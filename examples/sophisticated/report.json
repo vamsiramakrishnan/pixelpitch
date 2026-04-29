@@ -1,37 +1,39 @@
 {
   "pptx_path": "examples/sophisticated/deck.pptx",
-  "n_slides": 6,
+  "n_slides": 9,
   "fidelity_reports": [],
   "native_area_ratio": 1.0,
   "llm_calls": 0,
   "total_cost_usd": 0.0,
-  "elapsed_seconds": 2.5118791200000032,
-  "cache_hit_rate": 0.6496350364963503,
+  "elapsed_seconds": 3.6006685410000046,
+  "cache_hit_rate": 0.6696035242290749,
   "decisions_by_tier": {
-    "tier0": 43,
-    "tier2": 2,
-    "cache:tier0": 73,
-    "tier1": 3,
-    "cache:tier1": 16
+    "tier0": 65,
+    "tier2": 5,
+    "cache:tier0": 132,
+    "tier1": 4,
+    "cache:tier1": 20,
+    "promotion": 1
   },
   "pattern_hits": {
-    "kicker-from-css": 5,
-    "body-paragraph": 5,
-    "title-h1": 4,
-    "pill-from-css": 5,
-    "short-label": 3,
+    "kicker-from-css": 8,
+    "body-paragraph": 6,
+    "title-h1": 6,
+    "pill-from-css": 7,
+    "short-label": 8,
     "gradient-card-no-text": 3,
-    "slide-solid-bg": 5,
-    "text-card-composite": 3,
+    "slide-solid-bg": 8,
+    "text-card-composite": 4,
     "title-h2": 1,
-    "stat-number-from-css": 2,
+    "stat-number-from-css": 3,
     "hairline-divider": 1,
-    "stat-card-composite": 3,
-    "subtitle": 1,
+    "stat-card-composite": 5,
+    "subtitle": 2,
     "gradient-card-with-text": 1,
-    "feature-card-with-icon": 1
+    "feature-card-with-icon": 1,
+    "stat-number-with-runs": 1
   },
-  "pattern_coverage": 0.8958333333333334,
+  "pattern_coverage": 0.8666666666666667,
   "unmatched_signatures": [
     {
       "sig": "div(bgi=grad)[]<5>[1280x704]{div(bg+brd+txt+txtc)[][128x32],div(bgi=grad)[][0x32],div(bgi=grad)[][768x768],div(bgi=grad)[][896x896],div(txt)[][1088x0],div(txt)[][128x0],div(txt)[][192x0],div(txt+txtc)[][64x0],h1(txt+txtc)[][1024x288],p(txt)[][768x96]}",
@@ -76,6 +78,51 @@
       "bbox_h": 426,
       "sample_classes": "col bad",
       "sample_text": "Naive screenshot",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "p(txt+txtc)[][832x256]",
+      "sig_hash": "d2a1cb271954a245",
+      "bbox_w": 860,
+      "bbox_h": 283,
+      "sample_classes": "quote",
+      "sample_text": "Rasterization is the failure mode, not the goal. Every pixel",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bgi=other)[][1280x704]",
+      "sig_hash": "c5dba26a1e61b252",
+      "bbox_w": 1280,
+      "bbox_h": 720,
+      "sample_classes": "dots",
+      "sample_text": "",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bgi=grad)[]<4>[1280x704]{div(bgi=grad+txt)[][0x32],div(bgi=other)[][1280x704],div(txt)[][0x0],div(txt)[][128x0],div(txt)[][128x0],div(txt)[][128x0],div(txt)[][832x64],p(txt+txtc)[][832x256]}",
+      "sig_hash": "c635251dd8598af1",
+      "bbox_w": 1280,
+      "bbox_h": 720,
+      "sample_classes": "slide",
+      "sample_text": "\"",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+shdw=t+brd)[]<5>[320x448]{div(bg+brd+txt)[][256x32],div(txt)[][256x0],div(txt)[][256x32],div(txt)[][256x32],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][128x0],span(txt)[][64x0],span(txt)[][64x0],span(txt)[][64x0]}",
+      "sig_hash": "07f3f731e2df6b7a",
+      "bbox_w": 361,
+      "bbox_h": 455,
+      "sample_classes": "tier",
+      "sample_text": "Enterprise",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+shdw=t+brd)[]<5>[320x448]{div(bg+brd+txt)[][256x32],div(txt)[][256x0],div(txt)[][256x32],div(txt+txtc)[][256x32],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][128x0],span(txt)[][64x0],span(txt)[][64x0],span(txt)[][64x0]}",
+      "sig_hash": "a95c430334b12411",
+      "bbox_w": 361,
+      "bbox_h": 455,
+      "sample_classes": "tier",
+      "sample_text": "Starter",
       "n_occurrences": 1
     }
   ]
