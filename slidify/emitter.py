@@ -176,11 +176,17 @@ class Emitter:
             return
 
         if kind == DecisionKind.Hybrid:
-            # Surgical hybrid: try a native gradient/shadow shape first
-            # (covers the decoration); if the unit's bg-image is *not* a
-            # parseable gradient (e.g., url()), fall back to a full raster
-            # crop. Either way, children emit independently on top.
+            # Surgical hybrid emission, in order of preference:
+            #   1) Try emitting a native gradient/shape (works when the unit's
+            #      decoration is fully translatable — gradient + solid + shadow).
+            #   2) Else if the renderer captured a no-text decoration-only pass,
+            #      crop from THAT (pixel-exact decoration with no text bleed).
+            #   3) Else fall back to live region screenshot or ground-truth crop.
+            # Children emit independently on top in all three branches.
             if self._try_emit_native_decoration(slide, unit, op):
+                return
+            if rendered.no_text_png:
+                self._emit_region_raster(slide, rendered.no_text_png, op.bbox)
                 return
             await self._emit_raster(slide, unit, op, rendered, renderer)
             return

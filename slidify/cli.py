@@ -30,6 +30,13 @@ def _convert_options(fn):
     """Shared options between the explicit convert subcommand and the default."""
     fn = click.option("--report-json", type=click.Path(dir_okay=False, path_type=Path), default=None)(fn)
     fn = click.option(
+        "--differential-render",
+        is_flag=True,
+        help="Take a second screenshot per slide with all text blanked. "
+        "Surgical-hybrid emission then crops from the decoration-only image "
+        "for pixel-exact backgrounds. ~150ms / slide overhead.",
+    )(fn)
+    fn = click.option(
         "--low-memory",
         is_flag=True,
         help="Drop per-slide state right after emit. Disables oracle auto-correction"
@@ -64,6 +71,7 @@ def _run_convert(
     google_location: str | None,
     render_concurrency: int,
     low_memory: bool,
+    differential_render: bool,
     report_json: Path | None,
 ) -> None:
     cfg = ConversionConfig(
@@ -75,6 +83,7 @@ def _run_convert(
         google_location=google_location,
         render_concurrency=render_concurrency,
         keep_plans_for_oracle=not low_memory,
+        differential_render=differential_render,
     )
     result = asyncio.run(convert(input_path, output_pptx, cfg))
 
@@ -235,12 +244,14 @@ def convert_cmd(
     google_location: str | None,
     render_concurrency: int,
     low_memory: bool,
+    differential_render: bool,
     report_json: Path | None,
 ) -> None:
     """Convert INPUT_PATH (file or directory) to OUTPUT_PPTX."""
     _run_convert(
         input_path, output_pptx, no_tier3, no_oracle, llm_backend, llm_model,
-        google_project, google_location, render_concurrency, low_memory, report_json,
+        google_project, google_location, render_concurrency, low_memory,
+        differential_render, report_json,
     )
 
 

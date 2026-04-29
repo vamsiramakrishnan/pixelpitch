@@ -190,6 +190,10 @@ class RenderedSlide(BaseModel):
     html: str
     elements: list[DomElement]
     ground_truth_png: bytes
+    # Optional second-pass screenshot taken with every text node blanked.
+    # Captures the *decoration-only* layer — used by surgical-hybrid emission
+    # to crop pixel-exact backgrounds without text bleeding into them.
+    no_text_png: bytes = b""
     viewport_w: int
     viewport_h: int
     notes: str = ""

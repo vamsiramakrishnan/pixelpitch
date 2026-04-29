@@ -234,17 +234,16 @@ def to_emit_ops(
                 visit(c)
             return
 
-        # Hybrid: emit raster bg first, then children natively.
+        # Hybrid: emit decoration bg first, then children natively. We keep
+        # the decision kind as Hybrid so the emitter dispatches through the
+        # surgical-hybrid path (native gradient → no_text crop → fallback) and
+        # so native_area_ratio counts the slot as half-native rather than as
+        # a plain raster.
         if decision.kind == DecisionKind.Hybrid:
             ops.append(
                 EmitOp(
                     unit_id=unit.id,
-                    decision=Decision(
-                        kind=DecisionKind.Raster,
-                        confidence=decision.confidence,
-                        reason="hybrid_bg",
-                        source_tier=decision.source_tier,
-                    ),
+                    decision=decision,
                     z_order=counter[0],
                     bbox=unit.bbox,
                     payload={"hybrid_role": "background"},

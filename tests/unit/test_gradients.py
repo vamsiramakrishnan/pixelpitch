@@ -9,7 +9,6 @@ from slidify.gradients import (
     to_grad_fill_xml,
 )
 
-
 # ---- Parsing -----------------------------------------------------------------
 
 

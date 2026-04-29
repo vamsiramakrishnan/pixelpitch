@@ -97,6 +97,11 @@ class ConversionConfig:
     max_oracle_iterations: int = 2
     render_concurrency: int = 4
     keep_plans_for_oracle: bool = True
+    # Differential render: take a second screenshot per slide with all text
+    # blanked. The emitter uses that decoration-only image when it needs to
+    # raster a Hybrid background, eliminating text bleed-through. Costs a
+    # second screenshot per slide (~150 ms on default viewport).
+    differential_render: bool = False
 
 
 @dataclass
@@ -344,7 +349,9 @@ async def convert(
     pattern_stats = PatternStats()
     unmatched: dict[str, UnmatchedSignature] = {}
 
-    async with Renderer(viewport=cfg.viewport) as renderer:
+    async with Renderer(
+        viewport=cfg.viewport, differential=cfg.differential_render
+    ) as renderer:
         provider = await _build_provider(cfg)
         emitter = Emitter()
 

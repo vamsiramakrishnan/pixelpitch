@@ -55,9 +55,12 @@ class Renderer:
         self,
         viewport: tuple[int, int] = (SLIDE_W_PX, SLIDE_H_PX),
         timeout_ms: int = 15_000,
+        *,
+        differential: bool = False,
     ) -> None:
         self.viewport_w, self.viewport_h = viewport
         self.timeout_ms = timeout_ms
+        self.differential = differential
         self._pw: Playwright | None = None
         self._browser: Browser | None = None
         self._lock = asyncio.Lock()
@@ -161,6 +164,16 @@ class Renderer:
             except Exception as e:
                 raise RenderError(f"screenshot failed: {e}") from e
 
+            # Second pass for differential mode: blank every text node, take a
+            # decoration-only screenshot, restore. Layout stays identical so
+            # the no-text image is pixel-aligned with the ground truth.
+            no_text_png = b""
+            if self.differential:
+                try:
+                    no_text_png = await self._capture_decoration_only(page)
+                except Exception as e:
+                    log.warning("renderer.differential_failed", error=str(e))
+
             # DOM walk.
             try:
                 elements = await walk(page)
@@ -171,6 +184,7 @@ class Renderer:
                 "renderer.render_ok",
                 element_count=len(elements),
                 png_bytes=len(png),
+                differential=bool(no_text_png),
                 degraded=degraded,
             )
 
@@ -178,11 +192,52 @@ class Renderer:
                 html=html,
                 elements=elements,
                 ground_truth_png=png,
+                no_text_png=no_text_png,
                 viewport_w=self.viewport_w,
                 viewport_h=self.viewport_h,
                 degraded=degraded,
                 reason=reason,
             )
+
+    async def _capture_decoration_only(self, page: Page) -> bytes:
+        """Blank every text node, screenshot, restore. The result is the
+        decoration layer (gradients, shapes, borders, shadows) without any
+        text pixels — used by the surgical-hybrid emitter for pixel-exact
+        backgrounds."""
+        # Walks all text nodes, stashes originals on the document, blanks them.
+        await page.evaluate(
+            r"""() => {
+                const stash = [];
+                const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+                let n;
+                while ((n = walker.nextNode())) {
+                    if (!n.nodeValue) continue;
+                    stash.push([n, n.nodeValue]);
+                    n.nodeValue = '';
+                }
+                window.__slidify_text_stash = stash;
+            }"""
+        )
+        try:
+            png = await page.screenshot(
+                clip={
+                    "x": 0,
+                    "y": 0,
+                    "width": self.viewport_w,
+                    "height": self.viewport_h,
+                },
+                full_page=False,
+                type="png",
+            )
+        finally:
+            await page.evaluate(
+                r"""() => {
+                    const stash = window.__slidify_text_stash || [];
+                    for (const [n, v] of stash) n.nodeValue = v;
+                    window.__slidify_text_stash = null;
+                }"""
+            )
+        return png
 
     async def screenshot_region(
         self, html: str, selector: str, bbox: tuple[float, float, float, float]
