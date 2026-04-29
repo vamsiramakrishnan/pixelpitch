@@ -50,6 +50,19 @@ class BoundingBox(BaseModel):
         return self.intersect_area(other) / denom
 
 
+class TextRun(BaseModel):
+    """A single styled run inside a text container (per-span styling)."""
+
+    text: str
+    font_family: str = ""
+    font_size: str = "16px"
+    font_weight: str = "400"
+    color: str = "rgb(0, 0, 0)"
+    italic: bool = False
+    underline: bool = False
+    is_break: bool = False
+
+
 class DomElement(BaseModel):
     """One DOM element snapshot from the in-page walker."""
 
@@ -72,6 +85,8 @@ class DomElement(BaseModel):
     filter: str = "none"
     clip_path: str = "none"
     text: str | None = None
+    is_text_container: bool = False
+    runs: list[TextRun] | None = None
     font_family: str = ""
     font_size: str = "16px"
     font_weight: str = "400"
@@ -82,12 +97,15 @@ class DomElement(BaseModel):
     has_after: bool = False
     before_content: str | None = None
     after_content: str | None = None
+    pseudo_before_style: dict | None = None
+    pseudo_after_style: dict | None = None
     is_canvas: bool = False
     is_svg: bool = False
     is_img: bool = False
     is_video: bool = False
     img_src: str | None = None
     svg_path_count: int = 0
+    svg_shapes: list[dict] | None = None
     pptx_role: str | None = None
     pptx_rasterize: bool = False
     pptx_skip: bool = False
@@ -130,6 +148,7 @@ class DecisionKind(str, Enum):
     NativeShape = "native_shape"
     NativeBullet = "native_bullet"
     NativePicture = "native_picture"
+    NativeSvg = "native_svg"  # SVG with translatable primitives
     Raster = "raster"
     Hybrid = "hybrid"
     Skip = "skip"

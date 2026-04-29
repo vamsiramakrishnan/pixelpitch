@@ -25,8 +25,20 @@ import structlog
 log = structlog.get_logger(__name__)
 
 
-# Default models per provider. Callers may override.
+# Default models per provider. Callers may override. Flash is the default for
+# Gemini backends because tier-3 only fires on the ambiguous tail (~10% of
+# units) and Flash is ~16x cheaper than Pro at near-equivalent vision quality
+# for this classification task.
 DEFAULT_MODELS: dict[str, str] = {
+    "gemini-aistudio": "gemini-2.5-flash",
+    "gemini-vertex": "gemini-2.5-flash",
+    "anthropic": "claude-haiku-4-5-20251001",
+    "claude-vertex": "claude-haiku-4-5",
+}
+
+# Higher-quality alternates for `--llm-model` overrides or callers who want
+# maximum decision quality at higher cost.
+QUALITY_MODELS: dict[str, str] = {
     "gemini-aistudio": "gemini-2.5-pro",
     "gemini-vertex": "gemini-2.5-pro",
     "anthropic": "claude-opus-4-7",
@@ -39,6 +51,8 @@ PRICING: dict[str, tuple[float, float]] = {
     "gemini-2.5-flash": (0.075, 0.30),
     "claude-opus-4-7": (15.0, 75.0),
     "claude-sonnet-4-6": (3.0, 15.0),
+    "claude-haiku-4-5": (1.0, 5.0),
+    "claude-haiku-4-5-20251001": (1.0, 5.0),
 }
 
 

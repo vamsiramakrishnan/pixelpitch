@@ -6,7 +6,7 @@ from typing import Any
 
 from playwright.async_api import Page
 
-from slidify.models import BoundingBox, DomElement
+from slidify.models import BoundingBox, DomElement, TextRun
 
 # Walks the DOM in-page and produces an array of element records.
 # Skips invisible elements and <head>. Captures bbox, computed style,
@@ -35,6 +35,70 @@ WALKER_JS = r"""
         return !!content && content !== 'none' && content !== '""' && content !== "''" && content !== 'normal';
     }
 
+    const INLINE_FORMATTING_TAGS = new Set([
+        'SPAN', 'EM', 'STRONG', 'B', 'I', 'U', 'A', 'CODE', 'SMALL',
+        'MARK', 'SUP', 'SUB', 'INS', 'DEL', 'KBD', 'ABBR', 'CITE',
+    ]);
+
+    function pseudoSnapshot(cs) {
+        return {
+            background_color: cs.backgroundColor || 'rgba(0, 0, 0, 0)',
+            background_image: cs.backgroundImage || 'none',
+            color: cs.color || 'rgb(0,0,0)',
+            font_family: cs.fontFamily || '',
+            font_size: cs.fontSize || '16px',
+            font_weight: cs.fontWeight || '400',
+            position: cs.position || 'static',
+            border_radius: cs.borderRadius || '0px',
+        };
+    }
+
+    function isTextContainer(el) {
+        // Element has at least one non-empty text node AND every element
+        // child is an inline formatting tag (or BR). Text containers emit as
+        // one text frame with multiple styled runs.
+        let hasText = false;
+        for (const node of el.childNodes) {
+            if (node.nodeType === 3) {
+                if ((node.textContent || '').trim()) hasText = true;
+            } else if (node.nodeType === 1) {
+                const t = node.tagName;
+                if (t !== 'BR' && !INLINE_FORMATTING_TAGS.has(t)) return false;
+            }
+        }
+        return hasText;
+    }
+
+    function collectRuns(el) {
+        const out = [];
+        const cs = getComputedStyle(el);
+        for (const node of el.childNodes) {
+            if (node.nodeType === 3) {
+                const txt = node.textContent || '';
+                if (!txt) continue;
+                out.push({
+                    text: txt,
+                    font_family: cs.fontFamily,
+                    font_size: cs.fontSize,
+                    font_weight: cs.fontWeight,
+                    color: cs.color,
+                    italic: cs.fontStyle === 'italic',
+                    underline: cs.textDecorationLine && cs.textDecorationLine.includes('underline'),
+                    is_break: false,
+                });
+            } else if (node.nodeType === 1) {
+                if (node.tagName === 'BR') {
+                    out.push({ text: '\n', is_break: true });
+                    continue;
+                }
+                // Recurse with the child's own computed style.
+                const sub = collectRuns(node);
+                for (const r of sub) out.push(r);
+            }
+        }
+        return out;
+    }
+
     function snapshot(el, parentId, depth) {
         // Skip non-element nodes and <head>/<script>/<style>
         if (!el || el.nodeType !== 1) return null;
@@ -56,20 +120,77 @@ WALKER_JS = r"""
         const id = nextId++;
 
         let before = null, after = null, hasBefore = false, hasAfter = false;
+        let pseudoBeforeStyle = null, pseudoAfterStyle = null;
         try {
             const csb = getComputedStyle(el, '::before');
             const csa = getComputedStyle(el, '::after');
-            if (isInteresting(csb.content)) { hasBefore = true; before = csb.content; }
-            if (isInteresting(csa.content)) { hasAfter = true; after = csa.content; }
+            if (isInteresting(csb.content)) {
+                hasBefore = true; before = csb.content;
+                pseudoBeforeStyle = pseudoSnapshot(csb);
+            }
+            if (isInteresting(csa.content)) {
+                hasAfter = true; after = csa.content;
+                pseudoAfterStyle = pseudoSnapshot(csa);
+            }
         } catch (_) {}
 
         // Leaf-text detection: only text node children, non-empty
         let isLeafText = el.children.length === 0 && (el.textContent || '').trim().length > 0;
+        // Text container: text + only inline formatting children. Emitter
+        // renders as a single text frame with multiple styled runs.
+        const textContainer = !isLeafText && el.children.length > 0 && isTextContainer(el);
+        const runs = textContainer ? collectRuns(el) : null;
 
         // SVG path count (for tier 1 complexity rule)
         let svgPathCount = 0;
+        let svgShapes = null;
         if (tag === 'SVG' || tag === 'svg') {
-            try { svgPathCount = el.querySelectorAll('path, polygon, polyline, circle, rect, ellipse, line').length; } catch (_) {}
+            try {
+                const allShapes = el.querySelectorAll('path, polygon, polyline, circle, rect, ellipse, line');
+                svgPathCount = allShapes.length;
+                // For simple SVGs (≤5 elements), capture geometry so emitter can
+                // transpile to native PPTX freeform / built-in shapes.
+                if (svgPathCount > 0 && svgPathCount <= 5) {
+                    const svgRect = el.getBoundingClientRect();
+                    svgShapes = [];
+                    for (const s of allShapes) {
+                        const sCs = getComputedStyle(s);
+                        const ss = { tag: s.tagName.toLowerCase(),
+                                     fill: s.getAttribute('fill') || sCs.fill || 'none',
+                                     stroke: s.getAttribute('stroke') || sCs.stroke || 'none',
+                                     stroke_width: parseFloat(s.getAttribute('stroke-width') || sCs.strokeWidth || '0') || 0,
+                                     fill_opacity: parseFloat(s.getAttribute('fill-opacity') || sCs.fillOpacity || '1') };
+                        if (s.tagName === 'rect') {
+                            ss.x = parseFloat(s.getAttribute('x') || '0');
+                            ss.y = parseFloat(s.getAttribute('y') || '0');
+                            ss.w = parseFloat(s.getAttribute('width') || '0');
+                            ss.h = parseFloat(s.getAttribute('height') || '0');
+                            ss.rx = parseFloat(s.getAttribute('rx') || '0');
+                        } else if (s.tagName === 'circle') {
+                            ss.cx = parseFloat(s.getAttribute('cx') || '0');
+                            ss.cy = parseFloat(s.getAttribute('cy') || '0');
+                            ss.r = parseFloat(s.getAttribute('r') || '0');
+                        } else if (s.tagName === 'ellipse') {
+                            ss.cx = parseFloat(s.getAttribute('cx') || '0');
+                            ss.cy = parseFloat(s.getAttribute('cy') || '0');
+                            ss.rx = parseFloat(s.getAttribute('rx') || '0');
+                            ss.ry = parseFloat(s.getAttribute('ry') || '0');
+                        } else if (s.tagName === 'line') {
+                            ss.x1 = parseFloat(s.getAttribute('x1') || '0');
+                            ss.y1 = parseFloat(s.getAttribute('y1') || '0');
+                            ss.x2 = parseFloat(s.getAttribute('x2') || '0');
+                            ss.y2 = parseFloat(s.getAttribute('y2') || '0');
+                        } else if (s.tagName === 'polygon' || s.tagName === 'polyline') {
+                            ss.points = s.getAttribute('points') || '';
+                        } else {
+                            // path — skip detailed parsing for v1
+                            ss.d = s.getAttribute('d') || '';
+                        }
+                        svgShapes.push(ss);
+                    }
+                    svgShapes._svgRect = { x: svgRect.x, y: svgRect.y, w: svgRect.width, h: svgRect.height };
+                }
+            } catch (_) {}
         }
 
         const ds = el.dataset || {};
@@ -93,7 +214,9 @@ WALKER_JS = r"""
             box_shadow: cs.boxShadow || 'none',
             filter: cs.filter || 'none',
             clip_path: cs.clipPath || 'none',
-            text: isLeafText ? el.textContent : null,
+            text: isLeafText ? el.textContent : (textContainer ? el.textContent : null),
+            is_text_container: textContainer,
+            runs: runs,
             font_family: cs.fontFamily || '',
             font_size: cs.fontSize || '16px',
             font_weight: cs.fontWeight || '400',
@@ -104,12 +227,15 @@ WALKER_JS = r"""
             has_after: hasAfter,
             before_content: before,
             after_content: after,
+            pseudo_before_style: pseudoBeforeStyle,
+            pseudo_after_style: pseudoAfterStyle,
             is_canvas: tag === 'CANVAS',
             is_svg: tag === 'SVG' || tag === 'svg',
             is_img: tag === 'IMG',
             is_video: tag === 'VIDEO',
             img_src: tag === 'IMG' ? (el.currentSrc || el.src || null) : null,
             svg_path_count: svgPathCount,
+            svg_shapes: svgShapes,
             pptx_role: ds.pptxRole || null,
             pptx_rasterize: ds.pptxRasterize === 'true',
             pptx_skip: ds.pptxSkip === 'true',
@@ -119,7 +245,11 @@ WALKER_JS = r"""
             stable_selector: buildStableSelector(el),
         });
 
-        for (const child of el.children) snapshot(child, id, depth + 1);
+        // If we captured this element as a text container, don't recurse —
+        // the runs already include all inline children's text and styling.
+        if (!textContainer) {
+            for (const child of el.children) snapshot(child, id, depth + 1);
+        }
         return id;
     }
 
@@ -156,6 +286,20 @@ async def walk(page: Page) -> list[DomElement]:
                 filter=entry["filter"],
                 clip_path=entry["clip_path"],
                 text=entry["text"],
+                is_text_container=entry.get("is_text_container", False),
+                runs=[
+                    TextRun(
+                        text=r.get("text", ""),
+                        font_family=r.get("font_family", ""),
+                        font_size=r.get("font_size", "16px"),
+                        font_weight=r.get("font_weight", "400"),
+                        color=r.get("color", "rgb(0, 0, 0)"),
+                        italic=r.get("italic", False),
+                        underline=r.get("underline", False),
+                        is_break=r.get("is_break", False),
+                    )
+                    for r in (entry.get("runs") or [])
+                ] if entry.get("runs") else None,
                 font_family=entry["font_family"],
                 font_size=entry["font_size"],
                 font_weight=entry["font_weight"],
@@ -166,12 +310,15 @@ async def walk(page: Page) -> list[DomElement]:
                 has_after=entry["has_after"],
                 before_content=entry["before_content"],
                 after_content=entry["after_content"],
+                pseudo_before_style=entry.get("pseudo_before_style"),
+                pseudo_after_style=entry.get("pseudo_after_style"),
                 is_canvas=entry["is_canvas"],
                 is_svg=entry["is_svg"],
                 is_img=entry["is_img"],
                 is_video=entry["is_video"],
                 img_src=entry["img_src"],
                 svg_path_count=entry["svg_path_count"],
+                svg_shapes=entry.get("svg_shapes"),
                 pptx_role=entry["pptx_role"],
                 pptx_rasterize=entry["pptx_rasterize"],
                 pptx_skip=entry["pptx_skip"],

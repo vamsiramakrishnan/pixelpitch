@@ -8,7 +8,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from slidify.gradients import parse_gradient
 from slidify.models import Decision, DecisionKind, VisualUnit
+from slidify.shadows import is_translatable_shadow
 
 
 @dataclass
@@ -73,27 +75,31 @@ def _decoration_complexity(unit: VisualUnit) -> float:
     for e in unit.all_elements():
         bg = e.background_image or ""
         if "gradient(" in bg:
-            # Multi-stop gradient (3+ commas inside) is "complex"
+            # If the gradient is translatable to native a:gradFill, no pressure.
+            if parse_gradient(bg) is not None:
+                continue
             inner = bg.split("gradient(", 1)[1] if "gradient(" in bg else ""
             n_stops = inner.count(",")
-            if n_stops >= 3:
-                score = max(score, 0.8)
-            else:
-                score = max(score, 0.4)
+            score = max(score, 0.8 if n_stops >= 3 else 0.4)
         if "url(" in bg:
             score = max(score, 0.7)
-        # Multi-shadow box-shadow
         if e.box_shadow and e.box_shadow != "none":
-            depth = 0
-            n = 1
-            for ch in e.box_shadow:
-                if ch == "(":
-                    depth += 1
-                elif ch == ")":
-                    depth -= 1
-                elif ch == "," and depth == 0:
-                    n += 1
-            if n > 1:
+            # Translatable single shadows are free; multi-shadow stacks are not.
+            if is_translatable_shadow(e.box_shadow):
+                # Detect multi-layer (more than one comma at top level).
+                depth = 0
+                n = 1
+                for ch in e.box_shadow:
+                    if ch == "(":
+                        depth += 1
+                    elif ch == ")":
+                        depth -= 1
+                    elif ch == "," and depth == 0:
+                        n += 1
+                if n > 1:
+                    score = max(score, 0.4)
+                # else: free
+            else:
                 score = max(score, 0.6)
     return min(1.0, score)
 

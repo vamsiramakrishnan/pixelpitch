@@ -9,7 +9,10 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from slidify.geom import parse_px
+from slidify.gradients import parse_gradient
 from slidify.models import Decision, DecisionKind, UnitKind, VisualUnit
+from slidify.shadows import is_translatable_shadow
+from slidify.svg_shapes import is_translatable_svg
 
 
 def _has_canvas(unit: VisualUnit) -> bool:
@@ -82,11 +85,29 @@ def _has_clip_path(unit: VisualUnit) -> bool:
     return any(e.clip_path and e.clip_path != "none" for e in unit.all_elements())
 
 
-def _has_pseudo_content(unit: VisualUnit) -> bool:
-    for e in unit.all_elements():
-        if e.has_before and e.before_content not in (None, "none", '""', "''"):
+def _is_complex_pseudo(content: str | None, style: dict | None) -> bool:
+    """A pseudo is *complex* — and forces raster — if it carries a bg-image,
+    url() content, or a non-trivial decoration. Text-only pseudos (e.g.,
+    `content: "01"`) are decorative and don't disqualify the parent from
+    native classification.
+    """
+    if not content or content in ("none", '""', "''"):
+        return False
+    if "url(" in content:
+        return True
+    if style:
+        bg_image = (style.get("background_image") or "none")
+        if bg_image != "none" and "url(" in bg_image:
             return True
-        if e.has_after and e.after_content not in (None, "none", '""', "''"):
+    return False
+
+
+def _has_pseudo_content(unit: VisualUnit) -> bool:
+    """Return True only if the unit has a *complex* pseudo we can't translate."""
+    for e in unit.all_elements():
+        if e.has_before and _is_complex_pseudo(e.before_content, e.pseudo_before_style):
+            return True
+        if e.has_after and _is_complex_pseudo(e.after_content, e.pseudo_after_style):
             return True
     return False
 
@@ -103,11 +124,20 @@ def _is_simple_leaf_text(unit: VisualUnit) -> bool:
     if len(unit.elements) > 6:
         return False
     anchor = unit.elements[0]
+    # Gradient bg is OK if we can translate it natively.
     if anchor.background_image and anchor.background_image != "none":
-        return False
+        if "url(" in anchor.background_image:
+            return False
+        if not parse_gradient(anchor.background_image):
+            return False
     if anchor.transform and anchor.transform != "none":
         return False
-    if anchor.box_shadow and anchor.box_shadow != "none":
+    # Shadow is OK if translatable.
+    if (
+        anchor.box_shadow
+        and anchor.box_shadow != "none"
+        and not is_translatable_shadow(anchor.box_shadow)
+    ):
         return False
     if anchor.filter and anchor.filter != "none":
         return False
@@ -129,11 +159,17 @@ def _is_plain_rectangle(unit: VisualUnit) -> bool:
         return False
     if any(e.filter and e.filter != "none" for e in elems):
         return False
-    # Background image (gradient/url) cannot be reproduced by a flat fill.
-    if any(
-        e.background_image and e.background_image != "none" for e in elems
-    ):
-        return False
+    # url() backgrounds we can't reproduce. Gradients we *can* — let those
+    # through.
+    for e in elems:
+        bg_img = e.background_image
+        if not bg_img or bg_img == "none":
+            continue
+        if "url(" in bg_img:
+            return False
+        # Unparseable / unrecognized gradient → treat as raster
+        if not parse_gradient(bg_img):
+            return False
     return True
 
 
@@ -207,15 +243,24 @@ def rule_complex_svg_raster(unit: VisualUnit) -> Decision | None:
 
 
 def rule_simple_svg_raster(unit: VisualUnit) -> Decision | None:
-    # Even small SVGs we don't transpile in v1 — rasterize them.
-    if _has_simple_svg(unit):
+    if not _has_simple_svg(unit):
+        return None
+    svg_el = next(
+        (e for e in unit.all_elements() if e.is_svg and e.svg_shapes), None
+    )
+    if svg_el is not None and is_translatable_svg(svg_el.svg_shapes):
         return Decision(
-            kind=DecisionKind.Raster,
-            confidence=0.95,
-            reason="svg_v1_rasterize",
+            kind=DecisionKind.NativeSvg,
+            confidence=0.9,
+            reason="svg_translatable_primitives",
             source_tier="tier1",
         )
-    return None
+    return Decision(
+        kind=DecisionKind.Raster,
+        confidence=0.95,
+        reason="svg_path_or_complex",
+        source_tier="tier1",
+    )
 
 
 def rule_caller_rasterize(unit: VisualUnit) -> Decision | None:

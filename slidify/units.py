@@ -64,7 +64,22 @@ def _has_transform(transform: str) -> bool:
 
 
 def _has_pseudo(el: DomElement) -> bool:
-    return el.has_before or el.has_after
+    """A pseudo only counts as visually-distinguishing decoration if it carries
+    a bg-image / url() content. Plain text pseudos are treated as decoration
+    folded into the parent."""
+    if el.has_before:
+        if el.before_content and "url(" in el.before_content:
+            return True
+        sb = el.pseudo_before_style or {}
+        if "url(" in (sb.get("background_image") or ""):
+            return True
+    if el.has_after:
+        if el.after_content and "url(" in el.after_content:
+            return True
+        sa = el.pseudo_after_style or {}
+        if "url(" in (sa.get("background_image") or ""):
+            return True
+    return False
 
 
 def _is_anchor(el: DomElement, parent_bg: str | None) -> bool:
@@ -94,8 +109,10 @@ def _is_anchor(el: DomElement, parent_bg: str | None) -> bool:
         return True
     # Leaf text elements with their own meaningful area become anchors so
     # that two different text blocks don't merge into one NativeText frame.
-    if el.text and el.text.strip() and el.bbox.area >= 200:
-        return True
+    # Text containers (text + inline formatting children) count too.
+    if (el.text and el.text.strip()) or el.is_text_container:
+        if el.bbox.area >= 200:
+            return True
     return False
 
 

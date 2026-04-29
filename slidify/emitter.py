@@ -27,6 +27,7 @@ from slidify.geom import (
     parse_px,
     px_to_emu,
 )
+from slidify.gradients import apply_gradient_fill, parse_gradient
 from slidify.models import (
     BoundingBox,
     DecisionKind,
@@ -35,6 +36,8 @@ from slidify.models import (
     RenderedSlide,
     VisualUnit,
 )
+from slidify.shadows import apply_shadow, parse_box_shadow
+from slidify.svg_shapes import emit_svg_shapes
 
 log = structlog.get_logger(__name__)
 
@@ -164,29 +167,39 @@ class Emitter:
             self._emit_native_picture(slide, unit, op)
             return
 
+        if kind == DecisionKind.NativeSvg:
+            self._emit_native_svg(slide, unit, op)
+            return
+
         if kind == DecisionKind.Raster:
             await self._emit_raster(slide, unit, op, rendered, renderer)
             return
 
         if kind == DecisionKind.Hybrid:
-            # Hybrid background — emit raster of full unit, children continue separately.
+            # Surgical hybrid: try a native gradient/shadow shape first
+            # (covers the decoration); if the unit's bg-image is *not* a
+            # parseable gradient (e.g., url()), fall back to a full raster
+            # crop. Either way, children emit independently on top.
+            if self._try_emit_native_decoration(slide, unit, op):
+                return
             await self._emit_raster(slide, unit, op, rendered, renderer)
             return
 
     # ----- native text ---------------------------------------------------
 
     def _pick_text_anchor(self, unit: VisualUnit) -> DomElement | None:
-        """Return the deepest text-bearing element."""
+        """Return the deepest text-bearing element (leaf or text container)."""
         text_elems = [
-            e for e in unit.all_elements() if e.text and e.text.strip()
+            e
+            for e in unit.all_elements()
+            if (e.text and e.text.strip())
+            or (e.runs and any(r.text.strip() for r in e.runs if not r.is_break))
         ]
         if not text_elems:
             return None
-        # Prefer pptx_text override
         for e in text_elems:
             if e.pptx_text:
                 return e
-        # Largest font-size wins (heuristic for "the headline of the unit")
         return max(text_elems, key=lambda e: parse_px(e.font_size))
 
     def _emit_native_text(self, slide, unit: VisualUnit, op: EmitOp) -> None:
@@ -206,28 +219,102 @@ class Emitter:
         unit_anchor_el = unit.elements[0] if unit.elements else None
         if unit_anchor_el is not None:
             self._apply_fill(tb, unit_anchor_el)
+            self._apply_shadow(tb, unit_anchor_el)
 
-        text_elems = [e for e in unit.all_elements() if e.text and e.text.strip()]
-        # If multiple text elements, group lines as paragraphs.
-        # Otherwise put a single paragraph with the anchor's text.
+        text_elems = [
+            e
+            for e in unit.all_elements()
+            if (e.text and e.text.strip()) or (e.runs and any(r.text.strip() for r in e.runs if not r.is_break))
+        ]
         para_targets = text_elems if len(text_elems) > 1 else [anchor]
         first = True
         for e in para_targets:
-            text = (e.pptx_text or e.text or "").strip()
-            if not text:
-                continue
-            p = tf.paragraphs[0] if first else tf.add_paragraph()
-            first = False
-            p.alignment = _TEXT_ALIGN_MAP.get(e.text_align, PP_ALIGN.LEFT)
-            run = p.add_run()
-            run.text = text
-            font = run.font
-            font.name = resolve_font(e.font_family)
-            font.size = Pt(max(8.0, parse_pt(e.font_size)))
-            font.bold = is_bold(e.font_weight)
-            color = parse_color(e.color)
-            if color is not None:
+            # Build paragraph(s) from runs if available, else from text.
+            paragraphs = self._element_to_paragraphs(e)
+            for para_runs in paragraphs:
+                if not para_runs:
+                    continue
+                p = tf.paragraphs[0] if first else tf.add_paragraph()
+                first = False
+                p.alignment = _TEXT_ALIGN_MAP.get(e.text_align, PP_ALIGN.LEFT)
+                for run_spec in para_runs:
+                    self._add_styled_run(p, run_spec, fallback_el=e)
+
+    def _element_to_paragraphs(
+        self, e: DomElement
+    ) -> list[list[dict]]:
+        """Turn an element's runs (or text) into a list of paragraphs, where
+        each paragraph is a list of run-spec dicts. <br> splits paragraphs.
+        """
+        if e.runs:
+            paragraphs: list[list[dict]] = [[]]
+            for r in e.runs:
+                if r.is_break:
+                    paragraphs.append([])
+                    continue
+                if not r.text.strip():
+                    # Preserve inter-run whitespace inside a run, but skip empties.
+                    if r.text and paragraphs[-1]:
+                        paragraphs[-1].append(
+                            {
+                                "text": r.text,
+                                "font_family": r.font_family,
+                                "font_size": r.font_size,
+                                "font_weight": r.font_weight,
+                                "color": r.color,
+                                "italic": r.italic,
+                                "underline": r.underline,
+                            }
+                        )
+                    continue
+                paragraphs[-1].append(
+                    {
+                        "text": r.text,
+                        "font_family": r.font_family,
+                        "font_size": r.font_size,
+                        "font_weight": r.font_weight,
+                        "color": r.color,
+                        "italic": r.italic,
+                        "underline": r.underline,
+                    }
+                )
+            # Drop trailing empty paragraphs
+            while paragraphs and not paragraphs[-1]:
+                paragraphs.pop()
+            return paragraphs
+        text = (e.pptx_text or e.text or "").strip()
+        if not text:
+            return []
+        return [
+            [
+                {
+                    "text": text,
+                    "font_family": e.font_family,
+                    "font_size": e.font_size,
+                    "font_weight": e.font_weight,
+                    "color": e.color,
+                    "italic": False,
+                    "underline": False,
+                }
+            ]
+        ]
+
+    def _add_styled_run(self, paragraph, spec: dict, fallback_el: DomElement) -> None:
+        run = paragraph.add_run()
+        run.text = spec["text"]
+        font = run.font
+        font.name = resolve_font(spec.get("font_family") or fallback_el.font_family)
+        size_px = spec.get("font_size") or fallback_el.font_size
+        font.size = Pt(max(8.0, parse_pt(size_px)))
+        font.bold = is_bold(spec.get("font_weight") or fallback_el.font_weight)
+        font.italic = bool(spec.get("italic"))
+        font.underline = bool(spec.get("underline"))
+        color = parse_color(spec.get("color") or fallback_el.color)
+        if color is not None:
+            try:
                 font.color.rgb = color[0]
+            except Exception:
+                pass
 
     # ----- native bullets ------------------------------------------------
 
@@ -264,6 +351,36 @@ class Emitter:
 
     # ----- native shape --------------------------------------------------
 
+    def _try_emit_native_decoration(
+        self, slide, unit: VisualUnit, op: EmitOp
+    ) -> bool:
+        """If the unit's anchor decoration (gradient/shadow/solid) is all
+        translatable, emit a native shape covering the bbox. Returns True if
+        a native shape was emitted; False to fall back to raster.
+        """
+        anchor = unit.elements[0] if unit.elements else None
+        if anchor is None:
+            return False
+        # Gradients we can translate — go native.
+        bg_img = anchor.background_image
+        if bg_img and bg_img != "none":
+            if "url(" in bg_img:
+                return False
+            grad = parse_gradient(bg_img)
+            if grad is None:
+                return False
+        x, y, w, h = _emu_rect(op.bbox)
+        radius = parse_px(anchor.border_radius)
+        shape_kind = (
+            MSO_SHAPE.ROUNDED_RECTANGLE if radius > 0 else MSO_SHAPE.RECTANGLE
+        )
+        shape = slide.shapes.add_shape(shape_kind, x, y, w, h)
+        shape.line.fill.background()
+        self._apply_fill(shape, anchor)
+        self._apply_border(shape, anchor)
+        self._apply_shadow(shape, anchor)
+        return True
+
     def _emit_native_shape(self, slide, unit: VisualUnit, op: EmitOp) -> None:
         x, y, w, h = _emu_rect(op.bbox)
         anchor_el = unit.elements[0] if unit.elements else None
@@ -277,8 +394,15 @@ class Emitter:
         shape.line.fill.background()  # default to no border
         self._apply_fill(shape, anchor_el)
         self._apply_border(shape, anchor_el)
+        self._apply_shadow(shape, anchor_el)
 
     def _apply_fill(self, shape, el: DomElement) -> None:
+        # Try native gradient first (background-image: linear-gradient(...) / radial-gradient(...)).
+        if el.background_image and el.background_image != "none":
+            grad = parse_gradient(el.background_image)
+            if grad is not None and apply_gradient_fill(shape, grad):
+                return
+            # Fall through to background_color / no-fill if gradient unparseable.
         bg = parse_color(el.background_color)
         if bg is None:
             try:
@@ -291,6 +415,13 @@ class Emitter:
             shape.fill.fore_color.rgb = bg[0]
         except Exception:
             pass
+
+    def _apply_shadow(self, shape, el: DomElement) -> None:
+        if not el.box_shadow or el.box_shadow == "none":
+            return
+        sh = parse_box_shadow(el.box_shadow)
+        if sh is not None:
+            apply_shadow(shape, sh)
 
     def _apply_border(self, shape, el: DomElement) -> None:
         if not el.border or el.border == "none":
@@ -321,6 +452,12 @@ class Emitter:
             pass
 
     # ----- native picture (img) ------------------------------------------
+
+    def _emit_native_svg(self, slide, unit: VisualUnit, op: EmitOp) -> None:
+        svg_el = next((e for e in unit.all_elements() if e.is_svg and e.svg_shapes), None)
+        if svg_el is None or not svg_el.svg_shapes:
+            return
+        emit_svg_shapes(slide, svg_el.svg_shapes)
 
     def _emit_native_picture(self, slide, unit: VisualUnit, op: EmitOp) -> None:
         src = op.decision.metadata.get("src") or self._first_img_src(unit)
@@ -446,6 +583,8 @@ def native_area_ratio(
             DecisionKind.NativeShape,
             DecisionKind.NativeBullet,
             DecisionKind.NativePicture,
+            DecisionKind.NativeSvg,
+            DecisionKind.Hybrid,  # hybrid keeps text editable; fill counts as native shape
         ):
             bb = _clamp_bbox(op.bbox)
             native_area += bb.w * bb.h
