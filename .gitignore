@@ -17,6 +17,9 @@ dist/
 *.pptx
 !tests/fixtures/**/*.pptx
 *.pdf
+out/
+slide-*.png
+sample-report.json
 
 # IDE / OS
 .idea/
