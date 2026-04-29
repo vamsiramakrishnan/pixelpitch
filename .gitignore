@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+build/
+dist/
+.coverage
+
+# uv
+.venv/
+
+# Output artifacts
+*.pptx
+!tests/fixtures/**/*.pptx
+*.pdf
+out/
+slide-*.png
+sample-report.json
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store

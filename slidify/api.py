@@ -1,0 +1,569 @@
+"""Public API: convert(source, pptx_path, ...) → ConversionResult.
+
+Slide sources accepted:
+    * `str`  — full HTML, optionally containing `<!DOCTYPE html>` separators
+              for multi-slide files (Genspark convention).
+    * `Path` — single .html file (split on DOCTYPEs) OR a directory whose
+              top-level *.html files are each treated as a single slide
+              (sorted lexicographically).
+    * `Iterable[str | Path]`        — each item is one slide's HTML or a path
+                                      to a file containing one slide.
+    * `AsyncIterable[str | Path]`   — same, but pulled lazily for true
+                                      streaming sources (DB, HTTP, etc.).
+
+The pipeline streams: each slide is rendered → classified → emitted → its
+ground-truth PNG is dropped (when oracle is off) before the next batch starts,
+so peak memory is bounded by `render_concurrency`, not by deck size.
+"""
+
+from __future__ import annotations
+
+import asyncio
+import time
+from collections.abc import AsyncIterable, AsyncIterator, Iterable
+from dataclasses import dataclass, field
+from pathlib import Path
+
+import structlog
+
+from slidify.cache import MemoryCache, StructuralCache
+from slidify.classifier.llm import LLMProvider, auto_select_backend, build_provider
+from slidify.classifier.tier1 import classify_tier1
+from slidify.classifier.tier2 import classify_tier2
+from slidify.classifier.tier3 import Tier3Stats, classify_tier3
+from slidify.emitter import Emitter, native_area_ratio
+from slidify.geom import SLIDE_H_PX, SLIDE_W_PX
+from slidify.models import (
+    ConversionResult,
+    Decision,
+    DecisionKind,
+    EmitOp,
+    FidelityReport,
+    RenderedSlide,
+    VisualUnit,
+)
+from slidify.oracle import FidelityOracle
+from slidify.promotion import promote, to_emit_ops
+from slidify.renderer import Renderer
+from slidify.splitter import split_slides
+from slidify.units import cluster, flatten
+
+log = structlog.get_logger(__name__)
+
+
+SlideSource = (
+    str
+    | Path
+    | Iterable[str | Path]
+    | AsyncIterable[str | Path]
+)
+
+
+@dataclass
+class ConversionConfig:
+    """User-facing configuration for `convert`.
+
+    Attributes:
+        viewport: (w, h) in pixels for browser rendering.
+        run_oracle: whether to validate output via LibreOffice/SSIM/OCR.
+        run_tier3: enable LLM adjudication for ambiguous units.
+        llm_backend: one of {"gemini-aistudio", "gemini-vertex", "anthropic",
+            "claude-vertex"}. None = auto-detect from environment.
+        llm_model: override default model for chosen backend.
+        google_project: override GOOGLE_CLOUD_PROJECT for Vertex backends.
+        google_location: override GOOGLE_CLOUD_LOCATION for Vertex backends.
+        cache: optional pre-built structural cache.
+        max_oracle_iterations: max self-healing passes after a failed slide.
+        render_concurrency: how many slides to render in parallel; also bounds
+            the peak number of in-memory rendered slides.
+        keep_plans_for_oracle: when True (default), retain per-slide plans
+            (units + decisions + ground-truth PNG) until oracle has run, so
+            the auto-correction loop can re-emit failing slides natively.
+            Set False on huge decks to drop plan state right after emit and
+            rely on a single oracle pass without auto-correction.
+    """
+
+    viewport: tuple[int, int] = (SLIDE_W_PX, SLIDE_H_PX)
+    run_oracle: bool = True
+    run_tier3: bool = True
+    llm_backend: str | None = None
+    llm_model: str | None = None
+    google_project: str | None = None
+    google_location: str | None = None
+    cache: StructuralCache | None = None
+    max_oracle_iterations: int = 2
+    render_concurrency: int = 4
+    keep_plans_for_oracle: bool = True
+
+
+@dataclass
+class _SlidePlan:
+    index: int
+    rendered: RenderedSlide
+    units: list[VisualUnit]
+    units_flat: list[VisualUnit]
+    units_by_id: dict[str, VisualUnit]
+    decisions: dict[str, Decision] = field(default_factory=dict)
+    ops: list[EmitOp] = field(default_factory=list)
+    notes: str = ""
+
+
+@dataclass
+class _SlideSummary:
+    """Lightweight per-slide bookkeeping kept after `_SlidePlan` is dropped."""
+
+    index: int
+    ops: list[EmitOp]
+    decisions_by_tier: dict[str, int]
+
+
+# -----------------------------------------------------------------------------
+# Source normalization
+# -----------------------------------------------------------------------------
+
+
+async def _normalize_source(source: SlideSource) -> AsyncIterator[str]:
+    """Yield slide HTML strings from any supported source form."""
+    if isinstance(source, str):
+        for chunk in split_slides(source):
+            yield chunk
+        return
+
+    if isinstance(source, Path):
+        if source.is_dir():
+            for path in sorted(source.glob("*.html")):
+                yield path.read_text(encoding="utf-8")
+            return
+        # Single file: still split (so a single big concatenated file works).
+        text = source.read_text(encoding="utf-8")
+        for chunk in split_slides(text):
+            yield chunk
+        return
+
+    if hasattr(source, "__aiter__"):
+        async for item in source:  # type: ignore[union-attr]
+            yield _read_item(item)
+        return
+
+    if hasattr(source, "__iter__"):
+        for item in source:  # type: ignore[union-attr]
+            yield _read_item(item)
+        return
+
+    raise TypeError(f"unsupported slide source type: {type(source).__name__}")
+
+
+def _read_item(item: str | Path) -> str:
+    if isinstance(item, Path):
+        return item.read_text(encoding="utf-8")
+    if isinstance(item, str):
+        # Heuristic: if it looks like a path and a file exists, read it. Otherwise
+        # treat as HTML content. We bias toward HTML to keep the str API stable.
+        return item
+    raise TypeError(f"slide item must be str or Path, got {type(item).__name__}")
+
+
+# -----------------------------------------------------------------------------
+# Helpers
+# -----------------------------------------------------------------------------
+
+
+def _decisions_by_tier_from_summaries(
+    summaries: list[_SlideSummary],
+) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for s in summaries:
+        for tier, n in s.decisions_by_tier.items():
+            counts[tier] = counts.get(tier, 0) + n
+    return counts
+
+
+def _per_slide_decisions_count(plan: _SlidePlan) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for d in plan.decisions.values():
+        counts[d.source_tier] = counts.get(d.source_tier, 0) + 1
+    return counts
+
+
+def _extract_notes(rendered: RenderedSlide) -> str:
+    parts = [e.pptx_notes for e in rendered.elements if e.pptx_notes]
+    return "\n".join(parts).strip()
+
+
+def _classify_unit_tier12(
+    unit: VisualUnit, cache: StructuralCache, prior: dict[str, Decision]
+) -> Decision | None:
+    cached = cache.get(unit)
+    if cached is not None:
+        return Decision(
+            kind=cached.kind,
+            confidence=cached.confidence,
+            reason=f"cache_hit ({cached.reason})",
+            metadata=cached.metadata,
+            source_tier=f"cache:{cached.source_tier}",
+        )
+    d = classify_tier1(unit)
+    if d is not None:
+        cache.put(unit, d)
+        return d
+    d = classify_tier2(unit, prior)
+    if d is not None:
+        cache.put(unit, d)
+        return d
+    return None  # defer to tier 3
+
+
+async def _build_provider(config: ConversionConfig) -> LLMProvider | None:
+    if not config.run_tier3:
+        return None
+    backend = config.llm_backend or auto_select_backend()
+    if backend is None:
+        return None
+    try:
+        return build_provider(
+            backend,
+            model=config.llm_model,
+            project_id=config.google_project,
+            location=config.google_location,
+        )
+    except Exception as e:
+        log.warning("api.provider_build_failed", backend=backend, error=str(e))
+        return None
+
+
+async def _classify_slide(
+    plan: _SlidePlan,
+    cache: StructuralCache,
+    provider: LLMProvider | None,
+) -> Tier3Stats:
+    decisions: dict[str, Decision] = {}
+    deferred: list[VisualUnit] = []
+
+    for u in reversed(plan.units_flat):
+        d = _classify_unit_tier12(u, cache, decisions)
+        if d is None:
+            deferred.append(u)
+        else:
+            decisions[u.id] = d
+
+    stats = Tier3Stats()
+    if deferred and provider is not None:
+        decisions_t3, stats = await classify_tier3(
+            deferred, plan.rendered.ground_truth_png, provider=provider
+        )
+        for uid, d in decisions_t3.items():
+            decisions[uid] = d
+            cache.put(plan.units_by_id[uid], d)
+    elif deferred:
+        for u in deferred:
+            decisions[u.id] = Decision(
+                kind=DecisionKind.Raster,
+                confidence=0.5,
+                reason="no_llm_provider",
+                source_tier="tier3",
+            )
+
+    plan.decisions = decisions
+    return stats
+
+
+async def _render_batch(
+    renderer: Renderer, slides_html: list[str]
+) -> list[RenderedSlide]:
+    """Render a batch of slides in parallel."""
+    return list(await asyncio.gather(*(renderer.render(h) for h in slides_html)))
+
+
+async def _drain_in_batches(
+    iter_html: AsyncIterator[str], size: int
+) -> AsyncIterator[list[str]]:
+    """Pull `size` items at a time from an async source, yielding batches."""
+    batch: list[str] = []
+    async for html in iter_html:
+        batch.append(html)
+        if len(batch) >= size:
+            yield batch
+            batch = []
+    if batch:
+        yield batch
+
+
+# -----------------------------------------------------------------------------
+# Public API
+# -----------------------------------------------------------------------------
+
+
+async def convert(
+    source: SlideSource,
+    pptx_path: str | Path,
+    config: ConversionConfig | None = None,
+) -> ConversionResult:
+    """Convert HTML slides to PPTX. See module docstring for source forms."""
+    cfg = config or ConversionConfig()
+    pptx_path = Path(pptx_path)
+    t_start = time.perf_counter()
+    cache = cfg.cache or StructuralCache(MemoryCache())
+
+    summaries: list[_SlideSummary] = []
+    plans_for_oracle: list[_SlidePlan] = []
+    total_stats = Tier3Stats()
+
+    async with Renderer(viewport=cfg.viewport) as renderer:
+        provider = await _build_provider(cfg)
+        emitter = Emitter()
+
+        slide_iter = _normalize_source(source)
+        batch_size = max(1, cfg.render_concurrency)
+        slide_idx = 0
+        try:
+            async for batch in _drain_in_batches(slide_iter, batch_size):
+                rendered_batch = await _render_batch(renderer, batch)
+                for rendered in rendered_batch:
+                    plan = await _process_one(
+                        slide_idx,
+                        rendered,
+                        cache,
+                        provider,
+                        emitter,
+                        renderer,
+                        total_stats,
+                    )
+                    summaries.append(
+                        _SlideSummary(
+                            index=plan.index,
+                            ops=plan.ops,
+                            decisions_by_tier=_per_slide_decisions_count(plan),
+                        )
+                    )
+                    if cfg.run_oracle and cfg.keep_plans_for_oracle:
+                        plans_for_oracle.append(plan)
+                    else:
+                        # Keep only ground-truth PNG if we still need it for oracle.
+                        if cfg.run_oracle:
+                            plan.units = []
+                            plan.units_flat = []
+                            plan.units_by_id = {}
+                            plan.decisions = {}
+                        else:
+                            # No oracle: drop the rendered PNG immediately too.
+                            plan.rendered = RenderedSlide(
+                                html="",
+                                elements=[],
+                                ground_truth_png=b"",
+                                viewport_w=cfg.viewport[0],
+                                viewport_h=cfg.viewport[1],
+                            )
+                        plans_for_oracle.append(plan)
+                    slide_idx += 1
+
+            if slide_idx == 0:
+                raise ValueError("no slides produced from source")
+
+            emitter.save(pptx_path)
+        finally:
+            emitter.close()
+
+        reports: list[FidelityReport] = []
+        if cfg.run_oracle:
+            reports = await _oracle_with_correction(
+                pptx_path, plans_for_oracle, summaries, cfg, renderer
+            )
+
+    n_slides = len(summaries)
+    avg_native = (
+        sum(native_area_ratio(s.ops) for s in summaries) / n_slides if n_slides else 0.0
+    )
+    elapsed = time.perf_counter() - t_start
+    return ConversionResult(
+        pptx_path=str(pptx_path),
+        n_slides=n_slides,
+        fidelity_reports=reports,
+        native_area_ratio=avg_native,
+        llm_calls=total_stats.n_calls,
+        total_cost_usd=total_stats.cost_usd,
+        elapsed_seconds=elapsed,
+        cache_hit_rate=cache.hit_rate,
+        decisions_by_tier=_decisions_by_tier_from_summaries(summaries),
+    )
+
+
+async def _process_one(
+    slide_idx: int,
+    rendered: RenderedSlide,
+    cache: StructuralCache,
+    provider: LLMProvider | None,
+    emitter: Emitter,
+    renderer: Renderer,
+    total_stats: Tier3Stats,
+) -> _SlidePlan:
+    roots = cluster(rendered.elements)
+    flat = flatten(roots)
+    by_id = {u.id: u for u in flat}
+    plan = _SlidePlan(
+        index=slide_idx,
+        rendered=rendered,
+        units=roots,
+        units_flat=flat,
+        units_by_id=by_id,
+        notes=_extract_notes(rendered),
+    )
+    stats = await _classify_slide(plan, cache, provider)
+    total_stats.n_calls += stats.n_calls
+    total_stats.n_units += stats.n_units
+    total_stats.cost_usd += stats.cost_usd
+    for k, v in stats.by_backend.items():
+        total_stats.by_backend[k] = total_stats.by_backend.get(k, 0) + v
+    if stats.backend:
+        total_stats.backend = stats.backend
+        total_stats.model = stats.model
+
+    plan.decisions = promote(plan.units, plan.decisions)
+    plan.ops = to_emit_ops(plan.units, plan.decisions)
+    await emitter.emit_slide(
+        plan.index,
+        plan.rendered,
+        plan.units_by_id,
+        plan.ops,
+        renderer,
+        notes=plan.notes,
+    )
+    return plan
+
+
+# -----------------------------------------------------------------------------
+# Oracle + auto-correction
+# -----------------------------------------------------------------------------
+
+
+async def _oracle_with_correction(
+    pptx_path: Path,
+    plans: list[_SlidePlan],
+    summaries: list[_SlideSummary],
+    cfg: ConversionConfig,
+    renderer: Renderer,
+) -> list[FidelityReport]:
+    oracle = FidelityOracle()
+    ground_truths = [p.rendered.ground_truth_png for p in plans]
+    reports = await oracle.evaluate(pptx_path, ground_truths)
+
+    if not cfg.keep_plans_for_oracle:
+        # No state to re-emit from — return the first-pass reports.
+        return reports
+
+    for _iter in range(cfg.max_oracle_iterations):
+        failing = [r for r in reports if not r.passed]
+        if not failing:
+            break
+        log.info("oracle.iter", failing=len(failing))
+        any_changed = False
+        for r in failing:
+            plan = plans[r.slide_index]
+            if not plan.units:
+                continue  # state was dropped, can't fix
+            if not r.failing_regions:
+                _force_full_raster(plan)
+                any_changed = True
+                continue
+            for region in r.failing_regions:
+                if _force_raster_overlapping(plan, region):
+                    any_changed = True
+        if not any_changed:
+            break
+
+        emitter = Emitter()
+        try:
+            for plan in plans:
+                if not plan.units:
+                    # Re-emit from cached ops if state was dropped.
+                    plan.ops = summaries[plan.index].ops
+                else:
+                    plan.ops = to_emit_ops(plan.units, plan.decisions)
+                await emitter.emit_slide(
+                    plan.index,
+                    plan.rendered,
+                    plan.units_by_id,
+                    plan.ops,
+                    renderer,
+                    notes=plan.notes,
+                )
+            emitter.save(pptx_path)
+        finally:
+            emitter.close()
+        # Update summaries with the new ops so native_area_ratio reflects fixes.
+        for plan in plans:
+            summaries[plan.index].ops = plan.ops
+        reports = await oracle.evaluate(pptx_path, ground_truths)
+
+    return reports
+
+
+def _force_full_raster(plan: _SlidePlan) -> None:
+    new_decisions: dict[str, Decision] = {}
+    for u in plan.units:
+        new_decisions[u.id] = Decision(
+            kind=DecisionKind.Raster,
+            confidence=1.0,
+            reason="oracle_full_raster",
+            source_tier="oracle_fix",
+        )
+        for child in u.children:
+            new_decisions[child.id] = Decision(
+                kind=DecisionKind.Skip,
+                confidence=1.0,
+                reason="absorbed by oracle_full_raster",
+                source_tier="oracle_fix",
+            )
+            for grand in child.children:
+                new_decisions[grand.id] = Decision(
+                    kind=DecisionKind.Skip,
+                    confidence=1.0,
+                    reason="absorbed by oracle_full_raster",
+                    source_tier="oracle_fix",
+                )
+    plan.decisions = {**plan.decisions, **new_decisions}
+
+
+def _force_raster_overlapping(plan: _SlidePlan, region) -> bool:
+    """Mark the smallest unit overlapping `region` as Raster.
+
+    We pick the *smallest* overlapping unit (most specific) to avoid promoting
+    the whole slide to raster just because a single text region drifted.
+    Returns True if anything changed.
+    """
+    region_area = region.w * region.h
+    if region_area <= 0:
+        return False
+
+    candidates: list[VisualUnit] = []
+    for u in plan.units_flat:
+        if u.bbox.area <= 0:
+            continue
+        contained = u.bbox.intersect_area(region) / region_area
+        if contained < 0.5:
+            continue
+        if u.bbox.area > region_area * 10:
+            continue
+        candidates.append(u)
+
+    if not candidates:
+        return False
+
+    target = min(candidates, key=lambda u: u.bbox.area)
+    cur = plan.decisions.get(target.id)
+    if cur is not None and cur.kind in (DecisionKind.Raster, DecisionKind.Skip):
+        return False
+
+    plan.decisions[target.id] = Decision(
+        kind=DecisionKind.Raster,
+        confidence=1.0,
+        reason="oracle_region_fix",
+        source_tier="oracle_fix",
+    )
+    for c in target.children:
+        plan.decisions[c.id] = Decision(
+            kind=DecisionKind.Skip,
+            confidence=1.0,
+            reason="absorbed by oracle_region_fix",
+            source_tier="oracle_fix",
+        )
+    return True
