@@ -1,0 +1,168 @@
+<!--
+  slidify · sophisticated showcase deck
+  ======================================
+  12-slide presentation that exercises every Tier-0 pattern in the manifest.
+  Designed against the visual language of Vercel/Linear/Stripe landing pages.
+
+  Built incrementally. This is batches 1–3.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pixelpitch — 01 Hero</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; font-family: Inter, "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing:antialiased; color:#f5f5f7; background:#070710; }
+
+  .slide { width:1280px; height:720px; box-sizing:border-box; position:relative; overflow:hidden;
+           background: radial-gradient(ellipse 1100px 760px at 80% 12%, #1e1b4b 0%, #0a0a14 55%, #050510 100%); }
+
+  /* Aurora wash, low-poison so the parent stays native-eligible */
+  .aurora-1 { position:absolute; top:-220px; left:-120px; width:780px; height:780px; border-radius:50%;
+              background: radial-gradient(circle, rgba(139,92,246,0.32) 0%, rgba(99,102,241,0.18) 35%, transparent 70%); }
+  .aurora-2 { position:absolute; bottom:-260px; right:-180px; width:920px; height:920px; border-radius:50%;
+              background: radial-gradient(circle, rgba(236,72,153,0.28) 0%, rgba(244,114,182,0.10) 38%, transparent 72%); }
+
+  .content { position:relative; padding:96px 96px 80px 96px; height:100%; box-sizing:border-box; display:flex; flex-direction:column; justify-content:space-between; }
+
+  .top-row { display:flex; justify-content:space-between; align-items:center; }
+  .brand { display:flex; align-items:center; gap:12px; }
+  .brand-mark { width:36px; height:36px; border-radius:10px;
+                background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%); }
+  .brand-text { font-size:18px; font-weight:700; letter-spacing:-0.01em; color:#f5f5f7; }
+  .brand-text .sub { font-weight:500; color:#a1a1aa; margin-left:6px; }
+  .pill { display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:9999px;
+          background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+          font-size:13px; color:#e4e4e7; font-weight:500; }
+  .pill .dot { width:8px; height:8px; border-radius:50%; background:#34d399; }
+
+  .kicker { font-size:13px; letter-spacing:0.42em; text-transform:uppercase; color:#a78bfa; font-weight:600; margin-bottom:24px; }
+  h1 { font-size:104px; font-weight:800; line-height:0.95; margin:0; max-width:1080px; letter-spacing:-0.045em; }
+  h1 .accent { background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lede { font-size:22px; color:#d4d4d8; margin-top:28px; max-width:780px; line-height:1.5; font-weight:500; }
+
+  .meta-row { display:flex; justify-content:space-between; align-items:flex-end; }
+  .meta-left { font-size:14px; color:#71717a; letter-spacing:0.02em; }
+  .meta-right { font-size:13px; color:#52525b; letter-spacing:0.18em; font-weight:600; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="aurora-1"></div>
+  <div class="aurora-2"></div>
+  <div class="content">
+    <div class="top-row">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <div class="brand-text">slidify<span class="sub">· v1.0</span></div>
+      </div>
+      <div class="pill"><span class="dot"></span> shipping today</div>
+    </div>
+    <div>
+      <div class="kicker">Q2 2026 · Investor Update</div>
+      <h1 data-pptx-role="title">A compiler for <span class="accent">presentations</span>, not a screenshot tool.</h1>
+      <p class="lede">Render in Chromium. Cluster into visual units. Translate gradients, shadows, and shapes natively. Edit the result in PowerPoint as if a human authored it.</p>
+    </div>
+    <div class="meta-row">
+      <div class="meta-left">Internal · For discussion</div>
+      <div class="meta-right">PIXELPITCH LABS · 01 / 12</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pixelpitch — 02 Agenda</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; font-family: Inter, "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing:antialiased; color:#f5f5f7; background:#070710; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; padding:96px; background:#070710; position:relative; }
+  .kicker { font-size:13px; letter-spacing:0.42em; text-transform:uppercase; color:#a78bfa; font-weight:600; margin-bottom:18px; }
+  h1 { font-size:56px; font-weight:800; line-height:1.05; margin:0 0 56px 0; letter-spacing:-0.025em; }
+
+  .toc { display:grid; grid-template-columns: 1fr 1fr; gap:0 80px; }
+  .item { display:flex; align-items:flex-end; padding:22px 0; border-top:1px solid rgba(255,255,255,0.10); gap:24px; }
+  .item .num { font-size:14px; color:#a1a1aa; font-variant-numeric: tabular-nums; min-width:32px; font-weight:600; letter-spacing:0.04em; }
+  .item .label { flex:1; font-size:22px; color:#f5f5f7; font-weight:600; letter-spacing:-0.01em; }
+  .item .page { font-size:14px; color:#71717a; font-variant-numeric: tabular-nums; font-weight:500; }
+  .item:hover .label { color:#a78bfa; }
+
+  .footer { position:absolute; bottom:48px; left:96px; right:96px; display:flex; justify-content:space-between; font-size:13px; color:#52525b; letter-spacing:0.18em; font-weight:600; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="kicker">Agenda</div>
+  <h1 data-pptx-role="title">What we'll cover today.</h1>
+  <div class="toc">
+    <div class="item"><div class="num">01</div><div class="label">Why presentations are broken</div><div class="page">p. 03</div></div>
+    <div class="item"><div class="num">02</div><div class="label">The render-and-classify pipeline</div><div class="page">p. 05</div></div>
+    <div class="item"><div class="num">03</div><div class="label">Native vs raster, by the numbers</div><div class="page">p. 07</div></div>
+    <div class="item"><div class="num">04</div><div class="label">Six pillars of editability</div><div class="page">p. 06</div></div>
+    <div class="item"><div class="num">05</div><div class="label">Pattern database deep-dive</div><div class="page">p. 08</div></div>
+    <div class="item"><div class="num">06</div><div class="label">Where we are on the roadmap</div><div class="page">p. 11</div></div>
+  </div>
+  <div class="footer"><div>PIXELPITCH LABS</div><div>02 / 12</div></div>
+</div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pixelpitch — 03 Big Stat Hero</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; font-family: Inter, "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing:antialiased; color:#f5f5f7; background:#070710; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; padding:120px 96px 80px 96px; background:#070710; position:relative; }
+
+  .top-eyebrow { display:flex; align-items:center; gap:14px; margin-bottom:36px; }
+  .top-eyebrow .kicker { font-size:13px; letter-spacing:0.42em; text-transform:uppercase; color:#a78bfa; font-weight:600; }
+  .top-eyebrow .rule { flex:1; height:1px; background:rgba(255,255,255,0.10); }
+
+  .hero-row { display:grid; grid-template-columns: 1fr 360px; gap:64px; align-items:start; }
+
+  .number { font-size:240px; font-weight:800; line-height:0.85; letter-spacing:-0.06em;
+            background: linear-gradient(135deg, #f5f5f7 0%, #818cf8 35%, #c084fc 65%, #f472b6 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .number .unit { font-size:96px; color:#a78bfa; }
+
+  .headline { font-size:32px; font-weight:700; line-height:1.18; letter-spacing:-0.02em; margin:32px 0 0 0; max-width:760px; }
+  .lede { font-size:18px; color:#a1a1aa; line-height:1.55; margin-top:18px; max-width:680px; font-weight:500; }
+
+  .delta-card { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:28px;
+                box-shadow: 0 20px 50px rgba(99,102,241,0.10); }
+  .delta-card .delta { display:inline-flex; align-items:center; gap:8px; padding:6px 12px; border-radius:9999px;
+                       background:rgba(34,197,94,0.12); border:1px solid rgba(34,197,94,0.30);
+                       color:#86efac; font-size:13px; font-weight:600; }
+  .delta-card .delta-label { margin-top:18px; font-size:14px; color:#a1a1aa; font-weight:500; }
+  .delta-card .delta-num { margin-top:8px; font-size:36px; font-weight:700; color:#f5f5f7; letter-spacing:-0.02em; }
+  .delta-card .source { margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.08); font-size:12px; color:#71717a; line-height:1.5; }
+
+  .footer { position:absolute; bottom:48px; left:96px; right:96px; display:flex; justify-content:space-between; font-size:13px; color:#52525b; letter-spacing:0.18em; font-weight:600; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="top-eyebrow">
+    <div class="kicker">Headline KPI</div>
+    <div class="rule"></div>
+  </div>
+  <div class="hero-row">
+    <div>
+      <div class="number">87<span class="unit">%</span></div>
+      <h2 class="headline" data-pptx-role="title">of slide area emits as native, editable PPTX shapes.</h2>
+      <p class="lede">Average across a 200-deck corpus spanning Genspark, v0, Lovable, and hand-authored decks. With Tier-3 LLM enabled the figure climbs to 0.93.</p>
+    </div>
+    <div class="delta-card">
+      <div class="delta">▲ +29.4% vs. Q1</div>
+      <div class="delta-label">First-pass coverage</div>
+      <div class="delta-num">0.882</div>
+      <div class="source">Tier-0 pattern DB landed in March; Q2 expansion added composite recipes (stat-card, feature-card).</div>
+    </div>
+  </div>
+  <div class="footer"><div>SOURCE · slidify telemetry · April 29, 2026</div><div>03 / 12</div></div>
+</div>
+</body>
+</html>

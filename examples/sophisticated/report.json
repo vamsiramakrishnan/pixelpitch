@@ -1,0 +1,60 @@
+{
+  "pptx_path": "examples/sophisticated/deck.pptx",
+  "n_slides": 3,
+  "fidelity_reports": [],
+  "native_area_ratio": 1.0,
+  "llm_calls": 0,
+  "total_cost_usd": 0.0,
+  "elapsed_seconds": 21.956525536000015,
+  "cache_hit_rate": 0.4583333333333333,
+  "decisions_by_tier": {
+    "tier0": 23,
+    "tier2": 1,
+    "cache:tier0": 16,
+    "tier1": 2,
+    "cache:tier1": 6
+  },
+  "pattern_hits": {
+    "kicker-from-css": 4,
+    "body-paragraph": 3,
+    "title-h1": 2,
+    "pill-from-css": 2,
+    "short-label": 2,
+    "gradient-card-no-text": 3,
+    "slide-solid-bg": 3,
+    "text-card-composite": 1,
+    "title-h2": 1,
+    "stat-number-from-css": 1,
+    "hairline-divider": 1
+  },
+  "pattern_coverage": 0.8846153846153846,
+  "unmatched_signatures": [
+    {
+      "sig": "div(bgi=grad)[]<5>[1280x704]{div(bg+brd+txt+txtc)[][128x32],div(bgi=grad)[][0x32],div(bgi=grad)[][768x768],div(bgi=grad)[][896x896],div(txt)[][1088x0],div(txt)[][128x0],div(txt)[][192x0],div(txt+txtc)[][64x0],h1(txt+txtc)[][1024x288],p(txt)[][768x96]}",
+      "sig_hash": "2ce390ff0134f32a",
+      "bbox_w": 1280,
+      "bbox_h": 720,
+      "sample_classes": "slide",
+      "sample_text": "slidify· v1.0",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(txt)[][384x0]",
+      "sig_hash": "51fddad21a104668",
+      "bbox_w": 389,
+      "bbox_h": 26,
+      "sample_classes": "label",
+      "sample_text": "Where we are on the roadmap",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(txt)[][256x32]",
+      "sig_hash": "6c70e14f74e23363",
+      "bbox_w": 302,
+      "bbox_h": 51,
+      "sample_classes": "source",
+      "sample_text": "Tier-0 pattern DB landed in March; Q2 expansion added compos",
+      "n_occurrences": 1
+    }
+  ]
+}
