@@ -1,39 +1,40 @@
 {
   "pptx_path": "examples/sophisticated/deck.pptx",
-  "n_slides": 9,
+  "n_slides": 12,
   "fidelity_reports": [],
   "native_area_ratio": 1.0,
   "llm_calls": 0,
   "total_cost_usd": 0.0,
-  "elapsed_seconds": 3.6006685410000046,
-  "cache_hit_rate": 0.6696035242290749,
+  "elapsed_seconds": 4.108256245000007,
+  "cache_hit_rate": 0.676737160120846,
   "decisions_by_tier": {
-    "tier0": 65,
-    "tier2": 5,
-    "cache:tier0": 132,
-    "tier1": 4,
-    "cache:tier1": 20,
-    "promotion": 1
+    "tier0": 87,
+    "tier2": 11,
+    "cache:tier0": 201,
+    "tier1": 7,
+    "cache:tier1": 23,
+    "promotion": 2
   },
   "pattern_hits": {
-    "kicker-from-css": 8,
-    "body-paragraph": 6,
-    "title-h1": 6,
-    "pill-from-css": 7,
-    "short-label": 8,
-    "gradient-card-no-text": 3,
-    "slide-solid-bg": 8,
-    "text-card-composite": 4,
+    "kicker-from-css": 9,
+    "body-paragraph": 10,
+    "title-h1": 9,
+    "pill-from-css": 9,
+    "short-label": 10,
+    "gradient-card-no-text": 4,
+    "slide-solid-bg": 11,
+    "text-card-composite": 7,
     "title-h2": 1,
     "stat-number-from-css": 3,
     "hairline-divider": 1,
-    "stat-card-composite": 5,
+    "stat-card-composite": 7,
     "subtitle": 2,
     "gradient-card-with-text": 1,
     "feature-card-with-icon": 1,
-    "stat-number-with-runs": 1
+    "stat-number-with-runs": 1,
+    "decoration-card": 1
   },
-  "pattern_coverage": 0.8666666666666667,
+  "pattern_coverage": 0.8130841121495327,
   "unmatched_signatures": [
     {
       "sig": "div(bgi=grad)[]<5>[1280x704]{div(bg+brd+txt+txtc)[][128x32],div(bgi=grad)[][0x32],div(bgi=grad)[][768x768],div(bgi=grad)[][896x896],div(txt)[][1088x0],div(txt)[][128x0],div(txt)[][192x0],div(txt+txtc)[][64x0],h1(txt+txtc)[][1024x288],p(txt)[][768x96]}",
@@ -123,6 +124,96 @@
       "bbox_h": 455,
       "sample_classes": "tier",
       "sample_text": "Starter",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(txt)[][128x32]",
+      "sig_hash": "1f56c25a4af9ebec",
+      "bbox_w": 179,
+      "bbox_h": 36,
+      "sample_classes": "value",
+      "sample_text": "3",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(txt+txtc)[][128x32]",
+      "sig_hash": "f4f2a79529b98add",
+      "bbox_w": 179,
+      "bbox_h": 36,
+      "sample_classes": "value",
+      "sample_text": "38s",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg)[][576x32]{div(bg)[][0x0],div(bg)[][0x0],div(bg)[][0x0],div(txt)[][64x0]}",
+      "sig_hash": "a0dca281c52071d1",
+      "bbox_w": 637,
+      "bbox_h": 40,
+      "sample_classes": "term-bar",
+      "sample_text": "~/decks · zsh",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+shdw=t+brd)[]<7>[576x384]{div(bg)[][576x32]{div(bg)[][0x0],div(bg)[][0x0],div(bg)[][0x0],div(txt)[][64x0]},div(txt)[][576x0],div(txt+txtc)[][576x0],div(txt+txtc)[][576x0],div(txt+txtc)[][576x0],div(txt+txtc)[][576x0],div(txt+txtc)[][576x0],div(txt+txtc)[][576x0],span(txt)[][192x0],span(txt)[][384x0]}",
+      "sig_hash": "c06ba446b6bf9078",
+      "bbox_w": 639,
+      "bbox_h": 388,
+      "sample_classes": "terminal",
+      "sample_text": "$",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+shdw=t+brd)[]<6>[256x320]{div(bg+brd+txt)[][0x0],div(txt)[][0x0],div(txt)[][0x0],div(txt)[][192x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][128x0],span(txt)[][128x0],span(txt)[][128x0],span(txt)[][64x0]}",
+      "sig_hash": "820f1ad8b5a7b000",
+      "bbox_w": 266,
+      "bbox_h": 343,
+      "sample_classes": "col next",
+      "sample_text": "Q4",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+shdw=t+brd)[]<6>[256x320]{div(bg+brd+txt)[][0x0],div(txt)[][0x0],div(txt)[][0x0],div(txt)[][192x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][128x0],span(txt)[][128x0],span(txt)[][128x0],span(txt)[][128x0]}",
+      "sig_hash": "ebcb7de160b458f1",
+      "bbox_w": 266,
+      "bbox_h": 343,
+      "sample_classes": "col next",
+      "sample_text": "Q3",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(txt)[][192x32]",
+      "sig_hash": "4bf3b043ca3dd578",
+      "bbox_w": 220,
+      "bbox_h": 47,
+      "sample_classes": "note",
+      "sample_text": "Native ratio jumped 0.62 → 1.00 on showcase.",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+shdw=t+brd)[]<6>[256x320]{div(bg+brd+txt)[][0x0],div(txt)[][0x0],div(txt)[][0x0],div(txt)[][192x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][128x0],span(txt)[][64x0],span(txt)[][64x0],span(txt)[][64x0]}",
+      "sig_hash": "ac5e85b6d58138f3",
+      "bbox_w": 266,
+      "bbox_h": 343,
+      "sample_classes": "col done",
+      "sample_text": "Q1",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bgi=other)[grid-bg][1280x704]",
+      "sig_hash": "f23b475801704e6f",
+      "bbox_w": 1280,
+      "bbox_h": 720,
+      "sample_classes": "grid-bg",
+      "sample_text": "",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bgi=grad)[]<3>[1280x704]{div(bg+brd+txt)[][192x32],div(bg+brd+txt+txtc)[][128x32],div(bg+shdw=t+txt)[][192x32],div(bgi=grad+xform)[][1152x544],div(bgi=other)[grid-bg][1280x704],div(txt)[][128x0],div(txt)[][128x32],div(txt)[][320x0],div(txt)[][64x0],h1(txt+txtc)[][1088x160],p(txt)[][704x64]}",
+      "sig_hash": "fa7d7f30d857294e",
+      "bbox_w": 1280,
+      "bbox_h": 720,
+      "sample_classes": "slide",
+      "sample_text": "Get started in 30 seconds",
       "n_occurrences": 1
     }
   ]
