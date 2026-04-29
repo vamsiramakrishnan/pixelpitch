@@ -166,3 +166,204 @@
 </div>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pixelpitch — 04 Three-Column Stats</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; font-family: Inter, sans-serif; -webkit-font-smoothing:antialiased; color:#f5f5f7; background:#070710; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; padding:80px 80px 64px 80px; background:#070710; position:relative; }
+  .kicker { font-size:13px; letter-spacing:0.42em; text-transform:uppercase; color:#a78bfa; font-weight:600; margin-bottom:18px; }
+  h1 { font-size:48px; font-weight:800; line-height:1.05; margin:0 0 48px 0; letter-spacing:-0.025em; max-width:900px; }
+  .grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:24px; }
+  .stat { padding:36px 32px; border-radius:18px;
+          background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+          border:1px solid rgba(255,255,255,0.08);
+          box-shadow: 0 24px 60px rgba(99,102,241,0.08); }
+  .stat .label { font-size:13px; letter-spacing:0.18em; color:#a1a1aa; font-weight:600; text-transform:uppercase; }
+  .stat .num { font-size:88px; font-weight:800; letter-spacing:-0.045em; line-height:1.0; margin:14px 0 0 0; color:#f5f5f7; }
+  .stat .num .unit { font-size:40px; color:#a78bfa; font-weight:700; }
+  .stat .delta-row { display:flex; gap:8px; align-items:center; margin-top:14px; }
+  .stat .delta-up { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:9999px;
+                    background:rgba(34,197,94,0.12); border:1px solid rgba(34,197,94,0.30);
+                    color:#86efac; font-size:12px; font-weight:600; }
+  .stat .delta-down { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:9999px;
+                      background:rgba(244,63,94,0.12); border:1px solid rgba(244,63,94,0.30);
+                      color:#fda4af; font-size:12px; font-weight:600; }
+  .stat .vs { font-size:12px; color:#52525b; }
+  .stat .desc { margin-top:18px; font-size:14px; color:#a1a1aa; line-height:1.55; padding-top:16px; border-top:1px solid rgba(255,255,255,0.06); }
+  .footer { position:absolute; bottom:32px; left:80px; right:80px; display:flex; justify-content:space-between; font-size:13px; color:#52525b; letter-spacing:0.18em; font-weight:600; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="kicker">By the numbers</div>
+  <h1 data-pptx-role="title">Editability that compounds across every deck shipped.</h1>
+  <div class="grid">
+    <div class="stat">
+      <div class="label">Native area</div>
+      <div class="num">87<span class="unit">%</span></div>
+      <div class="delta-row"><div class="delta-up">▲ +29.4%</div><div class="vs">vs Q1 baseline</div></div>
+      <div class="desc">Average across the corpus. Tier-0 patterns landed in March; Q2 added composite recipes for stat- and feature-cards.</div>
+    </div>
+    <div class="stat">
+      <div class="label">Per 10-slide deck</div>
+      <div class="num">23<span class="unit">s</span></div>
+      <div class="delta-row"><div class="delta-down">▼ -41%</div><div class="vs">vs Q1 baseline</div></div>
+      <div class="desc">P95 conversion time on a single 8-core box, no GPU. Bottleneck is render parallelism (Chart.js init).</div>
+    </div>
+    <div class="stat">
+      <div class="label">LLM cost</div>
+      <div class="num">$0.04</div>
+      <div class="delta-row"><div class="delta-down">▼ -73%</div><div class="vs">vs Q1 baseline</div></div>
+      <div class="desc">Switch to Gemini Flash + only-firing-on-the-ambiguous-tail. ≤$0.10/deck even with full Tier-3 enabled.</div>
+    </div>
+  </div>
+  <div class="footer"><div>SOURCE · Internal benchmark · April 2026</div><div>04 / 12</div></div>
+</div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pixelpitch — 05 Feature Grid</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; font-family: Inter, sans-serif; -webkit-font-smoothing:antialiased; color:#f5f5f7; background:#070710; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; padding:72px 80px 56px 80px; background:#070710; position:relative; }
+  .header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:36px; }
+  .header h1 { font-size:44px; font-weight:800; line-height:1.05; margin:0; letter-spacing:-0.02em; max-width:760px; }
+  .header .num { font-size:13px; color:#71717a; letter-spacing:0.18em; font-weight:600; }
+
+  .grid { display:grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; gap:20px; height:480px; }
+  .card { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:26px;
+          display:flex; flex-direction:column; box-shadow: 0 12px 40px rgba(99,102,241,0.06); }
+  .card .icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+                font-size:22px; font-weight:800; color:#fff; }
+  .card.c1 .icon { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+  .card.c2 .icon { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
+  .card.c3 .icon { background: linear-gradient(135deg, #ec4899, #f97316); }
+  .card.c4 .icon { background: linear-gradient(135deg, #06b6d4, #6366f1); }
+  .card.c5 .icon { background: linear-gradient(135deg, #22c55e, #06b6d4); }
+  .card.c6 .icon { background: linear-gradient(135deg, #f97316, #facc15); }
+  .card h3 { font-size:18px; font-weight:700; margin:24px 0 6px 0; letter-spacing:-0.01em; color:#f5f5f7; }
+  .card p { font-size:13px; color:#a1a1aa; margin:0; line-height:1.55; }
+  .card .meta { margin-top:auto; padding-top:14px; font-size:11px; color:#52525b; letter-spacing:0.12em; font-weight:600; text-transform:uppercase; }
+
+  .footer { position:absolute; bottom:24px; left:80px; right:80px; display:flex; justify-content:space-between; font-size:13px; color:#52525b; letter-spacing:0.18em; font-weight:600; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="header">
+    <h1 data-pptx-role="title">Six pillars of the rendering pipeline.</h1>
+    <div class="num">05 / 12</div>
+  </div>
+  <div class="grid">
+    <div class="card c1">
+      <div class="icon">▦</div>
+      <h3>Render before decide</h3>
+      <p>Real Chromium computes the layout. Static analysis cannot resolve flex / grid / flow geometry.</p>
+      <div class="meta">PLAYWRIGHT</div>
+    </div>
+    <div class="card c2">
+      <div class="icon">◈</div>
+      <h3>Visual units, not DOM</h3>
+      <p>Classification atom is a connected visual region — a card, a bullet, a chart — not a single tag.</p>
+      <div class="meta">CLUSTERER</div>
+    </div>
+    <div class="card c3">
+      <div class="icon">⊞</div>
+      <h3>Three-tier classifier</h3>
+      <p>Rules → heuristics → LLM. Closed-vocabulary patterns short-circuit ~90% of decisions.</p>
+      <div class="meta">TIER 0–3</div>
+    </div>
+    <div class="card c4">
+      <div class="icon">◐</div>
+      <h3>Confidence aware</h3>
+      <p>Every decision carries a confidence score. Low-confidence triggers a dual-emit safety net.</p>
+      <div class="meta">CONFIDENCE</div>
+    </div>
+    <div class="card c5">
+      <div class="icon">✓</div>
+      <h3>Self validating</h3>
+      <p>SSIM + OCR oracle catches regressions. Failing regions auto-promote to raster and re-emit.</p>
+      <div class="meta">ORACLE</div>
+    </div>
+    <div class="card c6">
+      <div class="icon">⌘</div>
+      <h3>Cache aggressively</h3>
+      <p>Structural-signature cache hits 60–80% within a generator after warmup. Reuse is free.</p>
+      <div class="meta">CACHE</div>
+    </div>
+  </div>
+  <div class="footer"><div>PIXELPITCH LABS</div><div>05 / 12</div></div>
+</div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pixelpitch — 06 Comparison</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; font-family: Inter, sans-serif; -webkit-font-smoothing:antialiased; color:#f5f5f7; background:#070710; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; padding:80px 80px 64px 80px; background:#070710; position:relative; }
+  .kicker { font-size:13px; letter-spacing:0.42em; text-transform:uppercase; color:#a78bfa; font-weight:600; margin-bottom:18px; }
+  h1 { font-size:46px; font-weight:800; line-height:1.05; margin:0 0 40px 0; letter-spacing:-0.025em; }
+
+  .columns { display:grid; grid-template-columns: 1fr 1fr; gap:28px; }
+  .col { padding:36px; border-radius:20px; }
+  .col.bad { background:rgba(63,63,70,0.30); border:1px solid rgba(255,255,255,0.06); }
+  .col.good { background: linear-gradient(160deg, rgba(99,102,241,0.18) 0%, rgba(236,72,153,0.10) 100%);
+              border:1px solid rgba(167,139,250,0.45);
+              box-shadow: 0 0 80px rgba(139,92,246,0.20); }
+
+  .col-head { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:24px; padding-bottom:18px;
+              border-bottom:1px solid rgba(255,255,255,0.10); }
+  .col-head .name { font-size:24px; font-weight:800; letter-spacing:-0.02em; }
+  .col.bad .col-head .name { color:#a1a1aa; }
+  .col.good .col-head .name { color:#f5f5f7; }
+  .col-head .tag { padding:5px 11px; border-radius:9999px; font-size:11px; font-weight:700; letter-spacing:0.12em; }
+  .col.bad .col-head .tag { background:#3f3f46; color:#a1a1aa; }
+  .col.good .col-head .tag { background: linear-gradient(135deg, #818cf8, #f472b6); color:#0a0a0f; }
+
+  .row { display:flex; align-items:flex-start; gap:14px; padding:14px 0; border-top:1px solid rgba(255,255,255,0.05); }
+  .row:first-of-type { border-top:none; padding-top:6px; }
+  .mark { width:22px; height:22px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+          font-size:13px; font-weight:800; }
+  .col.bad .mark { background:rgba(244,63,94,0.20); color:#fda4af; }
+  .col.good .mark { background:rgba(34,197,94,0.22); color:#86efac; }
+  .row .text { font-size:15px; line-height:1.5; color:#e4e4e7; }
+  .col.bad .text { color:#a1a1aa; }
+
+  .footer { position:absolute; bottom:32px; left:80px; right:80px; display:flex; justify-content:space-between; font-size:13px; color:#52525b; letter-spacing:0.18em; font-weight:600; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="kicker">Before · After</div>
+  <h1 data-pptx-role="title">Same browser render. Two very different decks.</h1>
+  <div class="columns">
+    <div class="col bad">
+      <div class="col-head"><div class="name">Naive screenshot</div><div class="tag">OLD WAY</div></div>
+      <div class="row"><div class="mark">×</div><div class="text">Every slide is a 50 MB PNG embedded into PPTX.</div></div>
+      <div class="row"><div class="mark">×</div><div class="text">No text is searchable, selectable, or editable.</div></div>
+      <div class="row"><div class="mark">×</div><div class="text">Brand-color swap requires re-running the whole pipeline.</div></div>
+      <div class="row"><div class="mark">×</div><div class="text">Resizing degrades pixel-by-pixel, especially on retina.</div></div>
+      <div class="row"><div class="mark">×</div><div class="text">Translation requires a second model run plus paste-back.</div></div>
+    </div>
+    <div class="col good">
+      <div class="col-head"><div class="name">slidify</div><div class="tag">NEW WAY</div></div>
+      <div class="row"><div class="mark">✓</div><div class="text">Headlines, body copy, and bullets are real text frames.</div></div>
+      <div class="row"><div class="mark">✓</div><div class="text">Cards, dividers, badges are native rounded rectangles.</div></div>
+      <div class="row"><div class="mark">✓</div><div class="text">Designers edit fonts, colors, alignment in PowerPoint directly.</div></div>
+      <div class="row"><div class="mark">✓</div><div class="text">Only complex visuals (Chart.js, blur effects) rasterize.</div></div>
+      <div class="row"><div class="mark">✓</div><div class="text">Output is 4 MB instead of 50 MB. Email-friendly out of the box.</div></div>
+    </div>
+  </div>
+  <div class="footer"><div>PIXELPITCH LABS</div><div>06 / 12</div></div>
+</div>
+</body>
+</html>
