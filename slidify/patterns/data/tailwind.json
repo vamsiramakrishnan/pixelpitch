@@ -1,0 +1,121 @@
+{
+  "version": "tailwind-3.4",
+  "comment": "Subset of Tailwind utility classes the slidify pattern DB recognizes. Each value is the resolved semantic value the browser would compute. Adding more classes is a pure data extension.",
+  "colors": {
+    "slate-50": "#f8fafc", "slate-100": "#f1f5f9", "slate-200": "#e2e8f0", "slate-300": "#cbd5e1",
+    "slate-400": "#94a3b8", "slate-500": "#64748b", "slate-600": "#475569", "slate-700": "#334155",
+    "slate-800": "#1e293b", "slate-900": "#0f172a", "slate-950": "#020617",
+    "gray-50": "#f9fafb", "gray-100": "#f3f4f6", "gray-200": "#e5e7eb", "gray-300": "#d1d5db",
+    "gray-400": "#9ca3af", "gray-500": "#6b7280", "gray-600": "#4b5563", "gray-700": "#374151",
+    "gray-800": "#1f2937", "gray-900": "#111827", "gray-950": "#030712",
+    "zinc-50": "#fafafa", "zinc-100": "#f4f4f5", "zinc-200": "#e4e4e7", "zinc-300": "#d4d4d8",
+    "zinc-400": "#a1a1aa", "zinc-500": "#71717a", "zinc-600": "#52525b", "zinc-700": "#3f3f46",
+    "zinc-800": "#27272a", "zinc-900": "#18181b", "zinc-950": "#09090b",
+    "neutral-50": "#fafafa", "neutral-100": "#f5f5f5", "neutral-200": "#e5e5e5",
+    "neutral-300": "#d4d4d4", "neutral-400": "#a3a3a3", "neutral-500": "#737373",
+    "neutral-600": "#525252", "neutral-700": "#404040", "neutral-800": "#262626",
+    "neutral-900": "#171717", "neutral-950": "#0a0a0a",
+    "stone-50": "#fafaf9", "stone-100": "#f5f5f4", "stone-200": "#e7e5e4", "stone-300": "#d6d3d1",
+    "stone-400": "#a8a29e", "stone-500": "#78716c", "stone-600": "#57534e", "stone-700": "#44403c",
+    "stone-800": "#292524", "stone-900": "#1c1917", "stone-950": "#0c0a09",
+    "red-500": "#ef4444", "red-600": "#dc2626", "red-700": "#b91c1c", "red-900": "#7f1d1d",
+    "orange-500": "#f97316", "orange-600": "#ea580c",
+    "amber-500": "#f59e0b", "amber-600": "#d97706", "amber-400": "#fbbf24",
+    "yellow-400": "#facc15", "yellow-500": "#eab308",
+    "lime-500": "#84cc16",
+    "green-500": "#22c55e", "green-600": "#16a34a", "green-300": "#86efac",
+    "emerald-500": "#10b981", "emerald-400": "#34d399", "emerald-600": "#059669",
+    "teal-500": "#14b8a6",
+    "cyan-500": "#06b6d4", "cyan-400": "#22d3ee",
+    "sky-500": "#0ea5e9", "sky-400": "#38bdf8",
+    "blue-500": "#3b82f6", "blue-600": "#2563eb", "blue-700": "#1d4ed8",
+    "indigo-300": "#a5b4fc", "indigo-400": "#818cf8", "indigo-500": "#6366f1",
+    "indigo-600": "#4f46e5", "indigo-700": "#4338ca", "indigo-900": "#312e81", "indigo-950": "#1e1b4b",
+    "violet-500": "#8b5cf6", "violet-600": "#7c3aed",
+    "purple-500": "#a855f7", "purple-400": "#c084fc",
+    "fuchsia-500": "#d946ef",
+    "pink-500": "#ec4899", "pink-400": "#f472b6", "pink-600": "#db2777",
+    "rose-500": "#f43f5e",
+    "white": "#ffffff", "black": "#000000",
+    "transparent": "transparent"
+  },
+  "border_radius": {
+    "rounded-none": "0px",
+    "rounded-sm":   "2px",
+    "rounded":      "4px",
+    "rounded-md":   "6px",
+    "rounded-lg":   "8px",
+    "rounded-xl":   "12px",
+    "rounded-2xl":  "16px",
+    "rounded-3xl":  "24px",
+    "rounded-full": "9999px"
+  },
+  "shadow": {
+    "shadow-none": "none",
+    "shadow-sm":   "0 1px 2px 0 rgba(0,0,0,0.05)",
+    "shadow":      "0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.1)",
+    "shadow-md":   "0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1)",
+    "shadow-lg":   "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1)",
+    "shadow-xl":   "0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)",
+    "shadow-2xl":  "0 25px 50px -12px rgba(0,0,0,0.25)",
+    "shadow-inner": "inset 0 2px 4px 0 rgba(0,0,0,0.05)"
+  },
+  "font_size": {
+    "text-xs":   {"size_px": 12, "line_height_px": 16},
+    "text-sm":   {"size_px": 14, "line_height_px": 20},
+    "text-base": {"size_px": 16, "line_height_px": 24},
+    "text-lg":   {"size_px": 18, "line_height_px": 28},
+    "text-xl":   {"size_px": 20, "line_height_px": 28},
+    "text-2xl":  {"size_px": 24, "line_height_px": 32},
+    "text-3xl":  {"size_px": 30, "line_height_px": 36},
+    "text-4xl":  {"size_px": 36, "line_height_px": 40},
+    "text-5xl":  {"size_px": 48, "line_height_px": 1.0},
+    "text-6xl":  {"size_px": 60, "line_height_px": 1.0},
+    "text-7xl":  {"size_px": 72, "line_height_px": 1.0},
+    "text-8xl":  {"size_px": 96, "line_height_px": 1.0},
+    "text-9xl":  {"size_px": 128, "line_height_px": 1.0}
+  },
+  "font_weight": {
+    "font-thin":       100, "font-extralight": 200, "font-light":     300,
+    "font-normal":     400, "font-medium":     500, "font-semibold":  600,
+    "font-bold":       700, "font-extrabold":  800, "font-black":     900
+  },
+  "tracking": {
+    "tracking-tighter":  -0.05, "tracking-tight":   -0.025, "tracking-normal": 0,
+    "tracking-wide":      0.025, "tracking-wider":   0.05,  "tracking-widest": 0.1
+  },
+  "leading": {
+    "leading-none":   1.0,  "leading-tight":  1.25, "leading-snug": 1.375,
+    "leading-normal": 1.5,  "leading-relaxed":1.625,"leading-loose":2.0
+  },
+  "spacing_px": {
+    "0": 0, "px": 1, "0.5": 2, "1": 4, "1.5": 6, "2": 8, "2.5": 10, "3": 12, "3.5": 14,
+    "4": 16, "5": 20, "6": 24, "7": 28, "8": 32, "9": 36, "10": 40, "11": 44, "12": 48,
+    "14": 56, "16": 64, "20": 80, "24": 96, "28": 112, "32": 128, "36": 144, "40": 160,
+    "44": 176, "48": 192, "52": 208, "56": 224, "60": 240, "64": 256, "72": 288, "80": 320,
+    "96": 384
+  },
+  "gradient_direction": {
+    "bg-gradient-to-t":  0,
+    "bg-gradient-to-tr": 45,
+    "bg-gradient-to-r":  90,
+    "bg-gradient-to-br": 135,
+    "bg-gradient-to-b":  180,
+    "bg-gradient-to-bl": 225,
+    "bg-gradient-to-l":  270,
+    "bg-gradient-to-tl": 315
+  },
+  "opacity": {
+    "opacity-0": 0.0, "opacity-5": 0.05, "opacity-10": 0.1, "opacity-15": 0.15,
+    "opacity-20": 0.2, "opacity-25": 0.25, "opacity-30": 0.3, "opacity-40": 0.4,
+    "opacity-50": 0.5, "opacity-60": 0.6, "opacity-70": 0.7, "opacity-75": 0.75,
+    "opacity-80": 0.8, "opacity-90": 0.9, "opacity-95": 0.95, "opacity-100": 1.0
+  },
+  "rasterize_only": [
+    "backdrop-blur-sm", "backdrop-blur", "backdrop-blur-md", "backdrop-blur-lg",
+    "backdrop-blur-xl", "backdrop-blur-2xl", "backdrop-blur-3xl",
+    "blur-sm", "blur", "blur-md", "blur-lg", "blur-xl", "blur-2xl", "blur-3xl",
+    "mix-blend-multiply", "mix-blend-screen", "mix-blend-overlay", "mix-blend-difference",
+    "filter", "saturate-0", "grayscale", "invert", "sepia"
+  ]
+}

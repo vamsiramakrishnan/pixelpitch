@@ -43,6 +43,7 @@ from slidify.models import (
     VisualUnit,
 )
 from slidify.oracle import FidelityOracle
+from slidify.patterns import classify_tier0, get_default_catalog
 from slidify.promotion import promote, to_emit_ops
 from slidify.renderer import Renderer
 from slidify.splitter import split_slides
@@ -202,6 +203,11 @@ def _classify_unit_tier12(
             metadata=cached.metadata,
             source_tier=f"cache:{cached.source_tier}",
         )
+    # Tier 0: pattern DB recipes (Tailwind / shadcn / common compositions).
+    d = classify_tier0(unit, get_default_catalog())
+    if d is not None:
+        cache.put(unit, d)
+        return d
     d = classify_tier1(unit)
     if d is not None:
         cache.put(unit, d)
