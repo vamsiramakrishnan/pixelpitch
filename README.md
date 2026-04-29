@@ -31,10 +31,14 @@ uv run playwright install chromium --with-deps
 CLI:
 
 ```bash
-slidify convert deck.html deck.pptx
+# Single HTML file with optional <!DOCTYPE> separators
+slidify deck.html deck.pptx
+
+# Directory of per-slide files (sorted lexicographically — name them 01.html, 02.html, …)
+slidify slides/ deck.pptx
 ```
 
-Python:
+Python — `convert(source, pptx_path, config)` accepts five source forms:
 
 ```python
 import asyncio
@@ -42,14 +46,40 @@ from pathlib import Path
 from slidify import convert, ConversionConfig
 
 async def main():
-    html = Path("deck.html").read_text()
     cfg = ConversionConfig(run_tier3=True, run_oracle=True)
-    result = await convert(html, "deck.pptx", cfg)
-    print(f"native_area_ratio={result.native_area_ratio:.2f}")
-    print(f"oracle: {sum(r.passed for r in result.fidelity_reports)}/{result.n_slides}")
+
+    # 1) Full HTML string (multi-slide via DOCTYPE separators)
+    await convert(Path("deck.html").read_text(), "out.pptx", cfg)
+
+    # 2) Path to a single .html file
+    await convert(Path("deck.html"), "out.pptx", cfg)
+
+    # 3) Path to a directory of per-slide .html files
+    await convert(Path("slides/"), "out.pptx", cfg)
+
+    # 4) Iterable of HTML strings (one per slide)
+    await convert([slide_a, slide_b, slide_c], "out.pptx", cfg)
+
+    # 5) Async iterator — true streaming, slides pulled on demand
+    async def stream():
+        async for s in fetch_slides_from_db():
+            yield s
+    await convert(stream(), "out.pptx", cfg)
 
 asyncio.run(main())
 ```
+
+### Memory characteristics for large decks
+
+The pipeline streams: each slide is rendered → classified → emitted, and intermediate
+state is dropped before the next batch starts. Peak memory is bounded by
+`render_concurrency` (default 4 slides in flight), not by deck size — *with one caveat*.
+
+When `run_oracle=True`, the auto-correction loop needs per-slide state (units,
+decisions, ground-truth PNGs) so it can re-classify failing regions after the
+LibreOffice/SSIM/OCR pass. Set `keep_plans_for_oracle=False` (CLI flag:
+`--low-memory`) to drop that state right after emit; you still get a single
+fidelity report per slide, but failing regions are not auto-fixed.
 
 ## Pipeline
 

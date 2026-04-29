@@ -11,7 +11,10 @@ from slidify.api import ConversionConfig, convert
 
 
 @click.command(name="slidify")
-@click.argument("input_html", type=click.Path(exists=True, dir_okay=False, path_type=Path))
+@click.argument(
+    "input_path",
+    type=click.Path(exists=True, dir_okay=True, file_okay=True, path_type=Path),
+)
 @click.argument("output_pptx", type=click.Path(dir_okay=False, path_type=Path))
 @click.option(
     "--no-tier3",
@@ -36,9 +39,15 @@ from slidify.api import ConversionConfig, convert
 @click.option("--google-project", default=None, help="GCP project (for Vertex backends).")
 @click.option("--google-location", default=None, help="GCP location/region (for Vertex backends).")
 @click.option("--render-concurrency", type=int, default=4, show_default=True)
+@click.option(
+    "--low-memory",
+    is_flag=True,
+    help="Drop per-slide state right after emit. Disables oracle auto-correction"
+    " but keeps peak memory bounded for huge decks.",
+)
 @click.option("--report-json", type=click.Path(dir_okay=False, path_type=Path), default=None)
 def main(
-    input_html: Path,
+    input_path: Path,
     output_pptx: Path,
     no_tier3: bool,
     no_oracle: bool,
@@ -47,10 +56,18 @@ def main(
     google_project: str | None,
     google_location: str | None,
     render_concurrency: int,
+    low_memory: bool,
     report_json: Path | None,
 ) -> None:
-    """Convert INPUT_HTML to OUTPUT_PPTX with maximum native editability."""
-    html = input_html.read_text(encoding="utf-8")
+    """Convert INPUT_PATH to OUTPUT_PPTX with maximum native editability.
+
+    INPUT_PATH may be:
+
+    \b
+    * a single HTML file (with optional <!DOCTYPE> separators for multi-slide)
+    * a directory whose top-level *.html files are each treated as one slide
+      (sorted lexicographically — name them 01.html, 02.html, ...)
+    """
     cfg = ConversionConfig(
         run_tier3=not no_tier3,
         run_oracle=not no_oracle,
@@ -59,8 +76,10 @@ def main(
         google_project=google_project,
         google_location=google_location,
         render_concurrency=render_concurrency,
+        keep_plans_for_oracle=not low_memory,
     )
-    result = asyncio.run(convert(html, output_pptx, cfg))
+    # Pass Path directly; api._normalize_source handles file vs directory.
+    result = asyncio.run(convert(input_path, output_pptx, cfg))
 
     click.echo(f"Wrote: {result.pptx_path}")
     click.echo(f"Slides: {result.n_slides}")
