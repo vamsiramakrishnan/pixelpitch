@@ -197,6 +197,18 @@ class RenderedSlide(BaseModel):
     reason: str = ""
 
 
+class UnmatchedSignature(BaseModel):
+    """A unit that no Tier-0 pattern matched. Logged for the corpus harvester."""
+
+    sig: str
+    sig_hash: str
+    bbox_w: int
+    bbox_h: int
+    sample_classes: str = ""
+    sample_text: str = ""
+    n_occurrences: int = 1
+
+
 class ConversionResult(BaseModel):
     pptx_path: str
     n_slides: int
@@ -207,6 +219,9 @@ class ConversionResult(BaseModel):
     elapsed_seconds: float = 0.0
     cache_hit_rate: float = 0.0
     decisions_by_tier: dict[str, int] = Field(default_factory=dict)
+    pattern_hits: dict[str, int] = Field(default_factory=dict)
+    pattern_coverage: float = 0.0
+    unmatched_signatures: list[UnmatchedSignature] = Field(default_factory=list)
 
 
 VisualUnit.model_rebuild()

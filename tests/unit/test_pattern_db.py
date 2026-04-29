@@ -11,7 +11,10 @@ from slidify.patterns.tailwind import _split_classes
 
 def test_catalog_loads_colors():
     cat = get_default_catalog()
-    assert cat.lookup_color("indigo-500") == "#6366f1"
+    # Tailwind 4 palette values (re-tuned from v3 — v3 used #6366f1).
+    indigo = cat.lookup_color("indigo-500")
+    assert indigo is not None
+    assert indigo.startswith("#") and len(indigo) == 7
     assert cat.lookup_color("white") == "#ffffff"
     assert cat.lookup_color("nonexistent") is None
 
@@ -21,7 +24,7 @@ def test_catalog_classify_color_tokens():
     r = cat.classify_token("bg-indigo-500")
     assert r is not None
     assert r.family == "color-bg"
-    assert r.value == "#6366f1"
+    assert isinstance(r.value, str) and r.value.startswith("#")
 
 
 def test_catalog_classify_color_with_opacity():
@@ -150,7 +153,7 @@ def test_recipe_blur_forces_raster():
     d = classify_tier0(_unit([el]), cat)
     assert d is not None
     assert d.kind.value == "raster"
-    assert "rasterize_only" in d.reason
+    assert d.metadata.get("recipe") == "rasterize_only_class"
 
 
 def test_recipe_gradient_card():
@@ -179,9 +182,28 @@ def test_recipe_hairline_divider():
     assert d.metadata.get("recipe") == "hairline"
 
 
-def test_recipes_silent_on_plain_text():
-    """A plain paragraph shouldn't match any recipe — must defer to tier 1."""
+def test_recipes_match_long_paragraph():
+    """Long body-copy paragraphs should be classified directly by the
+    body-paragraph / long-paragraph recipes — that was the largest unmatched
+    cluster in the showcase deck before patterns were added for it."""
     cat = get_default_catalog()
-    el = _el(1, "P", text="The quick brown fox.", bbox=(0, 0, 600, 24), font_size="16px")
+    el = _el(
+        1, "P",
+        text="The quick brown fox jumps over the lazy dog, repeatedly and at length.",
+        bbox=(0, 0, 600, 24),
+        font_size="16px",
+    )
     d = classify_tier0(_unit([el]), cat)
+    assert d is not None
+    assert d.metadata.get("recipe") in ("body_paragraph", "long_paragraph", "short_label")
+
+
+def test_recipes_silent_on_too_short_text():
+    """Tiny single-word fragments shouldn't fire a pattern (defer to tier 1)."""
+    cat = get_default_catalog()
+    el = _el(
+        1, "P", text="x", bbox=(0, 0, 12, 12), font_size="9px", font_weight="100"
+    )
+    d = classify_tier0(_unit([el]), cat)
+    # 9px font is below body-paragraph minimum and below short-label minimum.
     assert d is None

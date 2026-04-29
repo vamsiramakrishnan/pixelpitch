@@ -40,10 +40,12 @@ from slidify.models import (
     EmitOp,
     FidelityReport,
     RenderedSlide,
+    UnmatchedSignature,
     VisualUnit,
 )
 from slidify.oracle import FidelityOracle
-from slidify.patterns import classify_tier0, get_default_catalog
+from slidify.patterns import PatternStats, classify_tier0, get_default_catalog
+from slidify.patterns.signatures import signature, signature_hash
 from slidify.promotion import promote, to_emit_ops
 from slidify.renderer import Renderer
 from slidify.splitter import split_slides
@@ -192,7 +194,11 @@ def _extract_notes(rendered: RenderedSlide) -> str:
 
 
 def _classify_unit_tier12(
-    unit: VisualUnit, cache: StructuralCache, prior: dict[str, Decision]
+    unit: VisualUnit,
+    cache: StructuralCache,
+    prior: dict[str, Decision],
+    pattern_stats: PatternStats,
+    unmatched: dict[str, UnmatchedSignature],
 ) -> Decision | None:
     cached = cache.get(unit)
     if cached is not None:
@@ -204,10 +210,30 @@ def _classify_unit_tier12(
             source_tier=f"cache:{cached.source_tier}",
         )
     # Tier 0: pattern DB recipes (Tailwind / shadcn / common compositions).
-    d = classify_tier0(unit, get_default_catalog())
+    d = classify_tier0(unit, get_default_catalog(), stats=pattern_stats)
     if d is not None:
         cache.put(unit, d)
         return d
+    # Pattern miss → record signature for the harvester.
+    sig = signature(unit)
+    sig_h = signature_hash(unit)
+    if sig_h in unmatched:
+        unmatched[sig_h].n_occurrences += 1
+    else:
+        anchor = unit.elements[0] if unit.elements else None
+        sample_text = ""
+        for e in unit.all_elements():
+            if e.text and e.text.strip():
+                sample_text = e.text.strip()[:60]
+                break
+        unmatched[sig_h] = UnmatchedSignature(
+            sig=sig,
+            sig_hash=sig_h,
+            bbox_w=int(unit.bbox.w),
+            bbox_h=int(unit.bbox.h),
+            sample_classes=(anchor.cls or "") if anchor else "",
+            sample_text=sample_text,
+        )
     d = classify_tier1(unit)
     if d is not None:
         cache.put(unit, d)
@@ -241,12 +267,14 @@ async def _classify_slide(
     plan: _SlidePlan,
     cache: StructuralCache,
     provider: LLMProvider | None,
+    pattern_stats: PatternStats,
+    unmatched: dict[str, UnmatchedSignature],
 ) -> Tier3Stats:
     decisions: dict[str, Decision] = {}
     deferred: list[VisualUnit] = []
 
     for u in reversed(plan.units_flat):
-        d = _classify_unit_tier12(u, cache, decisions)
+        d = _classify_unit_tier12(u, cache, decisions, pattern_stats, unmatched)
         if d is None:
             deferred.append(u)
         else:
@@ -313,6 +341,8 @@ async def convert(
     summaries: list[_SlideSummary] = []
     plans_for_oracle: list[_SlidePlan] = []
     total_stats = Tier3Stats()
+    pattern_stats = PatternStats()
+    unmatched: dict[str, UnmatchedSignature] = {}
 
     async with Renderer(viewport=cfg.viewport) as renderer:
         provider = await _build_provider(cfg)
@@ -333,6 +363,8 @@ async def convert(
                         emitter,
                         renderer,
                         total_stats,
+                        pattern_stats,
+                        unmatched,
                     )
                     summaries.append(
                         _SlideSummary(
@@ -380,6 +412,10 @@ async def convert(
         sum(native_area_ratio(s.ops) for s in summaries) / n_slides if n_slides else 0.0
     )
     elapsed = time.perf_counter() - t_start
+    # Top-N unmatched signatures by occurrence — most-likely candidates for new patterns.
+    unmatched_sorted = sorted(
+        unmatched.values(), key=lambda u: u.n_occurrences, reverse=True
+    )[:25]
     return ConversionResult(
         pptx_path=str(pptx_path),
         n_slides=n_slides,
@@ -390,6 +426,9 @@ async def convert(
         elapsed_seconds=elapsed,
         cache_hit_rate=cache.hit_rate,
         decisions_by_tier=_decisions_by_tier_from_summaries(summaries),
+        pattern_hits=dict(pattern_stats.hits_by_id),
+        pattern_coverage=pattern_stats.coverage,
+        unmatched_signatures=unmatched_sorted,
     )
 
 
@@ -401,6 +440,8 @@ async def _process_one(
     emitter: Emitter,
     renderer: Renderer,
     total_stats: Tier3Stats,
+    pattern_stats: PatternStats,
+    unmatched: dict[str, UnmatchedSignature],
 ) -> _SlidePlan:
     roots = cluster(rendered.elements)
     flat = flatten(roots)
@@ -413,7 +454,7 @@ async def _process_one(
         units_by_id=by_id,
         notes=_extract_notes(rendered),
     )
-    stats = await _classify_slide(plan, cache, provider)
+    stats = await _classify_slide(plan, cache, provider, pattern_stats, unmatched)
     total_stats.n_calls += stats.n_calls
     total_stats.n_units += stats.n_units
     total_stats.cost_usd += stats.cost_usd

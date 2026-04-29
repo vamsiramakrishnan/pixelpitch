@@ -13,12 +13,17 @@ Two layers:
       signature + computed-CSS shape and returns a high-confidence Decision.
 """
 
+from slidify.patterns.matcher import Pattern, PatternHit, PatternStats, match
 from slidify.patterns.recipes import RECIPES, classify_tier0
 from slidify.patterns.tailwind import TailwindCatalog, get_default_catalog
 
 __all__ = [
     "RECIPES",
+    "Pattern",
+    "PatternHit",
+    "PatternStats",
     "TailwindCatalog",
     "classify_tier0",
     "get_default_catalog",
+    "match",
 ]

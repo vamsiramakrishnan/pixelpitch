@@ -27,3 +27,7 @@ sample-report.json
 .idea/
 .vscode/
 .DS_Store
+
+# tools/ npm workspace (generator script lives in git, deps don't)
+tools/pattern-gen/node_modules/
+tools/pattern-gen/package-lock.json
