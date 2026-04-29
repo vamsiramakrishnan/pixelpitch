@@ -16,10 +16,12 @@ dist/
 # Output artifacts
 *.pptx
 !tests/fixtures/**/*.pptx
+!examples/**/*.pptx
 *.pdf
 out/
 slide-*.png
 sample-report.json
+!examples/**/report.json
 
 # IDE / OS
 .idea/

@@ -1,0 +1,446 @@
+<!--
+  slidify showcase deck — "Pixelpitch Labs"
+  8 slides exercising hero, stats, feature grid, pipeline, comparison,
+  quote, pricing, and CTA patterns. Dark theme, gradient accents,
+  glassmorphic cards. Tuned to be visually rich AND maximally editable
+  after pipeline conversion.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pixelpitch — Hero</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; font-family: Inter, "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing:antialiased; color:#f5f5f7; background:#0a0a0f; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; position:relative; overflow:hidden; background: radial-gradient(ellipse 1200px 800px at 78% 18%, #1e1b4b 0%, #0a0a0f 60%); }
+  .grid { position:absolute; inset:0; background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 64px 64px; opacity:0.7; }
+  .glow { position:absolute; right:-160px; top:-160px; width:680px; height:680px; border-radius:50%; background: radial-gradient(circle, rgba(139,92,246,0.35) 0%, rgba(236,72,153,0.15) 40%, transparent 70%); filter: blur(40px); }
+  .content { position:relative; padding:96px; height:100%; box-sizing:border-box; display:flex; flex-direction:column; justify-content:space-between; }
+  .kicker { font-size:13px; letter-spacing:0.42em; text-transform:uppercase; color:#a78bfa; font-weight:600; }
+  h1 { font-size:96px; font-weight:800; line-height:1.0; margin:24px 0 0 0; max-width:1080px; letter-spacing:-0.04em; }
+  h1 .accent { background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .meta { display:flex; justify-content:space-between; align-items:flex-end; }
+  .author { font-size:18px; color:#d4d4d8; font-weight:500; }
+  .label { font-size:13px; color:#71717a; letter-spacing:0.18em; font-weight:600; }
+  .pill { display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:999px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); font-size:13px; color:#d4d4d8; }
+  .dot { width:8px; height:8px; border-radius:50%; background:#22c55e; box-shadow:0 0 12px #22c55e; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="grid"></div>
+  <div class="glow"></div>
+  <div class="content">
+    <div>
+      <div class="kicker">Q2 2026 · Investor Update</div>
+    </div>
+    <div>
+      <h1 data-pptx-role="title">Presentations,<br>rebuilt from <span class="accent">first principles</span>.</h1>
+    </div>
+    <div class="meta">
+      <div class="author">slidify · v1.0</div>
+      <div style="display:flex; gap:16px; align-items:center;">
+        <div class="pill"><span class="dot"></span> shipping today</div>
+        <div class="label">PIXELPITCH LABS</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pixelpitch — Stats</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; font-family: Inter, "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing:antialiased; color:#f5f5f7; background:#0a0a0f; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; padding:96px; position:relative; }
+  .eyebrow { font-size:13px; letter-spacing:0.42em; text-transform:uppercase; color:#a78bfa; font-weight:600; margin-bottom:24px; }
+  h1 { font-size:56px; font-weight:800; line-height:1.05; margin:0 0 56px 0; letter-spacing:-0.025em; max-width:920px; }
+  .stats { display:grid; grid-template-columns: repeat(3, 1fr); gap:24px; }
+  .stat { padding:40px; border-radius:16px; background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.02) 100%); border:1px solid rgba(255,255,255,0.08); position:relative; }
+  .stat .num { font-size:96px; font-weight:800; letter-spacing:-0.05em; line-height:1.0; margin:0; color:#f5f5f7; }
+  .stat .num .unit { font-size:48px; color:#a78bfa; font-weight:700; }
+  .stat .label { margin-top:8px; font-size:18px; color:#d4d4d8; font-weight:600; }
+  .stat .desc { margin-top:16px; font-size:14px; color:#71717a; line-height:1.5; }
+  .footer { position:absolute; bottom:48px; left:96px; right:96px; display:flex; justify-content:space-between; font-size:13px; color:#52525b; letter-spacing:0.1em; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="eyebrow">By the numbers</div>
+  <h1 data-pptx-role="title">Editability that compounds across every deck you ship.</h1>
+  <div class="stats">
+    <div class="stat">
+      <div class="num">87<span class="unit">%</span></div>
+      <div class="label">Native area ratio</div>
+      <div class="desc">Average across the 200-deck Genspark + v0 corpus. 0.95 stretch target.</div>
+    </div>
+    <div class="stat">
+      <div class="num">23<span class="unit">s</span></div>
+      <div class="label">Per 10-slide deck</div>
+      <div class="desc">P95 conversion time on a single 8-core box, no GPU. 4-way render parallelism.</div>
+    </div>
+    <div class="stat">
+      <div class="num">$0.04</div>
+      <div class="label">LLM cost per deck</div>
+      <div class="desc">Three-tier classifier means tier-3 only fires on the ambiguous 10%.</div>
+    </div>
+  </div>
+  <div class="footer">
+    <div>SOURCE · Internal benchmark, April 2026</div>
+    <div>02 / 08</div>
+  </div>
+</div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pixelpitch — Features</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; font-family: Inter, "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing:antialiased; color:#f5f5f7; background:#0a0a0f; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; padding:80px 96px; position:relative; }
+  .header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:48px; }
+  h1 { font-size:48px; font-weight:800; line-height:1.05; margin:0; letter-spacing:-0.02em; max-width:760px; }
+  .header .num { font-size:13px; color:#71717a; letter-spacing:0.18em; font-weight:600; }
+  .grid { display:grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; gap:20px; height:480px; }
+  .card { background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:28px; display:flex; flex-direction:column; justify-content:space-between; }
+  .card .icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; color:#fff; margin-bottom:auto; }
+  .card.c1 .icon { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+  .card.c2 .icon { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
+  .card.c3 .icon { background: linear-gradient(135deg, #ec4899, #f97316); }
+  .card.c4 .icon { background: linear-gradient(135deg, #06b6d4, #6366f1); }
+  .card.c5 .icon { background: linear-gradient(135deg, #22c55e, #06b6d4); }
+  .card.c6 .icon { background: linear-gradient(135deg, #f97316, #facc15); }
+  .card h3 { font-size:20px; font-weight:700; margin:24px 0 8px 0; letter-spacing:-0.01em; }
+  .card p { font-size:14px; color:#a1a1aa; margin:0; line-height:1.55; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="header">
+    <h1 data-pptx-role="title">Six pillars of the rendering pipeline.</h1>
+    <div class="num">03 / 08</div>
+  </div>
+  <div class="grid">
+    <div class="card c1">
+      <div class="icon">▦</div>
+      <div>
+        <h3>Render before decide</h3>
+        <p>Real Chromium computes layout. Static analysis cannot resolve flex/grid/flow geometry.</p>
+      </div>
+    </div>
+    <div class="card c2">
+      <div class="icon">◈</div>
+      <div>
+        <h3>Visual units, not DOM</h3>
+        <p>The classification atom is a connected visual region — a card, a bullet, a chart — not a single tag.</p>
+      </div>
+    </div>
+    <div class="card c3">
+      <div class="icon">⊞</div>
+      <div>
+        <h3>Three-tier classifier</h3>
+        <p>Rules → heuristics → LLM. 70% decided free, 20% by score, 10% adjudicated.</p>
+      </div>
+    </div>
+    <div class="card c4">
+      <div class="icon">◐</div>
+      <div>
+        <h3>Confidence aware</h3>
+        <p>Every decision carries a confidence. Low confidence triggers dual-emit fallback.</p>
+      </div>
+    </div>
+    <div class="card c5">
+      <div class="icon">✓</div>
+      <div>
+        <h3>Self validating</h3>
+        <p>SSIM + OCR oracle catches regressions. Failing regions auto-promote to raster and re-emit.</p>
+      </div>
+    </div>
+    <div class="card c6">
+      <div class="icon">⌘</div>
+      <div>
+        <h3>Cache aggressively</h3>
+        <p>Structural hashes hit 60–80% within a generator after warmup. Decisions are cheap to reuse.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pixelpitch — Pipeline</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; font-family: Inter, "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing:antialiased; color:#f5f5f7; background:#0a0a0f; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; padding:96px; position:relative; }
+  .eyebrow { font-size:13px; letter-spacing:0.42em; text-transform:uppercase; color:#a78bfa; font-weight:600; margin-bottom:24px; }
+  h1 { font-size:48px; font-weight:800; line-height:1.05; margin:0 0 64px 0; letter-spacing:-0.02em; max-width:920px; }
+  .pipeline { display:grid; grid-template-columns: repeat(5, 1fr); gap:24px; align-items:start; }
+  .step { padding:24px 20px; background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:14px; position:relative; }
+  .step .badge { display:inline-block; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:700; letter-spacing:0.08em; margin-bottom:14px; color:#0a0a0f; }
+  .step.s1 .badge { background:#a78bfa; }
+  .step.s2 .badge { background:#c084fc; }
+  .step.s3 .badge { background:#f472b6; }
+  .step.s4 .badge { background:#fb923c; }
+  .step.s5 .badge { background:#facc15; }
+  .step h3 { font-size:18px; font-weight:700; margin:0 0 8px 0; letter-spacing:-0.01em; }
+  .step p { font-size:13px; color:#a1a1aa; margin:0; line-height:1.5; }
+  .step .meta { margin-top:14px; font-size:11px; color:#52525b; letter-spacing:0.1em; font-weight:600; }
+  .stage-detail { margin-top:64px; padding:32px 40px; background: linear-gradient(135deg, rgba(99,102,241,0.12) 0%, rgba(236,72,153,0.08) 100%); border:1px solid rgba(255,255,255,0.1); border-radius:16px; display:flex; justify-content:space-between; align-items:center; }
+  .stage-detail .left { font-size:18px; font-weight:600; color:#f5f5f7; }
+  .stage-detail .right { font-size:14px; color:#a1a1aa; max-width:540px; line-height:1.55; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="eyebrow">The pipeline</div>
+  <h1 data-pptx-role="title">Render. Cluster. Classify. Emit. Validate.</h1>
+  <div class="pipeline">
+    <div class="step s1">
+      <div class="badge">01</div>
+      <h3>Render</h3>
+      <p>Headless Chromium with animation freeze, font preload, two-rAF wait.</p>
+      <div class="meta">PLAYWRIGHT</div>
+    </div>
+    <div class="step s2">
+      <div class="badge">02</div>
+      <h3>Cluster</h3>
+      <p>DOM elements grouped into atomic visual units by anchor + spatial overlap.</p>
+      <div class="meta">~10–50 UNITS / SLIDE</div>
+    </div>
+    <div class="step s3">
+      <div class="badge">03</div>
+      <h3>Classify</h3>
+      <p>Tier 1 rules → tier 2 heuristics → tier 3 LLM, batched per slide.</p>
+      <div class="meta">3 TIERS</div>
+    </div>
+    <div class="step s4">
+      <div class="badge">04</div>
+      <h3>Emit</h3>
+      <p>python-pptx writes native text, shapes, bullets, pictures with EMU precision.</p>
+      <div class="meta">OOXML</div>
+    </div>
+    <div class="step s5">
+      <div class="badge">05</div>
+      <h3>Validate</h3>
+      <p>LibreOffice re-renders. SSIM + OCR oracle. Auto-correct failing regions.</p>
+      <div class="meta">SSIM ≥ 0.95</div>
+    </div>
+  </div>
+  <div class="stage-detail">
+    <div class="left">Total budget · 25 s for a 10-slide deck</div>
+    <div class="right">Bottleneck is render parallelism (Chart.js initialization). Tier 3 LLM is batched once per slide; cost ≤ $0.10/deck at default settings.</div>
+  </div>
+</div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pixelpitch — Comparison</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; font-family: Inter, "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing:antialiased; color:#f5f5f7; background:#0a0a0f; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; padding:80px 96px; position:relative; }
+  .eyebrow { font-size:13px; letter-spacing:0.42em; text-transform:uppercase; color:#a78bfa; font-weight:600; margin-bottom:18px; }
+  h1 { font-size:48px; font-weight:800; line-height:1.05; margin:0 0 48px 0; letter-spacing:-0.02em; max-width:920px; }
+  .columns { display:grid; grid-template-columns: 1fr 1fr; gap:32px; }
+  .col { padding:36px; border-radius:18px; }
+  .col.bad { background: rgba(63,63,70,0.4); border:1px solid rgba(255,255,255,0.06); }
+  .col.good { background: linear-gradient(160deg, rgba(99,102,241,0.18) 0%, rgba(236,72,153,0.10) 100%); border:1px solid rgba(167,139,250,0.4); position:relative; }
+  .col.good::after { content:""; position:absolute; inset:0; border-radius:18px; box-shadow: 0 0 80px rgba(139,92,246,0.25); pointer-events:none; }
+  .col h2 { font-size:28px; font-weight:800; margin:0 0 20px 0; letter-spacing:-0.02em; }
+  .col.bad h2 { color:#a1a1aa; }
+  .col.good h2 { color:#f5f5f7; }
+  .col h2 .tag { display:inline-block; font-size:12px; padding:4px 10px; border-radius:6px; margin-left:10px; vertical-align:middle; letter-spacing:0.1em; font-weight:700; }
+  .col.bad h2 .tag { background:#3f3f46; color:#a1a1aa; }
+  .col.good h2 .tag { background:#a78bfa; color:#0a0a0f; }
+  .row { display:flex; align-items:flex-start; gap:14px; padding:14px 0; border-top:1px solid rgba(255,255,255,0.06); }
+  .row:first-of-type { border-top:none; }
+  .row .mark { width:22px; height:22px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; }
+  .col.bad .mark { background:rgba(239,68,68,0.2); color:#fca5a5; }
+  .col.good .mark { background:rgba(34,197,94,0.2); color:#86efac; }
+  .row .text { font-size:15px; line-height:1.45; color:#e4e4e7; }
+  .col.bad .text { color:#a1a1aa; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="eyebrow">Before · After</div>
+  <h1 data-pptx-role="title">Same browser render. Two very different decks.</h1>
+  <div class="columns">
+    <div class="col bad">
+      <h2>Naive screenshot<span class="tag">OLD WAY</span></h2>
+      <div class="row"><div class="mark">×</div><div class="text">Every slide is a 50 MB PNG embedded into PPTX.</div></div>
+      <div class="row"><div class="mark">×</div><div class="text">No text is searchable, selectable, or editable.</div></div>
+      <div class="row"><div class="mark">×</div><div class="text">Resizing the window degrades pixel-by-pixel.</div></div>
+      <div class="row"><div class="mark">×</div><div class="text">Translation requires re-running the whole pipeline.</div></div>
+      <div class="row"><div class="mark">×</div><div class="text">Brand colors locked into raster — no theme swap.</div></div>
+    </div>
+    <div class="col good">
+      <h2>slidify<span class="tag">NEW WAY</span></h2>
+      <div class="row"><div class="mark">✓</div><div class="text">Headlines, body copy, and bullets are real text frames.</div></div>
+      <div class="row"><div class="mark">✓</div><div class="text">Cards and dividers are native rounded rectangles.</div></div>
+      <div class="row"><div class="mark">✓</div><div class="text">Designers edit fonts, colors, alignment in PowerPoint directly.</div></div>
+      <div class="row"><div class="mark">✓</div><div class="text">Only complex visuals (Chart.js, gradients) rasterize.</div></div>
+      <div class="row"><div class="mark">✓</div><div class="text">Output is 4 MB instead of 50 MB. Email-friendly.</div></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pixelpitch — Quote</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; font-family: Inter, "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing:antialiased; color:#f5f5f7; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; position:relative; overflow:hidden; background: linear-gradient(135deg, #4f46e5 0%, #8b5cf6 40%, #ec4899 100%); }
+  .noise { position:absolute; inset:0; background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.08) 1px, transparent 1px); background-size: 24px 24px; opacity:0.5; }
+  .content { position:relative; padding:120px 110px; height:100%; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; max-width:1080px; }
+  .mark { font-size:140px; line-height:0.6; color:rgba(255,255,255,0.18); margin:0 0 -40px 0; font-weight:700; }
+  .quote { font-size:52px; font-weight:700; line-height:1.18; letter-spacing:-0.02em; margin:0; max-width:1000px; }
+  .author { display:flex; align-items:center; gap:18px; margin-top:48px; }
+  .avatar { width:56px; height:56px; border-radius:50%; background: linear-gradient(135deg, #fff 0%, #fce7f3 100%); display:flex; align-items:center; justify-content:center; font-weight:800; color:#831843; font-size:22px; }
+  .author .name { font-size:18px; font-weight:600; }
+  .author .title { font-size:14px; color:rgba(255,255,255,0.75); margin-top:2px; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="noise"></div>
+  <div class="content">
+    <div class="mark">"</div>
+    <p class="quote" data-pptx-role="title">Rasterization is the failure mode, not the goal. Every pixel that stays editable compounds across every translation, every theme swap, every revision.</p>
+    <div class="author">
+      <div class="avatar">VR</div>
+      <div>
+        <div class="name">Vamsi Ramakrishnan</div>
+        <div class="title">Founder, Pixelpitch Labs</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pixelpitch — Pricing</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; font-family: Inter, "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing:antialiased; color:#f5f5f7; background:#0a0a0f; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; padding:64px 96px; position:relative; }
+  .eyebrow { font-size:13px; letter-spacing:0.42em; text-transform:uppercase; color:#a78bfa; font-weight:600; margin-bottom:14px; }
+  h1 { font-size:42px; font-weight:800; line-height:1.05; margin:0 0 36px 0; letter-spacing:-0.02em; }
+  .tiers { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:20px; }
+  .tier { padding:32px 28px; border-radius:18px; background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; }
+  .tier.featured { background: linear-gradient(160deg, rgba(99,102,241,0.18) 0%, rgba(236,72,153,0.10) 100%); border:1px solid rgba(167,139,250,0.5); position:relative; }
+  .tier .name { font-size:14px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#a78bfa; margin-bottom:14px; }
+  .tier .price { font-size:56px; font-weight:800; letter-spacing:-0.04em; line-height:1.0; margin:0; }
+  .tier .price .per { font-size:16px; color:#a1a1aa; font-weight:500; margin-left:6px; }
+  .tier .desc { font-size:14px; color:#a1a1aa; margin:14px 0 24px 0; line-height:1.5; }
+  .tier ul { list-style:none; padding:0; margin:0 0 24px 0; }
+  .tier li { font-size:14px; padding:8px 0; border-top:1px solid rgba(255,255,255,0.06); display:flex; gap:10px; align-items:flex-start; line-height:1.5; }
+  .tier li:first-child { border-top:none; padding-top:0; }
+  .tier li .check { color:#86efac; font-weight:700; flex-shrink:0; }
+  .tier .cta { margin-top:auto; padding:14px 20px; text-align:center; border-radius:10px; font-size:14px; font-weight:700; letter-spacing:0.04em; }
+  .tier .cta.outline { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.16); color:#f5f5f7; }
+  .tier .cta.solid { background:#fff; color:#0a0a0f; border:none; }
+  .tier .badge-feat { position:absolute; top:-12px; left:50%; transform:translateX(-50%); padding:6px 16px; border-radius:999px; background: linear-gradient(135deg, #a78bfa, #ec4899); font-size:12px; font-weight:700; letter-spacing:0.1em; color:#0a0a0f; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="eyebrow">Pricing</div>
+  <h1 data-pptx-role="title">Pay for the slides you ship, not the seats you don't fill.</h1>
+  <div class="tiers">
+    <div class="tier">
+      <div class="name">Starter</div>
+      <div class="price">$0<span class="per">/mo</span></div>
+      <div class="desc">For solo founders shipping their first deck. No credit card.</div>
+      <ul>
+        <li><span class="check">✓</span><span>50 slides / month</span></li>
+        <li><span class="check">✓</span><span>Tier 1 + Tier 2 only</span></li>
+        <li><span class="check">✓</span><span>SSIM oracle included</span></li>
+        <li><span class="check">✓</span><span>Community support</span></li>
+      </ul>
+      <div class="cta outline">Start free</div>
+    </div>
+    <div class="tier featured">
+      <div class="badge-feat">MOST POPULAR</div>
+      <div class="name">Studio</div>
+      <div class="price">$29<span class="per">/mo</span></div>
+      <div class="desc">For design teams converting decks every day. LLM credits included.</div>
+      <ul>
+        <li><span class="check">✓</span><span>1,000 slides / month</span></li>
+        <li><span class="check">✓</span><span>Full three-tier classifier</span></li>
+        <li><span class="check">✓</span><span>Gemini + Claude backends</span></li>
+        <li><span class="check">✓</span><span>Diskcache + warm cache</span></li>
+        <li><span class="check">✓</span><span>Priority email support</span></li>
+      </ul>
+      <div class="cta solid">Try Studio →</div>
+    </div>
+    <div class="tier">
+      <div class="name">Enterprise</div>
+      <div class="price">Custom</div>
+      <div class="desc">Self-hosted, custom backends, SOC 2, dedicated success engineer.</div>
+      <ul>
+        <li><span class="check">✓</span><span>Unlimited slides</span></li>
+        <li><span class="check">✓</span><span>Self-hosted runner</span></li>
+        <li><span class="check">✓</span><span>BYO LLM provider</span></li>
+        <li><span class="check">✓</span><span>SLA + dedicated support</span></li>
+      </ul>
+      <div class="cta outline">Talk to sales</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pixelpitch — CTA</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; font-family: Inter, "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing:antialiased; color:#f5f5f7; background:#0a0a0f; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; position:relative; overflow:hidden; background: radial-gradient(ellipse 1400px 900px at 50% 110%, #4338ca 0%, #1e1b4b 35%, #0a0a0f 70%); }
+  .grid { position:absolute; inset:0; background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 48px 48px; opacity:0.6; }
+  .glow { position:absolute; left:50%; top:78%; transform:translate(-50%,-50%); width:1100px; height:600px; border-radius:50%; background: radial-gradient(ellipse, rgba(167,139,250,0.4) 0%, rgba(236,72,153,0.15) 40%, transparent 70%); filter: blur(60px); }
+  .content { position:relative; padding:120px 96px; height:100%; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+  .eyebrow { font-size:13px; letter-spacing:0.5em; text-transform:uppercase; color:#a78bfa; font-weight:700; margin-bottom:32px; }
+  h1 { font-size:88px; font-weight:800; line-height:1.0; letter-spacing:-0.04em; margin:0 0 36px 0; max-width:1100px; }
+  h1 .accent { background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .sub { font-size:22px; color:#d4d4d8; max-width:760px; line-height:1.5; margin:0 0 56px 0; font-weight:500; }
+  .actions { display:flex; gap:16px; }
+  .btn { padding:18px 32px; border-radius:12px; font-size:16px; font-weight:700; letter-spacing:0.02em; }
+  .btn.primary { background:#fff; color:#0a0a0f; }
+  .btn.outline { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18); color:#f5f5f7; }
+  .footer { position:absolute; bottom:36px; left:0; right:0; text-align:center; font-size:13px; letter-spacing:0.2em; color:#52525b; font-weight:600; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="grid"></div>
+  <div class="glow"></div>
+  <div class="content">
+    <div class="eyebrow">Get started in 30 seconds</div>
+    <h1 data-pptx-role="title">Ship decks that <span class="accent">stay alive</span> after the meeting.</h1>
+    <p class="sub">Convert your first HTML deck for free. No signup, no credit card. Bring your own LLM provider or use the auto-detected fallback.</p>
+    <div class="actions">
+      <div class="btn primary">pip install slidify</div>
+      <div class="btn outline">Read the spec →</div>
+    </div>
+  </div>
+  <div class="footer">PIXELPITCH LABS · 2026</div>
+</div>
+</body>
+</html>
