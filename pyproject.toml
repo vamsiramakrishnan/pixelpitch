@@ -73,3 +73,7 @@ warn_redundant_casts = true
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests", "tests/patterns"]
+markers = [
+    "slow: tests that launch a full Chromium per-test (run with `-m slow` to include)",
+]
+addopts = "-m 'not slow'"

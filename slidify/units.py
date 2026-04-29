@@ -243,6 +243,17 @@ def cluster(elements: list[DomElement]) -> list[VisualUnit]:
                     continue
                 if ei.border_radius != ej.border_radius:
                     continue
+                # Don't merge across different bg-images — a body with a
+                # radial-gradient and an overlay grid-pattern div are visually
+                # *layered*, not the same unit.
+                if (ei.background_image or "none") != (ej.background_image or "none"):
+                    continue
+                # Don't merge if either element has a filter / transform / opacity
+                # — those signal a distinct visual layer.
+                if (ei.filter or "none") != "none" or (ej.filter or "none") != "none":
+                    continue
+                if ei.opacity < 0.99 or ej.opacity < 0.99:
+                    continue
                 # Merge aj → ai (keep larger as canonical)
                 small, big = (aj, ai) if ei.bbox.area >= ej.bbox.area else (ai, aj)
                 merged_into[small] = big

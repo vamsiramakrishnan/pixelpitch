@@ -102,8 +102,15 @@ def _native_decoration_only(unit: VisualUnit) -> bool:
 
 
 def _has_low_opacity(unit: VisualUnit) -> bool:
-    elems = unit.all_elements()
-    return any(e.opacity < 0.99 for e in elems)
+    """True only if the *anchor* itself has opacity < 1.
+
+    A non-anchor descendant's opacity (e.g., a faint overlay div) shouldn't
+    cascade-raster the entire unit — it's a separate layer that emits as its
+    own unit when classified.
+    """
+    if not unit.elements:
+        return False
+    return unit.elements[0].opacity < 0.99
 
 
 def promote(

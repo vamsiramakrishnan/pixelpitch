@@ -31,8 +31,11 @@ def _load_fixtures() -> list[dict]:
     return raw.get("fixtures", [])
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 async def renderer():
+    """Per-test renderer. Module-scoped async fixtures don't compose cleanly
+    with pytest-asyncio's auto mode in this version; per-test launches add
+    ~1s of Chromium startup overhead but make the suite robust."""
     r = Renderer()
     await r.start()
     try:
@@ -41,11 +44,12 @@ async def renderer():
         await r.close()
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def catalog():
     return get_default_catalog()
 
 
+@pytest.mark.slow
 @pytest.mark.parametrize("fixture", _load_fixtures(), ids=lambda f: f["id"])
 async def test_pattern_round_trip(fixture: dict, renderer, catalog):
     rendered = await renderer.render(fixture["html"])

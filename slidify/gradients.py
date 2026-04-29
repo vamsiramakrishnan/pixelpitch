@@ -38,7 +38,11 @@ class LinearGradient:
 @dataclass
 class RadialGradient:
     stops: list[GradientStop]
-    # Center is approximated; PPTX has limited radial control.
+    # Center as fractions in [0..1]. Default 50%/50% (CSS center).
+    cx: float = 0.5
+    cy: float = 0.5
+    # Shape: 'circle' or 'ellipse'.
+    shape: str = "ellipse"
 
 
 _LINEAR_RE = re.compile(r"linear-gradient\s*\(", re.IGNORECASE)
@@ -88,15 +92,90 @@ def parse_gradient(css_value: str) -> LinearGradient | RadialGradient | None:
             return None
         return LinearGradient(angle_deg=angle, stops=stops)
 
-    # Radial: skip any leading shape/extent/at-position clause.
+    # Radial: prefix may contain shape, extent, and `at <pos>`. Parse it.
+    cx, cy, shape = 0.5, 0.5, "ellipse"
     if not _looks_like_color_stop(args[0]):
+        head = args[0].strip()
+        cx, cy, shape = _parse_radial_prefix(head)
         stops_raw = args[1:]
     else:
         stops_raw = args
     stops = _parse_stops(stops_raw)
     if len(stops) < 2:
         return None
-    return RadialGradient(stops=stops)
+    return RadialGradient(stops=stops, cx=cx, cy=cy, shape=shape)
+
+
+_AT_CLAUSE_RE = re.compile(r"\bat\s+(.+)$", re.IGNORECASE)
+_KEYWORD_POS = {
+    "left": 0.0, "center": 0.5, "right": 1.0,
+    "top": 0.0, "bottom": 1.0,
+}
+
+
+def _parse_radial_prefix(head: str) -> tuple[float, float, str]:
+    """Parse 'circle at 78% 18%' or 'ellipse 1200px 800px at 78% 18%' or
+    'circle at top right' → (cx, cy, shape).
+
+    Returns the tuple (cx, cy, shape) where cx,cy ∈ [0,1] and shape is either
+    'circle' or 'ellipse'. Defaults to ellipse-at-center if unparsed.
+    """
+    s = head.strip().lower()
+    shape = "circle" if "circle" in s else "ellipse"
+
+    m = _AT_CLAUSE_RE.search(s)
+    if not m:
+        return 0.5, 0.5, shape
+    rest = m.group(1).strip()
+    tokens = rest.split()
+    if not tokens:
+        return 0.5, 0.5, shape
+
+    # Two cases: keyword pair ("top right") or two values ("78% 18%").
+    cx, cy = 0.5, 0.5
+    parsed: list[tuple[str, float]] = []
+    for tok in tokens:
+        if tok in _KEYWORD_POS:
+            parsed.append(("kw", _KEYWORD_POS[tok]))
+        elif tok.endswith("%"):
+            try:
+                parsed.append(("frac", float(tok[:-1]) / 100.0))
+            except ValueError:
+                continue
+        elif tok.endswith("px"):
+            # Bare px positions are uncommon; treat as fraction-of-1280 just
+            # so we don't lose the position entirely. Caller can override.
+            try:
+                parsed.append(("px", float(tok[:-2])))
+            except ValueError:
+                continue
+    # Distribute first two parsed values to cx, cy.
+    if len(parsed) >= 2:
+        a, b = parsed[0], parsed[1]
+        if a[0] == "kw" and b[0] == "kw":
+            # Keyword pair — assignment depends on which axis each keyword belongs to.
+            kw_x = {"left": 0.0, "center": 0.5, "right": 1.0}
+            kw_y = {"top": 0.0, "center": 0.5, "bottom": 1.0}
+            tok0, tok1 = tokens[0], tokens[1]
+            if tok0 in kw_x and tok1 in kw_y:
+                cx, cy = kw_x[tok0], kw_y[tok1]
+            elif tok0 in kw_y and tok1 in kw_x:
+                cx, cy = kw_x[tok1], kw_y[tok0]
+            else:
+                cx, cy = a[1], b[1]
+        elif a[0] == "frac" and b[0] == "frac":
+            cx, cy = a[1], b[1]
+        elif a[0] == "px" and b[0] == "px":
+            # Approximate against a 1280×720 viewport.
+            cx = max(0.0, min(1.0, a[1] / 1280.0))
+            cy = max(0.0, min(1.0, b[1] / 720.0))
+        else:
+            cx, cy = a[1], b[1]
+    elif len(parsed) == 1:
+        # Single keyword like "at center" — leave centered.
+        pass
+
+    return max(0.0, min(1.0, cx)), max(0.0, min(1.0, cy)), shape
 
 
 def _extract_first_call(s: str) -> str | None:
@@ -291,12 +370,29 @@ def to_grad_fill_xml(grad: LinearGradient | RadialGradient) -> etree._Element:
             attrib={"ang": str(int(round(pptx_deg * 60_000))), "scaled": "0"},
         )
     else:
-        path = etree.SubElement(fill, f"{{{NS_A}}}path", attrib={"path": "circle"})
+        # Radial: <a:path path="circle"><a:fillToRect l/t/r/b ... /></a:path>
+        # `fillToRect` defines the bounds of the focal (innermost) stop as a
+        # sub-rect of the shape in 1/100,000ths. l/r are the left/right
+        # insets; r and b are insets from the right/bottom (so r=80000 means
+        # 80% from the right, i.e. cx ≈ 20%). For a focal point at (cx,cy)
+        # we set l=cx*100k, t=cy*100k, r=(1-cx)*100k, b=(1-cy)*100k — an
+        # infinitesimal focal sub-rect.
+        path_kind = "circle"  # PPTX has no separate "ellipse" path; both use "circle"
+        path = etree.SubElement(fill, f"{{{NS_A}}}path", attrib={"path": path_kind})
+        cx_clamped = max(0.0, min(1.0, grad.cx))
+        cy_clamped = max(0.0, min(1.0, grad.cy))
         etree.SubElement(
             path,
             f"{{{NS_A}}}fillToRect",
-            attrib={"l": "50000", "t": "50000", "r": "50000", "b": "50000"},
+            attrib={
+                "l": str(int(round(cx_clamped * 100_000))),
+                "t": str(int(round(cy_clamped * 100_000))),
+                "r": str(int(round((1.0 - cx_clamped) * 100_000))),
+                "b": str(int(round((1.0 - cy_clamped) * 100_000))),
+            },
         )
+        # The default <a:tileRect/> outer ring (full-shape) is implicit;
+        # not adding it lets PowerPoint default to "fill the whole shape."
 
     return fill
 
