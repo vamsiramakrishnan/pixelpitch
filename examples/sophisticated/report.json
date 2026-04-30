@@ -5,15 +5,15 @@
   "native_area_ratio": 1.0,
   "llm_calls": 0,
   "total_cost_usd": 0.0,
-  "elapsed_seconds": 4.108256245000007,
+  "elapsed_seconds": 4.129926130000058,
   "cache_hit_rate": 0.676737160120846,
   "decisions_by_tier": {
-    "tier0": 87,
+    "tier0": 86,
     "tier2": 11,
+    "promotion": 3,
     "cache:tier0": 201,
     "tier1": 7,
-    "cache:tier1": 23,
-    "promotion": 2
+    "cache:tier1": 23
   },
   "pattern_hits": {
     "kicker-from-css": 9,
@@ -21,7 +21,7 @@
     "title-h1": 9,
     "pill-from-css": 9,
     "short-label": 10,
-    "gradient-card-no-text": 4,
+    "gradient-card-no-text": 6,
     "slide-solid-bg": 11,
     "text-card-composite": 7,
     "title-h2": 1,
@@ -34,7 +34,7 @@
     "stat-number-with-runs": 1,
     "decoration-card": 1
   },
-  "pattern_coverage": 0.8130841121495327,
+  "pattern_coverage": 0.8317757009345794,
   "unmatched_signatures": [
     {
       "sig": "div(bgi=grad)[]<5>[1280x704]{div(bg+brd+txt+txtc)[][128x32],div(bgi=grad)[][0x32],div(bgi=grad)[][768x768],div(bgi=grad)[][896x896],div(txt)[][1088x0],div(txt)[][128x0],div(txt)[][192x0],div(txt+txtc)[][64x0],h1(txt+txtc)[][1024x288],p(txt)[][768x96]}",
@@ -91,17 +91,8 @@
       "n_occurrences": 1
     },
     {
-      "sig": "div(bgi=other)[][1280x704]",
-      "sig_hash": "c5dba26a1e61b252",
-      "bbox_w": 1280,
-      "bbox_h": 720,
-      "sample_classes": "dots",
-      "sample_text": "",
-      "n_occurrences": 1
-    },
-    {
-      "sig": "div(bgi=grad)[]<4>[1280x704]{div(bgi=grad+txt)[][0x32],div(bgi=other)[][1280x704],div(txt)[][0x0],div(txt)[][128x0],div(txt)[][128x0],div(txt)[][128x0],div(txt)[][832x64],p(txt+txtc)[][832x256]}",
-      "sig_hash": "c635251dd8598af1",
+      "sig": "div(bgi=grad)[]<4>[1280x704]{div(bgi=grad)[][1280x704],div(bgi=grad+txt)[][0x32],div(txt)[][0x0],div(txt)[][128x0],div(txt)[][128x0],div(txt)[][128x0],div(txt)[][832x64],p(txt+txtc)[][832x256]}",
+      "sig_hash": "4c22ef68371670d5",
       "bbox_w": 1280,
       "bbox_h": 720,
       "sample_classes": "slide",
@@ -199,17 +190,8 @@
       "n_occurrences": 1
     },
     {
-      "sig": "div(bgi=other)[grid-bg][1280x704]",
-      "sig_hash": "f23b475801704e6f",
-      "bbox_w": 1280,
-      "bbox_h": 720,
-      "sample_classes": "grid-bg",
-      "sample_text": "",
-      "n_occurrences": 1
-    },
-    {
-      "sig": "div(bgi=grad)[]<3>[1280x704]{div(bg+brd+txt)[][192x32],div(bg+brd+txt+txtc)[][128x32],div(bg+shdw=t+txt)[][192x32],div(bgi=grad+xform)[][1152x544],div(bgi=other)[grid-bg][1280x704],div(txt)[][128x0],div(txt)[][128x32],div(txt)[][320x0],div(txt)[][64x0],h1(txt+txtc)[][1088x160],p(txt)[][704x64]}",
-      "sig_hash": "fa7d7f30d857294e",
+      "sig": "div(bgi=grad)[]<3>[1280x704]{div(bg+brd+txt)[][192x32],div(bg+brd+txt+txtc)[][128x32],div(bg+shdw=t+txt)[][192x32],div(bgi=grad)[grid-bg][1280x704],div(bgi=grad+xform)[][1152x544],div(txt)[][128x0],div(txt)[][128x32],div(txt)[][320x0],div(txt)[][64x0],h1(txt+txtc)[][1088x160],p(txt)[][704x64]}",
+      "sig_hash": "c8792a0140659ade",
       "bbox_w": 1280,
       "bbox_h": 720,
       "sample_classes": "slide",

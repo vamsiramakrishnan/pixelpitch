@@ -36,7 +36,7 @@ from slidify.models import (
     RenderedSlide,
     VisualUnit,
 )
-from slidify.shadows import apply_shadow, parse_box_shadow
+from slidify.shadows import apply_shadows, parse_box_shadows
 from slidify.svg_shapes import emit_svg_shapes
 
 log = structlog.get_logger(__name__)
@@ -156,7 +156,52 @@ class Emitter:
     def save(self, path: Path | str) -> None:
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
+        self._sanitize_for_repair_dialog()
         self.prs.save(str(path))
+
+    def _sanitize_for_repair_dialog(self) -> None:
+        """Walk every slide's XML and fix the two patterns that most often
+        trigger PowerPoint's "found a problem with some content" repair
+        dialog at open time:
+
+          1. Empty paragraph `<a:p/>` with no child runs and no
+             `<a:endParaRPr>` — PowerPoint logs an error then quietly
+             repairs by inserting one. We insert it ourselves so the
+             open is silent.
+          2. Run text `<a:t>foo bar</a:t>` containing leading/trailing
+             whitespace without `xml:space="preserve"` — XML's default
+             whitespace handling strips it, and PowerPoint repairs by
+             re-asserting `preserve`.
+
+        Both fixes are idempotent and additive — they only add elements
+        / attributes that are missing.
+        """
+        from lxml import etree as _et
+
+        ns_a = "http://schemas.openxmlformats.org/drawingml/2006/main"
+        XML_SPACE = "{http://www.w3.org/XML/1998/namespace}space"
+        for slide in self.prs.slides:
+            tree = slide._element  # noqa: SLF001
+            for p in tree.iter(f"{{{ns_a}}}p"):
+                # 1. Insert <a:endParaRPr> on empty paragraphs.
+                has_run = any(
+                    child.tag in (f"{{{ns_a}}}r", f"{{{ns_a}}}fld", f"{{{ns_a}}}br")
+                    for child in p
+                )
+                has_end_pr = p.find(f"{{{ns_a}}}endParaRPr") is not None
+                if not has_run and not has_end_pr:
+                    _et.SubElement(
+                        p,
+                        f"{{{ns_a}}}endParaRPr",
+                        attrib={"lang": "en-US"},
+                    )
+                # 2. xml:space="preserve" on whitespace-bearing <a:t>.
+                for t in p.iter(f"{{{ns_a}}}t"):
+                    if t.text and (
+                        t.text != t.text.strip() or "  " in t.text
+                    ):
+                        if t.get(XML_SPACE) != "preserve":
+                            t.set(XML_SPACE, "preserve")
 
     # ----- per-op dispatch ----------------------------------------------
 
@@ -374,6 +419,12 @@ class Emitter:
         font.bold = is_bold(spec.get("font_weight") or fallback_el.font_weight)
         font.italic = bool(spec.get("italic"))
         font.underline = bool(spec.get("underline"))
+        # If this is a `background-clip: text` run with a translatable
+        # gradient on the source span, emit a true OOXML gradient text fill
+        # via python-pptx's Font.fill API. PPTX renders the gradient through
+        # the glyph silhouettes — the visual the source CSS actually wants.
+        if _try_apply_gradient_text_fill(font, spec):
+            return
         color = _resolve_run_color(spec, fallback_el)
         if color is not None:
             try:
@@ -529,9 +580,9 @@ class Emitter:
     def _apply_shadow(self, shape, el: DomElement) -> None:
         if not el.box_shadow or el.box_shadow == "none":
             return
-        sh = parse_box_shadow(el.box_shadow)
-        if sh is not None:
-            apply_shadow(shape, sh)
+        layers = parse_box_shadows(el.box_shadow)
+        if layers:
+            apply_shadows(shape, layers)
 
     def _apply_border(self, shape, el: DomElement) -> None:
         if not el.border or el.border == "none":
@@ -736,6 +787,99 @@ def _is_bg_clip_text(anchor: DomElement) -> bool:
     import re as _re
 
     return _re.match(r"rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*0(?:\.0+)?\s*\)", col_str) is not None
+
+
+def _try_apply_gradient_text_fill(font, spec: dict) -> bool:
+    """Native gradient fill on a text run via OOXML's `<a:gradFill>` inside
+    `<a:rPr>`. Returns True iff a gradient was applied.
+
+    Triggers only when the spec has a transparent text color AND a
+    parseable gradient bg-image — i.e. the CSS `background-clip: text`
+    pattern. python-pptx exposes `font.fill.gradient()` for this; we then
+    populate the stops directly. The result is what the CSS author actually
+    wanted: glyph-shaped gradient, not a gradient rectangle.
+    """
+    raw_color = spec.get("color") or ""
+    if parse_color(raw_color) is not None:
+        return False  # color is a real RGB, not transparent
+    bg_image = spec.get("background_image") or "none"
+    if not bg_image or bg_image == "none":
+        return False
+    grad = parse_gradient(bg_image)
+    if grad is None or len(grad.stops) < 2:
+        return False
+    try:
+        font.fill.gradient()
+        gradient_stops = font.fill.gradient_stops
+    except Exception:
+        return False
+    # python-pptx pre-creates 2 stops; we may have more or fewer.
+    # Easiest robust path: drop down to OOXML and rewrite the gsLst.
+    try:
+        from lxml import etree as _et
+
+        ns_a = "http://schemas.openxmlformats.org/drawingml/2006/main"
+        # font.fill._xPr is the rPr element where the fill lives.
+        rpr = font._rPr  # noqa: SLF001
+        if rpr is None:
+            return False
+        grad_fill = rpr.find(f"{{{ns_a}}}gradFill")
+        if grad_fill is None:
+            return False
+        gs_lst = grad_fill.find(f"{{{ns_a}}}gsLst")
+        if gs_lst is None:
+            return False
+        # Wipe existing stops and rebuild.
+        for child in list(gs_lst):
+            gs_lst.remove(child)
+        for stop in grad.stops:
+            gs = _et.SubElement(
+                gs_lst,
+                f"{{{ns_a}}}gs",
+                attrib={"pos": str(int(round(max(0.0, min(1.0, stop.position)) * 100_000)))},
+            )
+            srgb = _et.SubElement(
+                gs, f"{{{ns_a}}}srgbClr", attrib={"val": stop.color_hex}
+            )
+            if stop.alpha < 0.999:
+                _et.SubElement(
+                    srgb,
+                    f"{{{ns_a}}}alpha",
+                    attrib={"val": str(int(round(stop.alpha * 100_000)))},
+                )
+        # Set direction: linear → <a:lin ang="..."/>, radial → <a:path path="circle">.
+        # python-pptx may have already inserted a <a:lin> default; replace it.
+        for tag in ("lin", "path"):
+            for el in grad_fill.findall(f"{{{ns_a}}}{tag}"):
+                grad_fill.remove(el)
+        from slidify.gradients import LinearGradient, RadialGradient
+
+        if isinstance(grad, LinearGradient):
+            pptx_deg = (grad.angle_deg - 90.0) % 360.0
+            _et.SubElement(
+                grad_fill,
+                f"{{{ns_a}}}lin",
+                attrib={"ang": str(int(round(pptx_deg * 60_000))), "scaled": "0"},
+            )
+        elif isinstance(grad, RadialGradient):
+            path = _et.SubElement(
+                grad_fill, f"{{{ns_a}}}path", attrib={"path": "circle"}
+            )
+            cx = max(0.0, min(1.0, grad.cx))
+            cy = max(0.0, min(1.0, grad.cy))
+            _et.SubElement(
+                path,
+                f"{{{ns_a}}}fillToRect",
+                attrib={
+                    "l": str(int(round(cx * 100_000))),
+                    "t": str(int(round(cy * 100_000))),
+                    "r": str(int(round((1.0 - cx) * 100_000))),
+                    "b": str(int(round((1.0 - cy) * 100_000))),
+                },
+            )
+        return True
+    except Exception:
+        return False
 
 
 def _resolve_run_color(spec: dict, fallback_el: DomElement):

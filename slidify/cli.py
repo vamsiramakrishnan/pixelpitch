@@ -37,6 +37,13 @@ def _convert_options(fn):
         "for pixel-exact backgrounds. ~150ms / slide overhead.",
     )(fn)
     fn = click.option(
+        "--no-embed-fonts",
+        is_flag=True,
+        help="Skip embedding source fonts (Inter, etc.) in the .pptx. "
+        "On by default; only disable if you trust the destination machine "
+        "to have the right fonts installed (it usually doesn't).",
+    )(fn)
+    fn = click.option(
         "--low-memory",
         is_flag=True,
         help="Drop per-slide state right after emit. Disables oracle auto-correction"
@@ -72,6 +79,7 @@ def _run_convert(
     render_concurrency: int,
     low_memory: bool,
     differential_render: bool,
+    no_embed_fonts: bool,
     report_json: Path | None,
 ) -> None:
     cfg = ConversionConfig(
@@ -84,6 +92,7 @@ def _run_convert(
         render_concurrency=render_concurrency,
         keep_plans_for_oracle=not low_memory,
         differential_render=differential_render,
+        embed_fonts=not no_embed_fonts,
     )
     result = asyncio.run(convert(input_path, output_pptx, cfg))
 
@@ -245,13 +254,14 @@ def convert_cmd(
     render_concurrency: int,
     low_memory: bool,
     differential_render: bool,
+    no_embed_fonts: bool,
     report_json: Path | None,
 ) -> None:
     """Convert INPUT_PATH (file or directory) to OUTPUT_PPTX."""
     _run_convert(
         input_path, output_pptx, no_tier3, no_oracle, llm_backend, llm_model,
         google_project, google_location, render_concurrency, low_memory,
-        differential_render, report_json,
+        differential_render, no_embed_fonts, report_json,
     )
 
 

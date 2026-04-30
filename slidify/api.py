@@ -102,6 +102,13 @@ class ConversionConfig:
     # raster a Hybrid background, eliminating text bleed-through. Costs a
     # second screenshot per slide (~150 ms on default viewport).
     differential_render: bool = False
+    # Embed the source fonts (Inter etc.) into the .pptx so PowerPoint
+    # renders with the same typeface that sized the original CSS bboxes.
+    # Without this, Calibri substitution shifts every text-frame width,
+    # causing titles to wrap, badges to overflow, alignment to drift.
+    # On by default; disable for faster emit on decks where the
+    # default-Office font is acceptable.
+    embed_fonts: bool = True
 
 
 @dataclass
@@ -348,6 +355,10 @@ async def convert(
     total_stats = Tier3Stats()
     pattern_stats = PatternStats()
     unmatched: dict[str, UnmatchedSignature] = {}
+    # Streamed accumulator of deck-wide DOM colors, scanned at save-time
+    # to derive theme accent1..accent6. Element refs are cheap (~few KB
+    # per slide) and we drop them after the theme is patched.
+    color_elements: list = []
 
     async with Renderer(
         viewport=cfg.viewport, differential=cfg.differential_render
@@ -380,6 +391,7 @@ async def convert(
                             decisions_by_tier=_per_slide_decisions_count(plan),
                         )
                     )
+                    color_elements.extend(plan.rendered.elements)
                     if cfg.run_oracle and cfg.keep_plans_for_oracle:
                         plans_for_oracle.append(plan)
                     else:
@@ -404,9 +416,44 @@ async def convert(
             if slide_idx == 0:
                 raise ValueError("no slides produced from source")
 
+            # Patch the deck's theme color scheme with the most-used brand
+            # colors. Downstream tools (corporate template imports, "change
+            # theme" in PowerPoint) then recolor schemeClr-bound shapes to
+            # match. This is purely additive — explicit srgbClr fills we
+            # already emitted continue to render unchanged.
+            try:
+                from slidify.theme import (
+                    derive_accents_from_elements,
+                    set_theme_accents,
+                )
+
+                accents = derive_accents_from_elements(color_elements)
+                if accents:
+                    set_theme_accents(
+                        emitter.prs,
+                        primary=accents[0] if len(accents) >= 1 else None,
+                        secondary=accents[1] if len(accents) >= 2 else None,
+                        accents=accents[2:6] if len(accents) > 2 else None,
+                    )
+            except Exception as e:
+                log.warning("api.theme_patch_failed", error=str(e))
+            color_elements.clear()
+
             emitter.save(pptx_path)
         finally:
             emitter.close()
+
+        # Post-process: embed source fonts so PowerPoint renders with Inter
+        # (or whatever the deck specified) instead of substituting Calibri.
+        # This eliminates the dominant class of layout drift — text frames
+        # sized for the source font no longer overflow under substitution.
+        if cfg.embed_fonts:
+            try:
+                from slidify.font_embed import embed_default_fonts
+
+                embed_default_fonts(pptx_path)
+            except Exception as e:
+                log.warning("api.font_embed_failed", error=str(e))
 
         reports: list[FidelityReport] = []
         if cfg.run_oracle:

@@ -3,8 +3,10 @@
 CSS box-shadow has the shape:
     [inset]? <offset-x> <offset-y> <blur-radius>? <spread-radius>? <color>
 
-Multiple shadows are comma-separated (we take the first parseable one — PPTX
-shapes can only carry one shadow effect via DrawingML's effect list).
+Multiple shadows are comma-separated. We parse all layers and emit each as
+its own `<a:outerShdw>` / `<a:innerShdw>` inside a single `<a:effectLst>`.
+PowerPoint stacks them in order (first layer = topmost), matching CSS
+which paints them outermost-first.
 """
 
 from __future__ import annotations
@@ -56,21 +58,7 @@ def _split_top_level(s: str, sep: str) -> list[str]:
     return out
 
 
-def parse_box_shadow(css_value: str | None) -> BoxShadow | None:
-    """Parse the first comma-separated layer of a CSS box-shadow.
-
-    Returns None for `none` / empty / unparseable input.
-    """
-    if not css_value:
-        return None
-    s = css_value.strip()
-    if s.lower() == "none":
-        return None
-
-    # Take only the first layer (PPTX shapes only support one shadow effect).
-    layer = _split_top_level(s, ",")[0]
-
-    # Extract a color token (rgb()/rgba()/hex). The remaining tokens are numeric.
+def _parse_one_layer(layer: str) -> BoxShadow | None:
     color_match = re.search(
         r"(rgba?\([^)]+\)|#[0-9a-fA-F]{3,8}|hsla?\([^)]+\))", layer
     )
@@ -78,7 +66,7 @@ def parse_box_shadow(css_value: str | None) -> BoxShadow | None:
         color_str = color_match.group(1)
         rest = (layer[: color_match.start()] + layer[color_match.end():]).strip()
     else:
-        color_str = "rgba(0, 0, 0, 0.25)"  # CSS default-ish
+        color_str = "rgba(0, 0, 0, 0.25)"
         rest = layer.strip()
 
     inset = False
@@ -111,6 +99,36 @@ def parse_box_shadow(css_value: str | None) -> BoxShadow | None:
     )
 
 
+def parse_box_shadow(css_value: str | None) -> BoxShadow | None:
+    """Parse the FIRST layer of a CSS box-shadow.
+
+    Kept for callers that want a single shadow. For multi-layer shadows
+    (Tailwind's `shadow-2xl` decomposes into 2 layers) prefer
+    `parse_box_shadows`.
+    """
+    layers = parse_box_shadows(css_value)
+    return layers[0] if layers else None
+
+
+def parse_box_shadows(css_value: str | None) -> list[BoxShadow]:
+    """Parse all comma-separated layers of a CSS box-shadow.
+
+    Returns layers in source order (CSS paints first-listed on top).
+    Skips unparseable layers rather than failing the whole list.
+    """
+    if not css_value:
+        return []
+    s = css_value.strip()
+    if s.lower() == "none":
+        return []
+    out: list[BoxShadow] = []
+    for layer in _split_top_level(s, ","):
+        sh = _parse_one_layer(layer)
+        if sh is not None:
+            out.append(sh)
+    return out
+
+
 # ---------------------------------------------------------------------------
 # OOXML emission
 # ---------------------------------------------------------------------------
@@ -132,24 +150,12 @@ def _emu(px: float) -> int:
     return int(round(px * 9525))
 
 
-def apply_shadow(shape, shadow: BoxShadow) -> bool:
-    """Attach a native shadow effect to `shape`. Returns True on success."""
-    try:
-        sp_pr = shape._element.spPr  # python-pptx Shape / Picture
-    except AttributeError:
-        try:
-            sp_pr = shape._element.find(f"{{{NS_A}}}spPr")
-        except Exception:
-            return False
-    if sp_pr is None:
-        return False
-    effect_lst = _ensure_effect_lst(sp_pr)
-
-    # Convert offset into PPTX's distance + direction polar form.
+def _append_shadow_to_effect_lst(
+    effect_lst: etree._Element, shadow: BoxShadow
+) -> None:
+    """Append one outerShdw/innerShdw to an existing effectLst, in order."""
     dx, dy = shadow.offset_x_px, shadow.offset_y_px
     distance = math.hypot(dx, dy)
-    # PPTX angle: 0 = pointing right (positive X), measured clockwise. CSS y is
-    # positive going DOWN, which matches PPTX's convention.
     if distance < 0.001:
         direction_deg = 0.0
     else:
@@ -172,6 +178,36 @@ def apply_shadow(shape, shadow: BoxShadow) -> bool:
             f"{{{NS_A}}}alpha",
             attrib={"val": str(int(round(shadow.alpha * 100_000)))},
         )
+
+
+def apply_shadow(shape, shadow: BoxShadow) -> bool:
+    """Attach a single native shadow effect to `shape`."""
+    return apply_shadows(shape, [shadow])
+
+
+def apply_shadows(shape, shadows: list[BoxShadow]) -> bool:
+    """Attach one or more shadow effects to `shape`. Returns True if any
+    shadow was attached.
+
+    Each layer becomes its own `<a:outerShdw>` / `<a:innerShdw>` inside a
+    single shared `<a:effectLst>`. Layers stack in CSS paint order
+    (first-listed = topmost), which matches the order children appear
+    inside `<a:effectLst>` for PowerPoint's renderer.
+    """
+    if not shadows:
+        return False
+    try:
+        sp_pr = shape._element.spPr  # python-pptx Shape / Picture
+    except AttributeError:
+        try:
+            sp_pr = shape._element.find(f"{{{NS_A}}}spPr")
+        except Exception:
+            return False
+    if sp_pr is None:
+        return False
+    effect_lst = _ensure_effect_lst(sp_pr)
+    for sh in shadows:
+        _append_shadow_to_effect_lst(effect_lst, sh)
     return True
 
 
@@ -182,6 +218,8 @@ def is_translatable_shadow(css_value: str | None) -> bool:
 __all__ = [
     "BoxShadow",
     "apply_shadow",
+    "apply_shadows",
     "is_translatable_shadow",
     "parse_box_shadow",
+    "parse_box_shadows",
 ]
