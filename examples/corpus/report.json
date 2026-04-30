@@ -19,7 +19,7 @@
         "promotion": 1
       },
       "unmatched_signatures": 6,
-      "elapsed_s": 10.645631108999964,
+      "elapsed_s": 31.58959064100003,
       "pptx": "examples/corpus/out/slide-01-hero.pptx",
       "preview_png": "examples/corpus/preview/slide-01-hero.png",
       "ssim": 0.7124449476117524,
@@ -42,7 +42,7 @@
         "promotion": 1
       },
       "unmatched_signatures": 7,
-      "elapsed_s": 6.633099093999931,
+      "elapsed_s": 6.961549170000012,
       "pptx": "examples/corpus/out/slide-02-bento.pptx",
       "preview_png": "examples/corpus/preview/slide-02-bento.png",
       "ssim": 0.7058442959049032,
@@ -65,7 +65,7 @@
         "cache:tier1": 1
       },
       "unmatched_signatures": 5,
-      "elapsed_s": 6.5231378490000225,
+      "elapsed_s": 6.551677756000004,
       "pptx": "examples/corpus/out/slide-03-comparison.pptx",
       "preview_png": "examples/corpus/preview/slide-03-comparison.png",
       "ssim": 0.7062518320094565,
@@ -88,7 +88,7 @@
         "promotion": 1
       },
       "unmatched_signatures": 6,
-      "elapsed_s": 6.6366072560000475,
+      "elapsed_s": 6.560440291999953,
       "pptx": "examples/corpus/out/slide-04-architecture.pptx",
       "preview_png": "examples/corpus/preview/slide-04-architecture.png",
       "ssim": 0.6674663753161726,
@@ -112,7 +112,7 @@
         "promotion": 2
       },
       "unmatched_signatures": 4,
-      "elapsed_s": 9.153313713999978,
+      "elapsed_s": 8.882425071,
       "pptx": "examples/corpus/out/slide-05-roadmap.pptx",
       "preview_png": "examples/corpus/preview/slide-05-roadmap.png",
       "ssim": 0.6138120233133036,
@@ -136,7 +136,7 @@
         "promotion": 1
       },
       "unmatched_signatures": 17,
-      "elapsed_s": 7.046051901000055,
+      "elapsed_s": 6.89431393000001,
       "pptx": "examples/corpus/out/slide-06-dashboard.pptx",
       "preview_png": "examples/corpus/preview/slide-06-dashboard.png",
       "ssim": 0.6989652322730869,
@@ -159,7 +159,7 @@
         "promotion": 1
       },
       "unmatched_signatures": 7,
-      "elapsed_s": 6.020119079999972,
+      "elapsed_s": 5.871646450000014,
       "pptx": "examples/corpus/out/slide-07-stats-hero.pptx",
       "preview_png": "examples/corpus/preview/slide-07-stats-hero.png",
       "ssim": 0.5893948554651364,
@@ -181,7 +181,7 @@
         "promotion": 2
       },
       "unmatched_signatures": 8,
-      "elapsed_s": 5.912667156999987,
+      "elapsed_s": 5.804831462000038,
       "pptx": "examples/corpus/out/slide-08-process.pptx",
       "preview_png": "examples/corpus/preview/slide-08-process.png",
       "ssim": 0.7295869327968415,
@@ -203,7 +203,7 @@
         "cache:tier1": 2
       },
       "unmatched_signatures": 3,
-      "elapsed_s": 6.459372027999962,
+      "elapsed_s": 6.2488660800000275,
       "pptx": "examples/corpus/out/slide-09-pricing-matrix.pptx",
       "preview_png": "examples/corpus/preview/slide-09-pricing-matrix.png",
       "ssim": 0.682285568056654,
@@ -227,7 +227,7 @@
         "promotion": 1
       },
       "unmatched_signatures": 7,
-      "elapsed_s": 6.678202547000069,
+      "elapsed_s": 6.5395895319999795,
       "pptx": "examples/corpus/out/slide-10-quote-wall.pptx",
       "preview_png": "examples/corpus/preview/slide-10-quote-wall.png",
       "ssim": 0.7371309816350586,
@@ -250,7 +250,7 @@
         "promotion": 1
       },
       "unmatched_signatures": 7,
-      "elapsed_s": 6.5540133079999805,
+      "elapsed_s": 6.170194938000009,
       "pptx": "examples/corpus/out/slide-11-section-divider.pptx",
       "preview_png": "examples/corpus/preview/slide-11-section-divider.png",
       "ssim": 0.6891881812611208,
@@ -273,7 +273,7 @@
         "promotion": 1
       },
       "unmatched_signatures": 8,
-      "elapsed_s": 7.292542935000029,
+      "elapsed_s": 7.047314477999976,
       "pptx": "examples/corpus/out/slide-12-org-chart.pptx",
       "preview_png": "examples/corpus/preview/slide-12-org-chart.png",
       "ssim": 0.7969275549650497,
@@ -295,7 +295,7 @@
         "promotion": 2
       },
       "unmatched_signatures": 9,
-      "elapsed_s": 6.901703640999926,
+      "elapsed_s": 6.698556454000027,
       "pptx": "examples/corpus/out/slide-13-feature-checklist.pptx",
       "preview_png": "examples/corpus/preview/slide-13-feature-checklist.png",
       "ssim": 0.6851277881050936,
@@ -318,7 +318,7 @@
         "tier2": 2
       },
       "unmatched_signatures": 11,
-      "elapsed_s": 6.915219976000003,
+      "elapsed_s": 6.998303313000008,
       "pptx": "examples/corpus/out/slide-14-code-sample.pptx",
       "preview_png": "examples/corpus/preview/slide-14-code-sample.png",
       "ssim": 0.7947650763099322,
@@ -341,7 +341,7 @@
         "promotion": 1
       },
       "unmatched_signatures": 6,
-      "elapsed_s": 6.73858881700005,
+      "elapsed_s": 6.635789806000048,
       "pptx": "examples/corpus/out/slide-15-closing-cta.pptx",
       "preview_png": "examples/corpus/preview/slide-15-closing-cta.png",
       "ssim": 0.7727851734023733,
