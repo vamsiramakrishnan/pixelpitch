@@ -1,0 +1,289 @@
+{
+  "n_slides": 15,
+  "n_ok": 15,
+  "n_failed": 0,
+  "mean_native_area_ratio": 1.0,
+  "total_unmatched": 80,
+  "rows": [
+    {
+      "slide": "slide-01-hero.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9,
+      "decisions_by_tier": {
+        "tier0": 17,
+        "cache:tier0": 12,
+        "tier2": 2,
+        "promotion": 1
+      },
+      "unmatched_signatures": 2,
+      "elapsed_s": 1.7506338630000755,
+      "pptx": "examples/corpus/out/slide-01-hero.pptx",
+      "preview_png": "examples/corpus/preview/slide-01-hero.png"
+    },
+    {
+      "slide": "slide-02-bento.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.7916666666666666,
+      "decisions_by_tier": {
+        "tier0": 18,
+        "tier1": 2,
+        "cache:tier1": 8,
+        "tier2": 1,
+        "cache:tier0": 6,
+        "promotion": 3
+      },
+      "unmatched_signatures": 5,
+      "elapsed_s": 1.8014353060000303,
+      "pptx": "examples/corpus/out/slide-02-bento.pptx",
+      "preview_png": "examples/corpus/preview/slide-02-bento.png"
+    },
+    {
+      "slide": "slide-03-comparison.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.7777777777777778,
+      "decisions_by_tier": {
+        "tier0": 13,
+        "cache:tier0": 39,
+        "promotion": 10,
+        "tier2": 2,
+        "tier1": 1,
+        "cache:tier1": 1
+      },
+      "unmatched_signatures": 4,
+      "elapsed_s": 1.6678511190000336,
+      "pptx": "examples/corpus/out/slide-03-comparison.pptx",
+      "preview_png": "examples/corpus/preview/slide-03-comparison.png"
+    },
+    {
+      "slide": "slide-04-architecture.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.7142857142857143,
+      "decisions_by_tier": {
+        "tier0": 9,
+        "tier1": 3,
+        "cache:tier0": 27,
+        "cache:tier1": 8,
+        "promotion": 2
+      },
+      "unmatched_signatures": 4,
+      "elapsed_s": 1.683763712999962,
+      "pptx": "examples/corpus/out/slide-04-architecture.pptx",
+      "preview_png": "examples/corpus/preview/slide-04-architecture.png"
+    },
+    {
+      "slide": "slide-05-roadmap.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8,
+      "decisions_by_tier": {
+        "tier0": 15,
+        "cache:tier0": 58,
+        "tier1": 1,
+        "cache:tier1": 16,
+        "tier2": 2,
+        "cache:tier2": 6,
+        "promotion": 2
+      },
+      "unmatched_signatures": 4,
+      "elapsed_s": 1.8127561149999565,
+      "pptx": "examples/corpus/out/slide-05-roadmap.pptx",
+      "preview_png": "examples/corpus/preview/slide-05-roadmap.png"
+    },
+    {
+      "slide": "slide-06-dashboard.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.5428571428571428,
+      "decisions_by_tier": {
+        "tier0": 18,
+        "cache:tier0": 22,
+        "tier1": 9,
+        "cache:tier1": 18,
+        "tier2": 4,
+        "promotion": 4,
+        "cache:tier2": 1
+      },
+      "unmatched_signatures": 16,
+      "elapsed_s": 1.7980970650000927,
+      "pptx": "examples/corpus/out/slide-06-dashboard.pptx",
+      "preview_png": "examples/corpus/preview/slide-06-dashboard.png"
+    },
+    {
+      "slide": "slide-07-stats-hero.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9130434782608695,
+      "decisions_by_tier": {
+        "tier0": 20,
+        "tier1": 1,
+        "cache:tier1": 7,
+        "cache:tier0": 8,
+        "tier2": 1,
+        "promotion": 1
+      },
+      "unmatched_signatures": 2,
+      "elapsed_s": 1.7181135010000617,
+      "pptx": "examples/corpus/out/slide-07-stats-hero.pptx",
+      "preview_png": "examples/corpus/preview/slide-07-stats-hero.png"
+    },
+    {
+      "slide": "slide-08-process.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.88,
+      "decisions_by_tier": {
+        "tier0": 21,
+        "tier1": 2,
+        "cache:tier1": 5,
+        "cache:tier0": 15,
+        "promotion": 2
+      },
+      "unmatched_signatures": 3,
+      "elapsed_s": 1.6589374130001033,
+      "pptx": "examples/corpus/out/slide-08-process.pptx",
+      "preview_png": "examples/corpus/preview/slide-08-process.png"
+    },
+    {
+      "slide": "slide-09-pricing-matrix.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9230769230769231,
+      "decisions_by_tier": {
+        "tier0": 22,
+        "cache:tier0": 57,
+        "tier1": 1,
+        "promotion": 3,
+        "cache:tier1": 1
+      },
+      "unmatched_signatures": 2,
+      "elapsed_s": 1.827051185000073,
+      "pptx": "examples/corpus/out/slide-09-pricing-matrix.pptx",
+      "preview_png": "examples/corpus/preview/slide-09-pricing-matrix.png"
+    },
+    {
+      "slide": "slide-10-quote-wall.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8,
+      "decisions_by_tier": {
+        "tier0": 15,
+        "tier1": 2,
+        "cache:tier1": 7,
+        "cache:tier0": 26,
+        "tier2": 2,
+        "cache:tier2": 2,
+        "promotion": 1
+      },
+      "unmatched_signatures": 4,
+      "elapsed_s": 1.838959745000011,
+      "pptx": "examples/corpus/out/slide-10-quote-wall.pptx",
+      "preview_png": "examples/corpus/preview/slide-10-quote-wall.png"
+    },
+    {
+      "slide": "slide-11-section-divider.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.782608695652174,
+      "decisions_by_tier": {
+        "tier0": 17,
+        "cache:tier0": 4,
+        "tier1": 4,
+        "cache:tier1": 1,
+        "promotion": 2
+      },
+      "unmatched_signatures": 5,
+      "elapsed_s": 1.7439755790001072,
+      "pptx": "examples/corpus/out/slide-11-section-divider.pptx",
+      "preview_png": "examples/corpus/preview/slide-11-section-divider.png"
+    },
+    {
+      "slide": "slide-12-org-chart.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.6666666666666666,
+      "decisions_by_tier": {
+        "tier0": 13,
+        "tier1": 6,
+        "cache:tier1": 22,
+        "cache:tier0": 23,
+        "promotion": 2
+      },
+      "unmatched_signatures": 7,
+      "elapsed_s": 1.7619224430000031,
+      "pptx": "examples/corpus/out/slide-12-org-chart.pptx",
+      "preview_png": "examples/corpus/preview/slide-12-org-chart.png"
+    },
+    {
+      "slide": "slide-13-feature-checklist.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.7666666666666667,
+      "decisions_by_tier": {
+        "tier0": 22,
+        "tier1": 6,
+        "cache:tier0": 35,
+        "cache:tier1": 23,
+        "promotion": 2
+      },
+      "unmatched_signatures": 7,
+      "elapsed_s": 1.6785317500000474,
+      "pptx": "examples/corpus/out/slide-13-feature-checklist.pptx",
+      "preview_png": "examples/corpus/preview/slide-13-feature-checklist.png"
+    },
+    {
+      "slide": "slide-14-code-sample.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.6428571428571429,
+      "decisions_by_tier": {
+        "tier0": 17,
+        "tier1": 5,
+        "cache:tier1": 6,
+        "cache:tier0": 116,
+        "promotion": 4,
+        "tier2": 2
+      },
+      "unmatched_signatures": 10,
+      "elapsed_s": 1.5750023179998607,
+      "pptx": "examples/corpus/out/slide-14-code-sample.pptx",
+      "preview_png": "examples/corpus/preview/slide-14-code-sample.png"
+    },
+    {
+      "slide": "slide-15-closing-cta.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.7619047619047619,
+      "decisions_by_tier": {
+        "tier0": 15,
+        "tier1": 4,
+        "cache:tier1": 3,
+        "cache:tier0": 11,
+        "tier2": 1,
+        "promotion": 1
+      },
+      "unmatched_signatures": 5,
+      "elapsed_s": 1.9032781290000003,
+      "pptx": "examples/corpus/out/slide-15-closing-cta.pptx",
+      "preview_png": "examples/corpus/preview/slide-15-closing-cta.png"
+    }
+  ]
+}

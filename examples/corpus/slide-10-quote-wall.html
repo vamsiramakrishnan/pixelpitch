@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Quote Wall</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; width: 1280px; height: 720px;
+    font-family: Inter, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: #050510;
+    color: #f5f5f7;
+  }
+  .slide {
+    width: 1280px; height: 720px; box-sizing: border-box;
+    position: relative; overflow: hidden;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.20) 0%, rgba(10,10,20,0) 55%),
+      linear-gradient(180deg, #0a0a16 0%, #050510 100%);
+  }
+
+  /* Aurora bands (decorative, native gradients only) */
+  .band {
+    position: absolute; left: -10%; right: -10%; height: 220px;
+    pointer-events: none;
+  }
+  .band.b1 {
+    top: 60px;
+    background: linear-gradient(95deg, rgba(99,102,241,0.0) 0%, rgba(99,102,241,0.18) 30%, rgba(168,85,247,0.18) 60%, rgba(236,72,153,0.0) 100%);
+    opacity: 0.55;
+  }
+  .band.b2 {
+    top: 280px;
+    background: linear-gradient(90deg, rgba(168,85,247,0.0) 0%, rgba(236,72,153,0.16) 40%, rgba(251,191,36,0.10) 70%, rgba(99,102,241,0.0) 100%);
+    opacity: 0.40;
+  }
+  .band.b3 {
+    top: 500px;
+    background: linear-gradient(90deg, rgba(99,102,241,0.0) 0%, rgba(167,139,250,0.14) 50%, rgba(99,102,241,0.0) 100%);
+    opacity: 0.45;
+  }
+
+  /* Header */
+  .header {
+    position: absolute; left: 48px; right: 48px; top: 38px;
+    display: flex; justify-content: space-between; align-items: flex-end;
+  }
+  .kicker {
+    font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: #c7d2fe; font-weight: 700;
+  }
+  .title {
+    margin: 6px 0 0 0;
+    font-size: 36px; line-height: 1.12; font-weight: 700;
+    letter-spacing: -0.015em;
+    max-width: 800px;
+  }
+  .title .accent {
+    color: transparent;
+    background: linear-gradient(90deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
+    -webkit-background-clip: text; background-clip: text;
+  }
+  .stats-strip {
+    display: flex; gap: 18px; align-items: center;
+  }
+  .stats-strip .item {
+    text-align: right;
+  }
+  .stats-strip .num {
+    font-size: 22px; font-weight: 800; letter-spacing: -0.01em;
+    background: linear-gradient(135deg, #f5f5f7, #a78bfa);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .stats-strip .lbl {
+    font-size: 10px; color: #a1a1aa; letter-spacing: 0.16em; text-transform: uppercase;
+  }
+  .divider {
+    width: 1px; height: 32px; background: rgba(255,255,255,0.10);
+  }
+
+  /* Quote grid */
+  .grid {
+    position: absolute; left: 48px; right: 48px; top: 196px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;
+  }
+  .quote {
+    position: relative;
+    height: 408px;
+    padding: 24px 22px 22px 22px;
+    background: linear-gradient(160deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.015) 100%);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 18px;
+    box-shadow: 0 14px 30px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.06);
+    display: flex; flex-direction: column;
+  }
+  .quote .qmark {
+    position: absolute; top: 14px; right: 18px;
+    font-size: 84px; line-height: 0.6; font-weight: 800;
+    color: transparent;
+    background: linear-gradient(135deg, rgba(167,139,250,0.45), rgba(236,72,153,0.45));
+    -webkit-background-clip: text; background-clip: text;
+    font-family: Inter, serif;
+  }
+  .quote .body {
+    margin-top: 18px;
+    font-size: 17px; line-height: 1.45; font-weight: 500;
+    color: #e4e4e7;
+  }
+  .quote .body em {
+    font-style: normal;
+    background: linear-gradient(90deg, #c7d2fe, #f472b6);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent; font-weight: 700;
+  }
+  .quote .body b {
+    color: #f5f5f7; font-weight: 700;
+  }
+  .meta {
+    margin-top: auto;
+    display: grid; grid-template-columns: 56px 1fr; gap: 14px; align-items: center;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .avatar {
+    width: 56px; height: 56px; border-radius: 50%;
+    display: grid; place-items: center;
+    color: #fff; font-weight: 800; font-size: 20px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.20);
+    border: 1.5px solid rgba(255,255,255,0.20);
+    letter-spacing: 0.01em;
+  }
+  .avatar.a1 { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); }
+  .avatar.a2 { background: linear-gradient(135deg, #ec4899 0%, #f97316 100%); }
+  .avatar.a3 { background: linear-gradient(135deg, #14b8a6 0%, #6366f1 100%); }
+  .person .name {
+    font-size: 14px; font-weight: 700; color: #f5f5f7;
+  }
+  .person .role {
+    font-size: 11px; color: #a1a1aa; margin-top: 2px;
+  }
+  .person .co {
+    margin-top: 6px;
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 6px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.10);
+    color: #c7d2fe;
+  }
+  .co .logo {
+    width: 8px; height: 8px; border-radius: 2px;
+  }
+  .co .logo.l1 { background: linear-gradient(135deg, #818cf8, #ec4899); }
+  .co .logo.l2 { background: linear-gradient(135deg, #fbbf24, #ec4899); }
+  .co .logo.l3 { background: linear-gradient(135deg, #34d399, #818cf8); }
+
+  .stars {
+    margin-top: 8px;
+    display: flex; gap: 2px;
+  }
+
+  /* Footer */
+  .footer {
+    position: absolute; left: 48px; right: 48px; bottom: 22px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 10px; color: #52525b; letter-spacing: 0.2em; text-transform: uppercase;
+  }
+  .pageno { color: #a1a1aa; font-weight: 700; }
+
+  /* Decorative SVG */
+  .deco-svg { position: absolute; pointer-events: none; }
+</style>
+</head>
+<body>
+<div class="slide" data-slidify-decorate="aurora">
+
+  <!-- Aurora bands -->
+  <div class="band b1"></div>
+  <div class="band b2"></div>
+  <div class="band b3"></div>
+
+  <!-- Decorative curves in corners -->
+  <svg class="deco-svg" style="left:-30px; top:-20px;" width="220" height="220" viewBox="0 0 220 220">
+    <path d="M 0 80 Q 110 0 220 80" fill="none" stroke="#818cf8" stroke-width="1.2" opacity="0.45" />
+    <path d="M 0 120 Q 110 40 220 120" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.30" />
+    <circle cx="60" cy="40" r="2" fill="#c7d2fe" />
+  </svg>
+  <svg class="deco-svg" style="right:-30px; bottom:30px;" width="240" height="240" viewBox="0 0 240 240">
+    <path d="M 0 200 Q 120 80 240 200" fill="none" stroke="#f472b6" stroke-width="1.2" opacity="0.45" />
+    <circle cx="200" cy="120" r="2.5" fill="#f472b6" />
+  </svg>
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <div class="kicker">CUSTOMER VOICES</div>
+      <h1 class="title" data-pptx-role="title">Trusted by teams who <span class="accent">measure outcomes</span></h1>
+    </div>
+    <div class="stats-strip">
+      <div class="item">
+        <div class="num">4.9 / 5</div>
+        <div class="lbl">G2 average</div>
+      </div>
+      <div class="divider"></div>
+      <div class="item">
+        <div class="num">96<span style="font-size:14px;color:#a1a1aa;">%</span></div>
+        <div class="lbl">Renewal rate</div>
+      </div>
+      <div class="divider"></div>
+      <div class="item">
+        <div class="num">73</div>
+        <div class="lbl">NPS score</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quote grid -->
+  <div class="grid">
+
+    <!-- Quote 1 -->
+    <div class="quote" data-slidify-decorate="glass">
+      <div class="qmark">&ldquo;</div>
+      <div class="body">
+        We replaced <b>three internal tools</b> and a queue of bespoke scripts in under a quarter. The team now ships <em>five times faster</em> with materially fewer incidents.
+      </div>
+      <div class="stars">
+        <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 9,5 13,5.5 10,8.5 11,13 7,10.5 3,13 4,8.5 1,5.5 5,5" fill="#fbbf24"/></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 9,5 13,5.5 10,8.5 11,13 7,10.5 3,13 4,8.5 1,5.5 5,5" fill="#fbbf24"/></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 9,5 13,5.5 10,8.5 11,13 7,10.5 3,13 4,8.5 1,5.5 5,5" fill="#fbbf24"/></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 9,5 13,5.5 10,8.5 11,13 7,10.5 3,13 4,8.5 1,5.5 5,5" fill="#fbbf24"/></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 9,5 13,5.5 10,8.5 11,13 7,10.5 3,13 4,8.5 1,5.5 5,5" fill="#fbbf24"/></svg>
+      </div>
+      <div class="meta">
+        <div class="avatar a1">MR</div>
+        <div class="person">
+          <div class="name">Maya Rodriguez</div>
+          <div class="role">VP of Platform Engineering</div>
+          <span class="co"><span class="logo l1"></span>NORTHWIND DATA</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quote 2 -->
+    <div class="quote" data-slidify-decorate="glass">
+      <div class="qmark">&ldquo;</div>
+      <div class="body">
+        The auditability story sealed it for us. Every decision is <em>explainable, replayable, and signed</em> &mdash; that <b>passes our regulators</b> on the first try, every quarter.
+      </div>
+      <div class="stars">
+        <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 9,5 13,5.5 10,8.5 11,13 7,10.5 3,13 4,8.5 1,5.5 5,5" fill="#fbbf24"/></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 9,5 13,5.5 10,8.5 11,13 7,10.5 3,13 4,8.5 1,5.5 5,5" fill="#fbbf24"/></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 9,5 13,5.5 10,8.5 11,13 7,10.5 3,13 4,8.5 1,5.5 5,5" fill="#fbbf24"/></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 9,5 13,5.5 10,8.5 11,13 7,10.5 3,13 4,8.5 1,5.5 5,5" fill="#fbbf24"/></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 9,5 13,5.5 10,8.5 11,13 7,10.5 3,13 4,8.5 1,5.5 5,5" fill="#fbbf24"/></svg>
+      </div>
+      <div class="meta">
+        <div class="avatar a2">DK</div>
+        <div class="person">
+          <div class="name">Daniel Kovacs</div>
+          <div class="role">Chief Risk Officer</div>
+          <span class="co"><span class="logo l2"></span>MERIDIAN BANK</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quote 3 -->
+    <div class="quote" data-slidify-decorate="glass">
+      <div class="qmark">&ldquo;</div>
+      <div class="body">
+        Onboarding took <b>eleven days</b>, not eleven months. Our analysts now build their own pipelines &mdash; engineering reviews them like <em>code, with diffs and tests</em>.
+      </div>
+      <div class="stars">
+        <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 9,5 13,5.5 10,8.5 11,13 7,10.5 3,13 4,8.5 1,5.5 5,5" fill="#fbbf24"/></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 9,5 13,5.5 10,8.5 11,13 7,10.5 3,13 4,8.5 1,5.5 5,5" fill="#fbbf24"/></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 9,5 13,5.5 10,8.5 11,13 7,10.5 3,13 4,8.5 1,5.5 5,5" fill="#fbbf24"/></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 9,5 13,5.5 10,8.5 11,13 7,10.5 3,13 4,8.5 1,5.5 5,5" fill="#fbbf24"/></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 9,5 13,5.5 10,8.5 11,13 7,10.5 3,13 4,8.5 1,5.5 5,5" fill="#fbbf24"/></svg>
+      </div>
+      <div class="meta">
+        <div class="avatar a3">AT</div>
+        <div class="person">
+          <div class="name">Aiko Tanaka</div>
+          <div class="role">Director of Data Operations</div>
+          <span class="co"><span class="logo l3"></span>HARBOR LOGISTICS</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div>Verified customer reviews &middot; G2 &amp; Gartner Peer Insights</div>
+    <div class="pageno">10 / 10</div>
+  </div>
+</div>
+</body>
+</html>

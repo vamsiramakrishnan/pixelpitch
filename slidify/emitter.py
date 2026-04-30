@@ -537,7 +537,7 @@ class Emitter:
         # gradient on the source span, emit a true OOXML gradient text fill
         # via python-pptx's Font.fill API. PPTX renders the gradient through
         # the glyph silhouettes — the visual the source CSS actually wants.
-        if _try_apply_gradient_text_fill(font, spec):
+        if _try_apply_gradient_text_fill(font, spec, fallback_el):
             return
         color = _resolve_run_color(spec, fallback_el)
         if color is not None:
@@ -917,7 +917,9 @@ def _is_bg_clip_text(anchor: DomElement) -> bool:
     return _re.match(r"rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*0(?:\.0+)?\s*\)", col_str) is not None
 
 
-def _try_apply_gradient_text_fill(font, spec: dict) -> bool:
+def _try_apply_gradient_text_fill(
+    font, spec: dict, fallback_el: DomElement | None = None
+) -> bool:
     """Native gradient fill on a text run via OOXML's `<a:gradFill>` inside
     `<a:rPr>`. Returns True iff a gradient was applied.
 
@@ -926,11 +928,19 @@ def _try_apply_gradient_text_fill(font, spec: dict) -> bool:
     pattern. python-pptx exposes `font.fill.gradient()` for this; we then
     populate the stops directly. The result is what the CSS author actually
     wanted: glyph-shaped gradient, not a gradient rectangle.
+
+    When the spec's own background_image is "none" (an inner `<em>` /
+    `<span>` inside a gradient-clipped parent), `fallback_el`'s
+    background_image is consulted so the gradient is inherited.
     """
     raw_color = spec.get("color") or ""
     if parse_color(raw_color) is not None:
         return False  # color is a real RGB, not transparent
-    bg_image = spec.get("background_image") or "none"
+    spec_bg = spec.get("background_image") or "none"
+    if spec_bg == "none" and fallback_el is not None:
+        bg_image = fallback_el.background_image or "none"
+    else:
+        bg_image = spec_bg
     if not bg_image or bg_image == "none":
         return False
     grad = parse_gradient(bg_image)
@@ -1027,12 +1037,13 @@ def _resolve_run_color(spec: dict, fallback_el: DomElement):
     # parse_color returned None — color is transparent or unrecognized.
     # Try the run's own bg-image first, then fall back to the anchor's
     # bg-image (covers leaf-text elements where the gradient is on the
-    # element itself, not on a wrapping span).
-    bg_image = (
-        spec.get("background_image")
-        or fallback_el.background_image
-        or "none"
-    )
+    # element itself, not on a wrapping span). The literal string "none"
+    # is the CSS default — treat it as no-bg-image so the fallback fires
+    # for inner spans (e.g. `<em>` inside a gradient-clipped `<h1>`).
+    own_bg = spec.get("background_image")
+    if not own_bg or own_bg == "none":
+        own_bg = None
+    bg_image = own_bg or fallback_el.background_image or "none"
     if bg_image and bg_image != "none":
         from slidify.gradients import parse_gradient
 

@@ -102,6 +102,36 @@ def test_native_gradient_text_fill_is_emitted_for_bg_clip_text():
     assert len(stops) >= 2  # may be auto-extended to 3 with terminal stop
 
 
+def test_native_gradient_text_fill_inherits_parent_gradient_for_inner_span():
+    """An `<em>` inside a gradient-clipped `<h1>` has its own
+    `background_image: 'none'` (CSS doesn't propagate background-image to
+    children). Slidify must walk to fallback_el (the parent h1) for the
+    gradient — otherwise the inner-span text falls through to BLACK on
+    multi-line wrapped titles. Regression for slide-01-hero in the corpus."""
+    from pptx import Presentation
+
+    from slidify.emitter import _try_apply_gradient_text_fill
+
+    prs = Presentation()
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    tb = slide.shapes.add_textbox(0, 0, 1000000, 1000000)
+    run = tb.text_frame.paragraphs[0].add_run()
+    run.text = "modern operations teams."
+    # Inner span run: transparent + bg-image="none" (no own bg).
+    spec = {
+        "text": "modern operations teams.",
+        "color": "rgba(0, 0, 0, 0)",
+        "background_image": "none",
+    }
+    # Parent h1 (fallback_el) carries the gradient.
+    parent = _el(color="rgba(0, 0, 0, 0)")
+    parent.background_image = (
+        "linear-gradient(135deg, rgb(245, 245, 247), rgb(199, 210, 254), rgb(236, 72, 153))"
+    )
+    applied = _try_apply_gradient_text_fill(run.font, spec, fallback_el=parent)
+    assert applied is True, "should inherit parent's gradient for the inner span"
+
+
 def test_native_gradient_text_fill_skips_non_transparent_runs():
     """A run with a real solid color should NOT trigger gradient text fill
     even if the run carries a background_image — it's not a bg-clip text."""

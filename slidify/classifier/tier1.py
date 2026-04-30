@@ -24,7 +24,14 @@ def _has_video(unit: VisualUnit) -> bool:
 
 
 def _has_complex_svg(unit: VisualUnit) -> bool:
-    return any(e.is_svg and e.svg_path_count > 10 for e in unit.all_elements())
+    # Threshold mirrors the dom_walker's capture cap (5). Any SVG with more
+    # primitives than the walker captures is, by definition, "too complex
+    # for the native path"; let it raster cleanly. Leaving the threshold
+    # above the cap creates a dead band where the SVG isn't captured (no
+    # svg_shapes) but also isn't classified complex — `rule_simple_svg`
+    # then misclassifies via the OTHER, smaller, captured SVG on the
+    # slide and drops content.
+    return any(e.is_svg and e.svg_path_count > 5 for e in unit.all_elements())
 
 
 def _has_simple_svg(unit: VisualUnit) -> bool:

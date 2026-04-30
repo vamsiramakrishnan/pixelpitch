@@ -151,7 +151,21 @@ WALKER_JS = r"""
         let svgShapes = null;
         if (tag === 'SVG' || tag === 'svg') {
             try {
-                const allShapes = el.querySelectorAll('path, polygon, polyline, circle, rect, ellipse, line');
+                // Skip primitives inside <defs> — those are definitions
+                // (markers / gradients-as-defs / symbols / patterns) consumed
+                // by other elements, not visible drawing primitives. The
+                // walker counts and emits the *visible* drawing primitives only.
+                const inDefs = (n) => {
+                    let p = n.parentNode;
+                    while (p && p !== el) {
+                        if (p.tagName && p.tagName.toLowerCase() === 'defs') return true;
+                        p = p.parentNode;
+                    }
+                    return false;
+                };
+                const allShapes = Array.from(
+                    el.querySelectorAll('path, polygon, polyline, circle, rect, ellipse, line')
+                ).filter(s => !inDefs(s));
                 svgPathCount = allShapes.length;
                 // For simple SVGs (≤5 elements), capture geometry so emitter can
                 // transpile to native PPTX freeform / built-in shapes.

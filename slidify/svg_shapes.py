@@ -311,7 +311,19 @@ def _emit_path(
 
     # Compute path bounds in SVG-local space, then map to slide-px.
     minx, miny, maxx, maxy = _path_bounds(commands)
-    if maxx <= minx or maxy <= miny:
+    # Horizontal / vertical / dot paths have zero height or width. Pad
+    # symmetrically by stroke_width so the stroke is visible *within* the
+    # freeform's bbox (otherwise PPT clips half of it).
+    pad = max(2.0, stroke_width * 1.5)
+    if maxx == minx:
+        minx -= pad
+        maxx += pad
+    elif maxx < minx:
+        return False
+    if maxy == miny:
+        miny -= pad
+        maxy += pad
+    elif maxy < miny:
         return False
 
     slide_x = mapping.x(minx)
