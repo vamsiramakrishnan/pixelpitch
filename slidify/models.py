@@ -58,6 +58,10 @@ class TextRun(BaseModel):
     font_size: str = "16px"
     font_weight: str = "400"
     color: str = "rgb(0, 0, 0)"
+    # Run's parent computed background-image. When color is transparent and
+    # bg-image is a gradient, the emitter reads this to pick a solid color
+    # fallback (gradient-clipped text → solid color).
+    background_image: str = "none"
     italic: bool = False
     underline: bool = False
     is_break: bool = False

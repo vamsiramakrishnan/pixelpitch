@@ -113,6 +113,36 @@ def _has_low_opacity(unit: VisualUnit) -> bool:
     return unit.elements[0].opacity < 0.99
 
 
+def _has_full_cover_native_child(unit: VisualUnit, decisions: dict[str, Decision]) -> bool:
+    """True iff at least one direct child unit has a native-shape decision and
+    its bbox covers ≥98% of this unit's bbox area. Such a child fully occludes
+    the parent's fill — the parent's own emit is wasted.
+    """
+    parent_area = unit.bbox.w * unit.bbox.h
+    if parent_area <= 0:
+        return False
+    for c in unit.children:
+        d = decisions.get(c.id)
+        if d is None or d.kind not in (DecisionKind.NativeShape, DecisionKind.Hybrid):
+            continue
+        # Child must contain ≥98% of the parent.
+        intersect = unit.bbox.intersect_area(c.bbox)
+        coverage = intersect / parent_area
+        if coverage >= 0.98:
+            # And the child's anchor must have an opaque-ish fill (solid
+            # color or gradient with no fully-transparent stops covering it).
+            if c.elements:
+                ca = c.elements[0]
+                # Quick proxy: child has opacity == 1 and either a non-trivial
+                # bg-color or a translatable gradient bg-image.
+                if ca.opacity >= 0.99 and (
+                    (ca.background_color and ca.background_color != "rgba(0, 0, 0, 0)")
+                    or (ca.background_image and ca.background_image != "none")
+                ):
+                    return True
+    return False
+
+
 def promote(
     roots: list[VisualUnit], decisions: dict[str, Decision]
 ) -> dict[str, Decision]:
@@ -134,6 +164,23 @@ def promote(
 
         all_raster = all(k in _RASTER_KINDS for k in child_kinds)
         any_native = any(k in _NATIVE_KINDS for k in child_kinds)
+
+        # Rule 0: occlusion. If any opaque NativeShape child covers ≥98% of
+        # this unit's bbox, the parent's own fill is invisible — skip the
+        # parent emit. This eliminates the "body bg + .slide div bg" double-
+        # layer that wastes a shape and confuses LibreOffice's z-order.
+        if (
+            my_decision is not None
+            and my_decision.kind == DecisionKind.NativeShape
+            and _has_full_cover_native_child(unit, out)
+        ):
+            out[unit.id] = Decision(
+                kind=DecisionKind.Skip,
+                confidence=1.0,
+                reason="occluded_by_full_cover_child",
+                source_tier="promotion",
+            )
+            return
 
         # Edge case: opacity < 1 on a unit with children → rasterize whole unit.
         if _has_low_opacity(unit) and unit.children:

@@ -72,6 +72,10 @@ WALKER_JS = r"""
     function collectRuns(el) {
         const out = [];
         const cs = getComputedStyle(el);
+        // Capture this element's bg-image so the Python emitter can substitute
+        // a solid color when the run uses gradient-clipped text
+        // (background-clip: text + color: transparent).
+        const bgImage = cs.backgroundImage || 'none';
         for (const node of el.childNodes) {
             if (node.nodeType === 3) {
                 const txt = node.textContent || '';
@@ -82,6 +86,7 @@ WALKER_JS = r"""
                     font_size: cs.fontSize,
                     font_weight: cs.fontWeight,
                     color: cs.color,
+                    background_image: bgImage,
                     italic: cs.fontStyle === 'italic',
                     underline: cs.textDecorationLine && cs.textDecorationLine.includes('underline'),
                     is_break: false,
@@ -294,6 +299,7 @@ async def walk(page: Page) -> list[DomElement]:
                         font_size=r.get("font_size", "16px"),
                         font_weight=r.get("font_weight", "400"),
                         color=r.get("color", "rgb(0, 0, 0)"),
+                        background_image=r.get("background_image", "none"),
                         italic=r.get("italic", False),
                         underline=r.get("underline", False),
                         is_break=r.get("is_break", False),

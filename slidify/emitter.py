@@ -11,7 +11,7 @@ import httpx
 import structlog
 from pptx import Presentation
 from pptx.enum.shapes import MSO_SHAPE
-from pptx.enum.text import PP_ALIGN
+from pptx.enum.text import MSO_AUTO_SIZE, PP_ALIGN
 from pptx.util import Emu, Pt
 
 from slidify.colors import parse_color
@@ -53,6 +53,12 @@ _TEXT_ALIGN_MAP = {
 
 
 def _clamp_bbox(b: BoundingBox) -> BoundingBox:
+    """Tight clamp to slide bounds — used only when we need a contained
+    region (e.g., screenshot crops). DO NOT use for placing decorative
+    shapes; clamping a top:-220px overlay to top:0 *moves* its visual
+    center. Use `_emu_rect_offcanvas` instead for shapes whose origin
+    can legitimately sit outside the slide.
+    """
     x = max(0.0, min(b.x, SLIDE_W_PX - 1))
     y = max(0.0, min(b.y, SLIDE_H_PX - 1))
     w = max(1.0, min(b.w, SLIDE_W_PX - x))
@@ -67,6 +73,25 @@ def _emu_rect(b: BoundingBox) -> tuple[Emu, Emu, Emu, Emu]:
         Emu(px_to_emu(b.y)),
         Emu(px_to_emu(b.w)),
         Emu(px_to_emu(b.h)),
+    )
+
+
+def _emu_rect_offcanvas(b: BoundingBox) -> tuple[Emu, Emu, Emu, Emu]:
+    """Convert px bbox → EMU rect WITHOUT clamping origin to >= 0. PPTX
+    accepts negative shape positions and clips at the slide boundary, which
+    is exactly what we want for decorative overlays anchored off-canvas
+    (auroras, glow ovals positioned with top: -220px etc).
+
+    Width/height are clamped to >= 1 px to avoid python-pptx errors on
+    zero-size shapes; otherwise the shape is emitted as-is.
+    """
+    w = max(1.0, b.w)
+    h = max(1.0, b.h)
+    return (
+        Emu(px_to_emu(b.x)),
+        Emu(px_to_emu(b.y)),
+        Emu(px_to_emu(w)),
+        Emu(px_to_emu(h)),
     )
 
 
@@ -220,6 +245,15 @@ class Emitter:
         tf.margin_right = Emu(0)
         tf.margin_top = Emu(0)
         tf.margin_bottom = Emu(0)
+        # PowerPoint substitutes Inter/etc with Calibri when the source font
+        # isn't installed — Calibri is wider, so headlines that fit in 3
+        # lines in Chromium overflow to 4 lines in PowerPoint, bleeding into
+        # the next text frame below. TEXT_TO_FIT_SHAPE shrinks the font just
+        # enough to keep everything in-frame.
+        try:
+            tf.auto_size = MSO_AUTO_SIZE.TEXT_TO_FIT_SHAPE
+        except Exception:
+            pass
 
         # If unit has a background that we can render, paint it on the textbox.
         unit_anchor_el = unit.elements[0] if unit.elements else None
@@ -258,32 +292,25 @@ class Emitter:
                 if r.is_break:
                     paragraphs.append([])
                     continue
+                spec = {
+                    "text": r.text,
+                    "font_family": r.font_family,
+                    "font_size": r.font_size,
+                    "font_weight": r.font_weight,
+                    "color": r.color,
+                    # Forward the run's parent background-image so the emitter
+                    # can substitute a solid color when the run is gradient-
+                    # clipped (color: transparent + background-clip: text).
+                    "background_image": r.background_image,
+                    "italic": r.italic,
+                    "underline": r.underline,
+                }
                 if not r.text.strip():
-                    # Preserve inter-run whitespace inside a run, but skip empties.
+                    # Preserve inter-run whitespace; skip empties.
                     if r.text and paragraphs[-1]:
-                        paragraphs[-1].append(
-                            {
-                                "text": r.text,
-                                "font_family": r.font_family,
-                                "font_size": r.font_size,
-                                "font_weight": r.font_weight,
-                                "color": r.color,
-                                "italic": r.italic,
-                                "underline": r.underline,
-                            }
-                        )
+                        paragraphs[-1].append(spec)
                     continue
-                paragraphs[-1].append(
-                    {
-                        "text": r.text,
-                        "font_family": r.font_family,
-                        "font_size": r.font_size,
-                        "font_weight": r.font_weight,
-                        "color": r.color,
-                        "italic": r.italic,
-                        "underline": r.underline,
-                    }
-                )
+                paragraphs[-1].append(spec)
             # Drop trailing empty paragraphs
             while paragraphs and not paragraphs[-1]:
                 paragraphs.pop()
@@ -315,10 +342,10 @@ class Emitter:
         font.bold = is_bold(spec.get("font_weight") or fallback_el.font_weight)
         font.italic = bool(spec.get("italic"))
         font.underline = bool(spec.get("underline"))
-        color = parse_color(spec.get("color") or fallback_el.color)
+        color = _resolve_run_color(spec, fallback_el)
         if color is not None:
             try:
-                font.color.rgb = color[0]
+                font.color.rgb = color
             except Exception:
                 pass
 
@@ -334,6 +361,15 @@ class Emitter:
         tf.margin_right = Emu(0)
         tf.margin_top = Emu(0)
         tf.margin_bottom = Emu(0)
+        # PowerPoint substitutes Inter/etc with Calibri when the source font
+        # isn't installed — Calibri is wider, so headlines that fit in 3
+        # lines in Chromium overflow to 4 lines in PowerPoint, bleeding into
+        # the next text frame below. TEXT_TO_FIT_SHAPE shrinks the font just
+        # enough to keep everything in-frame.
+        try:
+            tf.auto_size = MSO_AUTO_SIZE.TEXT_TO_FIT_SHAPE
+        except Exception:
+            pass
         text_elems = [e for e in unit.all_elements() if e.text and e.text.strip()]
         if not text_elems:
             return
@@ -375,11 +411,11 @@ class Emitter:
             grad = parse_gradient(bg_img)
             if grad is None:
                 return False
-        x, y, w, h = _emu_rect(op.bbox)
+        # Decorative overlays may sit off-canvas (top:-220px etc); preserve
+        # the original origin so the gradient center isn't displaced.
+        x, y, w, h = _emu_rect_offcanvas(op.bbox)
         radius = parse_px(anchor.border_radius)
-        shape_kind = (
-            MSO_SHAPE.ROUNDED_RECTANGLE if radius > 0 else MSO_SHAPE.RECTANGLE
-        )
+        shape_kind = _shape_kind_for_anchor(anchor, radius)
         shape = slide.shapes.add_shape(shape_kind, x, y, w, h)
         shape.line.fill.background()
         self._apply_fill(shape, anchor)
@@ -388,14 +424,13 @@ class Emitter:
         return True
 
     def _emit_native_shape(self, slide, unit: VisualUnit, op: EmitOp) -> None:
-        x, y, w, h = _emu_rect(op.bbox)
         anchor_el = unit.elements[0] if unit.elements else None
         if anchor_el is None:
             return
+        # Decorative overlays may sit off-canvas — see _emit_native_decoration.
+        x, y, w, h = _emu_rect_offcanvas(op.bbox)
         radius = parse_px(anchor_el.border_radius)
-        shape_kind = (
-            MSO_SHAPE.ROUNDED_RECTANGLE if radius > 0 else MSO_SHAPE.RECTANGLE
-        )
+        shape_kind = _shape_kind_for_anchor(anchor_el, radius)
         shape = slide.shapes.add_shape(shape_kind, x, y, w, h)
         shape.line.fill.background()  # default to no border
         self._apply_fill(shape, anchor_el)
@@ -416,11 +451,43 @@ class Emitter:
             except Exception:
                 pass
             return
+        rgb_color, alpha = bg
         try:
             shape.fill.solid()
-            shape.fill.fore_color.rgb = bg[0]
+            shape.fill.fore_color.rgb = rgb_color
         except Exception:
-            pass
+            return
+        # Honor alpha when < 1: cards with `rgba(255,255,255,0.04)` were
+        # rendering as solid WHITE and burning their light-gray text into
+        # invisibility. python-pptx doesn't expose alpha on solid fills, so
+        # drop down to OOXML and add an `<a:alpha val="..."/>` child.
+        if alpha < 0.999:
+            self._set_solid_fill_alpha(shape, alpha)
+
+    def _set_solid_fill_alpha(self, shape, alpha: float) -> None:
+        from lxml import etree
+
+        ns_a = "http://schemas.openxmlformats.org/drawingml/2006/main"
+        try:
+            sp_pr = shape._element.spPr
+        except AttributeError:
+            return
+        if sp_pr is None:
+            return
+        solid = sp_pr.find(f"{{{ns_a}}}solidFill")
+        if solid is None:
+            return
+        srgb = solid.find(f"{{{ns_a}}}srgbClr")
+        if srgb is None:
+            return
+        # Clear any pre-existing alpha child.
+        for existing in srgb.findall(f"{{{ns_a}}}alpha"):
+            srgb.remove(existing)
+        etree.SubElement(
+            srgb,
+            f"{{{ns_a}}}alpha",
+            attrib={"val": str(int(round(max(0.0, min(1.0, alpha)) * 100_000)))},
+        )
 
     def _apply_shadow(self, shape, el: DomElement) -> None:
         if not el.box_shadow or el.box_shadow == "none":
@@ -570,6 +637,60 @@ class Emitter:
             slide.notes_slide.notes_text_frame.text = text
         except Exception as e:
             log.warning("emitter.notes_failed", error=str(e))
+
+
+def _shape_kind_for_anchor(anchor: DomElement, radius_px: float):
+    """Pick the right MSO_SHAPE for an anchor.
+
+    A nearly-circular shape with a large radius (>= 50% of min dimension) is
+    rendered as an OVAL rather than a ROUNDED_RECTANGLE — matters for
+    decorative auroras and avatar circles where `border-radius:50%` should
+    truly be a circle, not a heavily-rounded square."""
+    w = anchor.bbox.w
+    h = anchor.bbox.h
+    if w > 0 and h > 0:
+        if radius_px >= min(w, h) * 0.45:
+            return MSO_SHAPE.OVAL
+    return MSO_SHAPE.ROUNDED_RECTANGLE if radius_px > 0 else MSO_SHAPE.RECTANGLE
+
+
+def _resolve_run_color(spec: dict, fallback_el: DomElement):
+    """Pick the RGB color for a styled text run.
+
+    Special case: when the run's color is fully transparent (rgba(*,*,*,0))
+    AND the run's parent has a background-image gradient, this is the
+    `background-clip: text` pattern — text is filled with the gradient. PPTX
+    can't reproduce gradient-clipped text natively, so we substitute the
+    gradient's first (focal) stop color as a solid fallback. This matches
+    most users' expectation: the dominant accent color shows through.
+    """
+    raw_color = spec.get("color") or fallback_el.color
+    parsed = parse_color(raw_color)
+    if parsed is not None:
+        return parsed[0]
+    # parse_color returned None — color is transparent or unrecognized.
+    bg_image = spec.get("background_image") or "none"
+    if bg_image and bg_image != "none":
+        from slidify.gradients import parse_gradient
+
+        grad = parse_gradient(bg_image)
+        if grad is not None and grad.stops:
+            # Use the FIRST stop (focal/dominant color in radial; start of
+            # the linear). For a 3-stop gradient like `from-indigo-500 via-
+            # purple-500 to-pink-500`, we get the indigo — visually the
+            # closest single-color match for "this text should look colorful".
+            stop = grad.stops[0]
+            from pptx.dml.color import RGBColor
+
+            try:
+                return RGBColor(
+                    int(stop.color_hex[0:2], 16),
+                    int(stop.color_hex[2:4], 16),
+                    int(stop.color_hex[4:6], 16),
+                )
+            except (ValueError, IndexError):
+                pass
+    return None
 
 
 def native_area_ratio(

@@ -68,6 +68,54 @@ def test_non_gradient_returns_none():
     assert parse_gradient("url(./bg.png)") is None
 
 
+def test_radial_with_transparent_stop_preserves_alpha_zero():
+    """Aurora-style decoration: radial-gradient(... transparent 70%).
+    The transparent stop must be preserved as alpha=0 so the gradient fades
+    to transparent — not held at the previous color's alpha. The parser
+    also extends the last stop to position 1.0 (LibreOffice doesn't
+    extrapolate past the last stop's position)."""
+    g = parse_gradient(
+        "radial-gradient(circle, rgba(139,92,246,0.32) 0%, rgba(99,102,241,0.18) 35%, transparent 70%)"
+    )
+    assert isinstance(g, RadialGradient)
+    # 3 user stops + 1 auto-extended terminal stop = 4
+    assert len(g.stops) == 4
+    assert abs(g.stops[0].alpha - 0.32) < 1e-6
+    assert abs(g.stops[1].alpha - 0.18) < 1e-6
+    assert g.stops[2].alpha == 0.0  # original transparent stop at 70%
+    assert g.stops[3].alpha == 0.0  # duplicated transparent stop at 100%
+    assert g.stops[3].position == 1.0
+    # Transparent stop's color hex is a legal hex (we inherit the previous
+    # stop's hex for cleaner interpolation).
+    assert len(g.stops[2].color_hex) == 6
+
+
+def test_linear_with_transparent_endpoint():
+    g = parse_gradient(
+        "linear-gradient(90deg, rgb(255,0,0), transparent)"
+    )
+    assert isinstance(g, LinearGradient)
+    assert len(g.stops) == 2
+    assert g.stops[0].alpha == 1.0
+    assert g.stops[1].alpha == 0.0
+
+
+def test_transparent_in_computed_form_rgba_zero_alpha():
+    """Chromium normalizes `transparent` to `rgba(0, 0, 0, 0)` in the
+    computed style. The parser must recognize this form too — otherwise
+    the aurora-style fade-to-transparent silently loses its last stop."""
+    g = parse_gradient(
+        "radial-gradient(circle, rgba(139,92,246,0.32) 0%, rgba(0, 0, 0, 0) 70%)"
+    )
+    assert isinstance(g, RadialGradient)
+    # 2 user stops + 1 auto-extended terminal stop = 3
+    assert len(g.stops) == 3
+    assert abs(g.stops[0].alpha - 0.32) < 1e-6
+    assert g.stops[1].alpha == 0.0  # the rgba(...,0) was recognized
+    assert g.stops[2].alpha == 0.0
+    assert g.stops[2].position == 1.0
+
+
 # ---- OOXML emission ---------------------------------------------------------
 
 

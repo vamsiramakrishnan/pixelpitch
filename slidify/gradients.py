@@ -49,6 +49,14 @@ _LINEAR_RE = re.compile(r"linear-gradient\s*\(", re.IGNORECASE)
 _RADIAL_RE = re.compile(r"radial-gradient\s*\(", re.IGNORECASE)
 _ANGLE_DEG_RE = re.compile(r"^\s*(-?\d+(?:\.\d+)?)\s*deg\s*$", re.IGNORECASE)
 _PERCENT_RE = re.compile(r"^\s*(-?\d+(?:\.\d+)?)\s*%\s*$")
+# Matches the computed-style normalization of CSS `transparent`:
+# `rgba(0, 0, 0, 0)` (with any whitespace, any color channel; only alpha=0
+# matters). Chromium emits this when CSS sets `color: transparent` or
+# `background: transparent`.
+_COMPUTED_TRANSPARENT_RE = re.compile(
+    r"^\s*rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*0(?:\.0+)?\s*\)\s*$",
+    re.IGNORECASE,
+)
 
 
 # A computed-style gradient looks like:
@@ -250,30 +258,71 @@ def _parse_to_direction(head: str, default: float) -> float:
 
 
 def _parse_stops(raw: list[str]) -> list[GradientStop]:
-    """Parse `["rgb(...) 0%", "rgb(...) 100%", ...]` stops; infer positions."""
+    """Parse `["rgb(...) 0%", "rgb(...) 100%", "transparent 70%", ...]` stops.
+
+    `transparent` is preserved as alpha=0 (with a sensible color borrowed
+    from the previous stop, since alpha=0 makes color irrelevant for paint
+    but matters for color *interpolation* between stops in PowerPoint).
+    Dropping a transparent stop turns a gradient-fades-to-transparent into
+    a solid-opacity gradient — the aurora overlays in the showcase deck were
+    rendering as full-opacity blobs because of this bug.
+    """
     stops: list[GradientStop] = []
     if not raw:
         return []
+    last_hex = "000000"  # color to inherit when a stop is fully-transparent
     for item in raw:
         # Color may itself contain spaces (rgba(255, 0, 0, 0.5)) → split off
         # the trailing position by detecting last whitespace not inside parens.
         color_str, position = _split_stop(item)
-        col = parse_color(color_str)
-        if col is None:
-            continue
-        rgb, alpha = col
-        # Compute hex
-        hex_ = f"{rgb[0]:02X}{rgb[1]:02X}{rgb[2]:02X}"
-        if position is None:
-            # Distribute evenly across remaining slots later.
-            stops.append(GradientStop(color_hex=hex_, alpha=alpha, position=-1.0))
+        cl = color_str.strip().lower()
+        # "transparent" reaches us either as the literal CSS keyword or as the
+        # computed-style normalization "rgba(0, 0, 0, 0)" / "rgba(*, *, *, 0)".
+        # We need to detect both — otherwise the aurora-style gradient
+        # `linear-gradient(... transparent 70%)` silently loses its
+        # fade-to-transparent stop.
+        is_transparent = (
+            cl == "transparent"
+            or _COMPUTED_TRANSPARENT_RE.match(cl) is not None
+        )
+        if is_transparent:
+            hex_ = last_hex
+            alpha = 0.0
         else:
-            stops.append(
-                GradientStop(color_hex=hex_, alpha=alpha, position=position)
-            )
+            col = parse_color(color_str)
+            if col is None:
+                continue
+            rgb, alpha = col
+            hex_ = f"{rgb[0]:02X}{rgb[1]:02X}{rgb[2]:02X}"
+            last_hex = hex_
+        pos = -1.0 if position is None else position
+        stops.append(GradientStop(color_hex=hex_, alpha=alpha, position=pos))
 
     # Fill in unspecified positions by linear interpolation between known ones.
     _fill_positions(stops)
+    # If the last user-defined stop is < 100%, extend it explicitly to 1.0.
+    # PowerPoint extrapolates the last stop's color past its position, but
+    # LibreOffice cuts off — we'd see a hard-edged gradient on the showcase
+    # auroras whose last stop is at 70%. Emit a redundant terminal stop so
+    # both renderers agree.
+    if stops and stops[-1].position < 0.999:
+        stops.append(
+            GradientStop(
+                color_hex=stops[-1].color_hex,
+                alpha=stops[-1].alpha,
+                position=1.0,
+            )
+        )
+    # Symmetric guard on the *first* stop.
+    if stops and stops[0].position > 0.001:
+        stops.insert(
+            0,
+            GradientStop(
+                color_hex=stops[0].color_hex,
+                alpha=stops[0].alpha,
+                position=0.0,
+            ),
+        )
     return stops
 
 
