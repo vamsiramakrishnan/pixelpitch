@@ -30,11 +30,11 @@ def _convert_options(fn):
     """Shared options between the explicit convert subcommand and the default."""
     fn = click.option("--report-json", type=click.Path(dir_okay=False, path_type=Path), default=None)(fn)
     fn = click.option(
-        "--differential-render",
+        "--no-differential-render",
         is_flag=True,
-        help="Take a second screenshot per slide with all text blanked. "
-        "Surgical-hybrid emission then crops from the decoration-only image "
-        "for pixel-exact backgrounds. ~150ms / slide overhead.",
+        help="Disable the second per-slide screenshot used for surgical-hybrid "
+        "background crops. On by default; saves ~150ms/slide at the cost of "
+        "occasional text bleed-through into rasterized backgrounds.",
     )(fn)
     fn = click.option(
         "--no-embed-fonts",
@@ -78,7 +78,7 @@ def _run_convert(
     google_location: str | None,
     render_concurrency: int,
     low_memory: bool,
-    differential_render: bool,
+    no_differential_render: bool,
     no_embed_fonts: bool,
     report_json: Path | None,
 ) -> None:
@@ -91,7 +91,7 @@ def _run_convert(
         google_location=google_location,
         render_concurrency=render_concurrency,
         keep_plans_for_oracle=not low_memory,
-        differential_render=differential_render,
+        differential_render=not no_differential_render,
         embed_fonts=not no_embed_fonts,
     )
     result = asyncio.run(convert(input_path, output_pptx, cfg))
@@ -253,7 +253,7 @@ def convert_cmd(
     google_location: str | None,
     render_concurrency: int,
     low_memory: bool,
-    differential_render: bool,
+    no_differential_render: bool,
     no_embed_fonts: bool,
     report_json: Path | None,
 ) -> None:
@@ -261,7 +261,7 @@ def convert_cmd(
     _run_convert(
         input_path, output_pptx, no_tier3, no_oracle, llm_backend, llm_model,
         google_project, google_location, render_concurrency, low_memory,
-        differential_render, no_embed_fonts, report_json,
+        no_differential_render, no_embed_fonts, report_json,
     )
 
 

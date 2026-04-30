@@ -1,29 +1,29 @@
 {
   "pptx_path": "examples/sophisticated/deck.pptx",
-  "n_slides": 12,
+  "n_slides": 13,
   "fidelity_reports": [],
   "native_area_ratio": 1.0,
   "llm_calls": 0,
   "total_cost_usd": 0.0,
-  "elapsed_seconds": 4.139425525000206,
-  "cache_hit_rate": 0.676737160120846,
+  "elapsed_seconds": 4.833332846999838,
+  "cache_hit_rate": 0.6906077348066298,
   "decisions_by_tier": {
-    "tier0": 86,
+    "tier0": 90,
     "tier2": 11,
     "promotion": 3,
-    "cache:tier0": 201,
-    "tier1": 7,
-    "cache:tier1": 23
+    "cache:tier0": 221,
+    "tier1": 8,
+    "cache:tier1": 29
   },
   "pattern_hits": {
     "kicker-from-css": 9,
     "body-paragraph": 10,
-    "title-h1": 9,
+    "title-h1": 10,
     "pill-from-css": 9,
     "short-label": 10,
     "gradient-card-no-text": 6,
-    "slide-solid-bg": 11,
-    "text-card-composite": 7,
+    "slide-solid-bg": 12,
+    "text-card-composite": 8,
     "title-h2": 1,
     "stat-number-from-css": 3,
     "hairline-divider": 1,
@@ -32,9 +32,9 @@
     "gradient-card-with-text": 1,
     "feature-card-with-icon": 1,
     "stat-number-with-runs": 1,
-    "decoration-card": 1
+    "decoration-card": 2
   },
-  "pattern_coverage": 0.8317757009345794,
+  "pattern_coverage": 0.8303571428571429,
   "unmatched_signatures": [
     {
       "sig": "div(bgi=grad)[]<5>[1280x704]{div(bg+brd+txt+txtc)[][128x32],div(bgi=grad)[][0x32],div(bgi=grad)[][768x768],div(bgi=grad)[][896x896],div(txt)[][1088x0],div(txt)[][128x0],div(txt)[][192x0],div(txt+txtc)[][64x0],h1(txt+txtc)[][1024x288],p(txt)[][768x96]}",
@@ -196,6 +196,15 @@
       "bbox_h": 720,
       "sample_classes": "slide",
       "sample_text": "Get started in 30 seconds",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bgi=grad)[]<4>[1280x704]{div(bg)[][320x224]{div(txt)[][256x0],div(txt)[][256x0],div(txt)[][256x32]},div(bg)[][320x224]{div(txt)[][256x0],div(txt)[][256x0],div(txt)[][256x32]},div(bg)[][320x224]{div(txt)[][256x0],div(txt)[][256x0],div(txt)[][256x32]},div(bg)[][320x224]{div(txt)[][256x0],div(txt)[][256x0],div(txt)[][256x32]},div(bg)[][320x224]{div(txt)[][256x0],div(txt)[][256x0],div(txt)[][256x32]},div(bg)[][320x224]{div(txt)[][256x0],div(txt)[][256x0],div(txt)[][256x32]},div(txt)[][1088x0],div(txt)[][320x0],div(txt)[][64x0],h1(txt)[][1088x64],svg(svg/1)[]<1>[0x32]}",
+      "sig_hash": "e0068d464b44ead2",
+      "bbox_w": 1280,
+      "bbox_h": 720,
+      "sample_classes": "slide",
+      "sample_text": "Decoration system",
       "n_occurrences": 1
     }
   ]

@@ -9,6 +9,7 @@ from urllib.parse import urlparse
 
 import httpx
 import structlog
+from lxml import etree
 from pptx import Presentation
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.enum.text import MSO_AUTO_SIZE, PP_ALIGN
@@ -40,6 +41,30 @@ from slidify.models import (
 from slidify.preset_shapes import detect_preset_shape, emit_preset
 from slidify.shadows import apply_shadows, parse_box_shadows
 from slidify.svg_shapes import emit_svg_shapes
+from slidify.text_metrics import (
+    compute_font_scale_for_textbox,
+    shrink_pill_bbox_to_fit_text,
+)
+
+_A_NS = "http://schemas.openxmlformats.org/drawingml/2006/main"
+
+
+def _apply_explicit_autofit(
+    text_frame, font_scale_pct: int, line_space_reduction_pct: int
+) -> None:
+    """Bake an explicit ``<a:normAutofit fontScale=... lnSpcReduction=.../>``
+    into the textframe, replacing any existing autofit element. Pre-computing
+    the shrink at emit time makes the deck render identically across
+    LibreOffice/PowerPoint regardless of which font gets substituted."""
+    from lxml import etree as _et
+
+    bodyPr = text_frame._txBody.bodyPr
+    for tag in ("normAutofit", "spAutoFit", "noAutofit"):
+        for existing in bodyPr.findall(f"{{{_A_NS}}}{tag}"):
+            bodyPr.remove(existing)
+    norm = _et.SubElement(bodyPr, f"{{{_A_NS}}}normAutofit")
+    norm.set("fontScale", str(font_scale_pct))
+    norm.set("lnSpcReduction", str(line_space_reduction_pct))
 
 log = structlog.get_logger(__name__)
 
@@ -321,6 +346,25 @@ class Emitter:
                 w=op.bbox.w + extra,
                 h=op.bbox.h,
             )
+
+        # Pill shrink — kills the "green tail" past the substituted-font
+        # text in single-line bg-painted containers. Only applied to
+        # truly pill-sized boxes (single-line, narrow).
+        if (
+            anchor_paints_bg
+            and anchor.is_text_container
+            and (not anchor.runs or len(anchor.runs) <= 1)
+            and emit_bbox.h <= 48
+            and (anchor.text or "").strip()
+        ):
+            try:
+                pt_size = max(8.0, parse_pt(anchor.font_size))
+                emit_bbox = shrink_pill_bbox_to_fit_text(
+                    anchor.text.strip(), emit_bbox, pt_size
+                )
+            except Exception:
+                pass
+
         x, y, w, h = _emu_rect(emit_bbox)
         # Decoration layer (BELOW): mesh glow / drop shadow attached to
         # the text container's anchor. Opt-in via `data-slidify-decorate`.
@@ -388,6 +432,28 @@ class Emitter:
 
         text_elems = [e for e in text_elems if not _has_text_descendant(e.id)]
         para_targets = text_elems if len(text_elems) > 1 else [anchor]
+
+        # Pre-compute fontScale against the fallback (Liberation Sans /
+        # Calibri) rather than trusting MSO_AUTO_SIZE.TEXT_TO_FIT_SHAPE
+        # at runtime. Bake the result into <a:normAutofit> so the deck
+        # renders identically across PowerPoint and LibreOffice.
+        try:
+            scale_runs: list[tuple[str, float]] = []
+            for e in para_targets:
+                t = (e.pptx_text or e.text or "").strip()
+                if not t:
+                    continue
+                scale_runs.append((t, max(8.0, parse_pt(e.font_size))))
+            if scale_runs:
+                scale = compute_font_scale_for_textbox(
+                    scale_runs, bbox_w_px=emit_bbox.w, bbox_h_px=emit_bbox.h
+                )
+                if scale.needs_autofit:
+                    _apply_explicit_autofit(
+                        tf, scale.font_scale_pct, scale.line_space_reduction_pct
+                    )
+        except Exception:
+            pass
         first = True
         for e in para_targets:
             # Build paragraph(s) from runs if available, else from text.

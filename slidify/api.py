@@ -100,8 +100,12 @@ class ConversionConfig:
     # Differential render: take a second screenshot per slide with all text
     # blanked. The emitter uses that decoration-only image when it needs to
     # raster a Hybrid background, eliminating text bleed-through. Costs a
-    # second screenshot per slide (~150 ms on default viewport).
-    differential_render: bool = False
+    # second screenshot per slide (~150 ms on default viewport). On by
+    # default — the visual quality win on textured backgrounds (mesh
+    # gradients, glassmorphism, photo overlays) outweighs the small
+    # latency cost. Set to False for huge decks where wall-clock time
+    # matters more than perfect background fidelity.
+    differential_render: bool = True
     # Embed the source fonts (Inter etc.) into the .pptx so PowerPoint
     # renders with the same typeface that sized the original CSS bboxes.
     # Without this, Calibri substitution shifts every text-frame width,

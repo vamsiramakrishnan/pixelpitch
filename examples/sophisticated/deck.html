@@ -783,3 +783,84 @@
 </div>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pixelpitch — 13 Decoration showcase</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; font-family: Inter, sans-serif; -webkit-font-smoothing:antialiased; color:#f5f5f7; }
+  .slide { width:1280px; height:720px; position:relative; overflow:hidden;
+           background: radial-gradient(ellipse at 30% 30%, #1e1b4b 0%, #050510 70%); }
+
+  .header { position:absolute; left:96px; right:96px; top:64px; }
+  .kicker { font-size:13px; letter-spacing:0.5em; text-transform:uppercase; color:#a78bfa; font-weight:700; }
+  h1 { font-size:42px; font-weight:800; line-height:1.0; letter-spacing:-0.02em; margin:8px 0 0 0; }
+
+  .grid { position:absolute; left:96px; right:96px; top:200px; display:grid; grid-template-columns: 1fr 1fr 1fr; gap:24px; }
+  .card { position:relative; height:200px; padding:20px 22px; border-radius:18px; background:#0f0f1f; }
+  .card-label { font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#a78bfa; font-weight:700; }
+  .card-title { font-size:22px; font-weight:700; margin-top:8px; line-height:1.1; }
+  .card-desc { font-size:13px; color:#a1a1aa; margin-top:10px; line-height:1.5; }
+
+  .row2 { position:absolute; left:96px; right:96px; top:430px; display:grid; grid-template-columns: 1fr 1fr 1fr; gap:24px; }
+
+  .footer { position:absolute; bottom:32px; left:96px; right:96px; display:flex; justify-content:space-between; font-size:13px; color:#52525b; letter-spacing:0.18em; font-weight:700; }
+
+  /* Star path decoration */
+  .star-path { position:absolute; top:660px; right:96px; width:56px; height:56px; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="header">
+    <div class="kicker">Decoration system</div>
+    <h1 data-pptx-role="title">Six layered styles — each row of cards uses a different decoration hint.</h1>
+  </div>
+
+  <div class="grid">
+    <div class="card" data-slidify-decorate="hero">
+      <div class="card-label">Hero</div>
+      <div class="card-title">4-corner mesh glow</div>
+      <div class="card-desc">Stripe / Vercel hero look. Brand palette → 4 translucent radial blobs at the corners.</div>
+    </div>
+    <div class="card" data-slidify-decorate="spotlight">
+      <div class="card-label">Spotlight</div>
+      <div class="card-title">1 huge centered blob</div>
+      <div class="card-desc">For dramatic CTA backgrounds — a single glow centered in the surface.</div>
+    </div>
+    <div class="card" data-slidify-decorate="aurora">
+      <div class="card-label">Aurora</div>
+      <div class="card-title">3 horizontal bands</div>
+      <div class="card-desc">Northern-lights effect — three blobs stacked vertically across the surface.</div>
+    </div>
+  </div>
+
+  <div class="row2">
+    <div class="card" data-slidify-decorate="glass">
+      <div class="card-label">Glass</div>
+      <div class="card-title">Frosted depth</div>
+      <div class="card-desc">Rim highlight + hairline + inset glow. Looks like brushed glass on a dark base.</div>
+    </div>
+    <div class="card" data-slidify-decorate="tactile">
+      <div class="card-label">Tactile</div>
+      <div class="card-title">Button-like surface</div>
+      <div class="card-desc">Strong rim highlight + thin border. Implies a clickable, raised affordance.</div>
+    </div>
+    <div class="card" data-slidify-decorate="recessed">
+      <div class="card-label">Recessed</div>
+      <div class="card-title">Inset depression</div>
+      <div class="card-desc">Inset shadow only — gives the impression of a sunken or pressed surface.</div>
+    </div>
+  </div>
+
+  <!-- Native SVG path with curves: emitted as freeform custGeom -->
+  <svg class="star-path" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 50 5 Q 60 35 95 35 Q 65 55 80 90 Q 50 70 20 90 Q 35 55 5 35 Q 40 35 50 5 Z"
+          fill="#fbbf24" stroke="#fde68a" stroke-width="1"/>
+  </svg>
+
+  <div class="footer"><div>PIXELPITCH LABS · DECORATION DEMO</div><div>13 / 13 · END</div></div>
+</div>
+</body>
+</html>

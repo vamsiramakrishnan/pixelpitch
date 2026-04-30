@@ -55,7 +55,23 @@ def is_translatable_svg(svg_shapes: list[dict] | None) -> bool:
         tag = s.get("tag")
         if tag in ("rect", "circle", "ellipse", "line", "polygon", "polyline"):
             continue
-        return False  # path or other → not translatable
+        if tag == "path":
+            # Try a real parse to be sure svg_path can handle it. A bad
+            # path string falls through to raster, which is the safer
+            # default than emitting a broken custGeom.
+            d = (s.get("d") or "").strip()
+            if not d:
+                return False
+            try:
+                from slidify.svg_path import parse_path
+
+                cmds = parse_path(d)
+                if cmds:
+                    continue
+            except Exception:
+                pass
+            return False
+        return False
     return True
 
 
@@ -79,8 +95,11 @@ def emit_svg_shapes(slide, svg_shapes: list[dict]) -> int:
 
     n_emitted = 0
     for s in svg_shapes:
-        if isinstance(s, dict) and s.get("_svgRect") is not None:
-            continue  # metadata entry
+        # `_svgRect` used to ride as its own pseudo-entry in the list; now
+        # the DOM walker embeds it as a key on every shape dict. Either way,
+        # only entries with a real `tag` are emitted.
+        if not isinstance(s, dict) or not s.get("tag"):
+            continue
         try:
             if _emit_one(slide, s, mapping):
                 n_emitted += 1
@@ -201,6 +220,12 @@ def _emit_one(slide, s: dict, mapping: _Mapping) -> bool:
         _apply_svg_stroke(connector, stroke or "rgb(0,0,0)", stroke_width or 1.0)
         return True
 
+    if tag == "path":
+        d = (s.get("d") or "").strip()
+        if not d:
+            return False
+        return _emit_path(slide, d, mapping, fill, fill_opacity, stroke, stroke_width)
+
     if tag in ("polygon", "polyline"):
         points = _parse_points(s.get("points", ""))
         if len(points) < 2:
@@ -236,3 +261,140 @@ _POINT_PAIR = re.compile(r"(-?\d+(?:\.\d+)?)[\s,]+(-?\d+(?:\.\d+)?)")
 
 def _parse_points(s: str) -> list[tuple[float, float]]:
     return [(float(x), float(y)) for x, y in _POINT_PAIR.findall(s)]
+
+
+def _path_bounds(commands: list) -> tuple[float, float, float, float]:
+    """Return (minx, miny, maxx, maxy) over all endpoint + control points."""
+    xs: list[float] = []
+    ys: list[float] = []
+    for cmd in commands:
+        op = cmd[0]
+        if op == "moveTo" or op == "lineTo":
+            xs.append(cmd[1]); ys.append(cmd[2])
+        elif op == "cubicBezTo":
+            for i in (1, 3, 5):
+                xs.append(cmd[i]); ys.append(cmd[i + 1])
+        elif op == "quadBezTo":
+            for i in (1, 3):
+                xs.append(cmd[i]); ys.append(cmd[i + 1])
+    if not xs:
+        return (0.0, 0.0, 1.0, 1.0)
+    return (min(xs), min(ys), max(xs), max(ys))
+
+
+def _emit_path(
+    slide,
+    d: str,
+    mapping: _Mapping,
+    fill: str | None,
+    fill_opacity: float,
+    stroke: str | None,
+    stroke_width: float,
+) -> bool:
+    """Emit an SVG `<path d="...">` as a native PPTX freeform via custGeom.
+
+    Uses `slidify.svg_path.parse_path` for full curve command coverage
+    (cubic / smooth-cubic / quadratic / smooth-quadratic). Builds a
+    custGeom XML fragment and grafts it onto a placeholder freeform
+    shape, replacing the default prstGeom.
+    """
+    from lxml import etree
+
+    from slidify.svg_path import commands_to_path_xml, parse_path
+
+    try:
+        commands = parse_path(d)
+    except Exception:
+        return False
+    if not commands:
+        return False
+
+    # Compute path bounds in SVG-local space, then map to slide-px.
+    minx, miny, maxx, maxy = _path_bounds(commands)
+    if maxx <= minx or maxy <= miny:
+        return False
+
+    slide_x = mapping.x(minx)
+    slide_y = mapping.y(miny)
+    slide_w = (maxx - minx) * mapping.scale_x
+    slide_h = (maxy - miny) * mapping.scale_y
+    if slide_w <= 0 or slide_h <= 0:
+        return False
+
+    # Translate commands so the path's local-origin is (0, 0) at the
+    # bbox top-left — custGeom uses path-local coords scaled to the shape.
+    PATH_W = 100_000
+    PATH_H = 100_000
+    norm: list = []
+    for cmd in commands:
+        op = cmd[0]
+        if op == "moveTo" or op == "lineTo":
+            x = (cmd[1] - minx) / (maxx - minx) * PATH_W
+            y = (cmd[2] - miny) / (maxy - miny) * PATH_H
+            norm.append((op, x, y))
+        elif op == "cubicBezTo":
+            pts = []
+            for i in (1, 3, 5):
+                x = (cmd[i] - minx) / (maxx - minx) * PATH_W
+                y = (cmd[i + 1] - miny) / (maxy - miny) * PATH_H
+                pts.extend([x, y])
+            norm.append((op, *pts))
+        elif op == "quadBezTo":
+            pts = []
+            for i in (1, 3):
+                x = (cmd[i] - minx) / (maxx - minx) * PATH_W
+                y = (cmd[i + 1] - miny) / (maxy - miny) * PATH_H
+                pts.extend([x, y])
+            norm.append((op, *pts))
+        elif op == "close":
+            norm.append(cmd)
+
+    path_xml = commands_to_path_xml(norm, PATH_W, PATH_H)
+
+    # Bootstrap a freeform so we get a valid <p:sp> with all the
+    # plumbing (nvSpPr, spPr, etc.), then swap its <a:prstGeom> for
+    # our <a:custGeom>.
+    try:
+        ff = slide.shapes.build_freeform(
+            Emu(px_to_emu(slide_x)),
+            Emu(px_to_emu(slide_y)),
+            scale=1.0,
+        )
+        ff.add_line_segments(
+            [(Emu(px_to_emu(slide_x + 1)), Emu(px_to_emu(slide_y + 1)))]
+        )
+        shape = ff.convert_to_shape()
+    except Exception:
+        return False
+
+    # Resize to the actual path bbox.
+    try:
+        shape.width = Emu(px_to_emu(slide_w))
+        shape.height = Emu(px_to_emu(slide_h))
+    except Exception:
+        pass
+
+    # Swap prstGeom → custGeom. OOXML's spPr child order matters:
+    # xfrm → (prstGeom | custGeom) → fill → ln → effects.
+    # LibreOffice silently drops slides whose spPr children violate this.
+    sp_pr = shape._element.spPr  # noqa: SLF001
+    ns_a = "http://schemas.openxmlformats.org/drawingml/2006/main"
+    for prst in sp_pr.findall(f"{{{ns_a}}}prstGeom"):
+        sp_pr.remove(prst)
+    for cust in sp_pr.findall(f"{{{ns_a}}}custGeom"):
+        sp_pr.remove(cust)
+    custgeom_el = etree.fromstring(
+        f'<a:custGeom xmlns:a="{ns_a}"><a:avLst/><a:gdLst/><a:ahLst/>'
+        f"<a:cxnLst/><a:rect l=\"0\" t=\"0\" r=\"{PATH_W}\" b=\"{PATH_H}\"/>"
+        f"<a:pathLst>{path_xml}</a:pathLst></a:custGeom>"
+    )
+    # Insert right after <a:xfrm> (or at index 0 if absent).
+    xfrm = sp_pr.find(f"{{{ns_a}}}xfrm")
+    if xfrm is not None:
+        sp_pr.insert(list(sp_pr).index(xfrm) + 1, custgeom_el)
+    else:
+        sp_pr.insert(0, custgeom_el)
+
+    _apply_svg_fill(shape, fill, fill_opacity)
+    _apply_svg_stroke(shape, stroke, stroke_width)
+    return True

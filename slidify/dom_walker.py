@@ -193,7 +193,11 @@ WALKER_JS = r"""
                         }
                         svgShapes.push(ss);
                     }
-                    svgShapes._svgRect = { x: svgRect.x, y: svgRect.y, w: svgRect.width, h: svgRect.height };
+                    // Embed _svgRect on every shape dict — JS array
+                    // properties don't survive JSON serialization, but
+                    // dict items do.
+                    const rect = { x: svgRect.x, y: svgRect.y, w: svgRect.width, h: svgRect.height };
+                    for (const sh of svgShapes) sh._svgRect = rect;
                 }
             } catch (_) {}
         }
