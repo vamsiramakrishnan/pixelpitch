@@ -40,4 +40,14 @@ components/package-lock.json
 components/.tsbuildinfo
 .claude/worktrees/
 examples/corpus/out/
-_bench/
+# _bench is the iteration scratch dir — most of it is throwaway, but
+# the corpus HTML files + preview PNGs + heatmaps + scores ARE the
+# deliverables we want visible on the branch so the engine work has
+# inspectable output.
+_bench/scripts/*.pyc
+_bench/scripts/__pycache__/
+_bench/corpus/out/
+_bench/corpus/_tmp_render/
+_bench/corpus_orig/
+_bench/fanout/
+_bench/prompts/_*.md

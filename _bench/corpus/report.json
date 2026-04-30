@@ -1,0 +1,991 @@
+{
+  "n_slides": 48,
+  "n_ok": 48,
+  "n_failed": 0,
+  "mean_native_area_ratio": 1.0,
+  "total_unmatched": 110,
+  "rows": [
+    {
+      "slide": "slide-01-state-of-the-union.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8,
+      "decisions_by_tier": {
+        "tier0": 12,
+        "tier1": 3,
+        "cache:tier1": 4,
+        "cache:tier0": 4
+      },
+      "unmatched_signatures": 3,
+      "elapsed_s": 6.1104065810000066,
+      "pptx": "_bench/corpus/out/slide-01-state-of-the-union.pptx",
+      "preview_png": "_bench/corpus/preview/slide-01-state-of-the-union.png",
+      "ssim": 0.7822134162250892,
+      "ocr_recall": 0.8829787234042553,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-02-the-deficit-two-ways.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8461538461538461,
+      "decisions_by_tier": {
+        "tier0": 11,
+        "cache:tier0": 8,
+        "tier1": 2
+      },
+      "unmatched_signatures": 2,
+      "elapsed_s": 6.352129504000004,
+      "pptx": "_bench/corpus/out/slide-02-the-deficit-two-ways.pptx",
+      "preview_png": "_bench/corpus/preview/slide-02-the-deficit-two-ways.png",
+      "ssim": 0.7796702377397566,
+      "ocr_recall": 0.9090909090909091,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-03-housing-six-cities.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8,
+      "decisions_by_tier": {
+        "tier0": 12,
+        "tier1": 3,
+        "cache:tier0": 13,
+        "cache:tier1": 3
+      },
+      "unmatched_signatures": 3,
+      "elapsed_s": 5.278245560999949,
+      "pptx": "_bench/corpus/out/slide-03-housing-six-cities.pptx",
+      "preview_png": "_bench/corpus/preview/slide-03-housing-six-cities.png",
+      "ssim": 0.7703510120640304,
+      "ocr_recall": 0.8833333333333333,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-04-the-quiet-collapse.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8888888888888888,
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 10,
+        "tier1": 1
+      },
+      "unmatched_signatures": 1,
+      "elapsed_s": 4.861565079999991,
+      "pptx": "_bench/corpus/out/slide-04-the-quiet-collapse.pptx",
+      "preview_png": "_bench/corpus/preview/slide-04-the-quiet-collapse.png",
+      "ssim": 0.7517568916674889,
+      "ocr_recall": 0.9702970297029703,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-05-broadband-by-state.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.7777777777777778,
+      "decisions_by_tier": {
+        "tier0": 14,
+        "tier1": 3,
+        "cache:tier0": 83,
+        "cache:tier1": 8,
+        "promotion": 2
+      },
+      "unmatched_signatures": 4,
+      "elapsed_s": 5.628139412999985,
+      "pptx": "_bench/corpus/out/slide-05-broadband-by-state.pptx",
+      "preview_png": "_bench/corpus/preview/slide-05-broadband-by-state.png",
+      "ssim": 0.7542957229162993,
+      "ocr_recall": 0.8857142857142857,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-06-emissions-comparison.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8823529411764706,
+      "decisions_by_tier": {
+        "tier0": 15,
+        "tier1": 2,
+        "cache:tier0": 52,
+        "cache:tier1": 7
+      },
+      "unmatched_signatures": 2,
+      "elapsed_s": 5.222910555999988,
+      "pptx": "_bench/corpus/out/slide-06-emissions-comparison.pptx",
+      "preview_png": "_bench/corpus/preview/slide-06-emissions-comparison.png",
+      "ssim": 0.7252574659578422,
+      "ocr_recall": 0.5975609756097561,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-07-cover-the-numbers.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.625,
+      "decisions_by_tier": {
+        "tier0": 10,
+        "tier1": 6,
+        "cache:tier0": 14,
+        "cache:tier1": 3
+      },
+      "unmatched_signatures": 6,
+      "elapsed_s": 5.147167061999994,
+      "pptx": "_bench/corpus/out/slide-07-cover-the-numbers.pptx",
+      "preview_png": "_bench/corpus/preview/slide-07-cover-the-numbers.png",
+      "ssim": 0.6996591080687677,
+      "ocr_recall": 0.8446601941747572,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-11-hero-number.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "decisions_by_tier": {
+        "tier0": 5,
+        "cache:tier0": 1
+      },
+      "unmatched_signatures": 0,
+      "elapsed_s": 3.95827477499995,
+      "pptx": "_bench/corpus/out/slide-11-hero-number.pptx",
+      "preview_png": "_bench/corpus/preview/slide-11-hero-number.png",
+      "ssim": 0.8766643601551952,
+      "ocr_recall": 0.9285714285714286,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-12-title-reveal.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "decisions_by_tier": {
+        "tier0": 4,
+        "cache:tier0": 1
+      },
+      "unmatched_signatures": 0,
+      "elapsed_s": 3.4381776929999432,
+      "pptx": "_bench/corpus/out/slide-12-title-reveal.pptx",
+      "preview_png": "_bench/corpus/preview/slide-12-title-reveal.png",
+      "ssim": 0.9151506511045063,
+      "ocr_recall": 0.42857142857142855,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-13-spec-sheet.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.6666666666666666,
+      "decisions_by_tier": {
+        "tier0": 6,
+        "tier1": 3,
+        "cache:tier0": 3,
+        "cache:tier1": 3
+      },
+      "unmatched_signatures": 3,
+      "elapsed_s": 4.025315379999938,
+      "pptx": "_bench/corpus/out/slide-13-spec-sheet.pptx",
+      "preview_png": "_bench/corpus/preview/slide-13-spec-sheet.png",
+      "ssim": 0.8959224462507053,
+      "ocr_recall": 0.46153846153846156,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-14-was-now.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.875,
+      "decisions_by_tier": {
+        "tier0": 7,
+        "tier1": 1,
+        "cache:tier0": 3
+      },
+      "unmatched_signatures": 1,
+      "elapsed_s": 3.8785817180000777,
+      "pptx": "_bench/corpus/out/slide-14-was-now.pptx",
+      "preview_png": "_bench/corpus/preview/slide-14-was-now.png",
+      "ssim": 0.8775919818913316,
+      "ocr_recall": 0.9411764705882353,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-15-feature-mosaic.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.6,
+      "decisions_by_tier": {
+        "tier0": 6,
+        "tier1": 4,
+        "cache:tier0": 2,
+        "cache:tier1": 4
+      },
+      "unmatched_signatures": 4,
+      "elapsed_s": 4.240356488999964,
+      "pptx": "_bench/corpus/out/slide-15-feature-mosaic.pptx",
+      "preview_png": "_bench/corpus/preview/slide-15-feature-mosaic.png",
+      "ssim": 0.9123557740080104,
+      "ocr_recall": 1.0,
+      "passed": true,
+      "failing_regions": 0
+    },
+    {
+      "slide": "slide-16-pull-quote.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8333333333333334,
+      "decisions_by_tier": {
+        "tier0": 5,
+        "cache:tier0": 1,
+        "tier1": 1
+      },
+      "unmatched_signatures": 1,
+      "elapsed_s": 3.775588907000042,
+      "pptx": "_bench/corpus/out/slide-16-pull-quote.pptx",
+      "preview_png": "_bench/corpus/preview/slide-16-pull-quote.png",
+      "ssim": 0.8693487496169517,
+      "ocr_recall": 0.9545454545454546,
+      "passed": true,
+      "failing_regions": 0
+    },
+    {
+      "slide": "slide-17-thank-you.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "decisions_by_tier": {
+        "tier0": 5,
+        "cache:tier0": 1
+      },
+      "unmatched_signatures": 0,
+      "elapsed_s": 3.541882178000037,
+      "pptx": "_bench/corpus/out/slide-17-thank-you.pptx",
+      "preview_png": "_bench/corpus/preview/slide-17-thank-you.png",
+      "ssim": 0.9005573877931069,
+      "ocr_recall": 1.0,
+      "passed": true,
+      "failing_regions": 0
+    },
+    {
+      "slide": "slide-21-spec-sheet.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "decisions_by_tier": {
+        "tier0": 5,
+        "cache:tier0": 16
+      },
+      "unmatched_signatures": 0,
+      "elapsed_s": 4.797010899000043,
+      "pptx": "_bench/corpus/out/slide-21-spec-sheet.pptx",
+      "preview_png": "_bench/corpus/preview/slide-21-spec-sheet.png",
+      "ssim": 0.7320239976971772,
+      "ocr_recall": 0.5263157894736842,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-22-schematic.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.6,
+      "decisions_by_tier": {
+        "tier0": 3,
+        "cache:tier0": 12,
+        "tier1": 2,
+        "cache:tier1": 15
+      },
+      "unmatched_signatures": 2,
+      "elapsed_s": 4.4876333659999545,
+      "pptx": "_bench/corpus/out/slide-22-schematic.pptx",
+      "preview_png": "_bench/corpus/preview/slide-22-schematic.png",
+      "ssim": 0.8228568961728339,
+      "ocr_recall": 0.0,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-23-density-grid.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.875,
+      "decisions_by_tier": {
+        "tier0": 7,
+        "cache:tier0": 11,
+        "tier2": 1
+      },
+      "unmatched_signatures": 1,
+      "elapsed_s": 5.5143427320000455,
+      "pptx": "_bench/corpus/out/slide-23-density-grid.pptx",
+      "preview_png": "_bench/corpus/preview/slide-23-density-grid.png",
+      "ssim": 0.7133950440145623,
+      "ocr_recall": 0.7903225806451613,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-24-code-hero.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "decisions_by_tier": {
+        "tier0": 8
+      },
+      "unmatched_signatures": 0,
+      "elapsed_s": 5.040217452999968,
+      "pptx": "_bench/corpus/out/slide-24-code-hero.pptx",
+      "preview_png": "_bench/corpus/preview/slide-24-code-hero.png",
+      "ssim": 0.7469427583544462,
+      "ocr_recall": 0.8372093023255814,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-25-status-board.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9166666666666666,
+      "decisions_by_tier": {
+        "tier0": 11,
+        "cache:tier0": 42,
+        "tier1": 1
+      },
+      "unmatched_signatures": 1,
+      "elapsed_s": 4.725137207999978,
+      "pptx": "_bench/corpus/out/slide-25-status-board.pptx",
+      "preview_png": "_bench/corpus/preview/slide-25-status-board.png",
+      "ssim": 0.6424308951147942,
+      "ocr_recall": 0.6935483870967742,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-26-manifesto.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "decisions_by_tier": {
+        "tier0": 5
+      },
+      "unmatched_signatures": 0,
+      "elapsed_s": 4.566955337000081,
+      "pptx": "_bench/corpus/out/slide-26-manifesto.pptx",
+      "preview_png": "_bench/corpus/preview/slide-26-manifesto.png",
+      "ssim": 0.6387452594517989,
+      "ocr_recall": 0.8470588235294118,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-27-dotmatrix-ladder.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.6666666666666666,
+      "decisions_by_tier": {
+        "tier0": 12,
+        "cache:tier0": 39,
+        "tier1": 4,
+        "tier2": 2
+      },
+      "unmatched_signatures": 6,
+      "elapsed_s": 5.008728966000035,
+      "pptx": "_bench/corpus/out/slide-27-dotmatrix-ladder.pptx",
+      "preview_png": "_bench/corpus/preview/slide-27-dotmatrix-ladder.png",
+      "ssim": 0.7172800147417976,
+      "ocr_recall": 0.3235294117647059,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-31-hero-gradient.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8333333333333334,
+      "decisions_by_tier": {
+        "tier0": 14,
+        "cache:tier0": 12,
+        "tier2": 2,
+        "tier1": 1,
+        "promotion": 1
+      },
+      "unmatched_signatures": 3,
+      "elapsed_s": 6.565844341000002,
+      "pptx": "_bench/corpus/out/slide-31-hero-gradient.pptx",
+      "preview_png": "_bench/corpus/preview/slide-31-hero-gradient.png",
+      "ssim": 0.774445905836231,
+      "ocr_recall": 0.8536585365853658,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-32-stats-trio.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.75,
+      "decisions_by_tier": {
+        "tier0": 14,
+        "tier1": 2,
+        "cache:tier0": 10,
+        "tier2": 3,
+        "cache:tier1": 4,
+        "cache:tier2": 1,
+        "promotion": 1
+      },
+      "unmatched_signatures": 5,
+      "elapsed_s": 7.0243485269999155,
+      "pptx": "_bench/corpus/out/slide-32-stats-trio.pptx",
+      "preview_png": "_bench/corpus/preview/slide-32-stats-trio.png",
+      "ssim": 0.7588265264730484,
+      "ocr_recall": 0.8888888888888888,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-33-pricing-tiers.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8666666666666667,
+      "decisions_by_tier": {
+        "tier0": 25,
+        "cache:tier0": 39,
+        "tier2": 3,
+        "promotion": 2
+      },
+      "unmatched_signatures": 4,
+      "elapsed_s": 6.994783765999955,
+      "pptx": "_bench/corpus/out/slide-33-pricing-tiers.pptx",
+      "preview_png": "_bench/corpus/preview/slide-33-pricing-tiers.png",
+      "ssim": 0.7328962893002521,
+      "ocr_recall": 0.7906976744186046,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-34-feature-bento.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.7,
+      "decisions_by_tier": {
+        "tier0": 20,
+        "cache:tier0": 30,
+        "tier1": 5,
+        "cache:tier1": 3,
+        "tier2": 2,
+        "promotion": 3
+      },
+      "unmatched_signatures": 9,
+      "elapsed_s": 7.931208665000099,
+      "pptx": "_bench/corpus/out/slide-34-feature-bento.pptx",
+      "preview_png": "_bench/corpus/preview/slide-34-feature-bento.png",
+      "ssim": 0.6915274158993676,
+      "ocr_recall": 0.6896551724137931,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-35-quote-wall.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8181818181818182,
+      "decisions_by_tier": {
+        "tier0": 17,
+        "cache:tier0": 16,
+        "tier1": 1,
+        "tier2": 3,
+        "cache:tier1": 2,
+        "cache:tier2": 1,
+        "promotion": 1
+      },
+      "unmatched_signatures": 4,
+      "elapsed_s": 6.494772035999972,
+      "pptx": "_bench/corpus/out/slide-35-quote-wall.pptx",
+      "preview_png": "_bench/corpus/preview/slide-35-quote-wall.png",
+      "ssim": 0.7633244599097689,
+      "ocr_recall": 0.8829787234042553,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-36-cta-closing.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9285714285714286,
+      "decisions_by_tier": {
+        "tier0": 13,
+        "cache:tier0": 7,
+        "promotion": 1
+      },
+      "unmatched_signatures": 1,
+      "elapsed_s": 6.129808945000036,
+      "pptx": "_bench/corpus/out/slide-36-cta-closing.pptx",
+      "preview_png": "_bench/corpus/preview/slide-36-cta-closing.png",
+      "ssim": 0.7394921282067551,
+      "ocr_recall": 0.975,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-37-logo-mosaic.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.95,
+      "decisions_by_tier": {
+        "tier0": 18,
+        "cache:tier0": 25,
+        "tier2": 1,
+        "promotion": 1
+      },
+      "unmatched_signatures": 1,
+      "elapsed_s": 7.089365782000073,
+      "pptx": "_bench/corpus/out/slide-37-logo-mosaic.pptx",
+      "preview_png": "_bench/corpus/preview/slide-37-logo-mosaic.png",
+      "ssim": 0.7382119445830065,
+      "ocr_recall": 0.7948717948717948,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-41-hero-blob-frame.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.4,
+      "decisions_by_tier": {
+        "tier1": 2,
+        "tier0": 2,
+        "promotion": 1
+      },
+      "unmatched_signatures": 3,
+      "elapsed_s": 4.565379665000023,
+      "pptx": "_bench/corpus/out/slide-41-hero-blob-frame.pptx",
+      "preview_png": "_bench/corpus/preview/slide-41-hero-blob-frame.png",
+      "ssim": 0.9092518317169708,
+      "ocr_recall": 0.08108108108108109,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-42-story-pullquote.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.6666666666666666,
+      "decisions_by_tier": {
+        "tier0": 2,
+        "tier1": 1
+      },
+      "unmatched_signatures": 1,
+      "elapsed_s": 4.199771734000024,
+      "pptx": "_bench/corpus/out/slide-42-story-pullquote.pptx",
+      "preview_png": "_bench/corpus/preview/slide-42-story-pullquote.png",
+      "ssim": 0.8977143799247921,
+      "ocr_recall": 0.0,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-43-ritual-steps.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "decisions_by_tier": {
+        "tier0": 2
+      },
+      "unmatched_signatures": 0,
+      "elapsed_s": 3.995322253999916,
+      "pptx": "_bench/corpus/out/slide-43-ritual-steps.pptx",
+      "preview_png": "_bench/corpus/preview/slide-43-ritual-steps.png",
+      "ssim": 0.8844248402234959,
+      "ocr_recall": 0.873015873015873,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-44-feature-breathing.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 2
+      },
+      "unmatched_signatures": 0,
+      "elapsed_s": 3.895225943000014,
+      "pptx": "_bench/corpus/out/slide-44-feature-breathing.pptx",
+      "preview_png": "_bench/corpus/preview/slide-44-feature-breathing.png",
+      "ssim": 0.8731921232686792,
+      "ocr_recall": 0.9272727272727272,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-45-quote-testimonial.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8,
+      "decisions_by_tier": {
+        "tier0": 4,
+        "tier1": 1
+      },
+      "unmatched_signatures": 1,
+      "elapsed_s": 4.013837473999956,
+      "pptx": "_bench/corpus/out/slide-45-quote-testimonial.pptx",
+      "preview_png": "_bench/corpus/preview/slide-45-quote-testimonial.png",
+      "ssim": 0.9261917623020471,
+      "ocr_recall": 0.0,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-46-call-to-rest.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "decisions_by_tier": {
+        "tier0": 2
+      },
+      "unmatched_signatures": 0,
+      "elapsed_s": 3.5485788960000946,
+      "pptx": "_bench/corpus/out/slide-46-call-to-rest.pptx",
+      "preview_png": "_bench/corpus/preview/slide-46-call-to-rest.png",
+      "ssim": 0.9243449223579702,
+      "ocr_recall": 0.5882352941176471,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-47-manifesto-values.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "decisions_by_tier": {
+        "tier0": 2
+      },
+      "unmatched_signatures": 0,
+      "elapsed_s": 4.249337534000006,
+      "pptx": "_bench/corpus/out/slide-47-manifesto-values.pptx",
+      "preview_png": "_bench/corpus/preview/slide-47-manifesto-values.png",
+      "ssim": 0.871792732256944,
+      "ocr_recall": 0.9294117647058824,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-51-strategic-matrix.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.7777777777777778,
+      "decisions_by_tier": {
+        "tier0": 21,
+        "tier1": 3,
+        "cache:tier1": 3,
+        "cache:tier0": 23,
+        "tier2": 3,
+        "cache:tier2": 9
+      },
+      "unmatched_signatures": 6,
+      "elapsed_s": 5.461265236000031,
+      "pptx": "_bench/corpus/out/slide-51-strategic-matrix.pptx",
+      "preview_png": "_bench/corpus/preview/slide-51-strategic-matrix.png",
+      "ssim": 0.7884407212335605,
+      "ocr_recall": 0.7310924369747899,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-52-stacked-bar.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9411764705882353,
+      "decisions_by_tier": {
+        "tier0": 32,
+        "tier1": 2,
+        "cache:tier0": 34,
+        "cache:tier1": 2
+      },
+      "unmatched_signatures": 2,
+      "elapsed_s": 5.759129054999903,
+      "pptx": "_bench/corpus/out/slide-52-stacked-bar.pptx",
+      "preview_png": "_bench/corpus/preview/slide-52-stacked-bar.png",
+      "ssim": 0.650557184956241,
+      "ocr_recall": 0.7482993197278912,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-53-comparison-table.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.6923076923076923,
+      "decisions_by_tier": {
+        "tier0": 18,
+        "tier1": 2,
+        "cache:tier0": 55,
+        "tier2": 6
+      },
+      "unmatched_signatures": 8,
+      "elapsed_s": 5.350418729000012,
+      "pptx": "_bench/corpus/out/slide-53-comparison-table.pptx",
+      "preview_png": "_bench/corpus/preview/slide-53-comparison-table.png",
+      "ssim": 0.7290209478528421,
+      "ocr_recall": 0.5362318840579711,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-54-numbered-insights.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.875,
+      "decisions_by_tier": {
+        "tier0": 14,
+        "tier1": 2,
+        "cache:tier0": 23,
+        "cache:tier1": 4
+      },
+      "unmatched_signatures": 2,
+      "elapsed_s": 5.689588296000011,
+      "pptx": "_bench/corpus/out/slide-54-numbered-insights.pptx",
+      "preview_png": "_bench/corpus/preview/slide-54-numbered-insights.png",
+      "ssim": 0.650485591561118,
+      "ocr_recall": 0.8564102564102564,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-55-waterfall.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8518518518518519,
+      "decisions_by_tier": {
+        "tier0": 23,
+        "tier1": 1,
+        "cache:tier0": 46,
+        "tier2": 3,
+        "cache:tier2": 4
+      },
+      "unmatched_signatures": 4,
+      "elapsed_s": 5.769641013999944,
+      "pptx": "_bench/corpus/out/slide-55-waterfall.pptx",
+      "preview_png": "_bench/corpus/preview/slide-55-waterfall.png",
+      "ssim": 0.7289959919610484,
+      "ocr_recall": 0.6578947368421053,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-56-cover.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.7058823529411765,
+      "decisions_by_tier": {
+        "tier0": 12,
+        "cache:tier0": 9,
+        "tier1": 5,
+        "cache:tier1": 18
+      },
+      "unmatched_signatures": 5,
+      "elapsed_s": 4.663594459000024,
+      "pptx": "_bench/corpus/out/slide-56-cover.pptx",
+      "preview_png": "_bench/corpus/preview/slide-56-cover.png",
+      "ssim": 0.7691394276413783,
+      "ocr_recall": 0.8648648648648649,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-57-ranking.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.7586206896551724,
+      "decisions_by_tier": {
+        "tier1": 2,
+        "tier0": 22,
+        "cache:tier1": 2,
+        "cache:tier0": 71,
+        "tier2": 5,
+        "cache:tier2": 5
+      },
+      "unmatched_signatures": 7,
+      "elapsed_s": 6.434262856999794,
+      "pptx": "_bench/corpus/out/slide-57-ranking.pptx",
+      "preview_png": "_bench/corpus/preview/slide-57-ranking.png",
+      "ssim": 0.6845700977683783,
+      "ocr_recall": 0.41216216216216217,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-61-magazine-cover-mask.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "decisions_by_tier": {
+        "tier0": 5,
+        "promotion": 1
+      },
+      "unmatched_signatures": 0,
+      "elapsed_s": 5.173344482999937,
+      "pptx": "_bench/corpus/out/slide-61-magazine-cover-mask.pptx",
+      "preview_png": "_bench/corpus/preview/slide-61-magazine-cover-mask.png",
+      "ssim": 0.8878544670840013,
+      "ocr_recall": 0.7272727272727273,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-62-magazine-spread.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9166666666666666,
+      "decisions_by_tier": {
+        "tier0": 11,
+        "tier1": 1
+      },
+      "unmatched_signatures": 1,
+      "elapsed_s": 4.511217198000168,
+      "pptx": "_bench/corpus/out/slide-62-magazine-spread.pptx",
+      "preview_png": "_bench/corpus/preview/slide-62-magazine-spread.png",
+      "ssim": 0.8352644873959458,
+      "ocr_recall": 0.6881720430107527,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-63-photo-essay-caption.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.7272727272727273,
+      "decisions_by_tier": {
+        "tier0": 8,
+        "tier1": 1,
+        "cache:tier1": 1,
+        "promotion": 2,
+        "cache:tier0": 2
+      },
+      "unmatched_signatures": 3,
+      "elapsed_s": 5.887609655000006,
+      "pptx": "_bench/corpus/out/slide-63-photo-essay-caption.pptx",
+      "preview_png": "_bench/corpus/preview/slide-63-photo-essay-caption.png",
+      "ssim": 0.8104974471480585,
+      "ocr_recall": 0.719626168224299,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-64-pull-quote-faded.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "decisions_by_tier": {
+        "tier0": 10,
+        "cache:tier0": 2,
+        "promotion": 1
+      },
+      "unmatched_signatures": 0,
+      "elapsed_s": 5.276360705999878,
+      "pptx": "_bench/corpus/out/slide-64-pull-quote-faded.pptx",
+      "preview_png": "_bench/corpus/preview/slide-64-pull-quote-faded.png",
+      "ssim": 0.6696320017792573,
+      "ocr_recall": 0.3684210526315789,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-65-mosaic-gallery.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "decisions_by_tier": {
+        "tier0": 12,
+        "cache:tier0": 15
+      },
+      "unmatched_signatures": 0,
+      "elapsed_s": 4.26153856399992,
+      "pptx": "_bench/corpus/out/slide-65-mosaic-gallery.pptx",
+      "preview_png": "_bench/corpus/preview/slide-65-mosaic-gallery.png",
+      "ssim": 0.883851891312883,
+      "ocr_recall": 0.6774193548387096,
+      "passed": false,
+      "failing_regions": 20
+    },
+    {
+      "slide": "slide-66-duotone-hero.html",
+      "ok": true,
+      "n_slides": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "decisions_by_tier": {
+        "tier0": 5,
+        "cache:tier0": 1,
+        "promotion": 1
+      },
+      "unmatched_signatures": 0,
+      "elapsed_s": 7.874503588000152,
+      "pptx": "_bench/corpus/out/slide-66-duotone-hero.pptx",
+      "preview_png": "_bench/corpus/preview/slide-66-duotone-hero.png",
+      "ssim": 0.8037507777201115,
+      "ocr_recall": 0.5476190476190477,
+      "passed": false,
+      "failing_regions": 20
+    }
+  ],
+  "mean_ssim": 0.7896285076808468,
+  "mean_ocr_recall": 0.6982557619811184,
+  "pass_rate": 0.0625
+}

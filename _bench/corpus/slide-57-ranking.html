@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Top 10 capability gaps</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; -webkit-font-smoothing:antialiased; background:#ffffff; color:#1a1a1a; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; position:relative; overflow:hidden; background:#ffffff; }
+  .topbar { position:absolute; left:64px; right:64px; top:24px; display:flex; justify-content:space-between; font-family:'Inter','Helvetica Neue',sans-serif; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#475569; font-weight:600; padding-bottom:10px; border-bottom:1px solid rgba(0,0,0,0.12); }
+  .head { position:absolute; left:64px; top:74px; right:64px; }
+  .eyebrow { font-family:'Inter','Helvetica Neue',sans-serif; font-size:10px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:#0b3a5c; }
+  .rule { width:64px; height:2px; background:#0b3a5c; margin:8px 0 14px 0; }
+  h1 { font-family:'Source Serif Pro',Georgia,serif; font-weight:600; font-size:30px; letter-spacing:-0.01em; line-height:1.18; margin:0; max-width:980px; color:#1a1a1a; }
+  .lede { font-family:'Source Serif Pro',Georgia,serif; font-style:italic; font-size:16px; line-height:1.45; color:#475569; margin:12px 0 0 0; max-width:980px; }
+  sup { font-size:8.5px; color:#0b3a5c; font-weight:600; vertical-align:super; }
+  .panel { position:absolute; left:64px; right:64px; top:218px; }
+
+  .table-head { display:grid; grid-template-columns: 36px 220px 1fr 90px 90px 110px; gap:14px; padding:8px 0; border-bottom:1px solid #1a1a1a; font-family:'Inter','Helvetica Neue',sans-serif; font-size:9.5px; letter-spacing:0.16em; text-transform:uppercase; font-weight:700; color:#1a1a1a; align-items:end; }
+  .table-head .ra { text-align:right; }
+  .table-head .l { color:#475569; font-weight:600; }
+
+  .row { display:grid; grid-template-columns: 36px 220px 1fr 90px 90px 110px; gap:14px; align-items:center; padding:9px 0; border-bottom:1px solid rgba(0,0,0,0.10); font-family:'Inter','Helvetica Neue',sans-serif; font-size:11.5px; color:#1a1a1a; }
+  .rk { font-family:'Source Serif Pro',Georgia,serif; font-size:18px; font-weight:600; color:#0b3a5c; font-variant-numeric:tabular-nums; letter-spacing:-0.01em; }
+  .nm { font-family:'Source Serif Pro',Georgia,serif; font-size:13.5px; font-weight:600; color:#1a1a1a; letter-spacing:-0.005em; }
+  .nm .sub { font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; font-weight:400; color:#475569; margin-top:2px; }
+  .barwrap { position:relative; height:18px; background:rgba(11,58,92,0.05); border-left:1px solid rgba(0,0,0,0.18); }
+  .bar-fill { position:absolute; left:0; top:0; bottom:0; background:#0b3a5c; }
+  .bar-fill.muted { background:#475569; }
+  .bar-fill.low { background:#94a3b8; }
+  .barlbl { position:absolute; right:8px; top:50%; transform:translateY(-50%); font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; font-weight:600; color:#1a1a1a; font-variant-numeric:tabular-nums; }
+  .barlbl.inv { color:#ffffff; }
+  .scr { font-family:'Inter','Helvetica Neue',sans-serif; font-size:13px; font-weight:600; color:#1a1a1a; font-variant-numeric:tabular-nums; text-align:right; letter-spacing:-0.005em; }
+  .delta { font-family:'Inter','Helvetica Neue',sans-serif; font-size:11.5px; font-weight:600; font-variant-numeric:tabular-nums; text-align:right; }
+  .delta.up { color:#0b3a5c; }
+  .delta.down { color:#7a1f3d; }
+  .delta.flat { color:#64748b; }
+  .delta .arr { display:inline-block; margin-right:3px; font-size:11px; }
+  .prev { font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; color:#475569; text-align:right; font-variant-numeric:tabular-nums; }
+  .prev .pr-num { color:#1a1a1a; font-weight:600; }
+  .prev .pr-dir { display:inline-block; width:14px; }
+
+  .scale { display:grid; grid-template-columns: 36px 220px 1fr 90px 90px 110px; gap:14px; padding-top:8px; border-top:1px solid rgba(0,0,0,0.16); margin-top:6px; font-family:'Inter','Helvetica Neue',sans-serif; font-size:9.5px; color:#475569; font-variant-numeric:tabular-nums; }
+  .scale .axis { position:relative; height:14px; }
+  .scale .tick { position:absolute; top:-1px; width:1px; height:5px; background:rgba(0,0,0,0.3); }
+  .scale .axis span { position:absolute; top:6px; transform:translateX(-50%); }
+
+  .meta-row { position:absolute; left:64px; right:64px; top:594px; display:grid; grid-template-columns: 1fr 1fr 1fr; gap:24px; }
+  .meta-card { border:1px solid #1a1a1a; padding:10px 12px; background:#f7f5f2; }
+  .meta-card .mh { font-family:'Inter','Helvetica Neue',sans-serif; font-size:9.5px; letter-spacing:0.16em; text-transform:uppercase; font-weight:700; color:#0b3a5c; }
+  .meta-card .mt { font-family:'Source Serif Pro',Georgia,serif; font-size:12px; line-height:1.45; color:#1a1a1a; margin-top:4px; }
+  .meta-card .mt b { font-weight:600; color:#0b3a5c; font-variant-numeric:tabular-nums; }
+
+  .footer { position:absolute; left:64px; right:64px; bottom:24px; display:flex; justify-content:space-between; align-items:flex-end; border-top:1px solid rgba(0,0,0,0.12); padding-top:10px; }
+  .source { font-family:'Source Serif Pro',Georgia,serif; font-style:italic; font-size:10.5px; color:#475569; max-width:900px; }
+  .pgnum { font-family:'Inter','Helvetica Neue',sans-serif; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:#475569; font-variant-numeric:tabular-nums; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="topbar">
+    <span>Beacon &amp; Lowe — Enterprise Software Practice</span>
+    <span>Section VI · Capability Gaps</span>
+  </div>
+  <div class="head">
+    <div class="eyebrow">Exhibit 62 · Buyer-Reported Capability Gaps, Top 10</div>
+    <div class="rule"></div>
+    <h1 data-pptx-role="title">AI-grounded reporting tops the gap list for the second straight year &mdash; eight of ten gaps moved against vendors<sup>1</sup></h1>
+    <p class="lede">Buyers rate the unmet-need score on a 0&ndash;100 scale across 24 capability dimensions; positive deltas indicate gaps widening since FY 2024. Year-on-year movement is positive in eight cases, neutral in one, narrowing in one.</p>
+  </div>
+
+  <div class="panel">
+    <div class="table-head">
+      <div>Rank</div>
+      <div>Capability</div>
+      <div class="l">Unmet-need score, 0&ndash;100</div>
+      <div class="ra">Score<sup>2</sup></div>
+      <div class="ra">YoY &Delta;</div>
+      <div class="ra">Prior rank</div>
+    </div>
+
+    <div class="row">
+      <div class="rk">01</div>
+      <div class="nm">AI-grounded reporting<div class="sub">Citation-backed answers across enterprise corpora</div></div>
+      <div class="barwrap"><div class="bar-fill" style="width:84%;"></div><div class="barlbl inv" style="left:6px; right:auto; color:#ffffff;">84</div></div>
+      <div class="scr">84.2</div>
+      <div class="delta up"><span class="arr">&#9650;</span>+6.8</div>
+      <div class="prev"><span class="pr-num">#01</span> &middot; <span class="pr-dir">&minus;</span> flat</div>
+    </div>
+
+    <div class="row">
+      <div class="rk">02</div>
+      <div class="nm">Cross-tenant data lineage<div class="sub">Audit-grade provenance across SaaS estate</div></div>
+      <div class="barwrap"><div class="bar-fill" style="width:79%;"></div><div class="barlbl inv" style="left:6px; right:auto; color:#ffffff;">79</div></div>
+      <div class="scr">78.6</div>
+      <div class="delta up"><span class="arr">&#9650;</span>+11.4</div>
+      <div class="prev"><span class="pr-num">#05</span> &middot; <span class="pr-dir">&uarr;</span> +3</div>
+    </div>
+
+    <div class="row">
+      <div class="rk">03</div>
+      <div class="nm">Sub-second reactivity at scale<div class="sub">Sub-1s response on &gt;1B-row analytics</div></div>
+      <div class="barwrap"><div class="bar-fill" style="width:74%;"></div><div class="barlbl inv" style="left:6px; right:auto; color:#ffffff;">74</div></div>
+      <div class="scr">73.9</div>
+      <div class="delta up"><span class="arr">&#9650;</span>+4.2</div>
+      <div class="prev"><span class="pr-num">#04</span> &middot; <span class="pr-dir">&uarr;</span> +1</div>
+    </div>
+
+    <div class="row">
+      <div class="rk">04</div>
+      <div class="nm">In-region data planes<div class="sub">EU, UK, IN, BR sovereignty by default</div></div>
+      <div class="barwrap"><div class="bar-fill" style="width:71%;"></div><div class="barlbl inv" style="left:6px; right:auto; color:#ffffff;">71</div></div>
+      <div class="scr">70.8</div>
+      <div class="delta up"><span class="arr">&#9650;</span>+18.6</div>
+      <div class="prev"><span class="pr-num">#11</span> &middot; <span class="pr-dir">&uarr;</span> +7</div>
+    </div>
+
+    <div class="row">
+      <div class="rk">05</div>
+      <div class="nm">Workflow-grade orchestration<div class="sub">Long-running, recoverable, multi-vendor</div></div>
+      <div class="barwrap"><div class="bar-fill muted" style="width:66%;"></div><div class="barlbl inv" style="left:6px; right:auto; color:#ffffff;">66</div></div>
+      <div class="scr">66.1</div>
+      <div class="delta up"><span class="arr">&#9650;</span>+3.1</div>
+      <div class="prev"><span class="pr-num">#06</span> &middot; <span class="pr-dir">&uarr;</span> +1</div>
+    </div>
+
+    <div class="row">
+      <div class="rk">06</div>
+      <div class="nm">Granular usage metering<div class="sub">Per-feature, per-seat, per-event billing</div></div>
+      <div class="barwrap"><div class="bar-fill muted" style="width:62%;"></div><div class="barlbl inv" style="left:6px; right:auto; color:#ffffff;">62</div></div>
+      <div class="scr">61.7</div>
+      <div class="delta up"><span class="arr">&#9650;</span>+5.4</div>
+      <div class="prev"><span class="pr-num">#07</span> &middot; <span class="pr-dir">&uarr;</span> +1</div>
+    </div>
+
+    <div class="row">
+      <div class="rk">07</div>
+      <div class="nm">Edge-deployable runtimes<div class="sub">Sub-50ms inference at branch sites</div></div>
+      <div class="barwrap"><div class="bar-fill muted" style="width:58%;"></div><div class="barlbl inv" style="left:6px; right:auto; color:#ffffff;">58</div></div>
+      <div class="scr">57.9</div>
+      <div class="delta down"><span class="arr">&#9660;</span>&minus;2.6</div>
+      <div class="prev"><span class="pr-num">#03</span> &middot; <span class="pr-dir">&darr;</span> &minus;4</div>
+    </div>
+
+    <div class="row">
+      <div class="rk">08</div>
+      <div class="nm">Per-row access policies<div class="sub">ABAC at warehouse + app boundary</div></div>
+      <div class="barwrap"><div class="bar-fill muted" style="width:54%;"></div><div class="barlbl inv" style="left:6px; right:auto; color:#ffffff;">54</div></div>
+      <div class="scr">54.2</div>
+      <div class="delta up"><span class="arr">&#9650;</span>+1.8</div>
+      <div class="prev"><span class="pr-num">#08</span> &middot; <span class="pr-dir">&minus;</span> flat</div>
+    </div>
+
+    <div class="row">
+      <div class="rk">09</div>
+      <div class="nm">First-class observability<div class="sub">OpenTelemetry-native, vendor-agnostic</div></div>
+      <div class="barwrap"><div class="bar-fill low" style="width:48%;"></div><div class="barlbl inv" style="left:6px; right:auto; color:#ffffff;">48</div></div>
+      <div class="scr">48.3</div>
+      <div class="delta flat"><span class="arr">&#9644;</span>+0.4</div>
+      <div class="prev"><span class="pr-num">#09</span> &middot; <span class="pr-dir">&minus;</span> flat</div>
+    </div>
+
+    <div class="row">
+      <div class="rk">10</div>
+      <div class="nm">Configurable retention<div class="sub">Per-tenant policy enforced server-side</div></div>
+      <div class="barwrap"><div class="bar-fill low" style="width:43%;"></div><div class="barlbl inv" style="left:6px; right:auto; color:#ffffff;">43</div></div>
+      <div class="scr">43.1</div>
+      <div class="delta up"><span class="arr">&#9650;</span>+2.2</div>
+      <div class="prev"><span class="pr-num">#12</span> &middot; <span class="pr-dir">&uarr;</span> +2</div>
+    </div>
+
+    <div class="scale">
+      <div></div>
+      <div></div>
+      <div class="axis">
+        <div class="tick" style="left:0;"></div><span style="left:0;">0</span>
+        <div class="tick" style="left:25%;"></div><span style="left:25%;">25</span>
+        <div class="tick" style="left:50%;"></div><span style="left:50%;">50</span>
+        <div class="tick" style="left:75%;"></div><span style="left:75%;">75</span>
+        <div class="tick" style="left:100%;"></div><span style="left:100%;">100</span>
+      </div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+
+  <div class="meta-row">
+    <div class="meta-card">
+      <div class="mh">Risers (4)</div>
+      <div class="mt">Sovereignty &amp; lineage capabilities widened gap fastest, +<b>15.0&nbsp;ppts</b> on average since FY 2024.</div>
+    </div>
+    <div class="meta-card">
+      <div class="mh">Decliners (1)</div>
+      <div class="mt">Edge runtimes narrowed by <b>2.6&nbsp;ppts</b>; first material vendor improvement in three cycles.</div>
+    </div>
+    <div class="meta-card">
+      <div class="mh">Implication</div>
+      <div class="mt">Roadmap funding should target the <b>top 4</b> &mdash; together they account for <b>~58%</b> of stated buyer urgency.<sup>3</sup></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="source">Source: Beacon &amp; Lowe Capability Gap Index, FY 2026; n=412 enterprise software buyers, fielded Q3 2025; YoY base is FY 2024 fielding of n=389. <sup style="color:#0b3a5c;">1</sup> Eight gaps widened, one flat, one narrowed. <sup style="color:#0b3a5c;">2</sup> Score is 100 &times; (importance &minus; satisfaction). <sup style="color:#0b3a5c;">3</sup> Urgency-weighted by buyer-stated planning window.</div>
+    <div class="pgnum">57 / 84</div>
+  </div>
+</div>
+</body>
+</html>

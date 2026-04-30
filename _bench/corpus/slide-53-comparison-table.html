@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Operating model comparison</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; -webkit-font-smoothing:antialiased; background:#ffffff; color:#1a1a1a; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; position:relative; overflow:hidden; background:#ffffff; }
+  .topbar { position:absolute; left:64px; right:64px; top:24px; display:flex; justify-content:space-between; font-family:'Inter','Helvetica Neue',sans-serif; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#475569; font-weight:600; padding-bottom:10px; border-bottom:1px solid rgba(0,0,0,0.12); }
+  .head { position:absolute; left:64px; top:74px; right:64px; }
+  .eyebrow { font-family:'Inter','Helvetica Neue',sans-serif; font-size:10px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:#0b3a5c; }
+  .rule { width:64px; height:2px; background:#0b3a5c; margin:8px 0 14px 0; }
+  h1 { font-family:'Source Serif Pro',Georgia,serif; font-weight:600; font-size:30px; letter-spacing:-0.01em; line-height:1.18; margin:0; max-width:980px; color:#1a1a1a; }
+  .lede { font-family:'Source Serif Pro',Georgia,serif; font-style:italic; font-size:16px; line-height:1.45; color:#475569; margin:12px 0 0 0; max-width:1000px; }
+  sup { font-size:8.5px; color:#0b3a5c; font-weight:600; vertical-align:super; }
+  .tbl { position:absolute; left:64px; right:64px; top:228px; }
+  .row { display:grid; grid-template-columns: 220px 1fr 1fr 1fr 1fr; }
+  .row.head-row { border-top:2px solid #1a1a1a; border-bottom:1px solid #1a1a1a; }
+  .row.head-row .cell { padding:12px 14px 10px 14px; font-family:'Inter','Helvetica Neue',sans-serif; font-size:10px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:#1a1a1a; }
+  .row.head-row .cell.brand { color:#0b3a5c; }
+  .row.head-row .sub { font-family:'Source Serif Pro',Georgia,serif; font-style:italic; font-weight:400; font-size:11px; color:#475569; letter-spacing:0; text-transform:none; margin-top:2px; }
+  .cell { padding:11px 14px; box-sizing:border-box; font-family:'Inter','Helvetica Neue',sans-serif; font-size:11.5px; line-height:1.45; color:#1a1a1a; border-right:1px solid rgba(0,0,0,0.08); }
+  .cell:last-child { border-right:none; }
+  .cell.row-label { font-family:'Source Serif Pro',Georgia,serif; font-weight:600; font-size:13px; color:#1a1a1a; letter-spacing:-0.005em; }
+  .cell.row-label .sub { font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; font-weight:400; color:#475569; margin-top:2px; }
+  .row.body-row { border-bottom:1px solid rgba(0,0,0,0.10); }
+  .row.body-row.alt { background:#f7f5f2; }
+  .row.body-row.alt .cell { border-right-color:rgba(0,0,0,0.06); }
+  .num { font-variant-numeric:tabular-nums; font-weight:600; color:#1a1a1a; }
+  .delta-pos { color:#0b3a5c; font-variant-numeric:tabular-nums; font-weight:600; }
+  .delta-neg { color:#7a1f3d; font-variant-numeric:tabular-nums; font-weight:600; }
+  .badge { display:inline-block; padding:2px 7px; border:1px solid #1a1a1a; font-size:9.5px; letter-spacing:0.06em; font-weight:600; text-transform:uppercase; color:#1a1a1a; }
+  .badge.b { border-color:#0b3a5c; color:#0b3a5c; }
+  .col-brand { background:rgba(11,58,92,0.04); }
+  .row.foot-row { border-top:1px solid #1a1a1a; border-bottom:2px solid #1a1a1a; background:#ffffff; }
+  .row.foot-row .cell { font-weight:700; font-size:11.5px; }
+  .pill { display:inline-block; width:8px; height:8px; background:#0b3a5c; margin-right:4px; vertical-align:middle; }
+  .pill.empty { background:#ffffff; border:1px solid #1a1a1a; }
+  /* half-state indicator handled via rate dots below; no gradients used */
+  .rate { display:inline-flex; gap:2px; vertical-align:middle; }
+  .rate i { width:7px; height:7px; display:inline-block; background:#0b3a5c; }
+  .rate i.off { background:#cbd5e1; }
+  .footnotes { position:absolute; left:64px; right:64px; bottom:64px; font-family:'Source Serif Pro',Georgia,serif; font-size:10.5px; line-height:1.5; color:#475569; }
+  .footnotes b { color:#1a1a1a; font-weight:600; }
+  .footer { position:absolute; left:64px; right:64px; bottom:24px; display:flex; justify-content:space-between; align-items:flex-end; border-top:1px solid rgba(0,0,0,0.12); padding-top:10px; }
+  .source { font-family:'Source Serif Pro',Georgia,serif; font-style:italic; font-size:10.5px; color:#475569; max-width:900px; }
+  .pgnum { font-family:'Inter','Helvetica Neue',sans-serif; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:#475569; font-variant-numeric:tabular-nums; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="topbar">
+    <span>Beacon &amp; Lowe — Enterprise Software Practice</span>
+    <span>Section IV · Operating Models</span>
+  </div>
+  <div class="head">
+    <div class="eyebrow">Exhibit 31 · Archetype Comparison</div>
+    <div class="rule"></div>
+    <h1 data-pptx-role="title">Four operating-model archetypes &mdash; only the federated build sustains a return spread above 12 ppts<sup>1</sup></h1>
+    <p class="lede">Across the 218 large-buyer transformations in our 2026 panel, the trade-off between cost-to-serve and revenue uplift narrows materially under federated ownership; full outsourcing remains the lowest-variance choice.</p>
+  </div>
+
+  <div class="tbl">
+    <div class="row head-row">
+      <div class="cell">Dimension</div>
+      <div class="cell">Centralized<div class="sub">Single COE, one P&amp;L</div></div>
+      <div class="cell brand">Federated build<div class="sub">Hub plus 3-5 BU pods</div></div>
+      <div class="cell">Outsourced<div class="sub">Tier-1 SI lead</div></div>
+      <div class="cell">Hybrid pilot<div class="sub">Centralized + 1 BU pod</div></div>
+    </div>
+
+    <div class="row body-row">
+      <div class="cell row-label">Time to first release<div class="sub">Months from kick-off<sup>2</sup></div></div>
+      <div class="cell"><span class="num">9.4</span> mo</div>
+      <div class="cell col-brand"><span class="num">6.8</span> mo</div>
+      <div class="cell"><span class="num">11.2</span> mo</div>
+      <div class="cell"><span class="num">8.1</span> mo</div>
+    </div>
+
+    <div class="row body-row alt">
+      <div class="cell row-label">Three-year run-rate cost<div class="sub">Indexed, 100 = baseline</div></div>
+      <div class="cell"><span class="num">100</span></div>
+      <div class="cell col-brand"><span class="num">88</span> <span class="delta-pos">&minus;12</span></div>
+      <div class="cell"><span class="num">76</span> <span class="delta-pos">&minus;24</span></div>
+      <div class="cell"><span class="num">94</span> <span class="delta-pos">&minus;6</span></div>
+    </div>
+
+    <div class="row body-row">
+      <div class="cell row-label">Revenue uplift, year 3<div class="sub">vs. trailing 12-month run-rate</div></div>
+      <div class="cell">+<span class="num">3.8%</span></div>
+      <div class="cell col-brand">+<span class="num">9.1%</span></div>
+      <div class="cell">+<span class="num">2.6%</span></div>
+      <div class="cell">+<span class="num">5.2%</span></div>
+    </div>
+
+    <div class="row body-row alt">
+      <div class="cell row-label">Talent retention<div class="sub">% staff at month 24</div></div>
+      <div class="cell"><span class="num">81%</span></div>
+      <div class="cell col-brand"><span class="num">88%</span></div>
+      <div class="cell"><span class="num">62%</span> <span class="delta-neg">&minus;19</span></div>
+      <div class="cell"><span class="num">79%</span></div>
+    </div>
+
+    <div class="row body-row">
+      <div class="cell row-label">Governance burden<div class="sub">Steering hours / quarter</div></div>
+      <div class="cell"><span class="rate"><i></i><i></i><i></i><i class="off"></i><i class="off"></i></span> <span style="font-size:10.5px; color:#475569;">~28 hrs</span></div>
+      <div class="cell col-brand"><span class="rate"><i></i><i></i><i></i><i></i><i class="off"></i></span> <span style="font-size:10.5px; color:#475569;">~36 hrs</span></div>
+      <div class="cell"><span class="rate"><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i></span> <span style="font-size:10.5px; color:#475569;">~18 hrs</span></div>
+      <div class="cell"><span class="rate"><i></i><i></i><i></i><i class="off"></i><i class="off"></i></span> <span style="font-size:10.5px; color:#475569;">~30 hrs</span></div>
+    </div>
+
+    <div class="row body-row alt">
+      <div class="cell row-label">Vendor lock-in risk<div class="sub">Beacon &amp; Lowe rubric, 1&ndash;5</div></div>
+      <div class="cell"><span class="badge">2 &middot; Low</span></div>
+      <div class="cell col-brand"><span class="badge b">2 &middot; Low</span></div>
+      <div class="cell"><span class="badge">4 &middot; High</span></div>
+      <div class="cell"><span class="badge">3 &middot; Med</span></div>
+    </div>
+
+    <div class="row foot-row">
+      <div class="cell row-label" style="font-family:'Inter','Helvetica Neue',sans-serif; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; font-weight:700; color:#1a1a1a;">Composite score<sup>3</sup></div>
+      <div class="cell"><span class="num">3.2</span> / 5</div>
+      <div class="cell col-brand" style="color:#0b3a5c;"><span class="num">4.1</span> / 5</div>
+      <div class="cell"><span class="num">2.8</span> / 5</div>
+      <div class="cell"><span class="num">3.4</span> / 5</div>
+    </div>
+  </div>
+
+  <div class="footnotes">
+    <sup style="color:#0b3a5c;">1</sup> &ldquo;Spread&rdquo; defined as year-3 revenue uplift minus three-year cost increase, normalized. &nbsp;&nbsp; <sup style="color:#0b3a5c;">2</sup> Median across n=218 transformations; quartile bounds available in appendix C-4. &nbsp;&nbsp; <sup style="color:#0b3a5c;">3</sup> Composite weights: cost 30%, time 20%, uplift 30%, retention 10%, governance 10%.
+  </div>
+
+  <div class="footer">
+    <div class="source">Source: Beacon &amp; Lowe Transformation Outcomes Database, March 2026; based on n=218 large-enterprise transformations completed FY 2021&ndash;FY 2024; archetype assignment per primary delivery owner at month 6.</div>
+    <div class="pgnum">53 / 84</div>
+  </div>
+</div>
+</body>
+</html>

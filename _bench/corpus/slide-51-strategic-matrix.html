@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vendor positioning matrix</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; -webkit-font-smoothing:antialiased; background:#f7f5f2; color:#1a1a1a; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; position:relative; overflow:hidden; background:#f7f5f2; padding:48px 64px 56px 64px; }
+  .eyebrow { font-family:'Inter','Helvetica Neue',sans-serif; font-size:10px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:#0b3a5c; }
+  .rule { width:64px; height:2px; background:#0b3a5c; margin:8px 0 14px 0; }
+  h1 { font-family:'Source Serif Pro','Tiempos',Georgia,serif; font-weight:600; font-size:32px; letter-spacing:-0.01em; line-height:1.18; margin:0; max-width:880px; color:#1a1a1a; }
+  .lede { font-family:'Source Serif Pro','Tiempos',Georgia,serif; font-style:italic; font-weight:400; font-size:17px; line-height:1.45; color:#475569; margin:14px 0 0 0; max-width:920px; }
+  .grid { position:absolute; left:64px; top:212px; display:grid; grid-template-columns: 110px 600px 1fr; grid-template-rows: 24px 600px; column-gap:16px; }
+  /* axis treatment handled inline via writing-mode rotate(180deg) */
+  .matrix { grid-column:2; grid-row:2; position:relative; border:1px solid #1a1a1a; background:#ffffff; }
+  .matrix:before, .matrix:after { content:""; position:absolute; background:#1a1a1a; }
+  .matrix:before { left:0; right:0; top:50%; height:1px; }
+  .matrix:after { top:0; bottom:0; left:50%; width:1px; }
+  .quad { position:absolute; width:50%; height:50%; padding:14px 16px; box-sizing:border-box; font-family:'Inter','Helvetica Neue',sans-serif; }
+  .q-tl { top:0; left:0; }
+  .q-tr { top:0; right:0; background:rgba(11,58,92,0.04); }
+  .q-bl { top:50%; left:0; background:rgba(11,58,92,0.02); }
+  .q-br { top:50%; right:0; }
+  .q-name { font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:#0b3a5c; }
+  .q-desc { font-size:11.5px; line-height:1.45; color:#475569; margin-top:6px; max-width:230px; }
+  .dot { position:absolute; border-radius:50%; background:#0b3a5c; }
+  .dot.outline { background:#ffffff; border:1.5px solid #0b3a5c; }
+  .lbl { position:absolute; font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; font-weight:600; color:#1a1a1a; font-variant-numeric:tabular-nums; }
+  .x-axis { position:absolute; left:64px; right:64px; top:828px; }
+  .x-axis-row { position:relative; margin-left:126px; width:600px; height:30px; font-family:'Inter','Helvetica Neue',sans-serif; font-size:11px; color:#475569; }
+  .x-axis-row .lab-l { position:absolute; left:0; top:8px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:#1a1a1a; }
+  .x-axis-row .lab-r { position:absolute; right:0; top:8px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:#1a1a1a; }
+  .x-title { text-align:center; font-family:'Inter','Helvetica Neue',sans-serif; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:#1a1a1a; font-weight:600; margin-top:6px; }
+  .legend { position:absolute; left:806px; top:230px; width:362px; }
+  .legend h3 { font-family:'Source Serif Pro',Georgia,serif; font-weight:600; font-size:14px; margin:0 0 10px 0; color:#1a1a1a; letter-spacing:-0.01em; }
+  .legend ol { margin:0; padding:0 0 0 0; list-style:none; counter-reset:li; font-family:'Inter','Helvetica Neue',sans-serif; }
+  .legend li { counter-increment:li; position:relative; padding:8px 0 8px 26px; border-top:1px solid rgba(0,0,0,0.08); font-size:12px; line-height:1.4; color:#1a1a1a; }
+  .legend li:last-child { border-bottom:1px solid rgba(0,0,0,0.08); }
+  .legend li:before { content:counter(li,decimal-leading-zero); position:absolute; left:0; top:8px; font-size:10px; font-weight:700; color:#0b3a5c; letter-spacing:0.06em; font-variant-numeric:tabular-nums; }
+  .legend li b { font-weight:600; }
+  .legend li span.share { float:right; color:#475569; font-variant-numeric:tabular-nums; font-size:11px; }
+  .callout { position:absolute; left:806px; top:558px; width:362px; border:1px solid #1a1a1a; padding:12px 14px; background:#ffffff; box-sizing:border-box; }
+  .callout .ck { font-family:'Inter','Helvetica Neue',sans-serif; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; font-weight:700; color:#0b3a5c; }
+  .callout p { font-family:'Source Serif Pro',Georgia,serif; font-size:13.5px; line-height:1.45; color:#1a1a1a; margin:6px 0 0 0; }
+  .footer { position:absolute; left:64px; right:64px; bottom:24px; display:flex; justify-content:space-between; align-items:flex-end; }
+  .source { font-family:'Source Serif Pro',Georgia,serif; font-style:italic; font-size:10.5px; color:#475569; }
+  .pgnum { font-family:'Inter','Helvetica Neue',sans-serif; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:#475569; font-variant-numeric:tabular-nums; }
+  sup { font-size:8.5px; color:#0b3a5c; font-weight:600; }
+  .topbar { position:absolute; left:64px; right:64px; top:24px; display:flex; justify-content:space-between; font-family:'Inter','Helvetica Neue',sans-serif; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#475569; font-weight:600; padding-bottom:10px; border-bottom:1px solid rgba(0,0,0,0.12); }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="topbar">
+    <span>Beacon &amp; Lowe — Enterprise Software Practice</span>
+    <span>Section II · Vendor Landscape</span>
+  </div>
+  <div style="position:absolute; left:64px; top:74px; right:64px;">
+    <div class="eyebrow">Exhibit 14 · Competitive Positioning</div>
+    <div class="rule"></div>
+    <h1 data-pptx-role="title">Three of eleven vendors clear both bars; the long tail still wins on price, not capability<sup>1</sup></h1>
+    <p class="lede">Across n=412 buyer evaluations completed in Q3 2025, only Northstack, Aldermark, and Veridian combined top-quartile depth-of-feature scores with a credible go-to-market footprint outside North America &mdash; a pattern unchanged since our 2023 review.</p>
+  </div>
+
+  <!-- Y axis label -->
+  <div style="position:absolute; left:64px; top:228px; height:336px; width:30px;">
+    <div style="writing-mode:vertical-rl; transform:rotate(180deg); font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase; font-weight:700; color:#1a1a1a;">Depth of platform capability &rarr;</div>
+  </div>
+  <div style="position:absolute; left:96px; top:228px; width:80px; height:336px; font-family:'Inter','Helvetica Neue',sans-serif; font-size:10px; color:#475569; font-weight:600; letter-spacing:0.06em; text-transform:uppercase;">
+    <div style="position:absolute; top:0;">High</div>
+    <div style="position:absolute; bottom:0;">Low</div>
+  </div>
+
+  <!-- Matrix -->
+  <div style="position:absolute; left:188px; top:228px; width:600px; height:336px; border:1px solid #1a1a1a; background:#ffffff;">
+    <!-- crosshair -->
+    <div style="position:absolute; left:0; right:0; top:50%; height:1px; background:#1a1a1a;"></div>
+    <div style="position:absolute; top:0; bottom:0; left:50%; width:1px; background:#1a1a1a;"></div>
+    <!-- faint grid -->
+    <div style="position:absolute; left:0; right:0; top:25%; height:1px; background:rgba(0,0,0,0.06);"></div>
+    <div style="position:absolute; left:0; right:0; top:75%; height:1px; background:rgba(0,0,0,0.06);"></div>
+    <div style="position:absolute; top:0; bottom:0; left:25%; width:1px; background:rgba(0,0,0,0.06);"></div>
+    <div style="position:absolute; top:0; bottom:0; left:75%; width:1px; background:rgba(0,0,0,0.06);"></div>
+
+    <!-- Quadrant labels -->
+    <div style="position:absolute; top:8px; left:10px; font-family:'Inter','Helvetica Neue',sans-serif; font-size:9.5px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#475569;">A · Specialist</div>
+    <div style="position:absolute; top:8px; right:10px; font-family:'Inter','Helvetica Neue',sans-serif; font-size:9.5px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#0b3a5c;">B · Leader</div>
+    <div style="position:absolute; bottom:8px; left:10px; font-family:'Inter','Helvetica Neue',sans-serif; font-size:9.5px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#475569;">C · Tail</div>
+    <div style="position:absolute; bottom:8px; right:10px; font-family:'Inter','Helvetica Neue',sans-serif; font-size:9.5px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#475569;">D · Scale</div>
+
+    <!-- Dots: positioned (left%, top%) -->
+    <!-- 01 Northstack -->
+    <div style="position:absolute; left:74%; top:18%; width:14px; height:14px; background:#0b3a5c; border-radius:50%; transform:translate(-50%,-50%);"></div>
+    <div style="position:absolute; left:74%; top:18%; transform:translate(10px,-22px); font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; font-weight:600; color:#1a1a1a;">Northstack</div>
+
+    <!-- 02 Aldermark -->
+    <div style="position:absolute; left:64%; top:24%; width:12px; height:12px; background:#0b3a5c; border-radius:50%; transform:translate(-50%,-50%);"></div>
+    <div style="position:absolute; left:64%; top:24%; transform:translate(10px,-22px); font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; font-weight:600; color:#1a1a1a;">Aldermark</div>
+
+    <!-- 03 Veridian -->
+    <div style="position:absolute; left:82%; top:32%; width:11px; height:11px; background:#0b3a5c; border-radius:50%; transform:translate(-50%,-50%);"></div>
+    <div style="position:absolute; left:82%; top:32%; transform:translate(10px,-22px); font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; font-weight:600; color:#1a1a1a;">Veridian</div>
+
+    <!-- 04 Quartzline -->
+    <div style="position:absolute; left:30%; top:22%; width:9px; height:9px; background:#ffffff; border:1.5px solid #0b3a5c; border-radius:50%; transform:translate(-50%,-50%);"></div>
+    <div style="position:absolute; left:30%; top:22%; transform:translate(10px,-22px); font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; font-weight:600; color:#475569;">Quartzline</div>
+
+    <!-- 05 Brightlade -->
+    <div style="position:absolute; left:18%; top:38%; width:8px; height:8px; background:#ffffff; border:1.5px solid #64748b; border-radius:50%; transform:translate(-50%,-50%);"></div>
+    <div style="position:absolute; left:18%; top:38%; transform:translate(10px,-22px); font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; font-weight:600; color:#475569;">Brightlade</div>
+
+    <!-- 06 Forrowex -->
+    <div style="position:absolute; left:42%; top:44%; width:7px; height:7px; background:#ffffff; border:1.5px solid #64748b; border-radius:50%; transform:translate(-50%,-50%);"></div>
+    <div style="position:absolute; left:42%; top:44%; transform:translate(10px,-22px); font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; font-weight:600; color:#475569;">Forrowex</div>
+
+    <!-- 07 Crestmoor -->
+    <div style="position:absolute; left:60%; top:62%; width:9px; height:9px; background:#ffffff; border:1.5px solid #475569; border-radius:50%; transform:translate(-50%,-50%);"></div>
+    <div style="position:absolute; left:60%; top:62%; transform:translate(10px,8px); font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; font-weight:600; color:#475569;">Crestmoor</div>
+
+    <!-- 08 Halberd -->
+    <div style="position:absolute; left:78%; top:70%; width:11px; height:11px; background:#ffffff; border:1.5px solid #0b3a5c; border-radius:50%; transform:translate(-50%,-50%);"></div>
+    <div style="position:absolute; left:78%; top:70%; transform:translate(10px,8px); font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; font-weight:600; color:#475569;">Halberd</div>
+
+    <!-- 09 Otterbein -->
+    <div style="position:absolute; left:22%; top:78%; width:7px; height:7px; background:#ffffff; border:1.5px solid #94a3b8; border-radius:50%; transform:translate(-50%,-50%);"></div>
+    <div style="position:absolute; left:22%; top:78%; transform:translate(10px,8px); font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; font-weight:600; color:#475569;">Otterbein</div>
+
+    <!-- 10 Mendip -->
+    <div style="position:absolute; left:38%; top:84%; width:7px; height:7px; background:#ffffff; border:1.5px solid #94a3b8; border-radius:50%; transform:translate(-50%,-50%);"></div>
+    <div style="position:absolute; left:38%; top:84%; transform:translate(10px,8px); font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; font-weight:600; color:#475569;">Mendip</div>
+
+    <!-- 11 Pellish -->
+    <div style="position:absolute; left:88%; top:84%; width:8px; height:8px; background:#ffffff; border:1.5px solid #94a3b8; border-radius:50%; transform:translate(-50%,-50%);"></div>
+    <div style="position:absolute; left:88%; top:84%; transform:translate(-46px,8px); font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; font-weight:600; color:#475569;">Pellish</div>
+
+    <!-- threshold tick labels -->
+    <div style="position:absolute; left:50%; top:-16px; transform:translateX(-50%); font-family:'Inter','Helvetica Neue',sans-serif; font-size:9.5px; color:#475569; letter-spacing:0.06em;">Median GTM coverage</div>
+  </div>
+
+  <!-- X axis label -->
+  <div style="position:absolute; left:188px; top:574px; width:600px; font-family:'Inter','Helvetica Neue',sans-serif; font-size:10px; color:#475569; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; display:flex; justify-content:space-between;">
+    <span>Narrow</span><span>Broad</span>
+  </div>
+  <div style="position:absolute; left:188px; top:594px; width:600px; text-align:center; font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase; font-weight:700; color:#1a1a1a;">Go-to-market reach &rarr;</div>
+
+  <!-- Right rail: vendors enumerated -->
+  <div style="position:absolute; left:820px; top:228px; width:396px;">
+    <div style="font-family:'Source Serif Pro',Georgia,serif; font-weight:600; font-size:14.5px; color:#1a1a1a; letter-spacing:-0.01em;">Vendors plotted (n=11)<sup>2</sup></div>
+    <div style="border-top:1px solid #1a1a1a; margin-top:8px;"></div>
+    <ol style="margin:0; padding:0; list-style:none; font-family:'Inter','Helvetica Neue',sans-serif; counter-reset:li;">
+      <li style="counter-increment:li; position:relative; padding:7px 0 7px 28px; border-bottom:1px solid rgba(0,0,0,0.08); font-size:12px; color:#1a1a1a;">
+        <span style="position:absolute; left:0; top:7px; font-size:10px; font-weight:700; color:#0b3a5c; font-variant-numeric:tabular-nums;">01</span>
+        <b>Northstack</b> <span style="float:right; color:#475569; font-variant-numeric:tabular-nums;">22.4%</span>
+      </li>
+      <li style="position:relative; padding:7px 0 7px 28px; border-bottom:1px solid rgba(0,0,0,0.08); font-size:12px; color:#1a1a1a;">
+        <span style="position:absolute; left:0; top:7px; font-size:10px; font-weight:700; color:#0b3a5c; font-variant-numeric:tabular-nums;">02</span>
+        <b>Aldermark</b> <span style="float:right; color:#475569; font-variant-numeric:tabular-nums;">14.1%</span>
+      </li>
+      <li style="position:relative; padding:7px 0 7px 28px; border-bottom:1px solid rgba(0,0,0,0.08); font-size:12px; color:#1a1a1a;">
+        <span style="position:absolute; left:0; top:7px; font-size:10px; font-weight:700; color:#0b3a5c; font-variant-numeric:tabular-nums;">03</span>
+        <b>Veridian</b> <span style="float:right; color:#475569; font-variant-numeric:tabular-nums;">9.8%</span>
+      </li>
+      <li style="position:relative; padding:7px 0 7px 28px; border-bottom:1px solid rgba(0,0,0,0.08); font-size:12px; color:#1a1a1a;">
+        <span style="position:absolute; left:0; top:7px; font-size:10px; font-weight:700; color:#475569; font-variant-numeric:tabular-nums;">04</span>
+        Quartzline <span style="float:right; color:#475569; font-variant-numeric:tabular-nums;">7.6%</span>
+      </li>
+      <li style="position:relative; padding:7px 0 7px 28px; border-bottom:1px solid rgba(0,0,0,0.08); font-size:12px; color:#1a1a1a;">
+        <span style="position:absolute; left:0; top:7px; font-size:10px; font-weight:700; color:#475569; font-variant-numeric:tabular-nums;">05</span>
+        Brightlade <span style="float:right; color:#475569; font-variant-numeric:tabular-nums;">5.3%</span>
+      </li>
+      <li style="position:relative; padding:7px 0 7px 28px; border-bottom:1px solid rgba(0,0,0,0.08); font-size:12px; color:#1a1a1a;">
+        <span style="position:absolute; left:0; top:7px; font-size:10px; font-weight:700; color:#475569; font-variant-numeric:tabular-nums;">06</span>
+        Halberd <span style="float:right; color:#475569; font-variant-numeric:tabular-nums;">4.9%</span>
+      </li>
+      <li style="position:relative; padding:7px 0 7px 28px; border-bottom:1px solid rgba(0,0,0,0.08); font-size:12px; color:#1a1a1a;">
+        <span style="position:absolute; left:0; top:7px; font-size:10px; font-weight:700; color:#475569; font-variant-numeric:tabular-nums;">07</span>
+        Other (5) <span style="float:right; color:#475569; font-variant-numeric:tabular-nums;">35.9%</span>
+      </li>
+    </ol>
+  </div>
+
+  <!-- Callout -->
+  <div style="position:absolute; left:820px; top:528px; width:396px; border:1px solid #1a1a1a; padding:12px 14px; background:#ffffff; box-sizing:border-box;">
+    <div style="font-family:'Inter','Helvetica Neue',sans-serif; font-size:9.5px; letter-spacing:0.18em; text-transform:uppercase; font-weight:700; color:#0b3a5c;">So what</div>
+    <p style="font-family:'Source Serif Pro',Georgia,serif; font-size:13px; line-height:1.45; color:#1a1a1a; margin:6px 0 0 0;">Quadrant B is contestable for at most one entrant by 2027; specialists in A face a binary &mdash; acquire reach within 18 months, or accept share erosion of 180&ndash;240&nbsp;bps annually.<sup>3</sup></p>
+  </div>
+
+  <div style="position:absolute; left:64px; right:64px; bottom:24px; display:flex; justify-content:space-between; align-items:flex-end; border-top:1px solid rgba(0,0,0,0.12); padding-top:10px;">
+    <div style="font-family:'Source Serif Pro',Georgia,serif; font-style:italic; font-size:10.5px; color:#475569; max-width:880px;">Source: Beacon &amp; Lowe vendor benchmarking, March 2026; based on n=412 enterprise software buyers, Q3 2025; depth-of-capability score is a 24-criterion weighted index. <sup style="color:#0b3a5c;">1</sup> Bars defined at 75th-percentile thresholds. <sup style="color:#0b3a5c;">2</sup> Eleven vendors with &gt;0.5% share. <sup style="color:#0b3a5c;">3</sup> Modeled under base-case GTM scenario.</div>
+    <div style="font-family:'Inter','Helvetica Neue',sans-serif; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:#475569; font-variant-numeric:tabular-nums;">51 / 84</div>
+  </div>
+</div>
+</body>
+</html>

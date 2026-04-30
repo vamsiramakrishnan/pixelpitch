@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slide 45 — Testimonial</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               -webkit-font-smoothing:antialiased; background:#f5f1eb; }
+  .slide { width:1280px; height:720px; box-sizing:border-box;
+           position:relative; overflow:hidden; background:#f5f1eb;
+           font-family:'Source Serif Pro', Georgia, serif;
+           color:#2d1f1f; }
+  .kicker { position:absolute; top:80px; left:120px;
+            font-size:12px; font-weight:500; letter-spacing:0.08em;
+            color:#9c89b8;
+            font-family:'Inter', system-ui, sans-serif; }
+  .quote { position:absolute; top:236px; left:240px; max-width:880px;
+           font-family:'Source Serif Pro', Georgia, serif;
+           font-size:42px; font-weight:500; font-style:italic;
+           line-height:1.28; color:#2d1f1f; letter-spacing:-0.005em; }
+  .quote em { color:#e76f51; font-style:italic; font-weight:600; }
+  .attr { position:absolute; top:520px; left:240px;
+          display:flex; align-items:center; gap:18px; }
+  .attr .name { font-family:'Source Serif Pro', Georgia, serif;
+                font-size:18px; font-weight:600; color:#2d1f1f;
+                font-style:italic; }
+  .attr .role { font-family:'Inter', system-ui, sans-serif;
+                font-size:13px; font-weight:400; color:#7a6a6a; }
+  .attr .dot { width:6px; height:6px; border-radius:50%; background:#e76f51; }
+  .pageno { position:absolute; bottom:48px; right:96px;
+            font-size:12px; font-weight:500; color:#a89888;
+            font-family:'Source Serif Pro', Georgia, serif; }
+  .footer { position:absolute; bottom:48px; left:120px;
+            font-size:12px; font-weight:500; color:#7a6a6a;
+            font-family:'Inter', system-ui, sans-serif; letter-spacing:0.04em; }
+  .canvas { position:absolute; inset:0; }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <svg class="canvas" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- huge background blob behind quote glyph (6 control points) -->
+      <path d="M 60 220
+               C 160 160, 320 188, 360 290
+               C 400 392, 320 460, 220 470
+               C 120 480, 30 430, 18 360
+               C 6 290, 24 248, 40 232
+               C 50 224, 50 222, 60 220 Z"
+            fill="#fde2e4" fill-opacity="0.85"/>
+      <!-- secondary blob bottom right (5 control points) -->
+      <path d="M 1020 480
+               C 1120 460, 1240 510, 1262 600
+               C 1284 690, 1180 720, 1080 706
+               C 980 692, 940 632, 956 568
+               C 968 520, 990 488, 1020 480 Z"
+            fill="#e9c46a" fill-opacity="0.42"/>
+      <!-- small ambient circles -->
+      <circle cx="700" cy="124" r="18" fill="#a78bfa" fill-opacity="0.42"/>
+      <circle cx="1180" cy="180" r="32" fill="#f7b2a2" fill-opacity="0.50"/>
+      <circle cx="160" cy="600" r="14" fill="#2a9d8f" fill-opacity="0.40"/>
+      <!-- giant quote glyph -->
+      <text x="120" y="368" font-family="Source Serif Pro, Georgia, serif"
+            font-size="280" fill="#f4a261" fill-opacity="0.55"
+            font-weight="600" font-style="italic">&#8220;</text>
+      <!-- closing quote glyph small bottom right of quote -->
+      <text x="1108" y="498" font-family="Source Serif Pro, Georgia, serif"
+            font-size="120" fill="#e76f51" fill-opacity="0.40"
+            font-weight="600" font-style="italic">&#8221;</text>
+      <!-- hand-drawn slightly-off circle around author dot -->
+      <path d="M 232 568
+               C 256 560, 282 580, 274 606
+               C 266 632, 224 628, 218 600
+               C 214 584, 218 572, 232 568 Z"
+            fill="none" stroke="#264653" stroke-width="1.4" stroke-opacity="0.35"/>
+      <!-- curved underline under name area -->
+      <path d="M 280 612 C 360 606, 460 622, 540 612"
+            stroke="#e76f51" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <!-- wavy divider above kicker -->
+      <path d="M 120 70 C 160 64, 200 78, 240 70"
+            stroke="#9c89b8" stroke-width="1.4" fill="none"/>
+    </svg>
+
+    <div class="kicker">In their own words</div>
+    <blockquote class="quote" data-pptx-role="title">
+      It's the first tool that <em>didn't ask me to hurry</em> — and somehow, that's exactly when the work got better.
+    </blockquote>
+    <div class="attr">
+      <span class="name">Rae Okonkwo</span>
+      <span class="dot"></span>
+      <span class="role">Studio lead, Two Pines &middot; using us since 2024</span>
+    </div>
+    <div class="footer">Conversation no. 09</div>
+    <div class="pageno">45</div>
+  </div>
+</body>
+</html>

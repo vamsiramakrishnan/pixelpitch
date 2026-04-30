@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SCHEMATIC // INGEST PIPELINE</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               -webkit-font-smoothing:antialiased; background:#fafaf9; }
+  .slide { width:1280px; height:720px; box-sizing:border-box;
+           position:relative; overflow:hidden;
+           background:#fafaf9; color:#0a0a0a;
+           font-family:'JetBrains Mono','IBM Plex Mono','SF Mono',Menlo,monospace; }
+  .frame { position:absolute; inset:24px; border:2px solid #0a0a0a; }
+  .topbar { position:absolute; top:24px; left:24px; right:24px; height:36px;
+            border-bottom:2px solid #0a0a0a;
+            display:flex; justify-content:space-between; align-items:center;
+            padding:0 16px; font-size:11px; font-weight:600; }
+  .head { position:absolute; top:80px; left:40px; right:40px; }
+  .eyebrow { font-size:11px; font-weight:600; color:#ff5722; margin:0 0 10px 0; }
+  h1 { font-size:42px; font-weight:700; line-height:1.05; margin:0;
+       color:#0a0a0a; letter-spacing:0; }
+  .legend { position:absolute; right:40px; top:80px; text-align:right;
+            font-size:11px; font-weight:600; color:#0a0a0a; line-height:1.7; }
+  .legend .sw { display:inline-block; width:10px; height:10px;
+                vertical-align:middle; margin-right:6px;
+                border:1px solid #0a0a0a; }
+  .legend .sw.acc { background:#ff5722; border-color:#ff5722; }
+  .canvas { position:absolute; top:220px; left:40px; right:40px; bottom:120px; }
+
+  .footer { position:absolute; bottom:24px; left:40px; right:40px;
+            display:flex; justify-content:space-between; align-items:flex-end;
+            font-size:11px; font-weight:600; color:#0a0a0a;
+            border-top:1px solid #0a0a0a; padding-top:10px; }
+  .pillbar { display:flex; gap:0; }
+  .pillbar span { display:inline-block; padding:4px 8px;
+                  border:1px solid #0a0a0a; font-size:11px; font-weight:700;
+                  margin-right:6px; }
+  .pillbar span.acc { background:#ff5722; color:#fafaf9; border-color:#ff5722; }
+  .deco-grid { position:absolute; left:40px; bottom:54px; }
+  text { font-family:'JetBrains Mono','IBM Plex Mono','SF Mono',Menlo,monospace; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="frame"></div>
+
+  <div class="topbar">
+    <span>SCHEMATIC / INGEST-PIPELINE / V0.4.1</span>
+    <span>PAGE 22 OF 27 // SHEET 1/1</span>
+  </div>
+
+  <div class="head">
+    <div class="eyebrow">// 22 — SCHEMATIC</div>
+    <h1 data-pptx-role="title">INGEST → NORMALIZE → STORE</h1>
+  </div>
+
+  <div class="legend">
+    <span class="sw"></span>BLOCK&nbsp;&nbsp;SERVICE&nbsp;UNIT<br>
+    <span class="sw acc"></span>HOT&nbsp;&nbsp;&nbsp;&nbsp;ACTIVE&nbsp;PATH<br>
+    PROTOCOL&nbsp;&nbsp;HTTP/2&nbsp;//&nbsp;gRPC<br>
+    LATENCY&nbsp;&nbsp;&nbsp;p50&nbsp;14ms
+  </div>
+
+  <div class="canvas">
+    <svg viewBox="0 0 1200 380" preserveAspectRatio="none"
+         width="100%" height="100%" aria-hidden="false">
+      <!-- backdrop dotgrid as guide -->
+      <rect x="0" y="0" width="1200" height="380" fill="none" stroke="#0a0a0a" stroke-width="1"/>
+
+      <!-- Box 1 INGEST -->
+      <rect x="20" y="40" width="200" height="120" fill="none" stroke="#0a0a0a" stroke-width="2"/>
+      <rect x="20" y="40" width="200" height="22" fill="#0a0a0a"/>
+      <text x="30" y="56" font-size="12" font-weight="700" fill="#fafaf9">[01] INGEST</text>
+      <text x="30" y="92" font-size="22" font-weight="700" fill="#0a0a0a">edge-rx</text>
+      <text x="30" y="116" font-size="11" fill="#0a0a0a">tcp/443 // 8 nodes</text>
+      <text x="30" y="134" font-size="11" fill="#0a0a0a">qps 38.6K</text>
+      <text x="30" y="152" font-size="11" font-weight="700" fill="#ff5722">[ OK ]</text>
+
+      <!-- Box 2 QUEUE -->
+      <rect x="280" y="40" width="200" height="120" fill="none" stroke="#0a0a0a" stroke-width="2"/>
+      <rect x="280" y="40" width="200" height="22" fill="#0a0a0a"/>
+      <text x="290" y="56" font-size="12" font-weight="700" fill="#fafaf9">[02] QUEUE</text>
+      <text x="290" y="92" font-size="22" font-weight="700" fill="#0a0a0a">kfk-buf</text>
+      <text x="290" y="116" font-size="11" fill="#0a0a0a">part 24 // r=3</text>
+      <text x="290" y="134" font-size="11" fill="#0a0a0a">lag 1.18K</text>
+      <text x="290" y="152" font-size="11" font-weight="700" fill="#0a0a0a">[ HOLD ]</text>
+
+      <!-- Box 3 NORMALIZE (centered, larger) -->
+      <rect x="540" y="40" width="220" height="120" fill="#ff5722" stroke="#0a0a0a" stroke-width="2"/>
+      <rect x="540" y="40" width="220" height="22" fill="#0a0a0a"/>
+      <text x="550" y="56" font-size="12" font-weight="700" fill="#ff5722">[03] NORMALIZE</text>
+      <text x="550" y="92" font-size="22" font-weight="700" fill="#0a0a0a">norm-svc</text>
+      <text x="550" y="116" font-size="11" fill="#0a0a0a">parse + dedupe</text>
+      <text x="550" y="134" font-size="11" fill="#0a0a0a">cpu 62%</text>
+      <text x="550" y="152" font-size="11" font-weight="700" fill="#0a0a0a">[ HOT ]</text>
+
+      <!-- Box 4 STORE -->
+      <rect x="820" y="40" width="200" height="120" fill="none" stroke="#0a0a0a" stroke-width="2"/>
+      <rect x="820" y="40" width="200" height="22" fill="#0a0a0a"/>
+      <text x="830" y="56" font-size="12" font-weight="700" fill="#fafaf9">[04] STORE</text>
+      <text x="830" y="92" font-size="22" font-weight="700" fill="#0a0a0a">cold-tbl</text>
+      <text x="830" y="116" font-size="11" fill="#0a0a0a">parquet // s3</text>
+      <text x="830" y="134" font-size="11" fill="#0a0a0a">2.4 TB / day</text>
+      <text x="830" y="152" font-size="11" font-weight="700" fill="#ff5722">[ OK ]</text>
+
+      <!-- Box 5 SINK (lower row) -->
+      <rect x="540" y="240" width="220" height="100" fill="none" stroke="#0a0a0a" stroke-width="2"/>
+      <rect x="540" y="240" width="220" height="22" fill="#0a0a0a"/>
+      <text x="550" y="256" font-size="12" font-weight="700" fill="#fafaf9">[05] SINK</text>
+      <text x="550" y="290" font-size="20" font-weight="700" fill="#0a0a0a">obs-sink</text>
+      <text x="550" y="314" font-size="11" fill="#0a0a0a">log + metrics</text>
+      <text x="550" y="332" font-size="11" font-weight="700" fill="#0a0a0a">[ TAP ]</text>
+
+      <!-- 90-degree connectors -->
+      <!-- 01 -> 02 -->
+      <line x1="220" y1="100" x2="280" y2="100" stroke="#0a0a0a" stroke-width="2"/>
+      <!-- 02 -> 03 -->
+      <line x1="480" y1="100" x2="540" y2="100" stroke="#0a0a0a" stroke-width="2"/>
+      <!-- 03 -> 04 -->
+      <line x1="760" y1="100" x2="820" y2="100" stroke="#0a0a0a" stroke-width="2"/>
+      <!-- 03 -> 05 (down) -->
+      <line x1="650" y1="160" x2="650" y2="240" stroke="#0a0a0a" stroke-width="2"/>
+      <!-- 04 -> 05 (down then left) -->
+      <line x1="920" y1="160" x2="920" y2="290" stroke="#0a0a0a" stroke-width="2"/>
+      <line x1="920" y1="290" x2="760" y2="290" stroke="#0a0a0a" stroke-width="2"/>
+      <!-- 01 -> 05 (down then right, accent path) -->
+      <line x1="120" y1="160" x2="120" y2="290" stroke="#ff5722" stroke-width="2"/>
+      <line x1="120" y1="290" x2="540" y2="290" stroke="#ff5722" stroke-width="2"/>
+
+      <!-- arrow heads as small rects -->
+      <rect x="276" y="96" width="8" height="8" fill="#0a0a0a"/>
+      <rect x="536" y="96" width="8" height="8" fill="#0a0a0a"/>
+      <rect x="816" y="96" width="8" height="8" fill="#0a0a0a"/>
+      <rect x="646" y="236" width="8" height="8" fill="#0a0a0a"/>
+      <rect x="536" y="286" width="8" height="8" fill="#ff5722"/>
+
+      <!-- corner ticks -->
+      <line x1="0" y1="20" x2="20" y2="20" stroke="#0a0a0a" stroke-width="1"/>
+      <line x1="20" y1="0" x2="20" y2="20" stroke="#0a0a0a" stroke-width="1"/>
+      <line x1="1180" y1="20" x2="1200" y2="20" stroke="#0a0a0a" stroke-width="1"/>
+      <line x1="1180" y1="0" x2="1180" y2="20" stroke="#0a0a0a" stroke-width="1"/>
+
+      <!-- net labels along edges -->
+      <text x="232" y="92" font-size="10" font-weight="600" fill="#0a0a0a">net/01</text>
+      <text x="492" y="92" font-size="10" font-weight="600" fill="#0a0a0a">net/02</text>
+      <text x="772" y="92" font-size="10" font-weight="600" fill="#0a0a0a">net/03</text>
+      <text x="660" y="208" font-size="10" font-weight="600" fill="#0a0a0a">tap/01</text>
+      <text x="130" y="282" font-size="10" font-weight="700" fill="#ff5722">hot/01</text>
+    </svg>
+  </div>
+
+  <svg class="deco-grid" width="120" height="48" viewBox="0 0 120 48" aria-hidden="true">
+    <rect x="0" y="0" width="120" height="48" fill="none" stroke="#0a0a0a"/>
+    <rect x="4" y="4" width="8" height="8" fill="#0a0a0a"/>
+    <rect x="16" y="4" width="8" height="8" fill="none" stroke="#0a0a0a"/>
+    <rect x="28" y="4" width="8" height="8" fill="#0a0a0a"/>
+    <rect x="40" y="4" width="8" height="8" fill="none" stroke="#0a0a0a"/>
+    <rect x="52" y="4" width="8" height="8" fill="#ff5722"/>
+    <rect x="64" y="4" width="8" height="8" fill="none" stroke="#0a0a0a"/>
+    <rect x="76" y="4" width="8" height="8" fill="#0a0a0a"/>
+    <rect x="88" y="4" width="8" height="8" fill="none" stroke="#0a0a0a"/>
+    <rect x="100" y="4" width="8" height="8" fill="#0a0a0a"/>
+    <rect x="4" y="16" width="8" height="8" fill="none" stroke="#0a0a0a"/>
+    <rect x="16" y="16" width="8" height="8" fill="#0a0a0a"/>
+    <rect x="28" y="16" width="8" height="8" fill="none" stroke="#0a0a0a"/>
+    <rect x="40" y="16" width="8" height="8" fill="#0a0a0a"/>
+    <rect x="52" y="16" width="8" height="8" fill="none" stroke="#0a0a0a"/>
+    <rect x="64" y="16" width="8" height="8" fill="#0a0a0a"/>
+    <rect x="76" y="16" width="8" height="8" fill="none" stroke="#0a0a0a"/>
+    <rect x="88" y="16" width="8" height="8" fill="#ff5722"/>
+    <rect x="100" y="16" width="8" height="8" fill="none" stroke="#0a0a0a"/>
+    <rect x="4" y="28" width="8" height="8" fill="#0a0a0a"/>
+    <rect x="16" y="28" width="8" height="8" fill="none" stroke="#0a0a0a"/>
+    <rect x="28" y="28" width="8" height="8" fill="#0a0a0a"/>
+    <rect x="40" y="28" width="8" height="8" fill="none" stroke="#0a0a0a"/>
+    <rect x="52" y="28" width="8" height="8" fill="#0a0a0a"/>
+    <rect x="64" y="28" width="8" height="8" fill="none" stroke="#0a0a0a"/>
+    <rect x="76" y="28" width="8" height="8" fill="#0a0a0a"/>
+    <rect x="88" y="28" width="8" height="8" fill="none" stroke="#0a0a0a"/>
+    <rect x="100" y="28" width="8" height="8" fill="#0a0a0a"/>
+  </svg>
+
+  <div class="footer">
+    <span class="pillbar">
+      <span>NET A</span><span>NET B</span><span class="acc">HOT</span><span>SINK</span>
+    </span>
+    <span>// rev 0.4.1 // commit a8f12c9 // by platform-core</span>
+  </div>
+</div>
+</body>
+</html>

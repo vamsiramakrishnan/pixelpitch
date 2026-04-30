@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Where broadband still doesn't reach</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; -webkit-font-smoothing:antialiased; background:#fafaf6; color:#1a1a1a; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; position:relative; overflow:hidden; padding:40px 56px; font-family:'Source Serif Pro','Tiempos',Georgia,serif; }
+  .kicker { font-family:'Inter','Helvetica Neue',Arial,sans-serif; font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#1e5f8c; }
+  h1 { font-size:54px; font-weight:700; letter-spacing:-0.02em; line-height:1.05; margin:8px 0 10px 0; max-width:780px; }
+  .lede { font-size:16px; font-weight:400; line-height:1.55; max-width:760px; margin:0 0 12px 0; }
+  .lede b { font-weight:700; }
+  .layout { display:grid; grid-template-columns:760px 360px; gap:48px; margin-top:14px; }
+  .map-wrap { position:relative; }
+  .map-cap { font-family:'Inter',Arial,sans-serif; font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; margin-bottom:8px; }
+  .map-sub { font-family:'Source Serif Pro',Georgia,serif; font-size:13px; font-style:italic; color:rgba(0,0,0,0.7); margin-bottom:10px; }
+  .legend { display:flex; gap:0; align-items:center; margin-top:14px; font-family:'Inter',Arial,sans-serif; font-size:10px; }
+  .legend-label { margin-right:10px; letter-spacing:0.04em; }
+  .legend-swatch { display:inline-block; width:22px; height:14px; }
+  .sidebar-h { font-family:'Inter',Arial,sans-serif; font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; border-bottom:1px solid #1a1a1a; padding-bottom:6px; margin-bottom:10px; }
+  .sidebar-sub { font-family:'Source Serif Pro',Georgia,serif; font-size:12px; font-style:italic; color:rgba(0,0,0,0.7); margin-bottom:14px; }
+  .rank-row { display:grid; grid-template-columns:18px 90px 1fr 56px; gap:8px; align-items:center; padding:5px 0; border-bottom:1px solid rgba(0,0,0,0.06); font-size:13px; }
+  .rank-no { font-family:'IBM Plex Mono',monospace; font-size:11px; color:rgba(0,0,0,0.55); }
+  .rank-name { font-family:'Source Serif Pro',Georgia,serif; font-weight:700; }
+  .rank-bar-wrap { height:8px; background:rgba(0,0,0,0.06); position:relative; }
+  .rank-bar { height:8px; background:#c41e3a; position:absolute; left:0; top:0; }
+  .rank-val { font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums; font-size:11px; text-align:right; }
+  .src { position:absolute; left:56px; bottom:14px; font-family:'Inter',Arial,sans-serif; font-size:10px; color:rgba(0,0,0,0.55); border:1px solid #1a1a1a; padding:4px 8px; }
+  .figno { position:absolute; right:56px; bottom:14px; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.08em; color:rgba(0,0,0,0.55); }
+  .num { font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="kicker">Connectivity · Block grid + ranked sidebar</div>
+  <h1 data-pptx-role="title">Where broadband still doesn't reach</h1>
+  <p class="lede">Share of households without a 25/3 Mbps wired connection, by state. The map below uses a tile per state — area is uniform, color encodes the gap. <b>Ten states have a connectivity deficit above 18%.</b></p>
+
+  <div class="layout">
+    <div class="map-wrap">
+      <div class="map-cap">U.S. tile map · % households unserved</div>
+      <div class="map-sub">Each square is one state at equal weight. Darker = a larger share of households offline.</div>
+      <svg width="760" height="380" viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" font-family="Inter,Arial,sans-serif">
+        <!-- Row 1 -->
+        <rect x="0"   y="0"   width="56" height="56" fill="#1e5f8c" fill-opacity="0.45"/><text x="28" y="32" text-anchor="middle" font-size="11" font-weight="700" fill="#fafaf6">AK</text>
+        <rect x="672" y="0"   width="56" height="56" fill="#1e5f8c" fill-opacity="0.30"/><text x="700" y="32" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">ME</text>
+        <!-- Row 2 -->
+        <rect x="0"   y="64"  width="56" height="56" fill="#1e5f8c" fill-opacity="0.10"/><text x="28" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">WA</text>
+        <rect x="64"  y="64"  width="56" height="56" fill="#1e5f8c" fill-opacity="0.20"/><text x="92" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">ID</text>
+        <rect x="128" y="64"  width="56" height="56" fill="#1e5f8c" fill-opacity="0.45"/><text x="156" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#fafaf6">MT</text>
+        <rect x="192" y="64"  width="56" height="56" fill="#1e5f8c" fill-opacity="0.55"/><text x="220" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#fafaf6">ND</text>
+        <rect x="256" y="64"  width="56" height="56" fill="#1e5f8c" fill-opacity="0.30"/><text x="284" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">MN</text>
+        <rect x="320" y="64"  width="56" height="56" fill="#1e5f8c" fill-opacity="0.20"/><text x="348" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">WI</text>
+        <rect x="448" y="64"  width="56" height="56" fill="#1e5f8c" fill-opacity="0.10"/><text x="476" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">MI</text>
+        <rect x="608" y="64"  width="56" height="56" fill="#1e5f8c" fill-opacity="0.20"/><text x="636" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">VT</text>
+        <rect x="672" y="64"  width="56" height="56" fill="#1e5f8c" fill-opacity="0.20"/><text x="700" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">NH</text>
+        <!-- Row 3 -->
+        <rect x="0"   y="128" width="56" height="56" fill="#1e5f8c" fill-opacity="0.10"/><text x="28" y="160" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">OR</text>
+        <rect x="64"  y="128" width="56" height="56" fill="#1e5f8c" fill-opacity="0.20"/><text x="92" y="160" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">NV</text>
+        <rect x="128" y="128" width="56" height="56" fill="#1e5f8c" fill-opacity="0.45"/><text x="156" y="160" text-anchor="middle" font-size="11" font-weight="700" fill="#fafaf6">WY</text>
+        <rect x="192" y="128" width="56" height="56" fill="#1e5f8c" fill-opacity="0.55"/><text x="220" y="160" text-anchor="middle" font-size="11" font-weight="700" fill="#fafaf6">SD</text>
+        <rect x="256" y="128" width="56" height="56" fill="#1e5f8c" fill-opacity="0.30"/><text x="284" y="160" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">IA</text>
+        <rect x="320" y="128" width="56" height="56" fill="#1e5f8c" fill-opacity="0.20"/><text x="348" y="160" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">IL</text>
+        <rect x="384" y="128" width="56" height="56" fill="#1e5f8c" fill-opacity="0.30"/><text x="412" y="160" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">IN</text>
+        <rect x="448" y="128" width="56" height="56" fill="#1e5f8c" fill-opacity="0.20"/><text x="476" y="160" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">OH</text>
+        <rect x="512" y="128" width="56" height="56" fill="#1e5f8c" fill-opacity="0.30"/><text x="540" y="160" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">PA</text>
+        <rect x="576" y="128" width="56" height="56" fill="#1e5f8c" fill-opacity="0.20"/><text x="604" y="160" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">NJ</text>
+        <rect x="640" y="128" width="56" height="56" fill="#1e5f8c" fill-opacity="0.10"/><text x="668" y="160" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">CT</text>
+        <rect x="704" y="128" width="56" height="56" fill="#1e5f8c" fill-opacity="0.10"/><text x="732" y="160" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">RI</text>
+        <!-- Row 4 -->
+        <rect x="0"   y="192" width="56" height="56" fill="#1e5f8c" fill-opacity="0.20"/><text x="28" y="224" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">CA</text>
+        <rect x="64"  y="192" width="56" height="56" fill="#1e5f8c" fill-opacity="0.30"/><text x="92" y="224" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">UT</text>
+        <rect x="128" y="192" width="56" height="56" fill="#1e5f8c" fill-opacity="0.30"/><text x="156" y="224" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">CO</text>
+        <rect x="192" y="192" width="56" height="56" fill="#1e5f8c" fill-opacity="0.45"/><text x="220" y="224" text-anchor="middle" font-size="11" font-weight="700" fill="#fafaf6">NE</text>
+        <rect x="256" y="192" width="56" height="56" fill="#1e5f8c" fill-opacity="0.30"/><text x="284" y="224" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">MO</text>
+        <rect x="320" y="192" width="56" height="56" fill="#1e5f8c" fill-opacity="0.55"/><text x="348" y="224" text-anchor="middle" font-size="11" font-weight="700" fill="#fafaf6">KY</text>
+        <rect x="384" y="192" width="56" height="56" fill="#1e5f8c" fill-opacity="0.55"/><text x="412" y="224" text-anchor="middle" font-size="11" font-weight="700" fill="#fafaf6">WV</text>
+        <rect x="448" y="192" width="56" height="56" fill="#1e5f8c" fill-opacity="0.30"/><text x="476" y="224" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">VA</text>
+        <rect x="512" y="192" width="56" height="56" fill="#1e5f8c" fill-opacity="0.20"/><text x="540" y="224" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">MD</text>
+        <rect x="576" y="192" width="56" height="56" fill="#1e5f8c" fill-opacity="0.10"/><text x="604" y="224" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">DE</text>
+        <rect x="640" y="192" width="56" height="56" fill="#1e5f8c" fill-opacity="0.20"/><text x="668" y="224" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">NY</text>
+        <rect x="704" y="192" width="56" height="56" fill="#1e5f8c" fill-opacity="0.10"/><text x="732" y="224" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">MA</text>
+        <!-- Row 5 -->
+        <rect x="64"  y="256" width="56" height="56" fill="#1e5f8c" fill-opacity="0.30"/><text x="92"  y="288" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">AZ</text>
+        <rect x="128" y="256" width="56" height="56" fill="#1e5f8c" fill-opacity="0.55"/><text x="156" y="288" text-anchor="middle" font-size="11" font-weight="700" fill="#fafaf6">NM</text>
+        <rect x="192" y="256" width="56" height="56" fill="#1e5f8c" fill-opacity="0.30"/><text x="220" y="288" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">KS</text>
+        <rect x="256" y="256" width="56" height="56" fill="#1e5f8c" fill-opacity="0.55"/><text x="284" y="288" text-anchor="middle" font-size="11" font-weight="700" fill="#fafaf6">AR</text>
+        <rect x="320" y="256" width="56" height="56" fill="#1e5f8c" fill-opacity="0.45"/><text x="348" y="288" text-anchor="middle" font-size="11" font-weight="700" fill="#fafaf6">TN</text>
+        <rect x="384" y="256" width="56" height="56" fill="#1e5f8c" fill-opacity="0.55"/><text x="412" y="288" text-anchor="middle" font-size="11" font-weight="700" fill="#fafaf6">NC</text>
+        <rect x="448" y="256" width="56" height="56" fill="#1e5f8c" fill-opacity="0.45"/><text x="476" y="288" text-anchor="middle" font-size="11" font-weight="700" fill="#fafaf6">SC</text>
+        <rect x="512" y="256" width="56" height="56" fill="#1e5f8c" fill-opacity="0.30"/><text x="540" y="288" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">DC</text>
+        <!-- Row 6 -->
+        <rect x="0"   y="320" width="56" height="56" fill="#1e5f8c" fill-opacity="0.45"/><text x="28"  y="352" text-anchor="middle" font-size="11" font-weight="700" fill="#fafaf6">HI</text>
+        <rect x="192" y="320" width="56" height="56" fill="#1e5f8c" fill-opacity="0.45"/><text x="220" y="352" text-anchor="middle" font-size="11" font-weight="700" fill="#fafaf6">OK</text>
+        <rect x="256" y="320" width="56" height="56" fill="#1e5f8c" fill-opacity="0.45"/><text x="284" y="352" text-anchor="middle" font-size="11" font-weight="700" fill="#fafaf6">LA</text>
+        <rect x="320" y="320" width="56" height="56" fill="#1e5f8c" fill-opacity="0.55"/><text x="348" y="352" text-anchor="middle" font-size="11" font-weight="700" fill="#fafaf6">MS</text>
+        <rect x="384" y="320" width="56" height="56" fill="#1e5f8c" fill-opacity="0.55"/><text x="412" y="352" text-anchor="middle" font-size="11" font-weight="700" fill="#fafaf6">AL</text>
+        <rect x="448" y="320" width="56" height="56" fill="#1e5f8c" fill-opacity="0.45"/><text x="476" y="352" text-anchor="middle" font-size="11" font-weight="700" fill="#fafaf6">GA</text>
+        <rect x="512" y="320" width="56" height="56" fill="#1e5f8c" fill-opacity="0.20"/><text x="540" y="352" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a">FL</text>
+        <rect x="128" y="320" width="56" height="56" fill="#1e5f8c" fill-opacity="0.55"/><text x="156" y="352" text-anchor="middle" font-size="11" font-weight="700" fill="#fafaf6">TX</text>
+      </svg>
+
+      <div class="legend">
+        <span class="legend-label">LESS UNSERVED</span>
+        <span class="legend-swatch" style="background:#1e5f8c; opacity:0.10;"></span>
+        <span class="legend-swatch" style="background:#1e5f8c; opacity:0.20;"></span>
+        <span class="legend-swatch" style="background:#1e5f8c; opacity:0.30;"></span>
+        <span class="legend-swatch" style="background:#1e5f8c; opacity:0.45;"></span>
+        <span class="legend-swatch" style="background:#1e5f8c; opacity:0.55;"></span>
+        <span class="legend-label" style="margin-left:10px;">MORE UNSERVED</span>
+        <span class="legend-label" style="margin-left:auto;font-style:italic;color:rgba(0,0,0,0.55);">scale: 4% → 27%</span>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="sidebar-h">Top 10 · Largest connectivity gap</div>
+      <div class="sidebar-sub">Share of state households without a 25/3 wired connection.</div>
+      <div class="rank-row"><div class="rank-no">01</div><div class="rank-name">Mississippi</div><div class="rank-bar-wrap"><div class="rank-bar" style="width:100%"></div></div><div class="rank-val">26.8%</div></div>
+      <div class="rank-row"><div class="rank-no">02</div><div class="rank-name">Arkansas</div><div class="rank-bar-wrap"><div class="rank-bar" style="width:90%"></div></div><div class="rank-val">24.1%</div></div>
+      <div class="rank-row"><div class="rank-no">03</div><div class="rank-name">West Virginia</div><div class="rank-bar-wrap"><div class="rank-bar" style="width:88%"></div></div><div class="rank-val">23.6%</div></div>
+      <div class="rank-row"><div class="rank-no">04</div><div class="rank-name">New Mexico</div><div class="rank-bar-wrap"><div class="rank-bar" style="width:84%"></div></div><div class="rank-val">22.5%</div></div>
+      <div class="rank-row"><div class="rank-no">05</div><div class="rank-name">Alabama</div><div class="rank-bar-wrap"><div class="rank-bar" style="width:78%"></div></div><div class="rank-val">20.9%</div></div>
+      <div class="rank-row"><div class="rank-no">06</div><div class="rank-name">Kentucky</div><div class="rank-bar-wrap"><div class="rank-bar" style="width:76%"></div></div><div class="rank-val">20.3%</div></div>
+      <div class="rank-row"><div class="rank-no">07</div><div class="rank-name">Montana</div><div class="rank-bar-wrap"><div class="rank-bar" style="width:74%"></div></div><div class="rank-val">19.8%</div></div>
+      <div class="rank-row"><div class="rank-no">08</div><div class="rank-name">Oklahoma</div><div class="rank-bar-wrap"><div class="rank-bar" style="width:72%"></div></div><div class="rank-val">19.2%</div></div>
+      <div class="rank-row"><div class="rank-no">09</div><div class="rank-name">North Carolina</div><div class="rank-bar-wrap"><div class="rank-bar" style="width:70%"></div></div><div class="rank-val">18.7%</div></div>
+      <div class="rank-row"><div class="rank-no">10</div><div class="rank-name">Mississippi Delta avg.</div><div class="rank-bar-wrap"><div class="rank-bar" style="width:68%"></div></div><div class="rank-val">18.1%</div></div>
+    </div>
+  </div>
+
+  <div class="src">Source · FCC Form 477 (Dec 2023) · Microsoft Airband measured-connection data · Times analysis</div>
+  <div class="figno">FIG. 05 / 07</div>
+</div>
+</body>
+</html>

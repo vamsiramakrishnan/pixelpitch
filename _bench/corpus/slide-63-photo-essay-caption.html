@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slide 63 — Photo Essay Caption</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               -webkit-font-smoothing:antialiased; background:#0d0c0a; }
+  .slide {
+    width:1280px; height:720px; box-sizing:border-box;
+    position:relative; overflow:hidden;
+    font-family: 'Tiempos Headline', 'Source Serif Pro', Georgia, serif;
+    background:#0d0c0a;
+    color:#ece6d8;
+    padding:48px 64px;
+  }
+  .header {
+    display:flex; align-items:baseline; justify-content:space-between;
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    font-size:11px; font-weight:600; letter-spacing:0.32em;
+    text-transform:uppercase; color:#a99a7a;
+  }
+  .header .title {
+    color:#ece6d8; font-weight:700;
+    font-family: 'Tiempos Headline', 'Source Serif Pro', Georgia, serif;
+    font-style:italic;
+    letter-spacing:0.04em;
+    text-transform:none;
+    font-size:14px;
+  }
+  .plate-row {
+    margin-top:22px;
+    display:flex; gap:24px;
+    height:440px;
+  }
+  .plate {
+    position:relative;
+    background:#1a1814;
+    border:8px solid #ece6d8; /* hard-color border, polaroid feel */
+    box-sizing:border-box;
+    overflow:hidden;
+  }
+  .plate.large { flex:1.55; }
+  .plate.small { flex:1; }
+  .plate img {
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit:cover;
+    filter: brightness(0.95) contrast(1.05);
+  }
+  .plate .num {
+    position:absolute; left:14px; top:12px;
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    font-size:11px; font-weight:700; letter-spacing:0.28em;
+    color:#0d0c0a;
+    background:#ece6d8;
+    padding:4px 8px;
+  }
+  .caption-row {
+    margin-top:28px;
+    display:flex; gap:48px;
+  }
+  .cap {
+    flex:1;
+    font-family: 'Tiempos Headline', 'Source Serif Pro', Georgia, serif;
+    font-size:13px; line-height:1.55; font-weight:400;
+    color:#cfc3a8;
+    border-top:1px solid #4a4438;
+    padding-top:14px;
+  }
+  .cap .label {
+    display:block;
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    font-size:10px; font-weight:700; letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:#e5b06a;
+    margin-bottom:6px;
+  }
+  .cap em.place {
+    font-style:italic;
+    color:#ece6d8;
+  }
+  .essay-title {
+    position:absolute; left:64px; bottom:28px;
+    font-family: 'Tiempos Headline', 'Source Serif Pro', Georgia, serif;
+    font-size:11px; font-style:italic; color:#7a6f54;
+  }
+  .pageno {
+    position:absolute; right:64px; bottom:28px;
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    font-size:11px; font-weight:600; letter-spacing:0.28em;
+    color:#7a6f54;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="header">
+    <span>Photo Essay &middot; No. 14</span>
+    <span class="title" data-pptx-role="title">Notes from a sinking coast &mdash; two photographs</span>
+    <span>Aperture / Spring</span>
+  </div>
+
+  <div class="plate-row">
+    <div class="plate large">
+      <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1280"
+           alt="Aerial coastline">
+      <span class="num">PLATE 01</span>
+    </div>
+    <div class="plate small">
+      <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1280"
+           alt="Architectural detail">
+      <span class="num">PLATE 02</span>
+    </div>
+  </div>
+
+  <div class="caption-row">
+    <div class="cap">
+      <span class="label">Plate 01 &mdash; Aerial</span>
+      A salt marsh at low tide, photographed from
+      <em class="place">350m above the Bay of Fundy</em>.
+      The bright veining is a tidal channel that has
+      migrated nearly forty meters since the same frame
+      was taken in 1998. Locals call this stretch
+      <em>the breathing field</em>: at neap it is grass;
+      at spring it is sea. The line between is a
+      negotiation that the map will lose.
+    </div>
+    <div class="cap">
+      <span class="label">Plate 02 &mdash; The wall</span>
+      A retaining wall on the headland west of the
+      village, poured the summer the lighthouse went
+      automatic. The mason inscribed his initials and
+      the year into the lower-left corner; both have
+      since been overtaken by lichen. We photographed
+      it in February, when the cold gives the concrete
+      back its first colour &mdash; pale, faintly pink,
+      the colour of an apology that is already too late.
+    </div>
+  </div>
+
+  <div class="essay-title"><em>The Inland Sea &mdash; an essay in eight plates.</em></div>
+  <div class="pageno">P.&nbsp;084&ndash;085</div>
+</div>
+</body>
+</html>

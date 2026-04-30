@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Housing affordability, six cities</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; -webkit-font-smoothing:antialiased; background:#fafaf6; color:#1a1a1a; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; position:relative; overflow:hidden; padding:40px 56px; font-family:'Source Serif Pro','Tiempos',Georgia,serif; }
+  .kicker { font-family:'Inter','Helvetica Neue',Arial,sans-serif; font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#c41e3a; }
+  h1 { font-size:54px; font-weight:700; letter-spacing:-0.02em; line-height:1.05; margin:10px 0 10px 0; max-width:1100px; }
+  .lede { font-size:16px; font-weight:400; line-height:1.55; max-width:980px; margin:0 0 8px 0; }
+  .lede b { font-weight:700; }
+  .legendrow { display:flex; gap:32px; align-items:center; margin-top:14px; margin-bottom:14px; font-family:'Inter',Arial,sans-serif; font-size:11px; }
+  .swatch { display:inline-block; width:18px; height:2px; vertical-align:middle; margin-right:6px; }
+  .ymark { font-family:'Inter',Arial,sans-serif; font-size:10px; color:rgba(0,0,0,0.55); letter-spacing:0.04em; }
+  .grid { display:grid; grid-template-columns:repeat(3, 380px); grid-template-rows:repeat(2, 220px); gap:16px 24px; margin-top:6px; }
+  .cell { border-top:1px solid #1a1a1a; padding-top:8px; position:relative; }
+  .cell-name { font-family:'Inter',Arial,sans-serif; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; }
+  .cell-val { font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums; font-size:11px; color:rgba(0,0,0,0.7); margin-top:2px; }
+  .cell-val .delta { color:#c41e3a; font-weight:700; margin-left:6px; }
+  .cell-val .deltad { color:#1e5f8c; font-weight:700; margin-left:6px; }
+  .src { position:absolute; left:56px; bottom:14px; font-family:'Inter',Arial,sans-serif; font-size:10px; color:rgba(0,0,0,0.55); border:1px solid #1a1a1a; padding:4px 8px; }
+  .figno { position:absolute; right:56px; bottom:14px; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.08em; color:rgba(0,0,0,0.55); }
+  .scalenote { font-family:'Source Serif Pro',Georgia,serif; font-size:11px; font-style:italic; color:rgba(0,0,0,0.55); margin-left:auto; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="kicker">Housing · Small multiples</div>
+  <h1 data-pptx-role="title">Six cities, one shared y-axis</h1>
+  <p class="lede">Median monthly rent for a one-bedroom, indexed to <b>January 2019 = 100</b>. Same scale, same window, six different answers. Boise looks like a different country than Pittsburgh.</p>
+  <div class="legendrow">
+    <span><span class="swatch" style="background:#c41e3a;"></span>Median 1BR rent (indexed)</span>
+    <span class="ymark">Y-AXIS · 80 → 200 (every cell)</span>
+    <span class="ymark">X-AXIS · Jan 2019 → Jan 2025</span>
+    <span class="scalenote">Each tick on the y-axis represents 30 index points.</span>
+  </div>
+
+  <div class="grid">
+    <div class="cell">
+      <div class="cell-name">Boise, ID</div>
+      <div class="cell-val">2019 · <span>100</span> · 2025 · <span>178</span><span class="delta">+78</span></div>
+      <svg width="380" height="160" viewBox="0 0 380 160" xmlns="http://www.w3.org/2000/svg" font-family="Inter,Arial,sans-serif">
+        <line x1="20" y1="20" x2="370" y2="20" stroke="rgba(0,0,0,0.06)"/>
+        <line x1="20" y1="60" x2="370" y2="60" stroke="rgba(0,0,0,0.06)"/>
+        <line x1="20" y1="100" x2="370" y2="100" stroke="rgba(0,0,0,0.06)"/>
+        <line x1="20" y1="140" x2="370" y2="140" stroke="#1a1a1a"/>
+        <text x="14" y="24" text-anchor="end" font-size="8" fill="rgba(0,0,0,0.55)">200</text>
+        <text x="14" y="144" text-anchor="end" font-size="8" fill="rgba(0,0,0,0.55)">80</text>
+        <polyline points="20,140 78,134 136,118 194,82 252,52 310,40 370,46" fill="none" stroke="#c41e3a" stroke-width="2"/>
+        <circle cx="370" cy="46" r="3" fill="#c41e3a"/>
+        <line x1="252" y1="52" x2="252" y2="140" stroke="rgba(0,0,0,0.12)" stroke-dasharray="2,3"/>
+        <text x="256" y="50" font-size="9" fill="#1a1a1a">peak '22</text>
+      </svg>
+    </div>
+
+    <div class="cell">
+      <div class="cell-name">Phoenix, AZ</div>
+      <div class="cell-val">2019 · <span>100</span> · 2025 · <span>156</span><span class="delta">+56</span></div>
+      <svg width="380" height="160" viewBox="0 0 380 160" xmlns="http://www.w3.org/2000/svg" font-family="Inter,Arial,sans-serif">
+        <line x1="20" y1="20" x2="370" y2="20" stroke="rgba(0,0,0,0.06)"/>
+        <line x1="20" y1="60" x2="370" y2="60" stroke="rgba(0,0,0,0.06)"/>
+        <line x1="20" y1="100" x2="370" y2="100" stroke="rgba(0,0,0,0.06)"/>
+        <line x1="20" y1="140" x2="370" y2="140" stroke="#1a1a1a"/>
+        <text x="14" y="24" text-anchor="end" font-size="8" fill="rgba(0,0,0,0.55)">200</text>
+        <text x="14" y="144" text-anchor="end" font-size="8" fill="rgba(0,0,0,0.55)">80</text>
+        <polyline points="20,140 78,132 136,112 194,86 252,72 310,68 370,66" fill="none" stroke="#c41e3a" stroke-width="2"/>
+        <circle cx="370" cy="66" r="3" fill="#c41e3a"/>
+      </svg>
+    </div>
+
+    <div class="cell">
+      <div class="cell-name">Austin, TX</div>
+      <div class="cell-val">2019 · <span>100</span> · 2025 · <span>142</span><span class="delta">+42</span></div>
+      <svg width="380" height="160" viewBox="0 0 380 160" xmlns="http://www.w3.org/2000/svg" font-family="Inter,Arial,sans-serif">
+        <line x1="20" y1="20" x2="370" y2="20" stroke="rgba(0,0,0,0.06)"/>
+        <line x1="20" y1="60" x2="370" y2="60" stroke="rgba(0,0,0,0.06)"/>
+        <line x1="20" y1="100" x2="370" y2="100" stroke="rgba(0,0,0,0.06)"/>
+        <line x1="20" y1="140" x2="370" y2="140" stroke="#1a1a1a"/>
+        <text x="14" y="24" text-anchor="end" font-size="8" fill="rgba(0,0,0,0.55)">200</text>
+        <text x="14" y="144" text-anchor="end" font-size="8" fill="rgba(0,0,0,0.55)">80</text>
+        <polyline points="20,140 78,128 136,98 194,60 252,72 310,82 370,88" fill="none" stroke="#c41e3a" stroke-width="2"/>
+        <circle cx="370" cy="88" r="3" fill="#c41e3a"/>
+        <text x="200" y="56" font-size="9" fill="#1a1a1a" font-weight="700">cooled '23</text>
+      </svg>
+    </div>
+
+    <div class="cell">
+      <div class="cell-name">Chicago, IL</div>
+      <div class="cell-val">2019 · <span>100</span> · 2025 · <span>118</span><span class="delta">+18</span></div>
+      <svg width="380" height="160" viewBox="0 0 380 160" xmlns="http://www.w3.org/2000/svg" font-family="Inter,Arial,sans-serif">
+        <line x1="20" y1="20" x2="370" y2="20" stroke="rgba(0,0,0,0.06)"/>
+        <line x1="20" y1="60" x2="370" y2="60" stroke="rgba(0,0,0,0.06)"/>
+        <line x1="20" y1="100" x2="370" y2="100" stroke="rgba(0,0,0,0.06)"/>
+        <line x1="20" y1="140" x2="370" y2="140" stroke="#1a1a1a"/>
+        <text x="14" y="24" text-anchor="end" font-size="8" fill="rgba(0,0,0,0.55)">200</text>
+        <text x="14" y="144" text-anchor="end" font-size="8" fill="rgba(0,0,0,0.55)">80</text>
+        <polyline points="20,140 78,138 136,128 194,118 252,112 310,108 370,108" fill="none" stroke="#c41e3a" stroke-width="2"/>
+        <circle cx="370" cy="108" r="3" fill="#c41e3a"/>
+      </svg>
+    </div>
+
+    <div class="cell">
+      <div class="cell-name">San Francisco, CA</div>
+      <div class="cell-val">2019 · <span>100</span> · 2025 · <span>96</span><span class="deltad">−4</span></div>
+      <svg width="380" height="160" viewBox="0 0 380 160" xmlns="http://www.w3.org/2000/svg" font-family="Inter,Arial,sans-serif">
+        <line x1="20" y1="20" x2="370" y2="20" stroke="rgba(0,0,0,0.06)"/>
+        <line x1="20" y1="60" x2="370" y2="60" stroke="rgba(0,0,0,0.06)"/>
+        <line x1="20" y1="100" x2="370" y2="100" stroke="rgba(0,0,0,0.06)"/>
+        <line x1="20" y1="140" x2="370" y2="140" stroke="#1a1a1a"/>
+        <text x="14" y="24" text-anchor="end" font-size="8" fill="rgba(0,0,0,0.55)">200</text>
+        <text x="14" y="144" text-anchor="end" font-size="8" fill="rgba(0,0,0,0.55)">80</text>
+        <polyline points="20,140 78,144 136,148 194,142 252,138 310,134 370,132" fill="none" stroke="#c41e3a" stroke-width="2"/>
+        <circle cx="370" cy="132" r="3" fill="#c41e3a"/>
+        <text x="200" y="156" font-size="9" fill="#1e5f8c" font-weight="700">net decline</text>
+      </svg>
+    </div>
+
+    <div class="cell">
+      <div class="cell-name">Pittsburgh, PA</div>
+      <div class="cell-val">2019 · <span>100</span> · 2025 · <span>108</span><span class="delta">+8</span></div>
+      <svg width="380" height="160" viewBox="0 0 380 160" xmlns="http://www.w3.org/2000/svg" font-family="Inter,Arial,sans-serif">
+        <line x1="20" y1="20" x2="370" y2="20" stroke="rgba(0,0,0,0.06)"/>
+        <line x1="20" y1="60" x2="370" y2="60" stroke="rgba(0,0,0,0.06)"/>
+        <line x1="20" y1="100" x2="370" y2="100" stroke="rgba(0,0,0,0.06)"/>
+        <line x1="20" y1="140" x2="370" y2="140" stroke="#1a1a1a"/>
+        <text x="14" y="24" text-anchor="end" font-size="8" fill="rgba(0,0,0,0.55)">200</text>
+        <text x="14" y="144" text-anchor="end" font-size="8" fill="rgba(0,0,0,0.55)">80</text>
+        <polyline points="20,140 78,138 136,134 194,128 252,122 310,118 370,116" fill="none" stroke="#c41e3a" stroke-width="2"/>
+        <circle cx="370" cy="116" r="3" fill="#c41e3a"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="src">Source · Apartment List Rent Estimates, Jan 2019–Jan 2025 · The Times analysis</div>
+  <div class="figno">FIG. 03 / 07</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Emissions pledges vs. delivery, G20</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; -webkit-font-smoothing:antialiased; background:#fafaf6; color:#1a1a1a; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; position:relative; overflow:hidden; padding:40px 56px; font-family:'Source Serif Pro','Tiempos',Georgia,serif; }
+  .kicker { font-family:'Inter','Helvetica Neue',Arial,sans-serif; font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#d4a017; }
+  h1 { font-size:54px; font-weight:700; letter-spacing:-0.02em; line-height:1.05; margin:8px 0 8px 0; max-width:1100px; }
+  .lede { font-size:16px; font-weight:400; line-height:1.55; max-width:1080px; margin:0 0 16px 0; }
+  .lede b { font-weight:700; }
+  .lede em { font-style:italic; }
+  .table { display:grid; grid-template-columns:36px 1.6fr 1fr 1fr 1fr 0.7fr 1fr; column-gap:18px; margin-top:6px; }
+  .th { font-family:'Inter',Arial,sans-serif; font-size:10px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#1a1a1a; padding:8px 0 6px 0; border-bottom:2px solid #1a1a1a; }
+  .th-r { text-align:right; }
+  .td { padding:9px 0; border-bottom:1px solid rgba(0,0,0,0.08); font-size:14px; line-height:1.3; display:flex; align-items:center; }
+  .td-r { justify-content:flex-end; font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums; }
+  .rank { font-family:'IBM Plex Mono',monospace; font-size:11px; color:rgba(0,0,0,0.55); }
+  .country { font-family:'Source Serif Pro',Georgia,serif; font-weight:700; font-size:14px; }
+  .country small { display:block; font-family:'Inter',Arial,sans-serif; font-weight:400; font-size:10px; letter-spacing:0.06em; color:rgba(0,0,0,0.55); margin-top:2px; }
+  .delta-up { color:#c41e3a; font-weight:700; }
+  .delta-down { color:#1e5f8c; font-weight:700; }
+  .delta-flat { color:rgba(0,0,0,0.55); }
+  .arrow { display:inline-block; width:0; height:0; margin-right:6px; vertical-align:middle; }
+  .arrow-up { border-left:5px solid transparent; border-right:5px solid transparent; border-bottom:7px solid #c41e3a; }
+  .arrow-down { border-left:5px solid transparent; border-right:5px solid transparent; border-top:7px solid #1e5f8c; }
+  .arrow-flat { width:9px; height:2px; background:rgba(0,0,0,0.55); display:inline-block; vertical-align:middle; margin-right:6px; }
+  .spark { width:80px; height:24px; }
+  .verdict { font-family:'Inter',Arial,sans-serif; font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; padding:3px 6px; border:1px solid #1a1a1a; }
+  .verdict-miss { color:#c41e3a; border-color:#c41e3a; }
+  .verdict-track { color:#1e5f8c; border-color:#1e5f8c; }
+  .verdict-warn { color:#d4a017; border-color:#d4a017; }
+  .src { position:absolute; left:56px; bottom:14px; font-family:'Inter',Arial,sans-serif; font-size:10px; color:rgba(0,0,0,0.55); border:1px solid #1a1a1a; padding:4px 8px; }
+  .figno { position:absolute; right:56px; bottom:14px; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.08em; color:rgba(0,0,0,0.55); }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="kicker">Climate · Comparison table</div>
+  <h1 data-pptx-role="title">Pledged vs. delivered: G20 emissions, 2015 → 2024</h1>
+  <p class="lede">Each country's 2030 NDC target, its 2024 trajectory, and the gap between them. <b>Eight G20 economies are off-pledge</b>; three are ahead of schedule. The arrows show year-on-year delta — not progress against the pledge.</p>
+
+  <div class="table">
+    <div class="th">#</div>
+    <div class="th">Country</div>
+    <div class="th th-r">2015 baseline (MtCO₂e)</div>
+    <div class="th th-r">2024 actual (MtCO₂e)</div>
+    <div class="th th-r">2030 pledge</div>
+    <div class="th th-r">YoY Δ</div>
+    <div class="th">Trajectory · verdict</div>
+
+    <div class="td"><span class="rank">01</span></div>
+    <div class="td"><div class="country">China<small>NDC: peak before 2030</small></div></div>
+    <div class="td td-r">11,860</div>
+    <div class="td td-r">13,450</div>
+    <div class="td td-r">peak ≤14,000</div>
+    <div class="td td-r"><span class="delta-up"><span class="arrow arrow-up"></span>+1.2%</span></div>
+    <div class="td"><svg class="spark" viewBox="0 0 80 24"><polyline points="0,18 13,16 26,14 39,10 52,8 65,6 80,4" fill="none" stroke="#c41e3a" stroke-width="1.5"/></svg><span class="verdict verdict-warn" style="margin-left:8px;">At cap</span></div>
+
+    <div class="td"><span class="rank">02</span></div>
+    <div class="td"><div class="country">United States<small>NDC: −50% by 2030 vs. 2005</small></div></div>
+    <div class="td td-r">5,830</div>
+    <div class="td td-r">5,030</div>
+    <div class="td td-r">3,250</div>
+    <div class="td td-r"><span class="delta-down"><span class="arrow arrow-down"></span>−1.8%</span></div>
+    <div class="td"><svg class="spark" viewBox="0 0 80 24"><polyline points="0,6 13,8 26,10 39,12 52,12 65,14 80,16" fill="none" stroke="#1e5f8c" stroke-width="1.5"/></svg><span class="verdict verdict-miss" style="margin-left:8px;">Off pledge</span></div>
+
+    <div class="td"><span class="rank">03</span></div>
+    <div class="td"><div class="country">India<small>NDC: −45% intensity by 2030</small></div></div>
+    <div class="td td-r">2,510</div>
+    <div class="td td-r">3,180</div>
+    <div class="td td-r">intensity −45%</div>
+    <div class="td td-r"><span class="delta-up"><span class="arrow arrow-up"></span>+4.1%</span></div>
+    <div class="td"><svg class="spark" viewBox="0 0 80 24"><polyline points="0,20 13,18 26,16 39,12 52,10 65,8 80,4" fill="none" stroke="#c41e3a" stroke-width="1.5"/></svg><span class="verdict verdict-warn" style="margin-left:8px;">On intensity</span></div>
+
+    <div class="td"><span class="rank">04</span></div>
+    <div class="td"><div class="country">Russia<small>NDC: −30% by 2030 vs. 1990</small></div></div>
+    <div class="td td-r">2,140</div>
+    <div class="td td-r">2,090</div>
+    <div class="td td-r">1,680</div>
+    <div class="td td-r"><span class="delta-flat"><span class="arrow-flat"></span>+0.1%</span></div>
+    <div class="td"><svg class="spark" viewBox="0 0 80 24"><polyline points="0,12 13,12 26,11 39,11 52,12 65,12 80,12" fill="none" stroke="#1a1a1a" stroke-width="1.5"/></svg><span class="verdict verdict-miss" style="margin-left:8px;">Off pledge</span></div>
+
+    <div class="td"><span class="rank">05</span></div>
+    <div class="td"><div class="country">Japan<small>NDC: −46% by 2030 vs. 2013</small></div></div>
+    <div class="td td-r">1,310</div>
+    <div class="td td-r">1,040</div>
+    <div class="td td-r">707</div>
+    <div class="td td-r"><span class="delta-down"><span class="arrow arrow-down"></span>−2.4%</span></div>
+    <div class="td"><svg class="spark" viewBox="0 0 80 24"><polyline points="0,4 13,6 26,8 39,10 52,12 65,14 80,16" fill="none" stroke="#1e5f8c" stroke-width="1.5"/></svg><span class="verdict verdict-warn" style="margin-left:8px;">Behind</span></div>
+
+    <div class="td"><span class="rank">06</span></div>
+    <div class="td"><div class="country">Germany<small>NDC: −65% by 2030 vs. 1990</small></div></div>
+    <div class="td td-r">906</div>
+    <div class="td td-r">658</div>
+    <div class="td td-r">438</div>
+    <div class="td td-r"><span class="delta-down"><span class="arrow arrow-down"></span>−3.6%</span></div>
+    <div class="td"><svg class="spark" viewBox="0 0 80 24"><polyline points="0,2 13,5 26,8 39,10 52,12 65,15 80,18" fill="none" stroke="#1e5f8c" stroke-width="1.5"/></svg><span class="verdict verdict-track" style="margin-left:8px;">On pledge</span></div>
+
+    <div class="td"><span class="rank">07</span></div>
+    <div class="td"><div class="country">United Kingdom<small>NDC: −68% by 2030 vs. 1990</small></div></div>
+    <div class="td td-r">490</div>
+    <div class="td td-r">331</div>
+    <div class="td td-r">228</div>
+    <div class="td td-r"><span class="delta-down"><span class="arrow arrow-down"></span>−4.0%</span></div>
+    <div class="td"><svg class="spark" viewBox="0 0 80 24"><polyline points="0,2 13,4 26,7 39,10 52,13 65,16 80,19" fill="none" stroke="#1e5f8c" stroke-width="1.5"/></svg><span class="verdict verdict-track" style="margin-left:8px;">Ahead</span></div>
+
+    <div class="td"><span class="rank">08</span></div>
+    <div class="td"><div class="country">Brazil<small>NDC: −53% by 2030 vs. 2005</small></div></div>
+    <div class="td td-r">1,400</div>
+    <div class="td td-r">1,180</div>
+    <div class="td td-r">740</div>
+    <div class="td td-r"><span class="delta-down"><span class="arrow arrow-down"></span>−2.1%</span></div>
+    <div class="td"><svg class="spark" viewBox="0 0 80 24"><polyline points="0,6 13,7 26,9 39,10 52,12 65,13 80,15" fill="none" stroke="#1e5f8c" stroke-width="1.5"/></svg><span class="verdict verdict-warn" style="margin-left:8px;">Behind</span></div>
+
+    <div class="td"><span class="rank">09</span></div>
+    <div class="td"><div class="country">Australia<small>NDC: −43% by 2030 vs. 2005</small></div></div>
+    <div class="td td-r">523</div>
+    <div class="td td-r">461</div>
+    <div class="td td-r">331</div>
+    <div class="td td-r"><span class="delta-down"><span class="arrow arrow-down"></span>−1.1%</span></div>
+    <div class="td"><svg class="spark" viewBox="0 0 80 24"><polyline points="0,6 13,7 26,8 39,10 52,11 65,12 80,14" fill="none" stroke="#1e5f8c" stroke-width="1.5"/></svg><span class="verdict verdict-warn" style="margin-left:8px;">Behind</span></div>
+  </div>
+
+  <div class="src">Source · UNFCCC GHG inventories (latest), Climate Action Tracker · Pledges per submitted NDCs as of Q1 2025</div>
+  <div class="figno">FIG. 06 / 07</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CODE HERO // norm-svc.rs</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               -webkit-font-smoothing:antialiased; background:#fafaf9; }
+  .slide { width:1280px; height:720px; box-sizing:border-box;
+           position:relative; overflow:hidden;
+           background:#fafaf9; color:#0a0a0a;
+           font-family:'JetBrains Mono','IBM Plex Mono','SF Mono',Menlo,monospace; }
+  .frame { position:absolute; inset:24px; border:2px solid #0a0a0a; }
+  .topbar { position:absolute; top:24px; left:24px; right:24px; height:36px;
+            border-bottom:2px solid #0a0a0a;
+            display:flex; justify-content:space-between; align-items:center;
+            padding:0 16px; font-size:11px; font-weight:600; }
+  .head { position:absolute; top:80px; left:40px; right:40px; }
+  .eyebrow { font-size:11px; font-weight:600; color:#cdff00; margin:0 0 8px 0; }
+  h1 { font-size:36px; font-weight:700; line-height:1.05; margin:0;
+       color:#0a0a0a; letter-spacing:0; }
+  .lay { position:absolute; top:184px; left:40px; right:40px; bottom:90px;
+         display:grid; grid-template-columns: 720px 1fr; gap:0; }
+  .code { border:2px solid #0a0a0a; background:#0a0a0a; color:#fafaf9;
+          padding:16px 18px; font-size:13px; line-height:1.55;
+          position:relative; }
+  .code .bar { position:absolute; top:0; left:0; right:0; height:24px;
+               background:#0a0a0a; border-bottom:1px solid #fafaf9;
+               display:flex; justify-content:space-between; align-items:center;
+               padding:0 10px; font-size:10px; font-weight:700; color:#fafaf9; }
+  .code pre { margin:30px 0 0 0; white-space:pre; color:#fafaf9;
+              font-family:inherit; font-size:13px; line-height:1.55; }
+  .code .ln { color:#fafaf9; opacity:0.55; user-select:none; display:inline-block;
+              width:24px; text-align:right; padding-right:10px; }
+  .code .hl { color:#cdff00; }
+  .code .cm { color:#fafaf9; opacity:0.55; }
+  .side { display:flex; flex-direction:column; gap:0;
+          border-top:1px solid #0a0a0a; }
+  .ann { border-bottom:1px solid #0a0a0a; padding:14px 0 14px 28px;
+         position:relative; }
+  .ann .num { position:absolute; left:0; top:14px;
+              border:1px solid #0a0a0a; width:22px; height:22px;
+              display:flex; align-items:center; justify-content:center;
+              font-size:11px; font-weight:700; }
+  .ann.acc .num { background:#cdff00; border-color:#cdff00; color:#0a0a0a; }
+  .ann h4 { font-size:13px; font-weight:700; margin:0 0 4px 0; color:#0a0a0a;
+            letter-spacing:0; }
+  .ann p { font-size:11px; font-weight:400; margin:0; color:#0a0a0a;
+           line-height:1.45; }
+  .ann .arr { position:absolute; left:-28px; top:24px;
+              width:24px; height:1px; background:#0a0a0a; }
+  .ann .arrtip { position:absolute; left:-32px; top:21px;
+                 width:6px; height:6px; border-left:1px solid #0a0a0a;
+                 border-bottom:1px solid #0a0a0a; transform:rotate(0deg); }
+  .footer { position:absolute; bottom:24px; left:40px; right:40px;
+            display:flex; justify-content:space-between; align-items:flex-end;
+            font-size:11px; font-weight:600; color:#0a0a0a; }
+  .pillrow { display:flex; gap:6px; }
+  .pillrow span { display:inline-block; padding:3px 8px; border:1px solid #0a0a0a;
+                  font-size:10px; font-weight:700; }
+  .pillrow span.acc { background:#cdff00; border-color:#cdff00; color:#0a0a0a; }
+  .deco { position:absolute; left:40px; bottom:54px; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="frame"></div>
+  <div class="topbar">
+    <span>CODE / norm-svc.rs / fn handle_batch</span>
+    <span>PAGE 24 OF 27 // 1 FILE // 38 LOC</span>
+  </div>
+
+  <div class="head">
+    <div class="eyebrow">// 24 — CODE BLOCK HERO</div>
+    <h1 data-pptx-role="title">fn handle_batch&lt;T&gt;( ) -&gt; Result&lt;Out, Err&gt;</h1>
+  </div>
+
+  <div class="lay">
+    <div class="code">
+      <div class="bar">
+        <span>~/svc/norm/src/handler.rs&nbsp;&nbsp;//&nbsp;&nbsp;rust 1.78</span>
+        <span>L1:38&nbsp;&nbsp;UTF-8&nbsp;&nbsp;LF</span>
+      </div>
+<pre><span class="ln"> 1</span><span class="cm">// hot path: parse, dedupe, emit</span>
+<span class="ln"> 2</span><span class="hl">pub fn</span> handle_batch&lt;T: Record&gt;(
+<span class="ln"> 3</span>    batch: <span class="hl">&amp;[Raw&lt;T&gt;]</span>,
+<span class="ln"> 4</span>    ctx:   <span class="hl">&amp;Ctx</span>,
+<span class="ln"> 5</span>) -&gt; <span class="hl">Result&lt;Out, Err&gt;</span> {
+<span class="ln"> 6</span>    <span class="cm">// 01 - bound concurrency</span>
+<span class="ln"> 7</span>    <span class="hl">let</span> sem = ctx.sem.clone();
+<span class="ln"> 8</span>    <span class="hl">let</span> _p  = sem.acquire()?;
+<span class="ln"> 9</span>
+<span class="ln">10</span>    <span class="cm">// 02 - parse with budget</span>
+<span class="ln">11</span>    <span class="hl">let</span> parsed = batch
+<span class="ln">12</span>        .iter()
+<span class="ln">13</span>        .map(<span class="hl">|r|</span> parse(r, ctx))
+<span class="ln">14</span>        .collect::&lt;Result&lt;Vec&lt;_&gt;, _&gt;&gt;()?;
+<span class="ln">15</span>
+<span class="ln">16</span>    <span class="cm">// 03 - dedupe (xxhash64)</span>
+<span class="ln">17</span>    <span class="hl">let</span> uniq = dedupe(&amp;parsed, &amp;ctx.seen);
+<span class="ln">18</span>
+<span class="ln">19</span>    <span class="cm">// 04 - emit to sink</span>
+<span class="ln">20</span>    sink::emit(&amp;ctx.out, uniq).await?;
+<span class="ln">21</span>
+<span class="ln">22</span>    Ok(Out { n: parsed.len() as u32 })
+<span class="ln">23</span>}</pre>
+    </div>
+
+    <div class="side">
+      <div class="ann">
+        <span class="num">01</span>
+        <span class="arr"></span>
+        <h4>BOUND CONCURRENCY</h4>
+        <p>Semaphore caps in-flight batches at 64. Backpressure is a permit, not a queue.</p>
+      </div>
+      <div class="ann">
+        <span class="num">02</span>
+        <span class="arr"></span>
+        <h4>PARSE / BUDGET</h4>
+        <p>Per-record budget = 200us. Over-budget rows route to DLQ, never block the loop.</p>
+      </div>
+      <div class="ann acc">
+        <span class="num">03</span>
+        <span class="arr"></span>
+        <h4>DEDUPE / xxh64</h4>
+        <p>Bloom + recent set. Hot path: O(1) avg, no allocations, single hash family.</p>
+      </div>
+      <div class="ann">
+        <span class="num">04</span>
+        <span class="arr"></span>
+        <h4>EMIT / SINK</h4>
+        <p>Async batch flush, fixed 4KiB frames, idempotent on retry. No partial commits.</p>
+      </div>
+    </div>
+  </div>
+
+  <svg class="deco" width="220" height="20" viewBox="0 0 220 20" aria-hidden="true">
+    <rect x="0" y="4" width="10" height="10" fill="#0a0a0a"/>
+    <rect x="14" y="4" width="10" height="10" fill="none" stroke="#0a0a0a"/>
+    <rect x="28" y="4" width="10" height="10" fill="#0a0a0a"/>
+    <rect x="42" y="4" width="10" height="10" fill="#cdff00"/>
+    <rect x="56" y="4" width="10" height="10" fill="#0a0a0a"/>
+    <rect x="70" y="4" width="10" height="10" fill="none" stroke="#0a0a0a"/>
+    <rect x="84" y="4" width="10" height="10" fill="#0a0a0a"/>
+    <rect x="98" y="4" width="10" height="10" fill="#cdff00"/>
+    <rect x="112" y="4" width="10" height="10" fill="#0a0a0a"/>
+    <rect x="126" y="4" width="10" height="10" fill="none" stroke="#0a0a0a"/>
+    <rect x="140" y="4" width="10" height="10" fill="#0a0a0a"/>
+    <rect x="154" y="4" width="10" height="10" fill="none" stroke="#0a0a0a"/>
+    <rect x="168" y="4" width="10" height="10" fill="#0a0a0a"/>
+    <rect x="182" y="4" width="10" height="10" fill="#cdff00"/>
+    <rect x="196" y="4" width="10" height="10" fill="#0a0a0a"/>
+  </svg>
+
+  <div class="footer">
+    <span class="pillrow">
+      <span>RUST 1.78</span><span>edition 2021</span><span class="acc">HOT PATH</span><span>no_unsafe</span>
+    </span>
+    <span>// commit a8f12c9 // owner: norm@platform</span>
+  </div>
+</div>
+</body>
+</html>
