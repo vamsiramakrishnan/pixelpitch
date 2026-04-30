@@ -29,8 +29,28 @@ patterns:
       confidence: 0.99
       metadata: { recipe: rasterize_only_class }
 
-  - id: filter-active
+  # Faded `<img>` (opacity < 0.95) used as a backdrop under native overlays.
+  # Routes to NativePicture so the emitter embeds the source bytes directly
+  # and applies `<a:alphaModFix amt="…"/>` on the blip to honor the CSS
+  # `opacity`. The alternative (Raster) takes a live region screenshot that
+  # bakes in any overlapping native textboxes — those text boxes are then
+  # re-emitted on top, doubling the type and crashing SSIM.
+  #
+  # Must run before `filter-active` (priority 3): a faint backdrop photo with
+  # mild CSS `filter: contrast(1.05) brightness(0.95)` would otherwise get
+  # caught by the broader filter rule first.
+  - id: faded-img-backdrop
     priority: 2
+    match:
+      anchor.is_img: true
+      anchor.opacity_max: 0.95
+    emit:
+      kind: NativePicture
+      confidence: 0.95
+      metadata: { recipe: faded_img_backdrop, honor_opacity: true }
+
+  - id: filter-active
+    priority: 3
     match:
       filter: any
     emit:
@@ -39,7 +59,7 @@ patterns:
       metadata: { recipe: filter_active }
 
   - id: pptx-unsupported-blend-mode
-    priority: 3
+    priority: 4
     match:
       mix_blend_mode: any
     emit:
@@ -48,7 +68,7 @@ patterns:
       metadata: { recipe: pptx_unsupported_blend_mode }
 
   - id: pptx-unsupported-backdrop-filter
-    priority: 4
+    priority: 5
     match:
       backdrop_filter: any
     emit:
@@ -57,7 +77,7 @@ patterns:
       metadata: { recipe: pptx_unsupported_backdrop_filter }
 
   - id: pptx-unsupported-text-image-mask
-    priority: 5
+    priority: 6
     match:
       text_image_mask: any
     emit:
@@ -66,7 +86,7 @@ patterns:
       metadata: { recipe: pptx_unsupported_text_image_mask }
 
   - id: pptx-unsupported-bg-image-url
-    priority: 6
+    priority: 7
     match:
       bg_image_url: any
     emit:
