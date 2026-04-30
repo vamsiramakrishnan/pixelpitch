@@ -31,3 +31,9 @@ sample-report.json
 # tools/ npm workspace (generator script lives in git, deps don't)
 tools/pattern-gen/node_modules/
 tools/pattern-gen/package-lock.json
+
+# components/ npm workspace
+components/node_modules/
+components/dist/
+components/package-lock.json
+components/.tsbuildinfo
