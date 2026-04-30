@@ -24,30 +24,27 @@ def _has_video(unit: VisualUnit) -> bool:
 
 
 def _has_complex_svg(unit: VisualUnit) -> bool:
-    # Threshold mirrors the dom_walker's capture cap (5). Any SVG with more
-    # primitives than the walker captures is, by definition, "too complex
-    # for the native path"; let it raster cleanly. Leaving the threshold
-    # above the cap creates a dead band where the SVG isn't captured (no
-    # svg_shapes) but also isn't classified complex — `rule_simple_svg`
-    # then misclassifies via the OTHER, smaller, captured SVG on the
-    # slide and drops content.
-    return any(e.is_svg and e.svg_path_count > 5 for e in unit.all_elements())
+    # Iterate this unit's DIRECT elements only — never descendants. A
+    # child unit's SVG should fire its own classifier; bubbling the rule
+    # up to the parent caused the slide-level unit to absorb every
+    # sibling box's emit (slide 04 went 48 -> 3 shapes). Threshold
+    # mirrors the dom_walker capture cap (30) so any SVG that the
+    # walker could capture stays on the native path.
+    return any(e.is_svg and e.svg_path_count > 30 for e in unit.elements)
 
 
 def _has_simple_svg(unit: VisualUnit) -> bool:
     """True iff the unit IS substantially a simple SVG.
 
-    Guard: when the unit is a big slide-level container that happens to
-    *contain* an SVG, the NativeSvg path would emit ONLY the svg shapes
-    and drop all other content. Require the SVG element to occupy at
-    least 30% of the unit's area before treating the whole unit as an
-    SVG unit. Small standalone SVGs (icons, decorative paths in their
-    own DIVs) still match.
+    Direct elements only — same reason as `_has_complex_svg`. Also
+    require the SVG element to occupy at least 30% of the unit's area
+    so a tiny decorative icon inside a card unit doesn't relabel the
+    whole card.
     """
     unit_area = unit.bbox.area
     if unit_area <= 0:
         return False
-    for e in unit.all_elements():
+    for e in unit.elements:
         if e.is_svg and e.svg_path_count > 0:
             if e.bbox.area / unit_area >= 0.30:
                 return True

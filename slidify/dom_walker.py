@@ -167,9 +167,14 @@ WALKER_JS = r"""
                     el.querySelectorAll('path, polygon, polyline, circle, rect, ellipse, line')
                 ).filter(s => !inDefs(s));
                 svgPathCount = allShapes.length;
-                // For simple SVGs (≤5 elements), capture geometry so emitter can
-                // transpile to native PPTX freeform / built-in shapes.
-                if (svgPathCount > 0 && svgPathCount <= 5) {
+                // Capture geometry for SVGs up to ~30 primitives. Architecture
+                // diagrams, dashboard charts and process flows routinely
+                // ship 10-25 primitives, and rasterizing them loses every
+                // connector + axis line. The classifier's simple/complex
+                // SVG rules now scope to a unit's direct elements only,
+                // so a large overlay SVG no longer absorbs sibling content
+                // even when its bbox spans most of the slide.
+                if (svgPathCount > 0 && svgPathCount <= 30) {
                     const svgRect = el.getBoundingClientRect();
                     svgShapes = [];
                     for (const s of allShapes) {

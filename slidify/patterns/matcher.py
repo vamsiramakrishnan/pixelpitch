@@ -71,12 +71,21 @@ def _anchor_classes(anchor: DomElement) -> list[str]:
 
 
 def _has_visible_decoration(anchor: DomElement) -> bool:
-    return (
-        (anchor.background_color and anchor.background_color != "rgba(0, 0, 0, 0)")
-        or (anchor.background_image and anchor.background_image != "none")
-        or (anchor.border and anchor.border != "none")
-        or parse_px(anchor.border_radius) > 0
-    )
+    if anchor.background_color and anchor.background_color != "rgba(0, 0, 0, 0)":
+        return True
+    if anchor.background_image and anchor.background_image != "none":
+        return True
+    if parse_px(anchor.border_radius) > 0:
+        return True
+    # Border check: parse the width — the computed value can be e.g.
+    # "0px none rgb(245,245,247)" which is "no visible border" but
+    # ``!= "none"`` would falsely flag it as decorated. Look for any
+    # parseable width > 0 in the leading token.
+    if anchor.border and anchor.border != "none":
+        leading = anchor.border.split(None, 1)[0]
+        if parse_px(leading) > 0:
+            return True
+    return False
 
 
 def _bbox_aspect(unit: VisualUnit) -> float:
