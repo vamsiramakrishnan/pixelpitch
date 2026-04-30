@@ -5,7 +5,7 @@
   "native_area_ratio": 1.0,
   "llm_calls": 0,
   "total_cost_usd": 0.0,
-  "elapsed_seconds": 4.129926130000058,
+  "elapsed_seconds": 4.095735520999824,
   "cache_hit_rate": 0.676737160120846,
   "decisions_by_tier": {
     "tier0": 86,

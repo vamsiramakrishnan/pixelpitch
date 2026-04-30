@@ -289,12 +289,20 @@ class Emitter:
         # the bbox by 30% horizontally — only for short multi-run frames where
         # the wrap risk is real.
         emit_bbox = op.bbox
+        # Naked inline text only — if the anchor paints its own background
+        # (a pill, a chip, a trend tag) the slack would stretch that fill
+        # past the text and leave a visible "tail" rectangle.
+        anchor_paints_bg = (
+            (anchor.background_color and anchor.background_color != "rgba(0, 0, 0, 0)")
+            or (anchor.background_image and anchor.background_image != "none")
+        )
         if (
             anchor.is_text_container
             and anchor.runs
             and len(anchor.runs) >= 2
             and op.bbox.h <= 48
             and op.bbox.w <= 320
+            and not anchor_paints_bg
         ):
             extra = op.bbox.w * 0.30
             emit_bbox = BoundingBox(
@@ -343,6 +351,27 @@ class Emitter:
             for e in unit.all_elements()
             if (e.text and e.text.strip()) or (e.runs and any(r.text.strip() for r in e.runs if not r.is_break))
         ]
+        # Leaf-text-wins: when a text-bearing parent has text-bearing
+        # descendants in the same list, the descendants will paint the
+        # words at their precise child bboxes — so emitting the parent
+        # too produces a stacked duplicate (slide 8's `.author` div case
+        # contained `.name` + `.title`, both with their own text).
+        text_elem_ids = {e.id for e in text_elems}
+        all_in_unit = unit.all_elements()
+        parent_of = {e.id: e.parent_id for e in all_in_unit}
+
+        def _has_text_descendant(eid: int) -> bool:
+            for other in all_in_unit:
+                if other.id == eid or other.id not in text_elem_ids:
+                    continue
+                cur = parent_of.get(other.id)
+                while cur is not None:
+                    if cur == eid:
+                        return True
+                    cur = parent_of.get(cur)
+            return False
+
+        text_elems = [e for e in text_elems if not _has_text_descendant(e.id)]
         para_targets = text_elems if len(text_elems) > 1 else [anchor]
         first = True
         for e in para_targets:
