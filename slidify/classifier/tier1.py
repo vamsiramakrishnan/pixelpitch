@@ -28,7 +28,23 @@ def _has_complex_svg(unit: VisualUnit) -> bool:
 
 
 def _has_simple_svg(unit: VisualUnit) -> bool:
-    return any(e.is_svg and e.svg_path_count > 0 for e in unit.all_elements())
+    """True iff the unit IS substantially a simple SVG.
+
+    Guard: when the unit is a big slide-level container that happens to
+    *contain* an SVG, the NativeSvg path would emit ONLY the svg shapes
+    and drop all other content. Require the SVG element to occupy at
+    least 30% of the unit's area before treating the whole unit as an
+    SVG unit. Small standalone SVGs (icons, decorative paths in their
+    own DIVs) still match.
+    """
+    unit_area = unit.bbox.area
+    if unit_area <= 0:
+        return False
+    for e in unit.all_elements():
+        if e.is_svg and e.svg_path_count > 0:
+            if e.bbox.area / unit_area >= 0.30:
+                return True
+    return False
 
 
 def _has_caller_rasterize_hint(unit: VisualUnit) -> bool:
