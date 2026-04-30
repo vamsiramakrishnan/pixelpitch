@@ -19,9 +19,13 @@
         "promotion": 1
       },
       "unmatched_signatures": 6,
-      "elapsed_s": 20.050492152000004,
+      "elapsed_s": 10.645631108999964,
       "pptx": "examples/corpus/out/slide-01-hero.pptx",
-      "preview_png": "examples/corpus/preview/slide-01-hero.png"
+      "preview_png": "examples/corpus/preview/slide-01-hero.png",
+      "ssim": 0.7124449476117524,
+      "ocr_recall": 0.7878787878787878,
+      "passed": false,
+      "failing_regions": 20
     },
     {
       "slide": "slide-02-bento.html",
@@ -38,9 +42,13 @@
         "promotion": 1
       },
       "unmatched_signatures": 7,
-      "elapsed_s": 2.152852246000009,
+      "elapsed_s": 6.633099093999931,
       "pptx": "examples/corpus/out/slide-02-bento.pptx",
-      "preview_png": "examples/corpus/preview/slide-02-bento.png"
+      "preview_png": "examples/corpus/preview/slide-02-bento.png",
+      "ssim": 0.7058442959049032,
+      "ocr_recall": 0.9195402298850575,
+      "passed": false,
+      "failing_regions": 20
     },
     {
       "slide": "slide-03-comparison.html",
@@ -57,9 +65,13 @@
         "cache:tier1": 1
       },
       "unmatched_signatures": 5,
-      "elapsed_s": 1.7502879330000098,
+      "elapsed_s": 6.5231378490000225,
       "pptx": "examples/corpus/out/slide-03-comparison.pptx",
-      "preview_png": "examples/corpus/preview/slide-03-comparison.png"
+      "preview_png": "examples/corpus/preview/slide-03-comparison.png",
+      "ssim": 0.7062518320094565,
+      "ocr_recall": 0.6835443037974683,
+      "passed": false,
+      "failing_regions": 20
     },
     {
       "slide": "slide-04-architecture.html",
@@ -76,9 +88,13 @@
         "promotion": 1
       },
       "unmatched_signatures": 6,
-      "elapsed_s": 1.7365048409999986,
+      "elapsed_s": 6.6366072560000475,
       "pptx": "examples/corpus/out/slide-04-architecture.pptx",
-      "preview_png": "examples/corpus/preview/slide-04-architecture.png"
+      "preview_png": "examples/corpus/preview/slide-04-architecture.png",
+      "ssim": 0.6674663753161726,
+      "ocr_recall": 0.7528089887640449,
+      "passed": false,
+      "failing_regions": 20
     },
     {
       "slide": "slide-05-roadmap.html",
@@ -96,9 +112,13 @@
         "promotion": 2
       },
       "unmatched_signatures": 4,
-      "elapsed_s": 1.857867816999999,
+      "elapsed_s": 9.153313713999978,
       "pptx": "examples/corpus/out/slide-05-roadmap.pptx",
-      "preview_png": "examples/corpus/preview/slide-05-roadmap.png"
+      "preview_png": "examples/corpus/preview/slide-05-roadmap.png",
+      "ssim": 0.6138120233133036,
+      "ocr_recall": 0.7515923566878981,
+      "passed": false,
+      "failing_regions": 20
     },
     {
       "slide": "slide-06-dashboard.html",
@@ -116,9 +136,13 @@
         "promotion": 1
       },
       "unmatched_signatures": 17,
-      "elapsed_s": 1.8087976819999767,
+      "elapsed_s": 7.046051901000055,
       "pptx": "examples/corpus/out/slide-06-dashboard.pptx",
-      "preview_png": "examples/corpus/preview/slide-06-dashboard.png"
+      "preview_png": "examples/corpus/preview/slide-06-dashboard.png",
+      "ssim": 0.6989652322730869,
+      "ocr_recall": 0.5641025641025641,
+      "passed": false,
+      "failing_regions": 20
     },
     {
       "slide": "slide-07-stats-hero.html",
@@ -135,9 +159,13 @@
         "promotion": 1
       },
       "unmatched_signatures": 7,
-      "elapsed_s": 1.759034120000024,
+      "elapsed_s": 6.020119079999972,
       "pptx": "examples/corpus/out/slide-07-stats-hero.pptx",
-      "preview_png": "examples/corpus/preview/slide-07-stats-hero.png"
+      "preview_png": "examples/corpus/preview/slide-07-stats-hero.png",
+      "ssim": 0.5893948554651364,
+      "ocr_recall": 0.7671232876712328,
+      "passed": false,
+      "failing_regions": 20
     },
     {
       "slide": "slide-08-process.html",
@@ -153,9 +181,13 @@
         "promotion": 2
       },
       "unmatched_signatures": 8,
-      "elapsed_s": 1.6641844050000145,
+      "elapsed_s": 5.912667156999987,
       "pptx": "examples/corpus/out/slide-08-process.pptx",
-      "preview_png": "examples/corpus/preview/slide-08-process.png"
+      "preview_png": "examples/corpus/preview/slide-08-process.png",
+      "ssim": 0.7295869327968415,
+      "ocr_recall": 0.8421052631578947,
+      "passed": false,
+      "failing_regions": 20
     },
     {
       "slide": "slide-09-pricing-matrix.html",
@@ -171,9 +203,13 @@
         "cache:tier1": 2
       },
       "unmatched_signatures": 3,
-      "elapsed_s": 1.9358513500000072,
+      "elapsed_s": 6.459372027999962,
       "pptx": "examples/corpus/out/slide-09-pricing-matrix.pptx",
-      "preview_png": "examples/corpus/preview/slide-09-pricing-matrix.png"
+      "preview_png": "examples/corpus/preview/slide-09-pricing-matrix.png",
+      "ssim": 0.682285568056654,
+      "ocr_recall": 0.9397590361445783,
+      "passed": false,
+      "failing_regions": 20
     },
     {
       "slide": "slide-10-quote-wall.html",
@@ -191,9 +227,13 @@
         "promotion": 1
       },
       "unmatched_signatures": 7,
-      "elapsed_s": 1.849074160999976,
+      "elapsed_s": 6.678202547000069,
       "pptx": "examples/corpus/out/slide-10-quote-wall.pptx",
-      "preview_png": "examples/corpus/preview/slide-10-quote-wall.png"
+      "preview_png": "examples/corpus/preview/slide-10-quote-wall.png",
+      "ssim": 0.7371309816350586,
+      "ocr_recall": 0.79,
+      "passed": false,
+      "failing_regions": 20
     },
     {
       "slide": "slide-11-section-divider.html",
@@ -210,9 +250,13 @@
         "promotion": 1
       },
       "unmatched_signatures": 7,
-      "elapsed_s": 1.8135438979999776,
+      "elapsed_s": 6.5540133079999805,
       "pptx": "examples/corpus/out/slide-11-section-divider.pptx",
-      "preview_png": "examples/corpus/preview/slide-11-section-divider.png"
+      "preview_png": "examples/corpus/preview/slide-11-section-divider.png",
+      "ssim": 0.6891881812611208,
+      "ocr_recall": 0.5641025641025641,
+      "passed": false,
+      "failing_regions": 20
     },
     {
       "slide": "slide-12-org-chart.html",
@@ -229,9 +273,13 @@
         "promotion": 1
       },
       "unmatched_signatures": 8,
-      "elapsed_s": 1.8339220130000058,
+      "elapsed_s": 7.292542935000029,
       "pptx": "examples/corpus/out/slide-12-org-chart.pptx",
-      "preview_png": "examples/corpus/preview/slide-12-org-chart.png"
+      "preview_png": "examples/corpus/preview/slide-12-org-chart.png",
+      "ssim": 0.7969275549650497,
+      "ocr_recall": 0.52,
+      "passed": false,
+      "failing_regions": 20
     },
     {
       "slide": "slide-13-feature-checklist.html",
@@ -247,9 +295,13 @@
         "promotion": 2
       },
       "unmatched_signatures": 9,
-      "elapsed_s": 1.6046126850000064,
+      "elapsed_s": 6.901703640999926,
       "pptx": "examples/corpus/out/slide-13-feature-checklist.pptx",
-      "preview_png": "examples/corpus/preview/slide-13-feature-checklist.png"
+      "preview_png": "examples/corpus/preview/slide-13-feature-checklist.png",
+      "ssim": 0.6851277881050936,
+      "ocr_recall": 0.8235294117647058,
+      "passed": false,
+      "failing_regions": 20
     },
     {
       "slide": "slide-14-code-sample.html",
@@ -266,9 +318,13 @@
         "tier2": 2
       },
       "unmatched_signatures": 11,
-      "elapsed_s": 1.5998411649999866,
+      "elapsed_s": 6.915219976000003,
       "pptx": "examples/corpus/out/slide-14-code-sample.pptx",
-      "preview_png": "examples/corpus/preview/slide-14-code-sample.png"
+      "preview_png": "examples/corpus/preview/slide-14-code-sample.png",
+      "ssim": 0.7947650763099322,
+      "ocr_recall": 0.7115384615384616,
+      "passed": false,
+      "failing_regions": 20
     },
     {
       "slide": "slide-15-closing-cta.html",
@@ -285,9 +341,16 @@
         "promotion": 1
       },
       "unmatched_signatures": 6,
-      "elapsed_s": 1.9253538410000033,
+      "elapsed_s": 6.73858881700005,
       "pptx": "examples/corpus/out/slide-15-closing-cta.pptx",
-      "preview_png": "examples/corpus/preview/slide-15-closing-cta.png"
+      "preview_png": "examples/corpus/preview/slide-15-closing-cta.png",
+      "ssim": 0.7727851734023733,
+      "ocr_recall": 0.5135135135135135,
+      "passed": false,
+      "failing_regions": 20
     }
-  ]
+  ],
+  "mean_ssim": 0.7054651212283958,
+  "mean_ocr_recall": 0.7287425846005849,
+  "pass_rate": 0.0
 }
