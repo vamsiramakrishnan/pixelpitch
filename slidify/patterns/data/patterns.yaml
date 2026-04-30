@@ -200,6 +200,107 @@ patterns:
       confidence: 0.85
       metadata: { recipe: page_number, role: page_number }
 
+  # ---- Caption / micro-label classes (sub, src, chart-sub, byline, caption,
+  # legend-item, meta) — small text under 14px that the existing short-label
+  # recipe (font_size_px_min:12) misses for sub-12px sizes. Surfaced by the
+  # 15-slide harvester as the highest-frequency unmatched-signature cluster.
+  - id: caption-text-known-class
+    priority: 22
+    match:
+      anchor.tag_in: [DIV, P, SPAN]
+      children: none
+      own_text: true
+      classes_any:
+        - src
+        - chart-sub
+        - byline
+        - caption
+      font_size_px_max: 14
+      bbox.h_max: 40
+      text_length_max: 140
+    emit:
+      kind: NativeText
+      confidence: 0.9
+      metadata: { recipe: caption_text, role: caption }
+
+  - id: small-subtitle-class
+    priority: 23
+    match:
+      anchor.tag_in: [DIV, SPAN]
+      children: none
+      own_text: true
+      classes_any: [sub]
+      font_size_px_max: 14
+      bbox.h_max: 40
+      text_length_max: 80
+    emit:
+      kind: NativeText
+      confidence: 0.88
+      metadata: { recipe: small_subtitle, role: subheading }
+
+  - id: legend-item-text
+    priority: 24
+    match:
+      anchor.tag_in: [SPAN, DIV]
+      children: none
+      own_text: true
+      classes_any: [legend-item]
+      font_size_px_max: 16
+      bbox.h_max: 40
+      text_length_max: 60
+    emit:
+      kind: NativeText
+      confidence: 0.9
+      metadata: { recipe: legend_item, role: legend }
+
+  - id: badge-text-no-decoration
+    priority: 25
+    match:
+      anchor.tag_in: [DIV, SPAN]
+      children: none
+      own_text: true
+      classes_any: [badge]
+      has_visible_decoration: false
+      font_size_px_max: 14
+      bbox.h_max: 32
+      bbox.w_max: 240
+      text_length_max: 40
+    emit:
+      kind: NativeText
+      confidence: 0.88
+      metadata: { recipe: badge_text, role: label }
+
+  - id: meta-byline-leaf
+    priority: 26
+    match:
+      anchor.tag_in: [DIV, SPAN, P]
+      children: none
+      own_text: true
+      classes_any: [meta]
+      font_size_px_max: 16
+      bbox.h_max: 40
+      text_length_max: 80
+    emit:
+      kind: NativeText
+      confidence: 0.85
+      metadata: { recipe: meta_byline, role: caption }
+
+  - id: micro-text-tiny
+    priority: 27
+    match:
+      anchor.tag_in: [DIV, SPAN, P]
+      children: none
+      own_text: true
+      font_size_px_min: 9
+      font_size_px_max: 11
+      bbox.h_max: 24
+      text_length_min: 4
+      text_length_max: 80
+    emit:
+      kind: NativeText
+      confidence: 0.8
+      metadata: { recipe: micro_text, role: caption }
+
   # =========================================================================
   # STAT NUMBERS — large display digits (KPI emphasis).
   # =========================================================================
