@@ -20,6 +20,7 @@ dist/
 *.pdf
 out/
 slide-*.png
+!examples/**/preview/slide-*.png
 sample-report.json
 !examples/**/report.json
 

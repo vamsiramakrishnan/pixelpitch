@@ -294,6 +294,15 @@ def cluster(elements: list[DomElement]) -> list[VisualUnit]:
         for aid in sibs:
             sig = _isomorphic_subtree_signature(by_id[aid], by_parent)
             sigs.setdefault(sig, []).append(aid)
+        # Composite-row guard: when the parent has *multiple* parallel
+        # isomorphic groups (e.g., a TOC where each row is `.num/.label/.page`
+        # contributes 3 distinct groups of 6), this is a structured layout,
+        # not a bullet list. Tagging every cell as ListItem causes tier-1's
+        # bullet recipe to fire on each cell, prepending stray "•" markers.
+        # Only tag when there's exactly one repeated-pattern group.
+        groups_with_3_plus = [g for g in sigs.values() if len(g) >= 3]
+        if len(groups_with_3_plus) != 1:
+            continue
         for _sig, group in sigs.items():
             if len(group) < 3:
                 continue

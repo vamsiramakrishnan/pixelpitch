@@ -237,7 +237,28 @@ class Emitter:
         anchor = self._pick_text_anchor(unit)
         if anchor is None:
             return
-        x, y, w, h = _emu_rect(op.bbox)
+        # Give multi-run inline text containers some horizontal slack so font
+        # substitution doesn't wrap them. CSS sizes flex-item widths by their
+        # content; PPTX uses fixed bboxes, so a "slidify · v1.0" inline-flex
+        # container that fit in 102px in Chromium overflows in Calibri. Grow
+        # the bbox by 30% horizontally — only for short multi-run frames where
+        # the wrap risk is real.
+        emit_bbox = op.bbox
+        if (
+            anchor.is_text_container
+            and anchor.runs
+            and len(anchor.runs) >= 2
+            and op.bbox.h <= 48
+            and op.bbox.w <= 320
+        ):
+            extra = op.bbox.w * 0.30
+            emit_bbox = BoundingBox(
+                x=op.bbox.x,
+                y=op.bbox.y,
+                w=op.bbox.w + extra,
+                h=op.bbox.h,
+            )
+        x, y, w, h = _emu_rect(emit_bbox)
         tb = slide.shapes.add_textbox(x, y, w, h)
         tf = tb.text_frame
         tf.word_wrap = True
@@ -246,18 +267,29 @@ class Emitter:
         tf.margin_top = Emu(0)
         tf.margin_bottom = Emu(0)
         # PowerPoint substitutes Inter/etc with Calibri when the source font
-        # isn't installed — Calibri is wider, so headlines that fit in 3
-        # lines in Chromium overflow to 4 lines in PowerPoint, bleeding into
-        # the next text frame below. TEXT_TO_FIT_SHAPE shrinks the font just
-        # enough to keep everything in-frame.
-        try:
-            tf.auto_size = MSO_AUTO_SIZE.TEXT_TO_FIT_SHAPE
-        except Exception:
-            pass
+        # isn't installed — Calibri is wider, so big headlines that fit in 3
+        # lines in Chromium can overflow into the lede below in PowerPoint.
+        # TEXT_TO_FIT_SHAPE shrinks the font just enough to keep everything
+        # in-frame. We only apply it for *title-sized* text where the wrap
+        # risk is real; on small frames (pills, badges, kickers) LibreOffice
+        # over-shrinks the text to invisibility.
+        # Heuristic: apply when the largest run is >= 20px (subtitle-ish or
+        # bigger). Small inline labels are unaffected.
+        if _has_title_sized_text(unit):
+            try:
+                tf.auto_size = MSO_AUTO_SIZE.TEXT_TO_FIT_SHAPE
+            except Exception:
+                pass
 
         # If unit has a background that we can render, paint it on the textbox.
+        # Special case: when this looks like a `background-clip: text` recipe
+        # (transparent text on a gradient bg), DON'T paint the gradient as
+        # the shape's fill — that produces a gradient rectangle with the
+        # text rendered as a transparent silhouette inside it. Instead,
+        # leave the textbox transparent; the run-color resolver will
+        # substitute the gradient's first stop as a solid text color.
         unit_anchor_el = unit.elements[0] if unit.elements else None
-        if unit_anchor_el is not None:
+        if unit_anchor_el is not None and not _is_bg_clip_text(unit_anchor_el):
             self._apply_fill(tb, unit_anchor_el)
             self._apply_shadow(tb, unit_anchor_el)
 
@@ -362,14 +394,19 @@ class Emitter:
         tf.margin_top = Emu(0)
         tf.margin_bottom = Emu(0)
         # PowerPoint substitutes Inter/etc with Calibri when the source font
-        # isn't installed — Calibri is wider, so headlines that fit in 3
-        # lines in Chromium overflow to 4 lines in PowerPoint, bleeding into
-        # the next text frame below. TEXT_TO_FIT_SHAPE shrinks the font just
-        # enough to keep everything in-frame.
-        try:
-            tf.auto_size = MSO_AUTO_SIZE.TEXT_TO_FIT_SHAPE
-        except Exception:
-            pass
+        # isn't installed — Calibri is wider, so big headlines that fit in 3
+        # lines in Chromium can overflow into the lede below in PowerPoint.
+        # TEXT_TO_FIT_SHAPE shrinks the font just enough to keep everything
+        # in-frame. We only apply it for *title-sized* text where the wrap
+        # risk is real; on small frames (pills, badges, kickers) LibreOffice
+        # over-shrinks the text to invisibility.
+        # Heuristic: apply when the largest run is >= 20px (subtitle-ish or
+        # bigger). Small inline labels are unaffected.
+        if _has_title_sized_text(unit):
+            try:
+                tf.auto_size = MSO_AUTO_SIZE.TEXT_TO_FIT_SHAPE
+            except Exception:
+                pass
         text_elems = [e for e in unit.all_elements() if e.text and e.text.strip()]
         if not text_elems:
             return
@@ -654,6 +691,53 @@ def _shape_kind_for_anchor(anchor: DomElement, radius_px: float):
     return MSO_SHAPE.ROUNDED_RECTANGLE if radius_px > 0 else MSO_SHAPE.RECTANGLE
 
 
+def _has_title_sized_text(unit: VisualUnit) -> bool:
+    """True iff the unit has at least one text element/run rendered at >= 20px.
+
+    The cutoff matches CSS `text-xl` / `text-2xl` (display headings). Below it
+    the text is body / labels / captions where wrap-on-overflow is acceptable
+    and auto-fit causes more harm than good (LibreOffice's TEXT_TO_FIT_SHAPE
+    over-shrinks small frames).
+    """
+    for e in unit.all_elements():
+        if e.runs:
+            for r in e.runs:
+                if parse_px(r.font_size) >= 20.0:
+                    return True
+        elif e.text and e.text.strip():
+            if parse_px(e.font_size) >= 20.0:
+                return True
+    return False
+
+
+def _is_bg_clip_text(anchor: DomElement) -> bool:
+    """Heuristic detection of the CSS `background-clip: text` recipe.
+
+    Pattern:
+      .x { background: linear-gradient(...); -webkit-background-clip: text;
+           color: transparent; }
+
+    The browser computes:
+      anchor.color           = "rgba(0, 0, 0, 0)"
+      anchor.background_image = "linear-gradient(...)"
+
+    We can't see the `background-clip` property in the computed-style snapshot
+    we collect, but the (transparent color + gradient bg-image) combination is
+    a sufficiently distinctive marker. PPTX cannot natively reproduce
+    gradient-clipped text on a block-level shape, so we paint the run with the
+    gradient's first stop color and leave the textbox unfilled.
+    """
+    if not anchor.background_image or anchor.background_image == "none":
+        return False
+    if "gradient(" not in anchor.background_image:
+        return False
+    # color: transparent? In computed form it's `rgba(*, *, *, 0)`.
+    col_str = (anchor.color or "").strip().lower()
+    import re as _re
+
+    return _re.match(r"rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*0(?:\.0+)?\s*\)", col_str) is not None
+
+
 def _resolve_run_color(spec: dict, fallback_el: DomElement):
     """Pick the RGB color for a styled text run.
 
@@ -669,7 +753,14 @@ def _resolve_run_color(spec: dict, fallback_el: DomElement):
     if parsed is not None:
         return parsed[0]
     # parse_color returned None — color is transparent or unrecognized.
-    bg_image = spec.get("background_image") or "none"
+    # Try the run's own bg-image first, then fall back to the anchor's
+    # bg-image (covers leaf-text elements where the gradient is on the
+    # element itself, not on a wrapping span).
+    bg_image = (
+        spec.get("background_image")
+        or fallback_el.background_image
+        or "none"
+    )
     if bg_image and bg_image != "none":
         from slidify.gradients import parse_gradient
 
