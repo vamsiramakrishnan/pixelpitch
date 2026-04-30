@@ -202,6 +202,54 @@ def _h_filter(unit, anchor, catalog, value):
     return (value == "any") if has_f else (value == "none")
 
 
+@_handler("mix_blend_mode")
+def _h_mix_blend_mode(unit, anchor, catalog, value):
+    """`mix_blend_mode: any` matches anchors / descendants with any non-
+    `normal` blend mode. PPTX has no equivalent so the match must route
+    the unit to Raster."""
+    has = any(
+        (getattr(e, "mix_blend_mode", "normal") or "normal") not in ("normal", "")
+        for e in unit.all_elements()
+    )
+    return (value == "any") if has else (value == "none")
+
+
+@_handler("backdrop_filter")
+def _h_backdrop_filter(unit, anchor, catalog, value):
+    has = any(
+        (getattr(e, "backdrop_filter", "none") or "none") not in ("none", "")
+        for e in unit.all_elements()
+    )
+    return (value == "any") if has else (value == "none")
+
+
+@_handler("text_image_mask")
+def _h_text_image_mask(unit, anchor, catalog, value):
+    """`background-clip: text` over a `background-image: url(...)`. Text
+    glyphs are a window into a raster — PPTX text-fill can't express it."""
+    found = False
+    for e in unit.all_elements():
+        clip = getattr(e, "background_clip", "border-box") or "border-box"
+        if clip != "text":
+            continue
+        bg = e.background_image or "none"
+        if bg != "none" and "url(" in bg:
+            found = True
+            break
+    return (value == "any") if found else (value == "none")
+
+
+@_handler("bg_image_url")
+def _h_bg_image_url(unit, anchor, catalog, value):
+    """Anchor (or any direct element) with `background-image: url(...)`.
+    Slidify can't fetch+embed bg-image URLs natively (only `<img>` tags)."""
+    has = any(
+        (e.background_image or "none") != "none" and "url(" in (e.background_image or "")
+        for e in unit.elements
+    )
+    return (value == "any") if has else (value == "none")
+
+
 @_handler("own_text")
 def _h_own_text(unit, anchor, catalog, value):
     has = any(

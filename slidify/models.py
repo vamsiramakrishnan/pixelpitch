@@ -88,6 +88,12 @@ class DomElement(BaseModel):
     box_shadow: str = "none"
     filter: str = "none"
     clip_path: str = "none"
+    # PPTX-unsupported CSS — captured so the classifier can route the
+    # whole unit to a raster fallback rather than emit a half-broken
+    # native shape.
+    mix_blend_mode: str = "normal"
+    backdrop_filter: str = "none"
+    background_clip: str = "border-box"
     text: str | None = None
     is_text_container: bool = False
     runs: list[TextRun] | None = None

@@ -105,6 +105,49 @@ def _has_clip_path(unit: VisualUnit) -> bool:
     return any(e.clip_path and e.clip_path != "none" for e in unit.all_elements())
 
 
+def _has_mix_blend_mode(unit: VisualUnit) -> bool:
+    return any(
+        getattr(e, "mix_blend_mode", "normal") not in ("normal", "")
+        for e in unit.all_elements()
+    )
+
+
+def _has_backdrop_filter(unit: VisualUnit) -> bool:
+    return any(
+        getattr(e, "backdrop_filter", "none") not in ("none", "")
+        for e in unit.all_elements()
+    )
+
+
+def _has_text_image_mask(unit: VisualUnit) -> bool:
+    """The CSS `background-clip: text` + `background-image: url(...)` recipe.
+
+    The text glyphs become a window into a raster image. PPTX's text-fill
+    paths can't reproduce this — they support solid, gradient, and pattern
+    fills, but not arbitrary raster clipped to glyph silhouettes. Force
+    Raster so the visual is preserved, even at the cost of editability.
+    """
+    for e in unit.all_elements():
+        clip = getattr(e, "background_clip", "border-box") or "border-box"
+        if clip != "text":
+            continue
+        bg = e.background_image or "none"
+        if bg != "none" and "url(" in bg:
+            return True
+    return False
+
+
+def _has_url_background_image(unit: VisualUnit) -> bool:
+    """An anchor element painting `background-image: url(...)` — slidify
+    can't fetch+embed bg-images natively (only `<img>` tags route through
+    `_emit_native_picture`), so the unit must raster."""
+    for e in unit.elements:  # direct, not descendants
+        bg = e.background_image or "none"
+        if bg != "none" and "url(" in bg:
+            return True
+    return False
+
+
 def _is_complex_pseudo(content: str | None, style: dict | None) -> bool:
     """A pseudo is *complex* — and forces raster — if it carries a bg-image,
     url() content, or a non-trivial decoration. Text-only pseudos (e.g.,
@@ -364,6 +407,58 @@ def rule_clip_path_raster(unit: VisualUnit) -> Decision | None:
     return None
 
 
+def rule_pptx_unsupported_raster(unit: VisualUnit) -> Decision | None:
+    """Catch-all for CSS that PPTX can't reproduce natively.
+
+    Each branch here corresponds to a known limit in the OOXML target:
+      - `mix-blend-mode` — not supported on Shape elements (only via
+        modern PowerPoint's limited blendOptions, which LibreOffice
+        ignores).
+      - `backdrop-filter` — no equivalent. The "frosted glass" effect
+        is a runtime live blur of what's behind the shape; OOXML can
+        only express baked-in fills.
+      - `background-clip: text` on `background-image: url(...)` — text
+        glyphs as a mask over a raster image. PPTX `<a:gradFill>` can
+        clip to text, but `<a:blipFill>` (image fill) cannot.
+      - `background-image: url(...)` directly on an anchor — slidify
+        natively emits `<img>` via `_emit_native_picture` but doesn't
+        fetch CSS bg-image URLs.
+
+    Returning `Raster` lets the surgical-hybrid emit pipeline crop the
+    source HTML render for the unit's region, which preserves the
+    visual at the cost of editability.
+    """
+    if _has_mix_blend_mode(unit):
+        return Decision(
+            kind=DecisionKind.Raster,
+            confidence=0.95,
+            reason="mix_blend_mode",
+            source_tier="tier1",
+        )
+    if _has_backdrop_filter(unit):
+        return Decision(
+            kind=DecisionKind.Raster,
+            confidence=0.95,
+            reason="backdrop_filter",
+            source_tier="tier1",
+        )
+    if _has_text_image_mask(unit):
+        return Decision(
+            kind=DecisionKind.Raster,
+            confidence=0.95,
+            reason="text_image_mask",
+            source_tier="tier1",
+        )
+    if _has_url_background_image(unit):
+        return Decision(
+            kind=DecisionKind.Raster,
+            confidence=0.9,
+            reason="bg_image_url",
+            source_tier="tier1",
+        )
+    return None
+
+
 def rule_simple_leaf_text(unit: VisualUnit) -> Decision | None:
     if _is_simple_leaf_text(unit):
         return Decision(
@@ -403,6 +498,7 @@ RULES: list[RuleFn] = [
     rule_3d_transform_raster,
     rule_filter_raster,
     rule_clip_path_raster,
+    rule_pptx_unsupported_raster,
     rule_simple_svg_raster,
     rule_single_image,
     rule_role_title,

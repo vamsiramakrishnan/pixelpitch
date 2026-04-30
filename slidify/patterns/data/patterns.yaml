@@ -38,6 +38,42 @@ patterns:
       confidence: 0.95
       metadata: { recipe: filter_active }
 
+  - id: pptx-unsupported-blend-mode
+    priority: 3
+    match:
+      mix_blend_mode: any
+    emit:
+      kind: Raster
+      confidence: 0.95
+      metadata: { recipe: pptx_unsupported_blend_mode }
+
+  - id: pptx-unsupported-backdrop-filter
+    priority: 4
+    match:
+      backdrop_filter: any
+    emit:
+      kind: Raster
+      confidence: 0.95
+      metadata: { recipe: pptx_unsupported_backdrop_filter }
+
+  - id: pptx-unsupported-text-image-mask
+    priority: 5
+    match:
+      text_image_mask: any
+    emit:
+      kind: Raster
+      confidence: 0.95
+      metadata: { recipe: pptx_unsupported_text_image_mask }
+
+  - id: pptx-unsupported-bg-image-url
+    priority: 6
+    match:
+      bg_image_url: any
+    emit:
+      kind: Raster
+      confidence: 0.9
+      metadata: { recipe: pptx_unsupported_bg_image_url }
+
   # =========================================================================
   # TYPOGRAPHY  — leaf or text-container units that classify as NativeText
   # with a known role/size/weight.
