@@ -348,11 +348,14 @@ class Emitter:
             )
 
         # Pill shrink — kills the "green tail" past the substituted-font
-        # text in single-line bg-painted containers. Only applied to
-        # truly pill-sized boxes (single-line, narrow).
+        # text in single-line bg-painted containers. Fires for any
+        # narrow single-line element with its own text and a painted
+        # background, whether the bg is a solid color OR a gradient
+        # (the slide-12 CEO badge has a 90deg gradient bg, which the
+        # is_text_container path missed because leaf text elements
+        # aren't marked as text containers).
         if (
             anchor_paints_bg
-            and anchor.is_text_container
             and (not anchor.runs or len(anchor.runs) <= 1)
             and emit_bbox.h <= 48
             and (anchor.text or "").strip()
@@ -433,6 +436,24 @@ class Emitter:
         text_elems = [e for e in text_elems if not _has_text_descendant(e.id)]
         para_targets = text_elems if len(text_elems) > 1 else [anchor]
 
+        # Spatially-distinct text emit: when para_targets are arranged
+        # horizontally (e.g. process steps with `position:absolute; left:N`),
+        # their text MUST land at each element's own x — not stacked into
+        # a single tall textbox at the unit's bbox. Detect by checking if
+        # any two elements have non-overlapping x-ranges. When detected,
+        # bypass the single-textbox path and emit each element as its own
+        # native_text shape.
+        if (
+            len(para_targets) >= 2
+            and _are_spatially_distinct(para_targets)
+        ):
+            for e in para_targets:
+                self._emit_text_element_as_own_shape(slide, e, op)
+            # Decorations on the unit-level still fire ABOVE.
+            if not deco_stack.is_empty():
+                deco_stack.emit_above(slide, emit_bbox)
+            return
+
         # Pre-compute fontScale against the fallback (Liberation Sans /
         # Calibri) rather than trusting MSO_AUTO_SIZE.TEXT_TO_FIT_SHAPE
         # at runtime. Bake the result into <a:normAutofit> so the deck
@@ -470,6 +491,31 @@ class Emitter:
         # Decoration layer (ABOVE): rim highlight / hairline / inset glow.
         if not deco_stack.is_empty():
             deco_stack.emit_above(slide, emit_bbox)
+
+    def _emit_text_element_as_own_shape(
+        self, slide, e: DomElement, op: EmitOp
+    ) -> None:
+        """Emit a single text element as a self-contained textbox at its
+        own bbox. Used for spatially-distinct siblings inside one unit
+        (e.g. absolutely-positioned process-step labels)."""
+        x, y, w, h = _emu_rect(e.bbox)
+        tb = slide.shapes.add_textbox(x, y, w, h)
+        tf = tb.text_frame
+        tf.word_wrap = True
+        tf.margin_left = Emu(0)
+        tf.margin_right = Emu(0)
+        tf.margin_top = Emu(0)
+        tf.margin_bottom = Emu(0)
+        paragraphs = self._element_to_paragraphs(e)
+        first = True
+        for para_runs in paragraphs:
+            if not para_runs:
+                continue
+            p = tf.paragraphs[0] if first else tf.add_paragraph()
+            first = False
+            p.alignment = _TEXT_ALIGN_MAP.get(e.text_align, PP_ALIGN.LEFT)
+            for run_spec in para_runs:
+                self._add_styled_run(p, run_spec, fallback_el=e)
 
     def _element_to_paragraphs(
         self, e: DomElement
@@ -868,6 +914,37 @@ def _shape_kind_for_anchor(anchor: DomElement, radius_px: float):
         if radius_px >= min(w, h) * 0.45:
             return MSO_SHAPE.OVAL
     return MSO_SHAPE.ROUNDED_RECTANGLE if radius_px > 0 else MSO_SHAPE.RECTANGLE
+
+
+def _are_spatially_distinct(elems: list[DomElement]) -> bool:
+    """True iff elems should each emit as their own textbox.
+
+    Triggers when any pair of elements has non-overlapping x-ranges OR
+    non-overlapping y-ranges — i.e., they don't visually share a region.
+    Putting them in a single textbox would either:
+      - stack their text on top of each other when they're laid out
+        horizontally (timeline step labels with `position:absolute; left:N`)
+      - clip the second paragraph when they're laid out vertically inside
+        a tight container (feature-row title + description with their own
+        y-bands).
+
+    Inline-styled siblings (multiple `<span>` runs of the same `<h1>`)
+    are NOT spatially distinct — they share a y-band and overlap in x —
+    so they continue through the existing single-textbox path.
+    """
+    if len(elems) < 2:
+        return False
+    boxes = [e.bbox for e in elems]
+    for i in range(len(boxes)):
+        for j in range(i + 1, len(boxes)):
+            a, b = boxes[i], boxes[j]
+            x_overlap = max(0.0, min(a.x2, b.x2) - max(a.x, b.x))
+            y_overlap = max(0.0, min(a.y2, b.y2) - max(a.y, b.y))
+            # Either axis has zero overlap → they're not in the same
+            # visual region, so they should emit at their own bboxes.
+            if x_overlap <= 0 or y_overlap <= 0:
+                return True
+    return False
 
 
 def _has_title_sized_text(unit: VisualUnit) -> bool:

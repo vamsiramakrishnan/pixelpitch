@@ -19,7 +19,7 @@
         "promotion": 1
       },
       "unmatched_signatures": 6,
-      "elapsed_s": 1.6726650699999936,
+      "elapsed_s": 1.7653169820000585,
       "pptx": "examples/corpus/out/slide-01-hero.pptx",
       "preview_png": "examples/corpus/preview/slide-01-hero.png"
     },
@@ -38,7 +38,7 @@
         "promotion": 1
       },
       "unmatched_signatures": 7,
-      "elapsed_s": 1.7432720349999613,
+      "elapsed_s": 1.79383205299996,
       "pptx": "examples/corpus/out/slide-02-bento.pptx",
       "preview_png": "examples/corpus/preview/slide-02-bento.png"
     },
@@ -57,7 +57,7 @@
         "cache:tier1": 1
       },
       "unmatched_signatures": 5,
-      "elapsed_s": 1.6256107579999934,
+      "elapsed_s": 1.7291009959999428,
       "pptx": "examples/corpus/out/slide-03-comparison.pptx",
       "preview_png": "examples/corpus/preview/slide-03-comparison.png"
     },
@@ -76,7 +76,7 @@
         "promotion": 1
       },
       "unmatched_signatures": 6,
-      "elapsed_s": 1.687544666000008,
+      "elapsed_s": 1.6666511240000546,
       "pptx": "examples/corpus/out/slide-04-architecture.pptx",
       "preview_png": "examples/corpus/preview/slide-04-architecture.png"
     },
@@ -96,7 +96,7 @@
         "promotion": 2
       },
       "unmatched_signatures": 4,
-      "elapsed_s": 1.7570740829999636,
+      "elapsed_s": 1.7769083219999402,
       "pptx": "examples/corpus/out/slide-05-roadmap.pptx",
       "preview_png": "examples/corpus/preview/slide-05-roadmap.png"
     },
@@ -116,7 +116,7 @@
         "promotion": 1
       },
       "unmatched_signatures": 17,
-      "elapsed_s": 1.714800365999963,
+      "elapsed_s": 1.7267263329999878,
       "pptx": "examples/corpus/out/slide-06-dashboard.pptx",
       "preview_png": "examples/corpus/preview/slide-06-dashboard.png"
     },
@@ -135,7 +135,7 @@
         "promotion": 1
       },
       "unmatched_signatures": 7,
-      "elapsed_s": 1.678294115999961,
+      "elapsed_s": 1.7524656239999103,
       "pptx": "examples/corpus/out/slide-07-stats-hero.pptx",
       "preview_png": "examples/corpus/preview/slide-07-stats-hero.png"
     },
@@ -153,7 +153,7 @@
         "promotion": 2
       },
       "unmatched_signatures": 8,
-      "elapsed_s": 1.5984078540000155,
+      "elapsed_s": 1.699444852000056,
       "pptx": "examples/corpus/out/slide-08-process.pptx",
       "preview_png": "examples/corpus/preview/slide-08-process.png"
     },
@@ -171,7 +171,7 @@
         "cache:tier1": 2
       },
       "unmatched_signatures": 3,
-      "elapsed_s": 1.8597991009999646,
+      "elapsed_s": 1.8850942819999545,
       "pptx": "examples/corpus/out/slide-09-pricing-matrix.pptx",
       "preview_png": "examples/corpus/preview/slide-09-pricing-matrix.png"
     },
@@ -191,7 +191,7 @@
         "promotion": 1
       },
       "unmatched_signatures": 7,
-      "elapsed_s": 1.7858988219999787,
+      "elapsed_s": 1.8311333359999935,
       "pptx": "examples/corpus/out/slide-10-quote-wall.pptx",
       "preview_png": "examples/corpus/preview/slide-10-quote-wall.png"
     },
@@ -210,7 +210,7 @@
         "promotion": 1
       },
       "unmatched_signatures": 7,
-      "elapsed_s": 1.6817701580000062,
+      "elapsed_s": 1.747622277000005,
       "pptx": "examples/corpus/out/slide-11-section-divider.pptx",
       "preview_png": "examples/corpus/preview/slide-11-section-divider.png"
     },
@@ -229,7 +229,7 @@
         "promotion": 1
       },
       "unmatched_signatures": 8,
-      "elapsed_s": 1.70635856399997,
+      "elapsed_s": 1.7191065729999764,
       "pptx": "examples/corpus/out/slide-12-org-chart.pptx",
       "preview_png": "examples/corpus/preview/slide-12-org-chart.png"
     },
@@ -247,7 +247,7 @@
         "promotion": 2
       },
       "unmatched_signatures": 9,
-      "elapsed_s": 1.5322509510000373,
+      "elapsed_s": 1.612251373999925,
       "pptx": "examples/corpus/out/slide-13-feature-checklist.pptx",
       "preview_png": "examples/corpus/preview/slide-13-feature-checklist.png"
     },
@@ -266,7 +266,7 @@
         "tier2": 2
       },
       "unmatched_signatures": 11,
-      "elapsed_s": 1.5388464970000086,
+      "elapsed_s": 1.5813885190000292,
       "pptx": "examples/corpus/out/slide-14-code-sample.pptx",
       "preview_png": "examples/corpus/preview/slide-14-code-sample.png"
     },
@@ -285,7 +285,7 @@
         "promotion": 1
       },
       "unmatched_signatures": 6,
-      "elapsed_s": 1.7922126350000553,
+      "elapsed_s": 1.870021329999986,
       "pptx": "examples/corpus/out/slide-15-closing-cta.pptx",
       "preview_png": "examples/corpus/preview/slide-15-closing-cta.png"
     }

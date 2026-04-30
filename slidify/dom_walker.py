@@ -98,6 +98,18 @@ WALKER_JS = r"""
                 }
                 // Recurse with the child's own computed style.
                 const sub = collectRuns(node);
+                if (sub.length > 0) {
+                    // CSS `margin-left` / `margin-right` on an inline child
+                    // creates a visible gap that the source HTML doesn't
+                    // express as whitespace (`<span>Q1</span>Foundation` →
+                    // CSS margin makes "Q1 Foundation"). Insert ASCII
+                    // spaces so the gap survives into the PPTX runs.
+                    const ccs = getComputedStyle(node);
+                    const mlPx = parseFloat(ccs.marginLeft || '0') || 0;
+                    const mrPx = parseFloat(ccs.marginRight || '0') || 0;
+                    if (mlPx >= 3) sub[0].text = ' ' + sub[0].text;
+                    if (mrPx >= 3) sub[sub.length - 1].text = sub[sub.length - 1].text + ' ';
+                }
                 for (const r of sub) out.push(r);
             }
         }
