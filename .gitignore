@@ -40,3 +40,4 @@ components/package-lock.json
 components/.tsbuildinfo
 .claude/worktrees/
 examples/corpus/out/
+_bench/
