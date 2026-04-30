@@ -479,6 +479,26 @@ def is_gradient(css_value: str | None) -> bool:
     return _LINEAR_RE.search(css_value) is not None or _RADIAL_RE.search(css_value) is not None
 
 
+def with_oklch_density(
+    grad: LinearGradient | RadialGradient,
+    n: int = 5,
+) -> LinearGradient | RadialGradient:
+    """Return a copy of ``grad`` whose stops have been densified in OKLCH.
+
+    Inserts ``n`` perceptually-uniform stops between each adjacent pair so
+    the renderer's piecewise-linear sRGB interpolation approximates an
+    OKLCH-space sweep. Original stops, angle/center/shape are preserved.
+    """
+    # Local import keeps gradients.py free of an import-time dep on oklch
+    # (oklch.py imports GradientStop from this module).
+    from slidify.oklch import densify_stops
+
+    new_stops = densify_stops(list(grad.stops), n_intermediate=n)
+    if isinstance(grad, LinearGradient):
+        return LinearGradient(angle_deg=grad.angle_deg, stops=new_stops)
+    return RadialGradient(stops=new_stops, cx=grad.cx, cy=grad.cy, shape=grad.shape)
+
+
 # Expose math constant in case callers want to know.
 __all__ = [
     "GradientStop",
@@ -489,4 +509,5 @@ __all__ = [
     "math",
     "parse_gradient",
     "to_grad_fill_xml",
+    "with_oklch_density",
 ]
