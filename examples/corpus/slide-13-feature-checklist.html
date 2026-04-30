@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>What Sentinel Does (and Doesn't Do)</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; font-family: Inter, sans-serif; -webkit-font-smoothing:antialiased; background:#0a0a0f; color:#f5f5f7; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; position:relative; overflow:hidden;
+           background: linear-gradient(180deg, #0e0e1d 0%, #07070f 100%); }
+  .glow-tl { position:absolute; top:-180px; left:-160px; width:560px; height:560px; border-radius:50%;
+             background: radial-gradient(circle, rgba(52,211,153,0.20) 0%, rgba(52,211,153,0) 70%); }
+  .glow-tr { position:absolute; top:-160px; right:-180px; width:540px; height:540px; border-radius:50%;
+             background: radial-gradient(circle, rgba(248,113,113,0.20) 0%, rgba(248,113,113,0) 70%); }
+
+  .header { position:absolute; top:32px; left:64px; right:64px; display:flex; justify-content:space-between; align-items:flex-start; }
+  .kicker { font-size:11px; letter-spacing:0.24em; text-transform:uppercase; color:#a1a1aa; margin-bottom:8px; }
+  .title { font-size:36px; line-height:1.05; font-weight:700; letter-spacing:-0.02em; margin:0; max-width:720px; }
+  .title em { font-style:normal; color:transparent; background:linear-gradient(90deg,#34d399,#22d3ee); -webkit-background-clip:text; background-clip:text; }
+  .title b { font-weight:700; color:transparent; background:linear-gradient(90deg,#f87171,#ec4899); -webkit-background-clip:text; background-clip:text; }
+  .meta-pill { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:999px;
+               background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.10); font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#a1a1aa; }
+  .meta-pill .d { width:6px; height:6px; border-radius:50%; background:#34d399; box-shadow:0 0 8px #34d399; }
+
+  .columns { position:absolute; top:152px; left:64px; right:64px; bottom:64px; display:grid; grid-template-columns: 1fr 1fr; gap:36px; }
+  .col { display:flex; flex-direction:column; }
+
+  .col-header { padding:14px 18px; border-radius:14px; display:flex; align-items:center; gap:14px;
+                background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+                border:1px solid rgba(255,255,255,0.10);
+                box-shadow: 0 8px 22px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.08) inset; }
+  .col-header.does { border-color: rgba(52,211,153,0.4); background: linear-gradient(180deg, rgba(52,211,153,0.14) 0%, rgba(34,211,238,0.06) 100%); }
+  .col-header.doesnt { border-color: rgba(248,113,113,0.4); background: linear-gradient(180deg, rgba(248,113,113,0.14) 0%, rgba(236,72,153,0.06) 100%); }
+  .col-header .ic { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; }
+  .col-header.does .ic { background:linear-gradient(135deg,#34d399,#22d3ee); color:#052e16; }
+  .col-header.doesnt .ic { background:linear-gradient(135deg,#f87171,#ec4899); color:#3f0a0a; }
+  .col-header .lab { font-size:10px; letter-spacing:0.24em; text-transform:uppercase; color:#a1a1aa; }
+  .col-header h2 { margin:0; font-size:20px; font-weight:700; }
+  .col-header .count { margin-left:auto; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; padding:4px 10px; border-radius:999px; background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.1); color:#e4e4e7; }
+
+  .list { margin-top:14px; display:flex; flex-direction:column; gap:8px; flex:1; }
+  .item { display:grid; grid-template-columns: 28px 1fr; gap:10px; padding:8px 10px; border-radius:10px;
+          background: rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.06); }
+  .item .glyph { width:24px; height:24px; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:800; }
+  .item.do .glyph { background: linear-gradient(135deg,#34d399,#10b981); color:#052e16; box-shadow: 0 0 0 1px rgba(52,211,153,0.4) inset; }
+  .item.dont .glyph { background: linear-gradient(135deg,#f87171,#ef4444); color:#3f0a0a; box-shadow: 0 0 0 1px rgba(248,113,113,0.4) inset; }
+  .item .t { font-size:13px; font-weight:600; color:#f5f5f7; }
+  .item .d { font-size:11px; color:#a1a1aa; line-height:1.4; margin-top:2px; }
+  .item .row { display:flex; align-items:center; gap:8px; }
+  .item .tag { font-size:9px; letter-spacing:0.16em; text-transform:uppercase; color:#71717a; padding:2px 6px; border-radius:4px; border:1px solid rgba(255,255,255,0.08); }
+
+  .footer-bar { position:absolute; bottom:14px; left:64px; right:64px; display:flex; justify-content:space-between; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:#52525b; }
+
+  .divider-svg { position:absolute; top:170px; bottom:80px; left:50%; transform:translateX(-50%); width:2px; opacity:0.3; }
+
+  .corner-mark { position:absolute; width:80px; height:80px; opacity:0.45; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="glow-tl"></div>
+  <div class="glow-tr"></div>
+
+  <svg class="corner-mark" style="bottom:18px; right:18px;" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 10 60 C 10 30, 50 20, 70 40 C 80 50, 70 70, 50 70 C 30 70, 10 70, 10 60 Z" fill="none" stroke="rgba(168,85,247,0.5)" stroke-width="1"/>
+  </svg>
+  <svg class="corner-mark" style="bottom:18px; left:18px;" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 70 20 C 70 50, 30 60, 10 40 C 0 30, 10 10, 30 10 C 50 10, 70 10, 70 20 Z" fill="none" stroke="rgba(34,211,238,0.5)" stroke-width="1"/>
+  </svg>
+
+  <div class="header">
+    <div>
+      <div class="kicker">Product Principles · v3.4</div>
+      <h1 class="title" data-pptx-role="title">What Sentinel <em>does</em>, and what it <b>refuses to do</b>.</h1>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end;">
+      <span class="meta-pill"><span class="d"></span>Updated 2 days ago</span>
+      <span class="meta-pill" style="color:#fbbf24"><span class="d" style="background:#fbbf24; box-shadow:0 0 8px #fbbf24"></span>13 promises · 5 non-goals</span>
+    </div>
+  </div>
+
+  <svg class="divider-svg" viewBox="0 0 2 480" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <line x1="1" y1="0" x2="1" y2="480" stroke="rgba(255,255,255,0.15)" stroke-dasharray="3 6" stroke-width="1"/>
+  </svg>
+
+  <div class="columns">
+    <!-- LEFT: 8 features the product DOES -->
+    <div class="col">
+      <div class="col-header does" data-slidify-decorate="tactile">
+        <div class="ic">+</div>
+        <div>
+          <div class="lab">In Scope</div>
+          <h2>What we DO</h2>
+        </div>
+        <span class="count">8 capabilities</span>
+      </div>
+      <div class="list">
+        <div class="item do">
+          <div class="glyph">&#10003;</div>
+          <div>
+            <div class="row"><span class="t">Continuous secret scanning</span><span class="tag">Core</span></div>
+            <div class="d">Every commit, branch, and pull request — under 2 seconds median latency.</div>
+          </div>
+        </div>
+        <div class="item do">
+          <div class="glyph">&#10003;</div>
+          <div>
+            <div class="row"><span class="t">Auto-rotation for 84 providers</span><span class="tag">Auto</span></div>
+            <div class="d">AWS, GCP, Stripe, OpenAI, Datadog, and more, with audit-grade history.</div>
+          </div>
+        </div>
+        <div class="item do">
+          <div class="glyph">&#10003;</div>
+          <div>
+            <div class="row"><span class="t">Inline PR review comments</span><span class="tag">DevEx</span></div>
+            <div class="d">Posted as a bot reviewer with one-click "rotate now" actions.</div>
+          </div>
+        </div>
+        <div class="item do">
+          <div class="glyph">&#10003;</div>
+          <div>
+            <div class="row"><span class="t">SAML SSO + SCIM provisioning</span><span class="tag">Enterprise</span></div>
+            <div class="d">Okta, Entra ID, JumpCloud, Google Workspace — included in every plan.</div>
+          </div>
+        </div>
+        <div class="item do">
+          <div class="glyph">&#10003;</div>
+          <div>
+            <div class="row"><span class="t">Self-hosted runner option</span><span class="tag">Compliance</span></div>
+            <div class="d">Air-gapped scanning for FedRAMP, IL5, and on-prem GitLab fleets.</div>
+          </div>
+        </div>
+        <div class="item do">
+          <div class="glyph">&#10003;</div>
+          <div>
+            <div class="row"><span class="t">Custom rule DSL</span><span class="tag">Power</span></div>
+            <div class="d">Author detection rules in YAML or TypeScript with full test harness.</div>
+          </div>
+        </div>
+        <div class="item do">
+          <div class="glyph">&#10003;</div>
+          <div>
+            <div class="row"><span class="t">Slack + PagerDuty bridges</span><span class="tag">Alert</span></div>
+            <div class="d">Triage from your existing channels — no new dashboards to babysit.</div>
+          </div>
+        </div>
+        <div class="item do">
+          <div class="glyph">&#10003;</div>
+          <div>
+            <div class="row"><span class="t">SOC2 Type II reports</span><span class="tag">Trust</span></div>
+            <div class="d">Annual attestation, continuous monitoring evidence available on demand.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: 5 things it does NOT do -->
+    <div class="col">
+      <div class="col-header doesnt" data-slidify-decorate="tactile">
+        <div class="ic">&#215;</div>
+        <div>
+          <div class="lab">Out of Scope</div>
+          <h2>What we DON'T</h2>
+        </div>
+        <span class="count">5 non-goals</span>
+      </div>
+      <div class="list">
+        <div class="item dont">
+          <div class="glyph">&#215;</div>
+          <div>
+            <div class="row"><span class="t">Generic SAST / DAST scanning</span><span class="tag">Use Snyk</span></div>
+            <div class="d">We focus on credentials and tokens, not application vulnerabilities.</div>
+          </div>
+        </div>
+        <div class="item dont">
+          <div class="glyph">&#215;</div>
+          <div>
+            <div class="row"><span class="t">Endpoint or device posture</span><span class="tag">Use Kandji</span></div>
+            <div class="d">No agents on laptops. We live in your CI and your cloud, not your fleet.</div>
+          </div>
+        </div>
+        <div class="item dont">
+          <div class="glyph">&#215;</div>
+          <div>
+            <div class="row"><span class="t">Sell or train on customer code</span><span class="tag">Never</span></div>
+            <div class="d">Source is processed in-region and discarded after every scan window.</div>
+          </div>
+        </div>
+        <div class="item dont">
+          <div class="glyph">&#215;</div>
+          <div>
+            <div class="row"><span class="t">Replace your secrets manager</span><span class="tag">Integrate</span></div>
+            <div class="d">We rotate INTO Vault, AWS SM, Doppler, 1Password — not instead of them.</div>
+          </div>
+        </div>
+        <div class="item dont">
+          <div class="glyph">&#215;</div>
+          <div>
+            <div class="row"><span class="t">Free forever tier</span><span class="tag">Honest</span></div>
+            <div class="d">14-day trial, then a real bill. No data farming, no surprise upgrades.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <span>SENTINEL · PRODUCT PRINCIPLES</span>
+    <span>PAGE 13 / 42</span>
+  </div>
+</div>
+</body>
+</html>

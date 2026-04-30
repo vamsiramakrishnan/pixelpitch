@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Helix Architecture — System Diagram</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; width: 1280px; height: 720px;
+    font-family: Inter, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: #050510; color: #f5f5f7;
+  }
+  .slide {
+    width: 1280px; height: 720px;
+    box-sizing: border-box;
+    position: relative; overflow: hidden;
+    background:
+      radial-gradient(ellipse at 80% 20%, rgba(168,85,247,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse at 10% 90%, rgba(99,102,241,0.18) 0%, transparent 60%),
+      linear-gradient(180deg, #0a0a14 0%, #050510 100%);
+    padding: 44px 64px 56px 64px;
+  }
+
+  /* Header */
+  .kicker {
+    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #a78bfa; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .kicker .seg { width: 28px; height: 1px; background: linear-gradient(90deg, #a78bfa, transparent); }
+  .h1 {
+    font-size: 34px; line-height: 1.1; letter-spacing: -0.02em;
+    font-weight: 700; margin: 6px 0 4px 0;
+    background: linear-gradient(110deg, #f5f5f7 0%, #c7d2fe 60%, #ec4899 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .sub {
+    font-size: 13px; color: #a1a1aa;
+    margin: 0; max-width: 720px;
+  }
+  .header-row {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 18px;
+  }
+  .header-meta {
+    display: flex; gap: 8px;
+  }
+  .meta-pill {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    font-weight: 600; color: #c7d2fe;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.10);
+  }
+
+  /* Diagram canvas */
+  .canvas {
+    position: relative;
+    width: 1152px;
+    height: 480px;
+    margin: 0 auto;
+  }
+
+  /* Service boxes */
+  .svc {
+    position: absolute;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: linear-gradient(160deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.015) 100%);
+    border: 1px solid rgba(255,255,255,0.10);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.45), 0 2px 4px rgba(0,0,0,0.3);
+    z-index: 3;
+  }
+  .svc .label {
+    font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #71717a; font-weight: 600;
+  }
+  .svc .name {
+    font-size: 15px; font-weight: 700; color: #f5f5f7;
+    margin-top: 4px; letter-spacing: -0.01em;
+  }
+  .svc .meta {
+    font-size: 11px; color: #a1a1aa; margin-top: 4px; line-height: 1.35;
+  }
+  .svc .pip {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    margin-right: 6px;
+    background: #34d399; box-shadow: 0 0 6px #34d399;
+    vertical-align: middle;
+  }
+
+  /* Specific positions */
+  .svc.client    { left: 0;    top: 30px;  width: 200px; }
+  .svc.gateway   { left: 240px; top: 30px;  width: 220px; }
+  .svc.api       { left: 510px; top: 30px;  width: 220px; }
+  .svc.workers   { left: 780px; top: 0;     width: 220px; }
+  .svc.storage   { left: 510px; top: 200px; width: 220px; }
+  .svc.search    { left: 240px; top: 320px; width: 220px; }
+  .svc.ai-agent  { left: 780px; top: 320px; width: 220px; }
+
+  .svc.gateway   { background: linear-gradient(160deg, rgba(99,102,241,0.18) 0%, rgba(99,102,241,0.04) 100%); border-color: rgba(99,102,241,0.30); }
+  .svc.api       { background: linear-gradient(160deg, rgba(168,85,247,0.20) 0%, rgba(168,85,247,0.04) 100%); border-color: rgba(168,85,247,0.30); }
+  .svc.ai-agent  { background: linear-gradient(160deg, rgba(236,72,153,0.18) 0%, rgba(236,72,153,0.04) 100%); border-color: rgba(236,72,153,0.30); }
+  .svc.storage   { background: linear-gradient(160deg, rgba(52,211,153,0.16) 0%, rgba(52,211,153,0.03) 100%); border-color: rgba(52,211,153,0.28); }
+
+  /* Connector layer */
+  .connectors {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    z-index: 2; pointer-events: none;
+  }
+
+  /* Edge labels */
+  .edge-label {
+    position: absolute;
+    font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: #818cf8; font-weight: 600;
+    background: rgba(10,10,20,0.75);
+    border: 1px solid rgba(129,140,248,0.25);
+    padding: 2px 7px;
+    border-radius: 999px;
+    z-index: 4;
+  }
+
+  /* Legend */
+  .legend {
+    position: absolute; right: 0; top: -28px;
+    display: flex; gap: 14px;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #a1a1aa;
+  }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+  .legend-line {
+    width: 22px; height: 2px;
+    background: #a855f7;
+  }
+  .legend-line.dashed {
+    background: transparent;
+    border-top: 2px dashed #ec4899;
+  }
+  .legend-line.async {
+    background: transparent;
+    border-top: 2px dotted #34d399;
+  }
+
+  /* Footer */
+  .footer {
+    position: absolute; bottom: 22px; left: 64px; right: 64px;
+    display: flex; justify-content: space-between;
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: #52525b;
+  }
+
+  /* Decorative corner accent */
+  .corner {
+    position: absolute; left: 36px; top: 30px;
+    width: 80px; height: 80px;
+    z-index: 0; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <svg class="corner" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 8 40 C 20 8, 60 8, 72 40 Q 60 72, 40 60 C 20 48, 16 60, 8 40 Z"
+          fill="none" stroke="#a78bfa" stroke-width="1" opacity="0.55"/>
+    <circle cx="40" cy="40" r="3" fill="#ec4899"/>
+  </svg>
+
+  <!-- Header -->
+  <div class="header-row">
+    <div>
+      <div class="kicker"><span class="seg"></span> 04 &middot; Architecture</div>
+      <h1 class="h1" data-pptx-role="title">A graph-native control plane &mdash; built for ops at scale.</h1>
+      <p class="sub">Single binary deploy, region-pinned data, sub-200ms p95 read latency. AI agents run inside the trust boundary &mdash; no customer data leaves Helix.</p>
+    </div>
+    <div class="header-meta">
+      <span class="meta-pill">Multi-region</span>
+      <span class="meta-pill">Zero-trust</span>
+      <span class="meta-pill">SOC 2 Type II</span>
+    </div>
+  </div>
+
+  <!-- Diagram -->
+  <div class="canvas">
+
+    <div class="legend">
+      <span class="legend-item"><span class="legend-line"></span> Sync RPC</span>
+      <span class="legend-item"><span class="legend-line dashed"></span> Event stream</span>
+      <span class="legend-item"><span class="legend-line async"></span> Async job</span>
+    </div>
+
+    <!-- Connector SVG (curves) -->
+    <svg class="connectors" viewBox="0 0 1152 480" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <!-- defs -->
+      <defs>
+        <marker id="arrow-violet" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 Z" fill="#a855f7"/>
+        </marker>
+        <marker id="arrow-pink" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 Z" fill="#ec4899"/>
+        </marker>
+        <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 Z" fill="#34d399"/>
+        </marker>
+      </defs>
+
+      <!-- client -> gateway (sync) -->
+      <path d="M 200 70 C 220 70, 220 70, 240 70"
+            stroke="#a855f7" stroke-width="2" fill="none"
+            marker-end="url(#arrow-violet)"/>
+
+      <!-- gateway -> api (sync) -->
+      <path d="M 460 70 C 485 70, 485 70, 510 70"
+            stroke="#a855f7" stroke-width="2" fill="none"
+            marker-end="url(#arrow-violet)"/>
+
+      <!-- api -> workers (event stream, dashed) -->
+      <path d="M 730 60 C 755 40, 755 40, 780 35"
+            stroke="#ec4899" stroke-width="2" stroke-dasharray="5 5" fill="none"
+            marker-end="url(#arrow-pink)"/>
+
+      <!-- api -> storage (sync, downward curve) -->
+      <path d="M 620 110 C 620 150, 620 180, 620 200"
+            stroke="#a855f7" stroke-width="2" fill="none"
+            marker-end="url(#arrow-violet)"/>
+
+      <!-- workers -> storage (async, dotted curve) -->
+      <path d="M 820 80 C 760 140, 700 180, 680 200"
+            stroke="#34d399" stroke-width="2" stroke-dasharray="2 5" fill="none"
+            marker-end="url(#arrow-green)"/>
+
+      <!-- storage -> search (event, dashed leftward curve) -->
+      <path d="M 510 250 C 440 280, 380 310, 350 320"
+            stroke="#ec4899" stroke-width="2" stroke-dasharray="5 5" fill="none"
+            marker-end="url(#arrow-pink)"/>
+
+      <!-- storage -> ai-agent (async dotted curve right-down) -->
+      <path d="M 730 250 C 800 280, 850 310, 880 320"
+            stroke="#34d399" stroke-width="2" stroke-dasharray="2 5" fill="none"
+            marker-end="url(#arrow-green)"/>
+
+      <!-- ai-agent -> api (cubic loop back up) -->
+      <path d="M 880 320 C 700 340, 620 200, 620 110"
+            stroke="#a855f7" stroke-width="1.5" fill="none" opacity="0.55"
+            marker-end="url(#arrow-violet)"/>
+
+      <!-- search -> gateway (cubic loop) -->
+      <path d="M 350 320 C 220 320, 200 200, 350 110"
+            stroke="#a855f7" stroke-width="1.5" fill="none" opacity="0.55"
+            marker-end="url(#arrow-violet)"/>
+
+      <!-- decorative ambient curve -->
+      <path d="M 40 460 C 240 420, 480 460, 720 420 Q 940 380, 1120 440"
+            stroke="#818cf8" stroke-width="1" fill="none" opacity="0.18"/>
+    </svg>
+
+    <!-- Edge labels -->
+    <span class="edge-label" style="left: 200px; top: 50px;">HTTPS</span>
+    <span class="edge-label" style="left: 460px; top: 50px;">gRPC</span>
+    <span class="edge-label" style="left: 740px; top: 18px;">NATS</span>
+    <span class="edge-label" style="left: 622px; top: 150px;">SQL</span>
+    <span class="edge-label" style="left: 410px; top: 290px;">CDC</span>
+    <span class="edge-label" style="left: 760px; top: 290px;">Vector</span>
+
+    <!-- Service boxes -->
+    <div class="svc client" data-slidify-decorate="glass">
+      <div class="label">Client</div>
+      <div class="name">Helix Web &middot; Mobile</div>
+      <div class="meta"><span class="pip"></span>React, native iOS</div>
+    </div>
+
+    <div class="svc gateway" data-slidify-decorate="glass">
+      <div class="label">Edge &middot; CDN</div>
+      <div class="name">Gateway</div>
+      <div class="meta"><span class="pip"></span>Auth, rate-limit, WAF</div>
+    </div>
+
+    <div class="svc api" data-slidify-decorate="glass">
+      <div class="label">Stateless</div>
+      <div class="name">API · GraphQL</div>
+      <div class="meta"><span class="pip"></span>Go &middot; 24 pods &middot; p95 38ms</div>
+    </div>
+
+    <div class="svc workers" data-slidify-decorate="glass">
+      <div class="label">Background</div>
+      <div class="name">Workers · Jobs</div>
+      <div class="meta"><span class="pip"></span>Runbooks, webhooks, sync</div>
+    </div>
+
+    <div class="svc storage" data-slidify-decorate="glass">
+      <div class="label">Stateful</div>
+      <div class="name">Graph Storage</div>
+      <div class="meta"><span class="pip"></span>Postgres + WAL replicas</div>
+    </div>
+
+    <div class="svc search" data-slidify-decorate="glass">
+      <div class="label">Read path</div>
+      <div class="name">Search Index</div>
+      <div class="meta"><span class="pip"></span>Tantivy &middot; CDC-driven</div>
+    </div>
+
+    <div class="svc ai-agent" data-slidify-decorate="glass">
+      <div class="label">Inference</div>
+      <div class="name">AI Agent Pool</div>
+      <div class="meta"><span class="pip"></span>In-VPC LLM &middot; Sonnet 4.x</div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div>Helix Inc &middot; Architecture &middot; v3.2</div>
+    <div>Slide 04 / 28</div>
+  </div>
+
+</div>
+</body>
+</html>

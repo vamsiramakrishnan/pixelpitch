@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Why Now — Helix Bento</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; width: 1280px; height: 720px;
+    font-family: Inter, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: #050510; color: #f5f5f7;
+  }
+  .slide {
+    width: 1280px; height: 720px;
+    box-sizing: border-box;
+    position: relative; overflow: hidden;
+    background: radial-gradient(ellipse at 70% 20%, #1e1b4b 0%, #0a0a14 60%, #050510 100%);
+    padding: 56px 64px 56px 64px;
+  }
+
+  /* Header strip */
+  .header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 28px;
+  }
+  .header-left .kicker {
+    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #a1a1aa; font-weight: 600; margin-bottom: 8px;
+  }
+  .header-left .h1 {
+    font-size: 38px; line-height: 1.05; letter-spacing: -0.02em;
+    font-weight: 700; margin: 0;
+    background: linear-gradient(110deg, #f5f5f7 0%, #c7d2fe 60%, #ec4899 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .header-right {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: #a1a1aa;
+  }
+  .header-right .pip {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #34d399; box-shadow: 0 0 8px #34d399;
+  }
+
+  /* Bento grid */
+  .bento {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 16px;
+    height: 540px;
+  }
+  .hero-tile {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+    position: relative; overflow: hidden;
+    padding: 36px;
+    border-radius: 22px;
+    background:
+      radial-gradient(ellipse at 80% 0%, rgba(168,85,247,0.32) 0%, transparent 60%),
+      linear-gradient(160deg, #1a1a2e 0%, #0d0d1a 100%);
+    border: 1px solid rgba(255,255,255,0.10);
+    box-shadow: 0 22px 48px rgba(0,0,0,0.45), 0 4px 8px rgba(0,0,0,0.3);
+  }
+  .hero-tile .tile-label {
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: #a78bfa; font-weight: 600;
+  }
+  .hero-tile .tile-title {
+    font-size: 38px; line-height: 1.08; letter-spacing: -0.02em;
+    font-weight: 700; margin: 14px 0 16px 0;
+    color: #f5f5f7;
+  }
+  .hero-tile .tile-title em {
+    font-style: normal;
+    background: linear-gradient(120deg, #818cf8 0%, #ec4899 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero-tile .tile-body {
+    font-size: 15px; line-height: 1.55; color: #c7c7d1;
+    max-width: 460px;
+  }
+
+  /* Inline mini chart inside hero tile */
+  .mini-chart {
+    position: absolute;
+    left: 36px; bottom: 32px;
+    width: 480px; height: 150px;
+  }
+
+  .hero-badges {
+    position: absolute; right: 32px; top: 32px;
+    display: flex; flex-direction: column; gap: 8px; align-items: flex-end;
+  }
+  .badge {
+    padding: 6px 12px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 999px;
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: #c7d2fe; font-weight: 600;
+  }
+
+  /* Small tiles 2x2 */
+  .small-tile {
+    position: relative; overflow: hidden;
+    padding: 24px;
+    border-radius: 18px;
+    background: linear-gradient(160deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.2);
+  }
+  .small-tile.t1 { grid-column: 2 / 3; grid-row: 1 / 2; }
+  .small-tile.t2 { grid-column: 2 / 3; grid-row: 1 / 2; }
+  .small-tile-grid {
+    grid-column: 2 / 3; grid-row: 1 / 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 16px;
+  }
+  .stile-label {
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: #71717a; font-weight: 600;
+  }
+  .stile-title {
+    font-size: 14px; color: #f5f5f7; font-weight: 600;
+    margin-top: 6px;
+  }
+  .stile-body {
+    font-size: 12px; line-height: 1.5; color: #a1a1aa;
+    margin-top: 8px;
+  }
+
+  /* Stat tile (96px display number) */
+  .stat-tile {
+    background: linear-gradient(160deg, rgba(99,102,241,0.18) 0%, rgba(168,85,247,0.10) 100%);
+    border: 1px solid rgba(168,85,247,0.25);
+  }
+  .stat-tile .num {
+    font-size: 96px; line-height: 0.92; letter-spacing: -0.04em;
+    font-weight: 800; margin-top: 4px;
+    background: linear-gradient(135deg, #c7d2fe 0%, #ec4899 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .stat-tile .delta {
+    font-size: 11px; color: #34d399; font-weight: 600; margin-top: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Logo tile */
+  .logo-tile { padding: 18px 22px; }
+  .logo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .logo-cell {
+    height: 32px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: #c7d2fe;
+    letter-spacing: 0.05em;
+  }
+
+  /* Trend tile */
+  .trend-tile {
+    background: linear-gradient(160deg, rgba(236,72,153,0.16) 0%, rgba(251,191,36,0.06) 100%);
+    border: 1px solid rgba(236,72,153,0.25);
+  }
+  .trend-spark { margin-top: 8px; }
+
+  /* Quote tile */
+  .quote-tile .q {
+    font-size: 13px; line-height: 1.5; color: #f5f5f7; font-weight: 500;
+    margin-top: 8px;
+  }
+  .quote-tile .src {
+    font-size: 10px; color: #a1a1aa; margin-top: 8px;
+    letter-spacing: 0.1em;
+  }
+
+  /* Footer */
+  .footer {
+    position: absolute; bottom: 22px; left: 64px; right: 64px;
+    display: flex; justify-content: space-between;
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: #52525b;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="kicker">02 · Why Now</div>
+      <h1 class="h1" data-pptx-role="title">The operations stack is finally consolidating.</h1>
+    </div>
+    <div class="header-right">
+      <span class="pip"></span>
+      <span>Helix · Confidential</span>
+    </div>
+  </div>
+
+  <!-- Bento grid -->
+  <div class="bento">
+
+    <!-- HERO TILE (large, ~60% width) -->
+    <div class="hero-tile" data-slidify-decorate="hero">
+      <div class="tile-label">Market Inflection</div>
+      <h2 class="tile-title">Ops teams are <em>buying for the platform</em>, not the point tool.</h2>
+      <p class="tile-body">After a decade of unbundling, mid-market and enterprise ops leaders are re-bundling around <b style="color:#f5f5f7">a single workspace</b>. Helix is the first platform purpose-built for the new ops org &mdash; runbooks, incidents, vendor reviews, and quarterly planning, all on one graph.</p>
+
+      <div class="hero-badges">
+        <span class="badge">Forrester · Wave Q1</span>
+        <span class="badge">G2 · Leader Spring '26</span>
+        <span class="badge">SOC 2 Type II</span>
+      </div>
+
+      <!-- Inline native SVG growth chart -->
+      <svg class="mini-chart" viewBox="0 0 480 150" xmlns="http://www.w3.org/2000/svg">
+        <!-- gridlines -->
+        <line x1="0" y1="30"  x2="480" y2="30"  stroke="#27272a" stroke-width="1"/>
+        <line x1="0" y1="70"  x2="480" y2="70"  stroke="#27272a" stroke-width="1"/>
+        <line x1="0" y1="110" x2="480" y2="110" stroke="#27272a" stroke-width="1"/>
+        <!-- area curve -->
+        <path d="M 0 130 C 80 120, 140 100, 200 90 C 260 80, 320 50, 400 30 Q 440 22, 480 18 L 480 150 L 0 150 Z"
+              fill="rgba(168,85,247,0.20)" stroke="none"/>
+        <!-- line curve -->
+        <path d="M 0 130 C 80 120, 140 100, 200 90 C 260 80, 320 50, 400 30 Q 440 22, 480 18"
+              stroke="#a855f7" stroke-width="2.5" fill="none"/>
+        <!-- secondary curve -->
+        <path d="M 0 140 C 80 138, 160 132, 240 124 C 320 116, 400 108, 480 96"
+              stroke="#ec4899" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+        <!-- node markers -->
+        <circle cx="0"   cy="130" r="3" fill="#a855f7"/>
+        <circle cx="120" cy="105" r="3" fill="#a855f7"/>
+        <circle cx="240" cy="84"  r="3" fill="#a855f7"/>
+        <circle cx="360" cy="42"  r="3" fill="#a855f7"/>
+        <circle cx="480" cy="18"  r="4" fill="#ec4899"/>
+      </svg>
+    </div>
+
+    <!-- 2x2 SMALL TILE GRID -->
+    <div class="small-tile-grid">
+
+      <!-- Stat tile (96px number) -->
+      <div class="small-tile stat-tile" data-slidify-decorate="tactile">
+        <div class="stile-label">TAM 2030</div>
+        <div class="num">$84B</div>
+        <div class="delta">CAGR 27% &middot; Gartner</div>
+      </div>
+
+      <!-- Logo tile -->
+      <div class="small-tile logo-tile" data-slidify-decorate="glass">
+        <div class="stile-label">Reference Logos</div>
+        <div class="stile-title">Bought in the last 9 months</div>
+        <div class="logo-grid">
+          <div class="logo-cell">RAMP</div>
+          <div class="logo-cell">FIGMA</div>
+          <div class="logo-cell">VERCEL</div>
+          <div class="logo-cell">NOTION</div>
+          <div class="logo-cell">LINEAR</div>
+          <div class="logo-cell">RETOOL</div>
+        </div>
+      </div>
+
+      <!-- Trend tile (spark) -->
+      <div class="small-tile trend-tile" data-slidify-decorate="glass">
+        <div class="stile-label">Pipeline Q2</div>
+        <div class="stile-title">+312% QoQ</div>
+        <svg class="trend-spark" width="220" height="48" viewBox="0 0 220 48" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 0 40 C 30 36, 60 28, 90 30 C 120 32, 150 18, 180 10 Q 200 6, 220 4"
+                stroke="#fbbf24" stroke-width="2" fill="none"/>
+          <path d="M 0 40 C 30 36, 60 28, 90 30 C 120 32, 150 18, 180 10 Q 200 6, 220 4 L 220 48 L 0 48 Z"
+                fill="rgba(251,191,36,0.18)" stroke="none"/>
+          <circle cx="220" cy="4" r="3" fill="#ec4899"/>
+        </svg>
+        <div class="stile-body">$48M qualified, 22 enterprise.</div>
+      </div>
+
+      <!-- Quote tile -->
+      <div class="small-tile quote-tile" data-slidify-decorate="tactile">
+        <div class="stile-label">Customer Voice</div>
+        <p class="q">&ldquo;We replaced <b style="color:#a855f7">six</b> tools with Helix in our first quarter. The math was obvious.&rdquo;</p>
+        <div class="src">Priya R. · VP Ops · Series D fintech</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div>Helix Inc &middot; Confidential</div>
+    <div>Slide 02 / 28</div>
+  </div>
+
+</div>
+</body>
+</html>

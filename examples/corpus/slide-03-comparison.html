@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Helix vs. Legacy — Comparison Matrix</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; width: 1280px; height: 720px;
+    font-family: Inter, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: #050510; color: #f5f5f7;
+  }
+  .slide {
+    width: 1280px; height: 720px;
+    box-sizing: border-box;
+    position: relative; overflow: hidden;
+    background: radial-gradient(ellipse at 20% 0%, #1e1b4b 0%, #0a0a14 55%, #050510 100%);
+    padding: 48px 64px 56px 64px;
+  }
+
+  /* Top kicker */
+  .kicker {
+    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #a78bfa; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .kicker .seg {
+    width: 28px; height: 1px;
+    background: linear-gradient(90deg, #a78bfa, transparent);
+  }
+  .h1 {
+    font-size: 36px; line-height: 1.1; letter-spacing: -0.02em;
+    font-weight: 700; margin: 8px 0 4px 0;
+    background: linear-gradient(110deg, #f5f5f7 0%, #c7d2fe 60%, #ec4899 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .sub {
+    font-size: 14px; color: #a1a1aa;
+    margin: 0 0 22px 0;
+    max-width: 760px;
+  }
+
+  /* Header strip (decorate hero) */
+  .header-strip {
+    display: grid;
+    grid-template-columns: 380px 1fr 1fr 1fr;
+    gap: 12px;
+    padding: 18px 22px;
+    border-radius: 16px;
+    background:
+      radial-gradient(ellipse at 80% 50%, rgba(168,85,247,0.32) 0%, transparent 70%),
+      linear-gradient(135deg, #1a1a2e 0%, #0d0d1a 100%);
+    border: 1px solid rgba(255,255,255,0.10);
+    box-shadow: 0 16px 36px rgba(0,0,0,0.45);
+    margin-bottom: 10px;
+  }
+  .col-head {
+    display: flex; flex-direction: column; gap: 4px;
+    align-items: flex-start;
+  }
+  .col-head .title {
+    font-size: 18px; font-weight: 700; color: #f5f5f7; letter-spacing: -0.01em;
+  }
+  .col-head .sub {
+    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: #a1a1aa; margin: 0;
+    font-weight: 500;
+  }
+  .col-head.featured .title {
+    background: linear-gradient(120deg, #818cf8 0%, #ec4899 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .col-head.featured .badge {
+    margin-top: 4px;
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+    font-weight: 700;
+    background: linear-gradient(120deg, #6366f1 0%, #ec4899 100%);
+    color: #fff;
+    box-shadow: 0 6px 14px rgba(168,85,247,0.4);
+  }
+  .feature-col-head {
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: #71717a; font-weight: 600; padding-top: 4px;
+  }
+
+  /* Comparison grid (NOT a table) */
+  .matrix {
+    display: grid;
+    grid-template-columns: 380px 1fr 1fr 1fr;
+    gap: 0;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, rgba(255,255,255,0.01) 100%);
+  }
+  .row {
+    display: contents;
+  }
+  .cell {
+    padding: 13px 22px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    border-right: 1px solid rgba(255,255,255,0.05);
+    display: flex; align-items: center;
+    font-size: 13px;
+    color: #d4d4d8;
+    min-height: 24px;
+  }
+  .cell:last-child { border-right: none; }
+  .row.last .cell { border-bottom: none; }
+  .cell.feature {
+    color: #f5f5f7; font-weight: 500;
+    flex-direction: column; align-items: flex-start; gap: 2px;
+  }
+  .cell.feature .desc {
+    font-size: 11px; color: #71717a; font-weight: 400;
+  }
+  .cell.featured-col {
+    background: linear-gradient(180deg, rgba(168,85,247,0.06) 0%, rgba(99,102,241,0.04) 100%);
+  }
+
+  /* Status pills */
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.04em;
+    border: 1px solid transparent;
+  }
+  .pill .glyph {
+    font-size: 12px; line-height: 1; font-weight: 700;
+  }
+  .pill.yes {
+    background: rgba(52,211,153,0.14);
+    color: #34d399;
+    border-color: rgba(52,211,153,0.3);
+  }
+  .pill.no {
+    background: rgba(248,113,113,0.10);
+    color: #f87171;
+    border-color: rgba(248,113,113,0.25);
+  }
+  .pill.partial {
+    background: rgba(251,191,36,0.12);
+    color: #fbbf24;
+    border-color: rgba(251,191,36,0.28);
+  }
+  .pill.add-on {
+    background: rgba(161,161,170,0.10);
+    color: #a1a1aa;
+    border-color: rgba(161,161,170,0.22);
+  }
+
+  /* Decorative SVG accent */
+  .deco {
+    position: absolute; top: 30px; right: 50px;
+    z-index: 0; pointer-events: none;
+  }
+
+  /* Footer */
+  .footer {
+    position: absolute; bottom: 22px; left: 64px; right: 64px;
+    display: flex; justify-content: space-between;
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: #52525b;
+  }
+  .footer .legend {
+    display: inline-flex; gap: 14px; align-items: center;
+  }
+  .legend-item {
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .legend-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+  .legend-dot.yes { background: #34d399; }
+  .legend-dot.no { background: #f87171; }
+  .legend-dot.partial { background: #fbbf24; }
+  .legend-dot.add-on { background: #a1a1aa; }
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <!-- decorative accent -->
+  <svg class="deco" width="160" height="120" viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 10 80 C 40 20, 120 20, 150 80"
+          fill="none" stroke="#a78bfa" stroke-width="1.2" opacity="0.5"/>
+    <path d="M 10 90 Q 80 40, 150 90"
+          fill="none" stroke="#ec4899" stroke-width="1" opacity="0.4"/>
+    <circle cx="80" cy="34" r="3" fill="#ec4899"/>
+    <circle cx="10" cy="80" r="2" fill="#a78bfa"/>
+    <circle cx="150" cy="80" r="2" fill="#a78bfa"/>
+  </svg>
+
+  <div class="kicker"><span class="seg"></span> 03 &middot; Competitive Position</div>
+  <h1 class="h1" data-pptx-role="title">One platform &mdash; vs. legacy point tools and DIY scripts.</h1>
+  <p class="sub">Helix consolidates capability that historically required <b style="color:#f5f5f7">three to five vendors plus internal engineering</b>. The matrix below compares feature parity for a 500-seat operations org.</p>
+
+  <!-- Header strip -->
+  <div class="header-strip" data-slidify-decorate="hero">
+    <div class="feature-col-head">Capability</div>
+    <div class="col-head featured">
+      <div class="title">Helix</div>
+      <div class="sub">Unified · 2026</div>
+      <div class="badge">Recommended</div>
+    </div>
+    <div class="col-head">
+      <div class="title">Legacy Suite</div>
+      <div class="sub">ServiceNow + Jira</div>
+    </div>
+    <div class="col-head">
+      <div class="title">DIY Stack</div>
+      <div class="sub">Notion + Scripts</div>
+    </div>
+  </div>
+
+  <!-- Matrix -->
+  <div class="matrix">
+
+    <div class="row">
+      <div class="cell feature">Unified runbook execution
+        <span class="desc">Steps, approvals, and audit in one graph</span></div>
+      <div class="cell featured-col"><span class="pill yes"><span class="glyph">&#10003;</span>Native</span></div>
+      <div class="cell"><span class="pill partial"><span class="glyph">~</span>Plugin</span></div>
+      <div class="cell"><span class="pill no"><span class="glyph">&times;</span>Manual</span></div>
+    </div>
+
+    <div class="row">
+      <div class="cell feature">Real-time incident response
+        <span class="desc">Paging, war-room, postmortem in one flow</span></div>
+      <div class="cell featured-col"><span class="pill yes"><span class="glyph">&#10003;</span>Native</span></div>
+      <div class="cell"><span class="pill partial"><span class="glyph">~</span>Add-on</span></div>
+      <div class="cell"><span class="pill no"><span class="glyph">&times;</span>None</span></div>
+    </div>
+
+    <div class="row">
+      <div class="cell feature">Vendor / contract review workflow
+        <span class="desc">SOC2, DPA, redlines tracked end-to-end</span></div>
+      <div class="cell featured-col"><span class="pill yes"><span class="glyph">&#10003;</span>Native</span></div>
+      <div class="cell"><span class="pill add-on"><span class="glyph">+</span>Add-on</span></div>
+      <div class="cell"><span class="pill no"><span class="glyph">&times;</span>Spreadsheet</span></div>
+    </div>
+
+    <div class="row">
+      <div class="cell feature">AI agent &middot; auto-remediation
+        <span class="desc">LLM-driven runbook autonomy with approvals</span></div>
+      <div class="cell featured-col"><span class="pill yes"><span class="glyph">&#10003;</span>GA Q2</span></div>
+      <div class="cell"><span class="pill no"><span class="glyph">&times;</span>Roadmap</span></div>
+      <div class="cell"><span class="pill no"><span class="glyph">&times;</span>None</span></div>
+    </div>
+
+    <div class="row">
+      <div class="cell feature">Audit + immutable timeline
+        <span class="desc">Tamper-evident log, SOC2-ready export</span></div>
+      <div class="cell featured-col"><span class="pill yes"><span class="glyph">&#10003;</span>Native</span></div>
+      <div class="cell"><span class="pill yes"><span class="glyph">&#10003;</span>Native</span></div>
+      <div class="cell"><span class="pill no"><span class="glyph">&times;</span>Custom</span></div>
+    </div>
+
+    <div class="row">
+      <div class="cell feature">SAML SSO &middot; SCIM provisioning
+        <span class="desc">Okta, Entra, Google Workspace</span></div>
+      <div class="cell featured-col"><span class="pill yes"><span class="glyph">&#10003;</span>All plans</span></div>
+      <div class="cell"><span class="pill add-on"><span class="glyph">+</span>Enterprise tier</span></div>
+      <div class="cell"><span class="pill partial"><span class="glyph">~</span>Manual</span></div>
+    </div>
+
+    <div class="row">
+      <div class="cell feature">Cross-team graph search
+        <span class="desc">Documents, runbooks, incidents, vendors</span></div>
+      <div class="cell featured-col"><span class="pill yes"><span class="glyph">&#10003;</span>Native</span></div>
+      <div class="cell"><span class="pill partial"><span class="glyph">~</span>Per-app</span></div>
+      <div class="cell"><span class="pill no"><span class="glyph">&times;</span>None</span></div>
+    </div>
+
+    <div class="row">
+      <div class="cell feature">Time-to-value for a 500-seat org
+        <span class="desc">Median from contract to first runbook</span></div>
+      <div class="cell featured-col"><span class="pill yes"><span class="glyph">&#10003;</span>9 days</span></div>
+      <div class="cell"><span class="pill no"><span class="glyph">&times;</span>14 weeks</span></div>
+      <div class="cell"><span class="pill partial"><span class="glyph">~</span>6 weeks</span></div>
+    </div>
+
+    <div class="row last">
+      <div class="cell feature">Total annualized cost
+        <span class="desc">Licenses + integration + internal engineering</span></div>
+      <div class="cell featured-col"><span class="pill yes"><span class="glyph">&#10003;</span>$148k</span></div>
+      <div class="cell"><span class="pill no"><span class="glyph">&times;</span>$612k</span></div>
+      <div class="cell"><span class="pill partial"><span class="glyph">~</span>$340k</span></div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot yes"></span> Native</span>
+      <span class="legend-item"><span class="legend-dot partial"></span> Partial</span>
+      <span class="legend-item"><span class="legend-dot add-on"></span> Add-on</span>
+      <span class="legend-item"><span class="legend-dot no"></span> Not supported</span>
+    </div>
+    <div>Slide 03 / 28</div>
+  </div>
+
+</div>
+</body>
+</html>

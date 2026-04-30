@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Process Timeline</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; width: 1280px; height: 720px;
+    font-family: Inter, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: #050510;
+    color: #f5f5f7;
+  }
+  .slide {
+    width: 1280px; height: 720px; box-sizing: border-box;
+    position: relative; overflow: hidden;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.22) 0%, rgba(10,10,20,0) 55%),
+      radial-gradient(ellipse at 50% 110%, rgba(168,85,247,0.18) 0%, rgba(10,10,20,0) 55%),
+      linear-gradient(180deg, #0a0a16 0%, #050510 100%);
+  }
+
+  /* Header */
+  .header {
+    position: absolute; left: 48px; right: 48px; top: 36px;
+    display: flex; justify-content: space-between; align-items: flex-start;
+  }
+  .kicker {
+    font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: #818cf8; font-weight: 700;
+  }
+  .title {
+    margin: 6px 0 0 0;
+    font-size: 36px; line-height: 1.1; font-weight: 700;
+    letter-spacing: -0.015em;
+    max-width: 740px;
+  }
+  .title .accent {
+    color: transparent;
+    background: linear-gradient(90deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
+    -webkit-background-clip: text; background-clip: text;
+  }
+  .meta {
+    display: flex; flex-direction: column; gap: 8px; align-items: flex-end;
+  }
+  .pill {
+    padding: 6px 12px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+    background: linear-gradient(135deg, rgba(99,102,241,0.22), rgba(168,85,247,0.20));
+    border: 1px solid rgba(168,85,247,0.40);
+    color: #e4e4e7;
+  }
+  .meta .sub {
+    font-size: 11px; color: #a1a1aa;
+  }
+
+  /* Timeline area */
+  .timeline {
+    position: absolute; left: 48px; right: 48px; top: 220px;
+    height: 360px;
+  }
+
+  .step {
+    position: absolute;
+    width: 152px;
+    text-align: center;
+    top: 60px;
+  }
+  .step .node {
+    width: 64px; height: 64px; border-radius: 50%;
+    margin: 0 auto;
+    display: grid; place-items: center;
+    background: linear-gradient(160deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.02) 100%);
+    border: 1.5px solid rgba(255,255,255,0.20);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08);
+    position: relative;
+  }
+  .step .node .num {
+    position: absolute; top: -10px; right: -10px;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: linear-gradient(135deg, #ec4899, #a855f7);
+    color: #fff;
+    font-size: 11px; font-weight: 800;
+    display: grid; place-items: center;
+    box-shadow: 0 3px 8px rgba(168,85,247,0.55);
+  }
+  .step.active .node {
+    background: linear-gradient(160deg, #6366f1 0%, #a855f7 100%);
+    border-color: rgba(255,255,255,0.55);
+    box-shadow: 0 10px 24px rgba(139,92,246,0.55), 0 0 0 6px rgba(139,92,246,0.18);
+  }
+  .step .label {
+    margin-top: 14px;
+    font-size: 14px; font-weight: 700; color: #f5f5f7;
+    letter-spacing: 0.01em;
+  }
+  .step .desc {
+    margin-top: 6px;
+    font-size: 11px; line-height: 1.4; color: #a1a1aa;
+  }
+  .step .duration {
+    margin-top: 8px;
+    display: inline-block;
+    padding: 3px 8px; border-radius: 999px;
+    font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.10);
+    color: #c7d2fe;
+  }
+
+  /* Step positions: 6 steps evenly spaced across width 1184 */
+  .step.s1 { left: 0px;    }
+  .step.s2 { left: 200px;  }
+  .step.s3 { left: 400px;  }
+  .step.s4 { left: 600px;  }
+  .step.s5 { left: 800px;  }
+  .step.s6 { left: 1000px; }
+
+  /* Phase legend */
+  .phases {
+    position: absolute; left: 48px; right: 48px; bottom: 80px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  }
+  .phase {
+    padding: 12px 14px;
+    background: linear-gradient(160deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    display: grid; grid-template-columns: 36px 1fr; gap: 12px; align-items: center;
+  }
+  .phase .swatch {
+    width: 36px; height: 36px; border-radius: 10px;
+  }
+  .phase .swatch.a { background: linear-gradient(135deg, #6366f1, #4338ca); }
+  .phase .swatch.b { background: linear-gradient(135deg, #a855f7, #7c3aed); }
+  .phase .swatch.c { background: linear-gradient(135deg, #ec4899, #be185d); }
+  .phase .name {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
+  }
+  .phase .info {
+    font-size: 10px; color: #a1a1aa; margin-top: 2px;
+  }
+
+  /* Footer */
+  .footer {
+    position: absolute; left: 48px; right: 48px; bottom: 22px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 10px; color: #52525b; letter-spacing: 0.2em; text-transform: uppercase;
+  }
+  .pageno { color: #a1a1aa; font-weight: 700; }
+
+  .icon-svg { display: block; }
+</style>
+</head>
+<body>
+<div class="slide" data-slidify-decorate="orbit">
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <div class="kicker">END-TO-END WORKFLOW</div>
+      <h1 class="title" data-pptx-role="title">From raw event to <span class="accent">decisioned outcome</span> in six deterministic steps</h1>
+    </div>
+    <div class="meta">
+      <span class="pill">Avg cycle &middot; 4.2 sec</span>
+      <span class="sub">Production pipeline &middot; v4.18</span>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="timeline">
+
+    <!-- SVG connectors (cubic curves with arrowheads) -->
+    <svg width="1184" height="180" viewBox="0 0 1184 180" style="position:absolute; left:0; top:48px;">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <polygon points="0,0 10,5 0,10" fill="#a78bfa" />
+        </marker>
+      </defs>
+      <!-- Six nodes are centered at x=76,276,476,676,876,1076 (each step left + 76) at y=32 -->
+      <!-- Connector 1->2 (arc up) -->
+      <path d="M 108 32 C 158 -8, 220 -8, 244 32" fill="none"
+            stroke="#818cf8" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)" />
+      <!-- Connector 2->3 (arc down) -->
+      <path d="M 308 32 C 358 72, 420 72, 444 32" fill="none"
+            stroke="#a78bfa" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)" />
+      <!-- Connector 3->4 (arc up) -->
+      <path d="M 508 32 C 558 -8, 620 -8, 644 32" fill="none"
+            stroke="#c084fc" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)" />
+      <!-- Connector 4->5 (arc down) -->
+      <path d="M 708 32 C 758 72, 820 72, 844 32" fill="none"
+            stroke="#e879f9" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)" />
+      <!-- Connector 5->6 (arc up) -->
+      <path d="M 908 32 C 958 -8, 1020 -8, 1044 32" fill="none"
+            stroke="#f472b6" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)" />
+
+      <!-- Subtle dotted baseline -->
+      <line x1="40" y1="32" x2="1144" y2="32" stroke="rgba(255,255,255,0.07)" stroke-width="1" stroke-dasharray="2 6" />
+    </svg>
+
+    <!-- Step 1: Ingest -->
+    <div class="step s1">
+      <div class="node">
+        <span class="num">1</span>
+        <svg class="icon-svg" width="28" height="28" viewBox="0 0 28 28">
+          <path d="M 14 4 L 14 20 M 8 14 L 14 20 L 20 14"
+                stroke="#e0e7ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+          <line x1="6" y1="24" x2="22" y2="24" stroke="#e0e7ff" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </div>
+      <div class="label">Ingest</div>
+      <div class="desc">Stream events via Kafka with schema validation at the edge.</div>
+      <span class="duration">~80 ms</span>
+    </div>
+
+    <!-- Step 2: Normalize -->
+    <div class="step s2">
+      <div class="node">
+        <span class="num">2</span>
+        <svg class="icon-svg" width="28" height="28" viewBox="0 0 28 28">
+          <rect x="5" y="6" width="8" height="6" rx="1.5" fill="none" stroke="#e0e7ff" stroke-width="1.8" />
+          <rect x="15" y="6" width="8" height="6" rx="1.5" fill="none" stroke="#e0e7ff" stroke-width="1.8" />
+          <rect x="5" y="16" width="18" height="6" rx="1.5" fill="none" stroke="#e0e7ff" stroke-width="1.8" />
+        </svg>
+      </div>
+      <div class="label">Normalize</div>
+      <div class="desc">Map heterogeneous payloads to canonical entity model.</div>
+      <span class="duration">~120 ms</span>
+    </div>
+
+    <!-- Step 3: Enrich -->
+    <div class="step s3 active">
+      <div class="node">
+        <span class="num">3</span>
+        <svg class="icon-svg" width="28" height="28" viewBox="0 0 28 28">
+          <polygon points="14,4 17,11 24,11 18,16 20,23 14,19 8,23 10,16 4,11 11,11"
+                   fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round" />
+        </svg>
+      </div>
+      <div class="label">Enrich</div>
+      <div class="desc">Attach features, identity graph, and risk signals from feature store.</div>
+      <span class="duration">~640 ms</span>
+    </div>
+
+    <!-- Step 4: Score -->
+    <div class="step s4">
+      <div class="node">
+        <span class="num">4</span>
+        <svg class="icon-svg" width="28" height="28" viewBox="0 0 28 28">
+          <circle cx="14" cy="14" r="9" fill="none" stroke="#e0e7ff" stroke-width="1.8" />
+          <line x1="14" y1="14" x2="14" y2="6" stroke="#e0e7ff" stroke-width="1.8" stroke-linecap="round" />
+          <line x1="14" y1="14" x2="20" y2="17" stroke="#f472b6" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </div>
+      <div class="label">Score</div>
+      <div class="desc">Run model ensemble &middot; gradient-boosted + neural ranker.</div>
+      <span class="duration">~1.1 s</span>
+    </div>
+
+    <!-- Step 5: Decide -->
+    <div class="step s5">
+      <div class="node">
+        <span class="num">5</span>
+        <svg class="icon-svg" width="28" height="28" viewBox="0 0 28 28">
+          <polygon points="14,4 24,14 14,24 4,14" fill="none" stroke="#e0e7ff" stroke-width="1.8" stroke-linejoin="round" />
+          <path d="M 10 14 L 13 17 L 18 11" stroke="#34d399" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+      <div class="label">Decide</div>
+      <div class="desc">Apply policy DSL with explainability trace persisted.</div>
+      <span class="duration">~210 ms</span>
+    </div>
+
+    <!-- Step 6: Act -->
+    <div class="step s6">
+      <div class="node">
+        <span class="num">6</span>
+        <svg class="icon-svg" width="28" height="28" viewBox="0 0 28 28">
+          <path d="M 4 14 L 22 14 M 16 8 L 22 14 L 16 20"
+                stroke="#e0e7ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+        </svg>
+      </div>
+      <div class="label">Act</div>
+      <div class="desc">Dispatch to downstream systems &middot; webhook, queue, or RPA.</div>
+      <span class="duration">~95 ms</span>
+    </div>
+
+  </div>
+
+  <!-- Phase legend -->
+  <div class="phases">
+    <div class="phase" data-slidify-decorate="glass">
+      <div class="swatch a"></div>
+      <div>
+        <div class="name">Phase A &middot; Intake</div>
+        <div class="info">Steps 1&ndash;2 &middot; deterministic, idempotent, replayable</div>
+      </div>
+    </div>
+    <div class="phase" data-slidify-decorate="glass">
+      <div class="swatch b"></div>
+      <div>
+        <div class="name">Phase B &middot; Inference</div>
+        <div class="info">Steps 3&ndash;4 &middot; latency-bounded, model-versioned</div>
+      </div>
+    </div>
+    <div class="phase" data-slidify-decorate="glass">
+      <div class="swatch c"></div>
+      <div>
+        <div class="name">Phase C &middot; Outbound</div>
+        <div class="info">Steps 5&ndash;6 &middot; auditable, retried with back-off</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div>Pipeline reference architecture &middot; rev 2026.04</div>
+    <div class="pageno">08 / 10</div>
+  </div>
+</div>
+</body>
+</html>

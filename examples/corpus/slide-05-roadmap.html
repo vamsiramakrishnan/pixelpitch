@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Helix 2026 Roadmap — Quarterly View</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; width: 1280px; height: 720px;
+    font-family: Inter, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: #050510; color: #f5f5f7;
+  }
+  .slide {
+    width: 1280px; height: 720px;
+    box-sizing: border-box;
+    position: relative; overflow: hidden;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 90% 100%, rgba(236,72,153,0.16) 0%, transparent 55%),
+      linear-gradient(180deg, #0a0a14 0%, #050510 100%);
+    padding: 44px 64px 48px 64px;
+  }
+
+  /* Header */
+  .header-row {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 22px;
+  }
+  .kicker {
+    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #a78bfa; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .kicker .seg { width: 28px; height: 1px; background: linear-gradient(90deg, #a78bfa, transparent); }
+  .h1 {
+    font-size: 34px; line-height: 1.1; letter-spacing: -0.02em;
+    font-weight: 700; margin: 6px 0 4px 0;
+    background: linear-gradient(110deg, #f5f5f7 0%, #c7d2fe 60%, #ec4899 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .sub {
+    font-size: 13px; color: #a1a1aa;
+    margin: 0; max-width: 720px;
+  }
+  .header-meta {
+    display: flex; gap: 8px;
+  }
+  .meta-pill {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    font-weight: 600; color: #c7d2fe;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.10);
+  }
+
+  /* Quarter rail (the spine line beneath all 4 columns) */
+  .rail {
+    position: absolute;
+    left: 64px; right: 64px;
+    top: 200px;
+    height: 18px;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Roadmap grid */
+  .roadmap {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 16px;
+    margin-top: 4px;
+  }
+  .quarter {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+
+  /* Quarter header (tactile) */
+  .q-head {
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(99,102,241,0.22) 0%, rgba(168,85,247,0.10) 100%);
+    border: 1px solid rgba(168,85,247,0.32);
+    box-shadow: 0 12px 26px rgba(168,85,247,0.20), 0 2px 4px rgba(0,0,0,0.3);
+    display: flex; align-items: center; justify-content: space-between;
+    position: relative; z-index: 3;
+  }
+  .q-head .q-name {
+    font-size: 18px; font-weight: 700; color: #f5f5f7; letter-spacing: -0.01em;
+  }
+  .q-head .q-name span {
+    color: #a78bfa; font-weight: 600;
+    margin-right: 6px;
+  }
+  .q-head .q-date {
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: #c7d2fe; font-weight: 600;
+  }
+  .q-head .marker {
+    position: absolute; left: 50%; bottom: -22px;
+    transform: translateX(-50%);
+    width: 14px; height: 14px; border-radius: 50%;
+    background: #a855f7;
+    border: 3px solid #0a0a14;
+    box-shadow: 0 0 12px rgba(168,85,247,0.6);
+    z-index: 2;
+  }
+
+  .q-theme {
+    font-size: 11px; line-height: 1.4;
+    color: #71717a;
+    text-transform: uppercase; letter-spacing: 0.16em; font-weight: 600;
+    margin-top: 22px;
+    padding-left: 2px;
+  }
+
+  /* Feature pills column */
+  .pill-stack {
+    display: flex; flex-direction: column; gap: 8px;
+    margin-top: 8px;
+  }
+  .feat {
+    padding: 11px 13px;
+    border-radius: 11px;
+    background: linear-gradient(160deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.015) 100%);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.32), 0 1px 2px rgba(0,0,0,0.2);
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .feat .top {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .feat .name {
+    font-size: 13px; font-weight: 600; color: #f5f5f7;
+    letter-spacing: -0.005em;
+  }
+  .feat .desc {
+    font-size: 11px; color: #a1a1aa; line-height: 1.4;
+  }
+  .status {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 2px 8px; border-radius: 999px;
+    font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+    font-weight: 700;
+  }
+  .status .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+  .status.shipped { background: rgba(52,211,153,0.16); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+  .status.shipped .dot { background: #34d399; box-shadow: 0 0 6px #34d399; }
+  .status.in-progress { background: rgba(99,102,241,0.18); color: #818cf8; border: 1px solid rgba(99,102,241,0.32); }
+  .status.in-progress .dot { background: #818cf8; box-shadow: 0 0 6px #818cf8; }
+  .status.committed { background: rgba(251,191,36,0.16); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+  .status.committed .dot { background: #fbbf24; box-shadow: 0 0 6px #fbbf24; }
+  .status.exploring { background: rgba(161,161,170,0.12); color: #a1a1aa; border: 1px solid rgba(161,161,170,0.22); }
+  .status.exploring .dot { background: #a1a1aa; }
+
+  /* Footer */
+  .footer {
+    position: absolute; bottom: 18px; left: 64px; right: 64px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: #52525b;
+  }
+  .legend {
+    display: inline-flex; gap: 14px; align-items: center;
+  }
+  .legend-item { display: inline-flex; align-items: center; gap: 5px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .legend-dot.shipped { background: #34d399; }
+  .legend-dot.in-progress { background: #818cf8; }
+  .legend-dot.committed { background: #fbbf24; }
+  .legend-dot.exploring { background: #a1a1aa; }
+
+  /* Decorative top arc */
+  .deco-arc {
+    position: absolute; left: 64px; right: 64px;
+    top: 134px;
+    height: 80px;
+    z-index: 0; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <!-- Header -->
+  <div class="header-row">
+    <div>
+      <div class="kicker"><span class="seg"></span> 05 &middot; 12-Month Roadmap</div>
+      <h1 class="h1" data-pptx-role="title">From workspace to autonomous operations &mdash; in four quarters.</h1>
+      <p class="sub">Each release moves Helix further along the autonomy curve. <b style="color:#f5f5f7">Q1 ships the agent runtime</b>; Q4 closes the loop with autonomous remediation under SOC2-grade approval policy.</p>
+    </div>
+    <div class="header-meta">
+      <span class="meta-pill">Public</span>
+      <span class="meta-pill">Customer-validated</span>
+    </div>
+  </div>
+
+  <!-- Decorative spine arc above quarter headers -->
+  <svg class="deco-arc" viewBox="0 0 1152 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 20 60 C 300 10, 850 10, 1132 60"
+          stroke="#818cf8" stroke-width="1" fill="none" opacity="0.25"/>
+    <path d="M 20 70 Q 576 30, 1132 70"
+          stroke="#ec4899" stroke-width="1" fill="none" opacity="0.20" stroke-dasharray="4 6"/>
+    <circle cx="20"   cy="60" r="3" fill="#34d399"/>
+    <circle cx="384"  cy="22" r="3" fill="#818cf8"/>
+    <circle cx="768"  cy="22" r="3" fill="#fbbf24"/>
+    <circle cx="1132" cy="60" r="3" fill="#ec4899"/>
+  </svg>
+
+  <!-- Roadmap -->
+  <div class="roadmap">
+
+    <!-- Q1 -->
+    <div class="quarter">
+      <div class="q-head" data-slidify-decorate="tactile">
+        <div class="q-name"><span>Q1</span>Foundation</div>
+        <div class="q-date">Jan&ndash;Mar</div>
+        <div class="marker"></div>
+      </div>
+      <div class="q-theme">Agent runtime &middot; GA</div>
+      <div class="pill-stack">
+        <div class="feat">
+          <div class="top">
+            <span class="name">Agent runtime v1</span>
+            <span class="status shipped"><span class="dot"></span>Shipped</span>
+          </div>
+          <div class="desc">In-VPC LLM execution with policy guardrails.</div>
+        </div>
+        <div class="feat">
+          <div class="top">
+            <span class="name">Workflow graph editor</span>
+            <span class="status shipped"><span class="dot"></span>Shipped</span>
+          </div>
+          <div class="desc">Visual runbook builder with branching.</div>
+        </div>
+        <div class="feat">
+          <div class="top">
+            <span class="name">SOC 2 Type II</span>
+            <span class="status shipped"><span class="dot"></span>Shipped</span>
+          </div>
+          <div class="desc">Annual attestation with zero exceptions.</div>
+        </div>
+        <div class="feat">
+          <div class="top">
+            <span class="name">SCIM provisioning</span>
+            <span class="status shipped"><span class="dot"></span>Shipped</span>
+          </div>
+          <div class="desc">Okta, Entra, Google Workspace.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quarter">
+      <div class="q-head" data-slidify-decorate="tactile">
+        <div class="q-name"><span>Q2</span>Depth</div>
+        <div class="q-date">Apr&ndash;Jun</div>
+        <div class="marker"></div>
+      </div>
+      <div class="q-theme">Vendor &middot; Procurement</div>
+      <div class="pill-stack">
+        <div class="feat">
+          <div class="top">
+            <span class="name">Vendor review module</span>
+            <span class="status in-progress"><span class="dot"></span>In progress</span>
+          </div>
+          <div class="desc">Contract redline + DPA workflow + audit log.</div>
+        </div>
+        <div class="feat">
+          <div class="top">
+            <span class="name">Procurement intake</span>
+            <span class="status in-progress"><span class="dot"></span>In progress</span>
+          </div>
+          <div class="desc">Slack-native intake with auto-routing.</div>
+        </div>
+        <div class="feat">
+          <div class="top">
+            <span class="name">Cost graph &middot; v1</span>
+            <span class="status committed"><span class="dot"></span>Committed</span>
+          </div>
+          <div class="desc">Cross-tool spend &amp; usage rollups.</div>
+        </div>
+        <div class="feat">
+          <div class="top">
+            <span class="name">Mobile app &middot; iOS</span>
+            <span class="status committed"><span class="dot"></span>Committed</span>
+          </div>
+          <div class="desc">Approvals + on-call from your phone.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="quarter">
+      <div class="q-head" data-slidify-decorate="tactile">
+        <div class="q-name"><span>Q3</span>Scale</div>
+        <div class="q-date">Jul&ndash;Sep</div>
+        <div class="marker"></div>
+      </div>
+      <div class="q-theme">Enterprise readiness</div>
+      <div class="pill-stack">
+        <div class="feat">
+          <div class="top">
+            <span class="name">EU data residency</span>
+            <span class="status committed"><span class="dot"></span>Committed</span>
+          </div>
+          <div class="desc">Frankfurt &amp; Dublin region pinning.</div>
+        </div>
+        <div class="feat">
+          <div class="top">
+            <span class="name">Custom roles &amp; ABAC</span>
+            <span class="status committed"><span class="dot"></span>Committed</span>
+          </div>
+          <div class="desc">Attribute-based access control + audit.</div>
+        </div>
+        <div class="feat">
+          <div class="top">
+            <span class="name">Workflow marketplace</span>
+            <span class="status committed"><span class="dot"></span>Committed</span>
+          </div>
+          <div class="desc">Curated runbooks from design partners.</div>
+        </div>
+        <div class="feat">
+          <div class="top">
+            <span class="name">FedRAMP Moderate path</span>
+            <span class="status exploring"><span class="dot"></span>Exploring</span>
+          </div>
+          <div class="desc">Public-sector design partner signed.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="quarter">
+      <div class="q-head" data-slidify-decorate="tactile">
+        <div class="q-name"><span>Q4</span>Autonomy</div>
+        <div class="q-date">Oct&ndash;Dec</div>
+        <div class="marker"></div>
+      </div>
+      <div class="q-theme">Closed-loop ops</div>
+      <div class="pill-stack">
+        <div class="feat">
+          <div class="top">
+            <span class="name">Auto-remediation v1</span>
+            <span class="status committed"><span class="dot"></span>Committed</span>
+          </div>
+          <div class="desc">Agent acts under approval policy.</div>
+        </div>
+        <div class="feat">
+          <div class="top">
+            <span class="name">Predictive incidents</span>
+            <span class="status exploring"><span class="dot"></span>Exploring</span>
+          </div>
+          <div class="desc">Anomaly &rarr; runbook suggestion engine.</div>
+        </div>
+        <div class="feat">
+          <div class="top">
+            <span class="name">Multi-tenant agent fleet</span>
+            <span class="status exploring"><span class="dot"></span>Exploring</span>
+          </div>
+          <div class="desc">Per-team agent budgets and policies.</div>
+        </div>
+        <div class="feat">
+          <div class="top">
+            <span class="name">Helix for MSPs</span>
+            <span class="status exploring"><span class="dot"></span>Exploring</span>
+          </div>
+          <div class="desc">Multi-customer ops &middot; private beta.</div>
+        </div>
+        <div class="feat">
+          <div class="top">
+            <span class="name">Public API v2</span>
+            <span class="status exploring"><span class="dot"></span>Exploring</span>
+          </div>
+          <div class="desc">Webhook fan-out &amp; signed events.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot shipped"></span> Shipped</span>
+      <span class="legend-item"><span class="legend-dot in-progress"></span> In progress</span>
+      <span class="legend-item"><span class="legend-dot committed"></span> Committed</span>
+      <span class="legend-item"><span class="legend-dot exploring"></span> Exploring</span>
+    </div>
+    <div>Slide 05 / 28</div>
+  </div>
+
+</div>
+</body>
+</html>
