@@ -23,6 +23,15 @@ export type { FooterProps } from './components/Footer';
 export { default as Pill, pillToIR } from './components/Pill';
 export type { PillProps } from './components/Pill';
 
+export { default as StatCardWithDepth, statCardWithDepthToIR } from './components/StatCardWithDepth';
+export type { StatCardWithDepthProps, DeltaColor } from './components/StatCardWithDepth';
+
+export { default as GlassPanel, glassPanelToIR } from './components/GlassPanel';
+export type { GlassPanelProps } from './components/GlassPanel';
+
+export { default as AnnotatedCallout, annotatedCalloutToIR } from './components/AnnotatedCallout';
+export type { AnnotatedCalloutProps, PointerSide } from './components/AnnotatedCallout';
+
 // IR types (re-exported under './ir' subpath too)
 export type {
   Color,

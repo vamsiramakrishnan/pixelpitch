@@ -22,7 +22,8 @@
     "build": "tsup",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "ir-emit": "tsx scripts/ir-emit.ts"
+    "ir-emit": "tsx scripts/ir-emit.ts",
+    "test:composites": "tsx scripts/test-composites.ts"
   },
   "keywords": ["slidify", "presentations", "pptx", "ir", "compiler"],
   "license": "MIT",
