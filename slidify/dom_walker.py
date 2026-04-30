@@ -248,6 +248,7 @@ WALKER_JS = r"""
             pptx_notes: ds.pptxNotes || null,
             aria_label: el.getAttribute('aria-label'),
             stable_selector: buildStableSelector(el),
+            decorate_hint: ds.slidifyDecorate || '',
         });
 
         // If we captured this element as a text container, don't recurse —

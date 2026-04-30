@@ -392,6 +392,20 @@ async def convert(
                         )
                     )
                     color_elements.extend(plan.rendered.elements)
+                    # Refresh decoration palette as soon as we have enough
+                    # color signal — gives later slides' decoration layers
+                    # access to the deck's actual brand colors.
+                    if len(color_elements) > 0 and slide_idx % 2 == 0:
+                        try:
+                            from slidify.theme import derive_accents_from_elements
+
+                            running = derive_accents_from_elements(color_elements)
+                            if running:
+                                emitter.set_brand_palette(
+                                    [a.lstrip("#") for a in running]
+                                )
+                        except Exception:
+                            pass
                     if cfg.run_oracle and cfg.keep_plans_for_oracle:
                         plans_for_oracle.append(plan)
                     else:
@@ -434,6 +448,11 @@ async def convert(
                         primary=accents[0] if len(accents) >= 1 else None,
                         secondary=accents[1] if len(accents) >= 2 else None,
                         accents=accents[2:6] if len(accents) > 2 else None,
+                    )
+                    # Strip the leading '#' so decoration layers can hand the
+                    # palette straight to MeshGlow's hex-only API.
+                    emitter.set_brand_palette(
+                        [a.lstrip("#") for a in accents]
                     )
             except Exception as e:
                 log.warning("api.theme_patch_failed", error=str(e))

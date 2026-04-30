@@ -38,3 +38,4 @@ components/node_modules/
 components/dist/
 components/package-lock.json
 components/.tsbuildinfo
+.claude/worktrees/

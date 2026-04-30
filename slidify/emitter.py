@@ -15,6 +15,7 @@ from pptx.enum.text import MSO_AUTO_SIZE, PP_ALIGN
 from pptx.util import Emu, Pt
 
 from slidify.colors import parse_color
+from slidify.decorations import derive_decorations
 from slidify.exceptions import EmitError
 from slidify.fonts import is_bold
 from slidify.fonts import resolve as resolve_font
@@ -36,6 +37,7 @@ from slidify.models import (
     RenderedSlide,
     VisualUnit,
 )
+from slidify.preset_shapes import detect_preset_shape, emit_preset
 from slidify.shadows import apply_shadows, parse_box_shadows
 from slidify.svg_shapes import emit_svg_shapes
 
@@ -104,6 +106,14 @@ class Emitter:
         self.prs.slide_height = Emu(SLIDE_H_EMU)
         self._image_cache: dict[str, bytes] = {}
         self._http = httpx.Client(timeout=10.0, follow_redirects=True)
+        # Brand palette used by decoration layers (mesh glow, etc.) when the
+        # source HTML opts in via `data-slidify-decorate`. The API populates
+        # this from the deck-wide color harvest right before save.
+        self._brand_palette: list[str] = []
+
+    def set_brand_palette(self, palette: list[str]) -> None:
+        """Set the deck-wide brand palette used by decoration layers."""
+        self._brand_palette = list(palette)
 
     def close(self) -> None:
         self._http.close()
@@ -312,6 +322,11 @@ class Emitter:
                 h=op.bbox.h,
             )
         x, y, w, h = _emu_rect(emit_bbox)
+        # Decoration layer (BELOW): mesh glow / drop shadow attached to
+        # the text container's anchor. Opt-in via `data-slidify-decorate`.
+        deco_stack = derive_decorations(anchor, palette=self._brand_palette)
+        if not deco_stack.is_empty():
+            deco_stack.emit_below(slide, emit_bbox)
         tb = slide.shapes.add_textbox(x, y, w, h)
         tf = tb.text_frame
         tf.word_wrap = True
@@ -385,6 +400,10 @@ class Emitter:
                 p.alignment = _TEXT_ALIGN_MAP.get(e.text_align, PP_ALIGN.LEFT)
                 for run_spec in para_runs:
                     self._add_styled_run(p, run_spec, fallback_el=e)
+
+        # Decoration layer (ABOVE): rim highlight / hairline / inset glow.
+        if not deco_stack.is_empty():
+            deco_stack.emit_above(slide, emit_bbox)
 
     def _element_to_paragraphs(
         self, e: DomElement
@@ -533,11 +552,16 @@ class Emitter:
         x, y, w, h = _emu_rect_offcanvas(op.bbox)
         radius = parse_px(anchor.border_radius)
         shape_kind = _shape_kind_for_anchor(anchor, radius)
+        deco_stack = derive_decorations(anchor, palette=self._brand_palette)
+        if not deco_stack.is_empty():
+            deco_stack.emit_below(slide, op.bbox)
         shape = slide.shapes.add_shape(shape_kind, x, y, w, h)
         shape.line.fill.background()
         self._apply_fill(shape, anchor)
         self._apply_border(shape, anchor)
         self._apply_shadow(shape, anchor)
+        if not deco_stack.is_empty():
+            deco_stack.emit_above(slide, op.bbox)
         return True
 
     def _emit_native_shape(self, slide, unit: VisualUnit, op: EmitOp) -> None:
@@ -548,11 +572,16 @@ class Emitter:
         x, y, w, h = _emu_rect_offcanvas(op.bbox)
         radius = parse_px(anchor_el.border_radius)
         shape_kind = _shape_kind_for_anchor(anchor_el, radius)
+        deco_stack = derive_decorations(anchor_el, palette=self._brand_palette)
+        if not deco_stack.is_empty():
+            deco_stack.emit_below(slide, op.bbox)
         shape = slide.shapes.add_shape(shape_kind, x, y, w, h)
         shape.line.fill.background()  # default to no border
         self._apply_fill(shape, anchor_el)
         self._apply_border(shape, anchor_el)
         self._apply_shadow(shape, anchor_el)
+        if not deco_stack.is_empty():
+            deco_stack.emit_above(slide, op.bbox)
 
     def _apply_fill(self, shape, el: DomElement) -> None:
         # Try native gradient first (background-image: linear-gradient(...) / radial-gradient(...)).
@@ -759,10 +788,14 @@ class Emitter:
 def _shape_kind_for_anchor(anchor: DomElement, radius_px: float):
     """Pick the right MSO_SHAPE for an anchor.
 
-    A nearly-circular shape with a large radius (>= 50% of min dimension) is
-    rendered as an OVAL rather than a ROUNDED_RECTANGLE — matters for
-    decorative auroras and avatar circles where `border-radius:50%` should
-    truly be a circle, not a heavily-rounded square."""
+    Priority: explicit clip-path / class hint → preset (chevron, arrow,
+    star, hexagon, callout, etc.) via `slidify.preset_shapes`. Then fall
+    back to OVAL for true circles, ROUNDED_RECTANGLE for radius > 0,
+    RECTANGLE otherwise.
+    """
+    match = detect_preset_shape(anchor)
+    if match is not None:
+        return match.preset
     w = anchor.bbox.w
     h = anchor.bbox.h
     if w > 0 and h > 0:

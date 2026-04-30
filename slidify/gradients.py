@@ -446,8 +446,26 @@ def to_grad_fill_xml(grad: LinearGradient | RadialGradient) -> etree._Element:
     return fill
 
 
-def apply_gradient_fill(shape, grad: LinearGradient | RadialGradient) -> bool:
-    """Replace a shape's fill with a native gradient. Returns True on success."""
+def apply_gradient_fill(
+    shape,
+    grad: LinearGradient | RadialGradient,
+    *,
+    densify: bool = True,
+) -> bool:
+    """Replace a shape's fill with a native gradient. Returns True on success.
+
+    When ``densify`` is True (the default) and the gradient has only its
+    endpoint stops, OKLCH-interpolated mid-stops are inserted so the
+    renderer's piecewise-linear sRGB interpolation approximates a
+    perceptually uniform gradient. This eliminates the "muddy grey
+    midpoint" between two saturated colors (e.g. indigo → pink).
+    Densification is skipped when the gradient already has 4+ stops.
+    """
+    if densify and len(grad.stops) <= 3:
+        try:
+            grad = with_oklch_density(grad, n=5)
+        except Exception:
+            pass  # Fall back to original stops if OKLCH math fails.
     try:
         sp_pr = shape.fill._xPr  # python-pptx internal — works for shapes/textboxes
     except Exception:

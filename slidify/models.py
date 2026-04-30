@@ -117,6 +117,10 @@ class DomElement(BaseModel):
     pptx_notes: str | None = None
     aria_label: str | None = None
     stable_selector: str = ""
+    # Decoration opt-in: HTML can carry `data-slidify-decorate="hero|glass|tactile|recessed|aurora"`
+    # to request a layered native shape stack at emit time. Empty = no
+    # decoration (the default — heuristics never silently inflate shape count).
+    decorate_hint: str = ""
 
 
 class UnitKind(str, Enum):
