@@ -235,7 +235,7 @@ def compute_font_scale_for_textbox(
     bbox_h_px: float | None = None,
     primary_font: Path | None = None,
     fallback_font: Path | None = None,
-    safety_margin: float = 1.02,
+    safety_margin: float = 1.10,
 ) -> FontScaleResult:
     """Determine the minimum fontScale that lets ``runs`` fit ``bbox_w_px``
     when rendered with ``fallback_font`` (the substituted font on the

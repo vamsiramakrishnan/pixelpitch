@@ -454,10 +454,9 @@ class Emitter:
                 deco_stack.emit_above(slide, emit_bbox)
             return
 
-        # Pre-compute fontScale against the fallback (Liberation Sans /
-        # Calibri) rather than trusting MSO_AUTO_SIZE.TEXT_TO_FIT_SHAPE
-        # at runtime. Bake the result into <a:normAutofit> so the deck
-        # renders identically across PowerPoint and LibreOffice.
+        # Pre-compute fontScale + wrap policy. Single-line textboxes get
+        # `wrap=none` so the wider fallback font doesn't reflow text into
+        # a phantom second line; multi-paragraph textboxes keep wrapping.
         try:
             scale_runs: list[tuple[str, float]] = []
             for e in para_targets:
@@ -466,13 +465,9 @@ class Emitter:
                     continue
                 scale_runs.append((t, max(8.0, parse_pt(e.font_size))))
             if scale_runs:
-                scale = compute_font_scale_for_textbox(
-                    scale_runs, bbox_w_px=emit_bbox.w, bbox_h_px=emit_bbox.h
+                self._apply_textframe_wrap_and_scale(
+                    tf, scale_runs, emit_bbox.w, emit_bbox.h
                 )
-                if scale.needs_autofit:
-                    _apply_explicit_autofit(
-                        tf, scale.font_scale_pct, scale.line_space_reduction_pct
-                    )
         except Exception:
             pass
         first = True
@@ -506,6 +501,16 @@ class Emitter:
         tf.margin_right = Emu(0)
         tf.margin_top = Emu(0)
         tf.margin_bottom = Emu(0)
+        # Per-element font-metrics + wrap policy.
+        try:
+            text = (e.pptx_text or e.text or "").strip()
+            if text:
+                pt_size = max(8.0, parse_pt(e.font_size))
+                self._apply_textframe_wrap_and_scale(
+                    tf, [(text, pt_size)], e.bbox.w, e.bbox.h
+                )
+        except Exception:
+            pass
         paragraphs = self._element_to_paragraphs(e)
         first = True
         for para_runs in paragraphs:
@@ -516,6 +521,49 @@ class Emitter:
             p.alignment = _TEXT_ALIGN_MAP.get(e.text_align, PP_ALIGN.LEFT)
             for run_spec in para_runs:
                 self._add_styled_run(p, run_spec, fallback_el=e)
+
+    def _apply_textframe_wrap_and_scale(
+        self,
+        tf,
+        runs: list[tuple[str, float]],
+        bbox_w_px: float,
+        bbox_h_px: float,
+    ) -> None:
+        """Set wrap policy + explicit normAutofit fontScale on a textframe.
+
+        Single-line textboxes (height <= 1.5 line-heights of the largest
+        run) get ``wrap=none``: even if the fallback font happens to be
+        slightly wider than fonttools predicts, the text won't reflow
+        into a phantom second line that overlaps the next vertical row.
+        Then bake in normAutofit fontScale so PPT clients shrink to fit
+        instead of letting LibreOffice's wider Liberation Sans wrap.
+        """
+        if not runs:
+            return
+        max_pt = max(pt for _, pt in runs) if runs else 12.0
+        # Approximate line-height factor; CSS default is 1.2.
+        line_height_px = max_pt * 1.333 * 1.2
+        is_single_line = bbox_h_px <= line_height_px * 1.5
+
+        if is_single_line:
+            try:
+                from lxml import etree as _et
+
+                bodyPr = tf._txBody.bodyPr  # noqa: SLF001
+                bodyPr.set("wrap", "none")
+            except Exception:
+                pass
+
+        try:
+            scale = compute_font_scale_for_textbox(
+                runs, bbox_w_px=bbox_w_px, bbox_h_px=bbox_h_px
+            )
+            if scale.needs_autofit:
+                _apply_explicit_autofit(
+                    tf, scale.font_scale_pct, scale.line_space_reduction_pct
+                )
+        except Exception:
+            pass
 
     def _element_to_paragraphs(
         self, e: DomElement
