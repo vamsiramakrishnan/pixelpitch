@@ -135,9 +135,16 @@ def build_trace_rows(
 
 
 def write_trace_jsonl(path: str | Path, rows: list[dict[str, Any]]) -> None:
-    """Write trace rows as newline-delimited JSON."""
+    """Write trace rows as newline-delimited JSON.
+
+    Classifier metadata is supposed to be primitive JSON, but using default=str
+    makes the trace writer resilient to future metadata that carries enums,
+    paths, or tiny helper dataclasses.
+    """
     out = Path(path)
     out.parent.mkdir(parents=True, exist_ok=True)
     with out.open("w", encoding="utf-8") as f:
         for row in rows:
-            f.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
+            f.write(
+                json.dumps(row, ensure_ascii=False, sort_keys=True, default=str) + "\n"
+            )
