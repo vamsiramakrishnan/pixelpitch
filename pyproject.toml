@@ -49,6 +49,11 @@ packages = ["slidify"]
 [tool.hatch.build.targets.wheel.force-include]
 "slidify/patterns/data/tailwind.json" = "slidify/patterns/data/tailwind.json"
 "slidify/patterns/data/patterns.yaml" = "slidify/patterns/data/patterns.yaml"
+"slidify/guides/authoring.md" = "slidify/guides/authoring.md"
+"slidify/guides/agent-quickstart.md" = "slidify/guides/agent-quickstart.md"
+"slidify/guides/troubleshooting.md" = "slidify/guides/troubleshooting.md"
+"slidify/guides/binary.md" = "slidify/guides/binary.md"
+"slidify/guides/api.md" = "slidify/guides/api.md"
 
 [tool.ruff]
 line-length = 100
