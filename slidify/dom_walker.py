@@ -80,6 +80,26 @@ WALKER_JS = r"""
             if (node.nodeType === 3) {
                 const txt = node.textContent || '';
                 if (!txt) continue;
+                // Capture browser-derived line boxes for this text node via
+                // Range.getClientRects(). Each rect is one visual line at
+                // its exact rendered position. The Python emitter uses
+                // these as ground truth so a wrapped headline lands at the
+                // pixel-precise lines the source rendered, instead of
+                // being squeezed into the unit's bbox and re-flowed.
+                let lineBoxes = [];
+                try {
+                    const r = document.createRange();
+                    r.selectNodeContents(node);
+                    const rects = r.getClientRects();
+                    for (const rect of rects) {
+                        if (rect.width > 0 && rect.height > 0) {
+                            lineBoxes.push({
+                                x: rect.x, y: rect.y,
+                                w: rect.width, h: rect.height,
+                            });
+                        }
+                    }
+                } catch (_) {}
                 out.push({
                     text: txt,
                     font_family: cs.fontFamily,
@@ -90,6 +110,7 @@ WALKER_JS = r"""
                     italic: cs.fontStyle === 'italic',
                     underline: cs.textDecorationLine && cs.textDecorationLine.includes('underline'),
                     is_break: false,
+                    line_boxes: lineBoxes,
                 });
             } else if (node.nodeType === 1) {
                 if (node.tagName === 'BR') {
@@ -178,6 +199,13 @@ WALKER_JS = r"""
                 const allShapes = Array.from(
                     el.querySelectorAll('path, polygon, polyline, circle, rect, ellipse, line')
                 ).filter(s => !inDefs(s));
+                // Capture <text> children too — slidify emits these as
+                // textboxes alongside the freeform shapes. Without this,
+                // brutalist schematics / chart axis labels / annotated
+                // callouts render their boxes/lines but lose every label.
+                const allTexts = Array.from(
+                    el.querySelectorAll('text')
+                ).filter(t => !inDefs(t));
                 svgPathCount = allShapes.length;
                 // Capture geometry for SVGs up to ~30 primitives. Architecture
                 // diagrams, dashboard charts and process flows routinely
@@ -195,7 +223,8 @@ WALKER_JS = r"""
                                      fill: s.getAttribute('fill') || sCs.fill || 'none',
                                      stroke: s.getAttribute('stroke') || sCs.stroke || 'none',
                                      stroke_width: parseFloat(s.getAttribute('stroke-width') || sCs.strokeWidth || '0') || 0,
-                                     fill_opacity: parseFloat(s.getAttribute('fill-opacity') || sCs.fillOpacity || '1') };
+                                     fill_opacity: parseFloat(s.getAttribute('fill-opacity') || sCs.fillOpacity || '1'),
+                                     stroke_opacity: parseFloat(s.getAttribute('stroke-opacity') || sCs.strokeOpacity || '1') };
                         if (s.tagName === 'rect') {
                             ss.x = parseFloat(s.getAttribute('x') || '0');
                             ss.y = parseFloat(s.getAttribute('y') || '0');
@@ -223,6 +252,25 @@ WALKER_JS = r"""
                             ss.d = s.getAttribute('d') || '';
                         }
                         svgShapes.push(ss);
+                    }
+                    // Add <text> children alongside the shapes. Each
+                    // captured with attribute coords + computed style
+                    // (font / size / fill / anchor) so the emitter can
+                    // place a PPTX textbox at the right pixel.
+                    for (const t of allTexts) {
+                        const tcs = getComputedStyle(t);
+                        svgShapes.push({
+                            tag: 'text',
+                            text: t.textContent || '',
+                            x: parseFloat(t.getAttribute('x') || '0'),
+                            y: parseFloat(t.getAttribute('y') || '0'),
+                            font_size: parseFloat(t.getAttribute('font-size') || tcs.fontSize || '14') || 14,
+                            font_weight: t.getAttribute('font-weight') || tcs.fontWeight || '400',
+                            font_family: tcs.fontFamily || 'Inter',
+                            font_style: tcs.fontStyle || 'normal',
+                            fill: t.getAttribute('fill') || tcs.fill || '#000',
+                            text_anchor: t.getAttribute('text-anchor') || 'start',
+                        });
                     }
                     // Embed _svgRect on every shape dict — JS array
                     // properties don't survive JSON serialization, but
@@ -345,6 +393,12 @@ async def walk(page: Page) -> list[DomElement]:
                         italic=r.get("italic", False),
                         underline=r.get("underline", False),
                         is_break=r.get("is_break", False),
+                        line_boxes=[
+                            BoundingBox(
+                                x=lb["x"], y=lb["y"], w=lb["w"], h=lb["h"]
+                            )
+                            for lb in (r.get("line_boxes") or [])
+                        ],
                     )
                     for r in (entry.get("runs") or [])
                 ] if entry.get("runs") else None,
@@ -374,6 +428,7 @@ async def walk(page: Page) -> list[DomElement]:
                 pptx_notes=entry["pptx_notes"],
                 aria_label=entry["aria_label"],
                 stable_selector=entry["stable_selector"],
+                decorate_hint=entry.get("decorate_hint", ""),
             )
         )
     return elements

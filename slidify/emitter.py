@@ -43,6 +43,8 @@ from slidify.shadows import apply_shadows, parse_box_shadows
 from slidify.svg_shapes import emit_svg_shapes
 from slidify.text_metrics import (
     compute_font_scale_for_textbox,
+    estimate_wrapped_lines,
+    genre_for_family,
     shrink_pill_bbox_to_fit_text,
 )
 
@@ -101,6 +103,62 @@ def _emu_rect(b: BoundingBox) -> tuple[Emu, Emu, Emu, Emu]:
         Emu(px_to_emu(b.w)),
         Emu(px_to_emu(b.h)),
     )
+
+
+def _grow_bbox_for_fallback_wrap(
+    bbox: BoundingBox,
+    text: str,
+    font_size_pt: float,
+    font_family: str | None,
+    line_height_factor: float = 1.25,
+    max_lines: int = 4,
+) -> BoundingBox:
+    """If ``text`` would wrap to N lines at ``bbox.w`` with the genre-
+    appropriate fallback font but ``bbox.h`` only fits 1 line, grow
+    ``bbox.h`` to fit those N lines.
+
+    Background: slidify pulls bboxes from ``getBoundingClientRect()`` in
+    headless Chrome. When the source font isn't installed (e.g. Source
+    Serif Pro on a CI box that only has DejaVu Serif), the browser
+    rendered the headline as one line at width W. The PPTX gets a
+    1-line-tall textbox. LibreOffice opens the PPTX with its OWN
+    fallback (DejaVu Serif Bold for serif, ~15% wider than the browser's
+    fallback), and the text now genuinely needs to wrap. With a 1-line
+    bbox, the wrapped lines clip OR overflow horizontally past the bbox
+    into the next column. Either way the slide diverges.
+
+    Growing the bbox vertically is a defensive correction — the
+    extra space is invisible when the text really does fit (since
+    ``word_wrap=true`` only consumes what it needs). ``max_lines``
+    bounds the growth so a runaway misestimate can't push N lines into
+    the next layout band.
+
+    Skipped for *titles* (>= 24pt). Display headlines are designed to
+    sit on one line; if they overflow we lean on per-run ``<a:rPr sz=>``
+    shrink (see ``_apply_textframe_wrap_and_scale``) so the layout
+    keeps its visual rhythm. Body / caption text is what benefits from
+    vertical growth.
+    """
+    if not text or font_size_pt <= 0:
+        return bbox
+    if font_size_pt >= 24.0:
+        # Display headline — shrink-to-fit is the right tool, not wrap.
+        return bbox
+    line_height_px = font_size_pt * 1.333 * line_height_factor
+    if bbox.h >= line_height_px * 2:
+        return bbox  # already multi-line; trust the source.
+    genre = genre_for_family(font_family)
+    try:
+        n_lines = estimate_wrapped_lines(
+            text, bbox_w_px=bbox.w, font_size_pt=font_size_pt, genre=genre
+        )
+    except Exception:
+        return bbox
+    if n_lines <= 1:
+        return bbox
+    n_lines = min(n_lines, max_lines)
+    new_h = max(bbox.h, n_lines * line_height_px)
+    return BoundingBox(x=bbox.x, y=bbox.y, w=bbox.w, h=new_h)
 
 
 def _emu_rect_offcanvas(b: BoundingBox) -> tuple[Emu, Emu, Emu, Emu]:
@@ -256,6 +314,20 @@ class Emitter:
         if kind == DecisionKind.Skip:
             return
 
+        # Skip shapes whose bbox is entirely off the slide canvas. Without
+        # this, source HTML that overflows (CSS overflow:hidden hides it
+        # in the browser; the bboxes still get captured) emits dozens of
+        # h=1 placeholder shapes clamped to y=719. They aren't visible
+        # but bloat shape count and confuse the oracle's region attribution.
+        b = op.bbox
+        if (
+            b.y >= SLIDE_H_PX
+            or b.x >= SLIDE_W_PX
+            or b.y + b.h <= 0
+            or b.x + b.w <= 0
+        ):
+            return
+
         if kind == DecisionKind.NativeText:
             self._emit_native_text(slide, unit, op)
             return
@@ -317,13 +389,22 @@ class Emitter:
         anchor = self._pick_text_anchor(unit)
         if anchor is None:
             return
+        # Browser-derived line boxes (`Range.getClientRects()`) give the
+        # exact pixel rectangles each text run occupied in the source
+        # render. When we have them, prefer the UNION bbox of all line
+        # boxes over the unit's bbox — the unit bbox is the CSS box-model
+        # container, which is often padded or oversized vs. the actual
+        # text. The union is the truth: where the type really sat.
+        emit_bbox = _union_line_box(unit) or op.bbox
+
         # Give multi-run inline text containers some horizontal slack so font
         # substitution doesn't wrap them. CSS sizes flex-item widths by their
         # content; PPTX uses fixed bboxes, so a "slidify · v1.0" inline-flex
         # container that fit in 102px in Chromium overflows in Calibri. Grow
         # the bbox by 30% horizontally — only for short multi-run frames where
-        # the wrap risk is real.
-        emit_bbox = op.bbox
+        # the wrap risk is real. SKIP this when we have line boxes — those
+        # are already the truth.
+        skip_slack = _union_line_box(unit) is not None
         # Naked inline text only — if the anchor paints its own background
         # (a pill, a chip, a trend tag) the slack would stretch that fill
         # past the text and leave a visible "tail" rectangle.
@@ -338,6 +419,7 @@ class Emitter:
             and op.bbox.h <= 48
             and op.bbox.w <= 320
             and not anchor_paints_bg
+            and not skip_slack
         ):
             extra = op.bbox.w * 0.30
             emit_bbox = BoundingBox(
@@ -457,6 +539,7 @@ class Emitter:
         # Pre-compute fontScale + wrap policy. Single-line textboxes get
         # `wrap=none` so the wider fallback font doesn't reflow text into
         # a phantom second line; multi-paragraph textboxes keep wrapping.
+        font_scale = 1.0
         try:
             scale_runs: list[tuple[str, float]] = []
             for e in para_targets:
@@ -465,8 +548,9 @@ class Emitter:
                     continue
                 scale_runs.append((t, max(8.0, parse_pt(e.font_size))))
             if scale_runs:
-                self._apply_textframe_wrap_and_scale(
-                    tf, scale_runs, emit_bbox.w, emit_bbox.h
+                font_scale = self._apply_textframe_wrap_and_scale(
+                    tf, scale_runs, emit_bbox.w, emit_bbox.h,
+                    genre=genre_for_family(anchor.font_family),
                 )
         except Exception:
             pass
@@ -481,7 +565,9 @@ class Emitter:
                 first = False
                 p.alignment = _TEXT_ALIGN_MAP.get(e.text_align, PP_ALIGN.LEFT)
                 for run_spec in para_runs:
-                    self._add_styled_run(p, run_spec, fallback_el=e)
+                    self._add_styled_run(
+                        p, run_spec, fallback_el=e, font_scale=font_scale
+                    )
 
         # Decoration layer (ABOVE): rim highlight / hairline / inset glow.
         if not deco_stack.is_empty():
@@ -502,12 +588,14 @@ class Emitter:
         tf.margin_top = Emu(0)
         tf.margin_bottom = Emu(0)
         # Per-element font-metrics + wrap policy.
+        font_scale = 1.0
         try:
             text = (e.pptx_text or e.text or "").strip()
             if text:
                 pt_size = max(8.0, parse_pt(e.font_size))
-                self._apply_textframe_wrap_and_scale(
-                    tf, [(text, pt_size)], e.bbox.w, e.bbox.h
+                font_scale = self._apply_textframe_wrap_and_scale(
+                    tf, [(text, pt_size)], e.bbox.w, e.bbox.h,
+                    genre=genre_for_family(e.font_family),
                 )
         except Exception:
             pass
@@ -520,7 +608,9 @@ class Emitter:
             first = False
             p.alignment = _TEXT_ALIGN_MAP.get(e.text_align, PP_ALIGN.LEFT)
             for run_spec in para_runs:
-                self._add_styled_run(p, run_spec, fallback_el=e)
+                self._add_styled_run(
+                    p, run_spec, fallback_el=e, font_scale=font_scale
+                )
 
     def _apply_textframe_wrap_and_scale(
         self,
@@ -528,18 +618,35 @@ class Emitter:
         runs: list[tuple[str, float]],
         bbox_w_px: float,
         bbox_h_px: float,
-    ) -> None:
-        """Set wrap policy + explicit normAutofit fontScale on a textframe.
+        genre: str | None = None,
+    ) -> float:
+        """Set wrap policy + explicit fontScale for a textframe.
 
         Single-line textboxes (height <= 1.5 line-heights of the largest
         run) get ``wrap=none``: even if the fallback font happens to be
         slightly wider than fonttools predicts, the text won't reflow
         into a phantom second line that overlaps the next vertical row.
-        Then bake in normAutofit fontScale so PPT clients shrink to fit
-        instead of letting LibreOffice's wider Liberation Sans wrap.
+
+        Returns the font_scale (1.0 = no shrink, 0.91 = 9% shrink) the
+        caller should multiply each per-run pt size by. We return a bake-
+        scale (instead of always emitting ``<a:normAutofit fontScale=>``)
+        because LibreOffice **silently ignores** ``normAutofit``'s
+        ``fontScale`` when ``bodyPr.wrap="none"`` — the headline overflows
+        the slide and the renderer clips at the canvas edge instead of
+        shrinking to fit (slide-13 "Pro, in the smallest possible frame.").
+        Baking the scale into ``<a:rPr sz=...>`` works in every renderer.
+
+        ``genre`` ("serif" / "mono" / "sans") routes the autofit
+        measurement to a genre-matched fallback font — without this a
+        Source Serif Pro headline measured against Liberation Sans
+        under-counts by ~15% and skips the shrink that would have kept
+        it in-bbox.
+
+        For multi-line wrapping textboxes we keep emitting ``normAutofit`` so
+        PowerPoint's runtime shrink-to-fit still applies in the wrapped case.
         """
         if not runs:
-            return
+            return 1.0
         max_pt = max(pt for _, pt in runs) if runs else 12.0
         # Approximate line-height factor; CSS default is 1.2.
         line_height_px = max_pt * 1.333 * 1.2
@@ -547,8 +654,6 @@ class Emitter:
 
         if is_single_line:
             try:
-                from lxml import etree as _et
-
                 bodyPr = tf._txBody.bodyPr  # noqa: SLF001
                 bodyPr.set("wrap", "none")
             except Exception:
@@ -556,14 +661,21 @@ class Emitter:
 
         try:
             scale = compute_font_scale_for_textbox(
-                runs, bbox_w_px=bbox_w_px, bbox_h_px=bbox_h_px
+                runs, bbox_w_px=bbox_w_px, bbox_h_px=bbox_h_px, genre=genre
             )
-            if scale.needs_autofit:
-                _apply_explicit_autofit(
-                    tf, scale.font_scale_pct, scale.line_space_reduction_pct
-                )
+            if not scale.needs_autofit:
+                return 1.0
+            if is_single_line:
+                # Bake into rPr — normAutofit is dropped by LibreOffice when
+                # wrap=none, and would conflict with the per-run sz anyway.
+                return scale.font_scale_pct / 100_000.0
+            # Multi-line: normAutofit is honored; let the renderer shrink.
+            _apply_explicit_autofit(
+                tf, scale.font_scale_pct, scale.line_space_reduction_pct
+            )
+            return 1.0
         except Exception:
-            pass
+            return 1.0
 
     def _element_to_paragraphs(
         self, e: DomElement
@@ -617,13 +729,26 @@ class Emitter:
             ]
         ]
 
-    def _add_styled_run(self, paragraph, spec: dict, fallback_el: DomElement) -> None:
+    def _add_styled_run(
+        self,
+        paragraph,
+        spec: dict,
+        fallback_el: DomElement,
+        font_scale: float = 1.0,
+    ) -> None:
         run = paragraph.add_run()
         run.text = spec["text"]
         font = run.font
         font.name = resolve_font(spec.get("font_family") or fallback_el.font_family)
         size_px = spec.get("font_size") or fallback_el.font_size
-        font.size = Pt(max(8.0, parse_pt(size_px)))
+        # Bake font_scale into the per-run pt size when the textframe asked
+        # us to (single-line `wrap=none` boxes — see
+        # `_apply_textframe_wrap_and_scale` for the rationale). We never
+        # shrink below 8pt to keep small footers / kickers readable; the
+        # scale is meant for headline-class text where 5–10% shrink avoids
+        # canvas-edge clipping under the wider fallback font.
+        pt = parse_pt(size_px) * max(0.1, font_scale)
+        font.size = Pt(max(8.0, pt))
         font.bold = is_bold(spec.get("font_weight") or fallback_el.font_weight)
         font.italic = bool(spec.get("italic"))
         font.underline = bool(spec.get("underline"))
@@ -1047,6 +1172,47 @@ def _shape_kind_for_anchor(anchor: DomElement, radius_px: float):
         if radius_px >= min(w, h) * 0.45:
             return MSO_SHAPE.OVAL
     return MSO_SHAPE.ROUNDED_RECTANGLE if radius_px > 0 else MSO_SHAPE.RECTANGLE
+
+
+def _union_line_box(unit: VisualUnit) -> BoundingBox | None:
+    """Return the union of every text run's line boxes inside `unit`.
+
+    The walker captures `Range.getClientRects()` per text node — each
+    rect is a visual line at its exact rendered pixel position. The
+    union is where the type ACTUALLY sat in the source, regardless of
+    the CSS box-model container's bbox (which is often oversized due
+    to padding / line-height overhead).
+
+    Leaf-text elements (a plain `<h1>Thank you.</h1>` with no inline
+    children) carry text on the element itself rather than as a list
+    of runs, so the walker doesn't capture per-run line_boxes for
+    them. Without falling back to ``el.bbox`` for those, a unit
+    containing both a leaf `<h1>` and a multi-run `<div class="sub">`
+    would compute its emit bbox from the sub's lines alone — clipping
+    the headline to the subtitle's height (slide-17 "Thank you." at
+    180px shrunk into a 29px tall textbox).
+
+    Returns None when no text-bearing element exists in the unit.
+    """
+    boxes: list[BoundingBox] = []
+    for el in unit.all_elements():
+        if el.runs:
+            for r in el.runs:
+                if r.is_break:
+                    continue
+                boxes.extend(r.line_boxes)
+        elif el.text and el.text.strip():
+            # Leaf text: walker doesn't expose per-line rects, but the
+            # element's own bbox is a tight fit for the rendered glyphs
+            # (CSS line-height defines the box height directly).
+            boxes.append(el.bbox)
+    if not boxes:
+        return None
+    minx = min(b.x for b in boxes)
+    miny = min(b.y for b in boxes)
+    maxx = max(b.x + b.w for b in boxes)
+    maxy = max(b.y + b.h for b in boxes)
+    return BoundingBox(x=minx, y=miny, w=maxx - minx, h=maxy - miny)
 
 
 def _are_spatially_distinct(elems: list[DomElement]) -> bool:
