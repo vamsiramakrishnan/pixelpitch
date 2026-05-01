@@ -12,6 +12,7 @@ from slidify.dom_walker import SVG_NATIVE_PATH_BUDGET
 from slidify.geom import parse_px
 from slidify.gradients import parse_gradient
 from slidify.models import Decision, DecisionKind, UnitKind, VisualUnit
+from slidify.preset_shapes import clip_path_to_preset
 from slidify.shadows import is_translatable_shadow
 from slidify.svg_shapes import is_translatable_svg
 
@@ -106,6 +107,22 @@ def _has_filter(unit: VisualUnit) -> bool:
 
 def _has_clip_path(unit: VisualUnit) -> bool:
     return any(e.clip_path and e.clip_path != "none" for e in unit.all_elements())
+
+
+def _has_untranslatable_clip_path(unit: VisualUnit) -> bool:
+    """True iff any element has a clip-path that doesn't map to a PPTX preset.
+
+    inset(), circle(), and a handful of polygon() shapes are emit-time
+    translatable via `slidify.preset_shapes`; any other expression
+    (path(), url(#mask), unrecognized polygon) still forces raster.
+    """
+    for e in unit.all_elements():
+        cp = e.clip_path
+        if not cp or cp == "none":
+            continue
+        if clip_path_to_preset(cp, e.bbox) is None:
+            return True
+    return False
 
 
 def _has_mix_blend_mode(unit: VisualUnit) -> bool:
@@ -400,14 +417,20 @@ def rule_filter_raster(unit: VisualUnit) -> Decision | None:
 
 
 def rule_clip_path_raster(unit: VisualUnit) -> Decision | None:
-    if _has_clip_path(unit):
-        return Decision(
-            kind=DecisionKind.Raster,
-            confidence=0.9,
-            reason="clip_path",
-            source_tier="tier1",
-        )
-    return None
+    if not _has_clip_path(unit):
+        return None
+    if not _has_untranslatable_clip_path(unit):
+        # All clip-paths in this unit map to PPTX preset shapes — defer to
+        # the native rules (plain_rectangle / leaf_text / etc.) so the
+        # emitter can render `inset()` / `circle()` / common `polygon()`
+        # via MSO_SHAPE primitives instead of rasterizing the unit.
+        return None
+    return Decision(
+        kind=DecisionKind.Raster,
+        confidence=0.9,
+        reason="clip_path",
+        source_tier="tier1",
+    )
 
 
 def rule_pptx_unsupported_raster(unit: VisualUnit) -> Decision | None:

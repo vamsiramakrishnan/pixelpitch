@@ -11,12 +11,15 @@ from pptx.enum.shapes import MSO_SHAPE
 from slidify.models import BoundingBox, DomElement
 
 __all__ = [
+    "KNOWN_PRESETS",
     "PresetMatch",
+    "classify_polygon",
+    "clip_path_to_preset",
     "detect_preset_shape",
     "emit_preset",
-    "KNOWN_PRESETS",
+    "parse_circle_clip_path",
+    "parse_inset_clip_path",
     "parse_polygon_clip_path",
-    "classify_polygon",
 ]
 
 
@@ -26,6 +29,10 @@ class PresetMatch:
     rotation_deg: float = 0.0
     confidence: float = 1.0
     reason: str = ""
+    # When set, the emitter should place the shape at this absolute bbox
+    # instead of the source element's bbox — used by `clip-path: inset(...)`
+    # and `clip-path: circle(...)` which shrink the visible area.
+    bbox_override: BoundingBox | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -330,6 +337,205 @@ def classify_polygon(pts: list[tuple[float, float]]) -> PresetMatch | None:
 
 
 # ---------------------------------------------------------------------------
+# clip-path: inset(...) and circle(...) parsing
+# ---------------------------------------------------------------------------
+
+_INSET_RE = re.compile(r"^\s*inset\s*\(\s*(.*?)\s*\)\s*$", re.IGNORECASE | re.DOTALL)
+_CIRCLE_RE = re.compile(r"^\s*circle\s*\(\s*(.*?)\s*\)\s*$", re.IGNORECASE | re.DOTALL)
+
+
+def _parse_length(s: str, ref: float) -> float | None:
+    """Parse a CSS length ('10%', '20px', '0') to absolute pixels.
+
+    `ref` is the reference dimension used to resolve percentages.
+    """
+    s = s.strip().lower()
+    if not s:
+        return None
+    if s.endswith("%"):
+        try:
+            return float(s[:-1]) / 100.0 * ref
+        except ValueError:
+            return None
+    if s.endswith("px"):
+        try:
+            return float(s[:-2])
+        except ValueError:
+            return None
+    try:
+        return float(s)
+    except ValueError:
+        return None
+
+
+def parse_inset_clip_path(
+    value: str, bbox: BoundingBox
+) -> tuple[BoundingBox, float] | None:
+    """Parse `inset(top right? bottom? left? round radius?)`.
+
+    Returns `(visible_bbox, corner_radius_px)` in absolute coordinates,
+    or None if the expression is not a valid inset().
+    """
+    if not value:
+        return None
+    m = _INSET_RE.match(value)
+    if not m:
+        return None
+    args = m.group(1).strip()
+    if not args:
+        return None
+
+    radius_px = 0.0
+    lower = args.lower()
+    if " round " in lower:
+        idx = lower.index(" round ")
+        radius_part = args[idx + len(" round ") :].strip()
+        args = args[:idx].strip()
+        first = radius_part.split()[0] if radius_part.split() else ""
+        rp = _parse_length(first, min(bbox.w, bbox.h))
+        if rp is not None:
+            radius_px = rp
+
+    parts = args.split()
+    if len(parts) == 1:
+        t = rt = bt = lt = parts[0]
+    elif len(parts) == 2:
+        t, rt = parts
+        bt, lt = t, rt
+    elif len(parts) == 3:
+        t, rt, bt = parts
+        lt = rt
+    elif len(parts) == 4:
+        t, rt, bt, lt = parts
+    else:
+        return None
+
+    top = _parse_length(t, bbox.h)
+    right = _parse_length(rt, bbox.w)
+    bottom = _parse_length(bt, bbox.h)
+    left = _parse_length(lt, bbox.w)
+    if top is None or right is None or bottom is None or left is None:
+        return None
+
+    new_w = max(0.0, bbox.w - left - right)
+    new_h = max(0.0, bbox.h - top - bottom)
+    if new_w <= 0 or new_h <= 0:
+        return None
+    return (
+        BoundingBox(x=bbox.x + left, y=bbox.y + top, w=new_w, h=new_h),
+        radius_px,
+    )
+
+
+def parse_circle_clip_path(value: str, bbox: BoundingBox) -> BoundingBox | None:
+    """Parse `circle(radius? at cx? cy?)` to the absolute bbox of the visible
+    inscribed circle. Returns None if the expression is not a valid circle().
+    """
+    if not value:
+        return None
+    m = _CIRCLE_RE.match(value)
+    if not m:
+        return None
+    inner = m.group(1).strip()
+
+    radius_arg = ""
+    cx_arg: str | None = None
+    cy_arg: str | None = None
+    lower = inner.lower()
+    if " at " in lower:
+        idx = lower.index(" at ")
+        radius_arg = inner[:idx].strip()
+        position = inner[idx + len(" at ") :].strip().split()
+        if len(position) >= 2:
+            cx_arg, cy_arg = position[0], position[1]
+        elif len(position) == 1:
+            cx_arg = cy_arg = position[0]
+    else:
+        radius_arg = inner.strip()
+
+    cx = _parse_length(cx_arg, bbox.w) if cx_arg else bbox.w / 2.0
+    cy = _parse_length(cy_arg, bbox.h) if cy_arg else bbox.h / 2.0
+    if cx is None or cy is None:
+        return None
+
+    radius_arg_l = radius_arg.lower()
+    if radius_arg_l in ("", "closest-side"):
+        radius = min(cx, bbox.w - cx, cy, bbox.h - cy)
+    elif radius_arg_l == "farthest-side":
+        radius = max(cx, bbox.w - cx, cy, bbox.h - cy)
+    else:
+        # Per CSS spec, % radius resolves against
+        # sqrt(w^2 + h^2) / sqrt(2). For square boxes this equals the side
+        # length, so circle(50%) of a 100x100 box is a radius-50 circle —
+        # i.e., the inscribed circle, which is the common author intent.
+        if radius_arg.endswith("%"):
+            try:
+                pct = float(radius_arg[:-1]) / 100.0
+            except ValueError:
+                return None
+            radius = pct * math.sqrt(bbox.w * bbox.w + bbox.h * bbox.h) / math.sqrt(2)
+        else:
+            r = _parse_length(radius_arg, min(bbox.w, bbox.h))
+            if r is None:
+                return None
+            radius = r
+
+    if radius <= 0:
+        return None
+    return BoundingBox(
+        x=bbox.x + cx - radius,
+        y=bbox.y + cy - radius,
+        w=2 * radius,
+        h=2 * radius,
+    )
+
+
+def clip_path_to_preset(value: str, bbox: BoundingBox) -> PresetMatch | None:
+    """Map any `clip-path` value to a PresetMatch, or None if untranslatable.
+
+    Handles:
+      - `polygon(...)` via the existing classifier
+      - `inset(...)` -> RECTANGLE / ROUNDED_RECTANGLE (with bbox shrink)
+      - `circle(...)` -> OVAL (with bbox shrink to inscribed square)
+    """
+    if not value or value.strip().lower() == "none":
+        return None
+    v = value.strip()
+
+    inset = parse_inset_clip_path(v, bbox)
+    if inset is not None:
+        new_bbox, radius_px = inset
+        if radius_px > 0:
+            return PresetMatch(
+                preset=MSO_SHAPE.ROUNDED_RECTANGLE,
+                confidence=0.9,
+                reason="clip_path inset round",
+                bbox_override=new_bbox,
+            )
+        return PresetMatch(
+            preset=MSO_SHAPE.RECTANGLE,
+            confidence=0.95,
+            reason="clip_path inset",
+            bbox_override=new_bbox,
+        )
+
+    circle = parse_circle_clip_path(v, bbox)
+    if circle is not None:
+        return PresetMatch(
+            preset=MSO_SHAPE.OVAL,
+            confidence=0.95,
+            reason="clip_path circle",
+            bbox_override=circle,
+        )
+
+    pts = parse_polygon_clip_path(v)
+    if pts is not None:
+        return classify_polygon(pts)
+
+    return None
+
+
+# ---------------------------------------------------------------------------
 # border-radius helpers
 # ---------------------------------------------------------------------------
 
@@ -408,14 +614,12 @@ def _resolve_border_radius(el: DomElement) -> str:
 def detect_preset_shape(el: DomElement) -> PresetMatch | None:
     """Detect a non-rectangular MSO preset for this element, or None."""
 
-    # 1. clip-path: polygon(...)
+    # 1. clip-path: polygon(...) / inset(...) / circle(...)
     clip = _resolve_clip_path(el)
     if clip:
-        pts = parse_polygon_clip_path(clip)
-        if pts is not None:
-            match = classify_polygon(pts)
-            if match is not None:
-                return match
+        match = clip_path_to_preset(clip, el.bbox)
+        if match is not None:
+            return match
 
     # 2. CSS class hints
     if el.cls:
