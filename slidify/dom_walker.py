@@ -374,6 +374,7 @@ async def walk(page: Page) -> list[DomElement]:
                 pptx_notes=entry["pptx_notes"],
                 aria_label=entry["aria_label"],
                 stable_selector=entry["stable_selector"],
+                decorate_hint=entry.get("decorate_hint", ""),
             )
         )
     return elements
