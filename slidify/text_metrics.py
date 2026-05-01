@@ -33,6 +33,8 @@ __all__ = [
 
 # 1pt = 1/72in, 1px = 1/96in, so 1pt = 96/72 = 1.333... px
 _PX_PER_PT = 96.0 / 72.0
+_SKIA_BACKEND = "skia"
+_FONTTOOLS_BACKEND = "fonttools"
 
 
 @dataclass
@@ -116,6 +118,10 @@ def measure_text(
 ) -> TextMetrics:
     """Measure a text string in the given font at the given pt size."""
     fp = str(Path(font_path))
+    if _text_metrics_backend() == _SKIA_BACKEND:
+        skia_metrics = _measure_text_skia(text, fp, size_pt)
+        if skia_metrics is not None:
+            return skia_metrics
     upem = _font_unitsperem(fp)
     px_per_unit = (size_pt / upem) * _PX_PER_PT
     width = _advance_units(fp, text) * px_per_unit
@@ -133,8 +139,43 @@ def measure_text_width_px(
 ) -> float:
     """Convenience — just the advance width in px (1pt = 1.333px)."""
     fp = str(Path(font_path))
+    if _text_metrics_backend() == _SKIA_BACKEND:
+        skia_metrics = _measure_text_skia(text, fp, size_pt)
+        if skia_metrics is not None:
+            return skia_metrics.width_px
     upem = _font_unitsperem(fp)
     return _advance_units(fp, text) * (size_pt / upem) * _PX_PER_PT
+
+
+def _text_metrics_backend() -> str:
+    backend = os.getenv("SLIDIFY_TEXT_METRICS_BACKEND", _FONTTOOLS_BACKEND).strip().lower()
+    if backend in {_FONTTOOLS_BACKEND, _SKIA_BACKEND}:
+        return backend
+    return _FONTTOOLS_BACKEND
+
+
+def _measure_text_skia(text: str, font_path: str, size_pt: float) -> TextMetrics | None:
+    try:
+        import skia  # type: ignore
+    except Exception:
+        return None
+    if not Path(font_path).is_file():
+        return None
+
+    font_mgr = skia.FontMgr()
+    typeface = font_mgr.makeFromFile(font_path)
+    if typeface is None:
+        return None
+    font_size_px = size_pt * _PX_PER_PT
+    font = skia.Font(typeface, font_size_px)
+    width = float(font.measureText(text or ""))
+    metrics = font.getMetrics()
+    return TextMetrics(
+        width_px=width,
+        ascent_px=float(abs(metrics.fAscent)),
+        descent_px=float(metrics.fDescent),
+        line_gap_px=float(metrics.fLeading),
+    )
 
 
 # ----- font discovery -----------------------------------------------------

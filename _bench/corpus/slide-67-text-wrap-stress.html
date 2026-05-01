@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Text Wrap Stress</title>
+  <style>
+    :root { color-scheme: light; }
+    html, body {
+      margin: 0;
+      width: 1366px;
+      height: 768px;
+      font-family: "Inter", "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #0b1020 0%, #1a2451 45%, #1a4d82 100%);
+      color: #eef3ff;
+    }
+    .slide {
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      padding: 56px 68px;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 28px;
+    }
+    h1 { margin: 0; font-size: 56px; line-height: 1.08; letter-spacing: -0.02em; max-width: 1080px; }
+    .subtitle { font-size: 24px; line-height: 1.35; opacity: .92; max-width: 1140px; }
+    .cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; }
+    .card {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 18px;
+      padding: 20px 22px;
+      box-shadow: 0 12px 28px rgba(4,9,22,.28);
+    }
+    .k { font-size: 14px; text-transform: uppercase; letter-spacing: .08em; opacity: .72; margin-bottom: 10px; }
+    .v { font-size: 30px; line-height: 1.18; font-weight: 650; }
+  </style>
+</head>
+<body>
+  <section class="slide">
+    <h1>Operationally, this quarter validated a deliberate “native-first, raster-fallback” strategy for complex slides.</h1>
+    <div class="subtitle">We improved deterministic wrapping across long phrases, numerals (123,456,789), symbols (&amp; + / %), and punctuation-heavy snippets—without sacrificing editability in PowerPoint.</div>
+    <div class="cards">
+      <article class="card"><div class="k">Fidelity</div><div class="v">93.4% average SSIM across stress scenarios with multi-line title/lede structures.</div></article>
+      <article class="card"><div class="k">Editability</div><div class="v">88% of visible area emitted as native text/shape/table primitives.</div></article>
+      <article class="card"><div class="k">Latency</div><div class="v">1.7s median single-slide conversion at standard preview resolution.</div></article>
+    </div>
+  </section>
+</body>
+</html>
