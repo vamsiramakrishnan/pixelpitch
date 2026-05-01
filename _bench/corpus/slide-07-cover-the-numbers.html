@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Numbers · 2026 Edition · Cover</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; -webkit-font-smoothing:antialiased; background:#fafaf6; color:#1a1a1a; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; position:relative; overflow:hidden; padding:48px 56px; font-family:'Source Serif Pro','Tiempos',Georgia,serif; }
+
+  .top-rule { position:absolute; left:56px; right:56px; top:36px; height:1px; background:#1a1a1a; }
+  .masthead { display:flex; justify-content:space-between; align-items:center; padding-top:6px; }
+  .mast-l { font-family:'Inter',Arial,sans-serif; font-size:10px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; }
+  .mast-r { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.08em; color:rgba(0,0,0,0.55); }
+
+  .kicker { font-family:'Inter',Arial,sans-serif; font-size:11px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:#c41e3a; margin-top:48px; }
+  .vol { font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.06em; color:rgba(0,0,0,0.55); margin-top:6px; }
+
+  h1 { font-size:78px; font-weight:700; letter-spacing:-0.02em; line-height:0.98; margin:14px 0 0 0; max-width:1100px; }
+  h1 em { font-style:italic; font-weight:700; color:#c41e3a; }
+
+  .lede { font-family:'Source Serif Pro',Georgia,serif; font-size:20px; font-weight:400; line-height:1.45; max-width:760px; margin:18px 0 0 0; }
+  .lede b { font-weight:700; }
+
+  .preview { position:absolute; left:56px; right:56px; bottom:64px; border-top:1px solid #1a1a1a; padding-top:18px; display:grid; grid-template-columns:170px 1fr 1fr 1fr 1fr; gap:24px; align-items:start; }
+  .preview-h { font-family:'Inter',Arial,sans-serif; font-size:10px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; }
+  .preview-sub { font-family:'Source Serif Pro',Georgia,serif; font-size:12px; font-style:italic; color:rgba(0,0,0,0.7); margin-top:6px; line-height:1.4; }
+
+  .stat { border-left:1px solid rgba(0,0,0,0.12); padding-left:18px; }
+  .stat-label { font-family:'Inter',Arial,sans-serif; font-size:9px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:rgba(0,0,0,0.55); }
+  .stat-num { font-family:'Source Serif Pro',Georgia,serif; font-weight:700; font-size:34px; letter-spacing:-0.02em; line-height:1; margin-top:6px; }
+  .stat-num small { font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:14px; letter-spacing:0; color:#1a1a1a; margin-left:4px; }
+  .stat-cap { font-family:'Source Serif Pro',Georgia,serif; font-size:11px; font-style:italic; color:rgba(0,0,0,0.7); margin-top:6px; line-height:1.4; }
+  .stat-spark { margin-top:8px; }
+  .stat-delta { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; margin-top:4px; }
+  .delta-up { color:#c41e3a; }
+  .delta-down { color:#1e5f8c; }
+
+  .src { position:absolute; left:56px; bottom:18px; font-family:'Inter',Arial,sans-serif; font-size:10px; color:rgba(0,0,0,0.55); border:1px solid #1a1a1a; padding:4px 8px; }
+  .figno { position:absolute; right:56px; bottom:18px; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.08em; color:rgba(0,0,0,0.55); }
+
+  .corner { position:absolute; right:56px; top:140px; width:240px; }
+  .corner-cap { font-family:'Inter',Arial,sans-serif; font-size:10px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:rgba(0,0,0,0.7); margin-bottom:8px; }
+  .corner-cite { font-family:'Source Serif Pro',Georgia,serif; font-size:13px; font-style:italic; line-height:1.45; color:#1a1a1a; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="top-rule"></div>
+  <div class="masthead">
+    <div class="mast-l">The Times Editorial Graphics · 2026 Annual</div>
+    <div class="mast-r">VOL. XII · APRIL 30 · NEW YORK</div>
+  </div>
+
+  <div class="kicker">Cover · The year, in seven charts</div>
+  <div class="vol">A reporting project · 1,412 datapoints · 7 stories</div>
+
+  <h1 data-pptx-role="title">The numbers that <em>describe</em> the year, before the year describes itself.</h1>
+
+  <p class="lede">Wages and prices crossed. Newsrooms thinned. Broadband still missed twenty-three percent of the rural map. The federal deficit was either historic or routine — depending which axis you trusted. <b>Below: the dataset behind everything that follows.</b></p>
+
+  <div class="corner">
+    <div class="corner-cap">Editor's note</div>
+    <div class="corner-cite">"Numbers in this deck are rounded for the page; the long forms live in the appendix. Where two sources disagreed by less than 2%, we preferred the federal series."</div>
+  </div>
+
+  <div class="preview">
+    <div>
+      <div class="preview-h">Tiny dataset preview</div>
+      <div class="preview-sub">Five headline figures from the seven slides that follow. Each is the lede of its own chart.</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label">Wage / CPI gap</div>
+      <div class="stat-num">6<small>pts</small></div>
+      <div class="stat-delta delta-up">CPI ahead, 2024</div>
+      <div class="stat-spark">
+        <svg width="160" height="32" viewBox="0 0 160 32" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="28" x2="160" y2="28" stroke="rgba(0,0,0,0.06)"/>
+          <polyline points="0,24 22,22 44,18 66,16 88,12 110,8 132,4 160,2" fill="none" stroke="#c41e3a" stroke-width="1.5"/>
+          <polyline points="0,24 22,22 44,20 66,17 88,13 110,8 132,3 160,0" fill="none" stroke="#1e5f8c" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="stat-cap">Slide 01 · State of the union</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label">2024 deficit</div>
+      <div class="stat-num">$1.83<small>T</small></div>
+      <div class="stat-delta delta-up">+33% YoY (nominal)</div>
+      <div class="stat-spark">
+        <svg width="160" height="32" viewBox="0 0 160 32" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="28" x2="160" y2="28" stroke="rgba(0,0,0,0.06)"/>
+          <rect x="0"   y="22" width="14" height="6"  fill="#c41e3a"/>
+          <rect x="22"  y="20" width="14" height="8"  fill="#c41e3a"/>
+          <rect x="44"  y="16" width="14" height="12" fill="#c41e3a"/>
+          <rect x="66"  y="2"  width="14" height="26" fill="#c41e3a"/>
+          <rect x="88"  y="12" width="14" height="16" fill="#c41e3a"/>
+          <rect x="110" y="18" width="14" height="10" fill="#c41e3a"/>
+          <rect x="132" y="6"  width="14" height="22" fill="#c41e3a"/>
+        </svg>
+      </div>
+      <div class="stat-cap">Slide 02 · Two-up scaling</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label">Rents, Boise</div>
+      <div class="stat-num">+78<small>%</small></div>
+      <div class="stat-delta delta-up">since Jan 2019</div>
+      <div class="stat-spark">
+        <svg width="160" height="32" viewBox="0 0 160 32" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="28" x2="160" y2="28" stroke="rgba(0,0,0,0.06)"/>
+          <polyline points="0,28 27,26 54,22 80,12 107,4 134,2 160,4" fill="none" stroke="#c41e3a" stroke-width="1.5"/>
+          <circle cx="160" cy="4" r="2.5" fill="#c41e3a"/>
+        </svg>
+      </div>
+      <div class="stat-cap">Slide 03 · Six cities, one axis</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label">Newspapers lost</div>
+      <div class="stat-num">2,886</div>
+      <div class="stat-delta delta-down">2005 → 2024</div>
+      <div class="stat-spark">
+        <svg width="160" height="32" viewBox="0 0 160 32" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="28" x2="160" y2="28" stroke="rgba(0,0,0,0.06)"/>
+          <polyline points="0,2 27,6 54,12 80,16 107,20 134,24 160,26" fill="none" stroke="#1e5f8c" stroke-width="1.5"/>
+          <circle cx="0" cy="2" r="2.5" fill="#1e5f8c"/>
+          <circle cx="160" cy="26" r="2.5" fill="#1e5f8c"/>
+        </svg>
+      </div>
+      <div class="stat-cap">Slide 04 · The quiet collapse</div>
+    </div>
+  </div>
+
+  <div class="src">Source · This deck. Files: slides 01–07 · Reporting window: Q4 2024 — Q1 2026</div>
+  <div class="figno">FIG. 07 / 07</div>
+</div>
+</body>
+</html>

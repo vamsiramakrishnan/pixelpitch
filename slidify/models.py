@@ -50,6 +50,23 @@ class BoundingBox(BaseModel):
         return self.intersect_area(other) / denom
 
 
+class TextRun(BaseModel):
+    """A single styled run inside a text container (per-span styling)."""
+
+    text: str
+    font_family: str = ""
+    font_size: str = "16px"
+    font_weight: str = "400"
+    color: str = "rgb(0, 0, 0)"
+    # Run's parent computed background-image. When color is transparent and
+    # bg-image is a gradient, the emitter reads this to pick a solid color
+    # fallback (gradient-clipped text → solid color).
+    background_image: str = "none"
+    italic: bool = False
+    underline: bool = False
+    is_break: bool = False
+
+
 class DomElement(BaseModel):
     """One DOM element snapshot from the in-page walker."""
 
@@ -71,7 +88,15 @@ class DomElement(BaseModel):
     box_shadow: str = "none"
     filter: str = "none"
     clip_path: str = "none"
+    # PPTX-unsupported CSS — captured so the classifier can route the
+    # whole unit to a raster fallback rather than emit a half-broken
+    # native shape.
+    mix_blend_mode: str = "normal"
+    backdrop_filter: str = "none"
+    background_clip: str = "border-box"
     text: str | None = None
+    is_text_container: bool = False
+    runs: list[TextRun] | None = None
     font_family: str = ""
     font_size: str = "16px"
     font_weight: str = "400"
@@ -82,12 +107,15 @@ class DomElement(BaseModel):
     has_after: bool = False
     before_content: str | None = None
     after_content: str | None = None
+    pseudo_before_style: dict | None = None
+    pseudo_after_style: dict | None = None
     is_canvas: bool = False
     is_svg: bool = False
     is_img: bool = False
     is_video: bool = False
     img_src: str | None = None
     svg_path_count: int = 0
+    svg_shapes: list[dict] | None = None
     pptx_role: str | None = None
     pptx_rasterize: bool = False
     pptx_skip: bool = False
@@ -95,6 +123,10 @@ class DomElement(BaseModel):
     pptx_notes: str | None = None
     aria_label: str | None = None
     stable_selector: str = ""
+    # Decoration opt-in: HTML can carry `data-slidify-decorate="hero|glass|tactile|recessed|aurora"`
+    # to request a layered native shape stack at emit time. Empty = no
+    # decoration (the default — heuristics never silently inflate shape count).
+    decorate_hint: str = ""
 
 
 class UnitKind(str, Enum):
@@ -130,6 +162,7 @@ class DecisionKind(str, Enum):
     NativeShape = "native_shape"
     NativeBullet = "native_bullet"
     NativePicture = "native_picture"
+    NativeSvg = "native_svg"  # SVG with translatable primitives
     Raster = "raster"
     Hybrid = "hybrid"
     Skip = "skip"
@@ -171,11 +204,27 @@ class RenderedSlide(BaseModel):
     html: str
     elements: list[DomElement]
     ground_truth_png: bytes
+    # Optional second-pass screenshot taken with every text node blanked.
+    # Captures the *decoration-only* layer — used by surgical-hybrid emission
+    # to crop pixel-exact backgrounds without text bleeding into them.
+    no_text_png: bytes = b""
     viewport_w: int
     viewport_h: int
     notes: str = ""
     degraded: bool = False
     reason: str = ""
+
+
+class UnmatchedSignature(BaseModel):
+    """A unit that no Tier-0 pattern matched. Logged for the corpus harvester."""
+
+    sig: str
+    sig_hash: str
+    bbox_w: int
+    bbox_h: int
+    sample_classes: str = ""
+    sample_text: str = ""
+    n_occurrences: int = 1
 
 
 class ConversionResult(BaseModel):
@@ -188,6 +237,9 @@ class ConversionResult(BaseModel):
     elapsed_seconds: float = 0.0
     cache_hit_rate: float = 0.0
     decisions_by_tier: dict[str, int] = Field(default_factory=dict)
+    pattern_hits: dict[str, int] = Field(default_factory=dict)
+    pattern_coverage: float = 0.0
+    unmatched_signatures: list[UnmatchedSignature] = Field(default_factory=list)
 
 
 VisualUnit.model_rebuild()

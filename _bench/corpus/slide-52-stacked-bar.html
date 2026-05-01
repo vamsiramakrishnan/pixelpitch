@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spend mix by buyer segment</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px; -webkit-font-smoothing:antialiased; background:#f7f5f2; color:#1a1a1a; }
+  .slide { width:1280px; height:720px; box-sizing:border-box; position:relative; overflow:hidden; background:#f7f5f2; }
+  .topbar { position:absolute; left:64px; right:64px; top:24px; display:flex; justify-content:space-between; font-family:'Inter','Helvetica Neue',sans-serif; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#475569; font-weight:600; padding-bottom:10px; border-bottom:1px solid rgba(0,0,0,0.12); }
+  .head { position:absolute; left:64px; top:74px; right:64px; }
+  .eyebrow { font-family:'Inter','Helvetica Neue',sans-serif; font-size:10px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:#0b3a5c; }
+  .rule { width:64px; height:2px; background:#0b3a5c; margin:8px 0 14px 0; }
+  h1 { font-family:'Source Serif Pro','Tiempos',Georgia,serif; font-weight:600; font-size:30px; letter-spacing:-0.01em; line-height:1.18; margin:0; max-width:880px; color:#1a1a1a; }
+  .lede { font-family:'Source Serif Pro',Georgia,serif; font-style:italic; font-weight:400; font-size:16px; line-height:1.45; color:#475569; margin:12px 0 0 0; max-width:880px; }
+  sup { font-size:8.5px; color:#0b3a5c; font-weight:600; vertical-align:super; }
+  .chart-wrap { position:absolute; left:64px; top:228px; width:780px; }
+  .chart-title { font-family:'Inter','Helvetica Neue',sans-serif; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; font-weight:700; color:#1a1a1a; }
+  .chart-sub { font-family:'Source Serif Pro',Georgia,serif; font-style:italic; font-size:11.5px; color:#475569; margin-top:2px; }
+  .legend-row { margin-top:14px; display:flex; gap:18px; font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; color:#1a1a1a; }
+  .legend-row .li { display:flex; align-items:center; gap:6px; }
+  .swatch { width:12px; height:12px; display:inline-block; }
+  .row { margin-top:16px; }
+  .row .label { font-family:'Inter','Helvetica Neue',sans-serif; font-size:11.5px; color:#1a1a1a; font-weight:600; display:flex; justify-content:space-between; align-items:flex-end; }
+  .row .label .n { font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; color:#475569; font-weight:500; font-variant-numeric:tabular-nums; }
+  .bar { display:flex; height:30px; margin-top:6px; border:1px solid rgba(0,0,0,0.12); }
+  .seg { height:100%; position:relative; border-right:1px solid rgba(255,255,255,0.5); display:flex; align-items:center; justify-content:center; font-family:'Inter','Helvetica Neue',sans-serif; font-size:10.5px; font-weight:600; color:#ffffff; font-variant-numeric:tabular-nums; }
+  .seg:last-child { border-right:none; }
+  .seg.dim { color:#1a1a1a; }
+  .seg.tight { font-size:9.5px; }
+  .axis { position:relative; height:18px; margin-top:10px; border-top:1px solid rgba(0,0,0,0.18); font-family:'Inter','Helvetica Neue',sans-serif; font-size:10px; color:#475569; font-variant-numeric:tabular-nums; }
+  .axis span { position:absolute; top:4px; transform:translateX(-50%); }
+  .axis .tick { position:absolute; top:-4px; width:1px; height:6px; background:rgba(0,0,0,0.3); }
+  .sidebar { position:absolute; left:884px; top:228px; width:332px; }
+  .sidebar h3 { font-family:'Source Serif Pro',Georgia,serif; font-weight:600; font-size:14.5px; letter-spacing:-0.01em; margin:0 0 8px 0; color:#1a1a1a; }
+  .takeaway { border-top:1px solid #1a1a1a; }
+  .takeaway .item { padding:14px 0 14px 0; border-bottom:1px solid rgba(0,0,0,0.16); position:relative; padding-left:34px; font-family:'Inter','Helvetica Neue',sans-serif; }
+  .takeaway .item .num { position:absolute; left:0; top:14px; font-family:'Inter','Helvetica Neue',sans-serif; font-size:11px; font-weight:700; color:#0b3a5c; letter-spacing:0.06em; font-variant-numeric:tabular-nums; }
+  .takeaway .item .lead { font-size:12.5px; font-weight:700; color:#1a1a1a; line-height:1.35; letter-spacing:-0.005em; }
+  .takeaway .item .body { font-size:11.5px; line-height:1.5; color:#475569; margin-top:6px; }
+  .takeaway .item .body em { font-style:italic; }
+  .takeaway .item .body b { font-weight:600; color:#1a1a1a; font-variant-numeric:tabular-nums; }
+  .footer { position:absolute; left:64px; right:64px; bottom:24px; display:flex; justify-content:space-between; align-items:flex-end; border-top:1px solid rgba(0,0,0,0.12); padding-top:10px; }
+  .source { font-family:'Source Serif Pro',Georgia,serif; font-style:italic; font-size:10.5px; color:#475569; max-width:900px; }
+  .pgnum { font-family:'Inter','Helvetica Neue',sans-serif; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:#475569; font-variant-numeric:tabular-nums; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="topbar">
+    <span>Beacon &amp; Lowe — Enterprise Software Practice</span>
+    <span>Section III · Spend Composition</span>
+  </div>
+  <div class="head">
+    <div class="eyebrow">Exhibit 22 · Wallet Composition by Segment</div>
+    <div class="rule"></div>
+    <h1 data-pptx-role="title">Mid-market budgets are tilting toward platform fees; SMB still pays primarily for services<sup>1</sup></h1>
+    <p class="lede">Across four buyer cohorts, the share of wallet absorbed by recurring license fees ranges from 28% to 61% &mdash; the spread, more than the levels, drives go-to-market choices for the next planning cycle.</p>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Share of total IT software wallet, %, FY 2025</div>
+    <div class="chart-sub">Five categories; rows sum to 100% of segment spend (n=412)</div>
+    <div class="legend-row">
+      <span class="li"><span class="swatch" style="background:#0b3a5c;"></span>Platform &amp; license</span>
+      <span class="li"><span class="swatch" style="background:#475569;"></span>Implementation</span>
+      <span class="li"><span class="swatch" style="background:#64748b;"></span>Managed services</span>
+      <span class="li"><span class="swatch" style="background:#94a3b8;"></span>Training &amp; change</span>
+      <span class="li"><span class="swatch" style="background:#cbd5e1;"></span>Other</span>
+    </div>
+
+    <div class="row">
+      <div class="label"><span>Enterprise <span style="font-weight:400; color:#475569;">(&gt;$1B revenue)</span></span><span class="n">n=118 &middot; $84.2M avg.</span></div>
+      <div class="bar">
+        <div class="seg" style="width:61%; background:#0b3a5c;">61%</div>
+        <div class="seg" style="width:14%; background:#475569;">14%</div>
+        <div class="seg" style="width:13%; background:#64748b;">13%</div>
+        <div class="seg" style="width:7%; background:#94a3b8;">7%</div>
+        <div class="seg dim tight" style="width:5%; background:#cbd5e1;">5%</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="label"><span>Upper mid-market <span style="font-weight:400; color:#475569;">($250M&ndash;$1B)</span></span><span class="n">n=146 &middot; $18.6M avg.</span></div>
+      <div class="bar">
+        <div class="seg" style="width:52%; background:#0b3a5c;">52%</div>
+        <div class="seg" style="width:18%; background:#475569;">18%</div>
+        <div class="seg" style="width:14%; background:#64748b;">14%</div>
+        <div class="seg" style="width:10%; background:#94a3b8;">10%</div>
+        <div class="seg dim" style="width:6%; background:#cbd5e1;">6%</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="label"><span>Lower mid-market <span style="font-weight:400; color:#475569;">($50M&ndash;$250M)</span></span><span class="n">n=98 &middot; $4.1M avg.</span></div>
+      <div class="bar">
+        <div class="seg" style="width:41%; background:#0b3a5c;">41%</div>
+        <div class="seg" style="width:24%; background:#475569;">24%</div>
+        <div class="seg" style="width:18%; background:#64748b;">18%</div>
+        <div class="seg" style="width:11%; background:#94a3b8;">11%</div>
+        <div class="seg dim" style="width:6%; background:#cbd5e1;">6%</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="label"><span>SMB <span style="font-weight:400; color:#475569;">(&lt;$50M)</span></span><span class="n">n=50 &middot; $0.6M avg.</span></div>
+      <div class="bar">
+        <div class="seg" style="width:28%; background:#0b3a5c;">28%</div>
+        <div class="seg" style="width:31%; background:#475569;">31%</div>
+        <div class="seg" style="width:22%; background:#64748b;">22%</div>
+        <div class="seg" style="width:12%; background:#94a3b8;">12%</div>
+        <div class="seg dim" style="width:7%; background:#cbd5e1;">7%</div>
+      </div>
+    </div>
+
+    <div class="axis">
+      <div class="tick" style="left:0%;"></div><span style="left:0%;">0</span>
+      <div class="tick" style="left:25%;"></div><span style="left:25%;">25</span>
+      <div class="tick" style="left:50%;"></div><span style="left:50%;">50</span>
+      <div class="tick" style="left:75%;"></div><span style="left:75%;">75</span>
+      <div class="tick" style="left:100%;"></div><span style="left:100%;">100%</span>
+    </div>
+
+    <!-- Reference annotation -->
+    <div style="margin-top:18px; border:1px solid rgba(0,0,0,0.4); padding:10px 14px; background:#ffffff; box-sizing:border-box;">
+      <div style="font-family:'Inter','Helvetica Neue',sans-serif; font-size:9.5px; letter-spacing:0.16em; text-transform:uppercase; font-weight:700; color:#0b3a5c;">Methodology</div>
+      <div style="font-family:'Source Serif Pro',Georgia,serif; font-size:12px; line-height:1.45; color:#1a1a1a; margin-top:4px;">Categories per Beacon &amp; Lowe 2024 taxonomy, v3.2; respondents allocated 100 points across the five buckets. <sup>2</sup>Differences across cohorts significant at p&lt;0.01.</div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <h3>Three takeaways</h3>
+    <div class="takeaway">
+      <div class="item">
+        <div class="num">01</div>
+        <div class="lead">Platform share rises ~11&nbsp;ppts per tier of buyer scale.</div>
+        <div class="body">Mix shifts ~33&nbsp;<b>ppts</b> end-to-end &mdash; from 28% in SMB to 61% in enterprise &mdash; tracking IT-team self-sufficiency more closely than absolute spend.</div>
+      </div>
+      <div class="item">
+        <div class="num">02</div>
+        <div class="lead">SMB services line is structurally sticky.</div>
+        <div class="body">Implementation plus managed services hold a combined <b>53%</b> of SMB wallets, and have moved less than 200&nbsp;bps in three years.<sup>3</sup></div>
+      </div>
+      <div class="item">
+        <div class="num">03</div>
+        <div class="lead">Training is the swing line for upsell.</div>
+        <div class="body">Mid-market buyers willing to fund <b>10&ndash;11%</b> of wallet on enablement pay <b>1.4&times;</b> the platform multiple of peers, on average.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="source">Source: Beacon &amp; Lowe Buyer Wallet Survey, FY 2025; n=412 enterprise software buyers, fielded Q3 2025. <sup style="color:#0b3a5c;">1</sup> Excludes hardware and infrastructure-as-a-service. <sup style="color:#0b3a5c;">2</sup> Cohort definitions follow Beacon &amp; Lowe segmentation, vintage 2024. <sup style="color:#0b3a5c;">3</sup> Three-year window: FY 2022&ndash;FY 2025 longitudinal panel.</div>
+    <div class="pgnum">52 / 84</div>
+  </div>
+</div>
+</body>
+</html>

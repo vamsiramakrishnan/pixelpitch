@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DENSITY GRID // SUBSYSTEMS</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               -webkit-font-smoothing:antialiased; background:#0a0a0a; }
+  .slide { width:1280px; height:720px; box-sizing:border-box;
+           position:relative; overflow:hidden;
+           background:#0a0a0a; color:#fafaf9;
+           font-family:'JetBrains Mono','IBM Plex Mono','SF Mono',Menlo,monospace; }
+  .frame { position:absolute; inset:24px; border:2px solid #fafaf9; }
+  .topbar { position:absolute; top:24px; left:24px; right:24px; height:36px;
+            border-bottom:2px solid #fafaf9;
+            display:flex; justify-content:space-between; align-items:center;
+            padding:0 16px; font-size:11px; font-weight:600; }
+  .head { position:absolute; top:80px; left:40px; right:40px;
+          display:flex; justify-content:space-between; align-items:flex-end; }
+  .eyebrow { font-size:11px; font-weight:600; color:#0066ff; margin:0 0 8px 0; }
+  h1 { font-size:40px; font-weight:700; line-height:1.05; margin:0;
+       color:#fafaf9; letter-spacing:0; }
+  .summary { font-size:11px; font-weight:600; color:#fafaf9; line-height:1.7;
+             text-align:right; }
+  .grid { position:absolute; top:212px; left:40px; right:40px; bottom:90px;
+          display:grid; grid-template-columns: repeat(4, 1fr);
+          grid-template-rows: repeat(3, 1fr); gap:0;
+          border-left:1px solid #fafaf9; border-top:1px solid #fafaf9; }
+  .cell { border-right:1px solid #fafaf9; border-bottom:1px solid #fafaf9;
+          padding:14px 16px; position:relative; box-sizing:border-box;
+          display:flex; flex-direction:column; justify-content:space-between; }
+  .cell .ix { font-size:11px; font-weight:600; color:#fafaf9; }
+  .cell .ix em { font-style:normal; color:#0066ff; }
+  .cell h3 { font-size:18px; font-weight:700; margin:8px 0 4px 0;
+             color:#fafaf9; letter-spacing:0; line-height:1.15; }
+  .cell p { font-size:12px; font-weight:400; color:#fafaf9;
+            margin:0; line-height:1.4; }
+  .cell .foot { display:flex; justify-content:space-between;
+                font-size:10px; font-weight:700; color:#fafaf9;
+                border-top:1px dashed #fafaf9; padding-top:6px; margin-top:6px; }
+  .cell .foot em { font-style:normal; color:#0066ff; }
+  .cell.acc { background:#0066ff; color:#0a0a0a; }
+  .cell.acc .ix, .cell.acc h3, .cell.acc p, .cell.acc .foot { color:#0a0a0a; }
+  .cell.acc .ix em, .cell.acc .foot em { color:#0a0a0a; font-weight:700; }
+  .cell.acc .foot { border-top-color:#0a0a0a; }
+  .corner { position:absolute; right:6px; top:6px; width:6px; height:6px;
+            background:#fafaf9; }
+  .cell.acc .corner { background:#0a0a0a; }
+  .footer { position:absolute; bottom:24px; left:40px; right:40px;
+            display:flex; justify-content:space-between; align-items:flex-end;
+            font-size:11px; font-weight:600; color:#fafaf9; }
+  .deco { position:absolute; right:40px; bottom:54px; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="frame"></div>
+  <div class="topbar">
+    <span>DENSITY-GRID / SUBSYSTEMS / Q2-2026</span>
+    <span>PAGE 23 OF 27 // 12 UNITS</span>
+  </div>
+
+  <div class="head">
+    <div>
+      <div class="eyebrow">// 23 — DENSITY GRID</div>
+      <h1 data-pptx-role="title">12 SUBSYSTEMS // ONE GRID</h1>
+    </div>
+    <div class="summary">
+      4&nbsp;COLS&nbsp;×&nbsp;3&nbsp;ROWS&nbsp;=&nbsp;12&nbsp;CELLS<br>
+      OWNER&nbsp;platform-core<br>
+      AS-OF&nbsp;2026.04.30
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="cell">
+      <div>
+        <div class="ix"><em>01</em>&nbsp;/&nbsp;CORE</div>
+        <h3>edge-rx</h3>
+        <p>tcp/443 ingress, 8 nodes, mTLS terminator.</p>
+      </div>
+      <div class="foot"><span>p99 76ms</span><em>OK</em></div>
+      <span class="corner"></span>
+    </div>
+    <div class="cell">
+      <div>
+        <div class="ix"><em>02</em>&nbsp;/&nbsp;BUFFER</div>
+        <h3>kfk-buf</h3>
+        <p>24 partitions, replication 3, 1.18K lag.</p>
+      </div>
+      <div class="foot"><span>r=3</span><em>HOLD</em></div>
+      <span class="corner"></span>
+    </div>
+    <div class="cell acc">
+      <div>
+        <div class="ix"><em>03</em>&nbsp;/&nbsp;HOT</div>
+        <h3>norm-svc</h3>
+        <p>Parse + dedupe path, 62% cpu, primary loop.</p>
+      </div>
+      <div class="foot"><span>cpu 62%</span><em>HOT</em></div>
+      <span class="corner"></span>
+    </div>
+    <div class="cell">
+      <div>
+        <div class="ix"><em>04</em>&nbsp;/&nbsp;STORE</div>
+        <h3>cold-tbl</h3>
+        <p>Parquet on s3, 2.4TB / day, 30d retention.</p>
+      </div>
+      <div class="foot"><span>2.4TB/d</span><em>OK</em></div>
+      <span class="corner"></span>
+    </div>
+    <div class="cell">
+      <div>
+        <div class="ix"><em>05</em>&nbsp;/&nbsp;OBS</div>
+        <h3>obs-sink</h3>
+        <p>Logs + metrics tap, 15s scrape, single tenant.</p>
+      </div>
+      <div class="foot"><span>15s</span><em>TAP</em></div>
+      <span class="corner"></span>
+    </div>
+    <div class="cell">
+      <div>
+        <div class="ix"><em>06</em>&nbsp;/&nbsp;AUTH</div>
+        <h3>tok-sign</h3>
+        <p>Signing service, ed25519, 4ms median.</p>
+      </div>
+      <div class="foot"><span>p50 4ms</span><em>OK</em></div>
+      <span class="corner"></span>
+    </div>
+    <div class="cell">
+      <div>
+        <div class="ix"><em>07</em>&nbsp;/&nbsp;CACHE</div>
+        <h3>warm-set</h3>
+        <p>LRU 64GiB, 94.2% hit, 3 shards, no spill.</p>
+      </div>
+      <div class="foot"><span>hit 94.2%</span><em>OK</em></div>
+      <span class="corner"></span>
+    </div>
+    <div class="cell">
+      <div>
+        <div class="ix"><em>08</em>&nbsp;/&nbsp;ROUTE</div>
+        <h3>edge-route</h3>
+        <p>Anycast plan, 12 PoPs, weighted RR.</p>
+      </div>
+      <div class="foot"><span>12 pop</span><em>OK</em></div>
+      <span class="corner"></span>
+    </div>
+    <div class="cell">
+      <div>
+        <div class="ix"><em>09</em>&nbsp;/&nbsp;BATCH</div>
+        <h3>nightly</h3>
+        <p>Cron 03:00Z, 8 stages, idempotent retries.</p>
+      </div>
+      <div class="foot"><span>03:00Z</span><em>IDLE</em></div>
+      <span class="corner"></span>
+    </div>
+    <div class="cell">
+      <div>
+        <div class="ix"><em>10</em>&nbsp;/&nbsp;FLAGS</div>
+        <h3>flag-svc</h3>
+        <p>Bool + multivar, 1.4K rules, 12ms eval.</p>
+      </div>
+      <div class="foot"><span>1.4K rules</span><em>OK</em></div>
+      <span class="corner"></span>
+    </div>
+    <div class="cell">
+      <div>
+        <div class="ix"><em>11</em>&nbsp;/&nbsp;BILLING</div>
+        <h3>meter-rx</h3>
+        <p>Per-tenant counters, 5min rollup, idem keys.</p>
+      </div>
+      <div class="foot"><span>rollup 5m</span><em>OK</em></div>
+      <span class="corner"></span>
+    </div>
+    <div class="cell">
+      <div>
+        <div class="ix"><em>12</em>&nbsp;/&nbsp;DLQ</div>
+        <h3>dead-q</h3>
+        <p>Quarantine bucket, 412 items, 7d TTL.</p>
+      </div>
+      <div class="foot"><span>n=412</span><em>WATCH</em></div>
+      <span class="corner"></span>
+    </div>
+  </div>
+
+  <svg class="deco" width="160" height="22" viewBox="0 0 160 22" aria-hidden="true">
+    <rect x="0" y="6" width="10" height="10" fill="#fafaf9"/>
+    <rect x="14" y="6" width="10" height="10" fill="none" stroke="#fafaf9"/>
+    <rect x="28" y="6" width="10" height="10" fill="#fafaf9"/>
+    <rect x="42" y="6" width="10" height="10" fill="none" stroke="#fafaf9"/>
+    <rect x="56" y="6" width="10" height="10" fill="#0066ff"/>
+    <rect x="70" y="6" width="10" height="10" fill="none" stroke="#fafaf9"/>
+    <rect x="84" y="6" width="10" height="10" fill="#fafaf9"/>
+    <rect x="98" y="6" width="10" height="10" fill="none" stroke="#fafaf9"/>
+    <rect x="112" y="6" width="10" height="10" fill="#fafaf9"/>
+    <rect x="126" y="6" width="10" height="10" fill="none" stroke="#fafaf9"/>
+    <rect x="140" y="6" width="10" height="10" fill="#fafaf9"/>
+  </svg>
+
+  <div class="footer">
+    <span>// 12 / 12 UNITS LISTED // 0 OMITTED</span>
+    <span>SIG&nbsp;9b3f:0211:c4d8</span>
+  </div>
+</div>
+</body>
+</html>

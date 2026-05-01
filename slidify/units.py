@@ -64,7 +64,22 @@ def _has_transform(transform: str) -> bool:
 
 
 def _has_pseudo(el: DomElement) -> bool:
-    return el.has_before or el.has_after
+    """A pseudo only counts as visually-distinguishing decoration if it carries
+    a bg-image / url() content. Plain text pseudos are treated as decoration
+    folded into the parent."""
+    if el.has_before:
+        if el.before_content and "url(" in el.before_content:
+            return True
+        sb = el.pseudo_before_style or {}
+        if "url(" in (sb.get("background_image") or ""):
+            return True
+    if el.has_after:
+        if el.after_content and "url(" in el.after_content:
+            return True
+        sa = el.pseudo_after_style or {}
+        if "url(" in (sa.get("background_image") or ""):
+            return True
+    return False
 
 
 def _is_anchor(el: DomElement, parent_bg: str | None) -> bool:
@@ -94,8 +109,10 @@ def _is_anchor(el: DomElement, parent_bg: str | None) -> bool:
         return True
     # Leaf text elements with their own meaningful area become anchors so
     # that two different text blocks don't merge into one NativeText frame.
-    if el.text and el.text.strip() and el.bbox.area >= 200:
-        return True
+    # Text containers (text + inline formatting children) count too.
+    if (el.text and el.text.strip()) or el.is_text_container:
+        if el.bbox.area >= 200:
+            return True
     return False
 
 
@@ -226,6 +243,17 @@ def cluster(elements: list[DomElement]) -> list[VisualUnit]:
                     continue
                 if ei.border_radius != ej.border_radius:
                     continue
+                # Don't merge across different bg-images — a body with a
+                # radial-gradient and an overlay grid-pattern div are visually
+                # *layered*, not the same unit.
+                if (ei.background_image or "none") != (ej.background_image or "none"):
+                    continue
+                # Don't merge if either element has a filter / transform / opacity
+                # — those signal a distinct visual layer.
+                if (ei.filter or "none") != "none" or (ej.filter or "none") != "none":
+                    continue
+                if ei.opacity < 0.99 or ej.opacity < 0.99:
+                    continue
                 # Merge aj → ai (keep larger as canonical)
                 small, big = (aj, ai) if ei.bbox.area >= ej.bbox.area else (ai, aj)
                 merged_into[small] = big
@@ -266,6 +294,15 @@ def cluster(elements: list[DomElement]) -> list[VisualUnit]:
         for aid in sibs:
             sig = _isomorphic_subtree_signature(by_id[aid], by_parent)
             sigs.setdefault(sig, []).append(aid)
+        # Composite-row guard: when the parent has *multiple* parallel
+        # isomorphic groups (e.g., a TOC where each row is `.num/.label/.page`
+        # contributes 3 distinct groups of 6), this is a structured layout,
+        # not a bullet list. Tagging every cell as ListItem causes tier-1's
+        # bullet recipe to fire on each cell, prepending stray "•" markers.
+        # Only tag when there's exactly one repeated-pattern group.
+        groups_with_3_plus = [g for g in sigs.values() if len(g) >= 3]
+        if len(groups_with_3_plus) != 1:
+            continue
         for _sig, group in sigs.items():
             if len(group) < 3:
                 continue

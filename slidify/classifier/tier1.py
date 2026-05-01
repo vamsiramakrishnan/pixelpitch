@@ -9,7 +9,10 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from slidify.geom import parse_px
+from slidify.gradients import parse_gradient
 from slidify.models import Decision, DecisionKind, UnitKind, VisualUnit
+from slidify.shadows import is_translatable_shadow
+from slidify.svg_shapes import is_translatable_svg
 
 
 def _has_canvas(unit: VisualUnit) -> bool:
@@ -21,11 +24,31 @@ def _has_video(unit: VisualUnit) -> bool:
 
 
 def _has_complex_svg(unit: VisualUnit) -> bool:
-    return any(e.is_svg and e.svg_path_count > 10 for e in unit.all_elements())
+    # Iterate this unit's DIRECT elements only — never descendants. A
+    # child unit's SVG should fire its own classifier; bubbling the rule
+    # up to the parent caused the slide-level unit to absorb every
+    # sibling box's emit (slide 04 went 48 -> 3 shapes). Threshold
+    # mirrors the dom_walker capture cap (30) so any SVG that the
+    # walker could capture stays on the native path.
+    return any(e.is_svg and e.svg_path_count > 30 for e in unit.elements)
 
 
 def _has_simple_svg(unit: VisualUnit) -> bool:
-    return any(e.is_svg and e.svg_path_count > 0 for e in unit.all_elements())
+    """True iff the unit IS substantially a simple SVG.
+
+    Direct elements only — same reason as `_has_complex_svg`. Also
+    require the SVG element to occupy at least 30% of the unit's area
+    so a tiny decorative icon inside a card unit doesn't relabel the
+    whole card.
+    """
+    unit_area = unit.bbox.area
+    if unit_area <= 0:
+        return False
+    for e in unit.elements:
+        if e.is_svg and e.svg_path_count > 0:
+            if e.bbox.area / unit_area >= 0.30:
+                return True
+    return False
 
 
 def _has_caller_rasterize_hint(unit: VisualUnit) -> bool:
@@ -82,11 +105,72 @@ def _has_clip_path(unit: VisualUnit) -> bool:
     return any(e.clip_path and e.clip_path != "none" for e in unit.all_elements())
 
 
-def _has_pseudo_content(unit: VisualUnit) -> bool:
+def _has_mix_blend_mode(unit: VisualUnit) -> bool:
+    return any(
+        getattr(e, "mix_blend_mode", "normal") not in ("normal", "")
+        for e in unit.all_elements()
+    )
+
+
+def _has_backdrop_filter(unit: VisualUnit) -> bool:
+    return any(
+        getattr(e, "backdrop_filter", "none") not in ("none", "")
+        for e in unit.all_elements()
+    )
+
+
+def _has_text_image_mask(unit: VisualUnit) -> bool:
+    """The CSS `background-clip: text` + `background-image: url(...)` recipe.
+
+    The text glyphs become a window into a raster image. PPTX's text-fill
+    paths can't reproduce this — they support solid, gradient, and pattern
+    fills, but not arbitrary raster clipped to glyph silhouettes. Force
+    Raster so the visual is preserved, even at the cost of editability.
+    """
     for e in unit.all_elements():
-        if e.has_before and e.before_content not in (None, "none", '""', "''"):
+        clip = getattr(e, "background_clip", "border-box") or "border-box"
+        if clip != "text":
+            continue
+        bg = e.background_image or "none"
+        if bg != "none" and "url(" in bg:
             return True
-        if e.has_after and e.after_content not in (None, "none", '""', "''"):
+    return False
+
+
+def _has_url_background_image(unit: VisualUnit) -> bool:
+    """An anchor element painting `background-image: url(...)` — slidify
+    can't fetch+embed bg-images natively (only `<img>` tags route through
+    `_emit_native_picture`), so the unit must raster."""
+    for e in unit.elements:  # direct, not descendants
+        bg = e.background_image or "none"
+        if bg != "none" and "url(" in bg:
+            return True
+    return False
+
+
+def _is_complex_pseudo(content: str | None, style: dict | None) -> bool:
+    """A pseudo is *complex* — and forces raster — if it carries a bg-image,
+    url() content, or a non-trivial decoration. Text-only pseudos (e.g.,
+    `content: "01"`) are decorative and don't disqualify the parent from
+    native classification.
+    """
+    if not content or content in ("none", '""', "''"):
+        return False
+    if "url(" in content:
+        return True
+    if style:
+        bg_image = (style.get("background_image") or "none")
+        if bg_image != "none" and "url(" in bg_image:
+            return True
+    return False
+
+
+def _has_pseudo_content(unit: VisualUnit) -> bool:
+    """Return True only if the unit has a *complex* pseudo we can't translate."""
+    for e in unit.all_elements():
+        if e.has_before and _is_complex_pseudo(e.before_content, e.pseudo_before_style):
+            return True
+        if e.has_after and _is_complex_pseudo(e.after_content, e.pseudo_after_style):
             return True
     return False
 
@@ -103,11 +187,20 @@ def _is_simple_leaf_text(unit: VisualUnit) -> bool:
     if len(unit.elements) > 6:
         return False
     anchor = unit.elements[0]
+    # Gradient bg is OK if we can translate it natively.
     if anchor.background_image and anchor.background_image != "none":
-        return False
+        if "url(" in anchor.background_image:
+            return False
+        if not parse_gradient(anchor.background_image):
+            return False
     if anchor.transform and anchor.transform != "none":
         return False
-    if anchor.box_shadow and anchor.box_shadow != "none":
+    # Shadow is OK if translatable.
+    if (
+        anchor.box_shadow
+        and anchor.box_shadow != "none"
+        and not is_translatable_shadow(anchor.box_shadow)
+    ):
         return False
     if anchor.filter and anchor.filter != "none":
         return False
@@ -129,11 +222,17 @@ def _is_plain_rectangle(unit: VisualUnit) -> bool:
         return False
     if any(e.filter and e.filter != "none" for e in elems):
         return False
-    # Background image (gradient/url) cannot be reproduced by a flat fill.
-    if any(
-        e.background_image and e.background_image != "none" for e in elems
-    ):
-        return False
+    # url() backgrounds we can't reproduce. Gradients we *can* — let those
+    # through.
+    for e in elems:
+        bg_img = e.background_image
+        if not bg_img or bg_img == "none":
+            continue
+        if "url(" in bg_img:
+            return False
+        # Unparseable / unrecognized gradient → treat as raster
+        if not parse_gradient(bg_img):
+            return False
     return True
 
 
@@ -207,15 +306,24 @@ def rule_complex_svg_raster(unit: VisualUnit) -> Decision | None:
 
 
 def rule_simple_svg_raster(unit: VisualUnit) -> Decision | None:
-    # Even small SVGs we don't transpile in v1 — rasterize them.
-    if _has_simple_svg(unit):
+    if not _has_simple_svg(unit):
+        return None
+    svg_el = next(
+        (e for e in unit.all_elements() if e.is_svg and e.svg_shapes), None
+    )
+    if svg_el is not None and is_translatable_svg(svg_el.svg_shapes):
         return Decision(
-            kind=DecisionKind.Raster,
-            confidence=0.95,
-            reason="svg_v1_rasterize",
+            kind=DecisionKind.NativeSvg,
+            confidence=0.9,
+            reason="svg_translatable_primitives",
             source_tier="tier1",
         )
-    return None
+    return Decision(
+        kind=DecisionKind.Raster,
+        confidence=0.95,
+        reason="svg_path_or_complex",
+        source_tier="tier1",
+    )
 
 
 def rule_caller_rasterize(unit: VisualUnit) -> Decision | None:
@@ -299,6 +407,58 @@ def rule_clip_path_raster(unit: VisualUnit) -> Decision | None:
     return None
 
 
+def rule_pptx_unsupported_raster(unit: VisualUnit) -> Decision | None:
+    """Catch-all for CSS that PPTX can't reproduce natively.
+
+    Each branch here corresponds to a known limit in the OOXML target:
+      - `mix-blend-mode` — not supported on Shape elements (only via
+        modern PowerPoint's limited blendOptions, which LibreOffice
+        ignores).
+      - `backdrop-filter` — no equivalent. The "frosted glass" effect
+        is a runtime live blur of what's behind the shape; OOXML can
+        only express baked-in fills.
+      - `background-clip: text` on `background-image: url(...)` — text
+        glyphs as a mask over a raster image. PPTX `<a:gradFill>` can
+        clip to text, but `<a:blipFill>` (image fill) cannot.
+      - `background-image: url(...)` directly on an anchor — slidify
+        natively emits `<img>` via `_emit_native_picture` but doesn't
+        fetch CSS bg-image URLs.
+
+    Returning `Raster` lets the surgical-hybrid emit pipeline crop the
+    source HTML render for the unit's region, which preserves the
+    visual at the cost of editability.
+    """
+    if _has_mix_blend_mode(unit):
+        return Decision(
+            kind=DecisionKind.Raster,
+            confidence=0.95,
+            reason="mix_blend_mode",
+            source_tier="tier1",
+        )
+    if _has_backdrop_filter(unit):
+        return Decision(
+            kind=DecisionKind.Raster,
+            confidence=0.95,
+            reason="backdrop_filter",
+            source_tier="tier1",
+        )
+    if _has_text_image_mask(unit):
+        return Decision(
+            kind=DecisionKind.Raster,
+            confidence=0.95,
+            reason="text_image_mask",
+            source_tier="tier1",
+        )
+    if _has_url_background_image(unit):
+        return Decision(
+            kind=DecisionKind.Raster,
+            confidence=0.9,
+            reason="bg_image_url",
+            source_tier="tier1",
+        )
+    return None
+
+
 def rule_simple_leaf_text(unit: VisualUnit) -> Decision | None:
     if _is_simple_leaf_text(unit):
         return Decision(
@@ -338,6 +498,7 @@ RULES: list[RuleFn] = [
     rule_3d_transform_raster,
     rule_filter_raster,
     rule_clip_path_raster,
+    rule_pptx_unsupported_raster,
     rule_simple_svg_raster,
     rule_single_image,
     rule_role_title,

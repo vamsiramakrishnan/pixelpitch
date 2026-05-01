@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slide 44 — Made for the long breath</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               -webkit-font-smoothing:antialiased; background:#fde2e4; }
+  .slide { width:1280px; height:720px; box-sizing:border-box;
+           position:relative; overflow:hidden; background:#fde2e4;
+           font-family:'Source Serif Pro', Georgia, serif;
+           color:#2d1f1f; }
+  .kicker { position:absolute; top:96px; left:0; right:0; text-align:center;
+            font-size:12px; font-weight:500; letter-spacing:0.08em;
+            color:#e76f51;
+            font-family:'Inter', system-ui, sans-serif; }
+  .headline { position:absolute; top:152px; left:0; right:0; text-align:center;
+              font-size:60px; font-weight:600; line-height:1.08;
+              letter-spacing:-0.005em;
+              font-family:'Source Serif Pro', Georgia, serif;
+              padding:0 200px; }
+  .headline em { font-style:italic; color:#264653; font-weight:500; }
+  .sub { position:absolute; top:296px; left:0; right:0; text-align:center;
+         font-size:17px; font-weight:400; line-height:1.65; color:#4a3a3a;
+         font-family:'Inter', system-ui, sans-serif;
+         padding:0 360px; }
+  .card { position:absolute; width:300px; padding:32px 28px;
+          background:#fef6e8; border-radius:18px;
+          box-shadow: 0 8px 24px rgba(45,31,31,0.10); }
+  .card.left  { top:476px; left:240px; }
+  .card.right { top:476px; left:740px; }
+  .card .label { font-family:'Inter', system-ui, sans-serif;
+                 font-size:11px; font-weight:500; letter-spacing:0.08em;
+                 color:#9c89b8; }
+  .card h3 { margin:10px 0 8px;
+             font-family:'Source Serif Pro', Georgia, serif;
+             font-size:22px; font-weight:600; line-height:1.2; color:#2d1f1f; }
+  .card h3 em { font-style:italic; color:#e76f51; font-weight:500; }
+  .card p { margin:0;
+            font-family:'Inter', system-ui, sans-serif;
+            font-size:13px; font-weight:400; line-height:1.6; color:#4a3a3a; }
+  .pageno { position:absolute; bottom:40px; right:96px;
+            font-size:12px; font-weight:500; color:#a07878;
+            font-family:'Source Serif Pro', Georgia, serif; }
+  .canvas { position:absolute; inset:0; }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <svg class="canvas" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- top-left organic blob (5 control points) -->
+      <path d="M -40 -20
+               C 80 -40, 220 30, 240 130
+               C 260 230, 160 280, 60 254
+               C -40 228, -90 160, -88 80
+               C -86 30, -90 -10, -40 -20 Z"
+            fill="#f7b2a2" fill-opacity="0.55"/>
+      <!-- bottom-right organic blob (6 control points) -->
+      <path d="M 1100 540
+               C 1190 520, 1290 560, 1310 640
+               C 1330 720, 1260 760, 1180 760
+               C 1100 760, 1030 720, 1020 660
+               C 1010 600, 1040 580, 1070 564
+               C 1086 556, 1090 548, 1100 540 Z"
+            fill="#a78bfa" fill-opacity="0.32"/>
+      <!-- secondary small accent blob behind cards midpoint -->
+      <path d="M 600 580
+               C 660 570, 700 600, 696 640
+               C 692 680, 640 700, 596 686
+               C 552 672, 548 624, 568 596
+               C 578 584, 588 582, 600 580 Z"
+            fill="#e9c46a" fill-opacity="0.32"/>
+      <!-- ambient soft circles -->
+      <circle cx="170" cy="540" r="22" fill="#2a9d8f" fill-opacity="0.30"/>
+      <circle cx="1130" cy="220" r="18" fill="#f4a261" fill-opacity="0.55"/>
+      <!-- curved underline beneath kicker (centered) -->
+      <path d="M 580 122 C 620 116, 660 130, 700 120"
+            stroke="#e76f51" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <!-- heart glyph for left card -->
+      <path d="M 264 510
+               C 258 502, 268 492, 274 500
+               C 280 492, 290 502, 284 510
+               C 280 516, 274 520, 274 520
+               C 274 520, 268 516, 264 510 Z"
+            fill="none" stroke="#e76f51" stroke-width="1.5"/>
+      <!-- leaf glyph for right card -->
+      <path d="M 766 506
+               C 778 488, 800 488, 808 504
+               C 798 522, 778 528, 766 506 Z"
+            fill="none" stroke="#2a9d8f" stroke-width="1.5"/>
+      <path d="M 770 506 C 784 502, 798 498, 808 504" stroke="#2a9d8f" stroke-width="1.2" fill="none"/>
+      <!-- wavy divider above cards -->
+      <path d="M 480 432
+               C 540 424, 600 444, 660 434
+               C 720 424, 760 444, 800 434"
+            stroke="#264653" stroke-width="1.2" fill="none" stroke-opacity="0.40"/>
+    </svg>
+
+    <div class="kicker">Designed with breathing room</div>
+    <h1 class="headline" data-pptx-role="title">Made for the <em>long breath</em>, not the short sprint.</h1>
+    <p class="sub">A way of working that treats focus the way good cooks treat heat — patiently, with attention, and with a willingness to wait for it.</p>
+
+    <div class="card left">
+      <div class="label">Practice</div>
+      <h3>Begin <em>once</em>, well.</h3>
+      <p>One thing at a time, until it has the shape it deserves. Then the next.</p>
+    </div>
+    <div class="card right">
+      <div class="label">Posture</div>
+      <h3>Soft attention.</h3>
+      <p>Hold your task the way you'd hold a sleeping cat. Firmly, but never tightly.</p>
+    </div>
+
+    <div class="pageno">44</div>
+  </div>
+</body>
+</html>

@@ -40,9 +40,12 @@ from slidify.models import (
     EmitOp,
     FidelityReport,
     RenderedSlide,
+    UnmatchedSignature,
     VisualUnit,
 )
 from slidify.oracle import FidelityOracle
+from slidify.patterns import PatternStats, classify_tier0, get_default_catalog
+from slidify.patterns.signatures import signature, signature_hash
 from slidify.promotion import promote, to_emit_ops
 from slidify.renderer import Renderer
 from slidify.splitter import split_slides
@@ -94,6 +97,22 @@ class ConversionConfig:
     max_oracle_iterations: int = 2
     render_concurrency: int = 4
     keep_plans_for_oracle: bool = True
+    # Differential render: take a second screenshot per slide with all text
+    # blanked. The emitter uses that decoration-only image when it needs to
+    # raster a Hybrid background, eliminating text bleed-through. Costs a
+    # second screenshot per slide (~150 ms on default viewport). On by
+    # default — the visual quality win on textured backgrounds (mesh
+    # gradients, glassmorphism, photo overlays) outweighs the small
+    # latency cost. Set to False for huge decks where wall-clock time
+    # matters more than perfect background fidelity.
+    differential_render: bool = True
+    # Embed the source fonts (Inter etc.) into the .pptx so PowerPoint
+    # renders with the same typeface that sized the original CSS bboxes.
+    # Without this, Calibri substitution shifts every text-frame width,
+    # causing titles to wrap, badges to overflow, alignment to drift.
+    # On by default; disable for faster emit on decks where the
+    # default-Office font is acceptable.
+    embed_fonts: bool = True
 
 
 @dataclass
@@ -191,7 +210,11 @@ def _extract_notes(rendered: RenderedSlide) -> str:
 
 
 def _classify_unit_tier12(
-    unit: VisualUnit, cache: StructuralCache, prior: dict[str, Decision]
+    unit: VisualUnit,
+    cache: StructuralCache,
+    prior: dict[str, Decision],
+    pattern_stats: PatternStats,
+    unmatched: dict[str, UnmatchedSignature],
 ) -> Decision | None:
     cached = cache.get(unit)
     if cached is not None:
@@ -201,6 +224,31 @@ def _classify_unit_tier12(
             reason=f"cache_hit ({cached.reason})",
             metadata=cached.metadata,
             source_tier=f"cache:{cached.source_tier}",
+        )
+    # Tier 0: pattern DB recipes (Tailwind / shadcn / common compositions).
+    d = classify_tier0(unit, get_default_catalog(), stats=pattern_stats)
+    if d is not None:
+        cache.put(unit, d)
+        return d
+    # Pattern miss → record signature for the harvester.
+    sig = signature(unit)
+    sig_h = signature_hash(unit)
+    if sig_h in unmatched:
+        unmatched[sig_h].n_occurrences += 1
+    else:
+        anchor = unit.elements[0] if unit.elements else None
+        sample_text = ""
+        for e in unit.all_elements():
+            if e.text and e.text.strip():
+                sample_text = e.text.strip()[:60]
+                break
+        unmatched[sig_h] = UnmatchedSignature(
+            sig=sig,
+            sig_hash=sig_h,
+            bbox_w=int(unit.bbox.w),
+            bbox_h=int(unit.bbox.h),
+            sample_classes=(anchor.cls or "") if anchor else "",
+            sample_text=sample_text,
         )
     d = classify_tier1(unit)
     if d is not None:
@@ -235,12 +283,14 @@ async def _classify_slide(
     plan: _SlidePlan,
     cache: StructuralCache,
     provider: LLMProvider | None,
+    pattern_stats: PatternStats,
+    unmatched: dict[str, UnmatchedSignature],
 ) -> Tier3Stats:
     decisions: dict[str, Decision] = {}
     deferred: list[VisualUnit] = []
 
     for u in reversed(plan.units_flat):
-        d = _classify_unit_tier12(u, cache, decisions)
+        d = _classify_unit_tier12(u, cache, decisions, pattern_stats, unmatched)
         if d is None:
             deferred.append(u)
         else:
@@ -307,8 +357,16 @@ async def convert(
     summaries: list[_SlideSummary] = []
     plans_for_oracle: list[_SlidePlan] = []
     total_stats = Tier3Stats()
+    pattern_stats = PatternStats()
+    unmatched: dict[str, UnmatchedSignature] = {}
+    # Streamed accumulator of deck-wide DOM colors, scanned at save-time
+    # to derive theme accent1..accent6. Element refs are cheap (~few KB
+    # per slide) and we drop them after the theme is patched.
+    color_elements: list = []
 
-    async with Renderer(viewport=cfg.viewport) as renderer:
+    async with Renderer(
+        viewport=cfg.viewport, differential=cfg.differential_render
+    ) as renderer:
         provider = await _build_provider(cfg)
         emitter = Emitter()
 
@@ -327,6 +385,8 @@ async def convert(
                         emitter,
                         renderer,
                         total_stats,
+                        pattern_stats,
+                        unmatched,
                     )
                     summaries.append(
                         _SlideSummary(
@@ -335,6 +395,21 @@ async def convert(
                             decisions_by_tier=_per_slide_decisions_count(plan),
                         )
                     )
+                    color_elements.extend(plan.rendered.elements)
+                    # Refresh decoration palette as soon as we have enough
+                    # color signal — gives later slides' decoration layers
+                    # access to the deck's actual brand colors.
+                    if len(color_elements) > 0 and slide_idx % 2 == 0:
+                        try:
+                            from slidify.theme import derive_accents_from_elements
+
+                            running = derive_accents_from_elements(color_elements)
+                            if running:
+                                emitter.set_brand_palette(
+                                    [a.lstrip("#") for a in running]
+                                )
+                        except Exception:
+                            pass
                     if cfg.run_oracle and cfg.keep_plans_for_oracle:
                         plans_for_oracle.append(plan)
                     else:
@@ -359,9 +434,74 @@ async def convert(
             if slide_idx == 0:
                 raise ValueError("no slides produced from source")
 
+            # Patch the deck's theme color scheme with the most-used brand
+            # colors. Downstream tools (corporate template imports, "change
+            # theme" in PowerPoint) then recolor schemeClr-bound shapes to
+            # match. This is purely additive — explicit srgbClr fills we
+            # already emitted continue to render unchanged.
+            try:
+                from slidify.theme import (
+                    derive_accents_from_elements,
+                    set_theme_accents,
+                )
+
+                accents = derive_accents_from_elements(color_elements)
+                if accents:
+                    set_theme_accents(
+                        emitter.prs,
+                        primary=accents[0] if len(accents) >= 1 else None,
+                        secondary=accents[1] if len(accents) >= 2 else None,
+                        accents=accents[2:6] if len(accents) > 2 else None,
+                    )
+                    # Strip the leading '#' so decoration layers can hand the
+                    # palette straight to MeshGlow's hex-only API.
+                    emitter.set_brand_palette(
+                        [a.lstrip("#") for a in accents]
+                    )
+            except Exception as e:
+                log.warning("api.theme_patch_failed", error=str(e))
+            # Defer color_elements.clear() until after font-embedding so
+            # the resolver can scan requested families. Cleared at the
+            # end of convert() via the local going out of scope.
+
             emitter.save(pptx_path)
         finally:
             emitter.close()
+
+        # Post-process: embed source fonts so renderers don't substitute.
+        # Two passes:
+        #   1. embed_default_fonts → embed Inter (the engine's standard).
+        #   2. resolve_and_subset_for_deck → walk the rendered DOM for
+        #      every CSS-specified family (Source Serif Pro / JetBrains
+        #      Mono / etc.), resolve each via fontconfig, subset to the
+        #      glyphs the deck actually uses, and embed those too.
+        # Without (2), CSS asks for Source Serif Pro, fontconfig
+        # silently substitutes DejaVu Sans (a sans-serif), and the
+        # serif intent is lost in render. (2) keeps every requested
+        # family available to the renderer by name.
+        if cfg.embed_fonts:
+            from slidify.font_embed import (
+                discover_inter,
+                embed_fonts_in_pptx,
+            )
+            from slidify.font_resolver import resolve_and_subset_for_deck
+
+            try:
+                fonts_to_embed: list = []
+                inter = discover_inter()
+                if inter is not None:
+                    fonts_to_embed.append(inter)
+                deck_fonts = resolve_and_subset_for_deck(color_elements)
+                fonts_to_embed.extend(deck_fonts)
+                if fonts_to_embed:
+                    embed_fonts_in_pptx(pptx_path, fonts_to_embed)
+                    log.info(
+                        "api.fonts_embedded",
+                        n=len(fonts_to_embed),
+                        families=[f.typeface for f in fonts_to_embed],
+                    )
+            except Exception as e:
+                log.warning("api.font_embed_failed", error=str(e))
 
         reports: list[FidelityReport] = []
         if cfg.run_oracle:
@@ -374,6 +514,10 @@ async def convert(
         sum(native_area_ratio(s.ops) for s in summaries) / n_slides if n_slides else 0.0
     )
     elapsed = time.perf_counter() - t_start
+    # Top-N unmatched signatures by occurrence — most-likely candidates for new patterns.
+    unmatched_sorted = sorted(
+        unmatched.values(), key=lambda u: u.n_occurrences, reverse=True
+    )[:25]
     return ConversionResult(
         pptx_path=str(pptx_path),
         n_slides=n_slides,
@@ -384,6 +528,9 @@ async def convert(
         elapsed_seconds=elapsed,
         cache_hit_rate=cache.hit_rate,
         decisions_by_tier=_decisions_by_tier_from_summaries(summaries),
+        pattern_hits=dict(pattern_stats.hits_by_id),
+        pattern_coverage=pattern_stats.coverage,
+        unmatched_signatures=unmatched_sorted,
     )
 
 
@@ -395,6 +542,8 @@ async def _process_one(
     emitter: Emitter,
     renderer: Renderer,
     total_stats: Tier3Stats,
+    pattern_stats: PatternStats,
+    unmatched: dict[str, UnmatchedSignature],
 ) -> _SlidePlan:
     roots = cluster(rendered.elements)
     flat = flatten(roots)
@@ -407,7 +556,7 @@ async def _process_one(
         units_by_id=by_id,
         notes=_extract_notes(rendered),
     )
-    stats = await _classify_slide(plan, cache, provider)
+    stats = await _classify_slide(plan, cache, provider, pattern_stats, unmatched)
     total_stats.n_calls += stats.n_calls
     total_stats.n_units += stats.n_units
     total_stats.cost_usd += stats.cost_usd

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>STATUS BOARD // FLEET-Z</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               -webkit-font-smoothing:antialiased; background:#0a0a0a; }
+  .slide { width:1280px; height:720px; box-sizing:border-box;
+           position:relative; overflow:hidden;
+           background:#0a0a0a; color:#fafaf9;
+           font-family:'JetBrains Mono','IBM Plex Mono','SF Mono',Menlo,monospace; }
+  .frame { position:absolute; inset:24px; border:2px solid #fafaf9; }
+  .topbar { position:absolute; top:24px; left:24px; right:24px; height:36px;
+            border-bottom:2px solid #fafaf9;
+            display:flex; justify-content:space-between; align-items:center;
+            padding:0 16px; font-size:11px; font-weight:600; }
+  .head { position:absolute; top:80px; left:40px; right:40px;
+          display:flex; justify-content:space-between; align-items:flex-end; }
+  .eyebrow { font-size:11px; font-weight:600; color:#ff5722; margin:0 0 8px 0; }
+  h1 { font-size:40px; font-weight:700; line-height:1.05; margin:0;
+       color:#fafaf9; letter-spacing:0; }
+  .summary { text-align:right; font-size:11px; font-weight:600; line-height:1.7; }
+  .summary em { font-style:normal; color:#ff5722; font-weight:700; }
+  .board { position:absolute; top:200px; left:40px; right:40px; bottom:90px;
+           border:1px solid #fafaf9; }
+  .colhd { display:grid; grid-template-columns: 60px 1fr 96px 130px;
+           font-size:10px; font-weight:700; color:#fafaf9;
+           border-bottom:1px solid #fafaf9; height:24px; }
+  .colhd div { padding:0 12px; display:flex; align-items:center;
+               border-right:1px solid #fafaf9; }
+  .colhd div:last-child { border-right:none; }
+  .row { display:grid; grid-template-columns: 60px 1fr 96px 130px;
+         font-size:13px; height:33px; align-items:center;
+         border-bottom:1px solid #fafaf9; }
+  .row:last-child { border-bottom:none; }
+  .row .ix { padding:0 12px; font-weight:700; color:#fafaf9;
+             border-right:1px solid #fafaf9; height:100%;
+             display:flex; align-items:center; }
+  .row .lbl { padding:0 14px; height:100%; display:flex; align-items:center;
+              border-right:1px solid #fafaf9; font-weight:600; }
+  .row .lbl .dots { color:#fafaf9; opacity:0.45; margin:0 8px; flex:1;
+                    overflow:hidden; white-space:nowrap; }
+  .row .val { padding:0 12px; font-weight:700; height:100%;
+              display:flex; align-items:center;
+              border-right:1px solid #fafaf9; }
+  .row .pill { padding:0 12px; height:100%; display:flex; align-items:center; }
+  .pill span { display:inline-block; padding:3px 8px; border:1px solid #fafaf9;
+               font-size:11px; font-weight:700; }
+  .pill span.acc { background:#ff5722; border-color:#ff5722; color:#0a0a0a; }
+  .pill span.warn { color:#fafaf9; border-color:#fafaf9; }
+  .pill span.muted { color:#fafaf9; opacity:0.55; border-color:#fafaf9; }
+  .footer { position:absolute; bottom:24px; left:40px; right:40px;
+            display:flex; justify-content:space-between; align-items:flex-end;
+            font-size:11px; font-weight:600; color:#fafaf9; }
+  .deco { position:absolute; right:40px; bottom:54px; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="frame"></div>
+  <div class="topbar">
+    <span>STATUS-BOARD / FLEET-Z / LIVE 14:02:07Z</span>
+    <span>PAGE 25 OF 27 // 12 ROWS</span>
+  </div>
+
+  <div class="head">
+    <div>
+      <div class="eyebrow">// 25 — STATUS BOARD</div>
+      <h1 data-pptx-role="title">FLEET-Z // RUNTIME STATUS</h1>
+    </div>
+    <div class="summary">
+      ROWS&nbsp;&nbsp;12<br>
+      <em>OK&nbsp;&nbsp;&nbsp;&nbsp;7</em>&nbsp;//&nbsp;WATCH&nbsp;3&nbsp;//&nbsp;FAIL&nbsp;2<br>
+      WINDOW&nbsp;5&nbsp;MIN
+    </div>
+  </div>
+
+  <div class="board">
+    <div class="colhd">
+      <div>IDX</div><div>LABEL</div><div>VALUE</div><div>STATUS</div>
+    </div>
+
+    <div class="row">
+      <div class="ix">01</div>
+      <div class="lbl">edge-rx&nbsp;/&nbsp;us-east-1c<span class="dots">................................</span></div>
+      <div class="val">12.4ms</div>
+      <div class="pill"><span class="acc">[ OK ]</span></div>
+    </div>
+    <div class="row">
+      <div class="ix">02</div>
+      <div class="lbl">edge-rx&nbsp;/&nbsp;eu-west-2a<span class="dots">................................</span></div>
+      <div class="val">14.1ms</div>
+      <div class="pill"><span class="acc">[ OK ]</span></div>
+    </div>
+    <div class="row">
+      <div class="ix">03</div>
+      <div class="lbl">kfk-buf&nbsp;/&nbsp;part-12<span class="dots">................................</span></div>
+      <div class="val">1.18K</div>
+      <div class="pill"><span class="warn">[ HOLD ]</span></div>
+    </div>
+    <div class="row">
+      <div class="ix">04</div>
+      <div class="lbl">norm-svc&nbsp;/&nbsp;hot-loop<span class="dots">................................</span></div>
+      <div class="val">62%</div>
+      <div class="pill"><span class="acc">[ HOT ]</span></div>
+    </div>
+    <div class="row">
+      <div class="ix">05</div>
+      <div class="lbl">cold-tbl&nbsp;/&nbsp;writer<span class="dots">................................</span></div>
+      <div class="val">2.4TB</div>
+      <div class="pill"><span class="acc">[ OK ]</span></div>
+    </div>
+    <div class="row">
+      <div class="ix">06</div>
+      <div class="lbl">obs-sink&nbsp;/&nbsp;tap-1<span class="dots">................................</span></div>
+      <div class="val">15s</div>
+      <div class="pill"><span class="acc">[ OK ]</span></div>
+    </div>
+    <div class="row">
+      <div class="ix">07</div>
+      <div class="lbl">tok-sign&nbsp;/&nbsp;ed25519<span class="dots">................................</span></div>
+      <div class="val">4.0ms</div>
+      <div class="pill"><span class="acc">[ OK ]</span></div>
+    </div>
+    <div class="row">
+      <div class="ix">08</div>
+      <div class="lbl">warm-set&nbsp;/&nbsp;shard-2<span class="dots">................................</span></div>
+      <div class="val">94.2%</div>
+      <div class="pill"><span class="acc">[ OK ]</span></div>
+    </div>
+    <div class="row">
+      <div class="ix">09</div>
+      <div class="lbl">flag-svc&nbsp;/&nbsp;eval-rt<span class="dots">................................</span></div>
+      <div class="val">12.0ms</div>
+      <div class="pill"><span class="warn">[ WATCH ]</span></div>
+    </div>
+    <div class="row">
+      <div class="ix">10</div>
+      <div class="lbl">meter-rx&nbsp;/&nbsp;rollup-5m<span class="dots">................................</span></div>
+      <div class="val">0.013%</div>
+      <div class="pill"><span class="warn">[ WATCH ]</span></div>
+    </div>
+    <div class="row">
+      <div class="ix">11</div>
+      <div class="lbl">dead-q&nbsp;/&nbsp;quarantine<span class="dots">................................</span></div>
+      <div class="val">412</div>
+      <div class="pill"><span class="warn">[ FAIL ]</span></div>
+    </div>
+    <div class="row">
+      <div class="ix">12</div>
+      <div class="lbl">nightly&nbsp;/&nbsp;cron-03Z<span class="dots">................................</span></div>
+      <div class="val">--</div>
+      <div class="pill"><span class="muted">[ IDLE ]</span></div>
+    </div>
+  </div>
+
+  <svg class="deco" width="180" height="22" viewBox="0 0 180 22" aria-hidden="true">
+    <rect x="0" y="6" width="10" height="10" fill="#fafaf9"/>
+    <rect x="14" y="6" width="10" height="10" fill="none" stroke="#fafaf9"/>
+    <rect x="28" y="6" width="10" height="10" fill="#fafaf9"/>
+    <rect x="42" y="6" width="10" height="10" fill="#ff5722"/>
+    <rect x="56" y="6" width="10" height="10" fill="none" stroke="#fafaf9"/>
+    <rect x="70" y="6" width="10" height="10" fill="#fafaf9"/>
+    <rect x="84" y="6" width="10" height="10" fill="#fafaf9"/>
+    <rect x="98" y="6" width="10" height="10" fill="none" stroke="#fafaf9"/>
+    <rect x="112" y="6" width="10" height="10" fill="#fafaf9"/>
+    <rect x="126" y="6" width="10" height="10" fill="#ff5722"/>
+    <rect x="140" y="6" width="10" height="10" fill="none" stroke="#fafaf9"/>
+    <rect x="154" y="6" width="10" height="10" fill="#fafaf9"/>
+    <rect x="168" y="6" width="10" height="10" fill="#fafaf9"/>
+  </svg>
+
+  <div class="footer">
+    <span>// SOURCE prom/agent-2 // pull=15s // alert chan=#oncall</span>
+    <span>SIG&nbsp;e22a:71f0:08bc</span>
+  </div>
+</div>
+</body>
+</html>

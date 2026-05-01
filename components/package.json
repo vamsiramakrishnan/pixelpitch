@@ -1,0 +1,41 @@
+{
+  "name": "@slidify/components",
+  "version": "0.1.0",
+  "description": "Multi-target slide component library. Each component renders to HTML for browser preview AND emits a typed IR node consumed by slidify's Python PPTX backend (and, eventually, PDF / Google Slides / Keynote backends).",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./ir": {
+      "types": "./dist/ir/index.d.ts",
+      "import": "./dist/ir/index.mjs"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "ir-emit": "tsx scripts/ir-emit.ts",
+    "test:composites": "tsx scripts/test-composites.ts"
+  },
+  "keywords": ["slidify", "presentations", "pptx", "ir", "compiler"],
+  "license": "MIT",
+  "peerDependencies": { "react": ">=18" },
+  "dependencies": { "zod": "^3.23.8" },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^18.2.0",
+    "react": "^18.2.0",
+    "tsup": "^8.2.0",
+    "tsx": "^4.16.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0"
+  }
+}

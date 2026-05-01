@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import hashlib
-import json
 import threading
 from abc import ABC, abstractmethod
 from collections import OrderedDict
@@ -16,51 +14,17 @@ from slidify.models import Decision, VisualUnit
 log = structlog.get_logger(__name__)
 
 
-def _quantize(v: float, bucket: int = 50) -> int:
-    return int(v // bucket) * bucket
-
-
 def structural_hash(unit: VisualUnit) -> str:
     """Construct a structural hash for a VisualUnit.
 
-    Excludes text content and exact positions so similar templates collide.
+    The hash is the recursive shape signature defined in
+    `slidify.patterns.signatures` — it captures anchor kind, normalized
+    class set, quantized bbox, and child signatures.
     """
-    elems = unit.all_elements()
-    tags = sorted(e.tag for e in elems)
-    classes = sorted(c for e in elems for c in (e.cls or "").split())
-    sig = {
-        "tags": tags,
-        "classes": classes,
-        "qbbox": [
-            _quantize(unit.bbox.x),
-            _quantize(unit.bbox.y),
-            _quantize(unit.bbox.w),
-            _quantize(unit.bbox.h),
-        ],
-        "kind": unit.kind.value,
-        "anchor_styles": _anchor_style_signature(unit),
-    }
-    raw = json.dumps(sig, sort_keys=True, separators=(",", ":")).encode("utf-8")
-    return hashlib.sha256(raw).hexdigest()[:24]
+    # Lazy import to avoid circular dep at module load.
+    from slidify.patterns.signatures import signature_hash
 
-
-def _anchor_style_signature(unit: VisualUnit) -> dict:
-    if not unit.elements:
-        return {}
-    a = unit.elements[0]
-    return {
-        "bg": a.background_color,
-        "bg_image": "yes" if (a.background_image and a.background_image != "none") else "no",
-        "border": a.border,
-        "radius": a.border_radius,
-        "shadow": "yes" if (a.box_shadow and a.box_shadow != "none") else "no",
-        "transform": "yes" if (a.transform and a.transform != "none") else "no",
-        "filter": "yes" if (a.filter and a.filter != "none") else "no",
-        "has_pseudo": a.has_before or a.has_after,
-        "is_canvas": a.is_canvas,
-        "is_svg": a.is_svg,
-        "is_img": a.is_img,
-    }
+    return signature_hash(unit)
 
 
 class CacheBackend(ABC):
