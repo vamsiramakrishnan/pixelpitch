@@ -223,7 +223,8 @@ WALKER_JS = r"""
                                      fill: s.getAttribute('fill') || sCs.fill || 'none',
                                      stroke: s.getAttribute('stroke') || sCs.stroke || 'none',
                                      stroke_width: parseFloat(s.getAttribute('stroke-width') || sCs.strokeWidth || '0') || 0,
-                                     fill_opacity: parseFloat(s.getAttribute('fill-opacity') || sCs.fillOpacity || '1') };
+                                     fill_opacity: parseFloat(s.getAttribute('fill-opacity') || sCs.fillOpacity || '1'),
+                                     stroke_opacity: parseFloat(s.getAttribute('stroke-opacity') || sCs.strokeOpacity || '1') };
                         if (s.tagName === 'rect') {
                             ss.x = parseFloat(s.getAttribute('x') || '0');
                             ss.y = parseFloat(s.getAttribute('y') || '0');

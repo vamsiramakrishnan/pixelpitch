@@ -108,6 +108,27 @@ def emit_svg_shapes(slide, svg_shapes: list[dict]) -> int:
     return n_emitted
 
 
+_NS_A = "http://schemas.openxmlformats.org/drawingml/2006/main"
+
+
+def _set_solid_alpha(srgb_el, alpha: float) -> None:
+    """Append (or replace) an `<a:alpha val="N"/>` child on an `<a:srgbClr>`.
+
+    OOXML alpha is in 1/1000 of a percent (val=100000 → fully opaque).
+    Without this, SVG `fill-opacity="0.55"` blobs render as fully-opaque
+    walls of color, drowning the slide content underneath (slide-43 /
+    slide-44 organic blobs).
+    """
+    from lxml import etree as _et
+
+    if srgb_el is None:
+        return
+    for existing in srgb_el.findall(f"{{{_NS_A}}}alpha"):
+        srgb_el.remove(existing)
+    val = int(round(max(0.0, min(1.0, alpha)) * 100_000))
+    _et.SubElement(srgb_el, f"{{{_NS_A}}}alpha", attrib={"val": str(val)})
+
+
 def _apply_svg_fill(shape, fill: str | None, fill_opacity: float) -> None:
     if fill is None or fill.lower() in ("none", "transparent"):
         try:
@@ -118,14 +139,30 @@ def _apply_svg_fill(shape, fill: str | None, fill_opacity: float) -> None:
     parsed = parse_color(fill)
     if parsed is None:
         return
+    rgb, color_alpha = parsed
+    final_alpha = float(color_alpha) * float(max(0.0, min(1.0, fill_opacity)))
     try:
         shape.fill.solid()
-        shape.fill.fore_color.rgb = parsed[0]
+        shape.fill.fore_color.rgb = rgb
     except Exception:
-        pass
+        return
+    if final_alpha < 0.999:
+        try:
+            sp_pr = shape._element.spPr  # noqa: SLF001
+            solid = sp_pr.find(f"{{{_NS_A}}}solidFill")
+            if solid is not None:
+                srgb = solid.find(f"{{{_NS_A}}}srgbClr")
+                _set_solid_alpha(srgb, final_alpha)
+        except Exception:
+            pass
 
 
-def _apply_svg_stroke(shape, stroke: str | None, stroke_width: float) -> None:
+def _apply_svg_stroke(
+    shape,
+    stroke: str | None,
+    stroke_width: float,
+    stroke_opacity: float = 1.0,
+) -> None:
     if stroke is None or stroke.lower() in ("none", "transparent") or stroke_width <= 0:
         try:
             shape.line.fill.background()
@@ -135,11 +172,24 @@ def _apply_svg_stroke(shape, stroke: str | None, stroke_width: float) -> None:
     parsed = parse_color(stroke)
     if parsed is None:
         return
+    rgb, color_alpha = parsed
+    final_alpha = float(color_alpha) * float(max(0.0, min(1.0, stroke_opacity)))
     try:
         shape.line.width = Emu(px_to_emu(stroke_width))
-        shape.line.color.rgb = parsed[0]
+        shape.line.color.rgb = rgb
     except Exception:
-        pass
+        return
+    if final_alpha < 0.999:
+        try:
+            sp_pr = shape._element.spPr  # noqa: SLF001
+            ln = sp_pr.find(f"{{{_NS_A}}}ln")
+            if ln is not None:
+                solid = ln.find(f"{{{_NS_A}}}solidFill")
+                if solid is not None:
+                    srgb = solid.find(f"{{{_NS_A}}}srgbClr")
+                    _set_solid_alpha(srgb, final_alpha)
+        except Exception:
+            pass
 
 
 def _emit_one(slide, s: dict, mapping: _Mapping) -> bool:
@@ -147,7 +197,10 @@ def _emit_one(slide, s: dict, mapping: _Mapping) -> bool:
     fill = s.get("fill")
     stroke = s.get("stroke")
     stroke_width = float(s.get("stroke_width") or 0.0)
-    fill_opacity = float(s.get("fill_opacity") or 1.0)
+    fill_opacity = float(s.get("fill_opacity") if s.get("fill_opacity") is not None else 1.0)
+    stroke_opacity = float(
+        s.get("stroke_opacity") if s.get("stroke_opacity") is not None else 1.0
+    )
 
     if tag == "rect":
         x = mapping.x(float(s["x"]))
@@ -162,7 +215,7 @@ def _emit_one(slide, s: dict, mapping: _Mapping) -> bool:
             kind, Emu(px_to_emu(x)), Emu(px_to_emu(y)), Emu(px_to_emu(w)), Emu(px_to_emu(h))
         )
         _apply_svg_fill(shape, fill, fill_opacity)
-        _apply_svg_stroke(shape, stroke, stroke_width)
+        _apply_svg_stroke(shape, stroke, stroke_width, stroke_opacity)
         return True
 
     if tag == "circle":
@@ -182,7 +235,7 @@ def _emit_one(slide, s: dict, mapping: _Mapping) -> bool:
             Emu(px_to_emu(h)),
         )
         _apply_svg_fill(shape, fill, fill_opacity)
-        _apply_svg_stroke(shape, stroke, stroke_width)
+        _apply_svg_stroke(shape, stroke, stroke_width, stroke_opacity)
         return True
 
     if tag == "ellipse":
@@ -202,7 +255,7 @@ def _emit_one(slide, s: dict, mapping: _Mapping) -> bool:
             Emu(px_to_emu(2 * ry)),
         )
         _apply_svg_fill(shape, fill, fill_opacity)
-        _apply_svg_stroke(shape, stroke, stroke_width)
+        _apply_svg_stroke(shape, stroke, stroke_width, stroke_opacity)
         return True
 
     if tag == "line":
@@ -217,14 +270,18 @@ def _emit_one(slide, s: dict, mapping: _Mapping) -> bool:
             Emu(px_to_emu(x2)),
             Emu(px_to_emu(y2)),
         )
-        _apply_svg_stroke(connector, stroke or "rgb(0,0,0)", stroke_width or 1.0)
+        _apply_svg_stroke(
+            connector, stroke or "rgb(0,0,0)", stroke_width or 1.0, stroke_opacity
+        )
         return True
 
     if tag == "path":
         d = (s.get("d") or "").strip()
         if not d:
             return False
-        return _emit_path(slide, d, mapping, fill, fill_opacity, stroke, stroke_width)
+        return _emit_path(
+            slide, d, mapping, fill, fill_opacity, stroke, stroke_width, stroke_opacity
+        )
 
     if tag == "text":
         return _emit_svg_text(slide, s, mapping)
@@ -257,7 +314,7 @@ def _emit_one(slide, s: dict, mapping: _Mapping) -> bool:
         except Exception:
             return False
         _apply_svg_fill(shape, fill, fill_opacity)
-        _apply_svg_stroke(shape, stroke, stroke_width)
+        _apply_svg_stroke(shape, stroke, stroke_width, stroke_opacity)
         return True
 
     return False
@@ -381,6 +438,7 @@ def _emit_path(
     fill_opacity: float,
     stroke: str | None,
     stroke_width: float,
+    stroke_opacity: float = 1.0,
 ) -> bool:
     """Emit an SVG `<path d="...">` as a native PPTX freeform via custGeom.
 
@@ -499,5 +557,5 @@ def _emit_path(
         sp_pr.insert(0, custgeom_el)
 
     _apply_svg_fill(shape, fill, fill_opacity)
-    _apply_svg_stroke(shape, stroke, stroke_width)
+    _apply_svg_stroke(shape, stroke, stroke_width, stroke_opacity)
     return True
