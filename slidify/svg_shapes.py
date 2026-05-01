@@ -1,11 +1,10 @@
 """Translate simple SVG primitives to native PPTX shapes.
 
-Supports `<rect>`, `<circle>`, `<ellipse>`, `<line>`, `<polygon>`, `<polyline>`.
-Single `<path>` elements are *not* translated (would need a real path parser);
-they fall back to raster.
+Supports `<rect>`, `<circle>`, `<ellipse>`, `<line>`, `<polygon>`, `<polyline>`,
+`<path>` (via slidify.svg_path), and `<text>`.
 
 Coordinates are in SVG userspace; we map them into the SVG element's viewport
-bounding box on the slide.
+bounding box on the slide, honoring `viewBox` and `preserveAspectRatio`.
 """
 
 from __future__ import annotations
@@ -37,14 +36,68 @@ class _Mapping:
 
 
 def _build_mapping(svg_rect: dict) -> _Mapping:
-    """SVG userspace assumed equal to viewport pixels (the common case for
-    inline SVG without a viewBox). For SVGs *with* a viewBox we'd need to
-    parse it; we accept the simplification for v1."""
+    """Map SVG userspace into a sub-rect of the slide.
+
+    If the SVG has no `viewBox`, userspace == viewport pixels (1:1).
+    Otherwise the viewBox `(min-x, min-y, vb-w, vb-h)` is mapped into the
+    rendered viewport `(x, y, w, h)`, honoring `preserveAspectRatio` (the
+    default `xMidYMid meet` keeps aspect and centers; `none` stretches).
+    """
+    rect_x = svg_rect.get("x", 0.0) or 0.0
+    rect_y = svg_rect.get("y", 0.0) or 0.0
+    rect_w = svg_rect.get("w", 0.0) or 0.0
+    rect_h = svg_rect.get("h", 0.0) or 0.0
+
+    vb = svg_rect.get("viewBox")
+    if not vb or rect_w <= 0 or rect_h <= 0:
+        return _Mapping(rect_x, rect_y, 1.0, 1.0)
+
+    try:
+        min_x, min_y, vb_w, vb_h = (float(v) for v in vb)
+    except (TypeError, ValueError):
+        return _Mapping(rect_x, rect_y, 1.0, 1.0)
+    if vb_w <= 0 or vb_h <= 0:
+        return _Mapping(rect_x, rect_y, 1.0, 1.0)
+
+    par = (svg_rect.get("preserveAspectRatio") or "xMidYMid meet").strip().lower()
+    parts = par.split()
+    align = parts[0] if parts else "xmidymid"
+    meet_or_slice = parts[1] if len(parts) > 1 else "meet"
+
+    if align == "none":
+        scale_x = rect_w / vb_w
+        scale_y = rect_h / vb_h
+        return _Mapping(
+            rect_x - min_x * scale_x,
+            rect_y - min_y * scale_y,
+            scale_x,
+            scale_y,
+        )
+
+    sx = rect_w / vb_w
+    sy = rect_h / vb_h
+    scale = min(sx, sy) if meet_or_slice != "slice" else max(sx, sy)
+    extra_x = rect_w - vb_w * scale
+    extra_y = rect_h - vb_h * scale
+
+    if "xmin" in align:
+        ox = 0.0
+    elif "xmax" in align:
+        ox = extra_x
+    else:
+        ox = extra_x / 2.0
+    if "ymin" in align:
+        oy = 0.0
+    elif "ymax" in align:
+        oy = extra_y
+    else:
+        oy = extra_y / 2.0
+
     return _Mapping(
-        svg_origin_x=svg_rect["x"],
-        svg_origin_y=svg_rect["y"],
-        scale_x=1.0,
-        scale_y=1.0,
+        rect_x + ox - min_x * scale,
+        rect_y + oy - min_y * scale,
+        scale,
+        scale,
     )
 
 

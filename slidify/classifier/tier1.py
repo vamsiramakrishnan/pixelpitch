@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
+from slidify.dom_walker import SVG_NATIVE_PATH_BUDGET
 from slidify.geom import parse_px
 from slidify.gradients import parse_gradient
 from slidify.models import Decision, DecisionKind, UnitKind, VisualUnit
@@ -28,9 +29,11 @@ def _has_complex_svg(unit: VisualUnit) -> bool:
     # child unit's SVG should fire its own classifier; bubbling the rule
     # up to the parent caused the slide-level unit to absorb every
     # sibling box's emit (slide 04 went 48 -> 3 shapes). Threshold
-    # mirrors the dom_walker capture cap (30) so any SVG that the
-    # walker could capture stays on the native path.
-    return any(e.is_svg and e.svg_path_count > 30 for e in unit.elements)
+    # mirrors the dom_walker capture cap (SVG_NATIVE_PATH_BUDGET) so any
+    # SVG that the walker could capture stays on the native path.
+    return any(
+        e.is_svg and e.svg_path_count > SVG_NATIVE_PATH_BUDGET for e in unit.elements
+    )
 
 
 def _has_simple_svg(unit: VisualUnit) -> bool:
