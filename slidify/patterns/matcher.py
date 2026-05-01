@@ -393,6 +393,24 @@ def _h_is_svg(unit, anchor, catalog, value):
     return anchor.is_svg == bool(value)
 
 
+@_handler("anchor.opacity_max")
+def _h_anchor_opacity_max(unit, anchor, catalog, value):
+    """Anchor's `opacity` is at most `value`. Use `0.95` as the typical
+    threshold for "visibly translucent" (anything less is essentially full)."""
+    try:
+        return float(anchor.opacity) <= float(value)
+    except (TypeError, ValueError):
+        return False
+
+
+@_handler("anchor.opacity_min")
+def _h_anchor_opacity_min(unit, anchor, catalog, value):
+    try:
+        return float(anchor.opacity) >= float(value)
+    except (TypeError, ValueError):
+        return False
+
+
 # Heuristic luminance via background color hex. Useful for "is dark theme."
 def _hex_luma(hex_str: str) -> float | None:
     s = (hex_str or "").strip().lower()

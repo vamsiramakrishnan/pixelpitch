@@ -17,6 +17,7 @@ dist/
 *.pptx
 !tests/fixtures/**/*.pptx
 !examples/**/*.pptx
+!_bench/corpus/divergent-deck.pptx
 *.pdf
 out/
 slide-*.png
