@@ -239,6 +239,22 @@ def cluster(elements: list[DomElement]) -> list[VisualUnit]:
                 ratio = ei.bbox.overlap_ratio(ej.bbox)
                 if ratio < 0.7:
                     continue
+                # Don't merge an anchor with `pptx_role` (the author has
+                # explicitly tagged it — title / kicker / footer). Same
+                # for elements carrying text. The merge step is for
+                # visually-similar bg layers (two divs sharing surface
+                # styling), not for absorbing content into decoration.
+                if ei.pptx_role or ej.pptx_role:
+                    continue
+                if (ei.text and ei.text.strip()) or (ej.text and ej.text.strip()):
+                    continue
+                if ei.is_text_container or ej.is_text_container:
+                    continue
+                # Don't merge text into non-text or vice versa: an SVG
+                # canvas overlay covering the slide must not absorb a
+                # blockquote sitting on top of it (slide-45 quote lost).
+                if ei.is_svg != ej.is_svg:
+                    continue
                 if ei.background_color != ej.background_color:
                     continue
                 if ei.border_radius != ej.border_radius:
