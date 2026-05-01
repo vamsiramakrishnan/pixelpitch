@@ -65,6 +65,10 @@ class TextRun(BaseModel):
     italic: bool = False
     underline: bool = False
     is_break: bool = False
+    # Per-line boxes captured via Range.getClientRects() in the browser.
+    # One entry per visual line the text rendered as. Empty when the run
+    # is `is_break=True` or the walker couldn't get rects.
+    line_boxes: list[BoundingBox] = Field(default_factory=list)
 
 
 class DomElement(BaseModel):

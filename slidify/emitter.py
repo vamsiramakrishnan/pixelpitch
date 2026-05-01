@@ -317,13 +317,22 @@ class Emitter:
         anchor = self._pick_text_anchor(unit)
         if anchor is None:
             return
+        # Browser-derived line boxes (`Range.getClientRects()`) give the
+        # exact pixel rectangles each text run occupied in the source
+        # render. When we have them, prefer the UNION bbox of all line
+        # boxes over the unit's bbox — the unit bbox is the CSS box-model
+        # container, which is often padded or oversized vs. the actual
+        # text. The union is the truth: where the type really sat.
+        emit_bbox = _union_line_box(unit) or op.bbox
+
         # Give multi-run inline text containers some horizontal slack so font
         # substitution doesn't wrap them. CSS sizes flex-item widths by their
         # content; PPTX uses fixed bboxes, so a "slidify · v1.0" inline-flex
         # container that fit in 102px in Chromium overflows in Calibri. Grow
         # the bbox by 30% horizontally — only for short multi-run frames where
-        # the wrap risk is real.
-        emit_bbox = op.bbox
+        # the wrap risk is real. SKIP this when we have line boxes — those
+        # are already the truth.
+        skip_slack = _union_line_box(unit) is not None
         # Naked inline text only — if the anchor paints its own background
         # (a pill, a chip, a trend tag) the slack would stretch that fill
         # past the text and leave a visible "tail" rectangle.
@@ -338,6 +347,7 @@ class Emitter:
             and op.bbox.h <= 48
             and op.bbox.w <= 320
             and not anchor_paints_bg
+            and not skip_slack
         ):
             extra = op.bbox.w * 0.30
             emit_bbox = BoundingBox(
@@ -1047,6 +1057,36 @@ def _shape_kind_for_anchor(anchor: DomElement, radius_px: float):
         if radius_px >= min(w, h) * 0.45:
             return MSO_SHAPE.OVAL
     return MSO_SHAPE.ROUNDED_RECTANGLE if radius_px > 0 else MSO_SHAPE.RECTANGLE
+
+
+def _union_line_box(unit: VisualUnit) -> BoundingBox | None:
+    """Return the union of every text run's line boxes inside `unit`.
+
+    The walker captures `Range.getClientRects()` per text node — each
+    rect is a visual line at its exact rendered pixel position. The
+    union is where the type ACTUALLY sat in the source, regardless of
+    the CSS box-model container's bbox (which is often oversized due
+    to padding / line-height overhead).
+
+    Returns None when no run carries line_boxes (the walker may have
+    skipped capture, or the unit has no text runs). Caller should fall
+    back to `unit.bbox` in that case.
+    """
+    boxes: list[BoundingBox] = []
+    for el in unit.all_elements():
+        if not el.runs:
+            continue
+        for r in el.runs:
+            if r.is_break:
+                continue
+            boxes.extend(r.line_boxes)
+    if not boxes:
+        return None
+    minx = min(b.x for b in boxes)
+    miny = min(b.y for b in boxes)
+    maxx = max(b.x + b.w for b in boxes)
+    maxy = max(b.y + b.h for b in boxes)
+    return BoundingBox(x=minx, y=miny, w=maxx - minx, h=maxy - miny)
 
 
 def _are_spatially_distinct(elems: list[DomElement]) -> bool:

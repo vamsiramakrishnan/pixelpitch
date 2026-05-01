@@ -80,6 +80,26 @@ WALKER_JS = r"""
             if (node.nodeType === 3) {
                 const txt = node.textContent || '';
                 if (!txt) continue;
+                // Capture browser-derived line boxes for this text node via
+                // Range.getClientRects(). Each rect is one visual line at
+                // its exact rendered position. The Python emitter uses
+                // these as ground truth so a wrapped headline lands at the
+                // pixel-precise lines the source rendered, instead of
+                // being squeezed into the unit's bbox and re-flowed.
+                let lineBoxes = [];
+                try {
+                    const r = document.createRange();
+                    r.selectNodeContents(node);
+                    const rects = r.getClientRects();
+                    for (const rect of rects) {
+                        if (rect.width > 0 && rect.height > 0) {
+                            lineBoxes.push({
+                                x: rect.x, y: rect.y,
+                                w: rect.width, h: rect.height,
+                            });
+                        }
+                    }
+                } catch (_) {}
                 out.push({
                     text: txt,
                     font_family: cs.fontFamily,
@@ -90,6 +110,7 @@ WALKER_JS = r"""
                     italic: cs.fontStyle === 'italic',
                     underline: cs.textDecorationLine && cs.textDecorationLine.includes('underline'),
                     is_break: false,
+                    line_boxes: lineBoxes,
                 });
             } else if (node.nodeType === 1) {
                 if (node.tagName === 'BR') {
@@ -345,6 +366,12 @@ async def walk(page: Page) -> list[DomElement]:
                         italic=r.get("italic", False),
                         underline=r.get("underline", False),
                         is_break=r.get("is_break", False),
+                        line_boxes=[
+                            BoundingBox(
+                                x=lb["x"], y=lb["y"], w=lb["w"], h=lb["h"]
+                            )
+                            for lb in (r.get("line_boxes") or [])
+                        ],
                     )
                     for r in (entry.get("runs") or [])
                 ] if entry.get("runs") else None,
