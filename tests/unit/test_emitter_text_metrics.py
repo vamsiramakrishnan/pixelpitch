@@ -41,12 +41,19 @@ def _make_text_element(
 
 
 @pytest.mark.asyncio
-async def test_emitter_bakes_normAutofit_for_overflowing_title(tmp_path):
+async def test_emitter_shrinks_overflowing_title(tmp_path):
+    """Multi-line wrapping textbox: assert <a:normAutofit fontScale="..."> is
+    baked. Single-line ``wrap=none`` boxes bake the scale into rPr instead
+    (LibreOffice ignores normAutofit when wrap=none) — that path is covered
+    by ``test_single_line_title_bakes_size_into_rPr``.
+    """
     if get_inter_font_path() is None:
         pytest.skip("Inter not installed — autofit pre-compute requires it")
     # Long title that, in any reasonable font, overflows a tight bbox.
+    # Use a tall bbox so the wrap=true / multi-line branch is selected and
+    # we can assert the normAutofit element specifically.
     long_text = "An Extraordinarily Long Presentation Title That Will Overflow"
-    bbox = BoundingBox(x=10, y=10, w=200, h=60)
+    bbox = BoundingBox(x=10, y=10, w=200, h=300)
     el = _make_text_element(1, long_text, bbox, font_size_px=32.0)
     unit = VisualUnit(
         id="u1",
@@ -84,6 +91,69 @@ async def test_emitter_bakes_normAutofit_for_overflowing_title(tmp_path):
     assert found_scales, "expected at least one <a:normAutofit fontScale=...>"
     assert any(s < 100_000 for s in found_scales), (
         f"expected a fontScale < 100000 (shrink); got {found_scales}"
+    )
+
+
+@pytest.mark.asyncio
+async def test_single_line_title_bakes_size_into_rPr(tmp_path):
+    """Bug A regression: single-line wrap=none titles must bake the
+    autofit scale into per-run ``<a:rPr sz=...>`` rather than emit
+    ``<a:normAutofit fontScale="...">``. LibreOffice silently drops the
+    fontScale attribute when bodyPr.wrap="none", which left slide-13's
+    72pt title clipped at the slide edge with the substituted font even
+    though the scale had been computed correctly.
+    """
+    if get_inter_font_path() is None:
+        pytest.skip("Inter not installed — autofit pre-compute requires it")
+    # 72pt headline in a single-line, just-too-narrow box (mirrors slide-13:
+    # ``"Pro, in the smallest possible frame."`` at 72px font in ~1126px wide).
+    long_text = "Pro, in the smallest possible frame."
+    bbox = BoundingBox(x=10, y=10, w=900, h=80)
+    el = _make_text_element(1, long_text, bbox, font_size_px=72.0)
+    unit = VisualUnit(
+        id="u1", kind=UnitKind.Title, bbox=bbox, elements=[el]
+    )
+    op = EmitOp(
+        unit_id="u1",
+        decision=Decision(kind=DecisionKind.NativeText),
+        z_order=0,
+        bbox=bbox,
+    )
+
+    em = Emitter()
+    slide = em.prs.slides.add_slide(em.prs.slide_layouts[6])
+    em._emit_native_text(slide, unit, op)
+    out = tmp_path / "out.pptx"
+    em.save(out)
+    em.close()
+
+    # Reopen and inspect the title textbox's bodyPr + rPr.
+    prs = Presentation(str(out))
+    title_shape = next(
+        sh for sh in prs.slides[0].shapes
+        if sh.has_text_frame and "Pro," in sh.text_frame.text
+    )
+    bodyPr = title_shape.text_frame._txBody.bodyPr
+    # 1) wrap=none was set (single-line guard)
+    assert bodyPr.get("wrap") == "none"
+    # 2) NO normAutofit fontScale on a wrap=none box (LibreOffice ignores it).
+    autofits = bodyPr.findall(f"{{{A_NS}}}normAutofit")
+    for af in autofits:
+        # fontScale absent OR == 100000 (no-op) is acceptable; any < 100000 is
+        # the bug we're guarding against.
+        fs = af.get("fontScale")
+        assert fs is None or int(fs) >= 100_000, (
+            f"single-line wrap=none box should not rely on normAutofit; "
+            f"got fontScale={fs}"
+        )
+    # 3) The per-run rPr sz must be smaller than the source 72pt → 7200.
+    rprs = title_shape.text_frame._txBody.findall(
+        f".//{{{A_NS}}}r/{{{A_NS}}}rPr"
+    )
+    sizes = [int(r.get("sz")) for r in rprs if r.get("sz") is not None]
+    assert sizes, "expected at least one <a:rPr sz=...>"
+    assert min(sizes) < 7200, (
+        f"expected a baked-down sz < 7200; got {sizes}"
     )
 
 
