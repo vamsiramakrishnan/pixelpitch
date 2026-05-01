@@ -43,6 +43,8 @@ from slidify.shadows import apply_shadows, parse_box_shadows
 from slidify.svg_shapes import emit_svg_shapes
 from slidify.text_metrics import (
     compute_font_scale_for_textbox,
+    estimate_wrapped_lines,
+    genre_for_family,
     shrink_pill_bbox_to_fit_text,
 )
 
@@ -101,6 +103,62 @@ def _emu_rect(b: BoundingBox) -> tuple[Emu, Emu, Emu, Emu]:
         Emu(px_to_emu(b.w)),
         Emu(px_to_emu(b.h)),
     )
+
+
+def _grow_bbox_for_fallback_wrap(
+    bbox: BoundingBox,
+    text: str,
+    font_size_pt: float,
+    font_family: str | None,
+    line_height_factor: float = 1.25,
+    max_lines: int = 4,
+) -> BoundingBox:
+    """If ``text`` would wrap to N lines at ``bbox.w`` with the genre-
+    appropriate fallback font but ``bbox.h`` only fits 1 line, grow
+    ``bbox.h`` to fit those N lines.
+
+    Background: slidify pulls bboxes from ``getBoundingClientRect()`` in
+    headless Chrome. When the source font isn't installed (e.g. Source
+    Serif Pro on a CI box that only has DejaVu Serif), the browser
+    rendered the headline as one line at width W. The PPTX gets a
+    1-line-tall textbox. LibreOffice opens the PPTX with its OWN
+    fallback (DejaVu Serif Bold for serif, ~15% wider than the browser's
+    fallback), and the text now genuinely needs to wrap. With a 1-line
+    bbox, the wrapped lines clip OR overflow horizontally past the bbox
+    into the next column. Either way the slide diverges.
+
+    Growing the bbox vertically is a defensive correction — the
+    extra space is invisible when the text really does fit (since
+    ``word_wrap=true`` only consumes what it needs). ``max_lines``
+    bounds the growth so a runaway misestimate can't push N lines into
+    the next layout band.
+
+    Skipped for *titles* (>= 24pt). Display headlines are designed to
+    sit on one line; if they overflow we lean on per-run ``<a:rPr sz=>``
+    shrink (see ``_apply_textframe_wrap_and_scale``) so the layout
+    keeps its visual rhythm. Body / caption text is what benefits from
+    vertical growth.
+    """
+    if not text or font_size_pt <= 0:
+        return bbox
+    if font_size_pt >= 24.0:
+        # Display headline — shrink-to-fit is the right tool, not wrap.
+        return bbox
+    line_height_px = font_size_pt * 1.333 * line_height_factor
+    if bbox.h >= line_height_px * 2:
+        return bbox  # already multi-line; trust the source.
+    genre = genre_for_family(font_family)
+    try:
+        n_lines = estimate_wrapped_lines(
+            text, bbox_w_px=bbox.w, font_size_pt=font_size_pt, genre=genre
+        )
+    except Exception:
+        return bbox
+    if n_lines <= 1:
+        return bbox
+    n_lines = min(n_lines, max_lines)
+    new_h = max(bbox.h, n_lines * line_height_px)
+    return BoundingBox(x=bbox.x, y=bbox.y, w=bbox.w, h=new_h)
 
 
 def _emu_rect_offcanvas(b: BoundingBox) -> tuple[Emu, Emu, Emu, Emu]:
@@ -254,6 +312,20 @@ class Emitter:
         kind = op.decision.kind
 
         if kind == DecisionKind.Skip:
+            return
+
+        # Skip shapes whose bbox is entirely off the slide canvas. Without
+        # this, source HTML that overflows (CSS overflow:hidden hides it
+        # in the browser; the bboxes still get captured) emits dozens of
+        # h=1 placeholder shapes clamped to y=719. They aren't visible
+        # but bloat shape count and confuse the oracle's region attribution.
+        b = op.bbox
+        if (
+            b.y >= SLIDE_H_PX
+            or b.x >= SLIDE_W_PX
+            or b.y + b.h <= 0
+            or b.x + b.w <= 0
+        ):
             return
 
         if kind == DecisionKind.NativeText:
@@ -477,7 +549,8 @@ class Emitter:
                 scale_runs.append((t, max(8.0, parse_pt(e.font_size))))
             if scale_runs:
                 font_scale = self._apply_textframe_wrap_and_scale(
-                    tf, scale_runs, emit_bbox.w, emit_bbox.h
+                    tf, scale_runs, emit_bbox.w, emit_bbox.h,
+                    genre=genre_for_family(anchor.font_family),
                 )
         except Exception:
             pass
@@ -521,7 +594,8 @@ class Emitter:
             if text:
                 pt_size = max(8.0, parse_pt(e.font_size))
                 font_scale = self._apply_textframe_wrap_and_scale(
-                    tf, [(text, pt_size)], e.bbox.w, e.bbox.h
+                    tf, [(text, pt_size)], e.bbox.w, e.bbox.h,
+                    genre=genre_for_family(e.font_family),
                 )
         except Exception:
             pass
@@ -544,6 +618,7 @@ class Emitter:
         runs: list[tuple[str, float]],
         bbox_w_px: float,
         bbox_h_px: float,
+        genre: str | None = None,
     ) -> float:
         """Set wrap policy + explicit fontScale for a textframe.
 
@@ -560,6 +635,12 @@ class Emitter:
         the slide and the renderer clips at the canvas edge instead of
         shrinking to fit (slide-13 "Pro, in the smallest possible frame.").
         Baking the scale into ``<a:rPr sz=...>`` works in every renderer.
+
+        ``genre`` ("serif" / "mono" / "sans") routes the autofit
+        measurement to a genre-matched fallback font — without this a
+        Source Serif Pro headline measured against Liberation Sans
+        under-counts by ~15% and skips the shrink that would have kept
+        it in-bbox.
 
         For multi-line wrapping textboxes we keep emitting ``normAutofit`` so
         PowerPoint's runtime shrink-to-fit still applies in the wrapped case.
@@ -580,7 +661,7 @@ class Emitter:
 
         try:
             scale = compute_font_scale_for_textbox(
-                runs, bbox_w_px=bbox_w_px, bbox_h_px=bbox_h_px
+                runs, bbox_w_px=bbox_w_px, bbox_h_px=bbox_h_px, genre=genre
             )
             if not scale.needs_autofit:
                 return 1.0
