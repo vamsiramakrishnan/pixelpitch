@@ -847,24 +847,15 @@ class Emitter:
         except Exception as e:
             log.warning("emitter.image_fetch_failed", src=src[:120], error=str(e))
             return
-        # Honor `<img style="opacity: 0.X">` by baking the alpha into the
-        # image bytes against the slide's underlying bg color. We do this
-        # at emit time (rather than via OOXML `<a:alphaModFix>`) because
-        # LibreOffice and many older PowerPoint versions silently ignore
-        # blip-level alpha — pre-multiplying produces the same visual on
-        # every renderer at the cost of needing the bg color. Without this,
-        # slides that use a faded photo as a backdrop under big type render
-        # the photo at full strength, blowing out contrast and forcing the
-        # overlay text into illegibility.
+        x, y, w, h = _emu_rect(op.bbox)
+        pic = slide.shapes.add_picture(io.BytesIO(data), x, y, w, h)
+        # Honor `<img style="opacity: 0.X">` natively. Without this, slides
+        # that use a faded photo as a backdrop under big type render the
+        # photo at full strength in PPTX, blowing out contrast and forcing
+        # the overlay text into illegibility.
         opacity = self._picture_opacity(unit)
         if opacity is not None and opacity < 0.999:
-            bg_rgb = self._underlying_bg_rgb(unit)
-            try:
-                data = self._bake_image_opacity(data, opacity, bg_rgb)
-            except Exception as e:
-                log.warning("emitter.bake_alpha_failed", error=str(e))
-        x, y, w, h = _emu_rect(op.bbox)
-        slide.shapes.add_picture(io.BytesIO(data), x, y, w, h)
+            self._set_picture_alpha(pic, opacity)
 
     def _picture_opacity(self, unit: VisualUnit) -> float | None:
         """The IMG's CSS opacity (None ⇔ no IMG / opacity == 1)."""
@@ -877,63 +868,24 @@ class Emitter:
                 return op if 0.0 <= op < 1.0 else None
         return None
 
-    def _underlying_bg_rgb(self, unit: VisualUnit) -> tuple[int, int, int]:
-        """Best-effort guess at the color sitting behind a translucent IMG.
+    def _set_picture_alpha(self, pic, alpha: float) -> None:
+        """Insert `<a:alphaModFix amt="…"/>` into the picture's `<a:blip>`.
 
-        We walk the IMG's ancestor chain looking for the first opaque
-        `background-color` and use it as the alpha-composite base. Defaults
-        to black, which is what most photo-backdrop slides use.
+        OOXML expresses image translucency as a blip-level effect, not a
+        shape fill alpha. python-pptx doesn't expose this directly, so we
+        edit the underlying lxml tree.
         """
-        # Anchor parent chain via parent_id stored on every DomElement.
-        elems = {e.id: e for e in unit.all_elements()}
-        # Pick the IMG anchor.
-        img = next(
-            (e for e in unit.all_elements() if e.is_img and e.img_src), None
-        )
-        if img is None:
-            return (0, 0, 0)
-        cur = img
-        while cur is not None:
-            bgc = cur.background_color or ""
-            parsed = parse_color(bgc)
-            if parsed is not None:
-                rgb_color, alpha = parsed
-                if alpha >= 0.5:
-                    return (
-                        int((rgb_color >> 16) & 0xFF),
-                        int((rgb_color >> 8) & 0xFF),
-                        int(rgb_color & 0xFF),
-                    )
-            parent_id = cur.parent_id
-            cur = elems.get(parent_id) if parent_id is not None else None
-        return (0, 0, 0)
-
-    def _bake_image_opacity(
-        self, data: bytes, opacity: float, bg_rgb: tuple[int, int, int]
-    ) -> bytes:
-        """Alpha-composite an image against `bg_rgb` and return PNG bytes.
-
-        `out = src * opacity + bg * (1 - opacity)` per pixel. Fast, exact,
-        and renderer-portable.
-        """
-        from PIL import Image
-
-        img = Image.open(io.BytesIO(data)).convert("RGB")
-        # Use NumPy if available; fall back to a Python loop for portability.
         try:
-            import numpy as np
-
-            arr = np.asarray(img, dtype=np.float32)
-            bg = np.asarray(bg_rgb, dtype=np.float32)
-            out = arr * opacity + bg * (1.0 - opacity)
-            out = out.clip(0, 255).astype("uint8")
-            faded = Image.fromarray(out, mode="RGB")
-        except ImportError:  # pragma: no cover
-            blend = Image.new("RGB", img.size, bg_rgb)
-            faded = Image.blend(blend, img, opacity)
-        buf = io.BytesIO()
-        faded.save(buf, format="PNG")
-        return buf.getvalue()
+            blip = pic._element.blipFill.blip
+        except AttributeError:
+            return
+        if blip is None:
+            return
+        # Strip any prior alphaModFix to keep emit idempotent.
+        for existing in blip.findall(f"{{{_A_NS}}}alphaModFix"):
+            blip.remove(existing)
+        amt = max(0, min(100_000, int(round(alpha * 100_000))))
+        etree.SubElement(blip, f"{{{_A_NS}}}alphaModFix", attrib={"amt": str(amt)})
 
     def _first_img_src(self, unit: VisualUnit) -> str | None:
         for e in unit.all_elements():
