@@ -18,11 +18,11 @@
         "cache:tier0": 4
       },
       "unmatched_signatures": 3,
-      "elapsed_s": 6.1104065810000066,
+      "elapsed_s": 15.285391246000017,
       "pptx": "_bench/corpus/out/slide-01-state-of-the-union.pptx",
       "preview_png": "_bench/corpus/preview/slide-01-state-of-the-union.png",
-      "ssim": 0.7822134162250892,
-      "ocr_recall": 0.8829787234042553,
+      "ssim": 0.7867420923965326,
+      "ocr_recall": 0.8723404255319149,
       "passed": false,
       "failing_regions": 20
     },
@@ -38,10 +38,10 @@
         "tier1": 2
       },
       "unmatched_signatures": 2,
-      "elapsed_s": 6.352129504000004,
+      "elapsed_s": 4.481560468999987,
       "pptx": "_bench/corpus/out/slide-02-the-deficit-two-ways.pptx",
       "preview_png": "_bench/corpus/preview/slide-02-the-deficit-two-ways.png",
-      "ssim": 0.7796702377397566,
+      "ssim": 0.7890892715917014,
       "ocr_recall": 0.9090909090909091,
       "passed": false,
       "failing_regions": 20
@@ -59,10 +59,10 @@
         "cache:tier1": 3
       },
       "unmatched_signatures": 3,
-      "elapsed_s": 5.278245560999949,
+      "elapsed_s": 4.337436808999996,
       "pptx": "_bench/corpus/out/slide-03-housing-six-cities.pptx",
       "preview_png": "_bench/corpus/preview/slide-03-housing-six-cities.png",
-      "ssim": 0.7703510120640304,
+      "ssim": 0.7836741315528765,
       "ocr_recall": 0.8833333333333333,
       "passed": false,
       "failing_regions": 20
@@ -79,10 +79,10 @@
         "tier1": 1
       },
       "unmatched_signatures": 1,
-      "elapsed_s": 4.861565079999991,
+      "elapsed_s": 4.175610166000013,
       "pptx": "_bench/corpus/out/slide-04-the-quiet-collapse.pptx",
       "preview_png": "_bench/corpus/preview/slide-04-the-quiet-collapse.png",
-      "ssim": 0.7517568916674889,
+      "ssim": 0.7571996465728965,
       "ocr_recall": 0.9702970297029703,
       "passed": false,
       "failing_regions": 20
@@ -101,11 +101,11 @@
         "promotion": 2
       },
       "unmatched_signatures": 4,
-      "elapsed_s": 5.628139412999985,
+      "elapsed_s": 5.11163920599995,
       "pptx": "_bench/corpus/out/slide-05-broadband-by-state.pptx",
       "preview_png": "_bench/corpus/preview/slide-05-broadband-by-state.png",
-      "ssim": 0.7542957229162993,
-      "ocr_recall": 0.8857142857142857,
+      "ssim": 0.758390016265163,
+      "ocr_recall": 0.9,
       "passed": false,
       "failing_regions": 20
     },
@@ -122,11 +122,11 @@
         "cache:tier1": 7
       },
       "unmatched_signatures": 2,
-      "elapsed_s": 5.222910555999988,
+      "elapsed_s": 4.576905658999976,
       "pptx": "_bench/corpus/out/slide-06-emissions-comparison.pptx",
       "preview_png": "_bench/corpus/preview/slide-06-emissions-comparison.png",
-      "ssim": 0.7252574659578422,
-      "ocr_recall": 0.5975609756097561,
+      "ssim": 0.7327881999845646,
+      "ocr_recall": 0.6219512195121951,
       "passed": false,
       "failing_regions": 20
     },
@@ -143,11 +143,11 @@
         "cache:tier1": 3
       },
       "unmatched_signatures": 6,
-      "elapsed_s": 5.147167061999994,
+      "elapsed_s": 4.616390475999992,
       "pptx": "_bench/corpus/out/slide-07-cover-the-numbers.pptx",
       "preview_png": "_bench/corpus/preview/slide-07-cover-the-numbers.png",
-      "ssim": 0.6996591080687677,
-      "ocr_recall": 0.8446601941747572,
+      "ssim": 0.6836187412937188,
+      "ocr_recall": 0.8349514563106796,
       "passed": false,
       "failing_regions": 20
     },
@@ -162,10 +162,10 @@
         "cache:tier0": 1
       },
       "unmatched_signatures": 0,
-      "elapsed_s": 3.95827477499995,
+      "elapsed_s": 5.574969447000001,
       "pptx": "_bench/corpus/out/slide-11-hero-number.pptx",
       "preview_png": "_bench/corpus/preview/slide-11-hero-number.png",
-      "ssim": 0.8766643601551952,
+      "ssim": 0.8929592321994368,
       "ocr_recall": 0.9285714285714286,
       "passed": false,
       "failing_regions": 20
@@ -181,10 +181,10 @@
         "cache:tier0": 1
       },
       "unmatched_signatures": 0,
-      "elapsed_s": 3.4381776929999432,
+      "elapsed_s": 3.057610201999978,
       "pptx": "_bench/corpus/out/slide-12-title-reveal.pptx",
       "preview_png": "_bench/corpus/preview/slide-12-title-reveal.png",
-      "ssim": 0.9151506511045063,
+      "ssim": 0.921825060406432,
       "ocr_recall": 0.42857142857142855,
       "passed": false,
       "failing_regions": 20
@@ -202,10 +202,10 @@
         "cache:tier1": 3
       },
       "unmatched_signatures": 3,
-      "elapsed_s": 4.025315379999938,
+      "elapsed_s": 3.431080440999949,
       "pptx": "_bench/corpus/out/slide-13-spec-sheet.pptx",
       "preview_png": "_bench/corpus/preview/slide-13-spec-sheet.png",
-      "ssim": 0.8959224462507053,
+      "ssim": 0.897291538702005,
       "ocr_recall": 0.46153846153846156,
       "passed": false,
       "failing_regions": 20
@@ -222,10 +222,10 @@
         "cache:tier0": 3
       },
       "unmatched_signatures": 1,
-      "elapsed_s": 3.8785817180000777,
+      "elapsed_s": 3.3114333400000078,
       "pptx": "_bench/corpus/out/slide-14-was-now.pptx",
       "preview_png": "_bench/corpus/preview/slide-14-was-now.png",
-      "ssim": 0.8775919818913316,
+      "ssim": 0.8826904326532786,
       "ocr_recall": 0.9411764705882353,
       "passed": false,
       "failing_regions": 20
@@ -243,7 +243,7 @@
         "cache:tier1": 4
       },
       "unmatched_signatures": 4,
-      "elapsed_s": 4.240356488999964,
+      "elapsed_s": 3.7153130269999792,
       "pptx": "_bench/corpus/out/slide-15-feature-mosaic.pptx",
       "preview_png": "_bench/corpus/preview/slide-15-feature-mosaic.png",
       "ssim": 0.9123557740080104,
@@ -263,10 +263,10 @@
         "tier1": 1
       },
       "unmatched_signatures": 1,
-      "elapsed_s": 3.775588907000042,
+      "elapsed_s": 3.476083688000017,
       "pptx": "_bench/corpus/out/slide-16-pull-quote.pptx",
       "preview_png": "_bench/corpus/preview/slide-16-pull-quote.png",
-      "ssim": 0.8693487496169517,
+      "ssim": 0.8639979128793938,
       "ocr_recall": 0.9545454545454546,
       "passed": true,
       "failing_regions": 0
@@ -282,10 +282,10 @@
         "cache:tier0": 1
       },
       "unmatched_signatures": 0,
-      "elapsed_s": 3.541882178000037,
+      "elapsed_s": 3.0318756519999965,
       "pptx": "_bench/corpus/out/slide-17-thank-you.pptx",
       "preview_png": "_bench/corpus/preview/slide-17-thank-you.png",
-      "ssim": 0.9005573877931069,
+      "ssim": 0.9129707610560419,
       "ocr_recall": 1.0,
       "passed": true,
       "failing_regions": 0
@@ -301,11 +301,11 @@
         "cache:tier0": 16
       },
       "unmatched_signatures": 0,
-      "elapsed_s": 4.797010899000043,
+      "elapsed_s": 3.9806965399999967,
       "pptx": "_bench/corpus/out/slide-21-spec-sheet.pptx",
       "preview_png": "_bench/corpus/preview/slide-21-spec-sheet.png",
-      "ssim": 0.7320239976971772,
-      "ocr_recall": 0.5263157894736842,
+      "ssim": 0.7399168454464605,
+      "ocr_recall": 0.49122807017543857,
       "passed": false,
       "failing_regions": 20
     },
@@ -322,10 +322,10 @@
         "cache:tier1": 15
       },
       "unmatched_signatures": 2,
-      "elapsed_s": 4.4876333659999545,
+      "elapsed_s": 3.60067283799998,
       "pptx": "_bench/corpus/out/slide-22-schematic.pptx",
       "preview_png": "_bench/corpus/preview/slide-22-schematic.png",
-      "ssim": 0.8228568961728339,
+      "ssim": 0.8228822087725098,
       "ocr_recall": 0.0,
       "passed": false,
       "failing_regions": 20
@@ -342,11 +342,11 @@
         "tier2": 1
       },
       "unmatched_signatures": 1,
-      "elapsed_s": 5.5143427320000455,
+      "elapsed_s": 4.685102571000073,
       "pptx": "_bench/corpus/out/slide-23-density-grid.pptx",
       "preview_png": "_bench/corpus/preview/slide-23-density-grid.png",
-      "ssim": 0.7133950440145623,
-      "ocr_recall": 0.7903225806451613,
+      "ssim": 0.7393227004220289,
+      "ocr_recall": 0.7983870967741935,
       "passed": false,
       "failing_regions": 20
     },
@@ -360,11 +360,11 @@
         "tier0": 8
       },
       "unmatched_signatures": 0,
-      "elapsed_s": 5.040217452999968,
+      "elapsed_s": 4.090701962000026,
       "pptx": "_bench/corpus/out/slide-24-code-hero.pptx",
       "preview_png": "_bench/corpus/preview/slide-24-code-hero.png",
-      "ssim": 0.7469427583544462,
-      "ocr_recall": 0.8372093023255814,
+      "ssim": 0.7580352289937627,
+      "ocr_recall": 0.813953488372093,
       "passed": false,
       "failing_regions": 20
     },
@@ -380,11 +380,11 @@
         "tier1": 1
       },
       "unmatched_signatures": 1,
-      "elapsed_s": 4.725137207999978,
+      "elapsed_s": 5.259670325000002,
       "pptx": "_bench/corpus/out/slide-25-status-board.pptx",
       "preview_png": "_bench/corpus/preview/slide-25-status-board.png",
-      "ssim": 0.6424308951147942,
-      "ocr_recall": 0.6935483870967742,
+      "ssim": 0.6368044495761209,
+      "ocr_recall": 0.6451612903225806,
       "passed": false,
       "failing_regions": 20
     },
@@ -398,10 +398,10 @@
         "tier0": 5
       },
       "unmatched_signatures": 0,
-      "elapsed_s": 4.566955337000081,
+      "elapsed_s": 3.898162812999999,
       "pptx": "_bench/corpus/out/slide-26-manifesto.pptx",
       "preview_png": "_bench/corpus/preview/slide-26-manifesto.png",
-      "ssim": 0.6387452594517989,
+      "ssim": 0.6528054695865079,
       "ocr_recall": 0.8470588235294118,
       "passed": false,
       "failing_regions": 20
@@ -419,11 +419,11 @@
         "tier2": 2
       },
       "unmatched_signatures": 6,
-      "elapsed_s": 5.008728966000035,
+      "elapsed_s": 3.9029346879999594,
       "pptx": "_bench/corpus/out/slide-27-dotmatrix-ladder.pptx",
       "preview_png": "_bench/corpus/preview/slide-27-dotmatrix-ladder.png",
-      "ssim": 0.7172800147417976,
-      "ocr_recall": 0.3235294117647059,
+      "ssim": 0.7320386972921146,
+      "ocr_recall": 0.3382352941176471,
       "passed": false,
       "failing_regions": 20
     },
@@ -441,11 +441,11 @@
         "promotion": 1
       },
       "unmatched_signatures": 3,
-      "elapsed_s": 6.565844341000002,
+      "elapsed_s": 6.554145108000057,
       "pptx": "_bench/corpus/out/slide-31-hero-gradient.pptx",
       "preview_png": "_bench/corpus/preview/slide-31-hero-gradient.png",
-      "ssim": 0.774445905836231,
-      "ocr_recall": 0.8536585365853658,
+      "ssim": 0.7757952344365832,
+      "ocr_recall": 0.8780487804878049,
       "passed": false,
       "failing_regions": 20
     },
@@ -465,11 +465,11 @@
         "promotion": 1
       },
       "unmatched_signatures": 5,
-      "elapsed_s": 7.0243485269999155,
+      "elapsed_s": 7.314428371999952,
       "pptx": "_bench/corpus/out/slide-32-stats-trio.pptx",
       "preview_png": "_bench/corpus/preview/slide-32-stats-trio.png",
-      "ssim": 0.7588265264730484,
-      "ocr_recall": 0.8888888888888888,
+      "ssim": 0.7587650659196538,
+      "ocr_recall": 0.7592592592592593,
       "passed": false,
       "failing_regions": 20
     },
@@ -486,11 +486,11 @@
         "promotion": 2
       },
       "unmatched_signatures": 4,
-      "elapsed_s": 6.994783765999955,
+      "elapsed_s": 8.864282365000008,
       "pptx": "_bench/corpus/out/slide-33-pricing-tiers.pptx",
       "preview_png": "_bench/corpus/preview/slide-33-pricing-tiers.png",
-      "ssim": 0.7328962893002521,
-      "ocr_recall": 0.7906976744186046,
+      "ssim": 0.641304745439168,
+      "ocr_recall": 0.8837209302325582,
       "passed": false,
       "failing_regions": 20
     },
@@ -509,11 +509,11 @@
         "promotion": 3
       },
       "unmatched_signatures": 9,
-      "elapsed_s": 7.931208665000099,
+      "elapsed_s": 9.88627906599993,
       "pptx": "_bench/corpus/out/slide-34-feature-bento.pptx",
       "preview_png": "_bench/corpus/preview/slide-34-feature-bento.png",
-      "ssim": 0.6915274158993676,
-      "ocr_recall": 0.6896551724137931,
+      "ssim": 0.5785514837535208,
+      "ocr_recall": 0.9051724137931034,
       "passed": false,
       "failing_regions": 20
     },
@@ -533,11 +533,11 @@
         "promotion": 1
       },
       "unmatched_signatures": 4,
-      "elapsed_s": 6.494772035999972,
+      "elapsed_s": 6.90167447500005,
       "pptx": "_bench/corpus/out/slide-35-quote-wall.pptx",
       "preview_png": "_bench/corpus/preview/slide-35-quote-wall.png",
-      "ssim": 0.7633244599097689,
-      "ocr_recall": 0.8829787234042553,
+      "ssim": 0.7483641307346888,
+      "ocr_recall": 0.8723404255319149,
       "passed": false,
       "failing_regions": 20
     },
@@ -553,11 +553,11 @@
         "promotion": 1
       },
       "unmatched_signatures": 1,
-      "elapsed_s": 6.129808945000036,
+      "elapsed_s": 5.113317703000007,
       "pptx": "_bench/corpus/out/slide-36-cta-closing.pptx",
       "preview_png": "_bench/corpus/preview/slide-36-cta-closing.png",
-      "ssim": 0.7394921282067551,
-      "ocr_recall": 0.975,
+      "ssim": 0.7385517978003803,
+      "ocr_recall": 0.925,
       "passed": false,
       "failing_regions": 20
     },
@@ -574,11 +574,11 @@
         "promotion": 1
       },
       "unmatched_signatures": 1,
-      "elapsed_s": 7.089365782000073,
+      "elapsed_s": 7.679641366000055,
       "pptx": "_bench/corpus/out/slide-37-logo-mosaic.pptx",
       "preview_png": "_bench/corpus/preview/slide-37-logo-mosaic.png",
-      "ssim": 0.7382119445830065,
-      "ocr_recall": 0.7948717948717948,
+      "ssim": 0.6848619676755158,
+      "ocr_recall": 0.4358974358974359,
       "passed": false,
       "failing_regions": 20
     },
@@ -594,7 +594,7 @@
         "promotion": 1
       },
       "unmatched_signatures": 3,
-      "elapsed_s": 4.565379665000023,
+      "elapsed_s": 3.8951052459999573,
       "pptx": "_bench/corpus/out/slide-41-hero-blob-frame.pptx",
       "preview_png": "_bench/corpus/preview/slide-41-hero-blob-frame.png",
       "ssim": 0.9092518317169708,
@@ -613,7 +613,7 @@
         "tier1": 1
       },
       "unmatched_signatures": 1,
-      "elapsed_s": 4.199771734000024,
+      "elapsed_s": 3.518511429,
       "pptx": "_bench/corpus/out/slide-42-story-pullquote.pptx",
       "preview_png": "_bench/corpus/preview/slide-42-story-pullquote.png",
       "ssim": 0.8977143799247921,
@@ -631,7 +631,7 @@
         "tier0": 2
       },
       "unmatched_signatures": 0,
-      "elapsed_s": 3.995322253999916,
+      "elapsed_s": 3.578482005000069,
       "pptx": "_bench/corpus/out/slide-43-ritual-steps.pptx",
       "preview_png": "_bench/corpus/preview/slide-43-ritual-steps.png",
       "ssim": 0.8844248402234959,
@@ -650,7 +650,7 @@
         "cache:tier0": 2
       },
       "unmatched_signatures": 0,
-      "elapsed_s": 3.895225943000014,
+      "elapsed_s": 3.6077343970000584,
       "pptx": "_bench/corpus/out/slide-44-feature-breathing.pptx",
       "preview_png": "_bench/corpus/preview/slide-44-feature-breathing.png",
       "ssim": 0.8731921232686792,
@@ -669,7 +669,7 @@
         "tier1": 1
       },
       "unmatched_signatures": 1,
-      "elapsed_s": 4.013837473999956,
+      "elapsed_s": 3.4973872960000563,
       "pptx": "_bench/corpus/out/slide-45-quote-testimonial.pptx",
       "preview_png": "_bench/corpus/preview/slide-45-quote-testimonial.png",
       "ssim": 0.9261917623020471,
@@ -687,7 +687,7 @@
         "tier0": 2
       },
       "unmatched_signatures": 0,
-      "elapsed_s": 3.5485788960000946,
+      "elapsed_s": 3.243679315999998,
       "pptx": "_bench/corpus/out/slide-46-call-to-rest.pptx",
       "preview_png": "_bench/corpus/preview/slide-46-call-to-rest.png",
       "ssim": 0.9243449223579702,
@@ -705,7 +705,7 @@
         "tier0": 2
       },
       "unmatched_signatures": 0,
-      "elapsed_s": 4.249337534000006,
+      "elapsed_s": 3.650447338999925,
       "pptx": "_bench/corpus/out/slide-47-manifesto-values.pptx",
       "preview_png": "_bench/corpus/preview/slide-47-manifesto-values.png",
       "ssim": 0.871792732256944,
@@ -728,11 +728,11 @@
         "cache:tier2": 9
       },
       "unmatched_signatures": 6,
-      "elapsed_s": 5.461265236000031,
+      "elapsed_s": 4.873413313000015,
       "pptx": "_bench/corpus/out/slide-51-strategic-matrix.pptx",
       "preview_png": "_bench/corpus/preview/slide-51-strategic-matrix.png",
-      "ssim": 0.7884407212335605,
-      "ocr_recall": 0.7310924369747899,
+      "ssim": 0.7936168376278748,
+      "ocr_recall": 0.7394957983193278,
       "passed": false,
       "failing_regions": 20
     },
@@ -749,11 +749,11 @@
         "cache:tier1": 2
       },
       "unmatched_signatures": 2,
-      "elapsed_s": 5.759129054999903,
+      "elapsed_s": 4.762121031999982,
       "pptx": "_bench/corpus/out/slide-52-stacked-bar.pptx",
       "preview_png": "_bench/corpus/preview/slide-52-stacked-bar.png",
-      "ssim": 0.650557184956241,
-      "ocr_recall": 0.7482993197278912,
+      "ssim": 0.6686369071427493,
+      "ocr_recall": 0.7551020408163265,
       "passed": false,
       "failing_regions": 20
     },
@@ -770,11 +770,11 @@
         "tier2": 6
       },
       "unmatched_signatures": 8,
-      "elapsed_s": 5.350418729000012,
+      "elapsed_s": 4.644048818999977,
       "pptx": "_bench/corpus/out/slide-53-comparison-table.pptx",
       "preview_png": "_bench/corpus/preview/slide-53-comparison-table.png",
-      "ssim": 0.7290209478528421,
-      "ocr_recall": 0.5362318840579711,
+      "ssim": 0.7430476581210342,
+      "ocr_recall": 0.5072463768115942,
       "passed": false,
       "failing_regions": 20
     },
@@ -791,11 +791,11 @@
         "cache:tier1": 4
       },
       "unmatched_signatures": 2,
-      "elapsed_s": 5.689588296000011,
+      "elapsed_s": 5.042198841000072,
       "pptx": "_bench/corpus/out/slide-54-numbered-insights.pptx",
       "preview_png": "_bench/corpus/preview/slide-54-numbered-insights.png",
-      "ssim": 0.650485591561118,
-      "ocr_recall": 0.8564102564102564,
+      "ssim": 0.6632848693313377,
+      "ocr_recall": 0.7538461538461538,
       "passed": false,
       "failing_regions": 20
     },
@@ -813,11 +813,11 @@
         "cache:tier2": 4
       },
       "unmatched_signatures": 4,
-      "elapsed_s": 5.769641013999944,
+      "elapsed_s": 4.9271113300000025,
       "pptx": "_bench/corpus/out/slide-55-waterfall.pptx",
       "preview_png": "_bench/corpus/preview/slide-55-waterfall.png",
-      "ssim": 0.7289959919610484,
-      "ocr_recall": 0.6578947368421053,
+      "ssim": 0.7387389421398955,
+      "ocr_recall": 0.6513157894736842,
       "passed": false,
       "failing_regions": 20
     },
@@ -834,11 +834,11 @@
         "cache:tier1": 18
       },
       "unmatched_signatures": 5,
-      "elapsed_s": 4.663594459000024,
+      "elapsed_s": 4.255265872999985,
       "pptx": "_bench/corpus/out/slide-56-cover.pptx",
       "preview_png": "_bench/corpus/preview/slide-56-cover.png",
-      "ssim": 0.7691394276413783,
-      "ocr_recall": 0.8648648648648649,
+      "ssim": 0.7668365080643618,
+      "ocr_recall": 0.8468468468468469,
       "passed": false,
       "failing_regions": 20
     },
@@ -857,11 +857,11 @@
         "cache:tier2": 5
       },
       "unmatched_signatures": 7,
-      "elapsed_s": 6.434262856999794,
+      "elapsed_s": 5.743262750999975,
       "pptx": "_bench/corpus/out/slide-57-ranking.pptx",
       "preview_png": "_bench/corpus/preview/slide-57-ranking.png",
-      "ssim": 0.6845700977683783,
-      "ocr_recall": 0.41216216216216217,
+      "ssim": 0.6938006091760344,
+      "ocr_recall": 0.3783783783783784,
       "passed": false,
       "failing_regions": 20
     },
@@ -876,11 +876,11 @@
         "promotion": 1
       },
       "unmatched_signatures": 0,
-      "elapsed_s": 5.173344482999937,
+      "elapsed_s": 6.625244190999979,
       "pptx": "_bench/corpus/out/slide-61-magazine-cover-mask.pptx",
       "preview_png": "_bench/corpus/preview/slide-61-magazine-cover-mask.png",
-      "ssim": 0.8878544670840013,
-      "ocr_recall": 0.7272727272727273,
+      "ssim": 0.46355779619615184,
+      "ocr_recall": 0.6842105263157895,
       "passed": false,
       "failing_regions": 20
     },
@@ -895,11 +895,11 @@
         "tier1": 1
       },
       "unmatched_signatures": 1,
-      "elapsed_s": 4.511217198000168,
+      "elapsed_s": 4.523669042000051,
       "pptx": "_bench/corpus/out/slide-62-magazine-spread.pptx",
       "preview_png": "_bench/corpus/preview/slide-62-magazine-spread.png",
-      "ssim": 0.8352644873959458,
-      "ocr_recall": 0.6881720430107527,
+      "ssim": 0.5559552394308561,
+      "ocr_recall": 0.6666666666666666,
       "passed": false,
       "failing_regions": 20
     },
@@ -917,11 +917,11 @@
         "cache:tier0": 2
       },
       "unmatched_signatures": 3,
-      "elapsed_s": 5.887609655000006,
+      "elapsed_s": 6.840082282000026,
       "pptx": "_bench/corpus/out/slide-63-photo-essay-caption.pptx",
       "preview_png": "_bench/corpus/preview/slide-63-photo-essay-caption.png",
-      "ssim": 0.8104974471480585,
-      "ocr_recall": 0.719626168224299,
+      "ssim": 0.7626320972189697,
+      "ocr_recall": 0.7884615384615384,
       "passed": false,
       "failing_regions": 20
     },
@@ -937,11 +937,11 @@
         "promotion": 1
       },
       "unmatched_signatures": 0,
-      "elapsed_s": 5.276360705999878,
+      "elapsed_s": 6.919690081999988,
       "pptx": "_bench/corpus/out/slide-64-pull-quote-faded.pptx",
       "preview_png": "_bench/corpus/preview/slide-64-pull-quote-faded.png",
-      "ssim": 0.6696320017792573,
-      "ocr_recall": 0.3684210526315789,
+      "ssim": 0.5765142739370828,
+      "ocr_recall": 0.9473684210526315,
       "passed": false,
       "failing_regions": 20
     },
@@ -956,11 +956,11 @@
         "cache:tier0": 15
       },
       "unmatched_signatures": 0,
-      "elapsed_s": 4.26153856399992,
+      "elapsed_s": 4.007009397999923,
       "pptx": "_bench/corpus/out/slide-65-mosaic-gallery.pptx",
       "preview_png": "_bench/corpus/preview/slide-65-mosaic-gallery.png",
-      "ssim": 0.883851891312883,
-      "ocr_recall": 0.6774193548387096,
+      "ssim": 0.5327508656811103,
+      "ocr_recall": 0.7575757575757576,
       "passed": false,
       "failing_regions": 20
     },
@@ -976,16 +976,16 @@
         "promotion": 1
       },
       "unmatched_signatures": 0,
-      "elapsed_s": 7.874503588000152,
+      "elapsed_s": 8.811993192000045,
       "pptx": "_bench/corpus/out/slide-66-duotone-hero.pptx",
       "preview_png": "_bench/corpus/preview/slide-66-duotone-hero.png",
-      "ssim": 0.8037507777201115,
-      "ocr_recall": 0.5476190476190477,
+      "ssim": 0.7721934577921964,
+      "ocr_recall": 0.6923076923076923,
       "passed": false,
       "failing_regions": 20
     }
   ],
-  "mean_ssim": 0.7896285076808468,
-  "mean_ocr_recall": 0.6982557619811184,
+  "mean_ssim": 0.7625431560692008,
+  "mean_ocr_recall": 0.7055764511011678,
   "pass_rate": 0.0625
 }
