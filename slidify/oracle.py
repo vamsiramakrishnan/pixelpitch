@@ -19,7 +19,14 @@ from PIL import Image
 
 from slidify.exceptions import OracleError
 from slidify.geom import SLIDE_H_PX, SLIDE_W_PX
-from slidify.models import BoundingBox, FidelityReport
+from slidify.models import (
+    BoundingBox,
+    Decision,
+    DecisionKind,
+    FailingUnitAttribution,
+    FidelityReport,
+    VisualUnit,
+)
 
 log = structlog.get_logger(__name__)
 
@@ -192,6 +199,142 @@ def find_failing_regions(gt: bytes, candidate: bytes, threshold: int = 40) -> li
     return boxes[:20]
 
 
+_DECISION_KIND_LABELS: dict[DecisionKind, str] = {
+    DecisionKind.NativeText: "NativeText",
+    DecisionKind.NativeShape: "NativeShape",
+    DecisionKind.NativeBullet: "NativeBullet",
+    DecisionKind.NativePicture: "NativePicture",
+    DecisionKind.Raster: "Raster",
+    DecisionKind.Hybrid: "Hybrid",
+    DecisionKind.Skip: "Skip",
+}
+
+
+def _decision_kind_label(kind: DecisionKind) -> str:
+    return _DECISION_KIND_LABELS.get(kind, str(kind))
+
+
+def _unit_has_svg(unit: VisualUnit) -> bool:
+    """True when any element under this unit is an SVG node."""
+    return any(getattr(e, "is_svg", False) for e in unit.all_elements())
+
+
+def _suspected_failure(
+    decision: Decision,
+    region: BoundingBox,
+    unit: VisualUnit,
+) -> str:
+    """Heuristic root-cause guess for a failing region attributed to `unit`.
+
+    Rules (first match wins):
+      - NativeText + region tall+narrow      → "wrap_overflow"
+      - NativeText + region wide+short       → "font_metrics"
+      - NativeText (other shape)             → "font_metrics"
+      - NativeShape + decision metadata
+        recipe contains 'gradient'           → "gradient_render_drift"
+      - NativeShape over an SVG-bearing unit → "svg_path_render"
+      - Hybrid                               → "raster_overlap"
+      - Raster                               → "raster_quality"
+      - else                                 → "unknown"
+    """
+    kind = decision.kind
+    if kind == DecisionKind.NativeText:
+        # tall+narrow vs wide+short are mutually exclusive heuristics.
+        if region.h > 0 and region.w > 0:
+            if region.h >= region.w * 1.5:
+                return "wrap_overflow"
+            if region.w >= region.h * 1.5:
+                return "font_metrics"
+        return "font_metrics"
+
+    if kind == DecisionKind.NativeShape:
+        recipe = ""
+        meta = decision.metadata or {}
+        raw_recipe = meta.get("recipe")
+        if isinstance(raw_recipe, str):
+            recipe = raw_recipe.lower()
+        if "gradient" in recipe:
+            return "gradient_render_drift"
+        # The DecisionKind enum has no dedicated NativeSvg; we surface SVG
+        # render drift via a NativeShape decision over an SVG-bearing unit.
+        if _unit_has_svg(unit):
+            return "svg_path_render"
+        return "unknown"
+
+    if kind == DecisionKind.Hybrid:
+        return "raster_overlap"
+    if kind == DecisionKind.Raster:
+        return "raster_quality"
+    return "unknown"
+
+
+def attribute_regions_to_units(
+    regions: list[BoundingBox],
+    units: dict[str, VisualUnit],
+    decisions: dict[str, Decision],
+) -> list[FailingUnitAttribution]:
+    """For each region, find the smallest unit that fully contains
+    (or substantially overlaps with) the region's bbox. Returns
+    per-region attribution rows.
+
+    A unit is a candidate when at least 50% of the region's area lies
+    inside the unit's bbox. Among candidates, the smallest unit wins
+    (most specific). Regions with no candidate are skipped.
+
+    `suspected_failure` is computed by `_suspected_failure` above:
+      - NativeText + region tall+narrow → "wrap_overflow"
+      - NativeText + region wide+short  → "font_metrics"
+      - NativeShape + recipe gradient   → "gradient_render_drift"
+      - NativeShape over an SVG unit    → "svg_path_render"
+      - Hybrid                          → "raster_overlap"
+      - Raster                          → "raster_quality"
+      - else                            → "unknown"
+    """
+    out: list[FailingUnitAttribution] = []
+    if not regions or not units:
+        return out
+
+    for region in regions:
+        region_area = region.area
+        if region_area <= 0:
+            continue
+        best: VisualUnit | None = None
+        for unit in units.values():
+            if unit.bbox.area <= 0:
+                continue
+            contained = unit.bbox.intersect_area(region) / region_area
+            if contained < 0.5:
+                continue
+            if best is None or unit.bbox.area < best.bbox.area:
+                best = unit
+        if best is None:
+            continue
+        decision = decisions.get(best.id)
+        if decision is None:
+            # Unit exists but no decision recorded — surface as unknown so
+            # callers can still see the unit, rather than dropping the row.
+            decision_kind_label = "Unknown"
+            source_tier = "unknown"
+            reason = ""
+            suspected = "unknown"
+        else:
+            decision_kind_label = _decision_kind_label(decision.kind)
+            source_tier = decision.source_tier
+            reason = decision.reason
+            suspected = _suspected_failure(decision, region, best)
+        out.append(
+            FailingUnitAttribution(
+                region=region,
+                unit_id=best.id,
+                decision_kind=decision_kind_label,
+                source_tier=source_tier,
+                reason=reason,
+                suspected_failure=suspected,
+            )
+        )
+    return out
+
+
 class FidelityOracle:
     def __init__(
         self,
@@ -202,8 +345,19 @@ class FidelityOracle:
         self.ocr_recall_floor = ocr_recall_floor
 
     async def evaluate(
-        self, pptx_path: Path, ground_truths: list[bytes]
+        self,
+        pptx_path: Path,
+        ground_truths: list[bytes],
+        units_per_slide: list[tuple[dict[str, VisualUnit], dict[str, Decision]]] | None = None,
     ) -> list[FidelityReport]:
+        """Run SSIM + OCR + region diff against `ground_truths`.
+
+        When `units_per_slide` is provided (one (units_by_id, decisions) tuple
+        per slide, in the same order as `ground_truths`), each
+        FidelityReport's `failing_units` is populated by attributing each
+        failing region back to the most specific containing unit. When None,
+        `failing_units` stays empty (back-compat).
+        """
         try:
             renders = await render_pptx_to_pngs(pptx_path)
         except OracleError as e:
@@ -245,6 +399,13 @@ class FidelityOracle:
                 recall = 0.0
             passed = ssim_score >= self.ssim_floor and recall >= self.ocr_recall_floor
             failing = find_failing_regions(gt, cand) if not passed else []
+            failing_units: list[FailingUnitAttribution] = []
+            if failing and units_per_slide is not None and i < len(units_per_slide):
+                units_by_id, decisions = units_per_slide[i]
+                if units_by_id:
+                    failing_units = attribute_regions_to_units(
+                        failing, units_by_id, decisions
+                    )
             reports.append(
                 FidelityReport(
                     slide_index=i,
@@ -252,6 +413,7 @@ class FidelityOracle:
                     ocr_recall=recall,
                     passed=passed,
                     failing_regions=failing,
+                    failing_units=failing_units,
                 )
             )
         return reports

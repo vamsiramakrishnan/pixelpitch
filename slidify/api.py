@@ -593,7 +593,17 @@ async def _oracle_with_correction(
 ) -> list[FidelityReport]:
     oracle = FidelityOracle()
     ground_truths = [p.rendered.ground_truth_png for p in plans]
-    reports = await oracle.evaluate(pptx_path, ground_truths)
+
+    def _units_per_slide() -> list[tuple[dict[str, VisualUnit], dict[str, Decision]]]:
+        # Snapshot per-slide (units_by_id, decisions) so the oracle can
+        # attribute failing regions back to the unit/decision that produced
+        # them. When state was dropped (low_memory), the maps are empty and
+        # attribution is skipped for that slide.
+        return [(p.units_by_id, p.decisions) for p in plans]
+
+    reports = await oracle.evaluate(
+        pptx_path, ground_truths, units_per_slide=_units_per_slide()
+    )
 
     if not cfg.keep_plans_for_oracle:
         # No state to re-emit from — return the first-pass reports.
@@ -641,7 +651,9 @@ async def _oracle_with_correction(
         # Update summaries with the new ops so native_area_ratio reflects fixes.
         for plan in plans:
             summaries[plan.index].ops = plan.ops
-        reports = await oracle.evaluate(pptx_path, ground_truths)
+        reports = await oracle.evaluate(
+            pptx_path, ground_truths, units_per_slide=_units_per_slide()
+        )
 
     return reports
 

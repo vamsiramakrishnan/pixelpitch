@@ -190,13 +190,30 @@ class EmitOp(BaseModel):
     payload: dict[str, Any] = Field(default_factory=dict)
 
 
+class FailingUnitAttribution(BaseModel):
+    """Per-region attribution row linking a failing pixel region back to the
+    visual unit + decision that most likely caused it.
+
+    Produced by `slidify.oracle.attribute_regions_to_units`. The
+    `suspected_failure` field is a heuristic root-cause guess based on the
+    decision kind, the decision metadata, and the shape of the pixel region.
+    """
+
+    region: BoundingBox
+    unit_id: str
+    decision_kind: str        # e.g. "NativeText", "NativeShape", "Raster"
+    source_tier: str          # "tier1" / "tier2" / "tier3" / "oracle_fix" / etc
+    reason: str               # the existing decision.reason
+    suspected_failure: str    # heuristic guess (see oracle.attribute_regions_to_units)
+
+
 class FidelityReport(BaseModel):
     slide_index: int
     ssim: float
     ocr_recall: float
     passed: bool
     failing_regions: list[BoundingBox] = Field(default_factory=list)
-    failing_units: list[str] = Field(default_factory=list)
+    failing_units: list[FailingUnitAttribution] = Field(default_factory=list)
     note: str = ""
 
 
