@@ -19,6 +19,7 @@ so peak memory is bounded by `render_concurrency`, not by deck size.
 from __future__ import annotations
 
 import asyncio
+import re
 import time
 from collections.abc import AsyncIterable, AsyncIterator, Iterable
 from dataclasses import dataclass, field
@@ -148,7 +149,14 @@ class _SlideSummary:
 
 
 async def _normalize_source(source: SlideSource) -> AsyncIterator[str]:
-    """Yield slide HTML strings from any supported source form."""
+    """Yield slide HTML strings from any supported source form.
+
+    For Path sources we inject ``<base href="file:///parent/">`` into
+    each slide chunk so relative ``<img src="foo.gif">`` references —
+    common when embedding captured animation GIFs alongside the deck —
+    resolve through Playwright's ``set_content`` (which serves from
+    ``about:blank`` by default and otherwise can't see local files).
+    """
     if isinstance(source, str):
         for chunk in split_slides(source):
             yield chunk
@@ -157,12 +165,12 @@ async def _normalize_source(source: SlideSource) -> AsyncIterator[str]:
     if isinstance(source, Path):
         if source.is_dir():
             for path in sorted(source.glob("*.html")):
-                yield path.read_text(encoding="utf-8")
+                yield _inline_local_images(path.read_text(encoding="utf-8"), path.parent)
             return
         # Single file: still split (so a single big concatenated file works).
         text = source.read_text(encoding="utf-8")
         for chunk in split_slides(text):
-            yield chunk
+            yield _inline_local_images(chunk, source.parent)
         return
 
     if hasattr(source, "__aiter__"):
@@ -176,6 +184,59 @@ async def _normalize_source(source: SlideSource) -> AsyncIterator[str]:
         return
 
     raise TypeError(f"unsupported slide source type: {type(source).__name__}")
+
+
+_IMG_SRC_RE = re.compile(
+    r'(<img\b[^>]*\bsrc\s*=\s*)(["\'])([^"\']+)\2',
+    re.IGNORECASE,
+)
+
+
+def _inline_local_images(html: str, base_dir: Path) -> str:
+    """Inline relative ``<img src="local.gif">`` references as data
+    URIs so they resolve through Playwright's ``set_content`` (which
+    serves from ``about:blank`` and blocks cross-origin file:// loads).
+
+    Slidify's renderer feeds HTML to the browser as a string, not a
+    file URL, so the browser has no source location to resolve relative
+    paths against. ``<base href="file://...">`` is the canonical fix
+    but Chromium refuses about:blank → file:// for security. Inlining
+    is the renderer-portable workaround.
+
+    Only rewrites paths that resolve to a real local file under
+    ``base_dir``. URLs (http, https, data:, file:) are left alone.
+    """
+    def _rewrite(match: re.Match) -> str:
+        prefix, quote, src = match.group(1), match.group(2), match.group(3)
+        # Skip absolute URLs and data: URIs.
+        if src.startswith(("http://", "https://", "data:", "file://", "//")):
+            return match.group(0)
+        # Resolve relative path against base_dir.
+        candidate = (base_dir / src).resolve()
+        if not candidate.is_file():
+            return match.group(0)
+        try:
+            data = candidate.read_bytes()
+        except OSError:
+            return match.group(0)
+        mime = _guess_mime(candidate.suffix.lower())
+        import base64
+        b64 = base64.b64encode(data).decode("ascii")
+        return f'{prefix}{quote}data:{mime};base64,{b64}{quote}'
+
+    return _IMG_SRC_RE.sub(_rewrite, html)
+
+
+def _guess_mime(suffix: str) -> str:
+    return {
+        ".gif": "image/gif",
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".webp": "image/webp",
+        ".svg": "image/svg+xml",
+        ".bmp": "image/bmp",
+    }.get(suffix, "application/octet-stream")
 
 
 def _read_item(item: str | Path) -> str:

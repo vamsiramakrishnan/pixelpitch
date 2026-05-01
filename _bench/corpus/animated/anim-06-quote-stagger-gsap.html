@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="slidify-capture-duration" content="3500">
+<meta name="slidify-capture-fps" content="15">
+<title>Quote stagger (GSAP)</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               font-family: Inter, sans-serif; background:#0a0a0f;
+               color:#f5f5f7; -webkit-font-smoothing:antialiased; }
+  .slide { width:1280px; height:720px; box-sizing:border-box;
+           position:relative; overflow:hidden;
+           background:
+             radial-gradient(ellipse at 20% 80%, rgba(99,102,241,0.30) 0%, transparent 60%),
+             radial-gradient(ellipse at 80% 20%, rgba(236,72,153,0.25) 0%, transparent 60%),
+             #050510; }
+  .frame { position:absolute; inset: 56px 96px; display:flex;
+           flex-direction:column; justify-content:space-between; }
+  .kicker { font-size:13px; letter-spacing:0.22em; text-transform:uppercase;
+            color:#a78bfa; }
+  blockquote { margin: 0; padding: 0;
+               font-size: 64px; line-height:1.12; letter-spacing:-0.02em;
+               font-weight:600; max-width: 1080px; }
+  blockquote .ch { display:inline-block; opacity:0;
+                   transform: translateY(36px) rotate(8deg); }
+  blockquote .quote { color:#a78bfa; font-size:104px; line-height:0;
+                      vertical-align: -22px; margin-right: 8px; }
+  .attrib { display:flex; align-items:center; gap:18px; }
+  .avatar { width:56px; height:56px; border-radius:50%;
+            background: linear-gradient(135deg, #818cf8, #ec4899); }
+  .who { font-size:18px; font-weight:600; }
+  .role { font-size:13px; color:#a1a1aa; margin-top:2px; }
+  .footer { position:absolute; left:96px; right:96px; bottom:24px;
+            display:flex; justify-content:space-between; font-size:11px;
+            color:#52525b; letter-spacing:0.18em; text-transform:uppercase; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="frame">
+    <div>
+      <div class="kicker" data-kicker>Customer story · Helio</div>
+      <blockquote data-pptx-role="title">
+        <span class="quote">“</span><span data-text>The diff between our design tool and the deck used to be the demo. Now they're the same artifact.</span>
+      </blockquote>
+    </div>
+    <div class="attrib" data-attrib>
+      <div class="avatar"></div>
+      <div>
+        <div class="who">Maya Akinwole</div>
+        <div class="role">Head of Design, Helio</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <span>Pixelpitch · Customer story</span>
+    <span>Page 06</span>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script>
+  // Split into per-character spans so we can stagger them.
+  const text = document.querySelector("[data-text]");
+  const raw = text.textContent;
+  text.textContent = "";
+  raw.split("").forEach(ch => {
+    const span = document.createElement("span");
+    span.className = "ch";
+    span.textContent = ch === " " ? " " : ch;
+    text.appendChild(span);
+  });
+
+  const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+  tl.from("[data-kicker]", { opacity: 0, y: 12, duration: 0.5 }, 0.1)
+    .to(".ch",
+      { opacity: 1, y: 0, rotate: 0, duration: 0.45,
+        stagger: 0.012, ease: "power2.out" }, 0.35)
+    .from(".quote",
+      { opacity: 0, scale: 0, duration: 0.5,
+        ease: "back.out(2.2)", transformOrigin: "left bottom" }, 0.35)
+    .from("[data-attrib]",
+      { opacity: 0, x: -16, duration: 0.6 }, "-=0.5");
+</script>
+</body>
+</html>

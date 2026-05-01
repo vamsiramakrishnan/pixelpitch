@@ -309,30 +309,30 @@ MATRIX: tuple[CompatRow, ...] = (
     CompatRow(
         "Motion", "Framer / Framer-Motion (final state)", Support.Partial,
         "slidify.renderer.Renderer",
-        "Animation libs animate from initial → final; we capture the final state.",
+        "Default convert path captures the final state; use `slidify capture-gif` for animated output.",
     ),
     CompatRow(
-        "Motion", "Framer / Framer-Motion (record-and-embed as movie)",
-        Support.Planned, "",
-        "Lose animation today; planned: record N frames + embed as PPTX video.",
-        plan=(
-            "Drive Playwright at 30fps over a configurable duration, emit "
-            "MP4/WebM via ffmpeg, embed via slide.shapes.add_movie() so "
-            "PowerPoint plays the animation natively on slide enter."
-        ),
+        "Motion", "Framer / Framer-Motion (record-and-embed as animated GIF)",
+        Support.Native, "slidify.anim_capture.capture_html_to_gif",
+        "Render the slide without freeze, sample N frames at the declared fps, "
+        "emit an animated GIF that PowerPoint plays in slideshow mode. "
+        "Reference the GIF from a normal slide via <img src=\"...\"> and "
+        "the static-emit pipeline embeds it as a NativePicture verbatim.",
     ),
     CompatRow(
         "Motion", "Lottie animations", Support.Planned, "",
-        "Currently rasterized via canvas/SVG fallback (single frame).",
+        "Currently rasterized via canvas/SVG fallback (single frame). "
+        "Same record-and-embed plan as Framer once lottie-web detection lands.",
         plan=(
             "Detect lottie-web players in DOM, drive lottie.goToAndStop on "
-            "frame 0..N-1 and capture each, then embed as animated GIF."
+            "frame 0..N-1 and capture each via anim_capture, embed as GIF."
         ),
     ),
     CompatRow(
-        "Motion", "GSAP / Anime.js timelines", Support.Partial,
-        "slidify.renderer.Renderer",
-        "Final state captured; mid-timeline frames lost. Same plan as Framer.",
+        "Motion", "GSAP / Anime.js timelines",
+        Support.Native, "slidify.anim_capture.capture_html_to_gif",
+        "Same path as Framer Motion: capture-gif samples the timeline at the "
+        "declared fps and writes an animated GIF for embed.",
     ),
     CompatRow(
         "Motion", "Scroll-triggered animations (IntersectionObserver / GSAP ScrollTrigger)",

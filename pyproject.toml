@@ -24,7 +24,6 @@ dependencies = [
     "google-cloud-aiplatform>=1.60",
     "pyyaml>=6.0.3",
     "fonttools>=4.50",
-    "skia-python>=138.0",
 ]
 
 [project.scripts]
