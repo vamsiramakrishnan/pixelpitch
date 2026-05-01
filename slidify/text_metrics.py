@@ -236,12 +236,23 @@ def compute_font_scale_for_textbox(
     primary_font: Path | None = None,
     fallback_font: Path | None = None,
     safety_margin: float = 1.10,
+    genre: str | None = None,
 ) -> FontScaleResult:
     """Determine the minimum fontScale that lets ``runs`` fit ``bbox_w_px``
     when rendered with ``fallback_font`` (the substituted font on the
-    target renderer)."""
+    target renderer).
+
+    ``genre`` (``"serif"`` / ``"mono"`` / ``"sans"``) selects a genre-
+    matched fallback font when ``fallback_font`` isn't passed explicitly.
+    Critical for serif/mono text — measuring those with a sans fallback
+    under-counts the substituted width by ~15%, letting overflow cases
+    slip through.
+    """
     primary = primary_font or get_inter_font_path()
-    fallback = fallback_font or get_fallback_font_path()
+    if fallback_font is None and genre:
+        fallback = get_genre_fallback_font_path(genre)
+    else:
+        fallback = fallback_font or get_fallback_font_path()
 
     if primary is None or fallback is None or bbox_w_px <= 0:
         return FontScaleResult(
@@ -288,6 +299,111 @@ def compute_font_scale_for_textbox(
         measured_fallback_width_px=fallback_width,
         needs_autofit=True,
     )
+
+
+_GENRE_FALLBACK_PATHS: dict[str, tuple[str, ...]] = {
+    "serif": (
+        "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
+        "/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf",
+        "/usr/share/fonts/truetype/freefont/FreeSerif.ttf",
+    ),
+    "mono": (
+        "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
+        "/usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf",
+        "/usr/share/fonts/truetype/freefont/FreeMono.ttf",
+    ),
+    "sans": (
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+    ),
+}
+
+
+def get_genre_fallback_font_path(genre: str) -> Path | None:
+    """Return a fallback font path matching ``genre`` (``serif`` / ``mono`` /
+    ``sans``). Used when measuring the *substitute* glyph widths: a serif
+    primary like Source Serif Pro won't fall back to Liberation Sans on
+    LibreOffice — it picks DejaVu Serif (~15% wider). Measuring with the
+    sans fallback under-estimates the rendered width and causes
+    ``wrap=none`` to fire on a textbox whose text actually overflows.
+    """
+    for c in _GENRE_FALLBACK_PATHS.get(genre, ()):
+        p = Path(c)
+        if p.is_file():
+            return p
+    if genre != "sans":
+        return get_genre_fallback_font_path("sans")
+    return get_fallback_font_path()
+
+
+_SERIF_HINTS = (
+    "serif", "times", "georgia", "garamond", "cambria", "tiempos",
+    "source serif", "playfair", "merriweather", "lora",
+)
+_MONO_HINTS = (
+    "mono", "courier", "consolas", "menlo", "jetbrains", "ibm plex mono",
+    "sf mono", "monaco", "fira code", "cascadia",
+)
+
+
+def genre_for_family(family: str | None) -> str:
+    f = (family or "").lower()
+    if any(h in f for h in _MONO_HINTS):
+        return "mono"
+    # ``sans-serif`` contains ``serif`` as a substring — strip generic
+    # genre keywords first so a sans-serif spec doesn't match the
+    # serif hints. Also normalize away whitespace/quotes around generic
+    # keywords used as the last item in the CSS ``font-family`` list.
+    if "sans-serif" in f or "sans serif" in f:
+        # Strip the generic keyword to look at the named families.
+        cleaned = f.replace("sans-serif", "").replace("sans serif", "")
+        if any(h in cleaned for h in _SERIF_HINTS):
+            return "serif"
+        return "sans"
+    if any(h in f for h in _SERIF_HINTS):
+        return "serif"
+    return "sans"
+
+
+def estimate_wrapped_lines(
+    text: str,
+    bbox_w_px: float,
+    font_size_pt: float,
+    fallback_font: Path | None = None,
+    genre: str | None = None,
+    safety_margin: float = 1.05,
+) -> int:
+    """Estimate how many wrapped lines ``text`` will occupy at ``bbox_w_px``
+    when rendered with the genre-appropriate fallback font.
+
+    Used to grow a single-line bbox vertically before emit when the
+    source HTML's bbox was sized for a *narrower* font than what the
+    target renderer will pick. Conservative: it counts whole lines (so
+    a one-line that just barely fits returns 1, not 1.05).
+    """
+    if not text or bbox_w_px <= 0:
+        return 1
+    if fallback_font is None and genre:
+        fallback = get_genre_fallback_font_path(genre)
+    else:
+        fallback = fallback_font or get_fallback_font_path()
+    if fallback is None:
+        return 1
+    try:
+        full_width = measure_text_width_px(text, fallback, font_size_pt)
+    except Exception:
+        return 1
+    if full_width <= bbox_w_px:
+        return 1
+    # safety_margin shaves off the soft right edge browsers honor on
+    # word breaks (1-char ragging).
+    effective_w = bbox_w_px / safety_margin
+    if effective_w <= 0:
+        return 1
+    # Round up to whole lines.
+    import math
+
+    return max(1, math.ceil(full_width / effective_w))
 
 
 def shrink_pill_bbox_to_fit_text(

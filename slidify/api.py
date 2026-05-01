@@ -660,6 +660,11 @@ async def _oracle_with_correction(
 
 def _force_full_raster(plan: _SlidePlan) -> None:
     new_decisions: dict[str, Decision] = {}
+    # The earlier two-level iteration (children + grandchildren) missed any
+    # deeper descendant: brutalist decks routinely nest 4–5 levels deep
+    # (`.slide > .frame > .head > .row > h1`), and an h1 left as
+    # NativeText would paint over the full-slide raster. Walk the whole
+    # tree once.
     for u in plan.units:
         new_decisions[u.id] = Decision(
             kind=DecisionKind.Raster,
@@ -667,20 +672,16 @@ def _force_full_raster(plan: _SlidePlan) -> None:
             reason="oracle_full_raster",
             source_tier="oracle_fix",
         )
-        for child in u.children:
-            new_decisions[child.id] = Decision(
+        stack = list(u.children)
+        while stack:
+            c = stack.pop()
+            new_decisions[c.id] = Decision(
                 kind=DecisionKind.Skip,
                 confidence=1.0,
                 reason="absorbed by oracle_full_raster",
                 source_tier="oracle_fix",
             )
-            for grand in child.children:
-                new_decisions[grand.id] = Decision(
-                    kind=DecisionKind.Skip,
-                    confidence=1.0,
-                    reason="absorbed by oracle_full_raster",
-                    source_tier="oracle_fix",
-                )
+            stack.extend(c.children)
     plan.decisions = {**plan.decisions, **new_decisions}
 
 
@@ -720,8 +721,42 @@ def _force_raster_overlapping(plan: _SlidePlan, region) -> bool:
         reason="oracle_region_fix",
         source_tier="oracle_fix",
     )
-    for c in target.children:
-        plan.decisions[c.id] = Decision(
+    # Recursively skip ALL descendants AND any spatially-contained sibling
+    # units. Direct children alone isn't enough for two reasons:
+    #   1. Deeper descendants (text-bearing grandchildren) keep their
+    #      NativeText decision and re-paint atop the raster.
+    #   2. The DOM hierarchy may not match the spatial hierarchy: a
+    #      brutalist `.frame` div is a SIBLING of `.head`/`.lay` rather
+    #      than their ancestor (it's an absolutely-positioned overlay).
+    #      Rastering only its DOM subtree leaves the head's title and
+    #      ladder text drawing on top of the rastered frame interior,
+    #      producing the slide-27 doubled-title artifact.
+    # Both holes are closed by skipping every unit whose bbox is mostly
+    # contained in the target's bbox.
+    skip_set: set[str] = set()
+    stack: list[VisualUnit] = list(target.children)
+    while stack:
+        c = stack.pop()
+        skip_set.add(c.id)
+        stack.extend(c.children)
+    target_bbox = target.bbox
+    target_area = target_bbox.area
+    if target_area > 0:
+        for u in plan.units_flat:
+            if u.id == target.id or u.id in skip_set:
+                continue
+            if u.bbox.area <= 0:
+                continue
+            # Don't absorb siblings *larger* than the target — those are
+            # genuinely above us in the spatial hierarchy and may carry
+            # important content that extends outside the rastered patch.
+            if u.bbox.area > target_area:
+                continue
+            inter = u.bbox.intersect_area(target_bbox)
+            if inter / u.bbox.area >= 0.85:
+                skip_set.add(u.id)
+    for uid in skip_set:
+        plan.decisions[uid] = Decision(
             kind=DecisionKind.Skip,
             confidence=1.0,
             reason="absorbed by oracle_region_fix",

@@ -199,7 +199,12 @@ def promote(
                 reason="opacity<1 with children",
                 source_tier="promotion",
             )
-            for c in unit.children:
+            # Skip the entire descendant subtree, not just direct children —
+            # otherwise grand-descendants' native_text shapes still emit on
+            # top of the raster.
+            stack = list(unit.children)
+            while stack:
+                c = stack.pop()
                 if out.get(c.id) and out[c.id].kind != DecisionKind.Skip:
                     out[c.id] = Decision(
                         kind=DecisionKind.Skip,
@@ -207,6 +212,7 @@ def promote(
                         reason="absorbed by raster parent (opacity)",
                         source_tier="promotion",
                     )
+                stack.extend(c.children)
             return
 
         # Rule N0: parent's own decoration is fully native-translatable
@@ -247,13 +253,18 @@ def promote(
                 reason="all_children_raster_with_presence",
                 source_tier="promotion",
             )
-            for c in unit.children:
+            # Skip the entire descendant subtree to keep grand-descendants'
+            # native_text shapes from emitting over the raster.
+            stack = list(unit.children)
+            while stack:
+                c = stack.pop()
                 out[c.id] = Decision(
                     kind=DecisionKind.Skip,
                     confidence=1.0,
                     reason="absorbed by raster parent",
                     source_tier="promotion",
                 )
+                stack.extend(c.children)
             return
 
         # Rule 2 / 4: parent is plain wrapper — keep children's decisions.
