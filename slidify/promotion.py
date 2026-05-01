@@ -95,7 +95,10 @@ def _native_decoration_only(unit: VisualUnit) -> bool:
     if a.filter and a.filter != "none":
         return False
     if a.clip_path and a.clip_path != "none":
-        return False
+        from slidify.preset_shapes import clip_path_to_preset
+
+        if clip_path_to_preset(a.clip_path, a.bbox) is None:
+            return False
     if a.background_image and a.background_image != "none":
         if "url(" in a.background_image:
             return False

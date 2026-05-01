@@ -834,9 +834,10 @@ class Emitter:
                 return False
         # Decorative overlays may sit off-canvas (top:-220px etc); preserve
         # the original origin so the gradient center isn't displaced.
-        x, y, w, h = _emu_rect_offcanvas(op.bbox)
         radius = parse_px(anchor.border_radius)
-        shape_kind = _shape_kind_for_anchor(anchor, radius)
+        shape_kind, bbox_override = _shape_kind_for_anchor(anchor, radius)
+        shape_bbox = bbox_override if bbox_override is not None else op.bbox
+        x, y, w, h = _emu_rect_offcanvas(shape_bbox)
         deco_stack = derive_decorations(anchor, palette=self._brand_palette)
         if not deco_stack.is_empty():
             deco_stack.emit_below(slide, op.bbox)
@@ -854,9 +855,10 @@ class Emitter:
         if anchor_el is None:
             return
         # Decorative overlays may sit off-canvas — see _emit_native_decoration.
-        x, y, w, h = _emu_rect_offcanvas(op.bbox)
         radius = parse_px(anchor_el.border_radius)
-        shape_kind = _shape_kind_for_anchor(anchor_el, radius)
+        shape_kind, bbox_override = _shape_kind_for_anchor(anchor_el, radius)
+        shape_bbox = bbox_override if bbox_override is not None else op.bbox
+        x, y, w, h = _emu_rect_offcanvas(shape_bbox)
         deco_stack = derive_decorations(anchor_el, palette=self._brand_palette)
         if not deco_stack.is_empty():
             deco_stack.emit_below(slide, op.bbox)
@@ -1155,23 +1157,34 @@ class Emitter:
             log.warning("emitter.notes_failed", error=str(e))
 
 
-def _shape_kind_for_anchor(anchor: DomElement, radius_px: float):
+def _shape_kind_for_anchor(
+    anchor: DomElement, radius_px: float
+) -> tuple[int, BoundingBox | None]:
     """Pick the right MSO_SHAPE for an anchor.
 
     Priority: explicit clip-path / class hint → preset (chevron, arrow,
     star, hexagon, callout, etc.) via `slidify.preset_shapes`. Then fall
     back to OVAL for true circles, ROUNDED_RECTANGLE for radius > 0,
     RECTANGLE otherwise.
+
+    Returns `(preset, bbox_override)`. `bbox_override` is non-None when
+    the matched preset implies a smaller visible area than the source
+    element (e.g. `clip-path: inset(...)` shrinks the rectangle, and
+    `clip-path: circle(...)` clips to an inscribed disc) — callers must
+    place the shape at the override bbox rather than the unit bbox.
     """
     match = detect_preset_shape(anchor)
     if match is not None:
-        return match.preset
+        return match.preset, match.bbox_override
     w = anchor.bbox.w
     h = anchor.bbox.h
     if w > 0 and h > 0:
         if radius_px >= min(w, h) * 0.45:
-            return MSO_SHAPE.OVAL
-    return MSO_SHAPE.ROUNDED_RECTANGLE if radius_px > 0 else MSO_SHAPE.RECTANGLE
+            return MSO_SHAPE.OVAL, None
+    return (
+        MSO_SHAPE.ROUNDED_RECTANGLE if radius_px > 0 else MSO_SHAPE.RECTANGLE,
+        None,
+    )
 
 
 def _union_line_box(unit: VisualUnit) -> BoundingBox | None:
