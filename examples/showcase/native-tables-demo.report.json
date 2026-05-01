@@ -1,0 +1,88 @@
+{
+  "pptx_path": "examples/showcase/native-tables-demo.pptx",
+  "n_slides": 4,
+  "fidelity_reports": [],
+  "native_area_ratio": 1.0,
+  "llm_calls": 0,
+  "total_cost_usd": 0.0,
+  "elapsed_seconds": 4.4812115390000145,
+  "cache_hit_rate": 0.30952380952380953,
+  "decisions_by_tier": {
+    "tier0": 24,
+    "cache:tier0": 13,
+    "tier1": 3,
+    "tier2": 2
+  },
+  "pattern_hits": {
+    "body-paragraph": 8,
+    "title-h1": 4,
+    "filter-active": 1,
+    "feature-card-with-icon": 1,
+    "footer-text": 2,
+    "short-label": 2,
+    "slide-solid-bg": 2,
+    "title-h2": 1,
+    "pill-from-css": 2,
+    "slide-gradient-bg": 1
+  },
+  "pattern_coverage": 0.8275862068965517,
+  "unmatched_signatures": [
+    {
+      "sig": "table()[][1088x288]",
+      "sig_hash": "93f5b6bdd8e3ae8d",
+      "bbox_w": 1120,
+      "bbox_h": 294,
+      "sample_classes": "q",
+      "sample_text": "",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "code(bg+txt)[][64x0]",
+      "sig_hash": "5da0553db17d1b95",
+      "bbox_w": 121,
+      "bbox_h": 17,
+      "sample_classes": "",
+      "sample_text": "mix-blend-mode",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+shdw=t+brd)[]<2>[512x352]{code(bg+txt)[][64x0],h2(txt)[][448x0],li(txt+txtc)[][448x0],li(txt+txtc)[][448x0],li(txt+txtc)[][448x0],li(txt+txtc)[][448x0],li(txt+txtc)[][448x0],p(txt)[][448x32],span(bg+txt)[][192x0]}",
+      "sig_hash": "c975b6802553361d",
+      "bbox_w": 544,
+      "bbox_h": 353,
+      "sample_classes": "col raster",
+      "sample_text": "raster — preserved visually",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+shdw=t+brd)[]<1>[512x352]{h2(txt)[][448x0],li(txt)[][448x0],li(txt)[][448x0],li(txt+txtc)[][448x0],li(txt+txtc)[][448x0],li(txt+txtc)[][448x0],li(txt+txtc)[][448x0],p(txt)[][448x32],span(bg+txt)[][128x0]}",
+      "sig_hash": "089beedf3395d5d1",
+      "bbox_w": 544,
+      "bbox_h": 353,
+      "sample_classes": "col native",
+      "sample_text": "native — editable",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "table()[][1088x384]",
+      "sig_hash": "ab6e53837e260bf6",
+      "bbox_w": 1120,
+      "bbox_h": 413,
+      "sample_classes": "r",
+      "sample_text": "",
+      "n_occurrences": 1
+    }
+  ],
+  "compat_matrix_version": "2",
+  "compat_matrix_summary": {
+    "native": 38,
+    "raster": 20,
+    "partial": 8,
+    "unsupported": 1,
+    "planned": 14
+  },
+  "editability_passed": true,
+  "editability_intended_total": 40,
+  "editability_actual_total": 40,
+  "editability_failing_slides": []
+}
