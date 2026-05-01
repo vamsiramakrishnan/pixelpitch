@@ -274,8 +274,33 @@ WALKER_JS = r"""
                     }
                     // Embed _svgRect on every shape dict — JS array
                     // properties don't survive JSON serialization, but
-                    // dict items do.
-                    const rect = { x: svgRect.x, y: svgRect.y, w: svgRect.width, h: svgRect.height };
+                    // dict items do. Capture viewBox + preserveAspectRatio
+                    // so the Python side can map SVG userspace units (which
+                    // may be very different from viewport pixels) into the
+                    // slide. Without this, an SVG with viewBox="0 0 100 100"
+                    // rendered into a 1280×720 box has every coordinate off
+                    // by a factor of ~12.
+                    let viewBox = null;
+                    try {
+                        const vb = el.viewBox && el.viewBox.baseVal;
+                        if (vb && (vb.width > 0 || vb.height > 0)) {
+                            viewBox = [vb.x, vb.y, vb.width, vb.height];
+                        } else if (el.getAttribute('viewBox')) {
+                            const parts = el.getAttribute('viewBox').trim().split(/[\s,]+/).map(parseFloat);
+                            if (parts.length === 4 && parts.every(n => Number.isFinite(n))) {
+                                viewBox = parts;
+                            }
+                        }
+                    } catch (_) {}
+                    const preserveAspectRatio = el.getAttribute('preserveAspectRatio') || null;
+                    const rect = {
+                        x: svgRect.x,
+                        y: svgRect.y,
+                        w: svgRect.width,
+                        h: svgRect.height,
+                        viewBox: viewBox,
+                        preserveAspectRatio: preserveAspectRatio,
+                    };
                     for (const sh of svgShapes) sh._svgRect = rect;
                 }
             } catch (_) {}
