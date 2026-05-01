@@ -1,13 +1,17 @@
-"""Tier-2 heuristic scorer.
+"""Tier-2 scorer.
 
-For units the rules deferred, compute a weighted raster-pressure score and
-decide based on thresholds. Returns None to defer to tier 3.
+For units the deterministic rules deferred, compute raster pressure first. The
+hard tails preserve the old behavior; the ambiguous middle band now runs a
+small expected-value cost model that can later be replaced by oracle-trained
+weights. Returns None to defer to tier 3 when neither mechanism has enough
+margin.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 
+from slidify.classifier.cost_model import classify_with_cost_model
 from slidify.gradients import parse_gradient
 from slidify.models import Decision, DecisionKind, VisualUnit
 from slidify.shadows import is_translatable_shadow
@@ -156,9 +160,7 @@ def _child_disagreement(
     return n_raster / len(decided_kinds)
 
 
-def compute_pressure(
-    unit: VisualUnit, prior: dict[str, Decision]
-) -> RasterPressure:
+def compute_pressure(unit: VisualUnit, prior: dict[str, Decision]) -> RasterPressure:
     return RasterPressure(
         pseudo_complexity=_pseudo_complexity(unit),
         layout_complexity=_layout_complexity(unit),
@@ -169,18 +171,17 @@ def compute_pressure(
     )
 
 
-def classify_tier2(
-    unit: VisualUnit, prior: dict[str, Decision]
-) -> Decision | None:
+def classify_tier2(unit: VisualUnit, prior: dict[str, Decision]) -> Decision | None:
     pressure = compute_pressure(unit, prior)
     score = pressure.score()
+    pressure_metadata = pressure.__dict__ | {"score": score}
 
     if score >= 0.75:
         return Decision(
             kind=DecisionKind.Raster,
             confidence=score,
             reason=f"heuristic_high_pressure (score={score:.2f})",
-            metadata={"pressure": pressure.__dict__ | {"score": score}},
+            metadata={"pressure": pressure_metadata},
             source_tier="tier2",
         )
     if score <= 0.30:
@@ -195,9 +196,7 @@ def classify_tier2(
             and anchor.background_color
             and anchor.background_color != "rgba(0, 0, 0, 0)"
         )
-        anchor_has_border = (
-            anchor is not None and anchor.border and anchor.border != "none"
-        )
+        anchor_has_border = anchor is not None and anchor.border and anchor.border != "none"
         if has_own_text and not unit.children:
             kind = DecisionKind.NativeText
         elif anchor_has_bg or anchor_has_border:
@@ -208,7 +207,14 @@ def classify_tier2(
             kind=kind,
             confidence=1.0 - score,
             reason=f"heuristic_low_pressure (score={score:.2f})",
-            metadata={"pressure": pressure.__dict__ | {"score": score}},
+            metadata={"pressure": pressure_metadata},
             source_tier="tier2",
         )
-    return None
+
+    # Ambiguous middle band: use the expected-value prior only when its margin
+    # is high enough. Otherwise keep deferring to tier 3.
+    return classify_with_cost_model(
+        unit,
+        prior,
+        pressure_metadata=pressure_metadata,
+    )
