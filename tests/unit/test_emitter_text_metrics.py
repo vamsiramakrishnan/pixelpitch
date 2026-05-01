@@ -7,13 +7,14 @@ import pytest
 from pptx import Presentation
 from pptx.util import Emu
 
-from slidify.emitter import Emitter, _apply_explicit_autofit
+from slidify.emitter import Emitter, _apply_explicit_autofit, _union_line_box
 from slidify.models import (
     BoundingBox,
     Decision,
     DecisionKind,
     DomElement,
     EmitOp,
+    TextRun,
     UnitKind,
     VisualUnit,
 )
@@ -155,6 +156,81 @@ async def test_single_line_title_bakes_size_into_rPr(tmp_path):
     assert min(sizes) < 7200, (
         f"expected a baked-down sz < 7200; got {sizes}"
     )
+
+
+def test_union_line_box_includes_leaf_text_without_runs():
+    """Bug B regression: _union_line_box must fall back to el.bbox for
+    text-bearing elements that lack `runs` (the walker only populates
+    runs for multi-run text containers). When a unit holds both a leaf
+    `<h1>` and a multi-run `.sub`, the union must encompass BOTH —
+    otherwise slide-17's 180px "Thank you." headline gets squashed into
+    the 29px tall sub-line bbox.
+    """
+    title = DomElement(
+        id=1,
+        parent_id=None,
+        depth=0,
+        tag="H1",
+        bbox=BoundingBox(x=80, y=400, w=928, h=166),
+        text="Thank you.",
+        font_size="180px",
+        stable_selector="#title",
+    )
+    sub = DomElement(
+        id=2,
+        parent_id=None,
+        depth=0,
+        tag="DIV",
+        bbox=BoundingBox(x=80, y=512, w=372, h=31),
+        text=None,
+        is_text_container=True,
+        runs=[
+            TextRun(
+                text="Available everywhere on May 14.",
+                font_size="24px",
+                line_boxes=[BoundingBox(x=80, y=513, w=372, h=29)],
+            )
+        ],
+        stable_selector="#sub",
+    )
+    unit = VisualUnit(
+        id="u1",
+        kind=UnitKind.Generic,
+        bbox=BoundingBox(x=80, y=400, w=928, h=166),
+        elements=[title, sub],
+    )
+    union = _union_line_box(unit)
+    assert union is not None
+    # Must span from the title's top (~400) to at least the sub's bottom
+    # (~542). Pre-fix this returned (80, 513, 372, 29).
+    assert union.y <= 410, f"union should start at title top, got y={union.y}"
+    assert union.y + union.h >= 540, (
+        f"union should reach sub bottom, got y2={union.y + union.h}"
+    )
+    assert union.w >= 900, (
+        f"union should be at least the title width, got w={union.w}"
+    )
+
+
+def test_union_line_box_returns_none_when_no_text():
+    """Sanity: a unit with zero text elements still returns None
+    (caller falls back to op.bbox)."""
+    el = DomElement(
+        id=1,
+        parent_id=None,
+        depth=0,
+        tag="DIV",
+        bbox=BoundingBox(x=0, y=0, w=100, h=100),
+        background_color="rgb(0, 128, 255)",
+        stable_selector="#bg",
+    )
+    unit = VisualUnit(
+        id="u1",
+        kind=UnitKind.Generic,
+        bbox=BoundingBox(x=0, y=0, w=100, h=100),
+        elements=[el],
+    )
+    assert _union_line_box(unit) is None
 
 
 def test_apply_explicit_autofit_replaces_existing():
