@@ -79,6 +79,15 @@ def _native_decoration_only(unit: VisualUnit) -> bool:
     if not unit.elements:
         return False
     a = unit.elements[0]
+    # SVG anchors must NEVER be promoted to NativeShape via this rule —
+    # an SVG container has child primitives (rect/path/text/etc) that
+    # are NOT regular DOM units, so they wouldn't emit independently.
+    # Promotion to NativeShape paints an empty box; the child primitives
+    # then vanish (slide-05 tile map: 51 colored state-rects disappeared
+    # because the SVG container got promoted to a fill-less NativeShape).
+    # Let SVGs reach the dedicated NativeSvg / Raster classifier rules.
+    if a.is_svg:
+        return False
     if a.has_before or a.has_after:
         return False
     if a.transform and a.transform != "none":

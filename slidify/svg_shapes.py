@@ -238,14 +238,18 @@ def _emit_one(slide, s: dict, mapping: _Mapping) -> bool:
                 Emu(px_to_emu(mapping.y(y0_user))),
                 scale=1.0,
             )
-            for ux, uy in points[1:]:
-                ff.add_line_segments(
-                    [(Emu(px_to_emu(mapping.x(ux))), Emu(px_to_emu(mapping.y(uy))))]
-                )
-            if tag == "polygon":
-                ff.add_line_segments(
-                    [(Emu(px_to_emu(mapping.x(x0_user))), Emu(px_to_emu(mapping.y(y0_user))))]
-                )
+            # IMPORTANT: pass ALL remaining points in ONE call.
+            # python-pptx's `add_line_segments(pts, close=False)` writes one
+            # contiguous run of `<a:lnTo>`s. Calling it once per point (the
+            # previous code's bug) produced N independent `moveTo+lnTo+close`
+            # micro-paths — every line chart rendered as a sequence of
+            # zigzag triangles instead of a continuous polyline.
+            segments = [
+                (Emu(px_to_emu(mapping.x(ux))), Emu(px_to_emu(mapping.y(uy))))
+                for (ux, uy) in points[1:]
+            ]
+            # `close=True` only when this is a polygon — polylines stay open.
+            ff.add_line_segments(segments, close=(tag == "polygon"))
             shape = ff.convert_to_shape()
         except Exception:
             return False
