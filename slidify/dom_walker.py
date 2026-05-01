@@ -8,10 +8,21 @@ from playwright.async_api import Page
 
 from slidify.models import BoundingBox, DomElement, TextRun
 
+# Maximum SVG primitive count that the walker captures geometry for and that
+# the tier-1 classifier accepts on the native path. Beyond this, the SVG is
+# treated as a complex illustration and rasterized cleanly. The two sites
+# (this constant and `classifier.tier1._has_complex_svg`) MUST stay aligned —
+# a mismatch creates a "dead band" where the walker drops geometry but the
+# classifier still routes the unit to the native emitter, which then emits
+# an empty shell. Real-world charts (50+ data points + axis ticks + gridlines)
+# and architecture diagrams (40-80 connectors) routinely exceed the previous
+# cap of 30; the bumped budget keeps them on the native path.
+SVG_NATIVE_PATH_BUDGET = 200
+
 # Walks the DOM in-page and produces an array of element records.
 # Skips invisible elements and <head>. Captures bbox, computed style,
 # pseudo-element presence, and slidify hints.
-WALKER_JS = r"""
+_WALKER_JS_TEMPLATE = r"""
 () => {
     const out = [];
     let nextId = 0;
@@ -207,14 +218,15 @@ WALKER_JS = r"""
                     el.querySelectorAll('text')
                 ).filter(t => !inDefs(t));
                 svgPathCount = allShapes.length;
-                // Capture geometry for SVGs up to ~30 primitives. Architecture
-                // diagrams, dashboard charts and process flows routinely
-                // ship 10-25 primitives, and rasterizing them loses every
-                // connector + axis line. The classifier's simple/complex
-                // SVG rules now scope to a unit's direct elements only,
-                // so a large overlay SVG no longer absorbs sibling content
-                // even when its bbox spans most of the slide.
-                if (svgPathCount > 0 && svgPathCount <= 30) {
+                // Capture geometry for SVGs up to __SVG_NATIVE_PATH_BUDGET__
+                // primitives (kept in sync with classifier.tier1). Real-world
+                // charts (line/bar with 50+ data points + ticks + gridlines)
+                // and architecture diagrams (40-80 connectors) routinely
+                // exceed the older cap of 30. The classifier's simple/complex
+                // SVG rules scope to a unit's direct elements only, so a
+                // large overlay SVG can't absorb sibling content even when
+                // its bbox spans most of the slide.
+                if (svgPathCount > 0 && svgPathCount <= __SVG_NATIVE_PATH_BUDGET__) {
                     const svgRect = el.getBoundingClientRect();
                     svgShapes = [];
                     for (const s of allShapes) {
@@ -374,6 +386,11 @@ WALKER_JS = r"""
     return out;
 }
 """
+
+
+WALKER_JS = _WALKER_JS_TEMPLATE.replace(
+    "__SVG_NATIVE_PATH_BUDGET__", str(SVG_NATIVE_PATH_BUDGET)
+)
 
 
 async def walk(page: Page) -> list[DomElement]:
