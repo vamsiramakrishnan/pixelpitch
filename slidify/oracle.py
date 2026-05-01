@@ -204,6 +204,8 @@ _DECISION_KIND_LABELS: dict[DecisionKind, str] = {
     DecisionKind.NativeShape: "NativeShape",
     DecisionKind.NativeBullet: "NativeBullet",
     DecisionKind.NativePicture: "NativePicture",
+    DecisionKind.NativeSvg: "NativeSvg",
+    DecisionKind.NativeTable: "NativeTable",
     DecisionKind.Raster: "Raster",
     DecisionKind.Hybrid: "Hybrid",
     DecisionKind.Skip: "Skip",

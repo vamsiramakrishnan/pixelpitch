@@ -113,6 +113,12 @@ class ConversionConfig:
     # On by default; disable for faster emit on decks where the
     # default-Office font is acceptable.
     embed_fonts: bool = True
+    # Re-open the produced .pptx and verify that the editable-shape count
+    # per slide matches what the emitter intended to produce. Catches
+    # silent shape-drop bugs that the SSIM oracle can't see (it only
+    # checks pixels, so a missing-but-pixel-similar shape passes).
+    # Cheap (~1ms/slide); on by default.
+    run_editability_check: bool = True
 
 
 @dataclass
@@ -518,6 +524,42 @@ async def convert(
     unmatched_sorted = sorted(
         unmatched.values(), key=lambda u: u.n_occurrences, reverse=True
     )[:25]
+    from slidify.compat import MATRIX_VERSION as _COMPAT_VERSION
+    from slidify.compat import matrix_summary as _compat_summary
+
+    # Editability round-trip: re-open the produced .pptx and verify that
+    # the shapes the emitter was asked to produce actually survived to
+    # disk. Defaults on (cheap; one extra pptx open per conversion).
+    edit_passed = True
+    edit_intended_total = 0
+    edit_actual_total = 0
+    edit_failing: list[int] = []
+    if cfg.run_editability_check:
+        try:
+            from slidify.roundtrip import check_pptx_editability
+
+            ops_per_slide = [s.ops for s in summaries]
+            edit_report = check_pptx_editability(pptx_path, ops_per_slide)
+            edit_passed = edit_report.passed
+            edit_intended_total = sum(
+                s.intended_editable for s in edit_report.per_slide
+            )
+            edit_actual_total = sum(
+                s.actual_editable for s in edit_report.per_slide
+            )
+            edit_failing = [
+                s.slide_index for s in edit_report.per_slide if not s.passed
+            ]
+            if not edit_passed:
+                log.warning(
+                    "api.editability_drift",
+                    failing_slides=edit_failing,
+                    intended_total=edit_intended_total,
+                    actual_total=edit_actual_total,
+                )
+        except Exception as e:
+            log.warning("api.editability_check_failed", error=str(e))
+
     return ConversionResult(
         pptx_path=str(pptx_path),
         n_slides=n_slides,
@@ -531,6 +573,12 @@ async def convert(
         pattern_hits=dict(pattern_stats.hits_by_id),
         pattern_coverage=pattern_stats.coverage,
         unmatched_signatures=unmatched_sorted,
+        compat_matrix_version=_COMPAT_VERSION,
+        compat_matrix_summary=_compat_summary(),
+        editability_passed=edit_passed,
+        editability_intended_total=edit_intended_total,
+        editability_actual_total=edit_actual_total,
+        editability_failing_slides=edit_failing,
     )
 
 

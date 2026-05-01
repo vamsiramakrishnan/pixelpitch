@@ -86,6 +86,8 @@ def _is_anchor(el: DomElement, parent_bg: str | None) -> bool:
     """An element is anchor-worthy if it has a visual presence of its own."""
     if el.is_canvas or el.is_svg or el.is_img or el.is_video:
         return True
+    if el.is_table:
+        return True
     if el.transform and el.transform != "none":
         return True
     if _has_pseudo(el):
@@ -381,6 +383,8 @@ def _apply_kind_hints(roots: list[VisualUnit], by_id: dict[int, DomElement]) -> 
                 u.kind = UnitKind.Chart if anchor.is_canvas else UnitKind.Generic
             elif anchor.is_img:
                 u.kind = UnitKind.Image
+            elif anchor.is_table:
+                u.kind = UnitKind.Table
             elif anchor.pptx_role == "title":
                 u.kind = UnitKind.Title
             elif anchor.pptx_role in ("heading", "body", "caption"):

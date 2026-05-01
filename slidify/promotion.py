@@ -34,6 +34,7 @@ _NATIVE_KINDS = {
     DecisionKind.NativeBullet,
     DecisionKind.NativePicture,
     DecisionKind.NativeSvg,
+    DecisionKind.NativeTable,
 }
 
 

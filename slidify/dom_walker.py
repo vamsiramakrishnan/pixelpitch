@@ -148,6 +148,76 @@ _WALKER_JS_TEMPLATE = r"""
         return out;
     }
 
+    // ---- HTML <table> capture ------------------------------------------
+    //
+    // Returns a {rows, header_rows} dict if `el` is a translatable HTML
+    // table — every cell contains only text (text nodes + inline
+    // formatting). Returns null for tables that contain nested tables,
+    // images, SVG, canvas, or block-level layout inside cells; those
+    // rasterize via the existing pipeline so we never half-emit a table.
+    function isInlineOnly(node) {
+        for (const ch of node.childNodes) {
+            if (ch.nodeType === 1) {
+                const t = ch.tagName;
+                if (t === 'BR') continue;
+                if (!INLINE_FORMATTING_TAGS.has(t)) return false;
+                if (!isInlineOnly(ch)) return false;
+            }
+        }
+        return true;
+    }
+    function captureTable(el) {
+        // Only consider a flat (non-nested) <table>. We accept colspan /
+        // rowspan but record them so the emitter can merge cells.
+        if (el.querySelector('table, img, svg, canvas, video, iframe, ul, ol')) {
+            return null;
+        }
+        const rows = [];
+        // Header rows: any <tr> whose parent is <thead>, OR rows whose cells
+        // are entirely <th>.
+        let headerRows = 0;
+        const trs = Array.from(el.querySelectorAll('tr'));
+        if (trs.length === 0) return null;
+        for (const tr of trs) {
+            const inThead = tr.parentElement && tr.parentElement.tagName === 'THEAD';
+            const cellsRaw = Array.from(tr.children).filter(
+                (c) => c.tagName === 'TD' || c.tagName === 'TH'
+            );
+            if (cellsRaw.length === 0) continue;
+            const allTh = cellsRaw.every((c) => c.tagName === 'TH');
+            if (inThead || (rows.length === 0 && allTh)) headerRows++;
+            const cells = [];
+            for (const c of cellsRaw) {
+                if (!isInlineOnly(c)) return null;
+                const ccs = getComputedStyle(c);
+                const colspan = parseInt(c.getAttribute('colspan') || '1', 10) || 1;
+                const rowspan = parseInt(c.getAttribute('rowspan') || '1', 10) || 1;
+                cells.push({
+                    text: (c.textContent || '').trim(),
+                    is_header: c.tagName === 'TH',
+                    colspan: colspan,
+                    rowspan: rowspan,
+                    color: ccs.color || 'rgb(0,0,0)',
+                    background_color: ccs.backgroundColor || 'rgba(0,0,0,0)',
+                    font_family: ccs.fontFamily || '',
+                    font_size: ccs.fontSize || '14px',
+                    font_weight: ccs.fontWeight || '400',
+                    text_align: ccs.textAlign || 'start',
+                    italic: ccs.fontStyle === 'italic',
+                    underline: ccs.textDecorationLine && ccs.textDecorationLine.includes('underline'),
+                });
+            }
+            rows.push(cells);
+        }
+        // Reject ragged tables — equal column counts required (sums of
+        // colspan within a row). Tables with rowspan/colspan that don't
+        // form a clean grid are too ambiguous; rasterize them.
+        const widths = rows.map((r) => r.reduce((a, c) => a + c.colspan, 0));
+        const w0 = widths[0];
+        if (!widths.every((w) => w === w0)) return null;
+        return { rows: rows, header_rows: headerRows, n_cols: w0 };
+    }
+
     function snapshot(el, parentId, depth) {
         // Skip non-element nodes and <head>/<script>/<style>
         if (!el || el.nodeType !== 1) return null;
@@ -318,6 +388,13 @@ _WALKER_JS_TEMPLATE = r"""
             } catch (_) {}
         }
 
+        // <table> capture (only the <table> root; cell elements are not
+        // recursed into independently).
+        let tableData = null;
+        if (tag === 'TABLE') {
+            try { tableData = captureTable(el); } catch (_) { tableData = null; }
+        }
+
         const ds = el.dataset || {};
 
         out.push({
@@ -364,6 +441,8 @@ _WALKER_JS_TEMPLATE = r"""
             img_src: tag === 'IMG' ? (el.currentSrc || el.src || null) : null,
             svg_path_count: svgPathCount,
             svg_shapes: svgShapes,
+            is_table: tableData !== null,
+            table_data: tableData,
             pptx_role: ds.pptxRole || null,
             pptx_rasterize: ds.pptxRasterize === 'true',
             pptx_skip: ds.pptxSkip === 'true',
@@ -376,7 +455,9 @@ _WALKER_JS_TEMPLATE = r"""
 
         // If we captured this element as a text container, don't recurse —
         // the runs already include all inline children's text and styling.
-        if (!textContainer) {
+        // Same for tables we captured natively: their cells are owned by the
+        // NativeTable emit op, not by the visual-unit clusterer.
+        if (!textContainer && !(tag === 'TABLE' && tableData !== null)) {
             for (const child of el.children) snapshot(child, id, depth + 1);
         }
         return id;
@@ -463,6 +544,8 @@ async def walk(page: Page) -> list[DomElement]:
                 img_src=entry["img_src"],
                 svg_path_count=entry["svg_path_count"],
                 svg_shapes=entry.get("svg_shapes"),
+                is_table=entry.get("is_table", False),
+                table_data=entry.get("table_data"),
                 pptx_role=entry["pptx_role"],
                 pptx_rasterize=entry["pptx_rasterize"],
                 pptx_skip=entry["pptx_skip"],

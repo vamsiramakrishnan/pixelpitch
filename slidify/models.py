@@ -120,6 +120,14 @@ class DomElement(BaseModel):
     img_src: str | None = None
     svg_path_count: int = 0
     svg_shapes: list[dict] | None = None
+    # HTML <table> capture. Only populated on the <table> element itself, and
+    # only when the table is "translatable" — every cell is plain text or
+    # text-with-inline-formatting (no nested tables, SVG/canvas/img inside
+    # cells). When set, the tier-1 classifier routes the unit to a single
+    # NativeTable emit op that lays down a real PPTX table primitive
+    # (editable cells, not floating text frames).
+    is_table: bool = False
+    table_data: dict | None = None
     pptx_role: str | None = None
     pptx_rasterize: bool = False
     pptx_skip: bool = False
@@ -143,6 +151,7 @@ class UnitKind(str, Enum):
     Decoration = "decoration"
     Chart = "chart"
     Image = "image"
+    Table = "table"
 
 
 class VisualUnit(BaseModel):
@@ -167,6 +176,7 @@ class DecisionKind(str, Enum):
     NativeBullet = "native_bullet"
     NativePicture = "native_picture"
     NativeSvg = "native_svg"  # SVG with translatable primitives
+    NativeTable = "native_table"  # <table> → PPTX table primitive
     Raster = "raster"
     Hybrid = "hybrid"
     Skip = "skip"
@@ -261,6 +271,20 @@ class ConversionResult(BaseModel):
     pattern_hits: dict[str, int] = Field(default_factory=dict)
     pattern_coverage: float = 0.0
     unmatched_signatures: list[UnmatchedSignature] = Field(default_factory=list)
+    # Static metadata: a snapshot of the CSS/HTML compatibility matrix
+    # version + per-level counts in effect at the time of this conversion.
+    # Lets downstream consumers diff what slidify CAN translate against
+    # what they actually shipped.
+    compat_matrix_version: str = ""
+    compat_matrix_summary: dict[str, int] = Field(default_factory=dict)
+    # Per-slide structural diff between intended emit ops and what the
+    # produced .pptx actually contains. Detects silent shape-drop bugs
+    # the SSIM oracle cannot see (the slide "rendered" — it's just missing
+    # half its primitives). Empty when round-trip checking is disabled.
+    editability_passed: bool = True
+    editability_intended_total: int = 0
+    editability_actual_total: int = 0
+    editability_failing_slides: list[int] = Field(default_factory=list)
 
 
 VisualUnit.model_rebuild()

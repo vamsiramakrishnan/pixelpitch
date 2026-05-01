@@ -1,0 +1,293 @@
+<!--
+  slidify showcase — Native Tables, Editability & Compat Matrix
+  4 slides exercising the new pipeline pieces:
+    1. Hero (gradient + native shape decoration + native text)
+    2. Native HTML <table> — emits as a real PPTX table primitive
+    3. Side-by-side: native vs raster (illustrates fallback decisions)
+    4. Roadmap snapshot driven by the compat matrix
+-->
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    width: 1280px; height: 720px; background: #0b1020;
+    color: #f5f7ff; font-family: Inter, ui-sans-serif, sans-serif;
+    overflow: hidden; position: relative;
+  }
+  .glow {
+    position: absolute; width: 720px; height: 720px;
+    border-radius: 50%; filter: blur(0); opacity: 0.55;
+    background: radial-gradient(circle at 30% 30%, #6366f1 0%, rgba(99,102,241,0) 60%);
+    top: -200px; left: -200px;
+  }
+  .glow.b {
+    background: radial-gradient(circle at 70% 70%, #f59e0b 0%, rgba(245,158,11,0) 60%);
+    top: 220px; left: 720px; opacity: 0.45;
+  }
+  .kicker {
+    position: absolute; top: 80px; left: 80px;
+    font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: #a5b4fc;
+  }
+  h1 {
+    position: absolute; top: 130px; left: 80px; right: 80px;
+    margin: 0; font-size: 84px; line-height: 1.04; font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  h1 em { font-style: normal; color: #fbbf24; }
+  .lede {
+    position: absolute; top: 470px; left: 80px; right: 80px;
+    font-size: 22px; line-height: 1.5; color: #cbd5f5; max-width: 880px;
+  }
+  .meta {
+    position: absolute; bottom: 64px; left: 80px;
+    font-size: 14px; color: #94a3b8; letter-spacing: 0.04em;
+  }
+  .meta b { color: #f5f7ff; font-weight: 600; }
+</style></head>
+<body>
+  <div class="glow"></div>
+  <div class="glow b"></div>
+  <div class="kicker">slidify v0.2 — release notes</div>
+  <h1 data-pptx-role="title">Native tables, <em>compat matrix</em>, editability check.</h1>
+  <p class="lede">Three additions move HTML→PPTX past the usual cliffs: real PPTX
+    tables instead of floating text boxes, a self-validating CSS matrix that doubles
+    as a roadmap, and a post-emit round-trip that catches silently-dropped shapes.</p>
+  <div class="meta"><b>release date</b> &nbsp;·&nbsp; <b>matrix v2</b> &nbsp;·&nbsp; 81 documented features</div>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    width: 1280px; height: 720px; background: #ffffff;
+    color: #111827; font-family: Inter, ui-sans-serif, sans-serif;
+    position: relative;
+  }
+  .kicker {
+    position: absolute; top: 64px; left: 80px;
+    font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #6366f1;
+  }
+  h1 {
+    position: absolute; top: 92px; left: 80px;
+    margin: 0; font-size: 48px; font-weight: 700; letter-spacing: -0.01em;
+  }
+  .sub {
+    position: absolute; top: 160px; left: 80px; right: 80px;
+    font-size: 17px; line-height: 1.5; color: #4b5563; max-width: 920px;
+  }
+  table.q {
+    position: absolute; top: 240px; left: 80px; width: 1120px;
+    border-collapse: collapse; font-size: 18px;
+  }
+  table.q th, table.q td {
+    padding: 14px 18px; text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  table.q thead th {
+    background: #f3f4f6; font-weight: 700; color: #111827;
+    font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  table.q td.n { text-align: right; font-variant-numeric: tabular-nums; }
+  table.q td.up { color: #047857; font-weight: 600; }
+  table.q td.dn { color: #b91c1c; font-weight: 600; }
+  table.q tr.hi td { background: #fef3c7; }
+  .footnote {
+    position: absolute; bottom: 50px; left: 80px; right: 80px;
+    font-size: 13px; color: #6b7280; line-height: 1.5;
+  }
+</style></head>
+<body>
+  <div class="kicker">slide 2 · native &lt;table&gt;</div>
+  <h1 data-pptx-role="title">Quarterly performance, editable in PowerPoint</h1>
+  <p class="sub">This grid is an HTML <code>&lt;table&gt;</code> in the source.
+    Slidify routes it to a native PPTX table primitive — every cell is editable,
+    not a flattened picture or stack of floating textboxes.</p>
+  <table class="q">
+    <thead>
+      <tr><th>Quarter</th><th>Revenue</th><th>Gross margin</th><th>YoY</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Q1 FY25</td><td class="n">$3.2M</td><td class="n">62.4%</td><td class="n up">+18%</td></tr>
+      <tr><td>Q2 FY25</td><td class="n">$3.9M</td><td class="n">64.1%</td><td class="n up">+22%</td></tr>
+      <tr class="hi"><td>Q3 FY25</td><td class="n">$4.6M</td><td class="n">65.8%</td><td class="n up">+27%</td></tr>
+      <tr><td>Q4 FY25</td><td class="n">$5.1M</td><td class="n">66.2%</td><td class="n up">+24%</td></tr>
+      <tr><td>Q1 FY26 (proj.)</td><td class="n">$5.4M</td><td class="n">66.5%</td><td class="n dn">−6%</td></tr>
+    </tbody>
+  </table>
+  <div class="footnote">Highlighted row is the strongest YoY in the period. Cell
+    background color, header bolding, alignment, and per-cell text color all
+    survive into the native table.</div>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    width: 1280px; height: 720px;
+    background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+    color: #0f172a; font-family: Inter, ui-sans-serif, sans-serif;
+    position: relative;
+  }
+  .kicker {
+    position: absolute; top: 64px; left: 80px;
+    font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #6366f1;
+  }
+  h1 {
+    position: absolute; top: 92px; left: 80px; margin: 0;
+    font-size: 44px; font-weight: 700; letter-spacing: -0.01em;
+  }
+  .grid {
+    position: absolute; top: 200px; left: 80px; right: 80px;
+    display: flex; gap: 32px;
+  }
+  .col {
+    flex: 1; background: white; border-radius: 18px;
+    padding: 28px 28px 32px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    border: 1px solid #e2e8f0;
+  }
+  .badge {
+    display: inline-block; font-size: 11px; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 4px 10px; border-radius: 999px;
+  }
+  .col.native .badge { background: #dcfce7; color: #166534; }
+  .col.raster .badge { background: #fee2e2; color: #991b1b; }
+  .col h2 { margin: 12px 0 8px; font-size: 22px; }
+  .col p { margin: 0 0 18px; color: #475569; font-size: 15px; line-height: 1.5; }
+  ul { margin: 0; padding-left: 22px; color: #1e293b; font-size: 15px; line-height: 1.8; }
+  ul li code { background: #f1f5f9; padding: 1px 6px; border-radius: 4px; font-size: 13px; }
+  .footnote {
+    position: absolute; bottom: 50px; left: 80px; right: 80px;
+    font-size: 13px; color: #64748b; text-align: center;
+  }
+</style></head>
+<body>
+  <div class="kicker">slide 3 · native vs raster</div>
+  <h1 data-pptx-role="title">Where the matrix draws the line</h1>
+
+  <div class="grid">
+    <div class="col native">
+      <span class="badge">native — editable</span>
+      <h2>Translatable to PPTX shapes</h2>
+      <p>Every primitive PowerPoint understands directly. Edit text, change colors,
+        update tables — no pixel surgery required.</p>
+      <ul>
+        <li>Text runs (<code>color</code>, <code>font-*</code>, italic, underline)</li>
+        <li>Linear / radial / conic gradients</li>
+        <li><code>border-radius</code> + <code>box-shadow</code></li>
+        <li><code>&lt;table&gt;</code> with header rows and spans</li>
+        <li><code>clip-path: inset()</code> / <code>circle()</code> / common polygons</li>
+        <li>SVG ≤200 primitives + KaTeX / Shiki text</li>
+      </ul>
+    </div>
+    <div class="col raster">
+      <span class="badge">raster — preserved visually</span>
+      <h2>Pixel-cropped fallback</h2>
+      <p>PPTX has no equivalent — slidify embeds a screenshot of the affected region
+        so the visual is preserved at the cost of editability.</p>
+      <ul>
+        <li>CSS <code>filter</code> (blur / brightness / hue-rotate)</li>
+        <li><code>backdrop-filter</code> (frosted glass)</li>
+        <li><code>mix-blend-mode</code></li>
+        <li><code>background-image: url()</code> (no fetch+embed yet)</li>
+        <li><code>&lt;canvas&gt;</code> / WebGL / Three.js (single frame)</li>
+        <li>3D transforms (<code>matrix3d</code>, <code>preserve-3d</code>)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footnote">Run <code>slidify compat</code> for the full 81-row matrix · <code>--level planned</code> shows the roadmap with implementation plans</div>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    width: 1280px; height: 720px; background: #0f172a; color: #e2e8f0;
+    font-family: Inter, ui-sans-serif, sans-serif; position: relative;
+  }
+  .kicker {
+    position: absolute; top: 64px; left: 80px;
+    font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #fbbf24;
+  }
+  h1 {
+    position: absolute; top: 92px; left: 80px; margin: 0;
+    font-size: 44px; font-weight: 700; letter-spacing: -0.01em;
+    color: #f8fafc;
+  }
+  .sub {
+    position: absolute; top: 158px; left: 80px; right: 80px;
+    font-size: 16px; color: #94a3b8;
+  }
+  table.r {
+    position: absolute; top: 220px; left: 80px; width: 1120px;
+    border-collapse: collapse; font-size: 14px;
+  }
+  table.r th, table.r td {
+    padding: 12px 14px; text-align: left;
+    border-bottom: 1px solid #1e293b; vertical-align: top;
+  }
+  table.r thead th {
+    background: #1e293b; color: #fbbf24; font-weight: 600;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  table.r td.cat { color: #a5b4fc; font-weight: 600; width: 140px; }
+  table.r td.feat { color: #f1f5f9; font-weight: 500; width: 320px; }
+  table.r td.plan { color: #cbd5f5; font-size: 13px; line-height: 1.45; }
+</style></head>
+<body>
+  <div class="kicker">slide 4 · roadmap (planned rows)</div>
+  <h1 data-pptx-role="title">What's next on the matrix</h1>
+  <p class="sub">A subset of the 14 explicit Planned roadmap items in matrix v2 — each
+    cites a concrete implementation strategy, not a vague aspiration.</p>
+
+  <table class="r">
+    <thead>
+      <tr><th>Category</th><th>Feature</th><th>Plan</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="cat">Motion</td>
+        <td class="feat">Framer-Motion → embedded movie</td>
+        <td class="plan">Drive Playwright at 30fps over a configurable duration, encode via ffmpeg, embed via add_movie() so PowerPoint plays the animation natively on slide enter.</td>
+      </tr>
+      <tr>
+        <td class="cat">3D / WebGL</td>
+        <td class="feat">Three.js canvas → animated GIF</td>
+        <td class="plan">data-pptx-record='gif duration=4s fps=30' on canvas; renderer drives requestAnimationFrame N frames, encodes via Pillow, embeds as picture.</td>
+      </tr>
+      <tr>
+        <td class="cat">Embeds</td>
+        <td class="feat">YouTube / Vimeo as PPTX online video</td>
+        <td class="plan">Detect provider from iframe src, write &lt;p:videoFile r:link='…'&gt; into the slide XML so PowerPoint plays via online-video pane.</td>
+      </tr>
+      <tr>
+        <td class="cat">Charts</td>
+        <td class="feat">Chart.js / ECharts → native PPTX chart</td>
+        <td class="plan">data-pptx-chart='bar|line|pie' carries series JSON; emitter calls add_chart() so the chart is editable in PowerPoint, not flattened to pixels.</td>
+      </tr>
+      <tr>
+        <td class="cat">Slide structure</td>
+        <td class="feat">reveal.js &lt;section&gt; stacks</td>
+        <td class="plan">Reveal-aware splitter walks horizontal/vertical section stacks and emits one slide per leaf, honoring data-fragment as stepwise reveals.</td>
+      </tr>
+      <tr>
+        <td class="cat">Embeds</td>
+        <td class="feat">Hyperlinks (&lt;a href&gt;)</td>
+        <td class="plan">Set run.hyperlink.address on the PPTX run when the source &lt;a&gt; carries a non-fragment href, so links survive into the deck.</td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>

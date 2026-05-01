@@ -38,7 +38,7 @@ from slidify.models import (
     RenderedSlide,
     VisualUnit,
 )
-from slidify.preset_shapes import detect_preset_shape, emit_preset
+from slidify.preset_shapes import detect_preset_shape
 from slidify.shadows import apply_shadows, parse_box_shadows
 from slidify.svg_shapes import emit_svg_shapes
 from slidify.text_metrics import (
@@ -274,7 +274,7 @@ class Emitter:
         ns_a = "http://schemas.openxmlformats.org/drawingml/2006/main"
         XML_SPACE = "{http://www.w3.org/XML/1998/namespace}space"
         for slide in self.prs.slides:
-            tree = slide._element  # noqa: SLF001
+            tree = slide._element
             for p in tree.iter(f"{{{ns_a}}}p"):
                 # 1. Insert <a:endParaRPr> on empty paragraphs.
                 has_run = any(
@@ -346,6 +346,10 @@ class Emitter:
 
         if kind == DecisionKind.NativeSvg:
             self._emit_native_svg(slide, unit, op)
+            return
+
+        if kind == DecisionKind.NativeTable:
+            self._emit_native_table(slide, unit, op)
             return
 
         if kind == DecisionKind.Raster:
@@ -654,7 +658,7 @@ class Emitter:
 
         if is_single_line:
             try:
-                bodyPr = tf._txBody.bodyPr  # noqa: SLF001
+                bodyPr = tf._txBody.bodyPr
                 bodyPr.set("wrap", "none")
             except Exception:
                 pass
@@ -898,7 +902,6 @@ class Emitter:
             self._set_solid_fill_alpha(shape, alpha)
 
     def _set_solid_fill_alpha(self, shape, alpha: float) -> None:
-        from lxml import etree
 
         ns_a = "http://schemas.openxmlformats.org/drawingml/2006/main"
         try:
@@ -964,6 +967,161 @@ class Emitter:
         if svg_el is None or not svg_el.svg_shapes:
             return
         emit_svg_shapes(slide, svg_el.svg_shapes)
+
+    def _emit_native_table(self, slide, unit: VisualUnit, op: EmitOp) -> None:
+        """Emit an HTML <table> as a real PPTX table primitive.
+
+        We size the table at the source bbox, then post-walk the shape's
+        XML to apply per-cell colspan/rowspan merges (python-pptx exposes
+        a `merge` API, but it works on cell objects after creation).
+
+        Cells are populated with one paragraph each. Per-cell font, color,
+        background, alignment, italic and underline are honored. Header
+        rows (rows owned by <thead> or rows containing only <th> cells)
+        force bold and inherit any background captured on the cell.
+        """
+        table_el = next(
+            (e for e in unit.all_elements() if e.is_table and e.table_data),
+            None,
+        )
+        if table_el is None or not table_el.table_data:
+            return
+        td = table_el.table_data
+        rows: list[list[dict]] = td.get("rows") or []
+        n_cols: int = int(td.get("n_cols") or 0)
+        if not rows or n_cols <= 0:
+            return
+
+        # Build a logical grid (n_rows × n_cols) with each visible cell's
+        # source row/col index. We emit every grid slot first, then merge.
+        n_rows = len(rows)
+        # Pre-walk to establish the grid → (source_row, source_col_in_row)
+        # for every covered slot (including those swallowed by spans).
+        grid: list[list[tuple[int, int] | None]] = [
+            [None] * n_cols for _ in range(n_rows)
+        ]
+        for r_idx, row in enumerate(rows):
+            c_idx = 0
+            for cell_idx, cell in enumerate(row):
+                while c_idx < n_cols and grid[r_idx][c_idx] is not None:
+                    c_idx += 1
+                if c_idx >= n_cols:
+                    break
+                cs = max(1, int(cell.get("colspan", 1)))
+                rs = max(1, int(cell.get("rowspan", 1)))
+                for dr in range(rs):
+                    for dc in range(cs):
+                        rr, cc = r_idx + dr, c_idx + dc
+                        if 0 <= rr < n_rows and 0 <= cc < n_cols:
+                            grid[rr][cc] = (r_idx, cell_idx)
+                c_idx += cs
+
+        x, y, w, h = _emu_rect(op.bbox)
+        try:
+            shape = slide.shapes.add_table(n_rows, n_cols, x, y, w, h)
+        except Exception as e:
+            log.warning("emitter.table_create_failed", error=str(e))
+            return
+        table = shape.table
+
+        # Populate every visible (top-left of its span) cell.
+        for r_idx, row in enumerate(rows):
+            c_idx = 0
+            for cell_idx, cell in enumerate(row):
+                while c_idx < n_cols and (
+                    grid[r_idx][c_idx] is None
+                    or grid[r_idx][c_idx] != (r_idx, cell_idx)
+                ):
+                    c_idx += 1
+                if c_idx >= n_cols:
+                    break
+                self._populate_table_cell(
+                    table.cell(r_idx, c_idx), cell
+                )
+                c_idx += max(1, int(cell.get("colspan", 1)))
+
+        # Apply spans by merging the originating cell with the bottom-right
+        # of its span. python-pptx supports `origin.merge(other)` where
+        # both must be top-left and bottom-right corners of the rect.
+        for r_idx, row in enumerate(rows):
+            c_idx = 0
+            for cell in row:
+                while c_idx < n_cols and (
+                    grid[r_idx][c_idx] is None
+                    or grid[r_idx][c_idx][0] != r_idx
+                ):
+                    c_idx += 1
+                if c_idx >= n_cols:
+                    break
+                cs = max(1, int(cell.get("colspan", 1)))
+                rs = max(1, int(cell.get("rowspan", 1)))
+                if cs > 1 or rs > 1:
+                    r2 = min(n_rows - 1, r_idx + rs - 1)
+                    c2 = min(n_cols - 1, c_idx + cs - 1)
+                    try:
+                        table.cell(r_idx, c_idx).merge(table.cell(r2, c2))
+                    except Exception as e:
+                        log.debug(
+                            "emitter.table_merge_failed",
+                            r=r_idx, c=c_idx, rs=rs, cs=cs, error=str(e),
+                        )
+                c_idx += cs
+
+    def _populate_table_cell(self, pptx_cell, cell: dict) -> None:
+        """Set text + per-cell styling on a python-pptx table cell."""
+
+        text = cell.get("text", "") or ""
+        tf = pptx_cell.text_frame
+        tf.word_wrap = True
+        # Reset paragraphs (python-pptx pre-creates one).
+        p = tf.paragraphs[0]
+        # Clear any existing runs.
+        for r in list(p.runs):
+            r._r.getparent().remove(r._r)
+        align = _TEXT_ALIGN_MAP.get(
+            (cell.get("text_align") or "start").strip().lower(),
+            PP_ALIGN.LEFT,
+        )
+        p.alignment = align
+        run = p.add_run()
+        run.text = text
+
+        font = run.font
+        size_px = parse_px(cell.get("font_size") or "14px")
+        if size_px > 0:
+            font.size = Pt(size_px * 0.75)  # px → pt at 96dpi
+        weight = (cell.get("font_weight") or "400").strip()
+        font.bold = bool(cell.get("is_header")) or is_bold(weight)
+        if cell.get("italic"):
+            font.italic = True
+        if cell.get("underline"):
+            font.underline = True
+        family = (cell.get("font_family") or "").split(",")[0].strip().strip("\"'")
+        if family:
+            font.name = resolve_font(family)
+
+        col = parse_color(cell.get("color") or "rgb(0,0,0)")
+        if col is not None:
+            try:
+                font.color.rgb = col[0]
+            except Exception:
+                pass
+
+        bg = parse_color(cell.get("background_color") or "rgba(0,0,0,0)")
+        if bg is not None and bg[1] > 0.001:
+            try:
+                pptx_cell.fill.solid()
+                pptx_cell.fill.fore_color.rgb = bg[0]
+            except Exception:
+                pass
+        else:
+            # Override the default theme fill so cells without an explicit
+            # background render transparent rather than picking up the
+            # accent-color row banding python-pptx applies by default.
+            try:
+                pptx_cell.fill.background()
+            except Exception:
+                pass
 
     def _emit_native_picture(self, slide, unit: VisualUnit, op: EmitOp) -> None:
         src = op.decision.metadata.get("src") or self._first_img_src(unit)
@@ -1347,7 +1505,7 @@ def _try_apply_gradient_text_fill(
 
         ns_a = "http://schemas.openxmlformats.org/drawingml/2006/main"
         # font.fill._xPr is the rPr element where the fill lives.
-        rpr = font._rPr  # noqa: SLF001
+        rpr = font._rPr
         if rpr is None:
             return False
         grad_fill = rpr.find(f"{{{ns_a}}}gradFill")
@@ -1474,6 +1632,7 @@ def native_area_ratio(
             DecisionKind.NativeBullet,
             DecisionKind.NativePicture,
             DecisionKind.NativeSvg,
+            DecisionKind.NativeTable,
             DecisionKind.Hybrid,  # hybrid keeps text editable; fill counts as native shape
         ):
             bb = _clamp_bbox(op.bbox)
