@@ -848,44 +848,7 @@ class Emitter:
             log.warning("emitter.image_fetch_failed", src=src[:120], error=str(e))
             return
         x, y, w, h = _emu_rect(op.bbox)
-        pic = slide.shapes.add_picture(io.BytesIO(data), x, y, w, h)
-        # Honor `<img style="opacity: 0.X">` natively. Without this, slides
-        # that use a faded photo as a backdrop under big type render the
-        # photo at full strength in PPTX, blowing out contrast and forcing
-        # the overlay text into illegibility.
-        opacity = self._picture_opacity(unit)
-        if opacity is not None and opacity < 0.999:
-            self._set_picture_alpha(pic, opacity)
-
-    def _picture_opacity(self, unit: VisualUnit) -> float | None:
-        """The IMG's CSS opacity (None ⇔ no IMG / opacity == 1)."""
-        for e in unit.all_elements():
-            if e.is_img and e.img_src:
-                try:
-                    op = float(e.opacity)
-                except (TypeError, ValueError):
-                    return None
-                return op if 0.0 <= op < 1.0 else None
-        return None
-
-    def _set_picture_alpha(self, pic, alpha: float) -> None:
-        """Insert `<a:alphaModFix amt="…"/>` into the picture's `<a:blip>`.
-
-        OOXML expresses image translucency as a blip-level effect, not a
-        shape fill alpha. python-pptx doesn't expose this directly, so we
-        edit the underlying lxml tree.
-        """
-        try:
-            blip = pic._element.blipFill.blip
-        except AttributeError:
-            return
-        if blip is None:
-            return
-        # Strip any prior alphaModFix to keep emit idempotent.
-        for existing in blip.findall(f"{{{_A_NS}}}alphaModFix"):
-            blip.remove(existing)
-        amt = max(0, min(100_000, int(round(alpha * 100_000))))
-        etree.SubElement(blip, f"{{{_A_NS}}}alphaModFix", attrib={"amt": str(amt)})
+        slide.shapes.add_picture(io.BytesIO(data), x, y, w, h)
 
     def _first_img_src(self, unit: VisualUnit) -> str | None:
         for e in unit.all_elements():

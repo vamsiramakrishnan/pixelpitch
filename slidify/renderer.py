@@ -100,14 +100,6 @@ class Renderer:
         ctx = await self._browser.new_context(
             viewport={"width": self.viewport_w, "height": self.viewport_h},
             device_scale_factor=1,
-            # Many CI / container environments terminate TLS at a corporate
-            # proxy whose cert chain Chromium doesn't trust. Without this,
-            # `<img src="https://…">` references silently fail to load and
-            # the ground-truth screenshot diverges from the embedded blip
-            # (which httpx happily fetches via the system trust store),
-            # tanking SSIM on photo-heavy slides. The renderer is offline-
-            # safe — failed loads still yield a valid (text-only) shot.
-            ignore_https_errors=True,
         )
         # Inject animation freeze script before any page load.
         await ctx.add_init_script(ANIM_FREEZE_JS)
