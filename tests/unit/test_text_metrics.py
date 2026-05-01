@@ -10,7 +10,6 @@ import pytest
 
 from slidify.models import BoundingBox
 from slidify.text_metrics import (
-    _text_metrics_backend,
     compute_font_scale_for_textbox,
     get_fallback_font_path,
     get_inter_font_path,
@@ -167,13 +166,3 @@ def test_empty_text_zero_width():
     m = measure_text("", inter, 18.0)
     assert m.width_px == 0
     assert measure_text_width_px("", inter, 18.0) == 0
-
-
-def test_text_metrics_backend_defaults_to_fonttools(monkeypatch: pytest.MonkeyPatch):
-    monkeypatch.delenv("SLIDIFY_TEXT_METRICS_BACKEND", raising=False)
-    assert _text_metrics_backend() == "fonttools"
-
-
-def test_text_metrics_backend_invalid_value_falls_back(monkeypatch: pytest.MonkeyPatch):
-    monkeypatch.setenv("SLIDIFY_TEXT_METRICS_BACKEND", "not-real")
-    assert _text_metrics_backend() == "fonttools"
