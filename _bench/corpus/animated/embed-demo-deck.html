@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Animated GIF embed demo</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               font-family: Inter, sans-serif; background:#050510;
+               color:#f5f5f7; -webkit-font-smoothing:antialiased; }
+  .slide { width:1280px; height:720px; box-sizing:border-box;
+           position:relative; overflow:hidden;
+           background: radial-gradient(ellipse at 30% 20%, #1e1b4b 0%, #050510 70%); }
+  .header { padding:48px 64px 0; }
+  .kicker { font-size:12px; letter-spacing:0.2em; text-transform:uppercase; color:#a1a1aa; }
+  h1 { font-size:36px; line-height:1.05; margin:8px 0 0; letter-spacing:-0.02em; font-weight:600; }
+  .frame { position:absolute; left:64px; right:64px; bottom:64px; top:160px;
+           border-radius:18px; overflow:hidden;
+           border:1px solid rgba(255,255,255,0.08);
+           box-shadow: 0 18px 40px rgba(0,0,0,0.5); }
+  .frame img { width:100%; height:100%; object-fit:cover; display:block; }
+  .footer { position:absolute; left:64px; right:64px; bottom:18px;
+            display:flex; justify-content:space-between; font-size:11px;
+            color:#52525b; letter-spacing:0.18em; text-transform:uppercase; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="header">
+    <div class="kicker">Slide 1 · Stat cards</div>
+    <h1 data-pptx-role="title">Q4 results — animated stat reveal.</h1>
+  </div>
+  <div class="frame"><img src="anim-01-stat-cards-fm.gif" alt="Animated stat cards"></div>
+  <div class="footer"><span>Pixelpitch · Embed demo</span><span>Page 01</span></div>
+</div>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hero text reveal</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               font-family: Inter, sans-serif; background:#0a0a0f;
+               color:#f5f5f7; -webkit-font-smoothing:antialiased; }
+  .slide { width:1280px; height:720px; box-sizing:border-box;
+           position:relative; overflow:hidden; background:#050510; }
+  .header { padding:48px 64px 0; }
+  .kicker { font-size:12px; letter-spacing:0.2em; text-transform:uppercase; color:#a1a1aa; }
+  h1 { font-size:36px; line-height:1.05; margin:8px 0 0; letter-spacing:-0.02em; font-weight:600; }
+  .frame { position:absolute; left:64px; right:64px; bottom:64px; top:160px;
+           border-radius:18px; overflow:hidden;
+           border:1px solid rgba(255,255,255,0.08);
+           box-shadow: 0 18px 40px rgba(0,0,0,0.5); }
+  .frame img { width:100%; height:100%; object-fit:cover; display:block; }
+  .footer { position:absolute; left:64px; right:64px; bottom:18px;
+            display:flex; justify-content:space-between; font-size:11px;
+            color:#52525b; letter-spacing:0.18em; text-transform:uppercase; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="header">
+    <div class="kicker">Slide 2 · Hero text</div>
+    <h1 data-pptx-role="title">Word-by-word reveal via Framer Motion.</h1>
+  </div>
+  <div class="frame"><img src="anim-02-hero-text-fm.gif" alt="Animated hero text"></div>
+  <div class="footer"><span>Pixelpitch · Embed demo</span><span>Page 02</span></div>
+</div>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Timeline GSAP</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               font-family: Inter, sans-serif; background:#0a0a0f;
+               color:#f5f5f7; -webkit-font-smoothing:antialiased; }
+  .slide { width:1280px; height:720px; box-sizing:border-box;
+           position:relative; overflow:hidden; background:#050510; }
+  .header { padding:48px 64px 0; }
+  .kicker { font-size:12px; letter-spacing:0.2em; text-transform:uppercase; color:#a1a1aa; }
+  h1 { font-size:36px; line-height:1.05; margin:8px 0 0; letter-spacing:-0.02em; font-weight:600; }
+  .frame { position:absolute; left:64px; right:64px; bottom:64px; top:160px;
+           border-radius:18px; overflow:hidden;
+           border:1px solid rgba(255,255,255,0.08);
+           box-shadow: 0 18px 40px rgba(0,0,0,0.5); }
+  .frame img { width:100%; height:100%; object-fit:cover; display:block; }
+  .footer { position:absolute; left:64px; right:64px; bottom:18px;
+            display:flex; justify-content:space-between; font-size:11px;
+            color:#52525b; letter-spacing:0.18em; text-transform:uppercase; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="header">
+    <div class="kicker">Slide 3 · Timeline</div>
+    <h1 data-pptx-role="title">GSAP-driven process timeline.</h1>
+  </div>
+  <div class="frame"><img src="anim-04-timeline-gsap.gif" alt="Animated timeline"></div>
+  <div class="footer"><span>Pixelpitch · Embed demo</span><span>Page 03</span></div>
+</div>
+</body>
+</html>

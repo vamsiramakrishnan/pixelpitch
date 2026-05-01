@@ -353,6 +353,69 @@ def compat_cmd(fmt: str, level: str) -> None:
     click.echo("\n".join(lines))
 
 
+# ---------------------------------------------------------------------------
+# capture-gif — render an animated HTML slide as an animated GIF
+# ---------------------------------------------------------------------------
+
+
+@cli.command(name="capture-gif")
+@click.argument(
+    "html_path",
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+)
+@click.option(
+    "--out", "out_path",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=None,
+    help="Output GIF path. Defaults to <html>.gif next to the source.",
+)
+@click.option(
+    "--duration", "duration_ms", type=int, default=None,
+    help="Capture duration in ms. Overrides <meta name='slidify-capture-duration'>.",
+)
+@click.option(
+    "--fps", type=int, default=None,
+    help="Frames per second. Overrides <meta name='slidify-capture-fps'>.",
+)
+@click.option(
+    "--width", type=int, default=1280, show_default=True,
+    help="Viewport width in CSS pixels.",
+)
+@click.option(
+    "--height", type=int, default=720, show_default=True,
+    help="Viewport height in CSS pixels.",
+)
+def capture_gif_cmd(
+    html_path: Path,
+    out_path: Path | None,
+    duration_ms: int | None,
+    fps: int | None,
+    width: int,
+    height: int,
+) -> None:
+    """Capture an animated HTML slide as an animated GIF.
+
+    Loads HTML_PATH in headless Chromium *without* the slidify animation
+    freeze, samples frames at the declared duration / fps (read from
+    <meta> tags or overridden via flags), and writes an optimized
+    animated GIF that PowerPoint replays on slideshow.
+
+    The resulting GIF can be referenced from a normal slide as
+    <img src="..."> — slidify embeds it as a NativePicture, which
+    preserves the animation.
+    """
+    from slidify.anim_capture import capture_html_to_gif_sync
+
+    if out_path is None:
+        out_path = html_path.with_suffix(".gif")
+    capture_html_to_gif_sync(
+        html_path, out_path,
+        duration_ms=duration_ms, fps=fps,
+        viewport=(width, height),
+    )
+    click.echo(f"Wrote {out_path} ({out_path.stat().st_size / 1024:.1f} KiB)")
+
+
 def main() -> None:
     """Entry point shim: when called with positional args that look like
     (input, output), dispatch to convert directly so the legacy

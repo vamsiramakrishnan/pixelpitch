@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="slidify-capture-duration" content="3500">
+<meta name="slidify-capture-fps" content="15">
+<title>Bento build-in (Framer Motion)</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               font-family: Inter, sans-serif; background:#050510;
+               color:#f5f5f7; -webkit-font-smoothing:antialiased; }
+  .slide { width:1280px; height:720px; box-sizing:border-box;
+           position:relative; overflow:hidden; padding:40px 56px;
+           background: radial-gradient(ellipse at 80% 0%, #1e1b4b 0%, #050510 60%); }
+  .header { display:flex; justify-content:space-between; align-items:flex-end;
+            margin-bottom:24px; }
+  .kicker { font-size:12px; letter-spacing:0.2em; text-transform:uppercase;
+            color:#a1a1aa; }
+  h1 { font-size:38px; line-height:1.05; letter-spacing:-0.02em;
+       font-weight:600; margin:8px 0 0; max-width:720px; }
+  .bento { display:grid; grid-template-columns: repeat(6, 1fr);
+           grid-template-rows: repeat(2, 1fr); gap:18px;
+           height: 540px; }
+  .tile { background:#0f0f1f; border:1px solid rgba(255,255,255,0.08);
+          border-radius:18px; padding:22px 24px; position:relative;
+          overflow:hidden;
+          box-shadow: 0 6px 18px rgba(0,0,0,0.35); }
+  .tile.t1 { grid-column: span 3; grid-row: span 2;
+             background: linear-gradient(135deg, #4338ca 0%, #7c3aed 60%, #ec4899 100%); }
+  .tile.t2 { grid-column: span 3; grid-row: span 1; }
+  .tile.t3 { grid-column: span 1; grid-row: span 1; }
+  .tile.t4 { grid-column: span 2; grid-row: span 1; }
+  .tlabel { font-size:11px; letter-spacing:0.2em; text-transform:uppercase;
+            color:#a1a1aa; }
+  .tile.t1 .tlabel { color: rgba(255,255,255,0.85); }
+  .ttitle { font-size:24px; line-height:1.15; margin:8px 0 0;
+            letter-spacing:-0.01em; font-weight:600; }
+  .tile.t1 .ttitle { font-size:42px; line-height:1.05; }
+  .tcaption { font-size:13px; color:#a1a1aa; margin-top:14px; line-height:1.45; }
+  .tile.t1 .tcaption { color: rgba(255,255,255,0.85); }
+  .pill { display:inline-block; font-size:11px; letter-spacing:0.16em;
+          text-transform:uppercase; padding:5px 11px; border-radius:99px;
+          background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.92);
+          margin-top:18px; }
+  .footer { position:absolute; left:56px; right:56px; bottom:18px;
+            display:flex; justify-content:space-between; font-size:11px;
+            color:#52525b; letter-spacing:0.18em; text-transform:uppercase; }
+  [data-tile] { will-change: transform, opacity; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="header">
+    <div>
+      <div class="kicker">Product · Q4 launch</div>
+      <h1 data-pptx-role="title">Six things ship on Tuesday.</h1>
+    </div>
+    <div class="kicker">v2.4.0</div>
+  </div>
+
+  <div class="bento">
+    <div class="tile t1" data-tile>
+      <div class="tlabel">Headline feature</div>
+      <div class="ttitle">Motion-aware emit pipeline</div>
+      <div class="tcaption">Framer / GSAP slides record to GIF at the
+        configured fps, embedded as native PowerPoint pictures.</div>
+      <span class="pill">Available now</span>
+    </div>
+    <div class="tile t2" data-tile>
+      <div class="tlabel">Performance</div>
+      <div class="ttitle">3.4× faster classification</div>
+    </div>
+    <div class="tile t3" data-tile>
+      <div class="tlabel">Fonts</div>
+      <div class="ttitle">CSS-aware embed</div>
+    </div>
+    <div class="tile t4" data-tile>
+      <div class="tlabel">Diagnostics</div>
+      <div class="ttitle">Per-region oracle attribution</div>
+    </div>
+    <div class="tile t3" data-tile>
+      <div class="tlabel">Tables</div>
+      <div class="ttitle">Native HTML &lt;table&gt;</div>
+    </div>
+    <div class="tile t4" data-tile>
+      <div class="tlabel">Shapes</div>
+      <div class="ttitle">Native preset clip-path → MSO</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Pixelpitch · Release notes</span>
+    <span>Page 03</span>
+  </div>
+</div>
+
+<script type="module">
+  import { animate, stagger } from "https://cdn.jsdelivr.net/npm/framer-motion@11.11.17/+esm";
+
+  // Subtle directional builds: hero tile rises, side tiles slide from edges.
+  const tiles = [...document.querySelectorAll("[data-tile]")];
+  // Compute per-tile entry vector based on its row/col.
+  tiles.forEach((el, i) => {
+    const fromX = i % 2 === 0 ? -32 : 32;
+    const fromY = i < 2 ? 32 : 24;
+    el.style.transform = `translate(${fromX}px, ${fromY}px)`;
+    el.style.opacity = "0";
+  });
+
+  animate(
+    tiles,
+    { x: 0, y: 0, opacity: 1 },
+    { duration: 0.7, delay: stagger(0.09, { startDelay: 0.25 }),
+      ease: [0.22, 1, 0.36, 1] }
+  );
+</script>
+</body>
+</html>

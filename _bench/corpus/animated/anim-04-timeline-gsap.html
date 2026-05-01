@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="slidify-capture-duration" content="3500">
+<meta name="slidify-capture-fps" content="15">
+<title>Timeline build (GSAP)</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               font-family: Inter, sans-serif; background:#0a0a0f;
+               color:#f5f5f7; -webkit-font-smoothing:antialiased; }
+  .slide { width:1280px; height:720px; box-sizing:border-box;
+           position:relative; overflow:hidden; padding:64px 96px;
+           background: radial-gradient(ellipse at 50% 0%, #1e1b4b 0%, #050510 70%); }
+  .kicker { font-size:12px; letter-spacing:0.2em; text-transform:uppercase;
+            color:#a1a1aa; }
+  h1 { font-size:42px; line-height:1.05; letter-spacing:-0.02em;
+       font-weight:600; margin:10px 0 0; }
+  .timeline { position:absolute; left:0; right:0; top:50%;
+              transform: translateY(-50%); }
+  svg { display:block; margin: 0 auto; }
+  .nodebox { position:absolute; transform: translate(-50%, -50%);
+             width:200px; padding:16px 20px;
+             background:#0f0f1f; border:1px solid rgba(255,255,255,0.08);
+             border-radius:14px;
+             box-shadow: 0 6px 20px rgba(0,0,0,0.5); }
+  .nodelabel { font-size:11px; letter-spacing:0.18em; text-transform:uppercase;
+               color:#a1a1aa; }
+  .nodetitle { font-size:18px; font-weight:600; line-height:1.15;
+               margin-top:6px; letter-spacing:-0.005em; }
+  .nodecaption { font-size:12px; color:#a1a1aa; line-height:1.4; margin-top:8px; }
+  .footer { position:absolute; left:96px; right:96px; bottom:36px;
+            display:flex; justify-content:space-between; font-size:11px;
+            color:#52525b; letter-spacing:0.18em; text-transform:uppercase; }
+  [data-node] { opacity:0; }
+  .pulse { fill:none; stroke: #a78bfa; stroke-width: 2; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="kicker">Process · Slide-to-PPTX</div>
+  <h1 data-pptx-role="title">Five passes, one editable deck.</h1>
+
+  <div class="timeline">
+    <svg width="1080" height="220" viewBox="0 0 1080 220"
+         xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="line-gradient" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#818cf8"/>
+          <stop offset="100%" stop-color="#ec4899"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Connector path: drawn in via stroke-dashoffset -->
+      <path id="connector" d="M 80 110 L 1000 110"
+            fill="none" stroke="url(#line-gradient)"
+            stroke-width="3" stroke-linecap="round"/>
+
+      <!-- 5 nodes -->
+      <circle data-dot cx="80"   cy="110" r="12" fill="#818cf8"/>
+      <circle data-dot cx="310"  cy="110" r="12" fill="#a78bfa"/>
+      <circle data-dot cx="540"  cy="110" r="12" fill="#c084fc"/>
+      <circle data-dot cx="770"  cy="110" r="12" fill="#e879f9"/>
+      <circle data-dot cx="1000" cy="110" r="12" fill="#ec4899"/>
+    </svg>
+
+    <div class="nodebox" data-node style="left: 8.6%;  top: 50%;">
+      <div class="nodelabel">01 · Render</div>
+      <div class="nodetitle">Capture DOM</div>
+      <div class="nodecaption">Headless Chromium reads layout boxes.</div>
+    </div>
+    <div class="nodebox" data-node style="left: 25.5%; top: 50%;">
+      <div class="nodelabel">02 · Cluster</div>
+      <div class="nodetitle">Visual units</div>
+      <div class="nodecaption">Group anchors into emit-shaped regions.</div>
+    </div>
+    <div class="nodebox" data-node style="left: 42.4%; top: 50%;">
+      <div class="nodelabel">03 · Classify</div>
+      <div class="nodetitle">Native vs raster</div>
+      <div class="nodecaption">3-tier router with learned cost model.</div>
+    </div>
+    <div class="nodebox" data-node style="left: 59.3%; top: 50%;">
+      <div class="nodelabel">04 · Emit</div>
+      <div class="nodetitle">OOXML build</div>
+      <div class="nodecaption">Shapes, text, tables, and pictures.</div>
+    </div>
+    <div class="nodebox" data-node style="left: 76.2%; top: 50%;">
+      <div class="nodelabel">05 · Score</div>
+      <div class="nodetitle">Fidelity oracle</div>
+      <div class="nodecaption">SSIM + LLM-judge per region.</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Pixelpitch · Pipeline overview</span>
+    <span>Page 04</span>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script>
+  const path = document.getElementById("connector");
+  const len = path.getTotalLength();
+  path.style.strokeDasharray = len + "px";
+  path.style.strokeDashoffset = len + "px";
+
+  const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+  // Connector draws across the slide.
+  tl.to(path, { strokeDashoffset: 0, duration: 1.6 }, 0.2);
+
+  // Dots pop in along the line, then boxes fade up below them.
+  tl.from("[data-dot]",
+    { scale: 0, opacity: 0, duration: 0.4, stagger: 0.18,
+      transformOrigin: "center" },
+    0.4);
+
+  tl.to("[data-node]",
+    { opacity: 1, y: 0, duration: 0.5, stagger: 0.18 },
+    0.55);
+
+  // Initial state for nodes (translate-up so they fade-up).
+  gsap.set("[data-node]", { y: 12 });
+</script>
+</body>
+</html>
