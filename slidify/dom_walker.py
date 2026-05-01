@@ -199,6 +199,13 @@ WALKER_JS = r"""
                 const allShapes = Array.from(
                     el.querySelectorAll('path, polygon, polyline, circle, rect, ellipse, line')
                 ).filter(s => !inDefs(s));
+                // Capture <text> children too — slidify emits these as
+                // textboxes alongside the freeform shapes. Without this,
+                // brutalist schematics / chart axis labels / annotated
+                // callouts render their boxes/lines but lose every label.
+                const allTexts = Array.from(
+                    el.querySelectorAll('text')
+                ).filter(t => !inDefs(t));
                 svgPathCount = allShapes.length;
                 // Capture geometry for SVGs up to ~30 primitives. Architecture
                 // diagrams, dashboard charts and process flows routinely
@@ -244,6 +251,25 @@ WALKER_JS = r"""
                             ss.d = s.getAttribute('d') || '';
                         }
                         svgShapes.push(ss);
+                    }
+                    // Add <text> children alongside the shapes. Each
+                    // captured with attribute coords + computed style
+                    // (font / size / fill / anchor) so the emitter can
+                    // place a PPTX textbox at the right pixel.
+                    for (const t of allTexts) {
+                        const tcs = getComputedStyle(t);
+                        svgShapes.push({
+                            tag: 'text',
+                            text: t.textContent || '',
+                            x: parseFloat(t.getAttribute('x') || '0'),
+                            y: parseFloat(t.getAttribute('y') || '0'),
+                            font_size: parseFloat(t.getAttribute('font-size') || tcs.fontSize || '14') || 14,
+                            font_weight: t.getAttribute('font-weight') || tcs.fontWeight || '400',
+                            font_family: tcs.fontFamily || 'Inter',
+                            font_style: tcs.fontStyle || 'normal',
+                            fill: t.getAttribute('fill') || tcs.fill || '#000',
+                            text_anchor: t.getAttribute('text-anchor') || 'start',
+                        });
                     }
                     // Embed _svgRect on every shape dict — JS array
                     // properties don't survive JSON serialization, but

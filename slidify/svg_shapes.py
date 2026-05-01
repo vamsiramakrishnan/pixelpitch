@@ -53,7 +53,7 @@ def is_translatable_svg(svg_shapes: list[dict] | None) -> bool:
         return False
     for s in svg_shapes:
         tag = s.get("tag")
-        if tag in ("rect", "circle", "ellipse", "line", "polygon", "polyline"):
+        if tag in ("rect", "circle", "ellipse", "line", "polygon", "polyline", "text"):
             continue
         if tag == "path":
             # Try a real parse to be sure svg_path can handle it. A bad
@@ -226,6 +226,9 @@ def _emit_one(slide, s: dict, mapping: _Mapping) -> bool:
             return False
         return _emit_path(slide, d, mapping, fill, fill_opacity, stroke, stroke_width)
 
+    if tag == "text":
+        return _emit_svg_text(slide, s, mapping)
+
     if tag in ("polygon", "polyline"):
         points = _parse_points(s.get("points", ""))
         if len(points) < 2:
@@ -265,6 +268,90 @@ _POINT_PAIR = re.compile(r"(-?\d+(?:\.\d+)?)[\s,]+(-?\d+(?:\.\d+)?)")
 
 def _parse_points(s: str) -> list[tuple[float, float]]:
     return [(float(x), float(y)) for x, y in _POINT_PAIR.findall(s)]
+
+
+def _emit_svg_text(slide, s: dict, mapping: _Mapping) -> bool:
+    """Emit an SVG `<text>` element as a native PPTX textbox.
+
+    SVG text positioning is *baseline*-anchored at (x, y) — y is the
+    BASELINE, not the top edge. PPTX textboxes are top-anchored, so we
+    shift by approximately the font's ascent (≈0.8 × font-size) to
+    align baselines.
+    """
+    text_str = (s.get("text") or "").strip()
+    if not text_str:
+        return False
+    user_x = float(s.get("x") or 0.0)
+    user_y = float(s.get("y") or 0.0)
+    font_size_px = float(s.get("font_size") or 14.0)
+    font_family = s.get("font_family") or "Inter"
+    font_weight = str(s.get("font_weight") or "400")
+    italic = (s.get("font_style") or "").lower() == "italic"
+    fill = s.get("fill") or "#000"
+    anchor = (s.get("text_anchor") or "start").lower()
+
+    slide_x = mapping.x(user_x)
+    slide_y_baseline = mapping.y(user_y)
+    # Shift up so the baseline lands at slide_y_baseline.
+    ascent = font_size_px * 0.8
+    slide_y_top = slide_y_baseline - ascent
+
+    # Estimate text width — Inter at this weight/size renders ~0.55 ×
+    # font_size per character on average. Generous so the textbox isn't
+    # too tight (PPT can autofit smaller; can't extend wider than bbox).
+    est_width = max(8.0, len(text_str) * font_size_px * 0.55)
+    height = font_size_px * 1.25
+
+    if anchor == "middle":
+        slide_x -= est_width / 2.0
+    elif anchor == "end":
+        slide_x -= est_width
+
+    from pptx.dml.color import RGBColor
+    from pptx.enum.text import PP_ALIGN
+    from pptx.util import Pt
+
+    from slidify.colors import parse_color
+    from slidify.fonts import is_bold, parse_weight
+    from slidify.fonts import resolve as resolve_font
+
+    try:
+        tb = slide.shapes.add_textbox(
+            Emu(px_to_emu(slide_x)),
+            Emu(px_to_emu(slide_y_top)),
+            Emu(px_to_emu(est_width)),
+            Emu(px_to_emu(height)),
+        )
+    except Exception:
+        return False
+    tf = tb.text_frame
+    tf.word_wrap = False
+    tf.margin_left = Emu(0)
+    tf.margin_right = Emu(0)
+    tf.margin_top = Emu(0)
+    tf.margin_bottom = Emu(0)
+    p = tf.paragraphs[0]
+    if anchor == "middle":
+        p.alignment = PP_ALIGN.CENTER
+    elif anchor == "end":
+        p.alignment = PP_ALIGN.RIGHT
+    else:
+        p.alignment = PP_ALIGN.LEFT
+    run = p.add_run()
+    run.text = text_str
+    font = run.font
+    try:
+        font.name = resolve_font(font_family)
+        # SVG font_size is in user units that we treat as px; PPTX wants pt.
+        font.size = Pt(max(6.0, font_size_px / 1.333))
+        font.bold = is_bold(font_weight)
+        font.italic = italic
+        col = parse_color(fill)
+        if col is not None:
+            font.color.rgb = col[0]
+    except Exception:
+        pass
+    return True
 
 
 def _path_bounds(commands: list) -> tuple[float, float, float, float]:
