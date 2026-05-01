@@ -49,6 +49,7 @@ from slidify.patterns.signatures import signature, signature_hash
 from slidify.promotion import promote, to_emit_ops
 from slidify.renderer import Renderer
 from slidify.splitter import split_slides
+from slidify.trace import build_trace_rows, write_trace_jsonl
 from slidify.units import cluster, flatten
 
 log = structlog.get_logger(__name__)
@@ -84,6 +85,12 @@ class ConversionConfig:
             the auto-correction loop can re-emit failing slides natively.
             Set False on huge decks to drop plan state right after emit and
             rely on a single oracle pass without auto-correction.
+        trace_jsonl_path: optional path for unit-level JSONL trace rows used to
+            train/debug the cost model. When set, slide plans are retained until
+            the trace is written so rows can include final decisions and oracle
+            attribution.
+        trace_include_text: include a short text sample in trace rows. Defaults
+            to False to avoid leaking slide copy in shareable eval artifacts.
     """
 
     viewport: tuple[int, int] = (SLIDE_W_PX, SLIDE_H_PX)
@@ -113,6 +120,8 @@ class ConversionConfig:
     # On by default; disable for faster emit on decks where the
     # default-Office font is acceptable.
     embed_fonts: bool = True
+    trace_jsonl_path: str | Path | None = None
+    trace_include_text: bool = False
 
 
 @dataclass
@@ -338,6 +347,31 @@ async def _drain_in_batches(
         yield batch
 
 
+def _write_trace_if_requested(
+    cfg: ConversionConfig,
+    plans: list[_SlidePlan],
+    reports: list[FidelityReport],
+) -> None:
+    if cfg.trace_jsonl_path is None:
+        return
+    reports_by_slide = {r.slide_index: r for r in reports}
+    rows: list[dict] = []
+    for plan in plans:
+        if not plan.units_flat:
+            continue
+        rows.extend(
+            build_trace_rows(
+                slide_index=plan.index,
+                units=plan.units_flat,
+                decisions=plan.decisions,
+                report=reports_by_slide.get(plan.index),
+                include_text=cfg.trace_include_text,
+            )
+        )
+    write_trace_jsonl(cfg.trace_jsonl_path, rows)
+    log.info("api.trace_written", path=str(cfg.trace_jsonl_path), rows=len(rows))
+
+
 # -----------------------------------------------------------------------------
 # Public API
 # -----------------------------------------------------------------------------
@@ -410,7 +444,9 @@ async def convert(
                                 )
                         except Exception:
                             pass
-                    if cfg.run_oracle and cfg.keep_plans_for_oracle:
+                    if cfg.trace_jsonl_path is not None or (
+                        cfg.run_oracle and cfg.keep_plans_for_oracle
+                    ):
                         plans_for_oracle.append(plan)
                     else:
                         # Keep only ground-truth PNG if we still need it for oracle.
@@ -508,6 +544,7 @@ async def convert(
             reports = await _oracle_with_correction(
                 pptx_path, plans_for_oracle, summaries, cfg, renderer
             )
+        _write_trace_if_requested(cfg, plans_for_oracle, reports)
 
     n_slides = len(summaries)
     avg_native = (
