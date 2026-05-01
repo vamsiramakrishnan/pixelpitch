@@ -361,6 +361,31 @@ def rule_single_image(unit: VisualUnit) -> Decision | None:
     return _is_single_image(unit)
 
 
+def rule_native_table(unit: VisualUnit) -> Decision | None:
+    """Route an HTML <table> to a single NativeTable emit op when the walker
+    captured a translatable grid (no nested tables, no embedded media,
+    cells contain only text). The fall-through is the existing pipeline,
+    which would otherwise either rasterize the whole region (lossy) or
+    emit dozens of stand-alone text frames (loses the table semantics).
+    """
+    table_el = next(
+        (e for e in unit.all_elements() if e.is_table and e.table_data),
+        None,
+    )
+    if table_el is None:
+        return None
+    rows = table_el.table_data.get("rows") or []
+    if not rows:
+        return None
+    return Decision(
+        kind=DecisionKind.NativeTable,
+        confidence=1.0,
+        reason="html_table",
+        metadata={"table_element_id": table_el.id},
+        source_tier="tier1",
+    )
+
+
 def rule_role_title(unit: VisualUnit) -> Decision | None:
     if _has_role_title(unit):
         return Decision(
@@ -527,6 +552,7 @@ RULES: list[RuleFn] = [
     rule_pptx_unsupported_raster,
     rule_simple_svg_raster,
     rule_single_image,
+    rule_native_table,
     rule_role_title,
     rule_list_item,
     rule_simple_leaf_text,

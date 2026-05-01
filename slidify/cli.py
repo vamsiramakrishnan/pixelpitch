@@ -113,6 +113,18 @@ def _run_convert(
             f"Oracle: {passed}/{len(result.fidelity_reports)} slides passed "
             f"(mean SSIM={sum(r.ssim for r in result.fidelity_reports) / len(result.fidelity_reports):.3f})"
         )
+    if result.editability_intended_total or result.editability_actual_total:
+        status = "ok" if result.editability_passed else "DRIFT"
+        click.echo(
+            f"Editability: {status} "
+            f"(actual {result.editability_actual_total} / intended "
+            f"{result.editability_intended_total})"
+        )
+        if result.editability_failing_slides:
+            click.echo(
+                "  Slides with dropped shapes: "
+                + ", ".join(str(i) for i in result.editability_failing_slides)
+            )
     if result.unmatched_signatures:
         click.echo(
             f"Unmatched signatures: {len(result.unmatched_signatures)}"
@@ -268,12 +280,85 @@ def convert_cmd(
 cli.add_command(harvest)
 
 
+# ---------------------------------------------------------------------------
+# compat — print the CSS / HTML compatibility matrix
+# ---------------------------------------------------------------------------
+
+
+@cli.command(name="compat")
+@click.option(
+    "--format", "fmt",
+    type=click.Choice(["markdown", "json"], case_sensitive=False),
+    default="markdown", show_default=True,
+)
+@click.option(
+    "--level",
+    type=click.Choice(
+        ["native", "raster", "partial", "unsupported", "planned", "all"],
+        case_sensitive=False,
+    ),
+    default="all", show_default=True,
+    help="Filter rows by support level (e.g. --level planned to see roadmap).",
+)
+def compat_cmd(fmt: str, level: str) -> None:
+    """Print the CSS / HTML feature compatibility matrix.
+
+    Use this to find out — without reading source — which CSS properties
+    survive as editable PPTX, which fall back to a pixel raster, which are
+    dropped entirely, and which are on the roadmap.
+    """
+    from slidify.compat import MATRIX_VERSION, matrix, matrix_summary, to_markdown
+
+    rows = list(matrix())
+    if level.lower() != "all":
+        rows = [r for r in rows if r.support.value == level.lower()]
+
+    if fmt.lower() == "json":
+        import json
+
+        payload = {
+            "version": MATRIX_VERSION,
+            "summary": matrix_summary(),
+            "rows": [
+                {
+                    "category": r.category,
+                    "feature": r.feature,
+                    "support": r.support.value,
+                    "code_path": r.code_path,
+                    "note": r.note,
+                    "plan": r.plan,
+                }
+                for r in rows
+            ],
+        }
+        click.echo(json.dumps(payload, indent=2))
+        return
+
+    if level.lower() == "all":
+        click.echo(to_markdown())
+        return
+
+    # Filtered markdown: render just the selected level as a flat table.
+    lines = [
+        f"# slidify compat — `{level}` rows (matrix v{MATRIX_VERSION})",
+        "",
+        "| Category | Feature | Notes | Plan (if planned) |",
+        "|----------|---------|-------|--------------------|",
+    ]
+    for r in rows:
+        plan = (r.plan or "").replace("|", "\\|")
+        note = r.note.replace("|", "\\|")
+        feature = r.feature.replace("|", "\\|")
+        lines.append(f"| {r.category} | `{feature}` | {note} | {plan} |")
+    click.echo("\n".join(lines))
+
+
 def main() -> None:
     """Entry point shim: when called with positional args that look like
     (input, output), dispatch to convert directly so the legacy
     `slidify foo.html bar.pptx` invocation keeps working."""
     args = sys.argv[1:]
-    known_subs = {"convert", "harvest", "--help", "-h"}
+    known_subs = {"convert", "harvest", "compat", "--help", "-h"}
     if args and not args[0].startswith("-") and args[0] not in known_subs:
         # Implicit convert: rewrite to `slidify convert ...`
         sys.argv = [sys.argv[0], "convert", *args]
