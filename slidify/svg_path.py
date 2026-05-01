@@ -12,15 +12,13 @@ Supported commands:
     S / s   smooth cubic Bezier (reflected first control)
     Q / q   quadratic Bezier
     T / t   smooth quadratic Bezier (reflected control)
+    A / a   elliptical arc (approximated as up to four cubic Beziers)
     Z / z   close
-
-Arc commands (A / a) are not supported; we fall back to a straight line
-to the arc endpoint. Implementing the SVG arc → cubic conversion is out
-of scope for this module.
 """
 
 from __future__ import annotations
 
+import math
 import re
 
 # Public command tuple shapes:
@@ -42,6 +40,138 @@ def _tokenize(d: str) -> list[str]:
 def _take_floats(tokens: list[str], i: int, n: int) -> tuple[list[float], int]:
     vals = [float(tokens[i + k]) for k in range(n)]
     return vals, i + n
+
+
+def _arc_to_cubics(
+    x1: float,
+    y1: float,
+    rx: float,
+    ry: float,
+    phi_deg: float,
+    large_arc: bool,
+    sweep: bool,
+    x2: float,
+    y2: float,
+) -> list[tuple[float, float, float, float, float, float]]:
+    """Convert an SVG endpoint-form arc into cubic Bezier segments.
+
+    Returns a list of (c1x, c1y, c2x, c2y, x, y) absolute control/end points,
+    each spanning at most pi/2 radians for good circular approximation.
+    Per the SVG spec:
+      - if (x1, y1) == (x2, y2): the arc is omitted entirely (empty list).
+      - if rx == 0 or ry == 0: degenerate to a straight line, returned as a
+        single zero-curvature cubic (control points on the chord) so callers
+        can keep emitting cubicBezTo uniformly.
+    """
+    # Endpoints coincide → no arc.
+    if x1 == x2 and y1 == y2:
+        return []
+
+    rx = abs(rx)
+    ry = abs(ry)
+    if rx == 0.0 or ry == 0.0:
+        # Spec: treat as a line. Emit a degenerate cubic so the caller path
+        # stays consistent (control points on the chord).
+        return [(x1, y1, x2, y2, x2, y2)]
+
+    phi = math.radians(phi_deg)
+    cos_phi = math.cos(phi)
+    sin_phi = math.sin(phi)
+
+    # Step 1: compute (x1', y1') in the rotated/translated frame.
+    dx = (x1 - x2) / 2.0
+    dy = (y1 - y2) / 2.0
+    x1p = cos_phi * dx + sin_phi * dy
+    y1p = -sin_phi * dx + cos_phi * dy
+
+    # Out-of-range radii correction (F.6.6.2).
+    lam = (x1p * x1p) / (rx * rx) + (y1p * y1p) / (ry * ry)
+    if lam > 1.0:
+        s = math.sqrt(lam)
+        rx *= s
+        ry *= s
+
+    # Step 2: compute (cx', cy').
+    rx2 = rx * rx
+    ry2 = ry * ry
+    x1p2 = x1p * x1p
+    y1p2 = y1p * y1p
+    num = rx2 * ry2 - rx2 * y1p2 - ry2 * x1p2
+    den = rx2 * y1p2 + ry2 * x1p2
+    factor_sq = max(0.0, num / den) if den != 0.0 else 0.0
+    factor = math.sqrt(factor_sq)
+    if large_arc == sweep:
+        factor = -factor
+    cxp = factor * (rx * y1p) / ry
+    cyp = factor * -(ry * x1p) / rx
+
+    # Step 3: (cx, cy) in the original frame.
+    cx = cos_phi * cxp - sin_phi * cyp + (x1 + x2) / 2.0
+    cy = sin_phi * cxp + cos_phi * cyp + (y1 + y2) / 2.0
+
+    # Step 4: start angle and sweep delta.
+    def _angle(ux: float, uy: float, vx: float, vy: float) -> float:
+        n = math.hypot(ux, uy) * math.hypot(vx, vy)
+        if n == 0.0:
+            return 0.0
+        c = max(-1.0, min(1.0, (ux * vx + uy * vy) / n))
+        a = math.acos(c)
+        if ux * vy - uy * vx < 0.0:
+            a = -a
+        return a
+
+    sx = (x1p - cxp) / rx
+    sy = (y1p - cyp) / ry
+    ex = (-x1p - cxp) / rx
+    ey = (-y1p - cyp) / ry
+    theta1 = _angle(1.0, 0.0, sx, sy)
+    delta = _angle(sx, sy, ex, ey)
+    if not sweep and delta > 0.0:
+        delta -= 2.0 * math.pi
+    elif sweep and delta < 0.0:
+        delta += 2.0 * math.pi
+
+    # Split into segments of at most pi/2 for accurate approximation.
+    n_segments = max(1, int(math.ceil(abs(delta) / (math.pi / 2.0))))
+    seg_delta = delta / n_segments
+
+    segments: list[tuple[float, float, float, float, float, float]] = []
+    t = math.tan(seg_delta / 2.0)
+    alpha = math.sin(seg_delta) * (math.sqrt(4.0 + 3.0 * t * t) - 1.0) / 3.0
+
+    def _to_world(px: float, py: float) -> tuple[float, float]:
+        return (
+            cos_phi * px - sin_phi * py + cx,
+            sin_phi * px + cos_phi * py + cy,
+        )
+
+    for k in range(n_segments):
+        a0 = theta1 + k * seg_delta
+        a1 = a0 + seg_delta
+
+        cos_a0 = math.cos(a0)
+        sin_a0 = math.sin(a0)
+        cos_a1 = math.cos(a1)
+        sin_a1 = math.sin(a1)
+
+        # Endpoints in unrotated ellipse frame.
+        p0x = rx * cos_a0
+        p0y = ry * sin_a0
+        p1x = rx * cos_a1
+        p1y = ry * sin_a1
+
+        # Control points using the standard cubic-arc approximation.
+        c1x_pre = p0x - alpha * rx * sin_a0
+        c1y_pre = p0y + alpha * ry * cos_a0
+        c2x_pre = p1x + alpha * rx * sin_a1
+        c2y_pre = p1y - alpha * ry * cos_a1
+
+        c1 = _to_world(c1x_pre, c1y_pre)
+        c2 = _to_world(c2x_pre, c2y_pre)
+        end = _to_world(p1x, p1y)
+        segments.append((c1[0], c1[1], c2[0], c2[1], end[0], end[1]))
+
+    return segments
 
 
 def parse_path(d: str) -> list[PathCommand]:
@@ -179,14 +309,16 @@ def parse_path(d: str) -> list[PathCommand]:
             last_cubic_ctrl = None
 
         elif cmd in ("A", "a"):
-            # Arcs unsupported — fall back to a straight line to the endpoint.
-            # Arc payload is: rx ry x-axis-rotation large-arc sweep x y.
-            (_rx, _ry, _rot, _laf, _sf, x, y), i = _take_floats(tokens, i, 7)
+            # Arc payload: rx ry x-axis-rotation large-arc sweep x y.
+            (rx, ry, rot, laf, sf, x, y), i = _take_floats(tokens, i, 7)
             if cmd == "a":
                 x += cur_x
                 y += cur_y
+            for seg in _arc_to_cubics(
+                cur_x, cur_y, rx, ry, rot, laf != 0.0, sf != 0.0, x, y
+            ):
+                commands.append(("cubicBezTo", *seg))
             cur_x, cur_y = x, y
-            commands.append(("lineTo", x, y))
             last_cubic_ctrl = None
             last_quad_ctrl = None
 
