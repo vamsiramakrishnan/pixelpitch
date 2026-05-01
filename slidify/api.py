@@ -460,21 +460,46 @@ async def convert(
                     )
             except Exception as e:
                 log.warning("api.theme_patch_failed", error=str(e))
-            color_elements.clear()
+            # Defer color_elements.clear() until after font-embedding so
+            # the resolver can scan requested families. Cleared at the
+            # end of convert() via the local going out of scope.
 
             emitter.save(pptx_path)
         finally:
             emitter.close()
 
-        # Post-process: embed source fonts so PowerPoint renders with Inter
-        # (or whatever the deck specified) instead of substituting Calibri.
-        # This eliminates the dominant class of layout drift — text frames
-        # sized for the source font no longer overflow under substitution.
+        # Post-process: embed source fonts so renderers don't substitute.
+        # Two passes:
+        #   1. embed_default_fonts → embed Inter (the engine's standard).
+        #   2. resolve_and_subset_for_deck → walk the rendered DOM for
+        #      every CSS-specified family (Source Serif Pro / JetBrains
+        #      Mono / etc.), resolve each via fontconfig, subset to the
+        #      glyphs the deck actually uses, and embed those too.
+        # Without (2), CSS asks for Source Serif Pro, fontconfig
+        # silently substitutes DejaVu Sans (a sans-serif), and the
+        # serif intent is lost in render. (2) keeps every requested
+        # family available to the renderer by name.
         if cfg.embed_fonts:
-            try:
-                from slidify.font_embed import embed_default_fonts
+            from slidify.font_embed import (
+                discover_inter,
+                embed_fonts_in_pptx,
+            )
+            from slidify.font_resolver import resolve_and_subset_for_deck
 
-                embed_default_fonts(pptx_path)
+            try:
+                fonts_to_embed: list = []
+                inter = discover_inter()
+                if inter is not None:
+                    fonts_to_embed.append(inter)
+                deck_fonts = resolve_and_subset_for_deck(color_elements)
+                fonts_to_embed.extend(deck_fonts)
+                if fonts_to_embed:
+                    embed_fonts_in_pptx(pptx_path, fonts_to_embed)
+                    log.info(
+                        "api.fonts_embedded",
+                        n=len(fonts_to_embed),
+                        families=[f.typeface for f in fonts_to_embed],
+                    )
             except Exception as e:
                 log.warning("api.font_embed_failed", error=str(e))
 
