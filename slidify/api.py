@@ -85,6 +85,10 @@ class ConversionConfig:
             the auto-correction loop can re-emit failing slides natively.
             Set False on huge decks to drop plan state right after emit and
             rely on a single oracle pass without auto-correction.
+
+    Use `ConversionConfig.fast()` for the lowest-latency configuration
+    (no oracle, no LLM); `ConversionConfig.from_env()` reads SLIDIFY_*
+    environment variables (handy for containers and CI).
     """
 
     viewport: tuple[int, int] = (SLIDE_W_PX, SLIDE_H_PX)
@@ -120,6 +124,65 @@ class ConversionConfig:
     # checks pixels, so a missing-but-pixel-similar shape passes).
     # Cheap (~1ms/slide); on by default.
     run_editability_check: bool = True
+
+    # ---- Constructors ------------------------------------------------------
+
+    @classmethod
+    def fast(cls) -> ConversionConfig:
+        """Lowest-latency profile: no oracle, no LLM, no editability check.
+
+        Suitable for previewing decks while iterating on HTML — drops every
+        post-emit verification pass so wall-clock time scales linearly with
+        the number of slides.
+        """
+        return cls(
+            run_oracle=False,
+            run_tier3=False,
+            run_editability_check=False,
+            keep_plans_for_oracle=False,
+        )
+
+    @classmethod
+    def from_env(cls) -> ConversionConfig:
+        """Build a config from `SLIDIFY_*` environment variables.
+
+        Recognized variables (all optional):
+
+        * ``SLIDIFY_NO_ORACLE=1``         — disable the fidelity oracle.
+        * ``SLIDIFY_NO_TIER3=1``          — disable the LLM adjudicator.
+        * ``SLIDIFY_LOW_MEMORY=1``        — drop per-slide state after emit.
+        * ``SLIDIFY_NO_FONTS=1``          — skip font embedding.
+        * ``SLIDIFY_LLM_BACKEND``         — override backend selection.
+        * ``SLIDIFY_LLM_MODEL``           — override model name.
+        * ``SLIDIFY_RENDER_CONCURRENCY``  — int, default 4.
+
+        Vertex credentials read directly from ``GOOGLE_CLOUD_PROJECT`` /
+        ``GOOGLE_CLOUD_LOCATION`` (the canonical names; we don't shadow them).
+        """
+        import os
+
+        def _flag(name: str) -> bool:
+            return os.environ.get(name, "").strip().lower() in {"1", "true", "yes", "on"}
+
+        cfg = cls()
+        if _flag("SLIDIFY_NO_ORACLE"):
+            cfg.run_oracle = False
+        if _flag("SLIDIFY_NO_TIER3"):
+            cfg.run_tier3 = False
+        if _flag("SLIDIFY_LOW_MEMORY"):
+            cfg.keep_plans_for_oracle = False
+        if _flag("SLIDIFY_NO_FONTS"):
+            cfg.embed_fonts = False
+        if backend := os.environ.get("SLIDIFY_LLM_BACKEND"):
+            cfg.llm_backend = backend
+        if model := os.environ.get("SLIDIFY_LLM_MODEL"):
+            cfg.llm_model = model
+        if rc := os.environ.get("SLIDIFY_RENDER_CONCURRENCY"):
+            try:
+                cfg.render_concurrency = max(1, int(rc))
+            except ValueError:
+                pass
+        return cfg
 
 
 @dataclass
@@ -408,6 +471,27 @@ async def _drain_in_batches(
 # -----------------------------------------------------------------------------
 # Public API
 # -----------------------------------------------------------------------------
+
+
+def convert_sync(
+    source: SlideSource,
+    pptx_path: str | Path,
+    config: ConversionConfig | None = None,
+) -> ConversionResult:
+    """Synchronous wrapper around :func:`convert`.
+
+    Convenient for scripts and notebook cells that don't already run an
+    asyncio event loop. Will raise ``RuntimeError`` if called from inside
+    one — use :func:`convert` directly there.
+    """
+    try:
+        asyncio.get_running_loop()
+    except RuntimeError:
+        return asyncio.run(convert(source, pptx_path, config))
+    raise RuntimeError(
+        "convert_sync() cannot be called from a running event loop; "
+        "use `await convert(...)` instead."
+    )
 
 
 async def convert(

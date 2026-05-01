@@ -13,18 +13,26 @@ area covered by native shapes — subject to perceptual fidelity floors
 
 ## Install
 
-System dependencies (Ubuntu / Debian):
+Three options, ranked by friction:
 
 ```bash
+# 1. Single-binary install (recommended for users) — first run auto-provisions
+#    a private Python 3.11 + Playwright Chromium under ~/.local/share/slidify/.
+curl -fsSL https://slidify.sh/install | sh
+slidify doctor
+
+# 2. Docker (most self-contained — bundles LibreOffice / Tesseract / fonts).
+docker build -f packaging/Dockerfile -t slidify:latest .
+docker run --rm -v "$PWD":/work slidify:latest convert /work/deck.html /work/deck.pptx
+
+# 3. From source (development).
 sudo apt-get install -y libreoffice-impress poppler-utils tesseract-ocr fonts-inter
-```
-
-Python deps + browser:
-
-```bash
 uv sync --extra dev
 uv run playwright install chromium --with-deps
 ```
+
+Verify with `slidify doctor`. See [`packaging/`](packaging/) for the full
+matrix (Rust bootstrap, Docker, PyInstaller bundle, pip).
 
 ## Use
 
@@ -36,7 +44,31 @@ slidify deck.html deck.pptx
 
 # Directory of per-slide files (sorted lexicographically — name them 01.html, 02.html, …)
 slidify slides/ deck.pptx
+
+# Stdin pipe (no temp files)
+cat deck.html | slidify convert - deck.pptx --json
 ```
+
+The CLI is designed to be self-describing — every command emits structured
+JSON, every error includes a `_remediation` block, every successful run
+includes a `_next` array of follow-up commands:
+
+```bash
+slidify doctor              # verify environment (LibreOffice, Chromium, …)
+slidify manifest --brief    # one-line index of every command
+slidify manifest convert    # full spec for one command (drill-down)
+slidify guide               # list of long-form guides
+slidify guide authoring     # how to author HTML for high native-area ratio
+slidify guide authoring --section "What forces a raster"   # section pluck
+slidify guide --search "tier 0"                            # cross-guide grep
+slidify field report.json native_area_ratio                # built-in jq-lite
+```
+
+Exit codes: `0` ok, `1` doctor missing deps, `2` conversion error, `3`
+editability drift (shapes silently dropped). For LLM agents, the
+[`html-to-slides` skill](.claude/skills/html-to-slides/SKILL.md) (mirrored
+under [`.gemini/`](.gemini/skills/html-to-slides/SKILL.md)) wraps the
+canonical agent loop.
 
 Python — `convert(source, pptx_path, config)` accepts five source forms:
 
