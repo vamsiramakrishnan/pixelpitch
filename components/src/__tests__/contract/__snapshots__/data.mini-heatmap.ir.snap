@@ -16,25 +16,21 @@
       "children": [],
       "kind": "group",
       "metadata": {
-        "axis": "frame",
-        "innerBbox": {
-          "h": 8,
-          "w": 408,
-          "x": 196,
-          "y": 196
-        },
-        "insetPx": 96,
-        "padding": "cozy",
-        "role": "frame.safe-area"
+        "axis": "data",
+        "cols": 0,
+        "cornerPx": 2,
+        "gapPx": 2,
+        "role": "data.heatmap",
+        "rows": 0
       },
-      "recipeId": "frame.safe-area",
+      "recipeId": "data.heatmap",
       "zOrder": 0
     }
   ],
   "kind": "group",
   "metadata": {
     "axis": "data",
-    "primitive": "frame.safe-area",
+    "primitive": "data.heatmap",
     "role": "data.mini-heatmap",
     "version": "1.0.0"
   },

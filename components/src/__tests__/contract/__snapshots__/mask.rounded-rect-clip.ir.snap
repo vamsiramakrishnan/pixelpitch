@@ -35,7 +35,9 @@
   "metadata": {
     "axis": "mask",
     "primitive": "frame.safe-area",
+    "radiusPx": 24,
     "role": "mask.rounded-rect-clip",
+    "src": "https://example.invalid/asset",
     "version": "1.0.0"
   },
   "recipeId": "mask.rounded-rect-clip",

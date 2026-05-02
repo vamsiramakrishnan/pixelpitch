@@ -13,29 +13,46 @@
         "x": 100,
         "y": 100
       },
-      "children": [],
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "borderRadiusPx": 0,
+          "fill": {
+            "color": "#a78bfa",
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "axis": "decoration",
+            "preset": "octagon",
+            "role": "decoration.shape-preset"
+          },
+          "recipeId": "decoration.shape-preset",
+          "shape": "octagon",
+          "zOrder": 0
+        }
+      ],
       "kind": "group",
       "metadata": {
-        "axis": "frame",
-        "innerBbox": {
-          "h": 8,
-          "w": 408,
-          "x": 196,
-          "y": 196
-        },
-        "insetPx": 96,
-        "padding": "cozy",
-        "role": "frame.safe-area"
+        "axis": "decoration",
+        "preset": "octagon",
+        "role": "decoration.shape-preset"
       },
-      "recipeId": "frame.safe-area",
+      "recipeId": "decoration.shape-preset",
       "zOrder": 0
     }
   ],
   "kind": "group",
   "metadata": {
     "axis": "mask",
-    "primitive": "frame.safe-area",
+    "primitive": "decoration.shape-preset",
     "role": "mask.octagon",
+    "src": "https://example.invalid/asset",
     "version": "1.0.0"
   },
   "recipeId": "mask.octagon",

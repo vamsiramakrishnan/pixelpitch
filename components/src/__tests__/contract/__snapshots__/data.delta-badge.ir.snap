@@ -13,28 +13,81 @@
         "x": 100,
         "y": 100
       },
-      "children": [],
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "borderRadiusPx": 9999,
+          "fill": {
+            "color": {
+              "alpha": 0.18,
+              "hex": "#10b981"
+            },
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "role": "delta-badge-bg",
+            "tone": "success"
+          },
+          "recipeId": "data.delta-badge.bg",
+          "shape": "rounded-rect",
+          "zOrder": 0
+        },
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "kind": "text",
+          "metadata": {
+            "direction": "up",
+            "role": "delta-badge-label",
+            "value": "Sample"
+          },
+          "paragraphs": [
+            {
+              "align": "center",
+              "runs": [
+                {
+                  "color": "#10b981",
+                  "fontFamily": "Inter, sans-serif",
+                  "fontSizePx": 13,
+                  "fontWeight": 600,
+                  "italic": false,
+                  "text": "▲ Sample",
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "data.delta-badge.label",
+          "zOrder": 10
+        }
+      ],
       "kind": "group",
       "metadata": {
-        "axis": "frame",
-        "innerBbox": {
-          "h": 8,
-          "w": 408,
-          "x": 196,
-          "y": 196
-        },
-        "insetPx": 96,
-        "padding": "cozy",
-        "role": "frame.safe-area"
+        "axis": "data",
+        "direction": "up",
+        "role": "data.delta-badge",
+        "size": "md",
+        "tone": "success",
+        "value": "Sample"
       },
-      "recipeId": "frame.safe-area",
+      "recipeId": "data.delta-badge",
       "zOrder": 0
     }
   ],
   "kind": "group",
   "metadata": {
     "axis": "data",
-    "primitive": "frame.safe-area",
+    "primitive": "data.delta-badge",
     "role": "data.delta-badge",
     "version": "1.0.0"
   },

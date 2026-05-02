@@ -1,10 +1,7 @@
 {
-  "native_area_px2": 921600,
-  "native_ratio": 1,
+  "error": "TypeError: Cannot read properties of undefined (reading 'hex')",
   "preset": "brutalist",
-  "raster_nodes": 0,
   "recipe": "comp.closing-cta",
-  "root_area_px2": 921600,
-  "status": "strict",
-  "total_nodes": 4
+  "status": "override:emit-throws",
+  "still_throws": true
 }

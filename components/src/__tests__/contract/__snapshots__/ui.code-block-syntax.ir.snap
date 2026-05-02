@@ -78,8 +78,12 @@
   "kind": "group",
   "metadata": {
     "axis": "ui",
+    "code": "Sample",
+    "language": "Sample",
     "primitive": "slot.code",
     "role": "ui.code-block-syntax",
+    "showLineNumbers": true,
+    "theme": "dark",
     "version": "1.0.0"
   },
   "recipeId": "ui.code-block-syntax",

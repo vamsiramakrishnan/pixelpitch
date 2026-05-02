@@ -34,8 +34,11 @@
   "kind": "group",
   "metadata": {
     "axis": "dec",
+    "color": "tokens.palette.surface-1",
+    "corners": "tr",
     "primitive": "frame.safe-area",
     "role": "dec.corner-crop",
+    "sizePx": 24,
     "version": "1.0.0"
   },
   "recipeId": "dec.corner-crop",

@@ -59,6 +59,7 @@
   "metadata": {
     "axis": "type",
     "primitive": "slot.quote",
+    "quote": "A pithy quote.",
     "role": "type.pullquote-brutalist",
     "version": "1.0.0"
   },

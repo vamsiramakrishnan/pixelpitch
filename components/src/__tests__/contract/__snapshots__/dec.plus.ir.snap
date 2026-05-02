@@ -13,28 +13,45 @@
         "x": 100,
         "y": 100
       },
-      "children": [],
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "borderRadiusPx": 0,
+          "fill": {
+            "color": "#a78bfa",
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "axis": "decoration",
+            "preset": "plus",
+            "role": "decoration.shape-preset"
+          },
+          "recipeId": "decoration.shape-preset",
+          "shape": "plus",
+          "zOrder": 0
+        }
+      ],
       "kind": "group",
       "metadata": {
-        "axis": "frame",
-        "innerBbox": {
-          "h": 8,
-          "w": 408,
-          "x": 196,
-          "y": 196
-        },
-        "insetPx": 96,
-        "padding": "cozy",
-        "role": "frame.safe-area"
+        "axis": "decoration",
+        "preset": "plus",
+        "role": "decoration.shape-preset"
       },
-      "recipeId": "frame.safe-area",
+      "recipeId": "decoration.shape-preset",
       "zOrder": 0
     }
   ],
   "kind": "group",
   "metadata": {
     "axis": "dec",
-    "primitive": "frame.safe-area",
+    "color": "tokens.palette.ink-3",
+    "primitive": "decoration.shape-preset",
     "role": "dec.plus",
     "version": "1.0.0"
   },

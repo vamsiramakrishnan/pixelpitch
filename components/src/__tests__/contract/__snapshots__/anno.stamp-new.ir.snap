@@ -13,28 +13,87 @@
         "x": 100,
         "y": 100
       },
-      "children": [],
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "border": {
+            "color": "#10b981",
+            "style": "solid",
+            "width": 2
+          },
+          "borderRadiusPx": 4,
+          "fill": {
+            "color": {
+              "alpha": 0.16,
+              "hex": "#10b981"
+            },
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "kind": "stamp",
+            "role": "annotation-badge-bg",
+            "rotateDeg": -8,
+            "tone": "success"
+          },
+          "recipeId": "annotation.badge.bg",
+          "shape": "rounded-rect",
+          "zOrder": 0
+        },
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "kind": "text",
+          "metadata": {
+            "label": "NEW",
+            "role": "annotation-badge-label"
+          },
+          "paragraphs": [
+            {
+              "align": "center",
+              "runs": [
+                {
+                  "color": "#10b981",
+                  "fontFamily": "Inter, sans-serif",
+                  "fontSizePx": 14,
+                  "fontWeight": 700,
+                  "italic": false,
+                  "text": "NEW",
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "annotation.badge.label",
+          "zOrder": 10
+        }
+      ],
       "kind": "group",
       "metadata": {
-        "axis": "frame",
-        "innerBbox": {
-          "h": 8,
-          "w": 408,
-          "x": 196,
-          "y": 196
-        },
-        "insetPx": 96,
-        "padding": "cozy",
-        "role": "frame.safe-area"
+        "axis": "annotation",
+        "kind": "stamp",
+        "label": "NEW",
+        "role": "annotation.badge",
+        "rotateDeg": -8,
+        "tone": "success"
       },
-      "recipeId": "frame.safe-area",
+      "recipeId": "annotation.badge",
       "zOrder": 0
     }
   ],
   "kind": "group",
   "metadata": {
     "axis": "anno",
-    "primitive": "frame.safe-area",
+    "primitive": "annotation.badge",
     "role": "anno.stamp-new",
     "version": "1.0.0"
   },

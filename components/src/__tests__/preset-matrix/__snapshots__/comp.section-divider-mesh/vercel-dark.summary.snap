@@ -1,5 +1,5 @@
 {
-  "error": "TypeError: Cannot read properties of undefined (reading 'toUpperCase')",
+  "error": "TypeError: Cannot read properties of undefined (reading 'hex')",
   "preset": "vercel-dark",
   "recipe": "comp.section-divider-mesh",
   "status": "override:emit-throws",

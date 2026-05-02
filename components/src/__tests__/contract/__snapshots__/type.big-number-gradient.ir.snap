@@ -41,8 +41,10 @@
   "kind": "group",
   "metadata": {
     "axis": "type",
+    "gradient": "tokens.gradient.accent-grad",
     "primitive": "slot.numeral",
     "role": "type.big-number-gradient",
+    "value": "Sample",
     "version": "1.0.0"
   },
   "recipeId": "type.big-number-gradient",

@@ -34,8 +34,10 @@
   "kind": "group",
   "metadata": {
     "axis": "ui",
+    "current": 1,
     "primitive": "frame.safe-area",
     "role": "ui.stepper",
+    "steps": [],
     "version": "1.0.0"
   },
   "recipeId": "ui.stepper",

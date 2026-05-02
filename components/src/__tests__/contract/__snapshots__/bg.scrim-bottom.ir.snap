@@ -13,28 +13,65 @@
         "x": 100,
         "y": 100
       },
-      "children": [],
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "borderRadiusPx": 0,
+          "fill": {
+            "angleDeg": 180,
+            "kind": "linear-gradient",
+            "stops": [
+              {
+                "color": {
+                  "alpha": 0.7,
+                  "hex": "tokens."
+                },
+                "position": 0
+              },
+              {
+                "color": {
+                  "alpha": 0,
+                  "hex": "tokens."
+                },
+                "position": 1
+              }
+            ]
+          },
+          "kind": "shape",
+          "metadata": {
+            "axis": "surface",
+            "direction": "bottom",
+            "fadePct": 1,
+            "opacity": 0.7,
+            "role": "surface.linear-fade"
+          },
+          "recipeId": "surface.linear-fade",
+          "shape": "rect",
+          "zOrder": 0
+        }
+      ],
       "kind": "group",
       "metadata": {
-        "axis": "frame",
-        "innerBbox": {
-          "h": 8,
-          "w": 408,
-          "x": 196,
-          "y": 196
-        },
-        "insetPx": 96,
-        "padding": "cozy",
-        "role": "frame.safe-area"
+        "angleDeg": 180,
+        "axis": "surface",
+        "direction": "bottom",
+        "fadePct": 1,
+        "opacity": 0.7,
+        "role": "surface.linear-fade"
       },
-      "recipeId": "frame.safe-area",
+      "recipeId": "surface.linear-fade",
       "zOrder": 0
     }
   ],
   "kind": "group",
   "metadata": {
     "axis": "bg",
-    "primitive": "frame.safe-area",
+    "primitive": "surface.linear-fade",
     "role": "bg.scrim-bottom",
     "version": "1.0.0"
   },

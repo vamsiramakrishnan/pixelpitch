@@ -85,6 +85,8 @@
   "kind": "group",
   "metadata": {
     "axis": "surf",
+    "bandPx": 96,
+    "bgColor": "tokens.palette.surface-1",
     "primitive": "frame.letterbox",
     "role": "surf.frame-letterbox",
     "version": "1.0.0"

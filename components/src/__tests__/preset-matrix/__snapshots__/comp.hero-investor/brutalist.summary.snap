@@ -1,5 +1,5 @@
 {
-  "error": "TypeError: Cannot read properties of undefined (reading 'toUpperCase')",
+  "error": "TypeError: Cannot read properties of undefined (reading 'hex')",
   "preset": "brutalist",
   "recipe": "comp.hero-investor",
   "status": "override:emit-throws",

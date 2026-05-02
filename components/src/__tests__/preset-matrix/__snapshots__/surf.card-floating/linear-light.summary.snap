@@ -1,10 +1,10 @@
 {
-  "native_area_px2": 0,
-  "native_ratio": 0,
+  "native_area_px2": 921600,
+  "native_ratio": 1,
   "preset": "linear-light",
   "raster_nodes": 0,
   "recipe": "surf.card-floating",
   "root_area_px2": 921600,
   "status": "observe",
-  "total_nodes": 1
+  "total_nodes": 2
 }

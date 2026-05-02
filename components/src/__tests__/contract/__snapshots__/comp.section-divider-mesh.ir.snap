@@ -1,4 +1,4 @@
 {
   "atomId": "comp.section-divider-mesh",
-  "error": "TypeError: Cannot read properties of undefined (reading 'toUpperCase')"
+  "error": "TypeError: Cannot read properties of undefined (reading 'hex')"
 }

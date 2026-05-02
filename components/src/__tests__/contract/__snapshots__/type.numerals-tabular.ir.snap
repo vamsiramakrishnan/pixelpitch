@@ -41,6 +41,7 @@
   "kind": "group",
   "metadata": {
     "axis": "type",
+    "digits": "Sample",
     "primitive": "slot.caption",
     "role": "type.numerals-tabular",
     "version": "1.0.0"

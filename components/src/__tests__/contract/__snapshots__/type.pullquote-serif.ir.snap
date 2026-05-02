@@ -59,7 +59,9 @@
   "metadata": {
     "axis": "type",
     "primitive": "slot.quote",
+    "quote": "A pithy quote.",
     "role": "type.pullquote-serif",
+    "size": "lg",
     "version": "1.0.0"
   },
   "recipeId": "type.pullquote-serif",

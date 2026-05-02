@@ -34,8 +34,10 @@
   "kind": "group",
   "metadata": {
     "axis": "mask",
+    "pointerSide": "bottom",
     "primitive": "frame.safe-area",
     "role": "mask.callout",
+    "src": "https://example.invalid/asset",
     "version": "1.0.0"
   },
   "recipeId": "mask.callout",

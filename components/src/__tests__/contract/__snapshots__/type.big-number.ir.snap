@@ -41,8 +41,10 @@
   "kind": "group",
   "metadata": {
     "axis": "type",
+    "gradient": false,
     "primitive": "slot.numeral",
     "role": "type.big-number",
+    "value": "Sample",
     "version": "1.0.0"
   },
   "recipeId": "type.big-number",

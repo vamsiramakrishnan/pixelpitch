@@ -43,6 +43,7 @@
     "axis": "type",
     "primitive": "slot.numeral",
     "role": "type.big-number-xl",
+    "value": "Sample",
     "version": "1.0.0"
   },
   "recipeId": "type.big-number-xl",

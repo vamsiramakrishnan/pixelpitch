@@ -13,28 +13,43 @@
         "x": 100,
         "y": 100
       },
-      "children": [],
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "borderRadiusPx": 0,
+          "kind": "shape",
+          "metadata": {
+            "axis": "surface",
+            "role": "surface.shape-fill",
+            "shape": "rounded-rect"
+          },
+          "recipeId": "surface.shape-fill",
+          "shape": "rounded-rect",
+          "zOrder": 0
+        }
+      ],
       "kind": "group",
       "metadata": {
-        "axis": "frame",
-        "innerBbox": {
-          "h": 8,
-          "w": 408,
-          "x": 196,
-          "y": 196
-        },
-        "insetPx": 96,
-        "padding": "cozy",
-        "role": "frame.safe-area"
+        "axis": "surface",
+        "radiusPx": 0,
+        "role": "surface.shape-fill",
+        "shape": "rounded-rect"
       },
-      "recipeId": "frame.safe-area",
+      "recipeId": "surface.shape-fill",
       "zOrder": 0
     }
   ],
   "kind": "group",
   "metadata": {
     "axis": "surf",
-    "primitive": "frame.safe-area",
+    "bgColor": "tokens.palette.surface-1",
+    "primitive": "surface.shape-fill",
+    "radius": 12,
     "role": "surf.card-paper",
     "version": "1.0.0"
   },

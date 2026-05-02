@@ -34,8 +34,11 @@
   "kind": "group",
   "metadata": {
     "axis": "data",
+    "max": 1,
     "primitive": "frame.safe-area",
     "role": "data.bullet-bar",
+    "target": 1,
+    "value": 1,
     "version": "1.0.0"
   },
   "recipeId": "data.bullet-bar",

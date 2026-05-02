@@ -34,8 +34,11 @@
   "kind": "group",
   "metadata": {
     "axis": "anno",
+    "color": "tokens.palette.ink-3",
+    "label": "Sample",
     "primitive": "frame.safe-area",
     "role": "anno.brace-labeled",
+    "side": "right",
     "version": "1.0.0"
   },
   "recipeId": "anno.brace-labeled",

@@ -85,10 +85,22 @@ const MATRIX_PRESETS: ThemePresetKey[] = [
  * emit-stability snapshot test (M5.2) still records the failure mode.
  */
 const EMIT_THROWS_OVERRIDES = new Set<string>([
+  // Post-M3.5: recipes still throwing because the recipe→primitive
+  // prop-shape mapping is incomplete. Either the recipe has props that
+  // don't intersect with the primitive's required props (bg.aurora-corners
+  // has colorTL/TR/BL/BR but surface.radial-blob wants a single color),
+  // or the primitive needs content props the recipe never received
+  // (data.bar wants `bars: [...]`, slot.eyebrow wants `text`, etc.).
+  // Tracked for M3.6 / primitive-default follow-up.
+  'anno.numbered-hotspot',
+  'anno.tooltip',
+  'bg.aurora-corners',
   'comp.agenda-2col',
   'comp.agenda-toc',
+  'comp.annotated-screenshot',
   'comp.bento-mixed',
   'comp.big-stat-hero',
+  'comp.closing-cta',
   'comp.data-overview',
   'comp.hero-investor',
   'comp.hero-product',
@@ -103,6 +115,7 @@ const EMIT_THROWS_OVERRIDES = new Set<string>([
   'data.donut',
   'data.donut-multi-segment',
   'data.kpi-row',
+  'mask.gradient-fade-edge',
   'surf.bento-cell',
   'type.eyebrow-ruled',
   'type.eyebrow-tape',

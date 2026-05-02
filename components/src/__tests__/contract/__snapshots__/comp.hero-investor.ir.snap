@@ -1,4 +1,4 @@
 {
   "atomId": "comp.hero-investor",
-  "error": "TypeError: Cannot read properties of undefined (reading 'toUpperCase')"
+  "error": "TypeError: Cannot read properties of undefined (reading 'hex')"
 }

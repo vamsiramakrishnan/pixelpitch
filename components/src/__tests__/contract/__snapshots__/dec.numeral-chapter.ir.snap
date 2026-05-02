@@ -41,6 +41,7 @@
   "kind": "group",
   "metadata": {
     "axis": "dec",
+    "digits": "Sample",
     "primitive": "slot.numeral",
     "role": "dec.numeral-chapter",
     "version": "1.0.0"

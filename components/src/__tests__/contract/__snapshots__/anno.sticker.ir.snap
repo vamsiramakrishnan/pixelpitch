@@ -13,28 +13,96 @@
         "x": 100,
         "y": 100
       },
-      "children": [],
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "border": {
+            "color": "#3b82f6",
+            "style": "solid",
+            "width": 2
+          },
+          "borderRadiusPx": 12,
+          "fill": {
+            "color": {
+              "alpha": 0.16,
+              "hex": "#3b82f6"
+            },
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "kind": "sticker",
+            "role": "annotation-badge-bg",
+            "rotateDeg": -4,
+            "tone": "info"
+          },
+          "recipeId": "annotation.badge.bg",
+          "shadows": [
+            {
+              "blur": 0,
+              "color": "#3b82f6",
+              "inset": false,
+              "offsetX": 2,
+              "offsetY": 4,
+              "spread": 0
+            }
+          ],
+          "shape": "rounded-rect",
+          "zOrder": 0
+        },
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "kind": "text",
+          "metadata": {
+            "role": "annotation-badge-label"
+          },
+          "paragraphs": [
+            {
+              "align": "center",
+              "runs": [
+                {
+                  "color": "#3b82f6",
+                  "fontFamily": "Inter, sans-serif",
+                  "fontSizePx": 14,
+                  "fontWeight": 700,
+                  "italic": false,
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "annotation.badge.label",
+          "zOrder": 10
+        }
+      ],
       "kind": "group",
       "metadata": {
-        "axis": "frame",
-        "innerBbox": {
-          "h": 8,
-          "w": 408,
-          "x": 196,
-          "y": 196
-        },
-        "insetPx": 96,
-        "padding": "cozy",
-        "role": "frame.safe-area"
+        "axis": "annotation",
+        "kind": "sticker",
+        "role": "annotation.badge",
+        "rotateDeg": -4,
+        "tone": "info"
       },
-      "recipeId": "frame.safe-area",
+      "recipeId": "annotation.badge",
       "zOrder": 0
     }
   ],
   "kind": "group",
   "metadata": {
     "axis": "anno",
-    "primitive": "frame.safe-area",
+    "bgColor": "tokens.palette.warn",
+    "body": "Caption text",
+    "primitive": "annotation.badge",
     "role": "anno.sticker",
     "version": "1.0.0"
   },

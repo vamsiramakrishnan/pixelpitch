@@ -190,15 +190,24 @@ function defaultForProp(name: string, p: PropEntry): unknown {
       if (p.items === 'string') return ['a', 'b', 'c'];
       return [];
     }
-    case 'object': return {};
+    case 'object': {
+      // Name-aware: synthesizer needs to satisfy primitive prop shapes.
+      // Coord-like names get {x,y}; other objects stay {}.
+      if (/^(from|to|anchor|leaderTo|origin|target|point)$/i.test(name)) {
+        return { x: 200, y: 200 };
+      }
+      return {};
+    }
     default:       return undefined;
   }
 }
 
 /**
  * Synthesize a plausible props bag for a row's renderer. Always includes
- * `bbox`. Skips props with no declared default that are also not required
- * — that gives the recipe its baseline-default behavior.
+ * `bbox`. After M3.5's prop-forwarding fix, codegen forwards undefined
+ * values too, which crash primitives that assume present values. So we
+ * also synthesize OPTIONAL color/object props for primitives that need
+ * them — name-aware.
  */
 export function synthesizeProps(row: AtomRow, bbox: Bbox = DEFAULT_BBOX): Record<string, unknown> {
   const props: Record<string, unknown> = { bbox: { ...bbox } };
@@ -208,7 +217,12 @@ export function synthesizeProps(row: AtomRow, bbox: Bbox = DEFAULT_BBOX): Record
       props['bbox'] = { ...bbox };
       continue;
     }
-    if (entry.required === true || entry.default !== undefined) {
+    // Synthesize required props, OR props with declared defaults, OR
+    // optional color/object props (codegen forwards them; primitives
+    // crash on undefined).
+    const isOptionalForwarded =
+      entry.type === 'color' || entry.type === 'object' || entry.type === 'fill';
+    if (entry.required === true || entry.default !== undefined || isOptionalForwarded) {
       props[name] = defaultForProp(name, entry);
     }
   }

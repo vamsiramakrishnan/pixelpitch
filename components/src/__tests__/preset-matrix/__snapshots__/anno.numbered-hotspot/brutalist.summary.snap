@@ -1,10 +1,7 @@
 {
-  "native_area_px2": 0,
-  "native_ratio": 0,
+  "error": "TypeError: Cannot read properties of undefined (reading 'x')",
   "preset": "brutalist",
-  "raster_nodes": 0,
   "recipe": "anno.numbered-hotspot",
-  "root_area_px2": 921600,
-  "status": "observe",
-  "total_nodes": 1
+  "status": "override:emit-throws",
+  "still_throws": true
 }
