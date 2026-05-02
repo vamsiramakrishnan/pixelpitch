@@ -6,28 +6,28 @@
     "n_slides": 16,
     "native_area_ratio": 1.0,
     "cache_hit_rate": 0.5372,
-    "pattern_coverage": 0.7512,
+    "pattern_coverage": 0.8732,
     "decisions_by_tier": {
-      "tier0": 140,
-      "cache:tier0": 220,
-      "tier2": 15,
-      "promotion": 21,
-      "tier1": 29,
-      "cache:tier1": 14,
+      "tier0": 162,
+      "cache:tier0": 221,
+      "promotion": 17,
+      "tier1": 21,
+      "tier2": 5,
+      "cache:tier1": 13,
       "cache:tier2": 4
     },
     "top_pattern_hits": {
       "kicker-from-css": 46,
       "title-h1": 14,
       "slide-solid-bg": 13,
+      "slide-gradient-wrapper": 11,
       "short-label": 7,
       "background-blend-mode-raster": 6,
-      "text-card-composite": 6,
       "body-paragraph": 5,
-      "stat-number-from-css": 4
+      "decorated-card-mixed-content": 5
     },
     "n_unmatched_sigs": 25,
-    "elapsed_s": 13.99
+    "elapsed_s": 10.42
   },
   {
     "deck": "recipes",
@@ -38,14 +38,14 @@
     "cache_hit_rate": 1.0,
     "pattern_coverage": 0.0,
     "decisions_by_tier": {
-      "cache:tier0": 360,
-      "cache:tier2": 19,
-      "promotion": 21,
-      "cache:tier1": 43
+      "cache:tier0": 383,
+      "promotion": 17,
+      "cache:tier1": 34,
+      "cache:tier2": 9
     },
     "top_pattern_hits": {},
     "n_unmatched_sigs": 0,
-    "elapsed_s": 12.7
+    "elapsed_s": 10.28
   },
   {
     "deck": "atoms",
@@ -54,27 +54,27 @@
     "n_slides": 10,
     "native_area_ratio": 1.0,
     "cache_hit_rate": 0.618,
-    "pattern_coverage": 0.8202,
+    "pattern_coverage": 0.9663,
     "decisions_by_tier": {
-      "tier0": 138,
+      "tier0": 164,
       "cache:tier0": 274,
-      "tier2": 13,
-      "tier1": 17,
-      "promotion": 10,
-      "cache:tier1": 14
+      "promotion": 8,
+      "tier1": 2,
+      "cache:tier1": 14,
+      "tier2": 4
     },
     "top_pattern_hits": {
       "kicker-from-css": 26,
+      "native-svg-simple": 11,
       "gradient-card-no-text": 10,
+      "decorated-card-mixed-content": 8,
       "slide-solid-bg": 8,
       "atom-dec-any": 8,
       "background-blend-mode-raster": 6,
-      "decoration-card": 5,
-      "stat-number-with-runs": 5,
-      "stat-number-from-css": 5
+      "decoration-card": 5
     },
-    "n_unmatched_sigs": 25,
-    "elapsed_s": 6.03
+    "n_unmatched_sigs": 6,
+    "elapsed_s": 5.14
   },
   {
     "deck": "atoms",
@@ -85,14 +85,14 @@
     "cache_hit_rate": 1.0,
     "pattern_coverage": 0.0,
     "decisions_by_tier": {
-      "cache:tier0": 412,
-      "cache:tier2": 13,
-      "cache:tier1": 31,
-      "promotion": 10
+      "cache:tier0": 438,
+      "promotion": 8,
+      "cache:tier1": 16,
+      "cache:tier2": 4
     },
     "top_pattern_hits": {},
     "n_unmatched_sigs": 0,
-    "elapsed_s": 5.97
+    "elapsed_s": 5.07
   },
   {
     "deck": "sample_deck",
@@ -101,24 +101,24 @@
     "n_slides": 3,
     "native_area_ratio": 1.0,
     "cache_hit_rate": 0.3684,
-    "pattern_coverage": 0.6667,
+    "pattern_coverage": 0.75,
     "decisions_by_tier": {
-      "tier0": 8,
-      "tier1": 4,
-      "cache:tier0": 6,
-      "cache:tier1": 1
+      "tier0": 9,
+      "tier1": 3,
+      "cache:tier0": 7
     },
     "top_pattern_hits": {
       "text-card-composite": 2,
       "footer-text": 1,
+      "tight-sans-eyebrow": 1,
       "body-paragraph": 1,
       "subtitle": 1,
       "slide-solid-bg": 1,
       "short-label": 1,
       "stat-card-composite": 1
     },
-    "n_unmatched_sigs": 4,
-    "elapsed_s": 1.85
+    "n_unmatched_sigs": 3,
+    "elapsed_s": 1.61
   },
   {
     "deck": "sample_deck",
@@ -129,12 +129,12 @@
     "cache_hit_rate": 1.0,
     "pattern_coverage": 0.0,
     "decisions_by_tier": {
-      "cache:tier0": 14,
-      "cache:tier1": 5
+      "cache:tier0": 16,
+      "cache:tier1": 3
     },
     "top_pattern_hits": {},
     "n_unmatched_sigs": 0,
-    "elapsed_s": 1.82
+    "elapsed_s": 1.56
   },
   {
     "deck": "svg_stress",
@@ -143,21 +143,21 @@
     "n_slides": 1,
     "native_area_ratio": 1.0,
     "cache_hit_rate": 0.0909,
-    "pattern_coverage": 0.5,
+    "pattern_coverage": 1.0,
     "decisions_by_tier": {
-      "tier1": 3,
-      "tier0": 5,
-      "tier2": 2,
+      "tier0": 10,
       "cache:tier0": 1
     },
     "top_pattern_hits": {
+      "native-svg-simple": 3,
       "kicker-from-css": 2,
+      "decorated-card-mixed-content": 2,
       "text-card-composite": 1,
       "title-h1": 1,
       "slide-solid-bg": 1
     },
-    "n_unmatched_sigs": 5,
-    "elapsed_s": 1.31
+    "n_unmatched_sigs": 0,
+    "elapsed_s": 1.24
   },
   {
     "deck": "svg_stress",
@@ -168,12 +168,10 @@
     "cache_hit_rate": 1.0,
     "pattern_coverage": 0.0,
     "decisions_by_tier": {
-      "cache:tier1": 3,
-      "cache:tier0": 6,
-      "cache:tier2": 2
+      "cache:tier0": 11
     },
     "top_pattern_hits": {},
     "n_unmatched_sigs": 0,
-    "elapsed_s": 1.41
+    "elapsed_s": 1.19
   }
 ]

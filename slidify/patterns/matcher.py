@@ -305,6 +305,16 @@ def _h_own_text(unit, anchor, catalog, value):
     return has if value else not has
 
 
+@_handler("is_text_container")
+def _h_is_text_container(unit, anchor, catalog, value):
+    """Match anchors flagged as text containers by the walker — the multi-run
+    case ``<p>Some <em>emphasised</em> body.</p>``. The emitter renders those
+    as a single text frame with per-run styling; recipes that route to
+    NativeText want to opt into matching them in addition to plain leaf
+    text."""
+    return bool(getattr(anchor, "is_text_container", False)) == bool(value)
+
+
 @_handler("children")
 def _h_children(unit, anchor, catalog, value):
     return (value == "any") if unit.children else (value == "none")

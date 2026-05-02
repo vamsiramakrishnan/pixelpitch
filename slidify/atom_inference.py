@@ -385,3 +385,113 @@ def build_synthetic_table() -> dict[str, str]:
             atoms=dropped,
         )
     return table
+
+
+# ---------------------------------------------------------------------------
+# Real-browser priming
+# ---------------------------------------------------------------------------
+
+
+async def build_browser_table(
+    html_path: "str | os.PathLike[str] | list[str | os.PathLike[str]]",
+    *,
+    viewport: tuple[int, int] | None = None,
+) -> dict[str, str]:
+    """Prime the table by rendering ``html_path`` through Chromium.
+
+    For each slide in the source (DOCTYPE-separated), the renderer captures
+    every element + computed style; we cluster into VisualUnits the same way
+    the convert pipeline does, then hash every unit whose anchor carries a
+    non-empty ``data_atom`` attribute.
+
+    This is what production needs: the synthetic generator (above) produces
+    signatures that don't match what real Chromium renders, so implicit
+    inference never fired on actual decks. The browser walk produces real
+    signatures so the priming table actually maps onto the units the
+    classifier sees at convert time.
+
+    Returns ``{sig_hash: atom_id}``. When the same atom id appears multiple
+    times across slides (e.g. ``type.gfill-4`` on every chapter slide), the
+    first signature wins — they're all valid renderings of the same atom
+    so any of them serves as a priming key.
+
+    Raises if Playwright / Chromium isn't available; callers can fall back
+    to ``build_synthetic_table`` in CI environments without a browser.
+    """
+    import os
+    from pathlib import Path
+
+    from slidify.geom import SLIDE_H_PX, SLIDE_W_PX
+    from slidify.renderer import Renderer
+    from slidify.splitter import split_slides
+    from slidify.units import cluster, flatten
+
+    if isinstance(html_path, (str, os.PathLike)):
+        sources = [html_path]
+    else:
+        sources = list(html_path)
+    vp = viewport or (SLIDE_W_PX, SLIDE_H_PX)
+    table: dict[str, str] = {}
+    async with Renderer(viewport=vp) as renderer:
+        for src in sources:
+            p = Path(os.fspath(src))
+            html = p.read_text(encoding="utf-8")
+            slides = split_slides(html) or [html]
+            for slide_html in slides:
+                rendered = await renderer.render(slide_html)
+                roots = cluster(rendered.elements)
+                for unit in flatten(roots):
+                    if not unit.elements:
+                        continue
+                    aid = (unit.elements[0].data_atom or "").strip()
+                    if not aid:
+                        continue
+                    try:
+                        h = signature_hash(unit)
+                    except Exception:
+                        continue
+                    # First-write-wins so iteration order across slides
+                    # stays deterministic; callers that want
+                    # every-occurrence stats can re-walk and accumulate
+                    # themselves.
+                    table.setdefault(h, aid)
+    return table
+
+
+async def build_hybrid_table(
+    html_paths: "list[str | os.PathLike[str]]",
+    *,
+    viewport: tuple[int, int] | None = None,
+) -> dict[str, str]:
+    """Browser-priming with a synthetic backstop.
+
+    For each atom id declared in ``atoms.yaml``, prefer the signature
+    captured from a real browser render (so implicit inference fires on
+    actual decks). For atoms the source HTML doesn't demonstrate, fall back
+    to a synthetic entry so the priming table never silently drops a
+    declared atom.
+
+    The browser-derived signatures are real — they're keyed off what the
+    convert pipeline actually computes. The synthetic fallback keys won't
+    match any real render, but they keep the table complete and let later
+    HTML reference decks add real signatures incrementally.
+    """
+    browser_table = await build_browser_table(html_paths, viewport=viewport)
+    covered = set(browser_table.values())
+    declared = set(_atom_ids_from_yaml())
+    missing = sorted(declared - covered)
+    table = dict(browser_table)
+    if missing:
+        synthetic_full = build_synthetic_table()
+        # Filter the synthetic table to entries whose atom_id is in `missing`
+        # AND whose signature_hash isn't already present in the browser table.
+        for h, aid in synthetic_full.items():
+            if aid in missing and h not in table:
+                table[h] = aid
+        log.info(
+            "atom_inference.build_hybrid_table.synthetic_fallback",
+            n_browser=len(browser_table),
+            n_synthetic_added=len(table) - len(browser_table),
+            missing_atoms=missing[:8],
+        )
+    return table

@@ -1011,3 +1011,165 @@ patterns:
       kind: NativeShape
       confidence: 0.88
       metadata: { recipe: top_band }
+
+  # =========================================================================
+  # HARVESTER ITER 1 — patterns added from /tmp/corpus harvest run.
+  # Each entry below was the dominant cluster of one tier-0 miss family;
+  # adding a recipe converts the LLM/tier-2 fallback path into a deterministic
+  # cache hit on second runs. Numbers in the comments are the iter-1
+  # occurrence counts before adding the recipe.
+  # =========================================================================
+
+  # ── 13× simple SVGs (svg_path_count <= SVG_NATIVE_PATH_BUDGET).
+  # Tier-1's `rule_simple_svg_raster` already routes these to NativeSvg, but
+  # tier-0 had no recipe so every render ate a tier-1 evaluation + harvester
+  # log entry. The matcher's `anchor.is_svg` predicate exists since Phase 2a;
+  # adding the tier-0 hit collapses the path.
+  - id: native-svg-simple
+    priority: 88
+    match:
+      anchor.is_svg: true
+    emit:
+      kind: NativeSvg
+      confidence: 0.92
+      metadata: { recipe: native_svg_simple, role: svg }
+
+  # ── 2× <table> elements with a translatable grid. Tier-1's
+  # `rule_native_table` routes these but, like simple-svg, tier-0 was silent.
+  - id: native-table
+    priority: 89
+    match:
+      anchor.tag_in: [TABLE]
+    emit:
+      kind: NativeTable
+      confidence: 0.95
+      metadata: { recipe: native_table, role: table }
+
+  # ── 3× monospace text containers (terminal/code blocks). The existing
+  # `code-block-tailwind` recipe requires a dark bg; this catches mono-typeset
+  # bodies on any background.
+  - id: mono-text-container
+    priority: 33
+    match:
+      anchor.tag_in: [DIV, P, SPAN, PRE]
+      own_text: true
+      anchor.font_family_family: mono
+      text_length_min: 8
+    emit:
+      kind: NativeText
+      confidence: 0.92
+      metadata: { recipe: mono_text_container, role: code }
+
+  # ── 4× sans-serif text containers with tight tracking, no specific
+  # heading tag. The display-headline-tight recipe required negative
+  # letter-spacing AND large font; this is the looser fallback for tight
+  # headlines emitted as <div> instead of <h1/h2>.
+  - id: tight-display-container
+    priority: 34
+    match:
+      anchor.tag_in: [DIV, P]
+      own_text: true
+      is_text_container: true
+      anchor.font_family_family: sans
+      anchor.letter_spacing_px_max: 0.4
+      font_size_px_min: 24
+      text_length_min: 4
+    emit:
+      kind: NativeText
+      confidence: 0.88
+      metadata: { recipe: tight_display_container, role: heading }
+
+  # ── 12× decorated cards with mixed content (bg + border + radius, but
+  # children include images / SVG icons / nested cards — so
+  # text-card-composite's children_only_text predicate misses them).
+  # Emit a real NativeShape for the card so children z-stack on top via the
+  # existing promotion DAG. Without a decision the harvester re-fires every
+  # render and tier-2 pays the cost.
+  - id: decorated-card-mixed-content
+    priority: 79
+    match:
+      anchor.tag_in: [DIV, SECTION, ARTICLE]
+      children: any
+      n_children_min: 1
+      n_children_max: 16
+      has_visible_decoration: true
+      transform: none
+      filter: none
+      bg_image_kind: none
+    emit:
+      kind: NativeShape
+      confidence: 0.88
+      metadata: { recipe: decorated_card_mixed }
+
+  # =========================================================================
+  # HARVESTER ITER 2 — second pass after iter-1 patterns shipped.
+  # =========================================================================
+
+  # ── 6× radial-gradient slide-sized divs (mesh / hero backgrounds painted
+  # on a wrapper <div class="slide"> instead of <body>). The slide-gradient-bg
+  # recipe only matches BODY/HTML anchors; this catches the wrapper case.
+  - id: slide-gradient-wrapper
+    priority: 199
+    match:
+      anchor.tag_in: [DIV, SECTION, MAIN]
+      bg_image_kind: gradient
+      bbox.w_min: 1024
+      bbox.h_min: 600
+      children: any
+    emit:
+      kind: NativeShape
+      confidence: 0.88
+      metadata: { recipe: slide_gradient_wrapper }
+
+  # ── 3× asymmetric bottom border (accent underline). Mirrors
+  # brutalist-top-rule / magazine-left-rule for the bottom side — common in
+  # editorial layouts as the "section closer" rule.
+  - id: editorial-bottom-rule
+    priority: 38
+    match:
+      anchor.has_asymmetric_border: true
+      anchor.border_per_side: { bottom: solid }
+      children: any
+    emit:
+      kind: NativeShape
+      confidence: 0.85
+      metadata: { recipe: editorial_bottom_rule, decorate: bottom-rule }
+
+  # ── 6× generic short text containers — sans, no specific tracking, sub-24-
+  # char text, mid-size font. Body-paragraph requires text_length_min:24,
+  # short-label caps the font at 18px; this fills the band between them
+  # (12–24px / 4–24 chars) so taglines, eyebrows, and inline labels emit
+  # natively instead of paying the tier-1/2 round trip.
+  - id: short-sans-container
+    priority: 41
+    match:
+      anchor.tag_in: [DIV, P, SPAN]
+      own_text: true
+      anchor.font_family_family: sans
+      font_size_px_min: 12
+      font_size_px_max: 28
+      text_length_min: 4
+      text_length_max: 24
+    emit:
+      kind: NativeText
+      confidence: 0.85
+      metadata: { recipe: short_sans_container, role: label }
+
+  # ── 1× sans-serif tight-tracking <div> headlines too small for
+  # tight-display-container's font_size_px_min:24 cutoff (e.g. 18px taglines
+  # set in negative tracking). Caught here so they emit as headings rather
+  # than as raw body.
+  - id: tight-sans-eyebrow
+    priority: 42
+    match:
+      anchor.tag_in: [DIV, P]
+      own_text: true
+      anchor.font_family_family: sans
+      anchor.letter_spacing_px_max: 0.0
+      font_size_px_min: 14
+      font_size_px_max: 24
+      text_length_min: 4
+    emit:
+      kind: NativeText
+      confidence: 0.85
+      metadata: { recipe: tight_sans_eyebrow, role: subheading }

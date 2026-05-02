@@ -614,10 +614,24 @@ def harvest(
     "--source",
     type=click.Path(exists=True, dir_okay=False, path_type=Path),
     default=None,
+    multiple=True,
     help=(
-        "HTML file to render and walk for atom signatures. "
-        "When omitted, a synthetic table is built from atoms.yaml without "
-        "spinning up a browser (the default — fast and dependency-free)."
+        "HTML file to render and walk for atom signatures. May be passed "
+        "multiple times to combine signatures from several reference decks "
+        "(e.g. --source examples/landing/atoms.html "
+        "--source examples/landing/recipes.html). When omitted, a synthetic "
+        "table is built from atoms.yaml without spinning up a browser."
+    ),
+)
+@click.option(
+    "--no-synthetic-fallback",
+    is_flag=True,
+    default=False,
+    help=(
+        "When --source is given, only emit signatures the browser actually "
+        "captured. By default any atom in atoms.yaml that the source HTML "
+        "doesn't demonstrate gets a synthetic entry so the table stays "
+        "complete."
     ),
 )
 @click.option(
@@ -630,26 +644,65 @@ def harvest(
         "slidify/patterns/data/atom_signatures.json (the in-package table)."
     ),
 )
-def prime_atom_cache_cmd(source: Path | None, out_path: Path | None) -> None:
+def prime_atom_cache_cmd(
+    source: tuple[Path, ...],
+    no_synthetic_fallback: bool,
+    out_path: Path | None,
+) -> None:
     """Build the priming table that backs `infer_atom_id`.
 
-    The default mode walks `atoms.yaml`, constructs one synthetic
-    `VisualUnit` per atom id, hashes it via `signature_hash`, and writes
-    `{sig_hash: atom_id}` to the destination JSON. This bypasses Chromium so
-    the rail can be laid in any environment. A future `--source` mode will
-    render real HTML and use the resulting browser-grade signatures —
-    stub today, see TODO in `slidify/atom_inference.py`.
+    Two modes:
+
+      * Default (no ``--source``) — walks ``atoms.yaml``, constructs one
+        synthetic ``VisualUnit`` per atom id, hashes it. Fast and
+        dependency-free; the signatures don't match real browser renders
+        though, so implicit inference rarely fires on actual decks. Useful
+        for laying rail in CI/sandbox environments without Chromium.
+
+      * ``--source PATH`` — renders the HTML through Playwright + Chromium,
+        walks the DOM, clusters into visual units, and hashes every unit
+        whose anchor carries ``data-atom``. These signatures match what
+        the convert pipeline computes for real decks, so implicit inference
+        actually fires. This is the production priming mode.
+
+    Falls back to synthetic if a ``--source`` walk raises (e.g. Chromium
+    missing) so the command always produces a usable table.
     """
-    from slidify.atom_inference import build_synthetic_table
+    import asyncio
 
-    if source is not None:
-        click.echo(
-            "warning: --source rendering not yet implemented; "
-            "falling back to synthetic table (see slidify/atom_inference.py).",
-            err=True,
-        )
+    from slidify.atom_inference import (
+        build_browser_table,
+        build_hybrid_table,
+        build_synthetic_table,
+    )
 
-    table = build_synthetic_table()
+    if source:
+        sources = list(source)
+        try:
+            if no_synthetic_fallback:
+                table = asyncio.run(build_browser_table(sources))
+                click.echo(
+                    f"Browser-primed {len(table)} entries from "
+                    f"{len(sources)} source(s).",
+                    err=True,
+                )
+            else:
+                table = asyncio.run(build_hybrid_table(sources))
+                click.echo(
+                    f"Hybrid-primed {len(table)} entries from "
+                    f"{len(sources)} source(s) (browser + synthetic backstop).",
+                    err=True,
+                )
+        except Exception as e:
+            click.echo(
+                f"warning: browser priming failed ({type(e).__name__}: {e}); "
+                "falling back to synthetic table.",
+                err=True,
+            )
+            table = build_synthetic_table()
+    else:
+        table = build_synthetic_table()
+
     payload = {"version": 1, "entries": dict(sorted(table.items()))}
 
     if out_path is None:
