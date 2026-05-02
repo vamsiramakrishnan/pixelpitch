@@ -12,12 +12,25 @@
  *   8. Optional delta pill   (rounded-rect tinted by `deltaColor`)
  *   9. Optional description  (14px, white@65%)
  *
- * NOTE on the IR:
+ * NOTE on the IR (Wave-2 / pre-F1 shadows):
  *   ShapeNode currently exposes only a single `shadow` slot (not an array of
  *   `boxShadow` layers). Multi-layer shadow stacks are therefore expressed as
- *   sibling ShapeNodes — one transparent rect per shadow layer. If/when the
- *   schema grows a `boxShadow: BoxShadow[]` field, the two `.shadow` siblings
- *   here can collapse into a single attached array on `.base`.
+ *   sibling ShapeNodes — one transparent rect per shadow layer. When F1's
+ *   `shadows: BoxShadow[]` array lands and the post-F1+F2 cleanup PR runs,
+ *   the two `.shadow` siblings here can collapse onto `.base`. F2 leaves them
+ *   intact per CONTRACT coordination notes.
+ *
+ * Wave-2 / Crew F2: now token-aware. Where the palette doesn't carry an
+ * exact match, the historical literal is kept inline and noted below.
+ *   - `DEFAULT_BG = '#1a1a2e'`        — no palette match (sits between
+ *     `surface-3 #16162a` and `surface-4 #1f1f3a`).
+ *   - `DELTA_TINT.up.fg = '#a7f3d0'`  — emerald-200; no palette match.
+ *   - `DELTA_TINT.down.fg = '#fecaca'`— red-200; no palette match.
+ *   - `DELTA_TINT.neutral.fg = '#e4e4e7'` — no palette match.
+ *   - `TEXT_BRIGHT = '#ffffff'`       — kept as a primitive string for
+ *     snapshot parity (the equivalent palette call would emit a `{hex,
+ *     alpha:1}` object which differs structurally even though it renders
+ *     the same).
  */
 
 import type { ReactNode } from 'react';
@@ -29,6 +42,7 @@ import type {
   ShapeNode,
   TextNode,
 } from '../ir/schema';
+import { tokens as defaultTokens, type TokensApi } from '../tokens';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -48,38 +62,69 @@ export interface StatCardWithDepthProps {
 }
 
 // ---------------------------------------------------------------------------
-// Defaults
+// Static (non-token-derivable) constants
 // ---------------------------------------------------------------------------
 
+/** Bg fallback that lives outside the palette table. */
 const DEFAULT_BG: Color = '#1a1a2e';
-const DEFAULT_ACCENT: Color = { hex: '#a78bfa', alpha: 0.45 };
-const BORDER: Color = { hex: '#ffffff', alpha: 0.1 };
-const HAIRLINE: Color = { hex: '#ffffff', alpha: 0.08 };
-const RIM_TOP: Color = { hex: '#ffffff', alpha: 0.2 };
-const RIM_BOTTOM: Color = { hex: '#ffffff', alpha: 0 };
-const TEXT_DIM: Color = { hex: '#ffffff', alpha: 0.65 };
+/** Card-bright white. Kept as a primitive string for snapshot parity. */
 const TEXT_BRIGHT: Color = '#ffffff';
-const SHADOW_OUTER: Color = { hex: '#000000', alpha: 0.55 };
-const SHADOW_INNER: Color = { hex: '#000000', alpha: 0.35 };
-
-const DELTA_TINT: Record<DeltaColor, { fg: Color; bg: Color }> = {
-  up:      { fg: '#a7f3d0', bg: { hex: '#10b981', alpha: 0.18 } },
-  down:    { fg: '#fecaca', bg: { hex: '#ef4444', alpha: 0.2 } },
-  neutral: { fg: '#e4e4e7', bg: { hex: '#ffffff', alpha: 0.1 } },
-};
+/** Emerald-200 — used as the "up" delta foreground. No palette token. */
+const DELTA_FG_UP: Color = '#a7f3d0';
+/** Red-200 — used as the "down" delta foreground. No palette token. */
+const DELTA_FG_DOWN: Color = '#fecaca';
+/** Neutral delta foreground. No palette token. */
+const DELTA_FG_NEUTRAL: Color = '#e4e4e7';
 
 const RADIUS = 18;
 const PADDING = 24;
+
+// ---------------------------------------------------------------------------
+// Token-derived defaults — synthesized inside the helpers so a non-default
+// `tokens` arg can override them.
+// ---------------------------------------------------------------------------
+
+interface ResolvedDefaults {
+  accent: Color;
+  border: Color;
+  hairline: Color;
+  rimTop: Color;
+  rimBottom: Color;
+  textDim: Color;
+  shadowOuter: Color;
+  shadowInner: Color;
+  deltaTint: Record<DeltaColor, { fg: Color; bg: Color }>;
+}
+
+function resolveDefaults(tokens: TokensApi): ResolvedDefaults {
+  return {
+    accent:       tokens.palette('accent', 0.45),
+    border:       tokens.palette('divider', 0.1),
+    hairline:     tokens.palette('divider', 0.08),
+    rimTop:       tokens.palette('ruler', 0.2),
+    rimBottom:    tokens.palette('ruler', 0),
+    textDim:      tokens.palette('ruler', 0.65),
+    shadowOuter:  tokens.palette('surface-scrim', 0.55),
+    shadowInner:  tokens.palette('surface-scrim', 0.35),
+    deltaTint: {
+      up:      { fg: DELTA_FG_UP,      bg: tokens.palette('success', 0.18) },
+      down:    { fg: DELTA_FG_DOWN,    bg: tokens.palette('danger', 0.2) },
+      neutral: { fg: DELTA_FG_NEUTRAL, bg: tokens.palette('divider', 0.1) },
+    },
+  };
+}
 
 // ---------------------------------------------------------------------------
 // React component (HTML preview)
 // ---------------------------------------------------------------------------
 
 export default function StatCardWithDepth(props: StatCardWithDepthProps): ReactNode {
+  const t = defaultTokens;
+  const d = resolveDefaults(t);
   const bg = colorToCss(props.bgColor ?? DEFAULT_BG);
-  const accent = colorToCss(props.accentColor ?? DEFAULT_ACCENT);
+  const accent = colorToCss(props.accentColor ?? d.accent);
   const tint = props.deltaColor ?? 'up';
-  const dt = DELTA_TINT[tint];
+  const dt = d.deltaTint[tint];
   return (
     <div
       style={{
@@ -90,14 +135,15 @@ export default function StatCardWithDepth(props: StatCardWithDepthProps): ReactN
         height: props.bbox.h,
         borderRadius: RADIUS,
         background: bg,
-        border: '1px solid rgba(255,255,255,0.1)',
+        border: `1px solid ${colorToCss(d.border)}`,
         boxShadow:
-          '0 24px 48px rgba(0,0,0,0.55), 0 8px 16px rgba(0,0,0,0.35), ' +
+          `0 24px 48px ${colorToCss(d.shadowOuter)}, ` +
+          `0 8px 16px ${colorToCss(d.shadowInner)}, ` +
           `inset 0 1px 0 ${accent}`,
         padding: PADDING,
         boxSizing: 'border-box',
-        color: '#ffffff',
-        fontFamily: 'Inter, sans-serif',
+        color: colorToCss(TEXT_BRIGHT),
+        fontFamily: t.fonts.sans,
         overflow: 'hidden',
       }}
     >
@@ -108,11 +154,11 @@ export default function StatCardWithDepth(props: StatCardWithDepthProps): ReactN
           left: 0,
           right: 0,
           height: '50%',
-          background: 'linear-gradient(180deg, rgba(255,255,255,0.2), rgba(255,255,255,0))',
+          background: `linear-gradient(180deg, ${colorToCss(d.rimTop)}, ${colorToCss(d.rimBottom)})`,
           pointerEvents: 'none',
         }}
       />
-      <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.65)', marginBottom: 8 }}>
+      <div style={{ fontSize: 12, color: colorToCss(d.textDim), marginBottom: 8 }}>
         {props.label}
       </div>
       <div style={{ fontSize: 56, fontWeight: 700, lineHeight: 1.0 }}>{props.value}</div>
@@ -133,7 +179,7 @@ export default function StatCardWithDepth(props: StatCardWithDepthProps): ReactN
         </div>
       )}
       {props.description && (
-        <div style={{ marginTop: 12, fontSize: 14, color: 'rgba(255,255,255,0.65)' }}>
+        <div style={{ marginTop: 12, fontSize: 14, color: colorToCss(d.textDim) }}>
           {props.description}
         </div>
       )}
@@ -145,10 +191,17 @@ export default function StatCardWithDepth(props: StatCardWithDepthProps): ReactN
 // IR emitter
 // ---------------------------------------------------------------------------
 
-export function statCardWithDepthToIR(props: StatCardWithDepthProps): GroupNodeT {
+/**
+ * IR emitter. `tokens` defaults to vercel-dark for backward compatibility.
+ */
+export function statCardWithDepthToIR(
+  props: StatCardWithDepthProps,
+  tokens: TokensApi = defaultTokens,
+): GroupNodeT {
   const { bbox } = props;
+  const d = resolveDefaults(tokens);
   const tint = props.deltaColor ?? 'up';
-  const dt = DELTA_TINT[tint];
+  const dt = d.deltaTint[tint];
 
   const children: IRNode[] = [];
 
@@ -167,7 +220,7 @@ export function statCardWithDepthToIR(props: StatCardWithDepthProps): GroupNodeT
       offsetY: 24,
       blur: 48,
       spread: 0,
-      color: SHADOW_OUTER,
+      color: d.shadowOuter,
       inset: false,
     },
   };
@@ -188,7 +241,7 @@ export function statCardWithDepthToIR(props: StatCardWithDepthProps): GroupNodeT
       offsetY: 8,
       blur: 16,
       spread: 0,
-      color: SHADOW_INNER,
+      color: d.shadowInner,
       inset: false,
     },
   };
@@ -204,12 +257,12 @@ export function statCardWithDepthToIR(props: StatCardWithDepthProps): GroupNodeT
     shape: 'rounded-rect',
     borderRadiusPx: RADIUS,
     fill: { kind: 'solid', color: props.bgColor ?? DEFAULT_BG },
-    border: { width: 1, color: BORDER, style: 'solid' },
+    border: { width: 1, color: d.border, style: 'solid' },
   };
   children.push(base);
 
-  // 3. Rim highlight — top half, linear-gradient white@20% → transparent.
-  const accent = props.accentColor ?? DEFAULT_ACCENT;
+  // 3. Rim highlight — top half, linear-gradient white@20% → accent → transparent.
+  const accent = props.accentColor ?? d.accent;
   const rim: ShapeNode = {
     kind: 'shape',
     recipeId: 'statCardWithDepth.rim',
@@ -222,9 +275,9 @@ export function statCardWithDepthToIR(props: StatCardWithDepthProps): GroupNodeT
       kind: 'linear-gradient',
       angleDeg: 180,
       stops: [
-        { color: RIM_TOP, position: 0 },
+        { color: d.rimTop, position: 0 },
         { color: accent, position: 0.6 },
-        { color: RIM_BOTTOM, position: 1 },
+        { color: d.rimBottom, position: 1 },
       ],
     },
   };
@@ -240,7 +293,7 @@ export function statCardWithDepthToIR(props: StatCardWithDepthProps): GroupNodeT
     shape: 'rounded-rect',
     borderRadiusPx: RADIUS,
     fill: { kind: 'none' },
-    border: { width: 1, color: HAIRLINE, style: 'solid' },
+    border: { width: 1, color: d.hairline, style: 'solid' },
   };
   children.push(hairline);
 
@@ -264,7 +317,7 @@ export function statCardWithDepthToIR(props: StatCardWithDepthProps): GroupNodeT
             text: props.label,
             fontSizePx: 12,
             fontWeight: 500,
-            color: TEXT_DIM,
+            color: d.textDim,
             italic: false,
             underline: false,
           },
@@ -367,7 +420,7 @@ export function statCardWithDepthToIR(props: StatCardWithDepthProps): GroupNodeT
               text: props.description,
               fontSizePx: 14,
               fontWeight: 400,
-              color: TEXT_DIM,
+              color: d.textDim,
               italic: false,
               underline: false,
             },

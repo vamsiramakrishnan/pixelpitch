@@ -64,3 +64,42 @@ export type {
   PatternFill,
 } from './ir/schema';
 export { normalizeShadows, pathBbox } from './ir/normalize';
+
+// ---- Wave-2 / Crew F2 (tokens) ---------------------------------------------
+export {
+  DEFAULT_TOKENS,
+  DENSITY_MULTIPLIERS,
+  FONT_CSS_VAR,
+  GRADIENT_CSS_VAR,
+  PALETTE_CSS_VAR,
+  THEME_PRESETS,
+  TokenProvider,
+  defaultElevation,
+  defaultFonts,
+  defaultRadii,
+  defaultSpaceSlots,
+  defaultTypeScale,
+  getTokensFromBundle,
+  tokens,
+  useTokens,
+  variant,
+} from './tokens';
+
+export type {
+  DensityMode,
+  ElevationTier,
+  FontFamilyKey,
+  GradientKey,
+  GradientStopSpec,
+  PaletteKey,
+  RadiusKey,
+  SpaceSlotKey,
+  ThemePresetKey,
+  TokenBundle,
+  TokenProviderProps,
+  TokensApi,
+  TypeKey,
+  TypeSpec,
+  VariantConfig,
+  VariantSelection,
+} from './tokens';
