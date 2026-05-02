@@ -139,6 +139,20 @@ class DomElement(BaseModel):
     # to request a layered native shape stack at emit time. Empty = no
     # decoration (the default — heuristics never silently inflate shape count).
     decorate_hint: str = ""
+    # Atom catalog opt-in: HTML can carry `data-atom="bg.mesh"` (or any other
+    # registered atom id) to short-circuit signature inference and route the
+    # unit to a known emit recipe. Empty = no hint; the matcher falls back
+    # to the usual class+structure tier-0 patterns. See
+    # `slidify/patterns/data/atoms.yaml` for the registry; the recipe deck in
+    # `examples/landing/recipes.html` demonstrates composition.
+    data_atom: str = ""
+    # Opt-out from the overflow detector for elements that *intentionally*
+    # extend past the slide frame — aurora blobs, off-canvas bleeds, ghost
+    # numerals, edge-rotated captions. Set via
+    # ``data-pptx-allow-overflow="true"``. Distinct from ``data-pptx-skip``
+    # (which suppresses emit entirely): allow-overflow keeps the element in
+    # the PPTX but tells the compile-time check "yes, the bleed is by design."
+    allow_overflow: bool = False
 
 
 class UnitKind(str, Enum):
@@ -285,6 +299,35 @@ class ConversionResult(BaseModel):
     editability_intended_total: int = 0
     editability_actual_total: int = 0
     editability_failing_slides: list[int] = Field(default_factory=list)
+    # Overflow telemetry: elements whose bbox extends past the slide bounds
+    # (1280×720 by default). The DOM walker captures the resolved layout, so
+    # any clip is a deterministic fact — not a render error. Surfacing it
+    # here lets authors and agents catch the failure mode at compile time
+    # instead of eyeballing PNGs. Empty = nothing overflowed.
+    overflow_elements: list["OverflowElement"] = Field(default_factory=list)
 
 
+class OverflowElement(BaseModel):
+    """One element whose bbox extends past the slide frame.
+
+    `axis` reports which edge was crossed; `overflow_px` reports by how many
+    pixels (always positive). `data_atom` and `stable_selector` carry the
+    author-side identifiers so an agent can act on the report without
+    re-reading the source HTML.
+    """
+
+    slide_index: int
+    axis: str  # "right" | "bottom" | "left" | "top"
+    overflow_px: float
+    bbox_x: float
+    bbox_y: float
+    bbox_w: float
+    bbox_h: float
+    tag: str = ""
+    data_atom: str = ""
+    stable_selector: str = ""
+    sample_text: str = ""
+
+
+ConversionResult.model_rebuild()
 VisualUnit.model_rebuild()

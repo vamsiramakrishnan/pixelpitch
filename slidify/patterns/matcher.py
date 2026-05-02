@@ -160,6 +160,50 @@ def _h_classes_glob_any(unit, anchor, catalog, value):
     return False
 
 
+@_handler("anchor.data_atom_id")
+def _h_data_atom_id(unit, anchor, catalog, value):
+    """Match `data-atom="..."` on the cluster anchor.
+
+    `value` may be a single id (``"bg.mesh"``), a list of ids, or a glob
+    (``"bg.*"``). Atom hints short-circuit signature inference: when an
+    author tags ``data-atom="surf.glass"`` slidify routes the unit to the
+    canonical recipe for that atom rather than re-deriving it from the
+    DOM signature each time. The catalog of registered ids lives in
+    ``examples/landing/atoms.html``; the emit recipes live in
+    ``slidify/patterns/data/atoms.yaml``.
+    """
+    atom_id = (anchor.data_atom or "").strip()
+    if not atom_id:
+        return False
+    if isinstance(value, list):
+        for v in value:
+            if "*" in v or "?" in v:
+                if fnmatch.fnmatchcase(atom_id, v):
+                    return True
+            elif atom_id == v:
+                return True
+        return False
+    if isinstance(value, str):
+        if "*" in value or "?" in value:
+            return fnmatch.fnmatchcase(atom_id, value)
+        return atom_id == value
+    return False
+
+
+@_handler("anchor.data_atom_namespace")
+def _h_data_atom_namespace(unit, anchor, catalog, value):
+    """Match the namespace of an atom id (e.g. ``"bg"`` matches ``"bg.mesh"``,
+    ``"bg.conic"``, …). Useful for axis-wide patterns that handle every atom
+    in a family the same way."""
+    atom_id = (anchor.data_atom or "").strip()
+    if not atom_id or "." not in atom_id:
+        return False
+    ns = atom_id.split(".", 1)[0]
+    if isinstance(value, list):
+        return ns in value
+    return ns == value
+
+
 @_handler("classes_any_rasterize_only")
 def _h_rasterize_only(unit, anchor, catalog, value):
     if not value:
@@ -538,20 +582,37 @@ def _h_children_only_text(unit, anchor, catalog, value):
 # ---------------------------------------------------------------------------
 
 
+_MANIFEST_FILES = ("patterns.yaml", "atoms.yaml")
+
+
 def _load_manifest_yaml() -> list[Pattern]:
+    """Load every YAML manifest in ``slidify/patterns/data/``.
+
+    ``patterns.yaml`` carries the always-on tier-0 recipes (typography,
+    cards, decorations, must-rasters). ``atoms.yaml`` carries the atom
+    catalog — recipes keyed off the ``data-atom`` author hint. Both are
+    optional; missing files are skipped quietly so the package keeps
+    booting on partial installs.
+    """
     pkg = resources.files("slidify.patterns.data")
-    raw = yaml.safe_load((pkg / "patterns.yaml").read_text(encoding="utf-8"))
     out: list[Pattern] = []
-    for entry in raw.get("patterns", []):
-        out.append(
-            Pattern(
-                id=entry["id"],
-                priority=int(entry.get("priority", 100)),
-                match=entry.get("match", {}),
-                emit=entry.get("emit", {}),
-                tag=entry.get("tag", "decision"),
+    for fname in _MANIFEST_FILES:
+        path = pkg / fname
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (FileNotFoundError, OSError):
+            continue
+        raw = yaml.safe_load(text) or {}
+        for entry in raw.get("patterns", []):
+            out.append(
+                Pattern(
+                    id=entry["id"],
+                    priority=int(entry.get("priority", 100)),
+                    match=entry.get("match", {}),
+                    emit=entry.get("emit", {}),
+                    tag=entry.get("tag", "decision"),
+                )
             )
-        )
     out.sort(key=lambda p: p.priority)
     return out
 

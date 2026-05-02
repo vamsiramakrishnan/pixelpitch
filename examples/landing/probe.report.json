@@ -1,0 +1,229 @@
+{
+  "pptx_path": "examples/landing/probe.pptx",
+  "n_slides": 8,
+  "fidelity_reports": [],
+  "native_area_ratio": 1.0,
+  "llm_calls": 0,
+  "total_cost_usd": 0.0,
+  "elapsed_seconds": 3.666871676000028,
+  "cache_hit_rate": 0.6545454545454545,
+  "decisions_by_tier": {
+    "tier0": 34,
+    "tier2": 11,
+    "cache:tier0": 101,
+    "promotion": 4,
+    "tier1": 8,
+    "cache:tier2": 3,
+    "cache:tier1": 4
+  },
+  "pattern_hits": {
+    "kicker-from-css": 10,
+    "text-card-composite": 2,
+    "gradient-card-with-text": 1,
+    "title-h1": 3,
+    "slide-solid-bg": 8,
+    "stat-number-from-css": 8,
+    "stat-card-composite": 2,
+    "gradient-card-no-text": 1,
+    "short-label": 1,
+    "decoration-card": 1
+  },
+  "pattern_coverage": 0.6491228070175439,
+  "unmatched_signatures": [
+    {
+      "sig": "p(bgi=other+txt)[][1024x64]",
+      "sig_hash": "3d212a1c4d6f2f6a",
+      "bbox_w": 1066,
+      "bbox_h": 64,
+      "sample_classes": "gfill-conic",
+      "sample_text": "SHIP THE FUTURE.",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bgi=grad)[]<2>[1280x800]{div(bg+brd)[][1088x96]{div(txt)[][1024x0],p(bgi=grad+txt)[][1024x64]},div(bg+brd)[][1088x96]{div(txt)[][1024x0],p(bgi=grad+txt)[][1024x64]},div(bg+brd)[][1088x96]{div(txt)[][1024x0],p(bgi=grad+txt)[][1024x64]},div(bg+brd)[][1088x96]{div(txt)[][1024x0],p(bgi=other+txt)[][1024x64]},div(txt)[][0x0],div(txt)[][1088x0],div(txt)[][128x0],div(txt)[][192x0],h1(txt)[][1088x96]}",
+      "sig_hash": "6fee51c5bd5b10e3",
+      "bbox_w": 1280,
+      "bbox_h": 824,
+      "sample_classes": "slide",
+      "sample_text": "PROBE 01 / TYPE-FILL",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "em(txt)[][320x128]",
+      "sig_hash": "0f889f49061bd4dc",
+      "bbox_w": 369,
+      "bbox_h": 142,
+      "sample_classes": "",
+      "sample_text": "we ship",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "span(txt)[][704x128]",
+      "sig_hash": "3331a0c54d6379fc",
+      "bbox_w": 737,
+      "bbox_h": 143,
+      "sample_classes": "solid",
+      "sample_text": "we don't ship",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "h1()[][1088x384]{em(txt)[][320x128],span(bgi=grad+txt)[][448x128],span(txt)[][320x128],span(txt)[][704x128]}",
+      "sig_hash": "29ff3ef699e93f34",
+      "bbox_w": 1120,
+      "bbox_h": 385,
+      "sample_classes": "display",
+      "sample_text": "we don't ship",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bgi=grad+brd)[][320x160]{div(bg+txt)[][128x0]}",
+      "sig_hash": "1440cbd60b9fb0ac",
+      "bbox_w": 364,
+      "bbox_h": 172,
+      "sample_classes": "tile vignette",
+      "sample_text": "vignette · radial",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bgi=other+brd)[][320x160]{div(bg+txt)[][64x0]}",
+      "sig_hash": "67228e84a791e352",
+      "bbox_w": 364,
+      "bbox_h": 172,
+      "sample_classes": "tile conic",
+      "sample_text": "conic · 360°",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bgi=grad+bg+brd)[][320x160]{div(bg+txt)[][128x0]}",
+      "sig_hash": "68f9c5f087e714ac",
+      "bbox_w": 364,
+      "bbox_h": 172,
+      "sample_classes": "tile mesh",
+      "sample_text": "mesh · 4-blob",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[]<1>[320x224]{div(txt)[][256x0],div(txt)[][256x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][64x0]}",
+      "sig_hash": "9ddd584a9b49a022",
+      "bbox_w": 361,
+      "bbox_h": 230,
+      "sample_classes": "cell",
+      "sample_text": "logo cloud",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(txt)[][256x32]",
+      "sig_hash": "6c70e14f74e23363",
+      "bbox_w": 311,
+      "bbox_h": 37,
+      "sample_classes": "v",
+      "sample_text": "$12.4M",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "svg(svg/11)[]<11>[192x64]",
+      "sig_hash": "552db5d4e71e3347",
+      "bbox_w": 220,
+      "bbox_h": 80,
+      "sample_classes": "",
+      "sample_text": "",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[][320x224]{div(txt)[][256x0],div(txt)[][256x32],svg(svg/11)[]<11>[192x64]}",
+      "sig_hash": "d4de1968f248ea08",
+      "bbox_w": 361,
+      "bbox_h": 230,
+      "sample_classes": "cell",
+      "sample_text": "sparkbars",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[]<1>[320x224]{div(txt)[][256x0],div(txt)[][256x32],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0]}",
+      "sig_hash": "bface39419d9d276",
+      "bbox_w": 361,
+      "bbox_h": 230,
+      "sample_classes": "cell",
+      "sample_text": "heatmap · 7×4",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "svg(svg/2)[]<2>[192x64]",
+      "sig_hash": "f4f4f9c2181c0f4f",
+      "bbox_w": 224,
+      "bbox_h": 80,
+      "sample_classes": "",
+      "sample_text": "",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[][320x224]{div(txt)[][256x0],div(txt)[][256x32],svg(svg/2)[]<2>[192x64]}",
+      "sig_hash": "1b43c9fda07ef918",
+      "bbox_w": 361,
+      "bbox_h": 230,
+      "sample_classes": "cell",
+      "sample_text": "sparkline",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "svg(svg/3)[]<3>[192x96]",
+      "sig_hash": "fce263acabab9ad9",
+      "bbox_w": 200,
+      "bbox_h": 110,
+      "sample_classes": "",
+      "sample_text": "",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[][320x224]{div(txt)[][256x0],div(txt)[][256x32],svg(svg/3)[]<3>[192x96]}",
+      "sig_hash": "45a70357eeab4085",
+      "bbox_w": 361,
+      "bbox_h": 230,
+      "sample_classes": "cell",
+      "sample_text": "gauge",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "circle(xform)[][64x96]",
+      "sig_hash": "a6624dbb6815f869",
+      "bbox_w": 100,
+      "bbox_h": 100,
+      "sample_classes": "",
+      "sample_text": "",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "svg(svg/2)[]<1>[64x96]{circle(xform)[][64x96]}",
+      "sig_hash": "ca865e5103bb3ea2",
+      "bbox_w": 120,
+      "bbox_h": 120,
+      "sample_classes": "",
+      "sample_text": "",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[][320x224]{div(txt)[][256x0],div(txt)[][256x32],svg(svg/2)[]<1>[64x96]{circle(xform)[][64x96]}}",
+      "sig_hash": "ae8c2a82ef054d12",
+      "bbox_w": 361,
+      "bbox_h": 230,
+      "sample_classes": "cell",
+      "sample_text": "progress ring",
+      "n_occurrences": 1
+    }
+  ],
+  "compat_matrix_version": "2",
+  "compat_matrix_summary": {
+    "native": 40,
+    "raster": 20,
+    "partial": 7,
+    "unsupported": 1,
+    "planned": 13
+  },
+  "editability_passed": false,
+  "editability_intended_total": 157,
+  "editability_actual_total": 169,
+  "editability_failing_slides": [
+    0,
+    5
+  ]
+}

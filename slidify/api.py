@@ -204,6 +204,7 @@ class _SlideSummary:
     index: int
     ops: list[EmitOp]
     decisions_by_tier: dict[str, int]
+    overflow: list = field(default_factory=list)
 
 
 # -----------------------------------------------------------------------------
@@ -539,11 +540,28 @@ async def convert(
                         pattern_stats,
                         unmatched,
                     )
+                    from slidify._overflow import detect_overflow
+
+                    overflow = detect_overflow(
+                        slide_index=plan.index,
+                        elements=plan.rendered.elements,
+                        viewport_w=plan.rendered.viewport_w,
+                        viewport_h=plan.rendered.viewport_h,
+                    )
+                    if overflow:
+                        log.warning(
+                            "api.slide_overflow",
+                            slide=plan.index,
+                            n=len(overflow),
+                            axes=sorted({o.axis for o in overflow}),
+                            worst_px=max(o.overflow_px for o in overflow),
+                        )
                     summaries.append(
                         _SlideSummary(
                             index=plan.index,
                             ops=plan.ops,
                             decisions_by_tier=_per_slide_decisions_count(plan),
+                            overflow=overflow,
                         )
                     )
                     color_elements.extend(plan.rendered.elements)
@@ -705,6 +723,8 @@ async def convert(
         except Exception as e:
             log.warning("api.editability_check_failed", error=str(e))
 
+    overflow_elements = [o for s in summaries for o in s.overflow]
+
     return ConversionResult(
         pptx_path=str(pptx_path),
         n_slides=n_slides,
@@ -724,6 +744,7 @@ async def convert(
         editability_intended_total=edit_intended_total,
         editability_actual_total=edit_actual_total,
         editability_failing_slides=edit_failing,
+        overflow_elements=overflow_elements,
     )
 
 

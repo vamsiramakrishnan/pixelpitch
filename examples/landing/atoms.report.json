@@ -1,0 +1,278 @@
+{
+  "pptx_path": "examples/landing/atoms.pptx",
+  "n_slides": 10,
+  "fidelity_reports": [],
+  "native_area_ratio": 1.0,
+  "llm_calls": 0,
+  "total_cost_usd": 0.0,
+  "elapsed_seconds": 5.408148916999835,
+  "cache_hit_rate": 0.6652360515021459,
+  "decisions_by_tier": {
+    "tier0": 101,
+    "cache:tier0": 298,
+    "tier2": 30,
+    "tier1": 19,
+    "promotion": 6,
+    "cache:tier1": 12
+  },
+  "pattern_hits": {
+    "kicker-from-css": 19,
+    "small-subtitle-class": 1,
+    "gradient-card-no-text": 13,
+    "hairline-divider": 3,
+    "decoration-card": 5,
+    "feature-card-with-icon": 6,
+    "title-h1": 1,
+    "slide-solid-bg": 10,
+    "stat-card-composite": 5,
+    "text-card-composite": 22,
+    "body-paragraph": 1,
+    "stat-number-from-css": 8,
+    "gradient-card-with-text": 2,
+    "stat-number-with-runs": 3,
+    "step-number": 1,
+    "short-label": 1,
+    "micro-text-tiny": 1,
+    "pill-from-css": 1
+  },
+  "pattern_coverage": 0.6602564102564102,
+  "unmatched_signatures": [
+    {
+      "sig": "div(bg+brd)[]<1>[256x256]{div(bgi=grad)[][128x32],div(bgi=grad)[][64x32],div(bgi=grad)[][64x64],div(bgi=grad)[][64x64],div(txt)[][192x0],div(txt)[][192x0],span(bg+txt)[][64x0]}",
+      "sig_hash": "175cff580df887bc",
+      "bbox_w": 273,
+      "bbox_h": 260,
+      "sample_classes": "tile",
+      "sample_text": "comp.bento",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[]<1>[256x256]{div(bg)[][128x0],div(bg)[][128x0],div(txt)[][192x0],div(txt)[][192x0],div(xform+txt)[][0x128],span(bg+txt)[][128x0]}",
+      "sig_hash": "90217b45b7ed946e",
+      "bbox_w": 273,
+      "bbox_h": 260,
+      "sample_classes": "tile",
+      "sample_text": "comp.edge-rotated",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[]<1>[256x256]{div(bg)[grid-line][0x256],div(bg)[grid-line][0x256],div(bg)[grid-line][256x0],div(bg)[grid-line][256x0],div(bgi=grad)[][64x64],div(txt)[][192x0],div(txt)[][192x0],span(bg+txt)[][64x0]}",
+      "sig_hash": "933aa1238b8450e5",
+      "bbox_w": 273,
+      "bbox_h": 260,
+      "sample_classes": "tile",
+      "sample_text": "comp.thirds",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[]<1>[256x256]{div(bg)[][0x0],div(bg)[][128x0],div(bg)[][64x0],div(bg)[grid-line][0x256],div(bg)[grid-line][256x0],div(txt)[][192x0],div(txt)[][192x0],span(bg+txt)[][64x0]}",
+      "sig_hash": "55549aea4cdff014",
+      "bbox_w": 273,
+      "bbox_h": 260,
+      "sample_classes": "tile",
+      "sample_text": "comp.golden",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[]<1>[256x256]{div(bg)[][64x0],div(bg)[][64x0],div(bg)[][64x0],div(bg)[grid-line][0x256],div(bgi=grad)[][64x160],div(txt)[][192x0],div(txt)[][192x0],span(bg+txt)[][64x0]}",
+      "sig_hash": "18a8a78068741ccc",
+      "bbox_w": 273,
+      "bbox_h": 260,
+      "sample_classes": "tile",
+      "sample_text": "comp.split-60",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[]<1>[256x256]{div(bg)[][64x0],div(bg)[][64x0],div(bg)[grid-line][0x256],div(bgi=grad)[][64x128],div(txt)[][192x0],div(txt)[][192x0],span(bg+txt)[][64x0]}",
+      "sig_hash": "c7252a4fc27e8721",
+      "bbox_w": 273,
+      "bbox_h": 260,
+      "sample_classes": "tile",
+      "sample_text": "comp.split-50",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "svg(svg/12)[]<43>[256x256]",
+      "sig_hash": "4733c9a0974db6f2",
+      "bbox_w": 271,
+      "bbox_h": 279,
+      "sample_classes": "",
+      "sample_text": "",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[][256x256]{span(bg+txt)[][128x0],span(bg+txt)[][64x0],svg(svg/12)[]<43>[256x256]}",
+      "sig_hash": "c11b311c8cca29d5",
+      "bbox_w": 273,
+      "bbox_h": 281,
+      "sample_classes": "tile bg-svg",
+      "sample_text": "bg.dot-lattice",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bgi=other+brd)[][256x256]{span(bg+txt)[][128x0],span(bg+txt)[][64x0]}",
+      "sig_hash": "9c0f2dfeec42b9b2",
+      "bbox_w": 273,
+      "bbox_h": 281,
+      "sample_classes": "tile bg-conic",
+      "sample_text": "bg.conic",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(txt)[][192x32]",
+      "sig_hash": "4bf3b043ca3dd578",
+      "bbox_w": 224,
+      "bbox_h": 49,
+      "sample_classes": "v",
+      "sample_text": "★ 4.9",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+shdw=t+brd+xform)[]<1>[256x288]{div(txt)[][192x0],div(txt)[][192x32],span(txt)[][192x0]}",
+      "sig_hash": "1f5e1a1197feeaa0",
+      "bbox_w": 285,
+      "bbox_h": 301,
+      "sample_classes": "surf s-sticker",
+      "sample_text": "surf.sticker",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg)[]<3>[1280x704]{div(bg+shdw=t)[][256x256]{div(bgi=grad)[][192x128],div(txt)[][192x0],span(txt)[][192x0]},div(bg+shdw=t+brd)[]<1>[256x256]{div(txt)[][192x0],div(txt)[][192x32],span(txt)[][192x0]},div(bg+shdw=t+brd)[]<1>[256x256]{div(txt)[][192x0],div(txt)[][192x32],span(txt)[][192x0]},div(bg+shdw=t+brd+xform)[]<1>[256x288]{div(txt)[][192x0],div(txt)[][192x32],span(txt)[][192x0]},div(bgi=grad+brd)[]<1>[256x256]{div(txt)[][192x0],div(txt)[][192x32],span(txt)[][192x0]},div(bgi=grad+brd)[]<1>[256x256]{div(txt)[][192x0],div(txt)[][192x32],span(txt)[][192x0]},div(bgi=grad+shdw=t+brd)[]<1>[256x256]{div(txt)[][192x0],div(txt)[][192x32],span(txt)[][192x0]},div(bgi=grad+shdw=t+brd)[]<1>[256x256]{div(txt)[][192x0],div(txt)[][192x32],span(txt)[][192x0]},div(txt)[][0x0],div(txt)[][128x0],div(txt)[][128x0],div(txt)[][128x0],h1(txt)[][896x32]}",
+      "sig_hash": "092d398b6a6f0c0b",
+      "bbox_w": 1280,
+      "bbox_h": 720,
+      "sample_classes": "slide",
+      "sample_text": "atoms · axis 03",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(txt+txtc)[][1088x32]",
+      "sig_hash": "58ca43fd2db6a56b",
+      "bbox_w": 1090,
+      "bbox_h": 54,
+      "sample_classes": "t-marquee",
+      "sample_text": "SHIP · ITERATE · SHIP · ITERATE · SHIP · ITERATE · SHIP · IT",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "span(txt)[][128x32]",
+      "sig_hash": "887f74d7fece7edd",
+      "bbox_w": 130,
+      "bbox_h": 52,
+      "sample_classes": "b",
+      "sample_text": "slides,",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bgi=other)[][192x192]",
+      "sig_hash": "e8fd2d0a0b402a8a",
+      "bbox_w": 220,
+      "bbox_h": 200,
+      "sample_classes": "m-tri art-e",
+      "sample_text": "",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "svg(svg/2)[]<2>[64x96]{text(txt)[][0x0],text(txt)[][64x0]}",
+      "sig_hash": "dc9836a6ef7ee4c7",
+      "bbox_w": 120,
+      "bbox_h": 120,
+      "sample_classes": "",
+      "sample_text": "SHIPPED",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[][256x224]{div(txt)[][64x0],span(txt)[][0x0],svg(svg/2)[]<2>[64x96]{text(txt)[][0x0],text(txt)[][64x0]}}",
+      "sig_hash": "e52437b51152c12c",
+      "bbox_w": 273,
+      "bbox_h": 253,
+      "sample_classes": "cell",
+      "sample_text": "dec.seal",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "svg(svg/6)[]<2>[192x32]",
+      "sig_hash": "0636113fb6d62289",
+      "bbox_w": 220,
+      "bbox_h": 40,
+      "sample_classes": "",
+      "sample_text": "0",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "svg(svg/5)[]<3>[64x64]",
+      "sig_hash": "3ade74a63d85efe3",
+      "bbox_w": 80,
+      "bbox_h": 80,
+      "sample_classes": "",
+      "sample_text": "",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[][256x224]{div(txt)[][64x0],span(txt)[][64x0],svg(svg/5)[]<3>[64x64]}",
+      "sig_hash": "9490ff55c0b780b5",
+      "bbox_w": 273,
+      "bbox_h": 253,
+      "sample_classes": "cell",
+      "sample_text": "dec.registration",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(txt)[][128x64]",
+      "sig_hash": "7194cb4ee0be2b66",
+      "bbox_w": 140,
+      "bbox_h": 90,
+      "sample_classes": "lab",
+      "sample_text": "FUTURE",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[]<1>[512x96]{div(txt)[][512x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][0x0],span(txt)[][64x0],span(txt)[][64x0]}",
+      "sig_hash": "d697611d70a3b756",
+      "bbox_w": 561,
+      "bbox_h": 96,
+      "sample_classes": "cell",
+      "sample_text": "data.logo-cloud",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[]<1>[512x192]{div(txt)[][512x0],span(txt)[][64x0],span(txt+txtc)[][64x0],span(txt+txtc)[][64x0],span(txt+txtc)[][64x0],span(txt+txtc)[][64x0],span(txt+txtc)[][64x0],span(txt+txtc)[][64x0]}",
+      "sig_hash": "3ceb14e028d4b248",
+      "bbox_w": 561,
+      "bbox_h": 208,
+      "sample_classes": "cell",
+      "sample_text": "data.ticker",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[]<1>[256x192]{div(txt)[][192x0],div(txt)[][192x32],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],i(bg)[][0x0],span(txt)[][64x0]}",
+      "sig_hash": "840e76cbeda1dca7",
+      "bbox_w": 273,
+      "bbox_h": 208,
+      "sample_classes": "cell",
+      "sample_text": "data.heatmap",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "svg(svg/10)[]<10>[192x96]",
+      "sig_hash": "38ae5c3805d4f17b",
+      "bbox_w": 235,
+      "bbox_h": 100,
+      "sample_classes": "",
+      "sample_text": "",
+      "n_occurrences": 1
+    }
+  ],
+  "compat_matrix_version": "2",
+  "compat_matrix_summary": {
+    "native": 40,
+    "raster": 20,
+    "partial": 7,
+    "unsupported": 1,
+    "planned": 13
+  },
+  "editability_passed": true,
+  "editability_intended_total": 455,
+  "editability_actual_total": 560,
+  "editability_failing_slides": []
+}

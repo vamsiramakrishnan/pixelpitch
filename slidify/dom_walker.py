@@ -451,6 +451,8 @@ _WALKER_JS_TEMPLATE = r"""
             aria_label: el.getAttribute('aria-label'),
             stable_selector: buildStableSelector(el),
             decorate_hint: ds.slidifyDecorate || '',
+            data_atom: ds.atom || '',
+            allow_overflow: ds.pptxAllowOverflow === 'true',
         });
 
         // If we captured this element as a text container, don't recurse —
@@ -554,6 +556,8 @@ async def walk(page: Page) -> list[DomElement]:
                 aria_label=entry["aria_label"],
                 stable_selector=entry["stable_selector"],
                 decorate_hint=entry.get("decorate_hint", ""),
+                data_atom=entry.get("data_atom", ""),
+                allow_overflow=entry.get("allow_overflow", False),
             )
         )
     return elements

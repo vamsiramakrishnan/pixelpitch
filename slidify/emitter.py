@@ -68,6 +68,29 @@ def _apply_explicit_autofit(
     norm.set("fontScale", str(font_scale_pct))
     norm.set("lnSpcReduction", str(line_space_reduction_pct))
 
+
+def _ensure_default_normautofit(text_frame) -> None:
+    """Default-on safety net: emit a parameter-free ``<a:normAutofit/>`` on
+    every text frame that doesn't already have an explicit autofit element.
+
+    With this, a textbox whose body text exceeds its frame at runtime
+    (because the slide author over-budgeted, the font fell back to a wider
+    family, or both) shrinks instead of clipping. The compile-time
+    overflow detector still surfaces the design bug; this is the runtime
+    rescue so the PPTX never displays clipped text in slideshow mode.
+
+    Skipped if any autofit child element is already present — callers
+    that have *measured* the right shrink (see ``_apply_explicit_autofit``)
+    win, because their value is more accurate than PowerPoint's heuristic.
+    """
+    bodyPr = text_frame._txBody.bodyPr
+    for tag in ("normAutofit", "spAutoFit", "noAutofit"):
+        if bodyPr.find(f"{{{_A_NS}}}{tag}") is not None:
+            return
+    from lxml import etree as _et
+
+    _et.SubElement(bodyPr, f"{{{_A_NS}}}normAutofit")
+
 log = structlog.get_logger(__name__)
 
 
@@ -467,6 +490,7 @@ class Emitter:
         tf.margin_right = Emu(0)
         tf.margin_top = Emu(0)
         tf.margin_bottom = Emu(0)
+        _ensure_default_normautofit(tf)
         # PowerPoint substitutes Inter/etc with Calibri when the source font
         # isn't installed — Calibri is wider, so big headlines that fit in 3
         # lines in Chromium can overflow into the lede below in PowerPoint.
@@ -591,6 +615,7 @@ class Emitter:
         tf.margin_right = Emu(0)
         tf.margin_top = Emu(0)
         tf.margin_bottom = Emu(0)
+        _ensure_default_normautofit(tf)
         # Per-element font-metrics + wrap policy.
         font_scale = 1.0
         try:
@@ -781,6 +806,7 @@ class Emitter:
         tf.margin_right = Emu(0)
         tf.margin_top = Emu(0)
         tf.margin_bottom = Emu(0)
+        _ensure_default_normautofit(tf)
         # PowerPoint substitutes Inter/etc with Calibri when the source font
         # isn't installed — Calibri is wider, so big headlines that fit in 3
         # lines in Chromium can overflow into the lede below in PowerPoint.
