@@ -1,0 +1,102 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`dataGaugeToIR > emits a snapshot-stable 65/100 gauge 1`] = `
+{
+  "bbox": {
+    "h": 120,
+    "w": 200,
+    "x": 0,
+    "y": 0,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 120,
+        "w": 200,
+        "x": 0,
+        "y": 0,
+      },
+      "commands": [
+        {
+          "op": "M",
+          "x": 8,
+          "y": 111.99999999999999,
+        },
+        {
+          "largeArc": false,
+          "op": "A",
+          "rx": 92,
+          "ry": 92,
+          "sweep": true,
+          "x": 192,
+          "xAxisRotationDeg": 0,
+          "y": 112,
+        },
+      ],
+      "fillRule": "nonzero",
+      "kind": "path",
+      "metadata": {
+        "role": "gauge-track",
+      },
+      "recipeId": "data.gauge.track",
+      "strokeColor": {
+        "alpha": 0.18,
+        "hex": "#a1a1aa",
+      },
+      "strokeLinecap": "round",
+      "strokeLinejoin": "round",
+      "strokeWidthPx": 8,
+      "zOrder": 0,
+    },
+    {
+      "bbox": {
+        "h": 120,
+        "w": 200,
+        "x": 0,
+        "y": 0,
+      },
+      "commands": [
+        {
+          "op": "M",
+          "x": 8,
+          "y": 111.99999999999999,
+        },
+        {
+          "largeArc": false,
+          "op": "A",
+          "rx": 92,
+          "ry": 92,
+          "sweep": true,
+          "x": 141.7671259760383,
+          "xAxisRotationDeg": 0,
+          "y": 30.027399774670158,
+        },
+      ],
+      "fillRule": "nonzero",
+      "kind": "path",
+      "metadata": {
+        "max": 100,
+        "role": "gauge-value",
+        "value": 65,
+      },
+      "recipeId": "data.gauge.value",
+      "strokeColor": "#a78bfa",
+      "strokeLinecap": "round",
+      "strokeLinejoin": "round",
+      "strokeWidthPx": 8,
+      "zOrder": 10,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "data",
+    "max": 100,
+    "role": "data.gauge",
+    "sweepDeg": 180,
+    "thicknessPx": 8,
+    "value": 65,
+  },
+  "recipeId": "data.gauge",
+  "zOrder": 0,
+}
+`;

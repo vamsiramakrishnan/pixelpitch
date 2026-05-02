@@ -65,3 +65,49 @@ export type { DiagramConnectorProps, ConnectorKind } from './DiagramConnector';
 
 export { default as DiagramTimeline, diagramTimelineToIR } from './DiagramTimeline';
 export type { DiagramTimelineProps, TimelineEvent } from './DiagramTimeline';
+
+// ---------------------------------------------------------------------------
+// M3.5 — prop-compatible primitives (replace ghost-delegations).
+// ---------------------------------------------------------------------------
+
+export { default as SurfaceShapeFill, surfaceShapeFillToIR } from './SurfaceShapeFill';
+export type { SurfaceShapeFillProps, SurfaceShape } from './SurfaceShapeFill';
+
+export { default as SurfacePatternTile, surfacePatternTileToIR } from './SurfacePatternTile';
+export type { SurfacePatternTileProps, PatternKind } from './SurfacePatternTile';
+
+export { default as SurfaceRadialBlob, surfaceRadialBlobToIR } from './SurfaceRadialBlob';
+export type { SurfaceRadialBlobProps, BlobIntensity, BlobShape } from './SurfaceRadialBlob';
+
+export { default as SurfaceLinearFade, surfaceLinearFadeToIR } from './SurfaceLinearFade';
+export type { SurfaceLinearFadeProps, FadeDirection } from './SurfaceLinearFade';
+
+export { default as DecorationShapePreset, decorationShapePresetToIR } from './DecorationShapePreset';
+export type { DecorationShapePresetProps, ShapePreset } from './DecorationShapePreset';
+
+export { default as DecorationLineStroke, decorationLineStrokeToIR } from './DecorationLineStroke';
+export type { DecorationLineStrokeProps, LineOrientation, LineDash } from './DecorationLineStroke';
+
+export { default as DataDeltaBadge, dataDeltaBadgeToIR } from './DataDeltaBadge';
+export type { DataDeltaBadgeProps, DeltaDirection, DeltaSize, DeltaTone } from './DataDeltaBadge';
+
+export { default as DataHeatmap, dataHeatmapToIR } from './DataHeatmap';
+export type { DataHeatmapProps } from './DataHeatmap';
+
+export { default as DataGauge, dataGaugeToIR } from './DataGauge';
+export type { DataGaugeProps } from './DataGauge';
+
+export { default as DiagramFlowStep, diagramFlowStepToIR } from './DiagramFlowStep';
+export type { DiagramFlowStepProps, FlowStepShape } from './DiagramFlowStep';
+
+export { default as ChromeWindowFrame, chromeWindowFrameToIR } from './ChromeWindowFrame';
+export type { ChromeWindowFrameProps, WindowChromeKind, WindowFrameTheme } from './ChromeWindowFrame';
+
+export { default as ChromeDeviceFrame, chromeDeviceFrameToIR } from './ChromeDeviceFrame';
+export type { ChromeDeviceFrameProps, DeviceKind } from './ChromeDeviceFrame';
+
+export { default as AnnotationLeaderLine, annotationLeaderLineToIR } from './AnnotationLeaderLine';
+export type { AnnotationLeaderLineProps, LeaderPoint } from './AnnotationLeaderLine';
+
+export { default as AnnotationBadge, annotationBadgeToIR } from './AnnotationBadge';
+export type { AnnotationBadgeProps, BadgeKind, BadgeTone } from './AnnotationBadge';

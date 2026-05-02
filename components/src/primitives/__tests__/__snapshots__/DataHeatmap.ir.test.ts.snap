@@ -1,0 +1,259 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`dataHeatmapToIR > emits a snapshot-stable 3x3 heatmap 1`] = `
+{
+  "bbox": {
+    "h": 90,
+    "w": 90,
+    "x": 0,
+    "y": 0,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 28.666666666666668,
+        "w": 28.666666666666668,
+        "x": 0,
+        "y": 0,
+      },
+      "borderRadiusPx": 2,
+      "fill": {
+        "color": {
+          "alpha": 0.05,
+          "hex": "#a1a1aa",
+        },
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "col": 0,
+        "role": "heatmap-cell",
+        "row": 0,
+        "value": 0,
+      },
+      "recipeId": "data.heatmap.cell-1-1",
+      "shape": "rounded-rect",
+      "zOrder": 0,
+    },
+    {
+      "bbox": {
+        "h": 28.666666666666668,
+        "w": 28.666666666666668,
+        "x": 30.666666666666668,
+        "y": 0,
+      },
+      "borderRadiusPx": 2,
+      "fill": {
+        "color": {
+          "alpha": 0.2875,
+          "hex": "#a39cbe",
+        },
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "col": 1,
+        "role": "heatmap-cell",
+        "row": 0,
+        "value": 0.25,
+      },
+      "recipeId": "data.heatmap.cell-1-2",
+      "shape": "rounded-rect",
+      "zOrder": 10,
+    },
+    {
+      "bbox": {
+        "h": 28.666666666666668,
+        "w": 28.666666666666668,
+        "x": 61.333333333333336,
+        "y": 0,
+      },
+      "borderRadiusPx": 2,
+      "fill": {
+        "color": {
+          "alpha": 0.525,
+          "hex": "#a496d2",
+        },
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "col": 2,
+        "role": "heatmap-cell",
+        "row": 0,
+        "value": 0.5,
+      },
+      "recipeId": "data.heatmap.cell-1-3",
+      "shape": "rounded-rect",
+      "zOrder": 20,
+    },
+    {
+      "bbox": {
+        "h": 28.666666666666668,
+        "w": 28.666666666666668,
+        "x": 0,
+        "y": 30.666666666666668,
+      },
+      "borderRadiusPx": 2,
+      "fill": {
+        "color": {
+          "alpha": 0.525,
+          "hex": "#a496d2",
+        },
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "col": 0,
+        "role": "heatmap-cell",
+        "row": 1,
+        "value": 0.5,
+      },
+      "recipeId": "data.heatmap.cell-2-1",
+      "shape": "rounded-rect",
+      "zOrder": 30,
+    },
+    {
+      "bbox": {
+        "h": 28.666666666666668,
+        "w": 28.666666666666668,
+        "x": 30.666666666666668,
+        "y": 30.666666666666668,
+      },
+      "borderRadiusPx": 2,
+      "fill": {
+        "color": {
+          "alpha": 0.7625,
+          "hex": "#a691e6",
+        },
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "col": 1,
+        "role": "heatmap-cell",
+        "row": 1,
+        "value": 0.75,
+      },
+      "recipeId": "data.heatmap.cell-2-2",
+      "shape": "rounded-rect",
+      "zOrder": 40,
+    },
+    {
+      "bbox": {
+        "h": 28.666666666666668,
+        "w": 28.666666666666668,
+        "x": 61.333333333333336,
+        "y": 30.666666666666668,
+      },
+      "borderRadiusPx": 2,
+      "fill": {
+        "color": {
+          "alpha": 1,
+          "hex": "#a78bfa",
+        },
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "col": 2,
+        "role": "heatmap-cell",
+        "row": 1,
+        "value": 1,
+      },
+      "recipeId": "data.heatmap.cell-2-3",
+      "shape": "rounded-rect",
+      "zOrder": 50,
+    },
+    {
+      "bbox": {
+        "h": 28.666666666666668,
+        "w": 28.666666666666668,
+        "x": 0,
+        "y": 61.333333333333336,
+      },
+      "borderRadiusPx": 2,
+      "fill": {
+        "color": {
+          "alpha": 1,
+          "hex": "#a78bfa",
+        },
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "col": 0,
+        "role": "heatmap-cell",
+        "row": 2,
+        "value": 1,
+      },
+      "recipeId": "data.heatmap.cell-3-1",
+      "shape": "rounded-rect",
+      "zOrder": 60,
+    },
+    {
+      "bbox": {
+        "h": 28.666666666666668,
+        "w": 28.666666666666668,
+        "x": 30.666666666666668,
+        "y": 61.333333333333336,
+      },
+      "borderRadiusPx": 2,
+      "fill": {
+        "color": {
+          "alpha": 0.7625,
+          "hex": "#a691e6",
+        },
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "col": 1,
+        "role": "heatmap-cell",
+        "row": 2,
+        "value": 0.75,
+      },
+      "recipeId": "data.heatmap.cell-3-2",
+      "shape": "rounded-rect",
+      "zOrder": 70,
+    },
+    {
+      "bbox": {
+        "h": 28.666666666666668,
+        "w": 28.666666666666668,
+        "x": 61.333333333333336,
+        "y": 61.333333333333336,
+      },
+      "borderRadiusPx": 2,
+      "fill": {
+        "color": {
+          "alpha": 0.05,
+          "hex": "#a1a1aa",
+        },
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "col": 2,
+        "role": "heatmap-cell",
+        "row": 2,
+        "value": 0,
+      },
+      "recipeId": "data.heatmap.cell-3-3",
+      "shape": "rounded-rect",
+      "zOrder": 80,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "data",
+    "cols": 3,
+    "cornerPx": 2,
+    "gapPx": 2,
+    "role": "data.heatmap",
+    "rows": 3,
+  },
+  "recipeId": "data.heatmap",
+  "zOrder": 0,
+}
+`;
