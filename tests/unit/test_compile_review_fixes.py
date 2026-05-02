@@ -160,3 +160,119 @@ def test_fetch_picture_base64_data_uri_decodes_payload():
     )
     out2 = _fetch_picture(f"data:image/png;base64,{png_b64}")
     assert out2 == base64.b64decode(png_b64)
+
+
+# ---- Callout pointer adjustments --------------------------------------------
+
+
+def test_callout_bubble_pointer_writes_avLst_adjustments(tmp_path):
+    """`callout-bubble` with pointerSide+offset+length must emit an
+    `<a:avLst>` carrying two `<a:gd>` entries (adj1, adj2) so the
+    pointer geometry survives PowerPoint round-trip.
+
+    Sanity check on `_apply_callout_adjustments` — without it, the
+    callout renders with default pointer position regardless of IR.
+    """
+    node = IRShapeNode(
+        kind="shape",
+        recipeId="shape.callout",
+        bbox=IRBbox(x=0, y=0, w=200, h=120),
+        shape="callout-bubble",
+        fill=FillSolid(kind="solid", color="#16162a"),
+        calloutPointerSide="bottom",
+        calloutPointerOffset=0.5,
+        calloutPointerLengthPx=24.0,
+    )
+    prs = _compile_one(node, tmp_path)
+    _, sp_pr = _shape_sp_pr(prs)
+    prst_geom = sp_pr.find(f"{{{NS_A}}}prstGeom")
+    assert prst_geom is not None
+    av_lst = prst_geom.find(f"{{{NS_A}}}avLst")
+    assert av_lst is not None, "callout-bubble must carry an <a:avLst>"
+    gds = av_lst.findall(f"{{{NS_A}}}gd")
+    assert len(gds) >= 2, (
+        f"expected ≥2 <a:gd> adjustment entries, got {len(gds)} — "
+        "_apply_callout_adjustments may not have written them"
+    )
+    # Both gd entries should have a numeric `fmla` reference.
+    for gd in gds[:2]:
+        fmla = gd.get("fmla", "")
+        assert "val " in fmla, f"unexpected fmla format: {fmla!r}"
+
+
+def test_callout_bubble_no_pointer_fields_no_adjustments(tmp_path):
+    """When all pointer fields are None, _apply_callout_adjustments
+    early-returns; the callout uses default geometry.
+    """
+    node = IRShapeNode(
+        kind="shape",
+        recipeId="shape.callout-default",
+        bbox=IRBbox(x=0, y=0, w=200, h=120),
+        shape="callout-bubble",
+        fill=FillSolid(kind="solid", color="#16162a"),
+        # all callout fields default to None
+    )
+    prs = _compile_one(node, tmp_path)
+    _, sp_pr = _shape_sp_pr(prs)
+    # The shape still emits, just without authored pointer geometry.
+    assert sp_pr.find(f"{{{NS_A}}}prstGeom") is not None
+
+
+# ---- Multi-shadow z-order ---------------------------------------------------
+
+
+def test_multi_shadow_z_order_primary_above_siblings(tmp_path):
+    """When a shape has 3+ shadows, the leftover shadow rects must sit
+    BELOW the primary shape in the spTree so the soft halos don't
+    occlude the primary's edges. Regression for the bug where leftover
+    rects rendered on top of the primary, producing visible darkening.
+    """
+    from slidify.ir import IRBoxShadow
+
+    node = IRShapeNode(
+        kind="shape",
+        recipeId="shape.multi-shadow",
+        bbox=IRBbox(x=100, y=100, w=200, h=200),
+        shape="rounded-rect",
+        borderRadiusPx=12,
+        fill=FillSolid(kind="solid", color="#16162a"),
+        shadows=[
+            IRBoxShadow(offsetX=0, offsetY=4, blur=8, spread=0,
+                        color="#000000", inset=False),
+            IRBoxShadow(offsetX=0, offsetY=12, blur=24, spread=0,
+                        color="#000000", inset=False),
+            IRBoxShadow(offsetX=0, offsetY=24, blur=48, spread=0,
+                        color="#000000", inset=False),
+        ],
+    )
+    prs = _compile_one(node, tmp_path)
+    P_NS = "http://schemas.openxmlformats.org/presentationml/2006/main"
+    sp_tree = prs.slides[0].shapes._spTree
+    # Iterate <p:sp> children of spTree (skip non-shape elements like
+    # nvGrpSpPr). The primary shape is the one whose spPr.extLst carries
+    # the slidify recipeId extension matching our recipe.
+    sp_children = sp_tree.findall(f"{{{P_NS}}}sp")
+    primary_idx = None
+    for i, sp in enumerate(sp_children):
+        sp_pr = sp.find(f"{{{P_NS}}}spPr")
+        if sp_pr is None:
+            continue
+        ext_lst = sp_pr.find(f"{{{NS_A}}}extLst")
+        if ext_lst is None:
+            continue
+        for ext in ext_lst.findall(f"{{{NS_A}}}ext"):
+            if ext.get("uri") != "https://slidify.dev/2026/recipe":
+                continue
+            rid = ext.find("{https://slidify.dev/2026/recipe}recipeId")
+            if rid is not None and rid.text == "shape.multi-shadow":
+                primary_idx = i
+    assert primary_idx is not None, "primary shape not found in spTree"
+    # Primary should be at the END of the <p:sp> sequence: all sibling
+    # shadow rects come BEFORE it. With 3 shadows, the native pair takes
+    # one outer slot on the primary shape, and ONE leftover spills as a
+    # sibling rect. Background shape + sibling = 2 shapes before primary;
+    # primary should be the last (index n-1).
+    assert primary_idx == len(sp_children) - 1, (
+        f"primary shape at index {primary_idx} of {len(sp_children)} "
+        f"shapes; should be last so its halos render beneath it"
+    )

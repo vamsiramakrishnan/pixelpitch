@@ -41,6 +41,7 @@ from slidify.effects import apply_shadow_stack
 from slidify.fonts import resolve as resolve_font
 from slidify.geom import (
     SLIDE_H_EMU,
+    SLIDE_H_PX,
     SLIDE_W_EMU,
     SLIDE_W_PX,
     px_to_emu,
@@ -458,7 +459,7 @@ class _IRCompiler:
             pass
 
     def _emit_picture(self, slide, node: IRPictureNode) -> None:
-        bbox = node.bbox or IRBbox(x=0, y=0, w=SLIDE_W_PX, h=720)
+        bbox = node.bbox or IRBbox(x=0, y=0, w=SLIDE_W_PX, h=SLIDE_H_PX)
         x, y, w, h = _emu_rect(bbox)
 
         # Rounded-rect clip on a picture: emit as a ROUNDED_RECTANGLE
@@ -604,7 +605,7 @@ class _IRCompiler:
             log.warning("compile_ir.mask_overlay_failed", error=str(e))
 
     def _emit_raster(self, slide, node: IRRasterNode) -> None:
-        bbox = node.bbox or IRBbox(x=0, y=0, w=SLIDE_W_PX, h=720)
+        bbox = node.bbox or IRBbox(x=0, y=0, w=SLIDE_W_PX, h=SLIDE_H_PX)
         # Escape-hatch detour: detect, render-if-empty, embed, stamp metadata,
         # and bookkeep for `report.escapeRate`. The detection key is
         # `metadata.role == 'escape-hatch'` (set by EscapeHatch's TSX
@@ -818,7 +819,7 @@ class _IRCompiler:
             Emu(SLIDE_H_EMU),
         )
         shape.line.fill.background()
-        bg_bbox = IRBbox(x=0, y=0, w=SLIDE_W_PX, h=720)
+        bg_bbox = IRBbox(x=0, y=0, w=SLIDE_W_PX, h=SLIDE_H_PX)
         if isinstance(fill, IRPatternFill):
             apply_pattern_fill(shape, fill, slide=slide, bbox=bg_bbox)
         else:
@@ -1254,12 +1255,20 @@ def _apply_arrowheads(shape, marker_start, marker_end) -> None:
 def _apply_text_warp(shape, on_path) -> None:
     """Attach an `<a:prstTxWarp prst=…>` to a textbox's bodyPr.
 
-    Falls through silently when the path doesn't map to a known preset
-    (raster fallback per §9.1 is a stub for Wave-2).
+    Falls back to straight text when the path doesn't map to a known
+    preset (raster fallback per §9.1 is a stub for Wave-2). Logs at
+    `warning` level so the lossy fallback is visible by default — users
+    were previously seeing "straight text" without knowing they
+    requested a curve.
     """
     preset = detect_prst_txwarp(on_path.commands)
     if preset is None:
-        log.info("compile_ir.text_on_path_raster_fallback_pending")
+        log.warning(
+            "compile_ir.text_on_path_warp_fallback",
+            n_commands=len(on_path.commands),
+            note="arbitrary onPath paths fall back to straight text "
+                 "until §9.1 raster fallback ships",
+        )
         return
     try:
         body_pr = shape._element.txBody.bodyPr

@@ -130,6 +130,19 @@ def apply_shadow_stack(
     out: list = []
     for sh in leftover:
         out.append(_add_sibling_rect_with_shadow(slide, parent_bbox, sh))
+    # Z-order fix: leftover shadow rects were appended AFTER `shape`, so
+    # their soft halos render ON TOP of the primary shape — producing
+    # visible darkening around the perimeter for outer shadows. Move
+    # `shape` to the end of the spTree so the halos sit beneath it,
+    # matching the manual sibling-rect-before-base ordering used by
+    # StatCardWithDepth.tsx (the original spec exemplar).
+    try:
+        sp_tree = shape._element.getparent()
+        if sp_tree is not None:
+            sp_tree.remove(shape._element)
+            sp_tree.append(shape._element)
+    except Exception:
+        pass
     return out
 
 

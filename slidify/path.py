@@ -131,20 +131,33 @@ def _expand_command(
 
 
 def _flatten(commands) -> list[tuple[str, list[float]]]:
-    """Walk command list once, expanding A → cubics and tracking current point."""
+    """Walk command list once, expanding A → cubics and tracking current point.
+
+    OOXML `<a:close/>` ends a subpath; subsequent draw ops without a
+    fresh `<a:moveTo>` are malformed. SVG/CSS, by contrast, treat a
+    post-Z `L` as drawing from the subpath start. Bridge the two by
+    synthesizing a `moveTo(start)` whenever a draw op appears without
+    an open subpath. Same logic also handles the (malformed but
+    plausible) case of an L/C/Q at the very start with no preceding M.
+    """
     out: list[tuple[str, list[float]]] = []
     cur_x = 0.0
     cur_y = 0.0
     start_x = 0.0
     start_y = 0.0
+    subpath_open = False
     for cmd in commands:
         prims = _expand_command(cur_x, cur_y, cmd)
         for prim in prims:
             op, coords = prim
+            if op in ("L", "C", "Q") and not subpath_open:
+                out.append(("M", [start_x, start_y]))
+                subpath_open = True
             out.append(prim)
             if op == "M":
                 cur_x, cur_y = coords[0], coords[1]
                 start_x, start_y = cur_x, cur_y
+                subpath_open = True
             elif op == "L":
                 cur_x, cur_y = coords[0], coords[1]
             elif op == "C":
@@ -153,6 +166,7 @@ def _flatten(commands) -> list[tuple[str, list[float]]]:
                 cur_x, cur_y = coords[2], coords[3]
             elif op == "Z":
                 cur_x, cur_y = start_x, start_y
+                subpath_open = False
     return out
 
 

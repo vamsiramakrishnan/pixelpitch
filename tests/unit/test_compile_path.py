@@ -440,3 +440,60 @@ def test_path_odd_length_dasharray_doubles_per_svg_spec(tmp_path):
     expected = [(300_000, 200_000), (100_000, 300_000), (200_000, 100_000)]
     actual = [(int(c.get("d")), int(c.get("sp"))) for c in ds_children]
     assert actual == expected, f"dash sequence wrong: {actual}"
+
+
+def test_path_z_then_l_synthesizes_moveto(tmp_path):
+    """`M 0 0 L 10 10 Z L 20 20` — after Z, the next L starts a new
+    subpath. OOXML requires a fresh <a:moveTo> before any draw op once
+    <a:close/> has fired; without it, the trailing L is malformed.
+    The flattener now synthesizes a moveTo to the subpath start.
+    """
+    from slidify.path import _flatten
+
+    cmds = [
+        IRPathCommand(op="M", x=0, y=0),
+        IRPathCommand(op="L", x=10, y=10),
+        IRPathCommand(op="Z"),
+        IRPathCommand(op="L", x=20, y=20),
+    ]
+    flat = _flatten(cmds)
+    ops = [op for op, _ in flat]
+    # Sequence should be: M(0,0), L(10,10), Z, M(0,0) [synthetic], L(20,20)
+    assert ops == ["M", "L", "Z", "M", "L"], (
+        f"expected synthetic M after Z; got {ops}"
+    )
+    # The synthetic M should be at the subpath start (0, 0).
+    synthetic_m_coords = flat[3][1]
+    assert synthetic_m_coords == [0.0, 0.0], (
+        f"synthetic M should re-open subpath at start (0,0); got "
+        f"{synthetic_m_coords}"
+    )
+
+
+def test_path_dot_pattern_dropped_dots_outside_bbox(tmp_path):
+    """Dot tiler must not emit dots whose bbox extends past the host.
+
+    With diameter=20 and tile=8, a naive tiler would put the first dot
+    at (4, 4) with bbox [-6..14] in x — extending 6px past the left
+    edge. The fix clips dots whose center isn't far enough from the
+    edge to fit the diameter.
+    """
+    from slidify.ir import IRPatternFill
+    from slidify.pattern_fills import _dot_specs
+
+    bbox = IRBbox(x=0, y=0, w=100, h=100)
+    pattern = IRPatternFill(
+        kind="pattern", pattern="dots", fgColor="#ffffff",
+        tileWidthPx=8, tileHeightPx=8, featureSizePx=10,  # diameter = 20
+    )
+    specs = _dot_specs(bbox, pattern)
+    # Every dot must lie entirely within bbox.
+    for spec in specs:
+        assert spec.x >= bbox.x, f"dot {spec} extends past left edge"
+        assert spec.y >= bbox.y, f"dot {spec} extends past top edge"
+        assert spec.x + spec.diameter <= bbox.x + bbox.w + 1e-6, (
+            f"dot {spec} extends past right edge"
+        )
+        assert spec.y + spec.diameter <= bbox.y + bbox.h + 1e-6, (
+            f"dot {spec} extends past bottom edge"
+        )

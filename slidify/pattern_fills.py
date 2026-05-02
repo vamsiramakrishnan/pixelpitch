@@ -156,15 +156,28 @@ def _dot_specs(
     tile_h = max(2.0, pattern_fill.tileHeightPx)
     cols = max(1, int(math.floor(bbox.w / tile_w)))
     rows = max(1, int(math.floor(bbox.h / tile_h)))
+    # Clip each dot's bbox against the host bbox: drop dots that would
+    # extend past any edge. Without this, `featureSizePx > tileWidthPx/2`
+    # produces dots that bleed beyond the host shape, which is visually
+    # surprising and confuses downstream layout passes.
+    half = diameter / 2.0
+    x_lo = bbox.x + half
+    x_hi = bbox.x + bbox.w - half
+    y_lo = bbox.y + half
+    y_hi = bbox.y + bbox.h - half
     out: list[DotShapeSpec] = []
     for r in range(rows):
         cy = bbox.y + (r + 0.5) * tile_h
+        if cy < y_lo or cy > y_hi:
+            continue
         for c in range(cols):
             cx = bbox.x + (c + 0.5) * tile_w
+            if cx < x_lo or cx > x_hi:
+                continue
             out.append(
                 DotShapeSpec(
-                    x=cx - diameter / 2.0,
-                    y=cy - diameter / 2.0,
+                    x=cx - half,
+                    y=cy - half,
                     diameter=diameter,
                     color_hex=fg_hex,
                     alpha=fg_alpha,
