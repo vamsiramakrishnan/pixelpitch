@@ -47,6 +47,32 @@ Add `data-slidify-decorate="HINT"` to elements for layered native effects:
 
 3–6 decorated containers per slide is the sweet spot.
 
+## Atom catalog (`data-atom`)
+
+For landing-page-quality decks, prefer the **atomic seed** — a registry
+of ~70 named recipes across 10 axes (composition, background, surface,
+type, mask, decoration, data, motion, ui, annotation). Tag the cluster
+anchor with `data-atom="<id>"` and slidify routes it directly to a
+known native emit recipe (no signature inference, guaranteed cache hit).
+
+```html
+<div class="aurora" data-atom="bg.mesh">…</div>
+<h1 data-atom="type.gfill-4" data-pptx-role="title">Future.</h1>
+<svg data-atom="data.ring">…</svg>
+```
+
+Reference corpus:
+
+| File                             | What it shows |
+|----------------------------------|---------------|
+| `examples/landing/atoms.html`    | Parts catalog — every atom labeled with its `data-atom` id |
+| `examples/landing/recipes.html`  | 16 award-winning compositions, manifest-tagged with `data-atom-uses` |
+| `examples/landing/fonts.html`    | Eight typographic registers, same headline |
+| `examples/landing/probe.html`    | Constraint envelope: which primitives survive native emit |
+
+Full grammar (10 axes, ~70 atoms, viewport math, font registers): see
+the **slide-author** skill (`.claude/skills/slide-author/SKILL.md`).
+
 ## What forces a raster (avoid)
 
 * CSS `filter: blur()` on visible elements
@@ -66,9 +92,31 @@ and footer (label + page number).
 ## Verification loop
 
 ```bash
-slidify convert slide.html out.pptx --json | jq '.native_area_ratio'
+slidify convert slide.html out.pptx --report-json report.json --quiet
+slidify field report.json native_area_ratio   # target: ≥ 0.85
+slidify field report.json overflow_elements   # target: []   ← every entry is an authoring bug
+slidify field report.json editability_passed  # target: true ← shapes survived to disk
 ```
 
 * `native_area_ratio ≥ 0.85` → excellent, mostly editable
 * `0.6 – 0.85` → good, some raster fallbacks
 * `< 0.6` → revisit: probably background images, blurs, or unsupported SVG
+
+When `overflow_elements` is non-empty, each row carries an atom-aware
+`hint` field naming the smallest fix (shrink the type, swap the row,
+mark the bleed intentional). The CLI summary surfaces up to three
+unique hints so you can act without opening the report.
+
+The pipeline applies three smarts behind the scenes so well-formed atoms
+don't trip false warnings:
+
+1. **Allow-overflow inheritance** — descendants of `type.echo`,
+   `type.longshadow`, `type.marquee`, `motion.echo`, `motion.marquee`,
+   and `motion.speed-lines` automatically inherit
+   `data-pptx-allow-overflow="true"`. Ghost trails and marquee tapes
+   bleed by design; you don't tag every leaf span.
+2. **SVG line / path counted as editable** — the round-trip checker
+   credits `MSO_SHAPE_TYPE.LINE` and `FREEFORM` toward the per-slide
+   editable budget. Blueprint and dashboard recipes don't false-fail.
+3. **Atom-keyed authoring hints** — overflow reports walk up the DOM to
+   find the nearest `data-atom` and attach a one-line fix.

@@ -159,7 +159,34 @@ classification. See spec §10. Examples:
 <canvas data-pptx-rasterize="true">…</canvas>
 <div data-pptx-skip="true">debug overlay</div>
 <div data-pptx-text="Q1 results">Q1 sales numbers</div>
+<div data-pptx-allow-overflow="true">aurora bleed by design</div>
 ```
+
+## Atomic seed (landing-page-quality decks)
+
+For decks that need to look like a designer touched every gradient,
+slidify ships an **atomic seed** — ~70 named recipes across 10 axes,
+matched by `data-atom="<id>"` on the cluster anchor. The matcher
+short-circuits to the recipe and emits natively, with cache hits on
+repeat runs.
+
+```html
+<div data-atom="bg.mesh">…</div>
+<h1 data-atom="type.gfill-4" data-pptx-role="title">Future.</h1>
+<svg data-atom="data.ring">…</svg>
+```
+
+| Reference                          | What it shows |
+|------------------------------------|---------------|
+| [`examples/landing/atoms.html`](examples/landing/atoms.html)     | Parts catalog — every atom labeled with its `data-atom` id |
+| [`examples/landing/recipes.html`](examples/landing/recipes.html) | **16 award-winning compositions** (hero / chapter / manifesto / magazine / bento / anatomy / spec / process / ticker / longshadow / dashboard / testimonials / echo / marquee / team / closing CTA) |
+| [`examples/landing/fonts.html`](examples/landing/fonts.html)     | Eight typographic registers, same headline |
+| [`examples/landing/probe.html`](examples/landing/probe.html)     | Constraint envelope — which primitives survive native emit |
+
+Authoring grammar — viewport math, font registers, the 10 axes, and the
+pipeline-side rules (allow-overflow inheritance for echo / longshadow /
+marquee, native-line editability accounting, atom-keyed authoring hints) —
+lives in the [`slide-author`](.claude/skills/slide-author/SKILL.md) skill.
 
 ## Layout
 

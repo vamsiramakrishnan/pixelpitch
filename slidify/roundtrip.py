@@ -117,13 +117,20 @@ def _actual_counts(slide) -> dict[str, int]:
                 # we count them in their own bucket above and exclude from
                 # n_editable to avoid double-counting against intent.
                 continue
-            if shp.shape_type == MSO_SHAPE_TYPE.AUTO_SHAPE:
-                n_editable += 1
-                continue
-            if shp.shape_type == MSO_SHAPE_TYPE.TEXT_BOX:
-                n_editable += 1
-                continue
-            if shp.shape_type == MSO_SHAPE_TYPE.GROUP:
+            # Every native vector primitive counts as editable: AUTO_SHAPE
+            # (rect/oval/preset), TEXT_BOX, GROUP, plus LINE / FREEFORM /
+            # CONNECTOR — these last three are emitted by NativeSvg for
+            # `<line>`, `<path>`, and `<polyline>` and remain individually
+            # selectable & editable in PowerPoint. Omitting them caused
+            # decks dense in SVG (echo trails, blueprints, sparkbars) to
+            # spuriously fail the round-trip check.
+            if shp.shape_type in (
+                MSO_SHAPE_TYPE.AUTO_SHAPE,
+                MSO_SHAPE_TYPE.TEXT_BOX,
+                MSO_SHAPE_TYPE.GROUP,
+                MSO_SHAPE_TYPE.LINE,
+                MSO_SHAPE_TYPE.FREEFORM,
+            ):
                 n_editable += 1
                 continue
         except Exception:

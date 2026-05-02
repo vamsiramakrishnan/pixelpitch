@@ -207,6 +207,14 @@ def _next_steps(result) -> list[str]:
     next. Order matters — most-actionable first.
     """
     hints: list[str] = []
+    if result.overflow_elements:
+        slide_ids = sorted({o.slide_index + 1 for o in result.overflow_elements})
+        hints.append(
+            f"{len(result.overflow_elements)} overflow element(s) on slide(s) "
+            f"{', '.join(map(str, slide_ids))}. "
+            "Read each row's `hint` in --report-json (overflow_elements[].hint) "
+            "for an atom-aware fix."
+        )
     if not result.editability_passed and result.editability_failing_slides:
         hints.append(
             "Editability drift — re-render the failing slides individually:  "
@@ -294,6 +302,29 @@ def _print_summary(result) -> None:
                 D("  Slides with dropped shapes: ")
                 + ", ".join(str(i) for i in result.editability_failing_slides)
             )
+    if result.overflow_elements:
+        n = len(result.overflow_elements)
+        worst = max(o.overflow_px for o in result.overflow_elements)
+        click.echo(
+            f"{'Overflow':<22}"
+            + Y(f"{n} element(s)")
+            + D(f"  worst={worst:.0f}px")
+        )
+        # Surface up to three atom-aware authoring hints — enough to fix the
+        # common case without flooding the summary on a busy deck.
+        seen_hints: set[str] = set()
+        shown = 0
+        for o in result.overflow_elements:
+            if not o.hint or o.hint in seen_hints:
+                continue
+            seen_hints.add(o.hint)
+            shown += 1
+            if shown > 3:
+                click.echo(
+                    D(f"  …and {n - shown + 1} more — see overflow_elements in --report-json")
+                )
+                break
+            click.echo(D(f"  slide {o.slide_index + 1} {o.axis}: ") + o.hint)
     if result.unmatched_signatures:
         click.echo(
             D(f"Unmatched signatures  {len(result.unmatched_signatures)} "

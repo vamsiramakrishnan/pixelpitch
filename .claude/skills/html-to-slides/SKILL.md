@@ -117,6 +117,17 @@ The TL;DR:
 For deeper authoring guidance, the `slide-generator` agent in this repo is
 tuned for slidify and will produce dense, native-emit-friendly HTML.
 
+For **landing-page-quality** decks (hero / chapter / dashboard / closing
+CTA / etc.), use the `slide-author` skill — it teaches the **atomic seed**
+grammar (10 axes × ~70 atoms × 8 typographic registers) so the produced
+HTML stays inside the slidify native envelope and never overflows the
+1280×720 frame. The reference corpus lives at:
+
+* `examples/landing/atoms.html` — parts catalog with every `data-atom` id
+* `examples/landing/recipes.html` — 16 award-winning compositions
+* `examples/landing/fonts.html` — eight typographic registers
+* `examples/landing/probe.html` — constraint envelope
+
 ## Reading the result
 
 ```jsonc
@@ -128,6 +139,7 @@ tuned for slidify and will produce dense, native-emit-friendly HTML.
   "editability_passed":   true,     // false → shapes silently dropped
   "editability_failing_slides": [],
   "fidelity_reports":     [{"slide_index":0,"ssim":0.961,"ocr_recall":1.0,"passed":true}, ...],
+  "overflow_elements":    [{"slide_index":3,"axis":"bottom","overflow_px":135.0,"data_atom":"type.dropcap","hint":"atom `type.dropcap`: lower the ::first-letter font-size or widen the body's container."}, ...],
   "unmatched_signatures": [...],    // Tier-0 candidates for the harvester
   "_next":                [...]     // concrete follow-up commands
 }
@@ -140,7 +152,13 @@ Decision rules for the agent:
 2. `native_area_ratio < 0.6` → the deck is mostly raster. Use
    `slidify guide authoring --section "What forces a raster"` to find
    common offenders, fix HTML, retry.
-3. `unmatched_signatures` non-empty AND user owns the corpus → suggest
+3. `overflow_elements` non-empty → each row carries a `hint` field with
+   the smallest authoring fix (atom-keyed when an atom is implicated,
+   viewport-math reminder otherwise). Apply the hint, re-render, retry.
+   The pipeline already auto-allows overflow for `type.echo`,
+   `type.longshadow`, `type.marquee`, and the `motion.*` atoms — anything
+   still listed is a real authoring bug.
+4. `unmatched_signatures` non-empty AND user owns the corpus → suggest
    running `slidify harvest <corpus_dir>` to surface new Tier-0 patterns.
 
 ## Errors come with remediation

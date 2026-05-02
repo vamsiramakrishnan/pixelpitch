@@ -327,6 +327,11 @@ class OverflowElement(BaseModel):
     data_atom: str = ""
     stable_selector: str = ""
     sample_text: str = ""
+    # Atom-aware authoring hint surfaced when the overflow can be traced to
+    # a known visual recipe — points the author at the smallest fix
+    # (shrink the row, swap to a longer-friendly atom, mark the bleed
+    # intentional). Empty when no atom is implicated.
+    hint: str = ""
 
 
 ConversionResult.model_rebuild()
