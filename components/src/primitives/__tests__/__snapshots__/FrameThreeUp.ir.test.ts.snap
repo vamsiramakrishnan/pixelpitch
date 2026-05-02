@@ -1,0 +1,71 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`frameThreeUpToIR > emits a snapshot-stable 3-up layout 1`] = `
+{
+  "bbox": {
+    "h": 400,
+    "w": 1200,
+    "x": 0,
+    "y": 0,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 400,
+        "w": 384,
+        "x": 0,
+        "y": 0,
+      },
+      "children": [],
+      "kind": "group",
+      "metadata": {
+        "index": 1,
+        "role": "three-up-col",
+      },
+      "recipeId": "frame.three-up.col-1",
+      "zOrder": 0,
+    },
+    {
+      "bbox": {
+        "h": 400,
+        "w": 384,
+        "x": 408,
+        "y": 0,
+      },
+      "children": [],
+      "kind": "group",
+      "metadata": {
+        "index": 2,
+        "role": "three-up-col",
+      },
+      "recipeId": "frame.three-up.col-2",
+      "zOrder": 10,
+    },
+    {
+      "bbox": {
+        "h": 400,
+        "w": 384,
+        "x": 816,
+        "y": 0,
+      },
+      "children": [],
+      "kind": "group",
+      "metadata": {
+        "index": 3,
+        "role": "three-up-col",
+      },
+      "recipeId": "frame.three-up.col-3",
+      "zOrder": 20,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "frame",
+    "columns": 3,
+    "gap": 24,
+    "role": "frame.three-up",
+  },
+  "recipeId": "frame.three-up",
+  "zOrder": 0,
+}
+`;
