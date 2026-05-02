@@ -1,7 +1,10 @@
 {
-  "error": "TypeError: Cannot read properties of undefined (reading 'length')",
+  "native_area_px2": 0,
+  "native_ratio": 0,
   "preset": "glass-noir",
+  "raster_nodes": 0,
   "recipe": "data.kpi-row",
-  "status": "override:emit-throws",
-  "still_throws": true
+  "root_area_px2": 921600,
+  "status": "observe",
+  "total_nodes": 1
 }

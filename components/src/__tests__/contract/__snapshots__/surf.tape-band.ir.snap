@@ -64,6 +64,7 @@
           },
           "kind": "text",
           "metadata": {
+            "label": "",
             "role": "annotation-badge-label"
           },
           "paragraphs": [
@@ -76,6 +77,7 @@
                   "fontSizePx": 14,
                   "fontWeight": 700,
                   "italic": false,
+                  "text": "",
                   "underline": false
                 }
               ]
@@ -89,6 +91,7 @@
       "metadata": {
         "axis": "annotation",
         "kind": "sticker",
+        "label": "",
         "role": "annotation.badge",
         "rotateDeg": 0,
         "tone": "info"

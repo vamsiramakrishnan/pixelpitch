@@ -1,4 +1,42 @@
 {
-  "atomId": "surf.bento-cell",
-  "error": "TypeError: Cannot read properties of undefined (reading 'map')"
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [],
+      "kind": "group",
+      "metadata": {
+        "axis": "frame",
+        "cellCount": 0,
+        "columns": 1,
+        "gap": 24,
+        "role": "frame.bento",
+        "rows": 1
+      },
+      "recipeId": "frame.bento",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "surf",
+    "bgColor": "tokens.palette.surface-2",
+    "padding": 32,
+    "primitive": "frame.bento",
+    "radius": 24,
+    "role": "surf.bento-cell",
+    "version": "1.0.0"
+  },
+  "recipeId": "surf.bento-cell",
+  "zOrder": 0
 }

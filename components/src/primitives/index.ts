@@ -66,6 +66,9 @@ export type { DiagramConnectorProps, ConnectorKind } from './DiagramConnector';
 export { default as DiagramTimeline, diagramTimelineToIR } from './DiagramTimeline';
 export type { DiagramTimelineProps, TimelineEvent } from './DiagramTimeline';
 
+export { default as EscapeHatch, escapeHatchToIR } from './EscapeHatch';
+export type { EscapeHatchProps } from './EscapeHatch';
+
 // ---------------------------------------------------------------------------
 // M3.5 — prop-compatible primitives (replace ghost-delegations).
 // ---------------------------------------------------------------------------

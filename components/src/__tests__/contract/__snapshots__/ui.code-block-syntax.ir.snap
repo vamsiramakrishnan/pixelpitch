@@ -56,6 +56,7 @@
                   "fontSizePx": 14,
                   "fontWeight": 500,
                   "italic": false,
+                  "text": "Sample",
                   "underline": false
                 }
               ]
@@ -63,12 +64,63 @@
           ],
           "recipeId": "slot.code.body",
           "zOrder": 10
+        },
+        {
+          "bbox": {
+            "h": 22,
+            "w": 92,
+            "x": 596,
+            "y": 112
+          },
+          "borderRadiusPx": 9999,
+          "fill": {
+            "color": "#16162a",
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "role": "code-lang-pill-bg"
+          },
+          "recipeId": "slot.code.lang-pill",
+          "shape": "rounded-rect",
+          "zOrder": 20
+        },
+        {
+          "bbox": {
+            "h": 22,
+            "w": 92,
+            "x": 596,
+            "y": 112
+          },
+          "kind": "text",
+          "metadata": {
+            "language": "Sample",
+            "role": "code-lang-pill-text"
+          },
+          "paragraphs": [
+            {
+              "align": "center",
+              "runs": [
+                {
+                  "color": "#a1a1aa",
+                  "fontFamily": "Inter, sans-serif",
+                  "fontSizePx": 11,
+                  "fontWeight": 600,
+                  "italic": false,
+                  "text": "SAMPLE",
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "slot.code.lang-pill",
+          "zOrder": 30
         }
       ],
       "kind": "group",
       "metadata": {
         "axis": "slot",
-        "language": null,
+        "language": "Sample",
         "role": "slot.code"
       },
       "recipeId": "slot.code",
@@ -78,8 +130,6 @@
   "kind": "group",
   "metadata": {
     "axis": "ui",
-    "code": "Sample",
-    "language": "Sample",
     "primitive": "slot.code",
     "role": "ui.code-block-syntax",
     "showLineNumbers": true,

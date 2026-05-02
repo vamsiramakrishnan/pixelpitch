@@ -25,6 +25,10 @@
           "fill": {
             "angleDeg": 0,
             "featureSizePx": 1,
+            "fgColor": {
+              "alpha": 0.102,
+              "hex": "#ffffff"
+            },
             "kind": "pattern",
             "pattern": "lines-grid",
             "tileHeightPx": 16,

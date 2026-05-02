@@ -29,6 +29,7 @@
               "fontSizePx": 88,
               "fontWeight": 800,
               "italic": false,
+              "text": "Sample",
               "underline": false
             }
           ]
@@ -43,7 +44,6 @@
     "axis": "type",
     "primitive": "slot.numeral",
     "role": "type.big-number-xl",
-    "value": "Sample",
     "version": "1.0.0"
   },
   "recipeId": "type.big-number-xl",

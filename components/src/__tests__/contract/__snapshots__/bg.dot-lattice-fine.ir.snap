@@ -26,6 +26,10 @@
             "angleDeg": 0,
             "bgColor": "#cccccc",
             "featureSizePx": 1,
+            "fgColor": {
+              "alpha": 0.102,
+              "hex": "#ffffff"
+            },
             "kind": "pattern",
             "pattern": "dots",
             "tileHeightPx": 8,

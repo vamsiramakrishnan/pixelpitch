@@ -5,6 +5,6 @@
   "raster_nodes": 0,
   "recipe": "ui.browser-minimal",
   "root_area_px2": 921600,
-  "status": "observe",
+  "status": "strict",
   "total_nodes": 3
 }

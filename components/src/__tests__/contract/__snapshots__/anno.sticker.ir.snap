@@ -64,6 +64,7 @@
           },
           "kind": "text",
           "metadata": {
+            "label": "Caption text",
             "role": "annotation-badge-label"
           },
           "paragraphs": [
@@ -76,6 +77,7 @@
                   "fontSizePx": 14,
                   "fontWeight": 700,
                   "italic": false,
+                  "text": "Caption text",
                   "underline": false
                 }
               ]
@@ -89,6 +91,7 @@
       "metadata": {
         "axis": "annotation",
         "kind": "sticker",
+        "label": "Caption text",
         "role": "annotation.badge",
         "rotateDeg": -4,
         "tone": "info"
@@ -101,7 +104,6 @@
   "metadata": {
     "axis": "anno",
     "bgColor": "tokens.palette.warn",
-    "body": "Caption text",
     "primitive": "annotation.badge",
     "role": "anno.sticker",
     "version": "1.0.0"

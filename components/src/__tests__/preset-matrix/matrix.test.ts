@@ -78,49 +78,17 @@ const MATRIX_PRESETS: ThemePresetKey[] = [
 // ---------------------------------------------------------------------------
 
 /**
- * Recipes whose `*ToIR` currently throws at runtime in *every* preset
- * because the codegen wrapper forwards only `bbox` to a primitive that
- * requires more props. M3.5 (primitive expansion) consolidates primitive
- * prop schemas; until then, the matrix-gate skips these cells but the
- * emit-stability snapshot test (M5.2) still records the failure mode.
+ * Recipes whose `*ToIR` currently throws at runtime in *every* preset.
+ *
+ * Post-M3.6 (primitive defaults + name-overlap codegen forwarding +
+ * composite resolution), every recipe now emits a structurally-valid
+ * IR with sensible defaults — even when content props are missing.
+ * This list is empty.
+ *
+ * If something starts throwing again, add it here with a comment
+ * explaining why and link a follow-up issue.
  */
-const EMIT_THROWS_OVERRIDES = new Set<string>([
-  // Post-M3.5: recipes still throwing because the recipe→primitive
-  // prop-shape mapping is incomplete. Either the recipe has props that
-  // don't intersect with the primitive's required props (bg.aurora-corners
-  // has colorTL/TR/BL/BR but surface.radial-blob wants a single color),
-  // or the primitive needs content props the recipe never received
-  // (data.bar wants `bars: [...]`, slot.eyebrow wants `text`, etc.).
-  // Tracked for M3.6 / primitive-default follow-up.
-  'anno.numbered-hotspot',
-  'anno.tooltip',
-  'bg.aurora-corners',
-  'comp.agenda-2col',
-  'comp.agenda-toc',
-  'comp.annotated-screenshot',
-  'comp.bento-mixed',
-  'comp.big-stat-hero',
-  'comp.closing-cta',
-  'comp.data-overview',
-  'comp.hero-investor',
-  'comp.hero-product',
-  'comp.roadmap-quarterly',
-  'comp.section-divider-mesh',
-  'comp.team-grid',
-  'comp.three-up-stats',
-  'data.bar-set-h',
-  'data.bar-set-v',
-  'data.connector',
-  'data.data-table',
-  'data.donut',
-  'data.donut-multi-segment',
-  'data.kpi-row',
-  'mask.gradient-fade-edge',
-  'surf.bento-cell',
-  'type.eyebrow-ruled',
-  'type.eyebrow-tape',
-  'ui.checklist',
-]);
+const EMIT_THROWS_OVERRIDES = new Set<string>([]);
 
 /**
  * Recipes that legitimately rasterize in some presets (e.g. image-mode
@@ -135,21 +103,89 @@ const RASTER_OVERRIDES = new Set<string>([]);
  * leaf children) and so are gated to `native_area_ratio ≥ 0.97`. Every
  * other recipe currently emits a hollow group (treatment-masquerading-
  * as-primitive smell) — those snapshot their actual ratio without
- * blocking CI. M3.5 grows this list as primitives gain real shape
- * children for thin recipes.
+ * blocking CI. M3.6 expands this dramatically (11 → 78) once codegen's
+ * name-overlap forwarding wired bbox-only fills + content props through
+ * to every primitive that can paint.
  */
 const STRICT_GATE_ALLOWLIST = new Set<string>([
+  'anno.callout-bubble',
+  'anno.highlighter-mark',
+  'anno.numbered-hotspot',
+  'anno.redaction-bar',
+  'anno.stamp-draft',
+  'anno.stamp-internal',
+  'anno.stamp-new',
+  'anno.sticker',
+  'anno.tooltip',
+  'bg.aurora-corners',
+  'bg.crosshatch',
+  'bg.diagonal',
+  'bg.dot-lattice-coarse',
+  'bg.dot-lattice-fine',
+  'bg.line-grid',
+  'bg.scrim-bottom',
+  'bg.scrim-top',
+  'bg.spotlight-soft',
+  'bg.spotlight-tight',
+  'comp.agenda-2col',
+  'comp.agenda-toc',
+  'comp.annotated-screenshot',
+  'comp.bento-mixed',
+  'comp.big-stat-hero',
   'comp.closing-cta',
+  'comp.data-overview',
+  'comp.hero-investor',
+  'comp.hero-product',
   'comp.quote-editorial',
+  'comp.roadmap-quarterly',
+  'comp.section-divider-mesh',
+  'comp.team-grid',
+  'comp.three-up-stats',
+  'data.delta-badge',
+  'dec.arrow-down',
+  'dec.arrow-left',
+  'dec.arrow-right',
+  'dec.arrow-up',
+  'dec.brace-bottom',
+  'dec.brace-left',
+  'dec.brace-right',
+  'dec.brace-top',
+  'dec.bullet-dot',
+  'dec.dotted-rule',
+  'dec.hairline-rule',
   'dec.numeral-chapter',
+  'dec.plus',
+  'dec.section-divider',
+  'dec.star-5',
+  'dec.star-6',
+  'mask.gradient-fade-edge',
+  'mask.octagon',
+  'surf.card-bordered',
+  'surf.card-depth',
+  'surf.card-flat',
+  'surf.card-floating',
+  'surf.card-paper',
+  'surf.card-raised',
+  'surf.section-band',
+  'surf.tape-band',
   'type.big-number',
   'type.big-number-gradient',
   'type.big-number-xl',
+  'type.eyebrow-ruled',
+  'type.eyebrow-tape',
   'type.numerals-tabular',
   'type.pullquote-brutalist',
   'type.pullquote-serif',
+  'ui.browser-mac',
+  'ui.browser-minimal',
+  'ui.browser-win',
   'ui.code-block',
   'ui.code-block-syntax',
+  'ui.device-laptop',
+  'ui.device-phone',
+  'ui.progress-bar',
+  'ui.status-dot',
+  'ui.terminal-window',
 ]);
 
 const NATIVE_AREA_THRESHOLD = 0.97;
@@ -186,13 +222,12 @@ describe('preset-matrix gate — Tier-B × {vercel-dark, linear-light, stripe, p
     expect(CELLS.length).toBe(TIER_B.length * MATRIX_PRESETS.length);
   });
 
-  test('override lists stay short (M3.5 shrinks them)', () => {
+  test('override lists stay short (M3.6 cleared the throws-override list)', () => {
     // Document growth: explicit assertions surface bloat at PR review time.
-    // Spec target: ≤5 long-term per bucket. M5 ships at higher counts because
-    // the recipes layer is in a transitional state pre-M3.5.
-    expect(EMIT_THROWS_OVERRIDES.size).toBeLessThanOrEqual(30);
+    // M3.6 result: zero recipes throw under synthesized props; allowlist > 30.
+    expect(EMIT_THROWS_OVERRIDES.size).toBeLessThanOrEqual(5);
     expect(RASTER_OVERRIDES.size).toBeLessThanOrEqual(5);
-    expect(STRICT_GATE_ALLOWLIST.size).toBeGreaterThan(0);
+    expect(STRICT_GATE_ALLOWLIST.size).toBeGreaterThan(30);
   });
 
   for (const preset of MATRIX_PRESETS) {

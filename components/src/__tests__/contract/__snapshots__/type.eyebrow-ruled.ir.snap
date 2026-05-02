@@ -1,4 +1,68 @@
 {
-  "atomId": "type.eyebrow-ruled",
-  "error": "TypeError: Cannot read properties of undefined (reading 'toUpperCase')"
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "kind": "text",
+          "metadata": {
+            "role": "eyebrow-text"
+          },
+          "paragraphs": [
+            {
+              "align": "left",
+              "runs": [
+                {
+                  "color": "tokens.palette.accent",
+                  "fontFamily": "Inter, sans-serif",
+                  "fontSizePx": 13,
+                  "fontWeight": 600,
+                  "italic": false,
+                  "text": "SAMPLE",
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "slot.eyebrow.text",
+          "zOrder": 10
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "slot",
+        "role": "slot.eyebrow",
+        "withRule": "none"
+      },
+      "recipeId": "slot.eyebrow",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "type",
+    "primitive": "slot.eyebrow",
+    "role": "type.eyebrow-ruled",
+    "ruleSide": "right",
+    "version": "1.0.0"
+  },
+  "recipeId": "type.eyebrow-ruled",
+  "zOrder": 0
 }

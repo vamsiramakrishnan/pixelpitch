@@ -49,6 +49,7 @@
           },
           "kind": "text",
           "metadata": {
+            "label": "Caption text",
             "role": "annotation-badge-label"
           },
           "paragraphs": [
@@ -61,6 +62,7 @@
                   "fontSizePx": 12,
                   "fontWeight": 600,
                   "italic": false,
+                  "text": "Caption text",
                   "underline": false
                 }
               ]
@@ -74,6 +76,7 @@
       "metadata": {
         "axis": "annotation",
         "kind": "pill",
+        "label": "Caption text",
         "role": "annotation.badge",
         "rotateDeg": 0,
         "tone": "info"
@@ -86,7 +89,6 @@
   "metadata": {
     "axis": "anno",
     "bgColor": "tokens.palette.surface-3",
-    "body": "Caption text",
     "pointerOffset": 0.5,
     "pointerSide": "bottom",
     "primitive": "annotation.badge",

@@ -22,6 +22,10 @@
             "y": 100
           },
           "borderRadiusPx": 0,
+          "fill": {
+            "color": "tokens.palette.surface-1",
+            "kind": "solid"
+          },
           "kind": "shape",
           "metadata": {
             "axis": "surface",
@@ -47,11 +51,9 @@
   "kind": "group",
   "metadata": {
     "axis": "surf",
-    "bgColor": "tokens.palette.surface-1",
     "borderColor": "tokens.palette.ink-1",
     "borderPx": 2,
     "primitive": "surface.shape-fill",
-    "radius": 0,
     "role": "surf.card-bordered",
     "version": "1.0.0"
   },

@@ -21,7 +21,11 @@
             "x": 100,
             "y": 100
           },
-          "borderRadiusPx": 0,
+          "borderRadiusPx": 12,
+          "fill": {
+            "color": "tokens.palette.surface-1",
+            "kind": "solid"
+          },
           "kind": "shape",
           "metadata": {
             "axis": "surface",
@@ -36,7 +40,7 @@
       "kind": "group",
       "metadata": {
         "axis": "surface",
-        "radiusPx": 0,
+        "radiusPx": 12,
         "role": "surface.shape-fill",
         "shape": "rounded-rect"
       },
@@ -47,9 +51,7 @@
   "kind": "group",
   "metadata": {
     "axis": "surf",
-    "bgColor": "tokens.palette.surface-1",
     "primitive": "surface.shape-fill",
-    "radius": 12,
     "role": "surf.card-paper",
     "version": "1.0.0"
   },

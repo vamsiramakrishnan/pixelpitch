@@ -1,4 +1,285 @@
 {
-  "atomId": "comp.three-up-stats",
-  "error": "TypeError: Cannot read properties of undefined (reading 'toUpperCase')"
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 200,
+                "w": 600,
+                "x": 100,
+                "y": 100
+              },
+              "kind": "text",
+              "metadata": {
+                "role": "eyebrow-text"
+              },
+              "paragraphs": [
+                {
+                  "align": "left",
+                  "runs": [
+                    {
+                      "color": "#a1a1aa",
+                      "fontFamily": "Inter, sans-serif",
+                      "fontSizePx": 13,
+                      "fontWeight": 600,
+                      "italic": false,
+                      "text": "",
+                      "underline": false
+                    }
+                  ]
+                }
+              ],
+              "recipeId": "slot.eyebrow.text",
+              "zOrder": 10
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "slot",
+            "role": "slot.eyebrow",
+            "withRule": "none"
+          },
+          "recipeId": "slot.eyebrow",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "type",
+        "primitive": "slot.eyebrow",
+        "role": "type.eyebrow-ruled",
+        "version": "1.0.0"
+      },
+      "recipeId": "type.eyebrow-ruled",
+      "zOrder": 0
+    },
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 200,
+                "w": 600,
+                "x": 100,
+                "y": 100
+              },
+              "borderRadiusPx": 0,
+              "fill": {
+                "color": "#0e0e1a",
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "axis": "surface",
+                "role": "surface.shape-fill",
+                "shape": "rounded-rect"
+              },
+              "recipeId": "surface.shape-fill",
+              "shape": "rounded-rect",
+              "zOrder": 0
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "surface",
+            "radiusPx": 0,
+            "role": "surface.shape-fill",
+            "shape": "rounded-rect"
+          },
+          "recipeId": "surface.shape-fill",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "surf",
+        "primitive": "surface.shape-fill",
+        "role": "surf.card-raised",
+        "version": "1.0.0"
+      },
+      "recipeId": "surf.card-raised",
+      "zOrder": 10
+    },
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "children": [],
+          "kind": "group",
+          "metadata": {
+            "axis": "frame",
+            "innerBbox": {
+              "h": 8,
+              "w": 408,
+              "x": 196,
+              "y": 196
+            },
+            "insetPx": 96,
+            "padding": "cozy",
+            "role": "frame.safe-area"
+          },
+          "recipeId": "frame.safe-area",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "data",
+        "primitive": "frame.safe-area",
+        "role": "data.bullet-bar",
+        "version": "1.0.0"
+      },
+      "recipeId": "data.bullet-bar",
+      "zOrder": 20
+    },
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 200,
+                "w": 600,
+                "x": 100,
+                "y": 100
+              },
+              "borderRadiusPx": 9999,
+              "fill": {
+                "color": {
+                  "alpha": 0.18,
+                  "hex": "#10b981"
+                },
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "role": "delta-badge-bg",
+                "tone": "success"
+              },
+              "recipeId": "data.delta-badge.bg",
+              "shape": "rounded-rect",
+              "zOrder": 0
+            },
+            {
+              "bbox": {
+                "h": 200,
+                "w": 600,
+                "x": 100,
+                "y": 100
+              },
+              "kind": "text",
+              "metadata": {
+                "direction": "up",
+                "role": "delta-badge-label",
+                "value": ""
+              },
+              "paragraphs": [
+                {
+                  "align": "center",
+                  "runs": [
+                    {
+                      "color": "#10b981",
+                      "fontFamily": "Inter, sans-serif",
+                      "fontSizePx": 13,
+                      "fontWeight": 600,
+                      "italic": false,
+                      "text": "▲ ",
+                      "underline": false
+                    }
+                  ]
+                }
+              ],
+              "recipeId": "data.delta-badge.label",
+              "zOrder": 10
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "data",
+            "direction": "up",
+            "role": "data.delta-badge",
+            "size": "md",
+            "tone": "success",
+            "value": ""
+          },
+          "recipeId": "data.delta-badge",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "data",
+        "primitive": "data.delta-badge",
+        "role": "data.delta-badge",
+        "version": "1.0.0"
+      },
+      "recipeId": "data.delta-badge",
+      "zOrder": 30
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "comp",
+    "composite": true,
+    "role": "comp.three-up-stats",
+    "version": "1.0.0"
+  },
+  "recipeId": "comp.three-up-stats",
+  "zOrder": 0
 }

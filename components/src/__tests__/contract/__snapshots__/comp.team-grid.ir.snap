@@ -1,4 +1,162 @@
 {
-  "atomId": "comp.team-grid",
-  "error": "TypeError: Cannot read properties of undefined (reading 'toUpperCase')"
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 200,
+                "w": 600,
+                "x": 100,
+                "y": 100
+              },
+              "kind": "text",
+              "metadata": {
+                "role": "eyebrow-text"
+              },
+              "paragraphs": [
+                {
+                  "align": "left",
+                  "runs": [
+                    {
+                      "color": "#a1a1aa",
+                      "fontFamily": "Inter, sans-serif",
+                      "fontSizePx": 13,
+                      "fontWeight": 600,
+                      "italic": false,
+                      "text": "",
+                      "underline": false
+                    }
+                  ]
+                }
+              ],
+              "recipeId": "slot.eyebrow.text",
+              "zOrder": 10
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "slot",
+            "role": "slot.eyebrow",
+            "withRule": "none"
+          },
+          "recipeId": "slot.eyebrow",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "type",
+        "primitive": "slot.eyebrow",
+        "role": "type.eyebrow-ruled",
+        "version": "1.0.0"
+      },
+      "recipeId": "type.eyebrow-ruled",
+      "zOrder": 0
+    },
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 200,
+                "w": 600,
+                "x": 100,
+                "y": 100
+              },
+              "borderRadiusPx": 0,
+              "fill": {
+                "color": "#0e0e1a",
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "axis": "surface",
+                "role": "surface.shape-fill",
+                "shape": "rounded-rect"
+              },
+              "recipeId": "surface.shape-fill",
+              "shape": "rounded-rect",
+              "zOrder": 0
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "surface",
+            "radiusPx": 0,
+            "role": "surface.shape-fill",
+            "shape": "rounded-rect"
+          },
+          "recipeId": "surface.shape-fill",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "surf",
+        "primitive": "surface.shape-fill",
+        "role": "surf.card-raised",
+        "version": "1.0.0"
+      },
+      "recipeId": "surf.card-raised",
+      "zOrder": 10
+    },
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [],
+      "kind": "group",
+      "metadata": {
+        "placeholder": true,
+        "role": "ui.avatar-cluster"
+      },
+      "recipeId": "ui.avatar-cluster",
+      "zOrder": 20
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "comp",
+    "composite": true,
+    "role": "comp.team-grid",
+    "version": "1.0.0"
+  },
+  "recipeId": "comp.team-grid",
+  "zOrder": 0
 }

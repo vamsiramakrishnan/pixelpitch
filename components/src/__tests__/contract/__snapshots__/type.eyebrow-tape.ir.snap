@@ -1,4 +1,69 @@
 {
-  "atomId": "type.eyebrow-tape",
-  "error": "TypeError: Cannot read properties of undefined (reading 'toUpperCase')"
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "kind": "text",
+          "metadata": {
+            "role": "eyebrow-text"
+          },
+          "paragraphs": [
+            {
+              "align": "left",
+              "runs": [
+                {
+                  "color": "#a1a1aa",
+                  "fontFamily": "Inter, sans-serif",
+                  "fontSizePx": 13,
+                  "fontWeight": 600,
+                  "italic": false,
+                  "text": "SAMPLE",
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "slot.eyebrow.text",
+          "zOrder": 10
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "slot",
+        "role": "slot.eyebrow",
+        "withRule": "none"
+      },
+      "recipeId": "slot.eyebrow",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "type",
+    "fill": "tokens.gradient.accent-grad",
+    "primitive": "slot.eyebrow",
+    "role": "type.eyebrow-tape",
+    "skewDeg": -8,
+    "version": "1.0.0"
+  },
+  "recipeId": "type.eyebrow-tape",
+  "zOrder": 0
 }

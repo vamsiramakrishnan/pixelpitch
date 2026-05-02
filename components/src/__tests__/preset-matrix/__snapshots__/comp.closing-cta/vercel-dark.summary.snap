@@ -1,7 +1,10 @@
 {
-  "error": "TypeError: Cannot read properties of undefined (reading 'hex')",
+  "native_area_px2": 1843200,
+  "native_ratio": 2,
   "preset": "vercel-dark",
+  "raster_nodes": 0,
   "recipe": "comp.closing-cta",
-  "status": "override:emit-throws",
-  "still_throws": true
+  "root_area_px2": 921600,
+  "status": "strict",
+  "total_nodes": 5
 }

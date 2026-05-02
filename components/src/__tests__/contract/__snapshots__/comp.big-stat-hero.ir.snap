@@ -1,4 +1,312 @@
 {
-  "atomId": "comp.big-stat-hero",
-  "error": "TypeError: Cannot read properties of undefined (reading 'toUpperCase')"
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 200,
+                "w": 600,
+                "x": 100,
+                "y": 100
+              },
+              "kind": "text",
+              "metadata": {
+                "role": "eyebrow-text"
+              },
+              "paragraphs": [
+                {
+                  "align": "left",
+                  "runs": [
+                    {
+                      "color": "#a1a1aa",
+                      "fontFamily": "Inter, sans-serif",
+                      "fontSizePx": 13,
+                      "fontWeight": 600,
+                      "italic": false,
+                      "text": "",
+                      "underline": false
+                    }
+                  ]
+                }
+              ],
+              "recipeId": "slot.eyebrow.text",
+              "zOrder": 10
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "slot",
+            "role": "slot.eyebrow",
+            "withRule": "none"
+          },
+          "recipeId": "slot.eyebrow",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "type",
+        "primitive": "slot.eyebrow",
+        "role": "type.eyebrow-ruled",
+        "version": "1.0.0"
+      },
+      "recipeId": "type.eyebrow-ruled",
+      "zOrder": 0
+    },
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "kind": "text",
+          "metadata": {
+            "axis": "slot",
+            "gradientFill": {
+              "angleDeg": 135,
+              "kind": "linear-gradient",
+              "stops": [
+                {
+                  "color": "#818cf8",
+                  "position": 0
+                },
+                {
+                  "color": "#c084fc",
+                  "position": 0.5
+                },
+                {
+                  "color": "#f472b6",
+                  "position": 1
+                }
+              ]
+            },
+            "gradientKey": "accent-grad",
+            "role": "slot.numeral",
+            "scale": "numeral-md"
+          },
+          "paragraphs": [
+            {
+              "align": "left",
+              "runs": [
+                {
+                  "color": "#818cf8",
+                  "fontFamily": "Inter, sans-serif",
+                  "fontSizePx": 88,
+                  "fontWeight": 800,
+                  "italic": false,
+                  "text": "Sample",
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "slot.numeral",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "type",
+        "primitive": "slot.numeral",
+        "role": "type.big-number-gradient",
+        "version": "1.0.0"
+      },
+      "recipeId": "type.big-number-gradient",
+      "zOrder": 10
+    },
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 200,
+                "w": 600,
+                "x": 100,
+                "y": 100
+              },
+              "borderRadiusPx": 0,
+              "fill": {
+                "color": "#0e0e1a",
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "axis": "surface",
+                "role": "surface.shape-fill",
+                "shape": "rounded-rect"
+              },
+              "recipeId": "surface.shape-fill",
+              "shape": "rounded-rect",
+              "zOrder": 0
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "surface",
+            "radiusPx": 0,
+            "role": "surface.shape-fill",
+            "shape": "rounded-rect"
+          },
+          "recipeId": "surface.shape-fill",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "surf",
+        "primitive": "surface.shape-fill",
+        "role": "surf.card-depth",
+        "version": "1.0.0"
+      },
+      "recipeId": "surf.card-depth",
+      "zOrder": 20
+    },
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 200,
+                "w": 600,
+                "x": 100,
+                "y": 100
+              },
+              "borderRadiusPx": 9999,
+              "fill": {
+                "color": {
+                  "alpha": 0.18,
+                  "hex": "#10b981"
+                },
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "role": "delta-badge-bg",
+                "tone": "success"
+              },
+              "recipeId": "data.delta-badge.bg",
+              "shape": "rounded-rect",
+              "zOrder": 0
+            },
+            {
+              "bbox": {
+                "h": 200,
+                "w": 600,
+                "x": 100,
+                "y": 100
+              },
+              "kind": "text",
+              "metadata": {
+                "direction": "up",
+                "role": "delta-badge-label",
+                "value": "Sample"
+              },
+              "paragraphs": [
+                {
+                  "align": "center",
+                  "runs": [
+                    {
+                      "color": "#10b981",
+                      "fontFamily": "Inter, sans-serif",
+                      "fontSizePx": 13,
+                      "fontWeight": 600,
+                      "italic": false,
+                      "text": "▲ Sample",
+                      "underline": false
+                    }
+                  ]
+                }
+              ],
+              "recipeId": "data.delta-badge.label",
+              "zOrder": 10
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "data",
+            "direction": "up",
+            "role": "data.delta-badge",
+            "size": "md",
+            "tone": "success",
+            "value": "Sample"
+          },
+          "recipeId": "data.delta-badge",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "data",
+        "primitive": "data.delta-badge",
+        "role": "data.delta-badge",
+        "version": "1.0.0"
+      },
+      "recipeId": "data.delta-badge",
+      "zOrder": 30
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "comp",
+    "composite": true,
+    "role": "comp.big-stat-hero",
+    "version": "1.0.0"
+  },
+  "recipeId": "comp.big-stat-hero",
+  "zOrder": 0
 }

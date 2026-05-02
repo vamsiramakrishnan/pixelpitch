@@ -35,6 +35,7 @@
                   "fontSizePx": 22,
                   "fontWeight": 500,
                   "italic": false,
+                  "text": "A pithy quote.",
                   "underline": false
                 }
               ]
@@ -59,7 +60,6 @@
   "metadata": {
     "axis": "type",
     "primitive": "slot.quote",
-    "quote": "A pithy quote.",
     "role": "type.pullquote-serif",
     "size": "lg",
     "version": "1.0.0"

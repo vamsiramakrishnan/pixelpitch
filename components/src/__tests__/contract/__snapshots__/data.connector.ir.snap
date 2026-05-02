@@ -1,4 +1,71 @@
 {
-  "atomId": "data.connector",
-  "error": "TypeError: Cannot read properties of undefined (reading 'x')"
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 1,
+        "w": 1,
+        "x": 200,
+        "y": 200
+      },
+      "commands": [
+        {
+          "op": "M",
+          "x": 200,
+          "y": 200
+        },
+        {
+          "op": "L",
+          "x": 200,
+          "y": 200
+        }
+      ],
+      "fillRule": "nonzero",
+      "kind": "path",
+      "markerEnd": {
+        "kind": "arrow",
+        "size": "md"
+      },
+      "markerStart": {
+        "kind": "none",
+        "size": "md"
+      },
+      "metadata": {
+        "axis": "diagram",
+        "from": {
+          "x": 200,
+          "y": 200
+        },
+        "kind": "straight",
+        "role": "diagram.connector",
+        "to": {
+          "x": 200,
+          "y": 200
+        }
+      },
+      "recipeId": "diagram.connector",
+      "strokeColor": "#a1a1aa",
+      "strokeLinecap": "round",
+      "strokeLinejoin": "round",
+      "strokeWidthPx": 2,
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "data",
+    "color": "tokens.palette.ink-3",
+    "dashed": false,
+    "head": "arrow",
+    "primitive": "diagram.connector",
+    "role": "data.connector",
+    "version": "1.0.0"
+  },
+  "recipeId": "data.connector",
+  "zOrder": 0
 }

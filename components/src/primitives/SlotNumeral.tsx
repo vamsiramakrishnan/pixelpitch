@@ -123,12 +123,27 @@ export function slotNumeralToIR(
 
   // gradient prop may be either:
   //   - a `GradientKey` string ('accent-grad'), the legitimate use, or
-  //   - a `LinearGradient` object (token-resolved upstream, or supplied by
-  //     atoms.yaml `gradient: tokens.gradient.accent-grad` — the matcher
-  //     resolves the string to an object before calling).
-  // We only call `tokens.gradient(...)` when it's a string key.
-  const gradientKey = typeof props.gradient === 'string' ? props.gradient : undefined;
-  const gradientFill = gradientKey ? tokens.gradient(gradientKey) : undefined;
+  //   - a token-reference string ('tokens.gradient.accent-grad') — atoms.yaml
+  //     stamps these for composes-overrides; we strip the prefix.
+  //   - a `LinearGradient` object (matcher-resolved upstream).
+  let gradientKey: import('../tokens').GradientKey | undefined;
+  if (typeof props.gradient === 'string') {
+    const k = props.gradient.startsWith('tokens.gradient.')
+      ? props.gradient.slice('tokens.gradient.'.length)
+      : props.gradient;
+    // Only honor known keys; unknown strings fall through to no-gradient.
+    gradientKey = k as import('../tokens').GradientKey;
+  }
+  // Test the key actually resolves; if not, treat as no gradient.
+  let gradientFill: import('../tokens').LinearGradient | undefined;
+  if (gradientKey) {
+    try {
+      gradientFill = tokens.gradient(gradientKey);
+    } catch {
+      gradientFill = undefined;
+      gradientKey = undefined;
+    }
+  }
 
   // Single run, fill metadata routes the gradient through Python compiler.
   const baseRun: TextRun = {

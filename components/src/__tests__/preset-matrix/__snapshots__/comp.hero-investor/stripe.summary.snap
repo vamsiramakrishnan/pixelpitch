@@ -1,7 +1,10 @@
 {
-  "error": "TypeError: Cannot read properties of undefined (reading 'hex')",
+  "native_area_px2": 3686400,
+  "native_ratio": 4,
   "preset": "stripe",
+  "raster_nodes": 0,
   "recipe": "comp.hero-investor",
-  "status": "override:emit-throws",
-  "still_throws": true
+  "root_area_px2": 921600,
+  "status": "strict",
+  "total_nodes": 12
 }

@@ -1,10 +1,10 @@
 {
-  "native_area_px2": 1749504,
-  "native_ratio": 1.8983,
+  "native_area_px2": 1753552,
+  "native_ratio": 1.9027,
   "preset": "brutalist",
   "raster_nodes": 0,
   "recipe": "ui.code-block-syntax",
   "root_area_px2": 921600,
   "status": "strict",
-  "total_nodes": 3
+  "total_nodes": 5
 }

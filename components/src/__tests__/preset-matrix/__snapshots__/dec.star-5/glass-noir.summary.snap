@@ -5,6 +5,6 @@
   "raster_nodes": 0,
   "recipe": "dec.star-5",
   "root_area_px2": 921600,
-  "status": "observe",
+  "status": "strict",
   "total_nodes": 2
 }

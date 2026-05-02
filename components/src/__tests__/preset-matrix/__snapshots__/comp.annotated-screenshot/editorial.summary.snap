@@ -1,7 +1,10 @@
 {
-  "error": "TypeError: Cannot read properties of undefined (reading 'x')",
+  "native_area_px2": 2801072,
+  "native_ratio": 3.0394,
   "preset": "editorial",
+  "raster_nodes": 0,
   "recipe": "comp.annotated-screenshot",
-  "status": "override:emit-throws",
-  "still_throws": true
+  "root_area_px2": 921600,
+  "status": "strict",
+  "total_nodes": 13
 }

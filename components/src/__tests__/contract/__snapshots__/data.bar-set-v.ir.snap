@@ -1,4 +1,38 @@
 {
-  "atomId": "data.bar-set-v",
-  "error": "TypeError: Cannot read properties of undefined (reading 'length')"
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [],
+      "kind": "group",
+      "metadata": {
+        "axis": "data",
+        "barCount": 0,
+        "max": 1,
+        "orientation": "vertical",
+        "role": "data.bar"
+      },
+      "recipeId": "data.bar",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "data",
+    "primitive": "data.bar",
+    "role": "data.bar-set-v",
+    "version": "1.0.0"
+  },
+  "recipeId": "data.bar-set-v",
+  "zOrder": 0
 }

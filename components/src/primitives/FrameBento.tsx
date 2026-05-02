@@ -47,11 +47,14 @@ export interface FrameBentoCell {
 
 export interface FrameBentoProps {
   bbox: Bbox;
-  columns: number;
-  rows: number;
+  /** Grid columns. Optional — defaults to 1. */
+  columns?: number;
+  /** Grid rows. Optional — defaults to 1. */
+  rows?: number;
   /** Gap between cells. Defaults to `tokens.slot('gutter')`. */
   gap?: number;
-  cells: FrameBentoCell[];
+  /** Cell list. Optional — defaults to []. */
+  cells?: FrameBentoCell[];
   /** React preview content (renders cell outlines for visual debugging). */
   children?: ReactNode;
 }
@@ -93,8 +96,8 @@ export default function FrameBento(props: FrameBentoProps): ReactNode {
         height: props.bbox.h,
       }}
     >
-      {props.cells.map((cell, i) => {
-        const b = cellBbox(props.bbox, cell, props.columns, props.rows, gap);
+      {(props.cells ?? []).map((cell, i) => {
+        const b = cellBbox(props.bbox, cell, props.columns ?? 1, props.rows ?? 1, gap);
         return (
           <div
             key={i}
@@ -125,8 +128,11 @@ export function frameBentoToIR(
   tokens: TokensApi = defaultTokens,
 ): GroupNodeT {
   const gap = props.gap ?? tokens.slot('gutter');
-  const cellGroups: IRNode[] = props.cells.map((cell, i) => {
-    const b = cellBbox(props.bbox, cell, props.columns, props.rows, gap);
+  const columns = props.columns ?? 1;
+  const rows = props.rows ?? 1;
+  const cells = props.cells ?? [];
+  const cellGroups: IRNode[] = cells.map((cell, i) => {
+    const b = cellBbox(props.bbox, cell, columns, rows, gap);
     const inner: IRNode[] = cell.childIR
       ? [{ ...cell.childIR, bbox: cell.childIR.bbox ?? b }]
       : [];
@@ -159,10 +165,10 @@ export function frameBentoToIR(
     metadata: {
       role: 'frame.bento',
       axis: 'frame',
-      columns: props.columns,
-      rows: props.rows,
+      columns,
+      rows,
       gap,
-      cellCount: props.cells.length,
+      cellCount: cells.length,
     },
     children: cellGroups,
   };

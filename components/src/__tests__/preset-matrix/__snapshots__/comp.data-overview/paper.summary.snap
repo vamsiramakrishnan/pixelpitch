@@ -1,7 +1,10 @@
 {
-  "error": "TypeError: Cannot read properties of undefined (reading 'toUpperCase')",
+  "native_area_px2": 2029888,
+  "native_ratio": 2.2026,
   "preset": "paper",
+  "raster_nodes": 0,
   "recipe": "comp.data-overview",
-  "status": "override:emit-throws",
-  "still_throws": true
+  "root_area_px2": 921600,
+  "status": "strict",
+  "total_nodes": 13
 }

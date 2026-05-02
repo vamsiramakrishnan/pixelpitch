@@ -1,4 +1,92 @@
 {
-  "atomId": "anno.numbered-hotspot",
-  "error": "TypeError: Cannot read properties of undefined (reading 'x')"
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "commands": [
+            {
+              "op": "M",
+              "x": 200,
+              "y": 200
+            },
+            {
+              "op": "L",
+              "x": 700,
+              "y": 200
+            }
+          ],
+          "fillRule": "nonzero",
+          "kind": "path",
+          "markerEnd": {
+            "kind": "arrow",
+            "size": "md"
+          },
+          "metadata": {
+            "axis": "annotation",
+            "dashed": false,
+            "from": {
+              "x": 200,
+              "y": 200
+            },
+            "role": "annotation.leader-line",
+            "to": {
+              "x": 700,
+              "y": 200
+            }
+          },
+          "recipeId": "annotation.leader-line",
+          "strokeColor": "tokens.palette.accent",
+          "strokeLinecap": "round",
+          "strokeLinejoin": "miter",
+          "strokeWidthPx": 1.5,
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "annotation",
+        "dashed": false,
+        "from": {
+          "x": 200,
+          "y": 200
+        },
+        "role": "annotation.leader-line",
+        "thicknessPx": 1.5,
+        "to": {
+          "x": 700,
+          "y": 200
+        }
+      },
+      "recipeId": "annotation.leader-line",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "anno",
+    "n": 1,
+    "primitive": "annotation.leader-line",
+    "role": "anno.numbered-hotspot",
+    "version": "1.0.0"
+  },
+  "recipeId": "anno.numbered-hotspot",
+  "zOrder": 0
 }

@@ -1,4 +1,304 @@
 {
-  "atomId": "comp.hero-investor",
-  "error": "TypeError: Cannot read properties of undefined (reading 'hex')"
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [],
+      "kind": "group",
+      "metadata": {
+        "placeholder": true,
+        "role": "bg.aurora-band"
+      },
+      "recipeId": "bg.aurora-band",
+      "zOrder": 0
+    },
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 200,
+                "w": 600,
+                "x": 100,
+                "y": 100
+              },
+              "borderRadiusPx": 0,
+              "fill": {
+                "cx": 0.5,
+                "cy": 0.5,
+                "kind": "radial-gradient",
+                "shape": "ellipse",
+                "stops": [
+                  {
+                    "color": {
+                      "alpha": 0.32,
+                      "hex": "#a78bfa"
+                    },
+                    "position": 0
+                  },
+                  {
+                    "color": {
+                      "alpha": 0,
+                      "hex": "#a78bfa"
+                    },
+                    "position": 1
+                  }
+                ]
+              },
+              "kind": "shape",
+              "metadata": {
+                "axis": "surface",
+                "cx": 0.5,
+                "cy": 0.5,
+                "intensity": "med",
+                "role": "surface.radial-blob",
+                "shape": "ellipse"
+              },
+              "recipeId": "surface.radial-blob",
+              "shape": "rect",
+              "zOrder": 0
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "surface",
+            "cx": 0.5,
+            "cy": 0.5,
+            "intensity": "med",
+            "role": "surface.radial-blob",
+            "shape": "ellipse"
+          },
+          "recipeId": "surface.radial-blob",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "bg",
+        "primitive": "surface.radial-blob",
+        "role": "bg.aurora-corners",
+        "version": "1.0.0"
+      },
+      "recipeId": "bg.aurora-corners",
+      "zOrder": 10
+    },
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 200,
+                "w": 600,
+                "x": 100,
+                "y": 100
+              },
+              "kind": "text",
+              "metadata": {
+                "role": "eyebrow-text"
+              },
+              "paragraphs": [
+                {
+                  "align": "left",
+                  "runs": [
+                    {
+                      "color": "#a1a1aa",
+                      "fontFamily": "Inter, sans-serif",
+                      "fontSizePx": 13,
+                      "fontWeight": 600,
+                      "italic": false,
+                      "text": "",
+                      "underline": false
+                    }
+                  ]
+                }
+              ],
+              "recipeId": "slot.eyebrow.text",
+              "zOrder": 10
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "slot",
+            "role": "slot.eyebrow",
+            "withRule": "none"
+          },
+          "recipeId": "slot.eyebrow",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "type",
+        "primitive": "slot.eyebrow",
+        "role": "type.eyebrow-ruled",
+        "version": "1.0.0"
+      },
+      "recipeId": "type.eyebrow-ruled",
+      "zOrder": 20
+    },
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "kind": "text",
+          "metadata": {
+            "axis": "slot",
+            "role": "slot.numeral",
+            "scale": "numeral-md"
+          },
+          "paragraphs": [
+            {
+              "align": "left",
+              "runs": [
+                {
+                  "color": "#f5f5f7",
+                  "fontFamily": "Inter, sans-serif",
+                  "fontSizePx": 88,
+                  "fontWeight": 800,
+                  "italic": false,
+                  "text": "",
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "slot.numeral",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "type",
+        "primitive": "slot.numeral",
+        "role": "type.big-number-gradient",
+        "version": "1.0.0"
+      },
+      "recipeId": "type.big-number-gradient",
+      "zOrder": 30
+    },
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 200,
+                "w": 600,
+                "x": 100,
+                "y": 100
+              },
+              "kind": "text",
+              "metadata": {
+                "role": "quote-body"
+              },
+              "paragraphs": [
+                {
+                  "align": "left",
+                  "runs": [
+                    {
+                      "color": "#f5f5f7",
+                      "fontFamily": "Inter, sans-serif",
+                      "fontSizePx": 22,
+                      "fontWeight": 500,
+                      "italic": false,
+                      "text": "",
+                      "underline": false
+                    }
+                  ]
+                }
+              ],
+              "recipeId": "slot.quote.body",
+              "zOrder": 0
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "slot",
+            "hasAttribution": false,
+            "role": "slot.quote",
+            "withMark": false
+          },
+          "recipeId": "slot.quote",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "type",
+        "primitive": "slot.quote",
+        "role": "type.pullquote-serif",
+        "version": "1.0.0"
+      },
+      "recipeId": "type.pullquote-serif",
+      "zOrder": 40
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "comp",
+    "composite": true,
+    "role": "comp.hero-investor",
+    "version": "1.0.0"
+  },
+  "recipeId": "comp.hero-investor",
+  "zOrder": 0
 }

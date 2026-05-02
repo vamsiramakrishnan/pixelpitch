@@ -1,4 +1,178 @@
 {
-  "atomId": "comp.bento-mixed",
-  "error": "TypeError: Cannot read properties of undefined (reading 'map')"
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "children": [],
+          "kind": "group",
+          "metadata": {
+            "axis": "frame",
+            "cellCount": 0,
+            "columns": 1,
+            "gap": 24,
+            "role": "frame.bento",
+            "rows": 1
+          },
+          "recipeId": "frame.bento",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "surf",
+        "primitive": "frame.bento",
+        "role": "surf.bento-cell",
+        "version": "1.0.0"
+      },
+      "recipeId": "surf.bento-cell",
+      "zOrder": 0
+    },
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [],
+      "kind": "group",
+      "metadata": {
+        "placeholder": true,
+        "role": "surf.glass"
+      },
+      "recipeId": "surf.glass",
+      "zOrder": 10
+    },
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 200,
+                "w": 600,
+                "x": 100,
+                "y": 100
+              },
+              "borderRadiusPx": 16,
+              "fill": {
+                "color": "#0e0e1a",
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "role": "code-bg"
+              },
+              "recipeId": "slot.code.bg",
+              "shape": "rounded-rect",
+              "zOrder": 0
+            },
+            {
+              "bbox": {
+                "h": 152,
+                "w": 552,
+                "x": 124,
+                "y": 124
+              },
+              "kind": "text",
+              "metadata": {
+                "preserveWhitespace": true,
+                "role": "code-body"
+              },
+              "paragraphs": [
+                {
+                  "align": "left",
+                  "runs": [
+                    {
+                      "color": "#d4d4d8",
+                      "fontFamily": "JetBrains Mono, \"SF Mono\", monospace",
+                      "fontSizePx": 14,
+                      "fontWeight": 500,
+                      "italic": false,
+                      "text": "",
+                      "underline": false
+                    }
+                  ]
+                }
+              ],
+              "recipeId": "slot.code.body",
+              "zOrder": 10
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "slot",
+            "language": null,
+            "role": "slot.code"
+          },
+          "recipeId": "slot.code",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "ui",
+        "primitive": "slot.code",
+        "role": "ui.code-block-syntax",
+        "version": "1.0.0"
+      },
+      "recipeId": "ui.code-block-syntax",
+      "zOrder": 20
+    },
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [],
+      "kind": "group",
+      "metadata": {
+        "placeholder": true,
+        "role": "ui.avatar-cluster"
+      },
+      "recipeId": "ui.avatar-cluster",
+      "zOrder": 30
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "comp",
+    "composite": true,
+    "role": "comp.bento-mixed",
+    "version": "1.0.0"
+  },
+  "recipeId": "comp.bento-mixed",
+  "zOrder": 0
 }
