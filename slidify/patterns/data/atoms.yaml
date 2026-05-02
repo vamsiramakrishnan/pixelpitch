@@ -1249,3 +1249,458 @@ patterns:
       sample_html: |
         <span data-atom="type.numerals-tabular" style="font-family:'JetBrains Mono','SF Mono',monospace;font-variant-numeric:tabular-nums;font-size:16px;color:#d4d4d8;">2,487 → 3,612</span>
       expected_recipe_id: type.numerals-tabular
+
+  # ── mask.* additions (8 → 12) — octagon, callout, gradient-fade ────────
+
+  - id: atom-mask-octagon
+    priority: 70
+    match:
+      anchor.data_atom_id: mask.octagon
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_mask_octagon, axis: mask, shape: octagon }
+    renderer:
+      component: MaskOctagon
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox: { type: bbox, required: true }
+        src:  { type: string, required: true }
+    fixture:
+      sample_html: |
+        <div data-atom="mask.octagon" style="position:absolute;clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%);overflow:hidden;"><img src="..." style="width:100%;height:100%;object-fit:cover"/></div>
+      expected_recipe_id: mask.octagon
+
+  - id: atom-mask-callout
+    priority: 70
+    match:
+      anchor.data_atom_id: mask.callout
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_mask_callout, axis: mask, shape: callout-bubble }
+    renderer:
+      component: MaskCallout
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:        { type: bbox,   required: true }
+        src:         { type: string, required: true }
+        pointerSide: { type: enum,   values: [top, right, bottom, left], default: bottom }
+    fixture:
+      sample_html: |
+        <div data-atom="mask.callout" style="position:absolute;border-radius:24px;overflow:hidden;"><img src="..." style="width:100%;height:100%;object-fit:cover"/></div>
+      expected_recipe_id: mask.callout
+
+  - id: atom-mask-gradient-fade-edge
+    priority: 70
+    match:
+      anchor.data_atom_id: mask.gradient-fade-edge
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_mask_gradient_fade, axis: mask, mask: linear-grad }
+    renderer:
+      component: MaskGradientFadeEdge
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,   required: true }
+        src:     { type: string, required: true }
+        edge:    { type: enum,   values: [top, right, bottom, left, all], default: bottom }
+        fadePct: { type: number, default: 30 }
+    fixture:
+      sample_html: |
+        <div data-atom="mask.gradient-fade-edge" style="position:absolute;mask-image:linear-gradient(180deg,#000 70%,transparent);-webkit-mask-image:linear-gradient(180deg,#000 70%,transparent);"><img src="..." style="width:100%;height:100%;object-fit:cover"/></div>
+      expected_recipe_id: mask.gradient-fade-edge
+
+  - id: atom-mask-rounded-rect-clip
+    priority: 70
+    match:
+      anchor.data_atom_id: mask.rounded-rect-clip
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_mask_rounded_rect, axis: mask, clip: rounded-rect }
+    renderer:
+      component: MaskRoundedRectClip
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:     { type: bbox,   required: true }
+        src:      { type: string, required: true }
+        radiusPx: { type: number, default: 24 }
+    fixture:
+      sample_html: |
+        <div data-atom="mask.rounded-rect-clip" style="position:absolute;border-radius:24px;overflow:hidden;"><img src="..." style="width:100%;height:100%;object-fit:cover"/></div>
+      expected_recipe_id: mask.rounded-rect-clip
+
+  # ── dec.* additions (1 → 18) — braces, plus, stars, arrows, rules ──────
+
+  - id: atom-dec-brace-left
+    priority: 75
+    match:
+      anchor.data_atom_id: dec.brace-left
+    emit:
+      kind: NativeSvg
+      confidence: 0.99
+      metadata: { recipe: atom_dec_brace_left, axis: dec, shape: brace-left }
+    renderer:
+      component: DecBraceLeft
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:  { type: bbox,  required: true }
+        color: { type: color, default: 'tokens.palette.ink-3' }
+    fixture:
+      sample_html: |
+        <svg data-atom="dec.brace-left" viewBox="0 0 24 240"><path d="M16 0 C 4 60 4 60 4 120 C 4 180 4 180 16 240" fill="none" stroke="#a1a1aa" stroke-width="2"/></svg>
+      expected_recipe_id: dec.brace-left
+
+  - id: atom-dec-brace-right
+    priority: 75
+    match:
+      anchor.data_atom_id: dec.brace-right
+    emit:
+      kind: NativeSvg
+      confidence: 0.99
+      metadata: { recipe: atom_dec_brace_right, axis: dec, shape: brace-right }
+    renderer:
+      component: DecBraceRight
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:  { type: bbox,  required: true }
+        color: { type: color, default: 'tokens.palette.ink-3' }
+    fixture:
+      sample_html: |
+        <svg data-atom="dec.brace-right" viewBox="0 0 24 240"><path d="M8 0 C 20 60 20 60 20 120 C 20 180 20 180 8 240" fill="none" stroke="#a1a1aa" stroke-width="2"/></svg>
+      expected_recipe_id: dec.brace-right
+
+  - id: atom-dec-brace-top
+    priority: 75
+    match:
+      anchor.data_atom_id: dec.brace-top
+    emit:
+      kind: NativeSvg
+      confidence: 0.99
+      metadata: { recipe: atom_dec_brace_top, axis: dec, shape: brace-top }
+    renderer:
+      component: DecBraceTop
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:  { type: bbox,  required: true }
+        color: { type: color, default: 'tokens.palette.ink-3' }
+    fixture:
+      sample_html: |
+        <svg data-atom="dec.brace-top" viewBox="0 0 240 24"><path d="M0 16 C 60 4 60 4 120 4 C 180 4 180 4 240 16" fill="none" stroke="#a1a1aa" stroke-width="2"/></svg>
+      expected_recipe_id: dec.brace-top
+
+  - id: atom-dec-brace-bottom
+    priority: 75
+    match:
+      anchor.data_atom_id: dec.brace-bottom
+    emit:
+      kind: NativeSvg
+      confidence: 0.99
+      metadata: { recipe: atom_dec_brace_bottom, axis: dec, shape: brace-bottom }
+    renderer:
+      component: DecBraceBottom
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:  { type: bbox,  required: true }
+        color: { type: color, default: 'tokens.palette.ink-3' }
+    fixture:
+      sample_html: |
+        <svg data-atom="dec.brace-bottom" viewBox="0 0 240 24"><path d="M0 8 C 60 20 60 20 120 20 C 180 20 180 20 240 8" fill="none" stroke="#a1a1aa" stroke-width="2"/></svg>
+      expected_recipe_id: dec.brace-bottom
+
+  - id: atom-dec-plus
+    priority: 75
+    match:
+      anchor.data_atom_id: dec.plus
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_dec_plus, axis: dec, shape: plus }
+    renderer:
+      component: DecPlus
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:  { type: bbox,  required: true }
+        color: { type: color, default: 'tokens.palette.ink-3' }
+    fixture:
+      sample_html: |
+        <svg data-atom="dec.plus" viewBox="0 0 24 24"><path d="M10 2h4v8h8v4h-8v8h-4v-8H2v-4h8z" fill="#a1a1aa"/></svg>
+      expected_recipe_id: dec.plus
+
+  - id: atom-dec-star-5
+    priority: 75
+    match:
+      anchor.data_atom_id: dec.star-5
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_dec_star_5, axis: dec, shape: star-5 }
+    renderer:
+      component: DecStar5
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:  { type: bbox,  required: true }
+        color: { type: color, default: 'tokens.palette.accent' }
+    fixture:
+      sample_html: |
+        <svg data-atom="dec.star-5" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#a78bfa"/></svg>
+      expected_recipe_id: dec.star-5
+
+  - id: atom-dec-star-6
+    priority: 75
+    match:
+      anchor.data_atom_id: dec.star-6
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_dec_star_6, axis: dec, shape: star-6 }
+    renderer:
+      component: DecStar6
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:  { type: bbox,  required: true }
+        color: { type: color, default: 'tokens.palette.accent' }
+    fixture:
+      sample_html: |
+        <svg data-atom="dec.star-6" viewBox="0 0 24 24"><path d="M12 2 L14 8 L20 8 L15 12 L17 18 L12 14 L7 18 L9 12 L4 8 L10 8 Z" fill="#a78bfa"/></svg>
+      expected_recipe_id: dec.star-6
+
+  - id: atom-dec-arrow-right
+    priority: 75
+    match:
+      anchor.data_atom_id: dec.arrow-right
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_dec_arrow_right, axis: dec, shape: arrow-right }
+    renderer:
+      component: DecArrowRight
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:  { type: bbox,  required: true }
+        color: { type: color, default: 'tokens.palette.ink-1' }
+    fixture:
+      sample_html: |
+        <svg data-atom="dec.arrow-right" viewBox="0 0 24 24"><path d="M2 10h12V6l8 6-8 6v-4H2z" fill="#f5f5f7"/></svg>
+      expected_recipe_id: dec.arrow-right
+
+  - id: atom-dec-arrow-left
+    priority: 75
+    match:
+      anchor.data_atom_id: dec.arrow-left
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_dec_arrow_left, axis: dec, shape: arrow-left }
+    renderer:
+      component: DecArrowLeft
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:  { type: bbox,  required: true }
+        color: { type: color, default: 'tokens.palette.ink-1' }
+    fixture:
+      sample_html: |
+        <svg data-atom="dec.arrow-left" viewBox="0 0 24 24"><path d="M22 10H10V6L2 12l8 6v-4h12z" fill="#f5f5f7"/></svg>
+      expected_recipe_id: dec.arrow-left
+
+  - id: atom-dec-arrow-up
+    priority: 75
+    match:
+      anchor.data_atom_id: dec.arrow-up
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_dec_arrow_up, axis: dec, shape: arrow-up }
+    renderer:
+      component: DecArrowUp
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:  { type: bbox,  required: true }
+        color: { type: color, default: 'tokens.palette.success' }
+    fixture:
+      sample_html: |
+        <svg data-atom="dec.arrow-up" viewBox="0 0 24 24"><path d="M14 22h-4V10H6l6-8 6 8h-4z" fill="#10b981"/></svg>
+      expected_recipe_id: dec.arrow-up
+
+  - id: atom-dec-arrow-down
+    priority: 75
+    match:
+      anchor.data_atom_id: dec.arrow-down
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_dec_arrow_down, axis: dec, shape: arrow-down }
+    renderer:
+      component: DecArrowDown
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:  { type: bbox,  required: true }
+        color: { type: color, default: 'tokens.palette.danger' }
+    fixture:
+      sample_html: |
+        <svg data-atom="dec.arrow-down" viewBox="0 0 24 24"><path d="M14 2h-4v12H6l6 8 6-8h-4z" fill="#ef4444"/></svg>
+      expected_recipe_id: dec.arrow-down
+
+  - id: atom-dec-hairline-rule
+    priority: 75
+    match:
+      anchor.data_atom_id: dec.hairline-rule
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_dec_hairline_rule, axis: dec, shape: line }
+    renderer:
+      component: DecHairlineRule
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:        { type: bbox,   required: true }
+        orientation: { type: enum,   values: [h, v], default: h }
+        color:       { type: color,  default: 'tokens.palette.ruler' }
+        thicknessPx: { type: number, default: 1 }
+    fixture:
+      sample_html: |
+        <hr data-atom="dec.hairline-rule" style="border:none;border-top:1px solid rgba(255,255,255,0.10);margin:0;"/>
+      expected_recipe_id: dec.hairline-rule
+
+  - id: atom-dec-dotted-rule
+    priority: 75
+    match:
+      anchor.data_atom_id: dec.dotted-rule
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_dec_dotted_rule, axis: dec, shape: line, dash: dotted }
+    renderer:
+      component: DecDottedRule
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:        { type: bbox,  required: true }
+        orientation: { type: enum,  values: [h, v], default: h }
+        color:       { type: color, default: 'tokens.palette.ruler' }
+    fixture:
+      sample_html: |
+        <hr data-atom="dec.dotted-rule" style="border:none;border-top:1px dotted rgba(255,255,255,0.20);margin:0;"/>
+      expected_recipe_id: dec.dotted-rule
+
+  - id: atom-dec-corner-crop
+    priority: 75
+    match:
+      anchor.data_atom_id: dec.corner-crop
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_dec_corner_crop, axis: dec, shape: triangle }
+    renderer:
+      component: DecCornerCrop
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,  required: true }
+        corners: { type: enum,  values: [tl, tr, bl, br, all], default: tr }
+        sizePx:  { type: number, default: 24 }
+        color:   { type: color, default: 'tokens.palette.surface-1' }
+    fixture:
+      sample_html: |
+        <div data-atom="dec.corner-crop" style="position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:24px 24px 0 0;border-color:#070710 transparent transparent transparent;"></div>
+      expected_recipe_id: dec.corner-crop
+
+  - id: atom-dec-section-divider
+    priority: 75
+    match:
+      anchor.data_atom_id: dec.section-divider
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_dec_section_divider, axis: dec, role: chapter-break }
+    renderer:
+      component: DecSectionDivider
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox: { type: bbox, required: true }
+        fill: { type: fill, default: 'tokens.gradient.accent-grad' }
+    fixture:
+      sample_html: |
+        <div data-atom="dec.section-divider" style="position:absolute;left:0;right:0;height:6px;background:linear-gradient(90deg,#818cf8,#c084fc 50%,#f472b6);"></div>
+      expected_recipe_id: dec.section-divider
+
+  - id: atom-dec-numeral-chapter
+    priority: 75
+    match:
+      anchor.data_atom_id: dec.numeral-chapter
+    emit:
+      kind: NativeText
+      confidence: 0.99
+      metadata: { recipe: atom_dec_numeral_chapter, axis: dec, scale: numeral-2xl }
+    renderer:
+      component: DecNumeralChapter
+      tier: B
+      primitive: slot.numeral
+      version: 1.0.0
+      props:
+        bbox:   { type: bbox,   required: true }
+        digits: { type: string, required: true }
+    fixture:
+      sample_html: |
+        <span data-atom="dec.numeral-chapter" style="font-size:240px;font-weight:800;line-height:0.85;letter-spacing:-0.06em;color:#a78bfa;opacity:0.18;">01</span>
+      expected_recipe_id: dec.numeral-chapter
+
+  - id: atom-dec-bullet-dot
+    priority: 75
+    match:
+      anchor.data_atom_id: dec.bullet-dot
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_dec_bullet_dot, axis: dec, shape: oval }
+    renderer:
+      component: DecBulletDot
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:  { type: bbox,  required: true }
+        color: { type: color, default: 'tokens.palette.accent' }
+        sizePx: { type: number, default: 8 }
+    fixture:
+      sample_html: |
+        <span data-atom="dec.bullet-dot" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#a78bfa;"></span>
+      expected_recipe_id: dec.bullet-dot
