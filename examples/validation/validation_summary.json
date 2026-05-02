@@ -1,0 +1,179 @@
+[
+  {
+    "deck": "recipes",
+    "label": "cold",
+    "pptx": "/tmp/pptx_artifacts/recipes.cold.pptx",
+    "n_slides": 16,
+    "native_area_ratio": 1.0,
+    "cache_hit_rate": 0.5372,
+    "pattern_coverage": 0.7512,
+    "decisions_by_tier": {
+      "tier0": 140,
+      "cache:tier0": 220,
+      "tier2": 15,
+      "promotion": 21,
+      "tier1": 29,
+      "cache:tier1": 14,
+      "cache:tier2": 4
+    },
+    "top_pattern_hits": {
+      "kicker-from-css": 46,
+      "title-h1": 14,
+      "slide-solid-bg": 13,
+      "short-label": 7,
+      "background-blend-mode-raster": 6,
+      "text-card-composite": 6,
+      "body-paragraph": 5,
+      "stat-number-from-css": 4
+    },
+    "n_unmatched_sigs": 25,
+    "elapsed_s": 13.99
+  },
+  {
+    "deck": "recipes",
+    "label": "warm",
+    "pptx": "/tmp/pptx_artifacts/recipes.warm.pptx",
+    "n_slides": 16,
+    "native_area_ratio": 1.0,
+    "cache_hit_rate": 1.0,
+    "pattern_coverage": 0.0,
+    "decisions_by_tier": {
+      "cache:tier0": 360,
+      "cache:tier2": 19,
+      "promotion": 21,
+      "cache:tier1": 43
+    },
+    "top_pattern_hits": {},
+    "n_unmatched_sigs": 0,
+    "elapsed_s": 12.7
+  },
+  {
+    "deck": "atoms",
+    "label": "cold",
+    "pptx": "/tmp/pptx_artifacts/atoms.cold.pptx",
+    "n_slides": 10,
+    "native_area_ratio": 1.0,
+    "cache_hit_rate": 0.618,
+    "pattern_coverage": 0.8202,
+    "decisions_by_tier": {
+      "tier0": 138,
+      "cache:tier0": 274,
+      "tier2": 13,
+      "tier1": 17,
+      "promotion": 10,
+      "cache:tier1": 14
+    },
+    "top_pattern_hits": {
+      "kicker-from-css": 26,
+      "gradient-card-no-text": 10,
+      "slide-solid-bg": 8,
+      "atom-dec-any": 8,
+      "background-blend-mode-raster": 6,
+      "decoration-card": 5,
+      "stat-number-with-runs": 5,
+      "stat-number-from-css": 5
+    },
+    "n_unmatched_sigs": 25,
+    "elapsed_s": 6.03
+  },
+  {
+    "deck": "atoms",
+    "label": "warm",
+    "pptx": "/tmp/pptx_artifacts/atoms.warm.pptx",
+    "n_slides": 10,
+    "native_area_ratio": 1.0,
+    "cache_hit_rate": 1.0,
+    "pattern_coverage": 0.0,
+    "decisions_by_tier": {
+      "cache:tier0": 412,
+      "cache:tier2": 13,
+      "cache:tier1": 31,
+      "promotion": 10
+    },
+    "top_pattern_hits": {},
+    "n_unmatched_sigs": 0,
+    "elapsed_s": 5.97
+  },
+  {
+    "deck": "sample_deck",
+    "label": "cold",
+    "pptx": "/tmp/pptx_artifacts/sample_deck.cold.pptx",
+    "n_slides": 3,
+    "native_area_ratio": 1.0,
+    "cache_hit_rate": 0.3684,
+    "pattern_coverage": 0.6667,
+    "decisions_by_tier": {
+      "tier0": 8,
+      "tier1": 4,
+      "cache:tier0": 6,
+      "cache:tier1": 1
+    },
+    "top_pattern_hits": {
+      "text-card-composite": 2,
+      "footer-text": 1,
+      "body-paragraph": 1,
+      "subtitle": 1,
+      "slide-solid-bg": 1,
+      "short-label": 1,
+      "stat-card-composite": 1
+    },
+    "n_unmatched_sigs": 4,
+    "elapsed_s": 1.85
+  },
+  {
+    "deck": "sample_deck",
+    "label": "warm",
+    "pptx": "/tmp/pptx_artifacts/sample_deck.warm.pptx",
+    "n_slides": 3,
+    "native_area_ratio": 1.0,
+    "cache_hit_rate": 1.0,
+    "pattern_coverage": 0.0,
+    "decisions_by_tier": {
+      "cache:tier0": 14,
+      "cache:tier1": 5
+    },
+    "top_pattern_hits": {},
+    "n_unmatched_sigs": 0,
+    "elapsed_s": 1.82
+  },
+  {
+    "deck": "svg_stress",
+    "label": "cold",
+    "pptx": "/tmp/pptx_artifacts/svg_stress.cold.pptx",
+    "n_slides": 1,
+    "native_area_ratio": 1.0,
+    "cache_hit_rate": 0.0909,
+    "pattern_coverage": 0.5,
+    "decisions_by_tier": {
+      "tier1": 3,
+      "tier0": 5,
+      "tier2": 2,
+      "cache:tier0": 1
+    },
+    "top_pattern_hits": {
+      "kicker-from-css": 2,
+      "text-card-composite": 1,
+      "title-h1": 1,
+      "slide-solid-bg": 1
+    },
+    "n_unmatched_sigs": 5,
+    "elapsed_s": 1.31
+  },
+  {
+    "deck": "svg_stress",
+    "label": "warm",
+    "pptx": "/tmp/pptx_artifacts/svg_stress.warm.pptx",
+    "n_slides": 1,
+    "native_area_ratio": 1.0,
+    "cache_hit_rate": 1.0,
+    "pattern_coverage": 0.0,
+    "decisions_by_tier": {
+      "cache:tier1": 3,
+      "cache:tier0": 6,
+      "cache:tier2": 2
+    },
+    "top_pattern_hits": {},
+    "n_unmatched_sigs": 0,
+    "elapsed_s": 1.41
+  }
+]
