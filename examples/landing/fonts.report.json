@@ -1,0 +1,159 @@
+{
+  "pptx_path": "examples/landing/fonts.pptx",
+  "n_slides": 4,
+  "fidelity_reports": [],
+  "native_area_ratio": 1.0,
+  "llm_calls": 0,
+  "total_cost_usd": 0.0,
+  "elapsed_seconds": 3.720493653000176,
+  "cache_hit_rate": 0.5742574257425742,
+  "decisions_by_tier": {
+    "tier0": 30,
+    "tier1": 12,
+    "cache:tier0": 50,
+    "cache:tier1": 8,
+    "tier2": 1
+  },
+  "pattern_hits": {
+    "kicker-from-css": 10,
+    "footer-text": 1,
+    "text-card-composite": 12,
+    "body-paragraph": 1,
+    "title-h1": 2,
+    "slide-solid-bg": 4
+  },
+  "pattern_coverage": 0.6976744186046512,
+  "unmatched_signatures": [
+    {
+      "sig": "p(txt)[][576x64]",
+      "sig_hash": "489f45b356c25bd7",
+      "bbox_w": 606,
+      "bbox_h": 87,
+      "sample_classes": "display",
+      "sample_text": "SHIP SLIDES THAT STAY ALIVE AFTER THE MEETING.",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "p(txt)[][576x160]",
+      "sig_hash": "c8bf98dce2589ba8",
+      "bbox_w": 606,
+      "bbox_h": 176,
+      "sample_classes": "display",
+      "sample_text": "Ship slides that stay alive after the meeting.",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "p(txt+txtc)[][576x64]",
+      "sig_hash": "13728a5b13c373e7",
+      "bbox_w": 606,
+      "bbox_h": 91,
+      "sample_classes": "display",
+      "sample_text": "Ship slides that stay alive after the meeting.",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "p(txt+txtc)[][576x96]",
+      "sig_hash": "811f665aff5dd822",
+      "bbox_w": 606,
+      "bbox_h": 100,
+      "sample_classes": "display",
+      "sample_text": "Ship slides that stay alive after the meeting.",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "p(txt)[][576x96]",
+      "sig_hash": "7913854f51be4e65",
+      "bbox_w": 606,
+      "bbox_h": 108,
+      "sample_classes": "display",
+      "sample_text": "Ship slides that stay alive after the meeting.",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "p(txt)[][576x32]",
+      "sig_hash": "9c7581a5516902ed",
+      "bbox_w": 606,
+      "bbox_h": 63,
+      "sample_classes": "display",
+      "sample_text": "$ ship slides --that-stay-alive --after=meeting",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "span(txt)[][576x96]",
+      "sig_hash": "f6eae6a91367b447",
+      "bbox_w": 583,
+      "bbox_h": 98,
+      "sample_classes": "l1",
+      "sample_text": "after the meeting.",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "span(txt)[][128x32]",
+      "sig_hash": "887f74d7fece7edd",
+      "bbox_w": 188,
+      "bbox_h": 52,
+      "sample_classes": "l4",
+      "sample_text": "stay alive",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "span(txt)[][64x32]",
+      "sig_hash": "2debef14f3f0f5eb",
+      "bbox_w": 76,
+      "bbox_h": 52,
+      "sample_classes": "l3",
+      "sample_text": "that",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[]<2>[1088x128]{div(txt)[][256x0],div(txt)[][256x0],div(txt+txtc)[][128x32],span(txt)[][128x32],span(txt)[][576x96],span(txt)[][64x32],span(txt)[][64x32],span(txt)[][64x32]}",
+      "sig_hash": "349ea439f10ccfe3",
+      "bbox_w": 1136,
+      "bbox_h": 158,
+      "sample_classes": "row r-manifesto",
+      "sample_text": "MANIFESTOInter · weight axis 200 → 900 in one line",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(txt+txtc)[][192x32]",
+      "sig_hash": "fea8469ee775eb6a",
+      "bbox_w": 227,
+      "bbox_h": 52,
+      "sample_classes": "h",
+      "sample_text": "Velocity.",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(txt)[][192x32]",
+      "sig_hash": "4bf3b043ca3dd578",
+      "bbox_w": 227,
+      "bbox_h": 45,
+      "sample_classes": "h",
+      "sample_text": "Velocity.",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "table()[][1088x416]",
+      "sig_hash": "ca61fe0549382076",
+      "bbox_w": 1136,
+      "bbox_h": 431,
+      "sample_classes": "",
+      "sample_text": "",
+      "n_occurrences": 1
+    }
+  ],
+  "compat_matrix_version": "2",
+  "compat_matrix_summary": {
+    "native": 40,
+    "raster": 20,
+    "partial": 7,
+    "unsupported": 1,
+    "planned": 13
+  },
+  "editability_passed": false,
+  "editability_intended_total": 101,
+  "editability_actual_total": 97,
+  "editability_failing_slides": [
+    0
+  ]
+}
