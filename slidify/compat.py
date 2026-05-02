@@ -252,6 +252,13 @@ MATRIX: tuple[CompatRow, ...] = (
         Support.Native, "slidify.decorations.derive_decorations",
         "Layered decoration stacks emit as native shape stacks.",
     ),
+    CompatRow(
+        "Hints", "data-atom (atom catalog short-circuit)",
+        Support.Native, "slidify.patterns.matcher._h_data_atom_id",
+        "Tags a cluster as a known atom (bg.mesh, surf.glass, type.echo, …); "
+        "matcher routes to the canonical recipe in atoms.yaml. "
+        "Catalog: examples/landing/atoms.html.",
+    ),
 
     # --- Notion-style block primitives -----------------------------------
     # Notion's blocks are "just HTML" once exported — toggles, callouts,

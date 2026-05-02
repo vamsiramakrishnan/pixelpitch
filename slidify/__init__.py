@@ -12,12 +12,16 @@ For containers and CI, ``ConversionConfig.from_env()`` reads ``SLIDIFY_*`` env
 vars (see its docstring).
 """
 
+from slidify._logging import ensure_configured as _ensure_logging_configured
 from slidify.api import (
     ConversionConfig,
     ConversionResult,
     convert,
     convert_sync,
 )
+
+# Route logs to stderr before any module gets a chance to log to stdout.
+_ensure_logging_configured()
 from slidify.exceptions import (
     ClassificationError,
     EmitError,

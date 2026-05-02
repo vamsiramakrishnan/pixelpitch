@@ -1,0 +1,606 @@
+# Atom catalog — recipes keyed off the `data-atom` author hint.
+#
+# When an HTML element carries `data-atom="bg.mesh"`, the matcher's
+# `anchor.data_atom_id` predicate fires and routes the unit to the recipe
+# below. This bypasses signature inference entirely: the deck author is
+# declaring "this cluster is exactly this atom — emit it natively." The
+# trade-off the author opts into is that the recipe assumes the markup
+# matches the atom's canonical structure (see `examples/landing/atoms.html`
+# for the reference shapes).
+#
+# Atoms are organised by axis (10 total):
+#   comp.*    composition gestures        (centered, split, golden, …)
+#   bg.*      background fields           (mesh, conic, halftone, …)
+#   surf.*    surfaces                    (glass, hero, sticker, …)
+#   type.*    type treatments             (gfill, stroke, echo, …)
+#   mask.*    media masks                 (disc, arch, hex, …)
+#   dec.*     decorative tokens           (brackets, registration, …)
+#   data.*    data primitives             (ring, gauge, sparkline, …)
+#   motion.*  motion implication          (echo, marquee, particles, …)
+#   ui.*      UI mocks                    (browser, toolbar, toast, …)
+#   anno.*    annotation primitives       (leader, dimension, reticle, …)
+#
+# Priority sits in the 50–80 band — *after* the must-raster gates (1–9)
+# and the typography/decoration tier-0 rules (10–48), so authoring an
+# atom doesn't override a hard constraint, but *before* the generic
+# fall-through patterns (priority ≥ 100) so the atom recipe wins by
+# declaration.
+#
+# Every recipe routes to a native emit kind:
+#   - bg.*, surf.*, mask.*    → NativeShape (gradient/clip-path → custGeom)
+#   - type.*                  → NativeText  (per-run font/weight/color)
+#   - data.*, dec.*, anno.*   → NativeSvg   (primitives stay as shapes)
+#   - ui.*                    → NativeShape composite (cluster of shapes)
+#   - comp.*                  → observe-only (layout hint, not an emit)
+#
+# Authors compose recipes in `examples/landing/recipes.html` by stacking
+# atoms across axes. The matcher resolves each `data-atom`-tagged anchor
+# independently — the composition emerges from z-ordered stacking, not
+# from a meta-recipe.
+
+patterns:
+
+  # ── composition gestures: structural-only (no decision override) ────────
+  - id: atom-comp-any
+    priority: 50
+    match:
+      anchor.data_atom_namespace: comp
+    tag: structural
+    emit:
+      kind: observe
+      metadata: { recipe: atom_comp, namespace: comp }
+
+  # ── background fields → NativeShape (gradient / repeating gradient) ─────
+  - id: atom-bg-mesh
+    priority: 52
+    match:
+      anchor.data_atom_id: bg.mesh
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_bg_mesh, axis: bg, layers: 4, fill: radial-mesh }
+
+  - id: atom-bg-conic
+    priority: 52
+    match:
+      anchor.data_atom_id: bg.conic
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_bg_conic, axis: bg, fill: conic }
+
+  - id: atom-bg-stripes
+    priority: 52
+    match:
+      anchor.data_atom_id: bg.stripes
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_bg_stripes, axis: bg, fill: repeating-linear }
+
+  - id: atom-bg-scanline
+    priority: 52
+    match:
+      anchor.data_atom_id: bg.scanline
+    emit:
+      kind: NativeShape
+      confidence: 0.95
+      metadata: { recipe: atom_bg_scanline, axis: bg, fill: scanline }
+
+  - id: atom-bg-duotone
+    priority: 52
+    match:
+      anchor.data_atom_id: bg.duotone
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_bg_duotone, axis: bg, fill: linear-2stop }
+
+  - id: atom-bg-vignette
+    priority: 52
+    match:
+      anchor.data_atom_id: bg.vignette
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_bg_vignette, axis: bg, fill: radial-ellipse }
+
+  - id: atom-bg-aurora-band
+    priority: 52
+    match:
+      anchor.data_atom_id: bg.aurora-band
+    emit:
+      kind: NativeShape
+      confidence: 0.95
+      metadata: { recipe: atom_bg_aurora_band, axis: bg, fill: linear-5stop }
+
+  - id: atom-bg-dot-lattice
+    priority: 52
+    match:
+      anchor.data_atom_id: bg.dot-lattice
+    emit:
+      kind: NativeSvg
+      confidence: 0.95
+      metadata: { recipe: atom_bg_dot_lattice, axis: bg, fill: svg-circles }
+
+  # ── surfaces (use existing decoration grammar where it overlaps) ────────
+  - id: atom-surf-glass
+    priority: 56
+    match:
+      anchor.data_atom_id: surf.glass
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_surf_glass, axis: surf, decorate: glass }
+
+  - id: atom-surf-hero
+    priority: 56
+    match:
+      anchor.data_atom_id: surf.hero
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_surf_hero, axis: surf, decorate: hero }
+
+  - id: atom-surf-spotlight
+    priority: 56
+    match:
+      anchor.data_atom_id: surf.spotlight
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_surf_spotlight, axis: surf, decorate: spotlight }
+
+  - id: atom-surf-aurora
+    priority: 56
+    match:
+      anchor.data_atom_id: surf.aurora
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_surf_aurora, axis: surf, decorate: aurora }
+
+  - id: atom-surf-tactile
+    priority: 56
+    match:
+      anchor.data_atom_id: surf.tactile
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_surf_tactile, axis: surf, decorate: tactile }
+
+  - id: atom-surf-recessed
+    priority: 56
+    match:
+      anchor.data_atom_id: surf.recessed
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_surf_recessed, axis: surf, decorate: recessed }
+
+  - id: atom-surf-sticker
+    priority: 56
+    match:
+      anchor.data_atom_id: surf.sticker
+    emit:
+      kind: NativeShape
+      confidence: 0.95
+      metadata: { recipe: atom_surf_sticker, axis: surf, rotation: native-2d }
+
+  - id: atom-surf-polaroid
+    priority: 56
+    match:
+      anchor.data_atom_id: surf.polaroid
+    emit:
+      kind: NativeShape
+      confidence: 0.95
+      metadata: { recipe: atom_surf_polaroid, axis: surf, kind: framed-photo }
+
+  # ── type treatments → NativeText (per-run styling) ──────────────────────
+  - id: atom-type-any
+    priority: 60
+    match:
+      anchor.data_atom_namespace: type
+    emit:
+      kind: NativeText
+      confidence: 0.95
+      metadata: { recipe: atom_type, axis: type }
+
+  - id: atom-type-gfill-2
+    priority: 58
+    match:
+      anchor.data_atom_id: type.gfill-2
+    emit:
+      kind: NativeText
+      confidence: 0.99
+      metadata: { recipe: atom_type_gfill, axis: type, stops: 2 }
+
+  - id: atom-type-gfill-4
+    priority: 58
+    match:
+      anchor.data_atom_id: type.gfill-4
+    emit:
+      kind: NativeText
+      confidence: 0.99
+      metadata: { recipe: atom_type_gfill, axis: type, stops: 4 }
+
+  - id: atom-type-stroke
+    priority: 58
+    match:
+      anchor.data_atom_id:
+        - type.stroke
+        - type.stroke-thick
+    emit:
+      kind: NativeText
+      confidence: 0.95
+      metadata: { recipe: atom_type_stroke, axis: type, fill: outline-only }
+
+  - id: atom-type-echo
+    priority: 58
+    match:
+      anchor.data_atom_id: type.echo
+    emit:
+      kind: NativeText
+      confidence: 0.95
+      metadata: { recipe: atom_type_echo, axis: type, layers: ghost-stack }
+
+  - id: atom-type-longshadow
+    priority: 58
+    match:
+      anchor.data_atom_id: type.longshadow
+    emit:
+      kind: NativeText
+      confidence: 0.95
+      metadata: { recipe: atom_type_longshadow, axis: type, layers: 8 }
+
+  - id: atom-type-mixed
+    priority: 58
+    match:
+      anchor.data_atom_id: type.mixed
+    emit:
+      kind: NativeText
+      confidence: 0.95
+      metadata: { recipe: atom_type_mixed, axis: type, runs: per-span }
+
+  - id: atom-type-kinetic-baseline
+    priority: 58
+    match:
+      anchor.data_atom_id: type.kinetic-baseline
+    emit:
+      kind: NativeText
+      confidence: 0.95
+      metadata: { recipe: atom_type_kinetic, axis: type, baseline: y-offset-per-glyph }
+
+  - id: atom-type-marquee
+    priority: 58
+    match:
+      anchor.data_atom_id: type.marquee
+    emit:
+      kind: NativeText
+      confidence: 0.95
+      metadata: { recipe: atom_type_marquee, axis: type, repeat: static-frame }
+
+  - id: atom-type-dropcap
+    priority: 58
+    match:
+      anchor.data_atom_id: type.dropcap
+    emit:
+      kind: NativeText
+      confidence: 0.95
+      metadata: { recipe: atom_type_dropcap, axis: type, first-letter: oversized-gradient }
+
+  # ── media masks → NativeShape (clip-path polygon / radius) ──────────────
+  - id: atom-mask-disc
+    priority: 62
+    match:
+      anchor.data_atom_id: mask.disc
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_mask_disc, axis: mask, preset: oval }
+
+  - id: atom-mask-arch
+    priority: 62
+    match:
+      anchor.data_atom_id: mask.arch
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_mask_arch, axis: mask, preset: round-top-rect }
+
+  - id: atom-mask-hex
+    priority: 62
+    match:
+      anchor.data_atom_id: mask.hex
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_mask_hex, axis: mask, preset: hexagon }
+
+  - id: atom-mask-parallelogram
+    priority: 62
+    match:
+      anchor.data_atom_id: mask.parallelogram
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_mask_para, axis: mask, preset: parallelogram }
+
+  - id: atom-mask-triangle
+    priority: 62
+    match:
+      anchor.data_atom_id: mask.triangle
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_mask_triangle, axis: mask, preset: triangle }
+
+  - id: atom-mask-diamond
+    priority: 62
+    match:
+      anchor.data_atom_id: mask.diamond
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_mask_diamond, axis: mask, preset: diamond }
+
+  - id: atom-mask-rounded
+    priority: 62
+    match:
+      anchor.data_atom_id: mask.rounded
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_mask_rounded, axis: mask, preset: rounded-rect }
+
+  - id: atom-mask-mosaic
+    priority: 62
+    match:
+      anchor.data_atom_id: mask.mosaic
+    emit:
+      kind: NativeShape
+      confidence: 0.95
+      metadata: { recipe: atom_mask_mosaic, axis: mask, layers: 4-quadrants }
+
+  # ── decorative tokens → NativeSvg (small primitive groups) ──────────────
+  - id: atom-dec-any
+    priority: 66
+    match:
+      anchor.data_atom_namespace: dec
+    emit:
+      kind: NativeSvg
+      confidence: 0.95
+      metadata: { recipe: atom_dec, axis: dec }
+
+  # ── data primitives → NativeSvg (chart-like) ────────────────────────────
+  - id: atom-data-ring
+    priority: 70
+    match:
+      anchor.data_atom_id: data.ring
+    emit:
+      kind: NativeSvg
+      confidence: 0.99
+      metadata: { recipe: atom_data_ring, axis: data, primitive: progress-ring }
+
+  - id: atom-data-gauge
+    priority: 70
+    match:
+      anchor.data_atom_id: data.gauge
+    emit:
+      kind: NativeSvg
+      confidence: 0.99
+      metadata: { recipe: atom_data_gauge, axis: data, primitive: half-arc }
+
+  - id: atom-data-sparkline
+    priority: 70
+    match:
+      anchor.data_atom_id: data.sparkline
+    emit:
+      kind: NativeSvg
+      confidence: 0.99
+      metadata: { recipe: atom_data_sparkline, axis: data, primitive: polyline }
+
+  - id: atom-data-sparkbars
+    priority: 70
+    match:
+      anchor.data_atom_id: data.sparkbars
+    emit:
+      kind: NativeSvg
+      confidence: 0.99
+      metadata: { recipe: atom_data_sparkbars, axis: data, primitive: rect-grid }
+
+  - id: atom-data-heatmap
+    priority: 70
+    match:
+      anchor.data_atom_id: data.heatmap
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_data_heatmap, axis: data, primitive: cell-grid }
+
+  - id: atom-data-kpi-delta
+    priority: 70
+    match:
+      anchor.data_atom_id: data.kpi-delta
+    emit:
+      kind: NativeText
+      confidence: 0.99
+      metadata: { recipe: atom_data_kpi, axis: data, primitive: number-arrow-pct }
+
+  - id: atom-data-ticker
+    priority: 70
+    match:
+      anchor.data_atom_id: data.ticker
+    emit:
+      kind: NativeText
+      confidence: 0.95
+      metadata: { recipe: atom_data_ticker, axis: data, primitive: ribbon }
+
+  - id: atom-data-logo-cloud
+    priority: 70
+    match:
+      anchor.data_atom_id: data.logo-cloud
+    emit:
+      kind: NativeText
+      confidence: 0.95
+      metadata: { recipe: atom_data_logo_cloud, axis: data, primitive: wordmark-row }
+
+  # ── motion implication: same emit shape as type/data depending on substrate
+  - id: atom-motion-echo
+    priority: 74
+    match:
+      anchor.data_atom_id: motion.echo
+    emit:
+      kind: NativeText
+      confidence: 0.95
+      metadata: { recipe: atom_motion_echo, axis: motion, layers: ghost-stack }
+
+  - id: atom-motion-shutter
+    priority: 74
+    match:
+      anchor.data_atom_id: motion.shutter
+    emit:
+      kind: NativeShape
+      confidence: 0.95
+      metadata: { recipe: atom_motion_shutter, axis: motion, fill: vertical-stripes }
+
+  - id: atom-motion-speed-lines
+    priority: 74
+    match:
+      anchor.data_atom_id: motion.speed-lines
+    emit:
+      kind: NativeSvg
+      confidence: 0.99
+      metadata: { recipe: atom_motion_speed, axis: motion, primitive: stacked-lines }
+
+  - id: atom-motion-particles
+    priority: 74
+    match:
+      anchor.data_atom_id: motion.particles
+    emit:
+      kind: NativeSvg
+      confidence: 0.99
+      metadata: { recipe: atom_motion_particles, axis: motion, primitive: scatter-dots }
+
+  - id: atom-motion-marquee
+    priority: 74
+    match:
+      anchor.data_atom_id: motion.marquee
+    emit:
+      kind: NativeText
+      confidence: 0.95
+      metadata: { recipe: atom_motion_marquee, axis: motion, transform: skew-x }
+
+  - id: atom-motion-kinetic
+    priority: 74
+    match:
+      anchor.data_atom_id: motion.kinetic
+    emit:
+      kind: NativeText
+      confidence: 0.95
+      metadata: { recipe: atom_motion_kinetic, axis: motion, baseline: per-glyph-translate }
+
+  # ── UI mocks → composite shape stacks ──────────────────────────────────
+  - id: atom-ui-browser-chrome
+    priority: 78
+    match:
+      anchor.data_atom_id: ui.browser-chrome
+    emit:
+      kind: NativeShape
+      confidence: 0.95
+      metadata: { recipe: atom_ui_browser, axis: ui, layers: window+bar+url+body }
+
+  - id: atom-ui-tab-strip
+    priority: 78
+    match:
+      anchor.data_atom_id: ui.tab-strip
+    emit:
+      kind: NativeShape
+      confidence: 0.95
+      metadata: { recipe: atom_ui_tabs, axis: ui }
+
+  - id: atom-ui-search
+    priority: 78
+    match:
+      anchor.data_atom_id: ui.search
+    emit:
+      kind: NativeShape
+      confidence: 0.95
+      metadata: { recipe: atom_ui_search, axis: ui, kind: pill-input }
+
+  - id: atom-ui-toolbar
+    priority: 78
+    match:
+      anchor.data_atom_id: ui.toolbar
+    emit:
+      kind: NativeShape
+      confidence: 0.95
+      metadata: { recipe: atom_ui_toolbar, axis: ui }
+
+  - id: atom-ui-avatar-cluster
+    priority: 78
+    match:
+      anchor.data_atom_id: ui.avatar-cluster
+    emit:
+      kind: NativeShape
+      confidence: 0.95
+      metadata: { recipe: atom_ui_avatars, axis: ui, layers: stacked-discs }
+
+  - id: atom-ui-toast
+    priority: 78
+    match:
+      anchor.data_atom_id: ui.toast
+    emit:
+      kind: NativeShape
+      confidence: 0.95
+      metadata: { recipe: atom_ui_toast, axis: ui }
+
+  # ── annotation primitives → NativeSvg (line + circle + label) ───────────
+  - id: atom-anno-leader-line
+    priority: 82
+    match:
+      anchor.data_atom_id: anno.leader-line
+    emit:
+      kind: NativeSvg
+      confidence: 0.99
+      metadata: { recipe: atom_anno_leader, axis: anno }
+
+  - id: atom-anno-dimension
+    priority: 82
+    match:
+      anchor.data_atom_id: anno.dimension
+    emit:
+      kind: NativeSvg
+      confidence: 0.99
+      metadata: { recipe: atom_anno_dimension, axis: anno }
+
+  - id: atom-anno-target-reticle
+    priority: 82
+    match:
+      anchor.data_atom_id: anno.target-reticle
+    emit:
+      kind: NativeSvg
+      confidence: 0.99
+      metadata: { recipe: atom_anno_reticle, axis: anno }
+
+  - id: atom-anno-callout-pill
+    priority: 82
+    match:
+      anchor.data_atom_id: anno.callout-pill
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_anno_pill, axis: anno }
+
+  # ── catch-all telemetry: any data-atom we DO know to be valid ──────────
+  # Fires only if no specific atom rule above matched. Tagged structural so
+  # it doesn't clobber a real decision; it's the "we saw an unknown atom"
+  # observability signal.
+  - id: atom-unrecognised
+    priority: 95
+    match:
+      anchor.data_atom_id: "*"
+    tag: structural
+    emit:
+      kind: observe
+      metadata: { recipe: atom_unrecognised }
