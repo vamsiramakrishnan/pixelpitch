@@ -1,0 +1,261 @@
+{
+  "pptx_path": "examples/landing/recipes.pptx",
+  "n_slides": 8,
+  "fidelity_reports": [],
+  "native_area_ratio": 1.0,
+  "llm_calls": 0,
+  "total_cost_usd": 0.0,
+  "elapsed_seconds": 28.919596852000012,
+  "cache_hit_rate": 0.4451219512195122,
+  "decisions_by_tier": {
+    "tier0": 63,
+    "cache:tier0": 66,
+    "tier2": 9,
+    "promotion": 9,
+    "tier1": 10,
+    "cache:tier1": 4,
+    "cache:tier2": 3
+  },
+  "pattern_hits": {
+    "kicker-from-css": 23,
+    "title-h1": 7,
+    "decoration-card": 2,
+    "atom-motion-particles": 2,
+    "gradient-card-no-text": 3,
+    "atom-bg-mesh": 1,
+    "slide-solid-bg": 8,
+    "body-paragraph": 2,
+    "pill-from-css": 1,
+    "stat-number-from-css": 1,
+    "stat-card-composite": 1,
+    "short-label": 3,
+    "stat-number-with-runs": 1,
+    "atom-mask-arch": 1,
+    "atom-surf-recessed": 2,
+    "atom-surf-aurora": 1,
+    "atom-surf-spotlight": 1,
+    "atom-surf-glass": 1,
+    "atom-data-ring": 1,
+    "atom-surf-hero": 1,
+    "gradient-card-with-text": 1,
+    "micro-text-tiny": 1,
+    "atom-ui-browser-chrome": 1,
+    "atom-anno-leader-line": 1,
+    "atom-dec-any": 1,
+    "subtitle": 1
+  },
+  "pattern_coverage": 0.7582417582417582,
+  "unmatched_signatures": [
+    {
+      "sig": "div(bgi=grad)[]<4>[1280x704]{div(bgi=grad)[][704x704],div(bgi=grad)[][832x864],div(brd)[][1152x608],div(txt)[][1280x0],div(txt)[][1280x0],div(xform+txt)[][0x320],h1(bgi=grad+xform+txt)[][1280x256],svg(svg/12)[]<16>[1280x704]}",
+      "sig_hash": "4bee789938a42b2f",
+      "bbox_w": 1280,
+      "bbox_h": 720,
+      "sample_classes": "slide",
+      "sample_text": "ISSUE 04 · 2026 · A FILM ABOUT SHIPPING",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bgi=grad)[]<2>[1280x704]{div(bgi=grad)[][1280x704],div(bgi=grad)[][1280x704],div(txt)[][0x32],div(txt)[][1024x0],div(txt)[][128x0],div(txt)[][128x0],div(txt+txtc)[][192x32],h1(txt+txtc)[][1024x192]}",
+      "sig_hash": "d1d4eb22c445cd45",
+      "bbox_w": 1280,
+      "bbox_h": 720,
+      "sample_classes": "slide",
+      "sample_text": "MANIFESTO · A LUXURY POSITION",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(txt+txtc)[][64x0]",
+      "sig_hash": "ccd30b19e9b56bf6",
+      "bbox_w": 70,
+      "bbox_h": 27,
+      "sample_classes": "brand",
+      "sample_text": "atelier .",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(txt+txtc)[][256x64]",
+      "sig_hash": "0f35c2a31c135ff9",
+      "bbox_w": 284,
+      "bbox_h": 74,
+      "sample_classes": "code",
+      "sample_text": "# compose from atoms\n        deck.compose(  \"hero\", \"bento\")",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(txt)[][256x32]",
+      "sig_hash": "6c70e14f74e23363",
+      "bbox_w": 285,
+      "bbox_h": 47,
+      "sample_classes": "v",
+      "sample_text": "1,184",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(txt+txtc)[][256x32]",
+      "sig_hash": "20dea6eb55204d11",
+      "bbox_w": 284,
+      "bbox_h": 38,
+      "sample_classes": "v",
+      "sample_text": "99.98%",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(txt)[][384x32]",
+      "sig_hash": "3c6aa815b3c4161e",
+      "bbox_w": 416,
+      "bbox_h": 34,
+      "sample_classes": "sub",
+      "sample_text": "of slide area emits as native, editable PPTX shapes — gradie",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(txt+txtc)[][384x32]",
+      "sig_hash": "4af457050e5d42a5",
+      "bbox_w": 416,
+      "bbox_h": 38,
+      "sample_classes": "v",
+      "sample_text": "95%",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "circle(xform)[][0x32]",
+      "sig_hash": "1daa11ad312df4ee",
+      "bbox_w": 52,
+      "bbox_h": 52,
+      "sample_classes": "",
+      "sample_text": "",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bgi=grad)[]<4>[1280x704]{div(bg+shdw=t+brd)[]<1>[320x224]{div(txt)[][256x0],div(txt)[][256x0],div(txt)[][256x32]},div(bg+shdw=t+brd)[][320x224]{div(txt)[][256x0],div(txt+txtc)[][256x64]},div(bgi=grad+brd)[]<1>[320x224]{div(txt)[][256x0],div(txt)[][256x0],div(txt+txtc)[][256x32]},div(bgi=grad+brd+xform)[]<1>[320x224]{div(txt)[][256x0],div(txt)[][256x0],div(txt)[][256x32]},div(bgi=grad+shdw=t+brd)[]<1>[448x480]{div(txt)[][384x0],div(txt)[][384x32],div(txt+txtc)[][384x32],svg(svg/2)[]<1>[64x64]{circle(xform)[][0x32]}},div(txt)[][128x0],div(txt)[][128x0],div(txt)[][576x0],div(txt)[][64x0],h1(txt)[][576x32]}",
+      "sig_hash": "3f7839ac59198f49",
+      "bbox_w": 1280,
+      "bbox_h": 720,
+      "sample_classes": "slide",
+      "sample_text": "PRODUCT · OVERVIEW",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg)[][512x32]{div(bg)[][0x0],div(bg)[][0x0],div(bg)[][0x0],div(bg+brd+txt)[][448x0]}",
+      "sig_hash": "ffe324d03e9f12d0",
+      "bbox_w": 540,
+      "bbox_h": 43,
+      "sample_classes": "bar",
+      "sample_text": "slidify.sh / atomic-seed",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[]<3>[512x160]{b(txt)[][0x0],b(txt)[][0x0],b(txt)[][0x0],div(txt)[][448x0],span(txt)[][64x0],span(txt)[][64x0],span(txt)[][64x0]}",
+      "sig_hash": "8deffb5cc4e04ffe",
+      "bbox_w": 515,
+      "bbox_h": 165,
+      "sample_classes": "spec-card",
+      "sample_text": "COMPOSITION",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[]<3>[512x160]{b(txt)[][0x0],b(txt)[][64x0],b(txt)[][64x0],div(txt)[][448x0],span(txt)[][64x0],span(txt)[][64x0],span(txt)[][64x0]}",
+      "sig_hash": "0220e5248d061825",
+      "bbox_w": 515,
+      "bbox_h": 165,
+      "sample_classes": "spec-card",
+      "sample_text": "EMIT",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[]<3>[512x160]{b(txt)[][0x0],b(txt)[][0x0],b(txt)[][64x0],div(txt)[][448x0],span(txt)[][64x0],span(txt)[][64x0],span(txt)[][64x0]}",
+      "sig_hash": "befce383dff80e6d",
+      "bbox_w": 515,
+      "bbox_h": 165,
+      "sample_classes": "spec-card",
+      "sample_text": "FRAME",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "text(xform+txt)[][0x32]",
+      "sig_hash": "e5b78ec1ca7fe0dd",
+      "bbox_w": 15,
+      "bbox_h": 40,
+      "sample_classes": "",
+      "sample_text": "720 PX",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "text(txt)[][0x0]",
+      "sig_hash": "55dcd25c9ee91052",
+      "bbox_w": 46,
+      "bbox_h": 15,
+      "sample_classes": "",
+      "sample_text": "1280 PX",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "svg(svg/12)[]<4>[512x448]{g(xform)[]<2>[0x32],text(txt)[][0x0],text(txt)[][128x0],text(txt)[][64x0],text(xform+txt)[][0x32]}",
+      "sig_hash": "33f9b0766ccd1bcb",
+      "bbox_w": 568,
+      "bbox_h": 470,
+      "sample_classes": "",
+      "sample_text": "slide.compose()",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bg+brd)[][576x512]{svg(svg/12)[]<4>[512x448]{g(xform)[]<2>[0x32],text(txt)[][0x0],text(txt)[][128x0],text(txt)[][64x0],text(xform+txt)[][0x32]}}",
+      "sig_hash": "8c67f1008783c3b4",
+      "bbox_w": 618,
+      "bbox_h": 520,
+      "sample_classes": "blueprint",
+      "sample_text": "slide.compose()",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "p(txt)[][128x0]",
+      "sig_hash": "8b92a7faeeed6a54",
+      "bbox_w": 170,
+      "bbox_h": 31,
+      "sample_classes": "",
+      "sample_text": "python-pptx writes native shapes with EMU precision.",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(xform)[][128x96]{div(bg+shdw=t+txt)[][0x32],h3(txt)[][128x0],p(txt)[][128x0]}",
+      "sig_hash": "f681f7a2c718558c",
+      "bbox_w": 170,
+      "bbox_h": 98,
+      "sample_classes": "step s4",
+      "sample_text": "04",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(txt)[][192x32]",
+      "sig_hash": "4bf3b043ca3dd578",
+      "bbox_w": 240,
+      "bbox_h": 38,
+      "sample_classes": "v",
+      "sample_text": "0.97",
+      "n_occurrences": 1
+    },
+    {
+      "sig": "div(bgi=grad)[]<4>[1280x704]{div(bg+shdw=t+brd+xform)[][256x128]{div(txt)[][192x0],div(txt)[][192x0],div(txt)[][192x0],div(txt)[][192x32]},div(txt)[][128x0],div(txt)[][128x0],div(txt)[][192x0],div(txt)[][512x0],div(xform)[][128x96]{div(bg+shdw=t+txt)[][0x32],h3(txt)[][128x0],p(txt)[][128x0]},div(xform)[][128x96]{div(bg+shdw=t+txt)[][0x32],h3(txt)[][128x0],p(txt)[][128x0]},div(xform)[][128x96]{div(bg+shdw=t+txt)[][0x32],h3(txt)[][128x0],p(txt)[][128x0]},div(xform)[][128x96]{div(bg+shdw=t+txt)[][0x32],h3(txt)[][128x0],p(txt)[][128x0]},h1(txt)[][512x0],svg(xform+svg/9)[]<9>[512x512]}",
+      "sig_hash": "74e9153f37c15bfa",
+      "bbox_w": 1280,
+      "bbox_h": 720,
+      "sample_classes": "slide",
+      "sample_text": "PIPELINE · LIVE",
+      "n_occurrences": 1
+    }
+  ],
+  "compat_matrix_version": "2",
+  "compat_matrix_summary": {
+    "native": 41,
+    "raster": 20,
+    "partial": 7,
+    "unsupported": 1,
+    "planned": 13
+  },
+  "editability_passed": true,
+  "editability_intended_total": 151,
+  "editability_actual_total": 197,
+  "editability_failing_slides": [],
+  "overflow_elements": []
+}
