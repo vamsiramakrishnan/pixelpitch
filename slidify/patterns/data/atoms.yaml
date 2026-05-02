@@ -1067,3 +1067,185 @@ patterns:
       sample_html: |
         <div data-atom="surf.tape-band" style="position:absolute;background:linear-gradient(135deg,#818cf8,#f472b6);transform:skewX(-12deg);padding:14px 28px;color:#fff;font-weight:700;">NEW</div>
       expected_recipe_id: surf.tape-band
+
+  # ── type.* additions (10 → 18) — big numbers, eyebrows, pullquotes ─────
+
+  - id: atom-type-big-number
+    priority: 70
+    match:
+      anchor.data_atom_id: type.big-number
+    emit:
+      kind: NativeText
+      confidence: 0.99
+      metadata: { recipe: atom_type_big_number, axis: type, scale: numeral-md }
+    renderer:
+      component: TypeBigNumber
+      tier: B
+      primitive: slot.numeral
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,   required: true }
+        value:   { type: string, required: true }
+        unit:    { type: string, required: false }
+        gradient: { type: boolean, default: false }
+    fixture:
+      sample_html: |
+        <div data-atom="type.big-number" style="font-size:88px;font-weight:800;line-height:1;letter-spacing:-0.045em;color:#f5f5f7;">87<span style="font-size:40px;color:#a78bfa;">%</span></div>
+      expected_recipe_id: type.big-number
+
+  - id: atom-type-big-number-xl
+    priority: 70
+    match:
+      anchor.data_atom_id: type.big-number-xl
+    emit:
+      kind: NativeText
+      confidence: 0.99
+      metadata: { recipe: atom_type_big_number_xl, axis: type, scale: numeral-xl }
+    renderer:
+      component: TypeBigNumberXl
+      tier: B
+      primitive: slot.numeral
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,   required: true }
+        value:   { type: string, required: true }
+        unit:    { type: string, required: false }
+    fixture:
+      sample_html: |
+        <div data-atom="type.big-number-xl" style="font-size:168px;font-weight:800;line-height:0.88;letter-spacing:-0.05em;color:#f5f5f7;">240</div>
+      expected_recipe_id: type.big-number-xl
+
+  - id: atom-type-big-number-gradient
+    priority: 70
+    match:
+      anchor.data_atom_id: type.big-number-gradient
+    emit:
+      kind: NativeText
+      confidence: 0.99
+      metadata: { recipe: atom_type_big_number_gradient, axis: type, scale: numeral-md, fill: linear-grad }
+    renderer:
+      component: TypeBigNumberGradient
+      tier: B
+      primitive: slot.numeral
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,   required: true }
+        value:   { type: string, required: true }
+        unit:    { type: string, required: false }
+        gradient: { type: gradient, default: 'tokens.gradient.accent-grad' }
+    fixture:
+      sample_html: |
+        <div data-atom="type.big-number-gradient" style="font-size:240px;font-weight:800;line-height:0.85;letter-spacing:-0.06em;background:linear-gradient(135deg,#f5f5f7,#818cf8 35%,#c084fc 65%,#f472b6);-webkit-background-clip:text;background-clip:text;color:transparent;">87</div>
+      expected_recipe_id: type.big-number-gradient
+
+  - id: atom-type-eyebrow-ruled
+    priority: 70
+    match:
+      anchor.data_atom_id: type.eyebrow-ruled
+    emit:
+      kind: NativeText
+      confidence: 0.99
+      metadata: { recipe: atom_type_eyebrow_ruled, axis: type, scale: eyebrow }
+    renderer:
+      component: TypeEyebrowRuled
+      tier: B
+      primitive: slot.eyebrow
+      version: 1.0.0
+      props:
+        bbox:     { type: bbox,   required: true }
+        label:    { type: string, required: true }
+        ruleSide: { type: enum,   values: [right, left, both, none], default: right }
+        color:    { type: color,  default: 'tokens.palette.accent' }
+    fixture:
+      sample_html: |
+        <div data-atom="type.eyebrow-ruled" style="display:flex;align-items:center;gap:14px;"><span style="font-size:13px;letter-spacing:0.42em;text-transform:uppercase;color:#a78bfa;font-weight:600;">Q2 2026</span><span style="flex:1;height:1px;background:rgba(255,255,255,0.10);"></span></div>
+      expected_recipe_id: type.eyebrow-ruled
+
+  - id: atom-type-eyebrow-tape
+    priority: 70
+    match:
+      anchor.data_atom_id: type.eyebrow-tape
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_type_eyebrow_tape, axis: type, decoration: tape }
+    renderer:
+      component: TypeEyebrowTape
+      tier: B
+      primitive: slot.eyebrow
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,   required: true }
+        label:   { type: string, required: true }
+        skewDeg: { type: number, default: -8 }
+        fill:    { type: fill,   default: 'tokens.gradient.accent-grad' }
+    fixture:
+      sample_html: |
+        <span data-atom="type.eyebrow-tape" style="display:inline-block;background:linear-gradient(135deg,#818cf8,#f472b6);transform:skewX(-8deg);padding:4px 14px;color:#fff;font-size:12px;letter-spacing:0.18em;font-weight:700;">NEW</span>
+      expected_recipe_id: type.eyebrow-tape
+
+  - id: atom-type-pullquote-serif
+    priority: 70
+    match:
+      anchor.data_atom_id: type.pullquote-serif
+    emit:
+      kind: NativeText
+      confidence: 0.99
+      metadata: { recipe: atom_type_pullquote_serif, axis: type, family: serif }
+    renderer:
+      component: TypePullquoteSerif
+      tier: B
+      primitive: slot.quote
+      version: 1.0.0
+      props:
+        bbox:        { type: bbox,   required: true }
+        quote:       { type: string, required: true }
+        attribution: { type: string, required: false }
+        size:        { type: enum,   values: [sm, lg], default: lg }
+    fixture:
+      sample_html: |
+        <blockquote data-atom="type.pullquote-serif" style="font-family:'Tiempos','Iowan Old Style',serif;font-size:48px;line-height:1.2;font-style:italic;color:#f5f5f7;margin:0;">"The compiler does the boring work; the designer keeps the brief."</blockquote>
+      expected_recipe_id: type.pullquote-serif
+
+  - id: atom-type-pullquote-brutalist
+    priority: 70
+    match:
+      anchor.data_atom_id: type.pullquote-brutalist
+    emit:
+      kind: NativeText
+      confidence: 0.99
+      metadata: { recipe: atom_type_pullquote_brutalist, axis: type, palette: brutalist }
+    renderer:
+      component: TypePullquoteBrutalist
+      tier: B
+      primitive: slot.quote
+      version: 1.0.0
+      props:
+        bbox:        { type: bbox,   required: true }
+        quote:       { type: string, required: true }
+        attribution: { type: string, required: false }
+    fixture:
+      sample_html: |
+        <blockquote data-atom="type.pullquote-brutalist" style="font-family:Inter,sans-serif;font-size:56px;font-weight:900;line-height:1.0;text-transform:uppercase;color:#000;background:#fff;border:4px solid #000;padding:24px;margin:0;">"NO COMPROMISES."</blockquote>
+      expected_recipe_id: type.pullquote-brutalist
+
+  - id: atom-type-numerals-tabular
+    priority: 70
+    match:
+      anchor.data_atom_id: type.numerals-tabular
+    emit:
+      kind: NativeText
+      confidence: 0.99
+      metadata: { recipe: atom_type_numerals_tabular, axis: type, family: mono, tabular: true }
+    renderer:
+      component: TypeNumeralsTabular
+      tier: B
+      primitive: slot.caption
+      version: 1.0.0
+      props:
+        bbox:   { type: bbox,   required: true }
+        digits: { type: string, required: true }
+    fixture:
+      sample_html: |
+        <span data-atom="type.numerals-tabular" style="font-family:'JetBrains Mono','SF Mono',monospace;font-variant-numeric:tabular-nums;font-size:16px;color:#d4d4d8;">2,487 → 3,612</span>
+      expected_recipe_id: type.numerals-tabular
