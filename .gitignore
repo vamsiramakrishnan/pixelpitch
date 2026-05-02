@@ -18,8 +18,10 @@ dist/
 !tests/fixtures/**/*.pptx
 !examples/**/*.pptx
 !_bench/corpus/divergent-deck.pptx
+!_bench/corpus/out/*.pptx
 *.pdf
 out/
+!_bench/corpus/out/
 slide-*.png
 !examples/**/preview/**/slide-*.png
 sample-report.json
@@ -47,7 +49,8 @@ examples/corpus/out/
 # inspectable output.
 _bench/scripts/*.pyc
 _bench/scripts/__pycache__/
-_bench/corpus/out/
+# _bench/corpus/out/ is allowed via the !-rules in the Output Artifacts
+# section above so committed .pptx benchmark builds stay tracked.
 _bench/corpus/_tmp_render/
 _bench/corpus_orig/
 _bench/fanout/
