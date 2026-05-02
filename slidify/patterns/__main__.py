@@ -8,11 +8,31 @@ from __future__ import annotations
 import json, re, sys
 from slidify.patterns.matcher import get_default_patterns
 
-_RE = re.compile(r'data-atom\s*=\s*"([^"]+)"', re.IGNORECASE)
+# Match data-atom="…", data-atom='…', or data-atom=… (unquoted, terminated
+# by whitespace or `>`). The previous regex only matched double-quoted
+# values, producing false-negative `atom_id: null` for valid HTML using
+# single quotes (`<div data-atom='comp.hero'>`) or the unquoted form
+# allowed by HTML5 for tokens without whitespace/special chars.
+_RE = re.compile(
+    r"""data-atom\s*=\s*(?:
+        "([^"]+)"        # double-quoted
+      | '([^']+)'        # single-quoted
+      | ([^\s"'>=`]+)    # unquoted (HTML5 — no whitespace or quote/equal/backtick)
+    )""",
+    re.IGNORECASE | re.VERBOSE,
+)
 
 def _classify(html: str) -> dict:
     m = _RE.search(html or "")
-    aid = (m.group(1).strip() if m else "")
+    # Only one of the three alternation groups will be populated; pick
+    # the non-None one. (re.Match.group with the alternation always has
+    # one populated group when the overall match succeeded.)
+    aid = ""
+    if m:
+        for g in (m.group(1), m.group(2), m.group(3)):
+            if g:
+                aid = g.strip()
+                break
     if aid:
         for p in get_default_patterns():
             v = p.match.get("anchor.data_atom_id")

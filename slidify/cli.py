@@ -570,6 +570,16 @@ def promote_unmatched_to_yaml(
     show_default=True,
     help="Minimum occurrences before --promote-yaml writes a stub.",
 )
+@click.option(
+    "--json", "json_out",
+    is_flag=True,
+    default=False,
+    help=(
+        "Print the clusters.json payload to stdout instead of (or in "
+        "addition to) writing it to --output. Implies machine-readable "
+        "output for piping into other tools."
+    ),
+)
 def harvest(
     input_path: Path,
     output_path: Path | None,
@@ -579,6 +589,7 @@ def harvest(
     top: int | None,
     promote_yaml: Path | None,
     min_count: int,
+    json_out: bool,
 ) -> None:
     """Run slidify across a corpus and emit clustered Tier-0 candidate atoms.
 
@@ -662,12 +673,19 @@ def harvest(
         write_report(report, output_path, top_n=top_n)
         click.echo("")
         click.echo(f"Wrote clusters.json   : {output_path}")
-    else:
-        # Echo a compact JSON-only payload so callers can pipe it.
+    if json_out:
+        # Machine-readable payload for piping. The previous guard
+        # (`context.obj == {"emit_json": True}`) was never reachable
+        # because click's `obj` defaults to None and no caller set it
+        # to that exact dict. The explicit `--json` flag is the
+        # documented seam for scripted consumers.
+        click.echo(json.dumps(report_to_dict(report, top_n=top_n), indent=2))
+    elif output_path is None:
         click.echo("")
-        click.echo("(no --output supplied — pass --output PATH to persist clusters.json)")
-        if click.get_current_context().obj == {"emit_json": True}:  # pragma: no cover
-            click.echo(json.dumps(report_to_dict(report, top_n=top_n), indent=2))
+        click.echo(
+            "(no --output / --json supplied — pass --output PATH or --json "
+            "to persist clusters.json)"
+        )
 
     if promote_yaml:
         # Bridge the new aggregated `report.clusters` flow back to
@@ -1669,25 +1687,62 @@ def report_escape_clusters_cmd(
     click.echo(f"Threshold  : {threshold} (intent count)")
     click.echo("─" * 64)
 
-    # In v1 we only have area share, not raw counts. Treat any intent with
-    # area share ≥ 1% as a "would-file" candidate when --auto-file-issues
-    # is set; a real implementation would read counts from the harvester
-    # output, not from a single report.json.
-    candidates = sorted(
-        by_intent.items(), key=lambda kv: -kv[1]
-    )
-    for intent, share in candidates:
-        would_promote = share >= 0.01  # 1% of slide area is the v1 floor
-        marker = click.style("→ would-promote", fg="yellow") if would_promote else "  observe"
-        click.echo(f"  {intent:<32}{share:>8.4f}    {marker}")
-        if would_promote and auto_file_issues:
-            # TODO(M4): replace with `gh issue create --label atom-proposal ...`
-            click.echo(
-                click.style(
-                    f"    [would file] atom-proposal issue for intent={intent}",
-                    dim=True,
-                )
+    # Prefer the count-based comparison when the report carries counts
+    # (post-compile_ir.to_report_dict update). Fall back to area share
+    # only when older reports omit `countByIntent`. This makes
+    # `--threshold` an actually-functional knob instead of a no-op.
+    count_by_intent = escape.get("countByIntent") or escape.get("count_by_intent") or {}
+
+    if count_by_intent:
+        candidates = sorted(
+            count_by_intent.items(), key=lambda kv: -kv[1]
+        )
+        for intent, count in candidates:
+            share = float(by_intent.get(intent, 0.0))
+            would_promote = int(count) >= int(threshold)
+            marker = (
+                click.style("→ would-promote", fg="yellow")
+                if would_promote else "  observe"
             )
+            click.echo(
+                f"  {intent:<32}{int(count):>5d}× ({share:>6.4f})  {marker}"
+            )
+            if would_promote and auto_file_issues:
+                # TODO(M4): replace with `gh issue create --label atom-proposal ...`
+                click.echo(
+                    click.style(
+                        f"    [would file] atom-proposal issue for "
+                        f"intent={intent} count={int(count)} share={share:.4f}",
+                        dim=True,
+                    )
+                )
+    else:
+        # Backward-compat: report.json predates `countByIntent`. Fall back
+        # to area-share threshold (1% floor); document the limitation.
+        click.echo(
+            click.style(
+                "warning: report.json lacks 'countByIntent'; falling back "
+                "to 1%-area-share floor (recompile with current slidify "
+                "to use --threshold).",
+                fg="yellow",
+            ),
+            err=True,
+        )
+        candidates = sorted(by_intent.items(), key=lambda kv: -kv[1])
+        for intent, share in candidates:
+            would_promote = share >= 0.01
+            marker = (
+                click.style("→ would-promote", fg="yellow")
+                if would_promote else "  observe"
+            )
+            click.echo(f"  {intent:<32}{share:>8.4f}    {marker}")
+            if would_promote and auto_file_issues:
+                click.echo(
+                    click.style(
+                        f"    [would file] atom-proposal issue for intent={intent}",
+                        dim=True,
+                    )
+                )
 
 
 @cli.command(name="field")

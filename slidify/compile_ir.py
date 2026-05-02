@@ -216,13 +216,26 @@ class EscapeMetering:
         self.count_by_intent[intent] += 1
 
     def to_report_dict(self) -> dict:
-        """Serialize to the `report.escapeRate` shape per CONTRACT-v2 §F.4."""
+        """Serialize to the `report.escapeRate` shape per CONTRACT-v2 §F.4.
+
+        Includes both `byIntent` (area-share fractions) AND `countByIntent`
+        (raw instance counts) so downstream tools — notably
+        `slidify report-escape-clusters` — can apply count-based
+        thresholds. Without `countByIntent` the CLI's `--threshold`
+        flag was a no-op (forced to compare against area share).
+        """
         denom = self.total_slide_area
         if denom <= 0:
-            return {"value": 0.0, "byIntent": {}, "atomCandidates": []}
+            return {
+                "value": 0.0,
+                "byIntent": {},
+                "countByIntent": {},
+                "atomCandidates": [],
+            }
         return {
             "value": self.escape_area / denom,
             "byIntent": {k: v / denom for k, v in sorted(self.area_by_intent.items())},
+            "countByIntent": dict(sorted(self.count_by_intent.items())),
             # M4 harvester populates atomCandidates when run later — see
             # CONTRACT-v2 §F.5. Empty during single-deck compile.
             "atomCandidates": [],
@@ -469,6 +482,17 @@ class _IRCompiler:
                 slide, node, bbox, node.clipPath
             )
 
+        # Path-shaped clipPath on a picture: emit a freeform shape
+        # (custGeom from the clip's path) and picture-fill it. This is
+        # the proper §3.4 path-clip implementation for pictures, the
+        # raster fallback only kicks in for ShapeNode (where the host
+        # shape's geometry would also have to be intersected against
+        # the clip path — left for Wave-3).
+        if isinstance(node.clipPath, IRClipPathPath):
+            return self._emit_picture_in_path_clip(
+                slide, node, bbox, node.clipPath
+            )
+
         try:
             data = _fetch_picture(node.src)
         except Exception as e:
@@ -484,13 +508,6 @@ class _IRCompiler:
         if node.mask is not None:
             self._emit_picture_mask_overlay(slide, bbox, node.mask)
 
-        # Path-shaped clipPath: raster fallback per §3.4 — stub-logged in
-        # Wave-2; the picture itself is preserved.
-        if isinstance(node.clipPath, IRClipPathPath):
-            log.info(
-                "compile_ir.clip_path_raster_fallback_pending",
-                recipe_id=node.recipeId,
-            )
         _stamp_recipe_id(pic, node.recipeId)
 
     def _emit_picture_in_rounded_rect(
@@ -545,7 +562,7 @@ class _IRCompiler:
                     sp_pr.remove(existing)
             # Embed the image via the slide's part so the relationship is
             # created and python-pptx tracks the embedded blob correctly.
-            _image_part, rel_id = slide.part.get_or_add_image(io.BytesIO(data))
+            _image_part, rel_id = slide.part.get_or_add_image_part(io.BytesIO(data))
             blip_fill = etree.SubElement(sp_pr, f"{{{NS_A}}}blipFill")
             sp_pr.remove(blip_fill)
             sp_pr.insert(0, blip_fill)
@@ -566,6 +583,100 @@ class _IRCompiler:
 
         if node.mask is not None:
             self._emit_picture_mask_overlay(slide, inner, node.mask)
+        _stamp_recipe_id(shape, node.recipeId)
+
+    def _emit_picture_in_path_clip(
+        self,
+        slide,
+        node: IRPictureNode,
+        bbox: IRBbox,
+        clip: IRClipPathPath,
+    ) -> None:
+        """Render picture inside an arbitrary-path clip via custGeom + blipFill.
+
+        Strategy mirrors `_emit_picture_in_rounded_rect`: emit a freeform
+        shape whose geometry is the clip path, then patch its fill with
+        a `<a:blipFill>` carrying the picture. PowerPoint clips the
+        picture to the shape's path geometry natively — no raster needed.
+
+        Fetches the picture before adding any shape so a missing source
+        leaves no orphan auto-shape (matches `_emit_picture_in_rounded_rect`).
+        """
+        try:
+            data = _fetch_picture(node.src)
+        except Exception as e:
+            log.warning(
+                "compile_ir.picture_fetch_failed",
+                src=node.src[:80],
+                error=str(e),
+            )
+            return
+
+        # Compute the path's tight bbox so the freeform shape sizes correctly.
+        # The clip path coordinates are slide-pixel space (same as ShapeNode.bbox).
+        path_box = path_bbox(clip.commands)
+        # If the path is degenerate (zero-area), fall back to the picture bbox.
+        if path_box[2] - path_box[0] <= 0 or path_box[3] - path_box[1] <= 0:
+            path_box = (bbox.x, bbox.y, bbox.x + bbox.w, bbox.y + bbox.h)
+        path_bbox_obj = IRBbox(
+            x=path_box[0],
+            y=path_box[1],
+            w=max(1.0, path_box[2] - path_box[0]),
+            h=max(1.0, path_box[3] - path_box[1]),
+        )
+        x, y, w, h = _emu_rect(path_bbox_obj)
+        shape = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x, y, w, h)
+        shape.line.fill.background()
+
+        # Replace prstGeom with custGeom built from the clip path.
+        try:
+            sp_pr = shape._element.spPr
+            for prst in sp_pr.findall(f"{{{NS_A}}}prstGeom"):
+                sp_pr.remove(prst)
+            for cg in sp_pr.findall(f"{{{NS_A}}}custGeom"):
+                sp_pr.remove(cg)
+            cust_xml = make_custgeom_xml(clip.commands, path_box)
+            wrapper = f'<root xmlns:a="{NS_A}">{cust_xml}</root>'
+            parsed = etree.fromstring(wrapper)
+            cust = parsed[0]
+            xfrm_idx = 0
+            for i, child in enumerate(sp_pr):
+                if child.tag == f"{{{NS_A}}}xfrm":
+                    xfrm_idx = i + 1
+                    break
+            sp_pr.insert(xfrm_idx, cust)
+        except Exception as e:
+            log.warning("compile_ir.path_clip_custgeom_failed", error=str(e))
+
+        # Replace solidFill with blipFill carrying the picture.
+        try:
+            sp_pr = shape._element.spPr
+            for tag in (
+                "solidFill", "gradFill", "pattFill", "noFill", "blipFill"
+            ):
+                for existing in sp_pr.findall(f"{{{NS_A}}}{tag}"):
+                    sp_pr.remove(existing)
+            _image_part, rel_id = slide.part.get_or_add_image_part(io.BytesIO(data))
+            blip_fill = etree.SubElement(sp_pr, f"{{{NS_A}}}blipFill")
+            sp_pr.remove(blip_fill)
+            sp_pr.insert(0, blip_fill)
+            r_ns = (
+                "http://schemas.openxmlformats.org/officeDocument/"
+                "2006/relationships"
+            )
+            etree.SubElement(
+                blip_fill,
+                f"{{{NS_A}}}blip",
+                attrib={f"{{{r_ns}}}embed": rel_id},
+            )
+            etree.SubElement(blip_fill, f"{{{NS_A}}}stretch").append(
+                etree.Element(f"{{{NS_A}}}fillRect")
+            )
+        except Exception as e:
+            log.warning("compile_ir.path_clip_blipfill_failed", error=str(e))
+
+        if node.mask is not None:
+            self._emit_picture_mask_overlay(slide, path_bbox_obj, node.mask)
         _stamp_recipe_id(shape, node.recipeId)
 
     def _emit_picture_mask_overlay(self, slide, bbox: IRBbox, mask) -> None:
@@ -734,13 +845,34 @@ class _IRCompiler:
                 recipe_id=node.recipeId,
             )
         elif isinstance(node.clipPath, IRClipPathPath):
-            # Wave-2: log and continue; raster_clipped_subtree is a
-            # follow-up (the shape's content remains visible; the clip
-            # is approximated by the shape's own preset geometry).
-            log.info(
-                "compile_ir.clip_path_path_raster_fallback_pending",
+            # Path clip on a ShapeNode would require intersecting the
+            # shape's preset geometry with the clip path — non-trivial
+            # polygon math left for a Wave-3 follow-up. Surface the
+            # gap loudly (warning, not info) and stamp a metadata
+            # extension so the harvester sees the unimplemented case
+            # rather than the deck silently rendering un-clipped.
+            log.warning(
+                "compile_ir.clip_path_path_unimplemented_on_shape",
                 recipe_id=node.recipeId,
+                note=(
+                    "ShapeNode + path-clip is not yet supported; the "
+                    "shape renders without the path clip. PictureNode + "
+                    "path-clip works (custGeom + blipFill)."
+                ),
             )
+            try:
+                sp_pr = shape._element.spPr
+                ext_lst = sp_pr.find(f"{{{NS_A}}}extLst")
+                if ext_lst is None:
+                    ext_lst = etree.SubElement(sp_pr, f"{{{NS_A}}}extLst")
+                ext = etree.SubElement(
+                    ext_lst,
+                    f"{{{NS_A}}}ext",
+                    attrib={"uri": "https://slidify.dev/2026/clip-fallback"},
+                )
+                ext.text = "path-clip-not-implemented-on-shape"
+            except Exception:
+                pass
 
     def _emit_escape_hatch(
         self, slide, node: IRRasterNode, bbox: IRBbox

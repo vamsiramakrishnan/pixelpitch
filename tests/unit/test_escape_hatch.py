@@ -115,7 +115,12 @@ def test_metering_zero_division_safe() -> None:
     m = EscapeMetering()
     m.add_escape("intent", 1000)
     report = m.to_report_dict()
-    assert report == {"value": 0.0, "byIntent": {}, "atomCandidates": []}
+    assert report == {
+        "value": 0.0,
+        "byIntent": {},
+        "countByIntent": {},
+        "atomCandidates": [],
+    }
 
 
 # ---------------------------------------------------------------------------
