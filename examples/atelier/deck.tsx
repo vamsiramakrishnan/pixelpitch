@@ -46,9 +46,8 @@ import {
   dataDonutToIR,
   dataKpiRowToIR,
   dataSparklineToIR,
+  escapeHatchToIR,
 } from '../../components/src/primitives';
-// EscapeHatch isn't re-exported from the primitives barrel yet; import direct.
-import { escapeHatchToIR } from '../../components/src/primitives/EscapeHatch';
 
 const SLIDE_BBOX: Bbox = { x: 0, y: 0, w: 1280, h: 720 };
 const BG = '#070710';

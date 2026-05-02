@@ -1,18 +1,21 @@
 /**
  * Atelier-v2 smoke tests.
  *
- * Four cheap structural assertions over `buildAtelierDeck()`:
+ * Five assertions over `buildAtelierDeck()`:
  *   1. 14 slides exactly.
- *   2. The full Deck zod-schema parses (catches drift in the IR shape).
- *   3. Slide 14 carries an `EscapeHatch` raster with a non-empty cssPayload
- *      and a recognizable intent.
- *   4. Every slide composes at least one node (no empty placeholders that
- *      would silently regress the showcase).
+ *   2. Full Deck zod-schema parses end-to-end (post-M3.6 every recipe
+ *      emits a structurally-valid IR, so we no longer need to skip the
+ *      deep-parse).
+ *   3. Zero fallback placeholder nodes — every slide composes via real
+ *      recipe IR.
+ *   4. Slide 14 carries an `EscapeHatch` raster with a non-empty
+ *      cssPayload and a recognizable intent.
+ *   5. Every slide composes at least one node.
  */
 
 import { describe, expect, it } from 'vitest';
 
-import { Bbox as BboxSchema, Theme as ThemeSchema } from '../../../components/src/ir/schema';
+import { Deck as DeckSchema } from '../../../components/src/ir/schema';
 import { buildAtelierDeck } from '../deck';
 
 describe('atelier deck', () => {
@@ -22,20 +25,39 @@ describe('atelier deck', () => {
     expect(deck.slides).toHaveLength(14);
   });
 
-  it('passes top-level Deck/Slide structural validation', () => {
-    // We validate the deck-level shape we control (theme, slide indices,
-    // bbox, background, sequential numbering) without deep-parsing every
-    // recipe's emitted subtree — many M3.5-era recipes still emit nodes
-    // with incomplete primitive props (tracked via EMIT_THROWS_OVERRIDES);
-    // those failures are expected and out of scope for the atelier deck.
-    expect(deck.version).toBe(2);
-    expect(ThemeSchema.safeParse(deck.theme).success).toBe(true);
-    deck.slides.forEach((slide, i) => {
-      expect(slide.index).toBe(i + 1);
-      expect(BboxSchema.safeParse(slide.bbox).success).toBe(true);
-      expect(slide.background).toBeDefined();
-      expect(Array.isArray(slide.nodes)).toBe(true);
-    });
+  it('passes full Deck zod validation (deep-parses every recipe subtree)', () => {
+    // M3.6 unblocked this: every Tier-B recipe emits a structurally-valid
+    // IR with sensible defaults under bbox-only forwarding, so the entire
+    // deck round-trips through `Deck.safeParse` cleanly.
+    const result = DeckSchema.safeParse(deck);
+    if (!result.success) {
+      // Surface the first failure path so debugging doesn't require
+      // wading through 14 slides × N node trees.
+      const issue = result.error.issues[0];
+      throw new Error(
+        `Deck.safeParse failed: ${issue?.path.join('.')} — ${issue?.message}`,
+      );
+    }
+    expect(result.success).toBe(true);
+  });
+
+  it('emits zero fallback placeholder nodes', () => {
+    let fallbackCount = 0;
+    const visit = (node: unknown): void => {
+      const n = node as {
+        kind?: string;
+        metadata?: { fallback?: unknown };
+        children?: unknown[];
+      };
+      if (n.metadata?.fallback === true) fallbackCount += 1;
+      if (n.kind === 'group' && Array.isArray(n.children)) {
+        for (const c of n.children) visit(c);
+      }
+    };
+    for (const slide of deck.slides) {
+      for (const node of slide.nodes) visit(node);
+    }
+    expect(fallbackCount).toBe(0);
   });
 
   it('slide 14 contains an EscapeHatch with non-empty cssPayload', () => {
