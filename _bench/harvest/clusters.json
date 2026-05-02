@@ -1,0 +1,1556 @@
+{
+  "harvest_run": {
+    "timestamp": "2026-05-02T04:43:18+00:00",
+    "corpus_dir": "/home/user/pixelpitch/.claude/worktrees/agent-a90cd38f96afdefc2/_bench/corpus",
+    "decks_processed": 61,
+    "total_unmatched": 267,
+    "unique_signatures": 234
+  },
+  "clusters": [
+    {
+      "id": "auto-cluster-001",
+      "sig_hash": "4bf3b043ca3dd578",
+      "signature": "div(txt)[][192x32]",
+      "instances": 7,
+      "exemplars": [
+        "landing-atoms.html#node-7",
+        "landing-fonts.html#node-11",
+        "landing-recipes.html#node-20",
+        "slide-07-cover-the-numbers.html#node-1",
+        "slide-21-spec-sheet.html#node-1",
+        "slide-43-ritual-steps.html#node-0",
+        "sophisticated.html#node-16"
+      ],
+      "sample_classes": [
+        "v",
+        "h",
+        "stat-num",
+        "val",
+        "num"
+      ],
+      "sample_text": [
+        "\u2605 4.9",
+        "Velocity.",
+        "0.97",
+        "2,886",
+        "1.18K"
+      ],
+      "bbox_typical": {
+        "w_avg": 219.6,
+        "h_avg": 45.9,
+        "w_min": 200,
+        "w_max": 240,
+        "h_min": 34,
+        "h_max": 54
+      },
+      "candidate_atom_id": "data.stat",
+      "candidate_axis": "data",
+      "candidate_props": {},
+      "candidate_confidence": 0.75,
+      "candidate_reason": "class 'stat-num' matched /\\bstat(?:-|s\\b|\\b)/"
+    },
+    {
+      "id": "auto-cluster-002",
+      "sig_hash": "1f56c25a4af9ebec",
+      "signature": "div(txt)[][128x32]",
+      "instances": 4,
+      "exemplars": [
+        "animated/anim-03-bento-build-fm.html#node-2",
+        "slide-07-cover-the-numbers.html#node-5",
+        "slide-61-magazine-cover-mask.html#node-0",
+        "sophisticated.html#node-10"
+      ],
+      "sample_classes": [
+        "ttitle",
+        "preview-sub",
+        "logo",
+        "value"
+      ],
+      "sample_text": [
+        "CSS-aware embed",
+        "Five headline figures from the seven slides that follow. Eac",
+        "CABINET",
+        "3"
+      ],
+      "bbox_typical": {
+        "w_avg": 155.8,
+        "h_avg": 44.2,
+        "w_min": 129,
+        "w_max": 179,
+        "h_min": 34,
+        "h_max": 55
+      },
+      "candidate_atom_id": "dec.logo",
+      "candidate_axis": "dec",
+      "candidate_props": {},
+      "candidate_confidence": 0.75,
+      "candidate_reason": "class 'logo' matched /\\blogo\\b/"
+    },
+    {
+      "id": "auto-cluster-003",
+      "sig_hash": "20dea6eb55204d11",
+      "signature": "div(txt+txtc)[][256x32]",
+      "instances": 4,
+      "exemplars": [
+        "landing-fonts.html#node-0",
+        "landing-recipes.html#node-5",
+        "slide-01-state-of-the-union.html#node-0",
+        "slide-52-stacked-bar.html#node-1"
+      ],
+      "sample_classes": [
+        "body",
+        "v",
+        "anno"
+      ],
+      "sample_text": [
+        "A compiler for presentations.Render in Chromium. Edit in Pow",
+        "99.98%",
+        "2024 \u00b7 Now. Wage index 192; CPI 198. The 6-point gap is what",
+        "Mid-market buyers willing to fund 10\u201311% of wallet on enable"
+      ],
+      "bbox_typical": {
+        "w_avg": 285.5,
+        "h_avg": 44.2,
+        "w_min": 260,
+        "w_max": 300,
+        "h_min": 37,
+        "h_max": 51
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-004",
+      "sig_hash": "6c70e14f74e23363",
+      "signature": "div(txt)[][256x32]",
+      "instances": 4,
+      "exemplars": [
+        "landing-probe.html#node-9",
+        "landing-recipes.html#node-4",
+        "slide-34-feature-bento.html#node-0",
+        "sophisticated.html#node-2"
+      ],
+      "sample_classes": [
+        "v",
+        "h3",
+        "source"
+      ],
+      "sample_text": [
+        "$12.4M",
+        "1,184",
+        "Policy & PII, before the model sees it.",
+        "Tier-0 pattern DB landed in March; Q2 expansion added compos"
+      ],
+      "bbox_typical": {
+        "w_avg": 293.8,
+        "h_avg": 46.2,
+        "w_min": 277,
+        "w_max": 311,
+        "h_min": 37,
+        "h_max": 51
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-005",
+      "sig_hash": "10f47895fd008868",
+      "signature": "div(txt+txtc)[][896x0]",
+      "instances": 4,
+      "exemplars": [
+        "slide-52-stacked-bar.html#node-0",
+        "slide-54-numbered-insights.html#node-0",
+        "slide-55-waterfall.html#node-0",
+        "slide-57-ranking.html#node-0"
+      ],
+      "sample_classes": [
+        "source"
+      ],
+      "sample_text": [
+        "Source: Beacon & Lowe Buyer Wallet Survey, FY 2025; n=412 en",
+        "Source: Beacon & Lowe Demand Drivers Index, March 2026; n=41",
+        "Source: Beacon & Lowe value-architecture model, March 2026 v",
+        "Source: Beacon & Lowe Capability Gap Index, FY 2026; n=412 e"
+      ],
+      "bbox_typical": {
+        "w_avg": 900.0,
+        "h_avg": 29.0,
+        "w_min": 900,
+        "w_max": 900,
+        "h_min": 29,
+        "h_max": 29
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-006",
+      "sig_hash": "2debef14f3f0f5eb",
+      "signature": "span(txt)[][64x32]",
+      "instances": 3,
+      "exemplars": [
+        "landing-atoms.html#node-10",
+        "landing-fonts.html#node-8",
+        "slide-13-spec-sheet.html#node-0"
+      ],
+      "sample_classes": [
+        "b",
+        "l2",
+        "spec-value"
+      ],
+      "sample_text": [
+        "slides,",
+        "slides",
+        "$1,299"
+      ],
+      "bbox_typical": {
+        "w_avg": 88.3,
+        "h_avg": 35.0,
+        "w_min": 74,
+        "w_max": 101,
+        "h_min": 33,
+        "h_max": 36
+      },
+      "candidate_atom_id": "surf.unmatched-2debef14",
+      "candidate_axis": "surf",
+      "candidate_props": {},
+      "candidate_confidence": 0.15,
+      "candidate_reason": "no class/shape signal \u2014 falling back to sig_hash stem"
+    },
+    {
+      "id": "auto-cluster-007",
+      "sig_hash": "f4f2a79529b98add",
+      "signature": "div(txt+txtc)[][128x32]",
+      "instances": 3,
+      "exemplars": [
+        "slide-23-density-grid.html#node-2",
+        "slide-25-status-board.html#node-1",
+        "sophisticated.html#node-11"
+      ],
+      "sample_classes": [
+        "summary",
+        "value"
+      ],
+      "sample_text": [
+        "4\u00a0COLS\u00a0\u00d7\u00a03\u00a0ROWS\u00a0=\u00a012\u00a0CELLS\n      OWNER\u00a0platform-core\n      A",
+        "ROWS\u00a0\u00a012\n      OK\u00a0\u00a0\u00a0\u00a07\u00a0//\u00a0WATCH\u00a03\u00a0//\u00a0FAIL\u00a02\n      WINDOW\u00a05\u00a0M",
+        "38s"
+      ],
+      "bbox_typical": {
+        "w_avg": 178.7,
+        "h_avg": 48.7,
+        "w_min": 172,
+        "w_max": 185,
+        "h_min": 34,
+        "h_max": 56
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-008",
+      "sig_hash": "07b4f1d4a59fecba",
+      "signature": "div(txt)[][320x32]",
+      "instances": 2,
+      "exemplars": [
+        "animated/anim-03-bento-build-fm.html#node-0",
+        "landing-recipes.html#node-22"
+      ],
+      "sample_classes": [
+        "ttitle",
+        "v"
+      ],
+      "sample_text": [
+        "Native preset clip-path \u2192 MSO",
+        "0.02%"
+      ],
+      "bbox_typical": {
+        "w_avg": 331.5,
+        "h_avg": 45.5,
+        "w_min": 327,
+        "w_max": 336,
+        "h_min": 36,
+        "h_max": 55
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-009",
+      "sig_hash": "7194cb4ee0be2b66",
+      "signature": "div(txt)[][128x64]",
+      "instances": 2,
+      "exemplars": [
+        "animated/anim-03-bento-build-fm.html#node-1",
+        "landing-atoms.html#node-14"
+      ],
+      "sample_classes": [
+        "ttitle",
+        "lab"
+      ],
+      "sample_text": [
+        "Native HTML <table>",
+        "FUTURE"
+      ],
+      "bbox_typical": {
+        "w_avg": 134.5,
+        "h_avg": 86.0,
+        "w_min": 129,
+        "w_max": 140,
+        "h_min": 82,
+        "h_max": 90
+      },
+      "candidate_atom_id": "surf.unmatched-7194cb4e",
+      "candidate_axis": "surf",
+      "candidate_props": {},
+      "candidate_confidence": 0.15,
+      "candidate_reason": "no class/shape signal \u2014 falling back to sig_hash stem"
+    },
+    {
+      "id": "auto-cluster-010",
+      "sig_hash": "0cb4845e002c2813",
+      "signature": "div(txt)[][512x0]",
+      "instances": 2,
+      "exemplars": [
+        "animated/anim-03-bento-build-fm.html#node-3",
+        "slide-15-feature-mosaic.html#node-0"
+      ],
+      "sample_classes": [
+        "ttitle",
+        "label"
+      ],
+      "sample_text": [
+        "3.4\u00d7 faster classification",
+        "Constellation sync"
+      ],
+      "bbox_typical": {
+        "w_avg": 522.5,
+        "h_avg": 26.5,
+        "w_min": 520,
+        "w_max": 525,
+        "h_min": 26,
+        "h_max": 27
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-011",
+      "sig_hash": "fce263acabab9ad9",
+      "signature": "svg(svg/3)[]<3>[192x96]",
+      "instances": 2,
+      "exemplars": [
+        "landing-atoms.html#node-17",
+        "landing-probe.html#node-15"
+      ],
+      "sample_classes": [],
+      "sample_text": [],
+      "bbox_typical": {
+        "w_avg": 217.5,
+        "h_avg": 115.0,
+        "w_min": 200,
+        "w_max": 235,
+        "h_min": 110,
+        "h_max": 120
+      },
+      "candidate_atom_id": "dec.illustration-vector",
+      "candidate_axis": "dec",
+      "candidate_props": {
+        "vector": true
+      },
+      "candidate_confidence": 0.45,
+      "candidate_reason": "large svg/canvas bbox"
+    },
+    {
+      "id": "auto-cluster-012",
+      "sig_hash": "a6624dbb6815f869",
+      "signature": "circle(xform)[][64x96]",
+      "instances": 2,
+      "exemplars": [
+        "landing-atoms.html#node-18",
+        "landing-probe.html#node-17"
+      ],
+      "sample_classes": [],
+      "sample_text": [],
+      "bbox_typical": {
+        "w_avg": 98.0,
+        "h_avg": 98.0,
+        "w_min": 96,
+        "w_max": 100,
+        "h_min": 96,
+        "h_max": 100
+      },
+      "candidate_atom_id": "surf.unmatched-a6624dbb",
+      "candidate_axis": "surf",
+      "candidate_props": {
+        "transform": true
+      },
+      "candidate_confidence": 0.15,
+      "candidate_reason": "no class/shape signal \u2014 falling back to sig_hash stem"
+    },
+    {
+      "id": "auto-cluster-013",
+      "sig_hash": "fea8469ee775eb6a",
+      "signature": "div(txt+txtc)[][192x32]",
+      "instances": 2,
+      "exemplars": [
+        "landing-fonts.html#node-10",
+        "slide-07-cover-the-numbers.html#node-3"
+      ],
+      "sample_classes": [
+        "h",
+        "stat-num"
+      ],
+      "sample_text": [
+        "Velocity.",
+        "+78%"
+      ],
+      "bbox_typical": {
+        "w_avg": 216.5,
+        "h_avg": 43.0,
+        "w_min": 206,
+        "w_max": 227,
+        "h_min": 34,
+        "h_max": 52
+      },
+      "candidate_atom_id": "data.stat",
+      "candidate_axis": "data",
+      "candidate_props": {},
+      "candidate_confidence": 0.75,
+      "candidate_reason": "class 'stat-num' matched /\\bstat(?:-|s\\b|\\b)/"
+    },
+    {
+      "id": "auto-cluster-014",
+      "sig_hash": "3c6aa815b3c4161e",
+      "signature": "div(txt)[][384x32]",
+      "instances": 2,
+      "exemplars": [
+        "landing-recipes.html#node-6",
+        "sophisticated.html#node-9"
+      ],
+      "sample_classes": [
+        "sub",
+        "value"
+      ],
+      "sample_text": [
+        "of slide area emits as native, editable PPTX shapes \u2014 gradie",
+        "4"
+      ],
+      "bbox_typical": {
+        "w_avg": 415.0,
+        "h_avg": 34.0,
+        "w_min": 414,
+        "w_max": 416,
+        "h_min": 34,
+        "h_max": 34
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-015",
+      "sig_hash": "7eea0978c85fd491",
+      "signature": "div(txt+txtc)[][64x64]",
+      "instances": 2,
+      "exemplars": [
+        "slide-21-spec-sheet.html#node-2",
+        "slide-54-numbered-insights.html#node-1"
+      ],
+      "sample_classes": [
+        "meta",
+        "num"
+      ],
+      "sample_text": [
+        "BUILD\u00a0\u00a0a8f12c9\n    HOST\u00a0\u00a0us-east-1c\n    OWNER\u00a0platform-core\n",
+        "05Force"
+      ],
+      "bbox_typical": {
+        "w_avg": 102.5,
+        "h_avg": 78.0,
+        "w_min": 80,
+        "w_max": 125,
+        "h_min": 70,
+        "h_max": 86
+      },
+      "candidate_atom_id": "surf.unmatched-7eea0978",
+      "candidate_axis": "surf",
+      "candidate_props": {},
+      "candidate_confidence": 0.15,
+      "candidate_reason": "no class/shape signal \u2014 falling back to sig_hash stem"
+    },
+    {
+      "id": "auto-cluster-016",
+      "sig_hash": "b1cc7a1d2cc96216",
+      "signature": "text(txt)[][64x0]",
+      "instances": 2,
+      "exemplars": [
+        "slide-22-schematic.html#node-1",
+        "slide-41-hero-blob-frame.html#node-0"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "log + metrics",
+        "Photographed at low tide"
+      ],
+      "bbox_typical": {
+        "w_avg": 103.5,
+        "h_avg": 12.5,
+        "w_min": 86,
+        "w_max": 121,
+        "h_min": 12,
+        "h_max": 13
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-017",
+      "sig_hash": "d51332111fdcbbc5",
+      "signature": "svg(svg/12)[]<15>[192x0]",
+      "instances": 2,
+      "exemplars": [
+        "slide-24-code-hero.html#node-0",
+        "slide-26-manifesto.html#node-0"
+      ],
+      "sample_classes": [
+        "deco",
+        "deco-bottom"
+      ],
+      "sample_text": [],
+      "bbox_typical": {
+        "w_avg": 220.0,
+        "h_avg": 20.0,
+        "w_min": 220,
+        "w_max": 220,
+        "h_min": 20,
+        "h_max": 20
+      },
+      "candidate_atom_id": "dec.illustration-vector",
+      "candidate_axis": "dec",
+      "candidate_props": {
+        "vector": true
+      },
+      "candidate_confidence": 0.45,
+      "candidate_reason": "large svg/canvas bbox"
+    },
+    {
+      "id": "auto-cluster-018",
+      "sig_hash": "967cff7a125c8ce7",
+      "signature": "svg(svg/12)[]<13>[128x0]",
+      "instances": 2,
+      "exemplars": [
+        "slide-25-status-board.html#node-0",
+        "slide-27-dotmatrix-ladder.html#node-0"
+      ],
+      "sample_classes": [
+        "deco"
+      ],
+      "sample_text": [],
+      "bbox_typical": {
+        "w_avg": 180.0,
+        "h_avg": 22.0,
+        "w_min": 180,
+        "w_max": 180,
+        "h_min": 22,
+        "h_max": 22
+      },
+      "candidate_atom_id": "dec.illustration-vector",
+      "candidate_axis": "dec",
+      "candidate_props": {
+        "vector": true
+      },
+      "candidate_confidence": 0.45,
+      "candidate_reason": "large svg/canvas bbox"
+    },
+    {
+      "id": "auto-cluster-019",
+      "sig_hash": "241267f4d1a73d20",
+      "signature": "div(bg+shdw=t+brd+xform)[][320x192]{div(txt)[][256x0],div(txt)[][256x0],div(txt)[][256x64]}",
+      "instances": 1,
+      "exemplars": [
+        "animated/anim-01-stat-cards-fm.html#node-0"
+      ],
+      "sample_classes": [
+        "card"
+      ],
+      "sample_text": [
+        "P95 latency"
+      ],
+      "bbox_typical": {
+        "w_avg": 339.0,
+        "h_avg": 202.0,
+        "w_min": 339,
+        "w_max": 339,
+        "h_min": 202,
+        "h_max": 202
+      },
+      "candidate_atom_id": "surf.card-bordered-rotated-shadowed",
+      "candidate_axis": "surf",
+      "candidate_props": {
+        "border": true,
+        "shadow": "translatable",
+        "transform": true
+      },
+      "candidate_confidence": 0.75,
+      "candidate_reason": "class 'card' matched /\\bcard\\b/"
+    },
+    {
+      "id": "auto-cluster-020",
+      "sig_hash": "4963eafd35d574df",
+      "signature": "div(bgi=grad)[]<3>[1280x704]{div(bg+shdw=t+brd)[][384x192]{div(txt)[][320x0],div(txt)[][320x0],div(txt)[][320x64]},div(bg+shdw=t+brd+xform)[][320x192]{div(txt)[][256x0],div(txt)[][256x0],div(txt)[][256x64]},div(bg+shdw=t+brd+xform)[][320x192]{div(txt)[][256x0],div(txt)[][256x0],div(txt)[][256x64]},div(txt)[][1152x0],h1(txt+txtc)[][1152x32],span(txt)[][0x0],span(txt)[][192x0]}",
+      "instances": 1,
+      "exemplars": [
+        "animated/anim-01-stat-cards-fm.html#node-1"
+      ],
+      "sample_classes": [
+        "slide"
+      ],
+      "sample_text": [
+        "Q4 results \u00b7 2026"
+      ],
+      "bbox_typical": {
+        "w_avg": 1280.0,
+        "h_avg": 720.0,
+        "w_min": 1280,
+        "w_max": 1280,
+        "h_min": 720,
+        "h_max": 720
+      },
+      "candidate_atom_id": "surf.unmatched-4963eafd",
+      "candidate_axis": "surf",
+      "candidate_props": {
+        "border": true,
+        "shadow": "translatable",
+        "gradient": true,
+        "transform": true
+      },
+      "candidate_confidence": 0.15,
+      "candidate_reason": "no class/shape signal \u2014 falling back to sig_hash stem"
+    },
+    {
+      "id": "auto-cluster-021",
+      "sig_hash": "a3161a6cae268e53",
+      "signature": "h1()[]<7>[1088x192]{span(xform+txt)[][128x64],span(xform+txt)[][128x64],span(xform+txt)[][128x64],span(xform+txt)[][128x64],span(xform+txt)[][192x64],span(xform+txt)[][192x64],span(xform+txt)[][192x64]}",
+      "instances": 1,
+      "exemplars": [
+        "animated/anim-02-hero-text-fm.html#node-0"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "Build"
+      ],
+      "bbox_typical": {
+        "w_avg": 1088.0,
+        "h_avg": 216.0,
+        "w_min": 1088,
+        "w_max": 1088,
+        "h_min": 216,
+        "h_max": 216
+      },
+      "candidate_atom_id": "text.banner-rotated",
+      "candidate_axis": "text",
+      "candidate_props": {
+        "transform": true
+      },
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-022",
+      "sig_hash": "04cdbc7472b70b86",
+      "signature": "div(xform)[][1088x352]{div(txt)[][1088x0],h1()[]<7>[1088x192]{span(xform+txt)[][128x64],span(xform+txt)[][128x64],span(xform+txt)[][128x64],span(xform+txt)[][128x64],span(xform+txt)[][192x64],span(xform+txt)[][192x64],span(xform+txt)[][192x64]}}",
+      "instances": 1,
+      "exemplars": [
+        "animated/anim-02-hero-text-fm.html#node-1"
+      ],
+      "sample_classes": [
+        "stack"
+      ],
+      "sample_text": [
+        "Keynote \u00b7 Spring 2026"
+      ],
+      "bbox_typical": {
+        "w_avg": 1088.0,
+        "h_avg": 377.0,
+        "w_min": 1088,
+        "w_max": 1088,
+        "h_min": 377,
+        "h_max": 377
+      },
+      "candidate_atom_id": "layout.stack-rotated",
+      "candidate_axis": "layout",
+      "candidate_props": {
+        "transform": true
+      },
+      "candidate_confidence": 0.75,
+      "candidate_reason": "class 'stack' matched /\\bstack\\b/"
+    },
+    {
+      "id": "auto-cluster-023",
+      "sig_hash": "70544844682ac03c",
+      "signature": "div(txt)[][512x32]",
+      "instances": 1,
+      "exemplars": [
+        "animated/anim-03-bento-build-fm.html#node-4"
+      ],
+      "sample_classes": [
+        "tcaption"
+      ],
+      "sample_text": [
+        "Framer / GSAP slides record to GIF at the\n        configured"
+      ],
+      "bbox_typical": {
+        "w_avg": 525.0,
+        "h_avg": 37.0,
+        "w_min": 525,
+        "w_max": 525,
+        "h_min": 37,
+        "h_max": 37
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-024",
+      "sig_hash": "02267f500a54e141",
+      "signature": "div(txt)[][512x64]",
+      "instances": 1,
+      "exemplars": [
+        "animated/anim-03-bento-build-fm.html#node-5"
+      ],
+      "sample_classes": [
+        "ttitle"
+      ],
+      "sample_text": [
+        "Motion-aware emit pipeline"
+      ],
+      "bbox_typical": {
+        "w_avg": 525.0,
+        "h_avg": 88.0,
+        "w_min": 525,
+        "w_max": 525,
+        "h_min": 88,
+        "h_max": 88
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-025",
+      "sig_hash": "b45f7af57a25ae32",
+      "signature": "div(bgi=grad)[]<4>[1280x704]{div(bg+shdw=t+brd)[][128x128]{div(txt)[][128x0],div(txt)[][128x64]},div(bg+shdw=t+brd)[][128x160]{div(txt)[][128x0],div(txt)[][128x32]},div(bg+shdw=t+brd)[][320x128]{div(txt)[][320x0],div(txt)[][320x32]},div(bg+shdw=t+brd)[][320x160]{div(txt)[][320x0],div(txt)[][320x0]},div(bg+shdw=t+brd)[][512x160]{div(txt)[][512x0],div(txt)[][512x0]},div(bgi=grad+shdw=t+brd)[][512x352]{div(txt)[][512x0],div(txt)[][512x32],div(txt)[][512x64],span(bg+txt)[][128x0]},div(txt)[][0x0],div(txt)[][448x0],h1(txt)[][448x32],span(txt)[][0x0],span(txt)[][192x0]}",
+      "instances": 1,
+      "exemplars": [
+        "animated/anim-03-bento-build-fm.html#node-6"
+      ],
+      "sample_classes": [
+        "slide"
+      ],
+      "sample_text": [
+        "Product \u00b7 Q4 launch"
+      ],
+      "bbox_typical": {
+        "w_avg": 1280.0,
+        "h_avg": 720.0,
+        "w_min": 1280,
+        "w_max": 1280,
+        "h_min": 720,
+        "h_max": 720
+      },
+      "candidate_atom_id": "surf.unmatched-b45f7af5",
+      "candidate_axis": "surf",
+      "candidate_props": {
+        "border": true,
+        "shadow": "translatable",
+        "gradient": true
+      },
+      "candidate_confidence": 0.15,
+      "candidate_reason": "no class/shape signal \u2014 falling back to sig_hash stem"
+    },
+    {
+      "id": "auto-cluster-026",
+      "sig_hash": "1ea259db424794b5",
+      "signature": "div(bg+shdw=t+brd+xform)[][192x96]{div(txt)[][192x0],div(txt)[][192x0],div(txt)[][192x0]}",
+      "instances": 1,
+      "exemplars": [
+        "animated/anim-04-timeline-gsap.html#node-0"
+      ],
+      "sample_classes": [
+        "nodebox"
+      ],
+      "sample_text": [
+        "03 \u00b7 Classify"
+      ],
+      "bbox_typical": {
+        "w_avg": 242.0,
+        "h_avg": 97.0,
+        "w_min": 242,
+        "w_max": 242,
+        "h_min": 97,
+        "h_max": 97
+      },
+      "candidate_atom_id": "surf.unmatched-1ea259db",
+      "candidate_axis": "surf",
+      "candidate_props": {
+        "border": true,
+        "shadow": "translatable",
+        "transform": true
+      },
+      "candidate_confidence": 0.15,
+      "candidate_reason": "no class/shape signal \u2014 falling back to sig_hash stem"
+    },
+    {
+      "id": "auto-cluster-027",
+      "sig_hash": "fe6a72328cafd3af",
+      "signature": "div(bg+shdw=t+brd+xform)[][192x96]{div(txt)[][192x0],div(txt)[][192x0],div(txt)[][192x32]}",
+      "instances": 1,
+      "exemplars": [
+        "animated/anim-04-timeline-gsap.html#node-1"
+      ],
+      "sample_classes": [
+        "nodebox"
+      ],
+      "sample_text": [
+        "02 \u00b7 Cluster"
+      ],
+      "bbox_typical": {
+        "w_avg": 242.0,
+        "h_avg": 114.0,
+        "w_min": 242,
+        "w_max": 242,
+        "h_min": 114,
+        "h_max": 114
+      },
+      "candidate_atom_id": "surf.unmatched-fe6a7232",
+      "candidate_axis": "surf",
+      "candidate_props": {
+        "border": true,
+        "shadow": "translatable",
+        "transform": true
+      },
+      "candidate_confidence": 0.15,
+      "candidate_reason": "no class/shape signal \u2014 falling back to sig_hash stem"
+    },
+    {
+      "id": "auto-cluster-028",
+      "sig_hash": "9effc1ba66d2d844",
+      "signature": "circle(xform)[][0x0]",
+      "instances": 1,
+      "exemplars": [
+        "animated/anim-04-timeline-gsap.html#node-2"
+      ],
+      "sample_classes": [],
+      "sample_text": [],
+      "bbox_typical": {
+        "w_avg": 21.0,
+        "h_avg": 21.0,
+        "w_min": 21,
+        "w_max": 21,
+        "h_min": 21,
+        "h_max": 21
+      },
+      "candidate_atom_id": "dec.glyph-rotated",
+      "candidate_axis": "dec",
+      "candidate_props": {
+        "transform": true
+      },
+      "candidate_confidence": 0.4,
+      "candidate_reason": "small square bbox"
+    },
+    {
+      "id": "auto-cluster-029",
+      "sig_hash": "497362460b3184e8",
+      "signature": "svg(svg/6)[][1024x192]{circle(xform)[][0x0],circle(xform)[][0x0],circle(xform)[][0x0]}",
+      "instances": 1,
+      "exemplars": [
+        "animated/anim-04-timeline-gsap.html#node-3"
+      ],
+      "sample_classes": [],
+      "sample_text": [],
+      "bbox_typical": {
+        "w_avg": 1080.0,
+        "h_avg": 220.0,
+        "w_min": 1080,
+        "w_max": 1080,
+        "h_min": 220,
+        "h_max": 220
+      },
+      "candidate_atom_id": "dec.illustration-vector",
+      "candidate_axis": "dec",
+      "candidate_props": {
+        "vector": true
+      },
+      "candidate_confidence": 0.45,
+      "candidate_reason": "large svg/canvas bbox"
+    },
+    {
+      "id": "auto-cluster-030",
+      "sig_hash": "b633f05d9ccd6f82",
+      "signature": "div(xform)[][1280x192]{div(bg+shdw=t+brd+xform)[][192x96]{div(txt)[][192x0],div(txt)[][192x0],div(txt)[][192x0]},div(bg+shdw=t+brd+xform)[][192x96]{div(txt)[][192x0],div(txt)[][192x0],div(txt)[][192x32]},div(bg+shdw=t+brd+xform)[][192x96]{div(txt)[][192x0],div(txt)[][192x0],div(txt)[][192x32]},svg(svg/6)[][1024x192]{circle(xform)[][0x0],circle(xform)[][0x0],circle(xform)[][0x0]}}",
+      "instances": 1,
+      "exemplars": [
+        "animated/anim-04-timeline-gsap.html#node-4"
+      ],
+      "sample_classes": [
+        "timeline"
+      ],
+      "sample_text": [
+        "01 \u00b7 Render"
+      ],
+      "bbox_typical": {
+        "w_avg": 1280.0,
+        "h_avg": 220.0,
+        "w_min": 1280,
+        "w_max": 1280,
+        "h_min": 220,
+        "h_max": 220
+      },
+      "candidate_atom_id": "dec.illustration-vector",
+      "candidate_axis": "dec",
+      "candidate_props": {
+        "vector": true
+      },
+      "candidate_confidence": 0.45,
+      "candidate_reason": "large svg/canvas bbox"
+    },
+    {
+      "id": "auto-cluster-031",
+      "sig_hash": "0fd7944a0bd41bb1",
+      "signature": "div(bgi=grad)[]<1>[1280x704]{div(txt)[][1088x0],div(xform)[][1280x192]{div(bg+shdw=t+brd+xform)[][192x96]{div(txt)[][192x0],div(txt)[][192x0],div(txt)[][192x0]},div(bg+shdw=t+brd+xform)[][192x96]{div(txt)[][192x0],div(txt)[][192x0],div(txt)[][192x32]},div(bg+shdw=t+brd+xform)[][192x96]{div(txt)[][192x0],div(txt)[][192x0],div(txt)[][192x32]},svg(svg/6)[][1024x192]{circle(xform)[][0x0],circle(xform)[][0x0],circle(xform)[][0x0]}},h1(txt)[][1088x32],span(txt)[][0x0],span(txt)[][192x0]}",
+      "instances": 1,
+      "exemplars": [
+        "animated/anim-04-timeline-gsap.html#node-5"
+      ],
+      "sample_classes": [
+        "slide"
+      ],
+      "sample_text": [
+        "Process \u00b7 Slide-to-PPTX"
+      ],
+      "bbox_typical": {
+        "w_avg": 1280.0,
+        "h_avg": 720.0,
+        "w_min": 1280,
+        "w_max": 1280,
+        "h_min": 720,
+        "h_max": 720
+      },
+      "candidate_atom_id": "dec.illustration-vector",
+      "candidate_axis": "dec",
+      "candidate_props": {
+        "vector": true
+      },
+      "candidate_confidence": 0.45,
+      "candidate_reason": "large svg/canvas bbox"
+    },
+    {
+      "id": "auto-cluster-032",
+      "sig_hash": "543131c3c183edcc",
+      "signature": "div(bg+shdw=t+brd+xform)[]<1>[320x352]{div(txt)[][256x0],div(txt)[][256x0],div(txt+txtc)[][256x32],span(bg+txt)[][256x32]}",
+      "instances": 1,
+      "exemplars": [
+        "animated/anim-05-pricing-rise-gsap.html#node-0"
+      ],
+      "sample_classes": [
+        "tier"
+      ],
+      "sample_text": [
+        "Studio"
+      ],
+      "bbox_typical": {
+        "w_avg": 346.0,
+        "h_avg": 352.0,
+        "w_min": 346,
+        "w_max": 346,
+        "h_min": 352,
+        "h_max": 352
+      },
+      "candidate_atom_id": "surf.tile-bordered-rotated-shadowed",
+      "candidate_axis": "surf",
+      "candidate_props": {
+        "border": true,
+        "shadow": "translatable",
+        "transform": true
+      },
+      "candidate_confidence": 0.4,
+      "candidate_reason": "square card-sized bbox"
+    },
+    {
+      "id": "auto-cluster-033",
+      "sig_hash": "88a29afabf3b8196",
+      "signature": "div(bg+shdw=t+brd+xform)[]<1>[320x352]{div(txt)[][256x0],div(txt)[][256x0],div(txt+txtc)[][256x64],span(bg+txt)[][256x32]}",
+      "instances": 1,
+      "exemplars": [
+        "animated/anim-05-pricing-rise-gsap.html#node-1"
+      ],
+      "sample_classes": [
+        "tier"
+      ],
+      "sample_text": [
+        "Starter"
+      ],
+      "bbox_typical": {
+        "w_avg": 346.0,
+        "h_avg": 352.0,
+        "w_min": 346,
+        "w_max": 346,
+        "h_min": 352,
+        "h_max": 352
+      },
+      "candidate_atom_id": "surf.tile-bordered-rotated-shadowed",
+      "candidate_axis": "surf",
+      "candidate_props": {
+        "border": true,
+        "shadow": "translatable",
+        "transform": true
+      },
+      "candidate_confidence": 0.4,
+      "candidate_reason": "square card-sized bbox"
+    },
+    {
+      "id": "auto-cluster-034",
+      "sig_hash": "24479fe5d2ab69ef",
+      "signature": "div(bgi=grad)[]<3>[1280x704]{div(bg+shdw=t+brd+xform)[]<1>[320x352]{div(txt)[][256x0],div(txt)[][256x0],div(txt+txtc)[][256x32],span(bg+txt)[][256x32]},div(bg+shdw=t+brd+xform)[]<1>[320x352]{div(txt)[][256x0],div(txt)[][256x0],div(txt+txtc)[][256x64],span(bg+txt)[][256x32]},div(bgi=grad+shdw=t+brd+xform)[]<1>[320x352]{div(txt)[][256x0],div(txt)[][256x0],div(txt+txtc)[][256x64],span(bg+txt)[][256x32]},div(txt)[][1088x0],h1(txt)[][1088x32],span(txt)[][0x0],span(txt)[][128x0]}",
+      "instances": 1,
+      "exemplars": [
+        "animated/anim-05-pricing-rise-gsap.html#node-2"
+      ],
+      "sample_classes": [
+        "slide"
+      ],
+      "sample_text": [
+        "Plans \u00b7 2026"
+      ],
+      "bbox_typical": {
+        "w_avg": 1280.0,
+        "h_avg": 720.0,
+        "w_min": 1280,
+        "w_max": 1280,
+        "h_min": 720,
+        "h_max": 720
+      },
+      "candidate_atom_id": "surf.unmatched-24479fe5",
+      "candidate_axis": "surf",
+      "candidate_props": {
+        "border": true,
+        "shadow": "translatable",
+        "gradient": true,
+        "transform": true
+      },
+      "candidate_confidence": 0.15,
+      "candidate_reason": "no class/shape signal \u2014 falling back to sig_hash stem"
+    },
+    {
+      "id": "auto-cluster-035",
+      "sig_hash": "057960d3afc3e693",
+      "signature": "blockquote()[]<1>[1024x192]{span(xform)[][0x64],span(xform)[][0x64],span(xform)[][0x64],span(xform)[][0x64],span(xform)[][0x64],span(xform)[][0x64],span(xform)[][0x64],span(xform)[][0x64],span(xform)[][0x64],span(xform)[][0x64],span(xform)[][0x64],span(xform)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x96]}",
+      "instances": 1,
+      "exemplars": [
+        "animated/anim-06-quote-stagger-gsap.html#node-0"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "\u201c"
+      ],
+      "bbox_typical": {
+        "w_avg": 1080.0,
+        "h_avg": 216.0,
+        "w_min": 1080,
+        "w_max": 1080,
+        "h_min": 216,
+        "h_max": 216
+      },
+      "candidate_atom_id": "text.banner-rotated",
+      "candidate_axis": "text",
+      "candidate_props": {
+        "transform": true
+      },
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-036",
+      "sig_hash": "f914f249bce5c713",
+      "signature": "div(bgi=grad+bg)[]<3>[1280x704]{blockquote()[]<1>[1024x192]{span(xform)[][0x64],span(xform)[][0x64],span(xform)[][0x64],span(xform)[][0x64],span(xform)[][0x64],span(xform)[][0x64],span(xform)[][0x64],span(xform)[][0x64],span(xform)[][0x64],span(xform)[][0x64],span(xform)[][0x64],span(xform)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x64],span(xform+txt)[][0x96]},div(xform+txt)[][1088x0],span(txt)[][0x0],span(txt)[][192x0]}",
+      "instances": 1,
+      "exemplars": [
+        "animated/anim-06-quote-stagger-gsap.html#node-1"
+      ],
+      "sample_classes": [
+        "slide"
+      ],
+      "sample_text": [
+        "Customer story \u00b7 Helio"
+      ],
+      "bbox_typical": {
+        "w_avg": 1280.0,
+        "h_avg": 720.0,
+        "w_min": 1280,
+        "w_max": 1280,
+        "h_min": 720,
+        "h_max": 720
+      },
+      "candidate_atom_id": "surf.unmatched-f914f249",
+      "candidate_axis": "surf",
+      "candidate_props": {
+        "gradient": true,
+        "transform": true
+      },
+      "candidate_confidence": 0.15,
+      "candidate_reason": "no class/shape signal \u2014 falling back to sig_hash stem"
+    },
+    {
+      "id": "auto-cluster-037",
+      "sig_hash": "469a1b4f84776b61",
+      "signature": "div(shdw=t+brd)[][1152x480]{img(img)[][1088x480]}",
+      "instances": 1,
+      "exemplars": [
+        "animated/embed-demo-deck.html#node-0"
+      ],
+      "sample_classes": [
+        "frame"
+      ],
+      "sample_text": [],
+      "bbox_typical": {
+        "w_avg": 1152.0,
+        "h_avg": 496.0,
+        "w_min": 1152,
+        "w_max": 1152,
+        "h_min": 496,
+        "h_max": 496
+      },
+      "candidate_atom_id": "surf.frame-bordered-shadowed",
+      "candidate_axis": "surf",
+      "candidate_props": {
+        "border": true,
+        "shadow": "translatable",
+        "image": true
+      },
+      "candidate_confidence": 0.75,
+      "candidate_reason": "class 'frame' matched /\\bframe\\b/"
+    },
+    {
+      "id": "auto-cluster-038",
+      "sig_hash": "eaaa811c1b848e14",
+      "signature": "div(bgi=grad)[]<2>[1280x704]{div(shdw=t+brd)[][1152x480]{img(img)[][1088x480]},div(txt)[][1152x0],h1(txt)[][1152x32],span(txt)[][0x0],span(txt)[][192x0]}",
+      "instances": 1,
+      "exemplars": [
+        "animated/embed-demo-deck.html#node-1"
+      ],
+      "sample_classes": [
+        "slide"
+      ],
+      "sample_text": [
+        "Slide 1 \u00b7 Stat cards"
+      ],
+      "bbox_typical": {
+        "w_avg": 1280.0,
+        "h_avg": 720.0,
+        "w_min": 1280,
+        "w_max": 1280,
+        "h_min": 720,
+        "h_max": 720
+      },
+      "candidate_atom_id": "media.image",
+      "candidate_axis": "media",
+      "candidate_props": {
+        "raster": true
+      },
+      "candidate_confidence": 0.55,
+      "candidate_reason": "anchor is <img>"
+    },
+    {
+      "id": "auto-cluster-039",
+      "sig_hash": "118b6bf594b6edcd",
+      "signature": "div(bg)[]<2>[1280x704]{div(shdw=t+brd)[][1152x480]{img(img)[][1088x480]},div(txt)[][1152x0],h1(txt)[][1152x32],span(txt)[][0x0],span(txt)[][192x0]}",
+      "instances": 1,
+      "exemplars": [
+        "animated/embed-demo-deck.html#node-2"
+      ],
+      "sample_classes": [
+        "slide"
+      ],
+      "sample_text": [
+        "Slide 2 \u00b7 Hero text"
+      ],
+      "bbox_typical": {
+        "w_avg": 1280.0,
+        "h_avg": 720.0,
+        "w_min": 1280,
+        "w_max": 1280,
+        "h_min": 720,
+        "h_max": 720
+      },
+      "candidate_atom_id": "media.image",
+      "candidate_axis": "media",
+      "candidate_props": {
+        "raster": true
+      },
+      "candidate_confidence": 0.55,
+      "candidate_reason": "anchor is <img>"
+    },
+    {
+      "id": "auto-cluster-040",
+      "sig_hash": "175cff580df887bc",
+      "signature": "div(bg+brd)[]<1>[256x256]{div(bgi=grad)[][128x32],div(bgi=grad)[][64x32],div(bgi=grad)[][64x64],div(bgi=grad)[][64x64],div(txt)[][192x0],div(txt)[][192x0],span(bg+txt)[][64x0]}",
+      "instances": 1,
+      "exemplars": [
+        "landing-atoms.html#node-0"
+      ],
+      "sample_classes": [
+        "tile"
+      ],
+      "sample_text": [
+        "comp.bento"
+      ],
+      "bbox_typical": {
+        "w_avg": 273.0,
+        "h_avg": 260.0,
+        "w_min": 273,
+        "w_max": 273,
+        "h_min": 260,
+        "h_max": 260
+      },
+      "candidate_atom_id": "surf.tile-bordered-gradient",
+      "candidate_axis": "surf",
+      "candidate_props": {
+        "border": true,
+        "gradient": true
+      },
+      "candidate_confidence": 0.75,
+      "candidate_reason": "class 'tile' matched /\\btile\\b/"
+    },
+    {
+      "id": "auto-cluster-041",
+      "sig_hash": "90217b45b7ed946e",
+      "signature": "div(bg+brd)[]<1>[256x256]{div(bg)[][128x0],div(bg)[][128x0],div(txt)[][192x0],div(txt)[][192x0],div(xform+txt)[][0x128],span(bg+txt)[][128x0]}",
+      "instances": 1,
+      "exemplars": [
+        "landing-atoms.html#node-1"
+      ],
+      "sample_classes": [
+        "tile"
+      ],
+      "sample_text": [
+        "comp.edge-rotated"
+      ],
+      "bbox_typical": {
+        "w_avg": 273.0,
+        "h_avg": 260.0,
+        "w_min": 273,
+        "w_max": 273,
+        "h_min": 260,
+        "h_max": 260
+      },
+      "candidate_atom_id": "surf.tile-bordered-rotated",
+      "candidate_axis": "surf",
+      "candidate_props": {
+        "border": true,
+        "transform": true
+      },
+      "candidate_confidence": 0.75,
+      "candidate_reason": "class 'tile' matched /\\btile\\b/"
+    },
+    {
+      "id": "auto-cluster-042",
+      "sig_hash": "933aa1238b8450e5",
+      "signature": "div(bg+brd)[]<1>[256x256]{div(bg)[grid-line][0x256],div(bg)[grid-line][0x256],div(bg)[grid-line][256x0],div(bg)[grid-line][256x0],div(bgi=grad)[][64x64],div(txt)[][192x0],div(txt)[][192x0],span(bg+txt)[][64x0]}",
+      "instances": 1,
+      "exemplars": [
+        "landing-atoms.html#node-2"
+      ],
+      "sample_classes": [
+        "tile"
+      ],
+      "sample_text": [
+        "comp.thirds"
+      ],
+      "bbox_typical": {
+        "w_avg": 273.0,
+        "h_avg": 260.0,
+        "w_min": 273,
+        "w_max": 273,
+        "h_min": 260,
+        "h_max": 260
+      },
+      "candidate_atom_id": "surf.tile-bordered-gradient-grid",
+      "candidate_axis": "surf",
+      "candidate_props": {
+        "border": true,
+        "gradient": true,
+        "grid": true
+      },
+      "candidate_confidence": 0.75,
+      "candidate_reason": "class 'tile' matched /\\btile\\b/"
+    },
+    {
+      "id": "auto-cluster-043",
+      "sig_hash": "55549aea4cdff014",
+      "signature": "div(bg+brd)[]<1>[256x256]{div(bg)[][0x0],div(bg)[][128x0],div(bg)[][64x0],div(bg)[grid-line][0x256],div(bg)[grid-line][256x0],div(txt)[][192x0],div(txt)[][192x0],span(bg+txt)[][64x0]}",
+      "instances": 1,
+      "exemplars": [
+        "landing-atoms.html#node-3"
+      ],
+      "sample_classes": [
+        "tile"
+      ],
+      "sample_text": [
+        "comp.golden"
+      ],
+      "bbox_typical": {
+        "w_avg": 273.0,
+        "h_avg": 260.0,
+        "w_min": 273,
+        "w_max": 273,
+        "h_min": 260,
+        "h_max": 260
+      },
+      "candidate_atom_id": "surf.tile-bordered-grid",
+      "candidate_axis": "surf",
+      "candidate_props": {
+        "border": true,
+        "grid": true
+      },
+      "candidate_confidence": 0.75,
+      "candidate_reason": "class 'tile' matched /\\btile\\b/"
+    },
+    {
+      "id": "auto-cluster-044",
+      "sig_hash": "18a8a78068741ccc",
+      "signature": "div(bg+brd)[]<1>[256x256]{div(bg)[][64x0],div(bg)[][64x0],div(bg)[][64x0],div(bg)[grid-line][0x256],div(bgi=grad)[][64x160],div(txt)[][192x0],div(txt)[][192x0],span(bg+txt)[][64x0]}",
+      "instances": 1,
+      "exemplars": [
+        "landing-atoms.html#node-4"
+      ],
+      "sample_classes": [
+        "tile"
+      ],
+      "sample_text": [
+        "comp.split-60"
+      ],
+      "bbox_typical": {
+        "w_avg": 273.0,
+        "h_avg": 260.0,
+        "w_min": 273,
+        "w_max": 273,
+        "h_min": 260,
+        "h_max": 260
+      },
+      "candidate_atom_id": "surf.tile-bordered-gradient-grid",
+      "candidate_axis": "surf",
+      "candidate_props": {
+        "border": true,
+        "gradient": true,
+        "grid": true
+      },
+      "candidate_confidence": 0.75,
+      "candidate_reason": "class 'tile' matched /\\btile\\b/"
+    },
+    {
+      "id": "auto-cluster-045",
+      "sig_hash": "c7252a4fc27e8721",
+      "signature": "div(bg+brd)[]<1>[256x256]{div(bg)[][64x0],div(bg)[][64x0],div(bg)[grid-line][0x256],div(bgi=grad)[][64x128],div(txt)[][192x0],div(txt)[][192x0],span(bg+txt)[][64x0]}",
+      "instances": 1,
+      "exemplars": [
+        "landing-atoms.html#node-5"
+      ],
+      "sample_classes": [
+        "tile"
+      ],
+      "sample_text": [
+        "comp.split-50"
+      ],
+      "bbox_typical": {
+        "w_avg": 273.0,
+        "h_avg": 260.0,
+        "w_min": 273,
+        "w_max": 273,
+        "h_min": 260,
+        "h_max": 260
+      },
+      "candidate_atom_id": "surf.tile-bordered-gradient-grid",
+      "candidate_axis": "surf",
+      "candidate_props": {
+        "border": true,
+        "gradient": true,
+        "grid": true
+      },
+      "candidate_confidence": 0.75,
+      "candidate_reason": "class 'tile' matched /\\btile\\b/"
+    },
+    {
+      "id": "auto-cluster-046",
+      "sig_hash": "4733c9a0974db6f2",
+      "signature": "svg(svg/12)[]<43>[256x256]",
+      "instances": 1,
+      "exemplars": [
+        "landing-atoms.html#node-6"
+      ],
+      "sample_classes": [],
+      "sample_text": [],
+      "bbox_typical": {
+        "w_avg": 271.0,
+        "h_avg": 279.0,
+        "w_min": 271,
+        "w_max": 271,
+        "h_min": 279,
+        "h_max": 279
+      },
+      "candidate_atom_id": "dec.illustration-vector",
+      "candidate_axis": "dec",
+      "candidate_props": {
+        "vector": true
+      },
+      "candidate_confidence": 0.45,
+      "candidate_reason": "large svg/canvas bbox"
+    },
+    {
+      "id": "auto-cluster-047",
+      "sig_hash": "b12cc156efdeea93",
+      "signature": "div(bg)[]<3>[1280x704]{div(bg+shdw=t)[][256x224]{div(bgi=grad)[][192x128],div(txt)[][192x0],span(txt)[][192x0]},div(bg+shdw=t+brd)[]<1>[256x224]{div(txt)[][192x0],div(txt)[][192x32],span(txt)[][192x0]},div(bg+shdw=t+brd)[]<1>[256x224]{div(txt)[][192x0],div(txt)[][192x32],span(txt)[][192x0]},div(bg+shdw=t+brd+xform)[]<1>[256x224]{div(txt)[][192x0],div(txt)[][192x32],span(txt)[][192x0]},div(bgi=grad+brd)[]<1>[256x224]{div(txt)[][192x0],div(txt)[][192x32],span(txt)[][192x0]},div(bgi=grad+brd)[]<1>[256x224]{div(txt)[][192x0],div(txt)[][192x32],span(txt)[][192x0]},div(bgi=grad+shdw=t+brd)[]<1>[256x224]{div(txt)[][192x0],div(txt)[][192x32],span(txt)[][192x0]},div(bgi=grad+shdw=t+brd)[]<1>[256x224]{div(txt)[][192x0],div(txt)[][192x32],span(txt)[][192x0]},div(txt)[][0x0],div(txt)[][128x0],div(txt)[][128x0],div(txt)[][128x0],h1(txt)[][896x32]}",
+      "instances": 1,
+      "exemplars": [
+        "landing-atoms.html#node-8"
+      ],
+      "sample_classes": [
+        "slide"
+      ],
+      "sample_text": [
+        "atoms \u00b7 axis 03"
+      ],
+      "bbox_typical": {
+        "w_avg": 1280.0,
+        "h_avg": 720.0,
+        "w_min": 1280,
+        "w_max": 1280,
+        "h_min": 720,
+        "h_max": 720
+      },
+      "candidate_atom_id": "surf.unmatched-b12cc156",
+      "candidate_axis": "surf",
+      "candidate_props": {
+        "border": true,
+        "shadow": "translatable",
+        "gradient": true,
+        "transform": true
+      },
+      "candidate_confidence": 0.15,
+      "candidate_reason": "no class/shape signal \u2014 falling back to sig_hash stem"
+    },
+    {
+      "id": "auto-cluster-048",
+      "sig_hash": "58ca43fd2db6a56b",
+      "signature": "div(txt+txtc)[][1088x32]",
+      "instances": 1,
+      "exemplars": [
+        "landing-atoms.html#node-9"
+      ],
+      "sample_classes": [
+        "t-marquee"
+      ],
+      "sample_text": [
+        "SHIP \u00b7 ITERATE \u00b7 SHIP \u00b7 ITERATE \u00b7 SHIP \u00b7 ITERATE \u00b7 SHIP \u00b7 IT"
+      ],
+      "bbox_typical": {
+        "w_avg": 1090.0,
+        "h_avg": 36.0,
+        "w_min": 1090,
+        "w_max": 1090,
+        "h_min": 36,
+        "h_max": 36
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-049",
+      "sig_hash": "dc9836a6ef7ee4c7",
+      "signature": "svg(svg/2)[]<2>[64x96]{text(txt)[][0x0],text(txt)[][64x0]}",
+      "instances": 1,
+      "exemplars": [
+        "landing-atoms.html#node-11"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "SHIPPED"
+      ],
+      "bbox_typical": {
+        "w_avg": 120.0,
+        "h_avg": 120.0,
+        "w_min": 120,
+        "w_max": 120,
+        "h_min": 120,
+        "h_max": 120
+      },
+      "candidate_atom_id": "dec.illustration-vector",
+      "candidate_axis": "dec",
+      "candidate_props": {
+        "vector": true
+      },
+      "candidate_confidence": 0.45,
+      "candidate_reason": "large svg/canvas bbox"
+    },
+    {
+      "id": "auto-cluster-050",
+      "sig_hash": "0636113fb6d62289",
+      "signature": "svg(svg/6)[]<2>[192x32]",
+      "instances": 1,
+      "exemplars": [
+        "landing-atoms.html#node-12"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "0"
+      ],
+      "bbox_typical": {
+        "w_avg": 220.0,
+        "h_avg": 40.0,
+        "w_min": 220,
+        "w_max": 220,
+        "h_min": 40,
+        "h_max": 40
+      },
+      "candidate_atom_id": "dec.illustration-vector",
+      "candidate_axis": "dec",
+      "candidate_props": {
+        "vector": true
+      },
+      "candidate_confidence": 0.45,
+      "candidate_reason": "large svg/canvas bbox"
+    }
+  ],
+  "errors": []
+}

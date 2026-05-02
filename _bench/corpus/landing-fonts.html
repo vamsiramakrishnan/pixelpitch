@@ -1,0 +1,235 @@
+<!--
+  slidify · landing-page atomic seed · TYPOGRAPHIC REGISTERS
+  ==========================================================
+  Same headline, eight typographic registers. Demonstrates that the
+  font-family axis is orthogonal to layout: any composition can be
+  re-skinned by swapping the type stack.
+
+  Each row gives:
+    [REGISTER NAME]     [DISPLAY HEADLINE]      [BODY SAMPLE]      [TAG/CAPTION]
+
+  The font-family stacks are realistic (designer-grade first, then
+  reasonable system fallbacks). slidify's font_resolver embeds whichever
+  family is available on the build machine; missing families gracefully
+  fall back to fontconfig defaults without breaking layout.
+-->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>fonts — 01 / 04 editorial / tech / magazine / brutalist</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;color:#06060c;background:#fafaf7;-webkit-font-smoothing:antialiased;font-family:Inter,sans-serif}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:42px 72px 36px 72px;position:relative;overflow:hidden;background:#fafaf7}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:14px;border-bottom:1px solid rgba(0,0,0,0.10);padding-bottom:10px}
+  .head .ttl{font-size:11px;letter-spacing:0.36em;color:#7c3aed;font-weight:800;text-transform:uppercase}
+  .head .axis{font-size:26px;font-weight:800;letter-spacing:-0.025em;line-height:1.0;margin:0;flex:1;padding-left:18px}
+  .head .idx{font-size:11px;letter-spacing:0.32em;color:#71717a;font-weight:700}
+  .grid{display:grid;grid-template-columns:1fr;gap:8px}
+  .row{display:grid;grid-template-columns:140px 1fr 260px;gap:20px;align-items:center;padding:10px 18px;border-radius:14px;background:#fff;border:1px solid rgba(0,0,0,0.06);box-shadow:0 4px 16px rgba(0,0,0,0.03);height:124px;overflow:hidden}
+  .reg{font-size:10px;letter-spacing:0.24em;font-weight:800;text-transform:uppercase;color:#7c3aed}
+  .reg .meta{display:block;font-size:10px;color:#71717a;font-weight:700;letter-spacing:0.18em;margin-top:6px}
+  .display{margin:0;line-height:0.95;letter-spacing:-0.03em}
+  .body{font-size:13px;line-height:1.5;color:#52525b;font-weight:500}
+  .tag{font-size:10px;letter-spacing:0.18em;color:#71717a;font-weight:700;text-transform:uppercase;margin-top:6px}
+
+  /* ── Register 1: Editorial (display serif + mono caption) ─────────────── */
+  .r-editorial .display{font-family:"Fraunces","Source Serif Pro","Tiempos Headline",Georgia,serif;font-size:34px;font-weight:700;font-style:italic;color:#06060c}
+  .r-editorial .body{font-family:"Source Serif Pro",Georgia,serif;font-size:13px;line-height:1.5;color:#3f3f46}
+  .r-editorial .tag{font-family:"JetBrains Mono","IBM Plex Mono",Menlo,monospace;letter-spacing:0.16em;color:#7c3aed}
+  /* ── Register 2: Tech (geometric sans + mono code) ────────────────────── */
+  .r-tech .display{font-family:"Space Grotesk","Geist",Inter,sans-serif;font-size:34px;font-weight:700;letter-spacing:-0.045em;color:#06060c}
+  .r-tech .body{font-family:Inter,"Geist",sans-serif;font-size:12px;color:#3f3f46}
+  .r-tech .tag{font-family:"JetBrains Mono","IBM Plex Mono",Menlo,monospace;color:#06060c;background:#facc15;padding:4px 10px;border-radius:6px;display:inline-block;letter-spacing:0.08em;font-size:11px}
+  /* ── Register 3: Magazine (condensed display + serif body) ───────────── */
+  .r-magazine .display{font-family:"Bebas Neue","Anton","Oswald","Helvetica Neue Condensed",Impact,sans-serif;font-size:42px;font-weight:400;letter-spacing:0.005em;color:#06060c;text-transform:uppercase;line-height:0.95}
+  .r-magazine .body{font-family:"Source Serif Pro","Tiempos Text",Georgia,serif;font-size:13px;line-height:1.5;color:#3f3f46}
+  .r-magazine .tag{font-family:Inter,sans-serif;letter-spacing:0.42em;color:#dc2626;font-weight:900;font-size:11px}
+  /* ── Register 4: Brutalist (grotesque + mono, all caps) ──────────────── */
+  .r-brutalist .display{font-family:"Helvetica Neue","Neue Haas Grotesk",Helvetica,Arial,sans-serif;font-size:30px;font-weight:900;letter-spacing:-0.04em;color:#06060c;text-transform:uppercase;line-height:1}
+  .r-brutalist .body{font-family:"JetBrains Mono","IBM Plex Mono",Menlo,monospace;font-size:11px;line-height:1.55;color:#06060c;letter-spacing:0.02em}
+  .r-brutalist .tag{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;background:#06060c;color:#fafaf7;padding:5px 10px;letter-spacing:0.24em;font-weight:900;display:inline-block;font-size:11px}
+
+  .footer{position:absolute;bottom:18px;left:72px;right:72px;display:flex;justify-content:space-between;font-size:11px;color:#71717a;letter-spacing:0.18em;font-weight:700}
+</style></head><body>
+<div class="slide">
+  <div class="head"><div class="ttl">atoms · typographic registers</div><h1 class="axis" data-pptx-role="title">Same headline, eight registers · sheet 1 of 2</h1><div class="idx">01 / 04</div></div>
+  <div class="grid">
+    <div class="row r-editorial">
+      <div class="reg">EDITORIAL<span class="meta">Fraunces · italic · serif body · mono caption</span></div>
+      <p class="display">Ship slides that <em>stay alive</em> after the meeting.</p>
+      <div><div class="body">A compiler for presentations. Render in Chromium. Edit in PowerPoint.</div><div class="tag">→ ATELIER · Q2 / 2026</div></div>
+    </div>
+    <div class="row r-tech">
+      <div class="reg">TECH<span class="meta">Space Grotesk · geometric sans · mono badge</span></div>
+      <p class="display">Ship slides that stay alive after the meeting.</p>
+      <div><div class="body">A compiler for presentations. Render in Chromium. Edit in PowerPoint.</div><div class="tag">v0.4 · stable</div></div>
+    </div>
+    <div class="row r-magazine">
+      <div class="reg">MAGAZINE<span class="meta">Bebas Neue · condensed · serif body · accent kicker</span></div>
+      <p class="display">Ship slides that stay alive after the meeting.</p>
+      <div><div class="body">A compiler for presentations. Render in Chromium. Edit in PowerPoint.</div><div class="tag">ISSUE · 04</div></div>
+    </div>
+    <div class="row r-brutalist">
+      <div class="reg">BRUTALIST<span class="meta">Helvetica · 900 · mono body · stamped tag</span></div>
+      <p class="display">SHIP SLIDES THAT STAY ALIVE AFTER THE MEETING.</p>
+      <div><div class="body">A compiler for presentations.<br>Render in Chromium. Edit in PowerPoint.</div><div class="tag">SHIPPED 26.04</div></div>
+    </div>
+  </div>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED · TYPOGRAPHIC REGISTERS</div><div>01 / 04 · LIGHT GROUND</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>fonts — 02 manifesto / blueprint / luxury / warm</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased;font-family:Inter,sans-serif}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:42px 72px 36px 72px;position:relative;overflow:hidden;background:#06060c}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.10);padding-bottom:10px}
+  .head .ttl{font-size:11px;letter-spacing:0.36em;color:#a78bfa;font-weight:800;text-transform:uppercase}
+  .head .axis{font-size:26px;font-weight:800;letter-spacing:-0.025em;line-height:1.0;margin:0;flex:1;padding-left:18px}
+  .head .idx{font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .grid{display:grid;grid-template-columns:1fr;gap:8px}
+  .row{display:grid;grid-template-columns:140px 1fr 260px;gap:20px;align-items:center;padding:10px 18px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);height:124px;overflow:hidden}
+  .reg{font-size:10px;letter-spacing:0.24em;font-weight:800;text-transform:uppercase;color:#a78bfa}
+  .reg .meta{display:block;font-size:10px;color:#71717a;font-weight:700;letter-spacing:0.18em;margin-top:6px}
+  .display{margin:0;line-height:0.95;letter-spacing:-0.03em}
+  .body{font-size:13px;line-height:1.5;color:#a1a1aa;font-weight:500}
+  .tag{font-size:10px;letter-spacing:0.18em;color:#a1a1aa;font-weight:700;text-transform:uppercase;margin-top:6px}
+
+  /* ── Register 5: Manifesto (variable-weight Inter axis play) ─────────── */
+  .r-manifesto .display{font-family:Inter,sans-serif;font-size:32px;letter-spacing:-0.04em;color:#f5f5f7;line-height:1.05}
+  .r-manifesto .display .l1{font-weight:200}.r-manifesto .display .l2{font-weight:400}.r-manifesto .display .l3{font-weight:700}.r-manifesto .display .l4{font-weight:900}
+  .r-manifesto .body{font-family:Inter,sans-serif;font-weight:300;color:#d4d4d8;font-size:12px}
+  .r-manifesto .tag{color:#f472b6;letter-spacing:0.24em;font-size:11px}
+  /* ── Register 6: Blueprint (all-mono drafting aesthetic) ─────────────── */
+  .r-blueprint .display{font-family:"JetBrains Mono","IBM Plex Mono",Menlo,monospace;font-size:22px;font-weight:700;letter-spacing:-0.01em;color:#67e8f9;line-height:1.1}
+  .r-blueprint .body{font-family:"JetBrains Mono","IBM Plex Mono",Menlo,monospace;font-size:10px;line-height:1.55;color:#94a3b8;letter-spacing:0.02em}
+  .r-blueprint .tag{font-family:"JetBrains Mono",monospace;color:#67e8f9;letter-spacing:0.10em;background:rgba(103,232,249,0.10);padding:5px 10px;border-radius:4px;display:inline-block;border:1px solid rgba(103,232,249,0.30);font-size:10px}
+  /* ── Register 7: Luxury (high-contrast serif + tracked sans) ─────────── */
+  .r-luxury .display{font-family:"Playfair Display","Didot","Bodoni Moda",Georgia,serif;font-size:36px;font-weight:400;letter-spacing:-0.015em;color:#fde68a;font-style:italic;line-height:1.05}
+  .r-luxury .body{font-family:Inter,sans-serif;font-size:12px;line-height:1.5;color:#a1a1aa;letter-spacing:0.04em}
+  .r-luxury .tag{font-family:Inter,sans-serif;letter-spacing:0.42em;color:#fde68a;font-weight:600;font-size:11px}
+  /* ── Register 8: Warm (humanist + script accent) ────────────────────── */
+  .r-warm .display{font-family:"Söhne","Inter Display",Inter,sans-serif;font-size:32px;font-weight:600;letter-spacing:-0.025em;color:#fef3c7;line-height:1.05}
+  .r-warm .display em{font-family:"Caveat","Pacifico","Brush Script MT",cursive;font-style:normal;font-weight:400;color:#fb923c;font-size:1.18em;letter-spacing:0;margin:0 4px}
+  .r-warm .body{font-family:Inter,sans-serif;color:#fcd9b6;font-weight:500;font-size:12px}
+  .r-warm .tag{font-family:"Caveat","Pacifico",cursive;font-size:16px;color:#fb923c;letter-spacing:0;text-transform:none;font-weight:400}
+
+  .footer{position:absolute;bottom:18px;left:72px;right:72px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700}
+</style></head><body>
+<div class="slide">
+  <div class="head"><div class="ttl">atoms · typographic registers</div><h1 class="axis" data-pptx-role="title">Same headline, eight registers · sheet 2 of 2</h1><div class="idx">02 / 04</div></div>
+  <div class="grid">
+    <div class="row r-manifesto">
+      <div class="reg">MANIFESTO<span class="meta">Inter · weight axis 200 → 900 in one line</span></div>
+      <p class="display"><span class="l1">Ship</span> <span class="l2">slides</span> <span class="l3">that</span> <span class="l4">stay alive</span> <span class="l1">after the meeting.</span></p>
+      <div><div class="body">A compiler for presentations.</div><div class="tag">v0.4 · STABLE</div></div>
+    </div>
+    <div class="row r-blueprint">
+      <div class="reg">BLUEPRINT<span class="meta">JetBrains Mono · all monospace · drafting</span></div>
+      <p class="display">$&nbsp;ship&nbsp;slides --that-stay-alive --after=meeting</p>
+      <div><div class="body"># compile.html → editable.pptx<br>render → cluster → classify → emit</div><div class="tag">EXIT 0</div></div>
+    </div>
+    <div class="row r-luxury">
+      <div class="reg">LUXURY<span class="meta">Playfair Display · italic · tracked sans</span></div>
+      <p class="display">Ship slides that stay alive after the meeting.</p>
+      <div><div class="body">A compiler for presentations. Render in Chromium. Edit in PowerPoint.</div><div class="tag">ATELIER · MMXXVI</div></div>
+    </div>
+    <div class="row r-warm">
+      <div class="reg">WARM<span class="meta">humanist sans · script accent</span></div>
+      <p class="display">Ship slides that <em>stay alive</em> after the meeting.</p>
+      <div><div class="body">A compiler for presentations.</div><div class="tag">— shipped with care</div></div>
+    </div>
+  </div>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED · TYPOGRAPHIC REGISTERS</div><div>02 / 04 · DARK GROUND</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>fonts — 03 register × layout matrix</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased;font-family:Inter,sans-serif}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:56px 72px;position:relative;overflow:hidden;background:#06060c}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.10);padding-bottom:14px}
+  .head .ttl{font-size:11px;letter-spacing:0.36em;color:#a78bfa;font-weight:800;text-transform:uppercase}
+  .head .axis{font-size:30px;font-weight:800;letter-spacing:-0.025em;line-height:1.0;margin:0;flex:1;padding-left:18px}
+  .head .idx{font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .matrix{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:14px;height:540px}
+  .cell{padding:22px;border-radius:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);position:relative;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+  .cell .id{position:absolute;top:10px;left:14px;font-size:9px;letter-spacing:0.24em;font-weight:800;text-transform:uppercase;color:#a1a1aa}
+  .cell .h{margin:24px 0 0 0;line-height:0.95;letter-spacing:-0.025em}
+  .cell .b{font-size:11px;line-height:1.5;color:#a1a1aa;margin-top:auto}
+
+  /* eight registers tiled — all on the same headline word "VELOCITY." */
+  .e1 .h{font-family:"Fraunces","Source Serif Pro",Georgia,serif;font-size:48px;font-weight:700;font-style:italic;color:#fde68a}
+  .e1 .b{font-family:"Source Serif Pro",Georgia,serif;color:#d4d4d8}
+  .e2 .h{font-family:"Space Grotesk","Geist",Inter,sans-serif;font-size:54px;font-weight:700;letter-spacing:-0.045em;color:#67e8f9}
+  .e2 .b{font-family:Inter,sans-serif}
+  .e3 .h{font-family:"Bebas Neue","Anton",Impact,sans-serif;font-size:46px;font-weight:400;letter-spacing:0.01em;color:#f472b6;text-transform:uppercase;line-height:0.92}
+  .e3 .b{font-family:"Source Serif Pro",Georgia,serif}
+  .e4 .h{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:48px;font-weight:900;letter-spacing:-0.04em;color:#fff;text-transform:uppercase}
+  .e4 .b{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:0.04em;color:#a1a1aa}
+  .e5 .h{font-family:Inter,sans-serif;font-size:48px;letter-spacing:-0.04em;line-height:1}
+  .e5 .h .a{font-weight:200;color:#a78bfa}.e5 .h .b{font-weight:900;color:#fff}
+  .e5 .b{font-family:Inter,sans-serif}
+  .e6 .h{font-family:"JetBrains Mono","IBM Plex Mono",monospace;font-size:30px;font-weight:700;color:#67e8f9;letter-spacing:-0.01em}
+  .e6 .b{font-family:"JetBrains Mono",monospace;color:#94a3b8;font-size:10px}
+  .e7 .h{font-family:"Playfair Display","Didot",Georgia,serif;font-size:48px;font-weight:400;font-style:italic;color:#fde68a}
+  .e7 .b{font-family:Inter,sans-serif;letter-spacing:0.04em}
+  .e8 .h{font-family:Inter,sans-serif;font-size:46px;font-weight:600;color:#fef3c7;letter-spacing:-0.025em}
+  .e8 .h em{font-family:"Caveat","Pacifico",cursive;font-style:normal;color:#fb923c;font-size:1.2em}
+  .e8 .b{font-family:"Caveat","Pacifico",cursive;font-size:16px;color:#fb923c;letter-spacing:0}
+  .footer{position:absolute;bottom:18px;left:72px;right:72px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700}
+</style></head><body>
+<div class="slide">
+  <div class="head"><div class="ttl">atoms · register matrix</div><h1 class="axis" data-pptx-role="title">VELOCITY. · one word, eight registers.</h1><div class="idx">03 / 04</div></div>
+  <div class="matrix">
+    <div class="cell e1"><span class="id">editorial</span><div class="h">Velocity.</div><div class="b">Fraunces · italic serif · 700</div></div>
+    <div class="cell e2"><span class="id">tech</span><div class="h">Velocity.</div><div class="b">Space Grotesk · 700 · -0.045em</div></div>
+    <div class="cell e3"><span class="id">magazine</span><div class="h">VELOCITY.</div><div class="b">Bebas Neue · condensed display</div></div>
+    <div class="cell e4"><span class="id">brutalist</span><div class="h">VELOCITY.</div><div class="b">HELVETICA · 900 · ALL CAPS · -0.04em</div></div>
+    <div class="cell e5"><span class="id">manifesto</span><div class="h"><span class="a">Velo</span><span class="b">city.</span></div><div class="b">Inter · 200 → 900 axis play</div></div>
+    <div class="cell e6"><span class="id">blueprint</span><div class="h">$&nbsp;velocity()</div><div class="b">JetBrains Mono · 700 · drafting</div></div>
+    <div class="cell e7"><span class="id">luxury</span><div class="h">Velocity.</div><div class="b">Playfair Display · italic · high-contrast</div></div>
+    <div class="cell e8"><span class="id">warm</span><div class="h">Velo<em>city</em>.</div><div class="b">humanist + script accent</div></div>
+  </div>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED · REGISTER MATRIX</div><div>03 / 04 · 8 REGISTERS · ONE WORD</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>fonts — 04 pairing rules</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;color:#06060c;background:#fafaf7;-webkit-font-smoothing:antialiased;font-family:Inter,sans-serif}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:56px 72px;position:relative;overflow:hidden;background:#fafaf7}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px;border-bottom:1px solid rgba(0,0,0,0.10);padding-bottom:14px}
+  .head .ttl{font-size:11px;letter-spacing:0.36em;color:#7c3aed;font-weight:800;text-transform:uppercase}
+  .head .axis{font-size:30px;font-weight:800;letter-spacing:-0.025em;line-height:1.0;margin:0;flex:1;padding-left:18px}
+  .head .idx{font-size:11px;letter-spacing:0.32em;color:#71717a;font-weight:700}
+
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  thead th{font-size:10px;letter-spacing:0.24em;color:#7c3aed;font-weight:800;text-transform:uppercase;text-align:left;padding:12px 14px;background:#fff;border-bottom:2px solid #06060c}
+  tbody td{padding:14px;border-bottom:1px solid rgba(0,0,0,0.06);vertical-align:top;background:#fff}
+  tbody tr:nth-child(even) td{background:#f4f4ee}
+  td.reg{font-weight:800;letter-spacing:-0.02em;color:#06060c;width:120px;text-transform:uppercase;font-size:12px;letter-spacing:0.12em}
+  td.disp{font-size:13px;color:#06060c;font-weight:600}
+  td.body{font-family:"Source Serif Pro",Georgia,serif;font-size:13px;color:#3f3f46}
+  td.use{color:#7c3aed;font-weight:700;font-size:12px;letter-spacing:0.04em}
+
+  .footer{position:absolute;bottom:18px;left:72px;right:72px;display:flex;justify-content:space-between;font-size:11px;color:#71717a;letter-spacing:0.18em;font-weight:700}
+</style></head><body>
+<div class="slide">
+  <div class="head"><div class="ttl">atoms · pairing rules</div><h1 class="axis" data-pptx-role="title">When to reach for which register.</h1><div class="idx">04 / 04</div></div>
+  <table>
+    <thead>
+      <tr><th>Register</th><th>Display family</th><th>Body family</th><th>Use when…</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="reg">Editorial</td><td class="disp" style="font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:18px">Fraunces · italic</td><td class="body">Source Serif Pro</td><td class="use">long-form narrative · pull-quotes · investor letters</td></tr>
+      <tr><td class="reg">Tech</td><td class="disp" style="font-family:'Space Grotesk',Inter,sans-serif;font-weight:700;font-size:18px">Space Grotesk · 700</td><td class="body" style="font-family:Inter,sans-serif">Inter · 500</td><td class="use">product launches · API docs · changelogs</td></tr>
+      <tr><td class="reg">Magazine</td><td class="disp" style="font-family:'Bebas Neue',Impact,sans-serif;font-size:24px;letter-spacing:0.01em">BEBAS NEUE</td><td class="body">Source Serif Pro</td><td class="use">issue covers · feature stories · annual reports</td></tr>
+      <tr><td class="reg">Brutalist</td><td class="disp" style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-weight:900;font-size:18px;text-transform:uppercase">HELVETICA · 900</td><td class="body" style="font-family:'JetBrains Mono',monospace;font-size:11px">JetBrains Mono</td><td class="use">manifesto walls · gallery zines · counter-culture</td></tr>
+      <tr><td class="reg">Manifesto</td><td class="disp" style="font-family:Inter,sans-serif"><span style="font-weight:200">Inter</span> <span style="font-weight:900">200→900</span></td><td class="body" style="font-family:Inter,sans-serif">Inter · 300</td><td class="use">vision keynotes · single-line posters · founder talks</td></tr>
+      <tr><td class="reg">Blueprint</td><td class="disp" style="font-family:'JetBrains Mono','IBM Plex Mono',monospace;font-size:13px;font-weight:700">JetBrains Mono · all</td><td class="body" style="font-family:'JetBrains Mono',monospace;font-size:11px">IBM Plex Mono</td><td class="use">technical specs · architecture diagrams · drafting</td></tr>
+      <tr><td class="reg">Luxury</td><td class="disp" style="font-family:'Playfair Display','Didot',Georgia,serif;font-style:italic;font-weight:400;font-size:20px">Playfair Display</td><td class="body" style="font-family:Inter,sans-serif;letter-spacing:0.04em">Inter · tracked</td><td class="use">brand reveals · awards decks · gallery openings</td></tr>
+      <tr><td class="reg">Warm</td><td class="disp" style="font-family:Inter,sans-serif;font-weight:600">Inter · 600 + <em style="font-family:'Caveat',cursive;font-style:normal;color:#fb923c;font-size:1.2em">Caveat</em></td><td class="body">Inter · 500</td><td class="use">team retros · onboarding · all-hands</td></tr>
+    </tbody>
+  </table>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED · PAIRING RULES</div><div>04 / 04 · WHEN-TO-USE</div></div>
+</div>
+</body></html>

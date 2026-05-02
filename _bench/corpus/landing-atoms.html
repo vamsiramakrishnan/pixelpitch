@@ -1,0 +1,837 @@
+<!--
+  slidify · landing-page atomic seed · ATOMS catalog
+  ===================================================
+  Parts catalog. Each slide groups one axis of the design space and labels
+  every primitive with its `data-atom` id. Recipes (recipes.html) reference
+  these by id.
+
+  Axes covered:
+    01  composition gestures      (centered, split, golden, off-canvas, anchor)
+    02  background fields         (mesh, conic, halftone, dot-lattice, scanline, vignette, duotone, paper-grid)
+    03  surfaces                  (glass, hero, spotlight, aurora, tactile, recessed, sticker, polaroid, ticket)
+    04  type treatments           (gfill, stroke, echo, longshadow, mixed, kinetic-baseline, marquee, dropcap)
+    05  media masks               (disc, arch, hex, parallelogram, blob-poly, mosaic-split, polaroid-frame)
+    06  decorative tokens         (corner-brackets, registration, drafting-tick, asterisk, dot-leader, arrow-glyphs, index-stamp)
+    07  data primitives           (ring, gauge, sparkline, sparkbars, ticker, heatmap, kpi-delta, logo-cloud)
+    08  motion implication        (echo, shutter, speed-lines, particles, comet, kinetic-baseline, marquee)
+    09  ui mocks                  (browser-chrome, code-window, tab-strip, search-bar, toolbar, avatar-cluster, toast)
+    10  annotation primitives     (leader-line, dimension-tick, callout-pill, anchor-dot, target-reticle)
+
+  Constraints respected:
+    - Inter only (no @font-face)
+    - inline SVG primitives (rect/circle/path/line/polygon)
+    - no filter, mix-blend, backdrop-filter, mask-image
+    - clip-path: polygon() only (common shapes); no path()/url(#mask)
+    - no <img>; all "imagery" synthesized from CSS gradients + inline SVG
+-->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>atoms — 01 composition gestures</title>
+<style>
+  :root{--ink:#06060c;--paper:#f5f5f7;--mute:#71717a;--rule:rgba(255,255,255,0.10);--accent:#a78bfa;--hot:#f472b6;--warm:#fb923c;--cool:#60a5fa;--mint:#34d399;--gold:#facc15}
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:var(--paper);background:var(--ink);-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:64px 72px;position:relative;overflow:hidden;background:#06060c}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px;border-bottom:1px solid var(--rule);padding-bottom:14px}
+  .head .ttl{font-size:11px;letter-spacing:0.36em;color:var(--accent);font-weight:800;text-transform:uppercase}
+  .head .axis{font-size:34px;font-weight:800;letter-spacing:-0.025em;line-height:1.0;margin:0;flex:1;padding-left:18px}
+  .head .idx{font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700;font-variant-numeric:tabular-nums}
+  .grid{display:grid;gap:14px}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .tile{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--rule);background:#0c0c14;min-height:230px;display:flex;flex-direction:column;justify-content:flex-end;padding:14px}
+  .tile .id{position:absolute;top:10px;left:12px;font-size:9px;letter-spacing:0.24em;color:#a1a1aa;font-weight:800;text-transform:uppercase;background:rgba(0,0,0,0.55);padding:4px 8px;border-radius:6px;z-index:6}
+  .tile .nm{font-size:11px;letter-spacing:0.24em;font-weight:800;color:#e4e4e7;text-transform:uppercase;z-index:6;position:relative}
+  .tile .sub{font-size:11px;color:#a1a1aa;margin-top:2px;z-index:6;position:relative}
+  .footer{position:absolute;bottom:24px;left:72px;right:72px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700}
+
+  /* === COMPOSITION GESTURES === */
+  .ges{position:absolute;inset:0}
+  .ges .lbl{position:absolute;font-size:10px;letter-spacing:0.24em;color:#a78bfa;font-weight:800;text-transform:uppercase}
+  .ges .blk{position:absolute;background:linear-gradient(135deg,#a78bfa,#f472b6);border-radius:6px}
+  .ges .h{position:absolute;height:6px;border-radius:3px;background:#f5f5f7}
+  .ges .b{position:absolute;height:3px;border-radius:2px;background:rgba(255,255,255,0.30)}
+  .ges .grid-line{position:absolute;background:rgba(167,139,250,0.20)}
+  .ges .anchor{position:absolute;width:8px;height:8px;background:#f472b6;border-radius:50%}
+</style></head><body>
+<div class="slide">
+  <div class="head"><div class="ttl">atoms · axis 01</div><h1 class="axis" data-pptx-role="title">Composition gestures</h1><div class="idx">01 / 10</div></div>
+  <div class="grid g4">
+    <div class="tile" data-atom="comp.centered">
+      <span class="id">comp.centered</span>
+      <div class="ges">
+        <div class="h" style="left:30%;top:40%;width:40%"></div>
+        <div class="h" style="left:25%;top:48%;width:50%;height:10px;background:linear-gradient(90deg,#818cf8,#f472b6)"></div>
+        <div class="b" style="left:32%;top:62%;width:36%"></div>
+      </div>
+      <div class="nm">centered</div><div class="sub">title + lede axis-aligned</div>
+    </div>
+    <div class="tile" data-atom="comp.split-50">
+      <span class="id">comp.split-50</span>
+      <div class="ges">
+        <div class="grid-line" style="left:50%;top:0;width:1px;height:100%"></div>
+        <div class="h" style="left:8%;top:38%;width:34%"></div>
+        <div class="b" style="left:8%;top:52%;width:30%"></div>
+        <div class="blk" style="right:8%;top:24%;width:38%;height:130px"></div>
+      </div>
+      <div class="nm">split · 50/50</div><div class="sub">copy left, media right</div>
+    </div>
+    <div class="tile" data-atom="comp.split-60">
+      <span class="id">comp.split-60</span>
+      <div class="ges">
+        <div class="grid-line" style="left:62%;top:0;width:1px;height:100%"></div>
+        <div class="h" style="left:8%;top:32%;width:46%"></div>
+        <div class="b" style="left:8%;top:46%;width:42%"></div>
+        <div class="b" style="left:8%;top:54%;width:36%"></div>
+        <div class="blk" style="right:8%;top:18%;width:24%;height:160px"></div>
+      </div>
+      <div class="nm">split · 60/40</div><div class="sub">narrative dominant</div>
+    </div>
+    <div class="tile" data-atom="comp.golden">
+      <span class="id">comp.golden</span>
+      <div class="ges">
+        <div class="grid-line" style="left:38.2%;top:0;width:1px;height:100%"></div>
+        <div class="grid-line" style="left:0;top:38.2%;width:100%;height:1px"></div>
+        <div class="anchor" style="left:38.2%;top:38.2%"></div>
+        <div class="h" style="left:42%;top:42%;width:48%"></div>
+        <div class="b" style="left:42%;top:54%;width:38%"></div>
+      </div>
+      <div class="nm">golden ratio</div><div class="sub">φ-anchor on the focal point</div>
+    </div>
+    <div class="tile" data-atom="comp.thirds">
+      <span class="id">comp.thirds</span>
+      <div class="ges">
+        <div class="grid-line" style="left:33.3%;top:0;width:1px;height:100%"></div>
+        <div class="grid-line" style="left:66.6%;top:0;width:1px;height:100%"></div>
+        <div class="grid-line" style="left:0;top:33.3%;width:100%;height:1px"></div>
+        <div class="grid-line" style="left:0;top:66.6%;width:100%;height:1px"></div>
+        <div class="blk" style="left:8%;top:42%;width:24%;height:80px"></div>
+      </div>
+      <div class="nm">rule of thirds</div><div class="sub">subject on a third-grid intersection</div>
+    </div>
+    <div class="tile" data-atom="comp.offcanvas">
+      <span class="id">comp.offcanvas</span>
+      <div class="ges">
+        <div class="blk" style="left:-12%;top:14%;width:60%;height:130px"></div>
+        <div class="h" style="right:8%;top:42%;width:34%"></div>
+        <div class="b" style="right:8%;top:54%;width:28%"></div>
+      </div>
+      <div class="nm">off-canvas bleed</div><div class="sub">media leaves the frame</div>
+    </div>
+    <div class="tile" data-atom="comp.edge-rotated">
+      <span class="id">comp.edge-rotated</span>
+      <div class="ges">
+        <div class="lbl" style="right:14px;top:50%;transform:rotate(-90deg) translate(0,-50%);transform-origin:right top">EDITION · 04 · 2026</div>
+        <div class="h" style="left:8%;top:38%;width:62%"></div>
+        <div class="b" style="left:8%;top:52%;width:48%"></div>
+      </div>
+      <div class="nm">edge-rotated caption</div><div class="sub">vertical type on the frame</div>
+    </div>
+    <div class="tile" data-atom="comp.bento">
+      <span class="id">comp.bento</span>
+      <div class="ges">
+        <div class="blk" style="left:8%;top:14%;width:38%;height:80px"></div>
+        <div class="blk" style="left:50%;top:14%;width:42%;height:80px;background:linear-gradient(135deg,#fb923c,#facc15)"></div>
+        <div class="blk" style="left:8%;top:54%;width:24%;height:60px;background:linear-gradient(135deg,#34d399,#60a5fa)"></div>
+        <div class="blk" style="left:36%;top:54%;width:56%;height:60px;background:linear-gradient(135deg,#60a5fa,#a78bfa)"></div>
+      </div>
+      <div class="nm">bento · asymmetric</div><div class="sub">apple/linear tile grid</div>
+    </div>
+  </div>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED</div><div>01 / 10 · COMPOSITION</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>atoms — 02 background fields</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:64px 72px;position:relative;overflow:hidden;background:#06060c}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.10);padding-bottom:14px}
+  .head .ttl{font-size:11px;letter-spacing:0.36em;color:#a78bfa;font-weight:800;text-transform:uppercase}
+  .head .axis{font-size:34px;font-weight:800;letter-spacing:-0.025em;line-height:1.0;margin:0;flex:1;padding-left:18px}
+  .head .idx{font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .tile{position:relative;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,0.10);height:255px;display:flex;flex-direction:column;justify-content:flex-end;padding:12px}
+  .tile .id{position:absolute;top:10px;left:12px;font-size:9px;letter-spacing:0.24em;color:#fff;font-weight:800;text-transform:uppercase;background:rgba(0,0,0,0.55);padding:4px 8px;border-radius:6px;z-index:6}
+  .tile .nm{font-size:11px;letter-spacing:0.24em;font-weight:800;color:#fff;text-transform:uppercase;z-index:6;position:relative;background:rgba(0,0,0,0.55);padding:4px 8px;border-radius:6px;align-self:flex-start}
+  .footer{position:absolute;bottom:24px;left:72px;right:72px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700}
+
+  /* Background fields (CSS only) */
+  .bg-mesh{background:
+    radial-gradient(circle at 18% 22%, rgba(99,102,241,0.55) 0%, transparent 38%),
+    radial-gradient(circle at 82% 18%, rgba(244,114,182,0.55) 0%, transparent 42%),
+    radial-gradient(circle at 78% 82%, rgba(251,146,60,0.55) 0%, transparent 40%),
+    radial-gradient(circle at 22% 78%, rgba(45,212,191,0.55) 0%, transparent 36%),
+    #0a0a14}
+  .bg-conic{background:conic-gradient(from 90deg at 50% 50%, #818cf8, #f472b6, #fb923c, #facc15, #2dd4bf, #818cf8)}
+  .bg-stripes{background:repeating-linear-gradient(135deg,#0a0a14 0 8px, #1e1b4b 8px 16px)}
+  .bg-scanline{background:repeating-linear-gradient(0deg, rgba(255,255,255,0) 0 3px, rgba(255,255,255,0.07) 3px 4px), linear-gradient(135deg,#1e1b4b,#312e81)}
+  .bg-duotone{background:linear-gradient(160deg,#312e81 0%, #db2777 100%)}
+  .bg-vignette{background:radial-gradient(ellipse 90% 80% at 50% 50%, #1e1b4b 0%, #0a0a14 70%, #050510 100%)}
+  .bg-aurora{background:linear-gradient(180deg,#020617 0%,#1e1b4b 28%,#7c3aed 50%,#db2777 70%,#020617 100%)}
+  .bg-paper{background:repeating-linear-gradient(0deg, #fafaf7 0 30px, #f4f4ee 30px 31px), repeating-linear-gradient(90deg, transparent 0 30px, rgba(0,0,0,0.04) 30px 31px), #fafaf7}
+  /* Inline-SVG-based fields */
+  .bg-svg{position:relative;background:#0a0a14}
+  .bg-svg svg{position:absolute;inset:0;width:100%;height:100%}
+</style></head><body>
+<div class="slide">
+  <div class="head"><div class="ttl">atoms · axis 02</div><h1 class="axis" data-pptx-role="title">Background fields</h1><div class="idx">02 / 10</div></div>
+  <div class="grid">
+    <div class="tile bg-mesh" data-atom="bg.mesh"><span class="id">bg.mesh</span><span class="nm">mesh · 4-blob</span></div>
+    <div class="tile bg-conic" data-atom="bg.conic"><span class="id">bg.conic</span><span class="nm">conic · spectrum</span></div>
+    <div class="tile bg-stripes" data-atom="bg.stripes"><span class="id">bg.stripes</span><span class="nm">stripes · 8/16</span></div>
+    <div class="tile bg-scanline" data-atom="bg.scanline"><span class="id">bg.scanline</span><span class="nm">CRT scanline</span></div>
+    <div class="tile bg-duotone" data-atom="bg.duotone"><span class="id">bg.duotone</span><span class="nm">duotone · 2-stop</span></div>
+    <div class="tile bg-vignette" data-atom="bg.vignette"><span class="id">bg.vignette</span><span class="nm">vignette · radial</span></div>
+    <div class="tile bg-aurora" data-atom="bg.aurora-band"><span class="id">bg.aurora-band</span><span class="nm">aurora band · 5-stop</span></div>
+    <div class="tile bg-svg" data-atom="bg.dot-lattice"><span class="id">bg.dot-lattice</span>
+      <svg viewBox="0 0 280 240" preserveAspectRatio="none">
+        <g fill="#a78bfa" opacity="0.55">
+          <circle cx="20" cy="20" r="2"/><circle cx="60" cy="20" r="2"/><circle cx="100" cy="20" r="2"/><circle cx="140" cy="20" r="2"/><circle cx="180" cy="20" r="2"/><circle cx="220" cy="20" r="2"/><circle cx="260" cy="20" r="2"/>
+          <circle cx="20" cy="60" r="2"/><circle cx="60" cy="60" r="2"/><circle cx="100" cy="60" r="2"/><circle cx="140" cy="60" r="2"/><circle cx="180" cy="60" r="2"/><circle cx="220" cy="60" r="2"/><circle cx="260" cy="60" r="2"/>
+          <circle cx="20" cy="100" r="2"/><circle cx="60" cy="100" r="2"/><circle cx="100" cy="100" r="2"/><circle cx="140" cy="100" r="2"/><circle cx="180" cy="100" r="2"/><circle cx="220" cy="100" r="2"/><circle cx="260" cy="100" r="2"/>
+          <circle cx="20" cy="140" r="2"/><circle cx="60" cy="140" r="2"/><circle cx="100" cy="140" r="2"/><circle cx="140" cy="140" r="2"/><circle cx="180" cy="140" r="2"/><circle cx="220" cy="140" r="2"/><circle cx="260" cy="140" r="2"/>
+          <circle cx="20" cy="180" r="2"/><circle cx="60" cy="180" r="2"/><circle cx="100" cy="180" r="2"/><circle cx="140" cy="180" r="2"/><circle cx="180" cy="180" r="2"/><circle cx="220" cy="180" r="2"/><circle cx="260" cy="180" r="2"/>
+          <circle cx="20" cy="220" r="2"/><circle cx="60" cy="220" r="2"/><circle cx="100" cy="220" r="2"/><circle cx="140" cy="220" r="2"/><circle cx="180" cy="220" r="2"/><circle cx="220" cy="220" r="2"/><circle cx="260" cy="220" r="2"/>
+        </g>
+      </svg>
+      <span class="nm">dot lattice · svg</span>
+    </div>
+  </div>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED</div><div>02 / 10 · BACKGROUND FIELDS</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>atoms — 03 surfaces</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:64px 72px;position:relative;overflow:hidden;background:#0a0a14}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.10);padding-bottom:14px}
+  .head .ttl{font-size:11px;letter-spacing:0.36em;color:#a78bfa;font-weight:800;text-transform:uppercase}
+  .head .axis{font-size:34px;font-weight:800;letter-spacing:-0.025em;line-height:1.0;margin:0;flex:1;padding-left:18px}
+  .head .idx{font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .surf{height:230px;border-radius:18px;padding:36px 18px 18px 18px;display:flex;flex-direction:column;justify-content:space-between;position:relative;box-sizing:border-box;overflow:hidden}
+  .surf .id{font-size:9px;letter-spacing:0.24em;font-weight:800;text-transform:uppercase;color:#a1a1aa}
+  .surf .nm{font-size:13px;letter-spacing:0.18em;font-weight:800;text-transform:uppercase}
+  .surf .v{font-size:32px;font-weight:800;letter-spacing:-0.025em;font-variant-numeric:tabular-nums}
+  .footer{position:absolute;bottom:24px;left:72px;right:72px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700}
+
+  /* SURFACE TREATMENTS — match the slidify decoration grammar */
+  .s-glass{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.18);box-shadow: inset 0 1px 0 rgba(255,255,255,0.16), 0 16px 40px rgba(0,0,0,0.35)}
+  .s-hero{background:linear-gradient(160deg,rgba(99,102,241,0.30) 0%, rgba(244,114,182,0.20) 100%);border:1px solid rgba(167,139,250,0.55);box-shadow: 0 0 80px rgba(139,92,246,0.30)}
+  .s-spotlight{background:radial-gradient(circle at 50% 35%,rgba(244,114,182,0.45) 0%, rgba(99,102,241,0.18) 40%, rgba(0,0,0,0.6) 100%);border:1px solid rgba(255,255,255,0.10)}
+  .s-aurora{background:linear-gradient(180deg, rgba(99,102,241,0.20) 0%, rgba(167,139,250,0.10) 30%, rgba(244,114,182,0.18) 60%, rgba(251,146,60,0.10) 90%);border:1px solid rgba(255,255,255,0.10)}
+  .s-tactile{background:linear-gradient(135deg,#f472b6,#fb923c);border:1px solid rgba(255,255,255,0.30);box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 12px 24px rgba(244,114,182,0.30);color:#1e1b4b}
+  .s-recessed{background:#050510;border:1px solid rgba(255,255,255,0.05);box-shadow: inset 0 2px 8px rgba(0,0,0,0.55), inset 0 -1px 0 rgba(255,255,255,0.04)}
+  .s-sticker{background:#f5f5f7;color:#06060c;border-radius:14px;transform:rotate(-3deg);box-shadow: 0 16px 40px rgba(0,0,0,0.45), 0 4px 8px rgba(0,0,0,0.25);border:6px solid #f5f5f7}
+  .s-polaroid{background:#f5f5f7;color:#06060c;border-radius:6px;padding:14px 14px 28px 14px;box-shadow: 0 16px 40px rgba(0,0,0,0.55)}
+  .s-polaroid .frame{height:130px;border-radius:4px;background:linear-gradient(160deg,#0ea5e9,#a855f7,#ec4899)}
+  .s-polaroid .cap{font-size:11px;font-style:italic;color:#52525b;margin-top:8px;font-family:Inter,sans-serif}
+</style></head><body>
+<div class="slide">
+  <div class="head"><div class="ttl">atoms · axis 03</div><h1 class="axis" data-pptx-role="title">Surfaces</h1><div class="idx">03 / 10</div></div>
+  <div class="grid">
+    <div class="surf s-glass" data-atom="surf.glass" data-slidify-decorate="glass"><span class="id">surf.glass</span><div><div class="v">12.4M</div><div class="nm">glass</div></div></div>
+    <div class="surf s-hero" data-atom="surf.hero" data-slidify-decorate="hero"><span class="id">surf.hero</span><div><div class="v">+340%</div><div class="nm">hero</div></div></div>
+    <div class="surf s-spotlight" data-atom="surf.spotlight" data-slidify-decorate="spotlight"><span class="id">surf.spotlight</span><div><div class="v">99.8%</div><div class="nm">spotlight</div></div></div>
+    <div class="surf s-aurora" data-atom="surf.aurora" data-slidify-decorate="aurora"><span class="id">surf.aurora</span><div><div class="v">2.4s</div><div class="nm">aurora</div></div></div>
+    <div class="surf s-tactile" data-atom="surf.tactile" data-slidify-decorate="tactile"><span class="id">surf.tactile</span><div><div class="v" style="color:#1e1b4b">$28</div><div class="nm">tactile</div></div></div>
+    <div class="surf s-recessed" data-atom="surf.recessed" data-slidify-decorate="recessed"><span class="id">surf.recessed</span><div><div class="v" style="color:#34d399">git&nbsp;diff</div><div class="nm">recessed</div></div></div>
+    <div class="surf s-sticker" data-atom="surf.sticker"><span class="id" style="color:#71717a">surf.sticker</span><div><div class="v" style="color:#06060c">★ 4.9</div><div class="nm" style="color:#06060c">sticker</div></div></div>
+    <div class="surf s-polaroid" data-atom="surf.polaroid"><span class="id" style="color:#71717a">surf.polaroid</span><div class="frame"></div><div class="cap">— shipped 04 / 2026</div></div>
+  </div>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED</div><div>03 / 10 · SURFACES</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>atoms — 04 type treatments</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:64px 72px;position:relative;overflow:hidden;background:#06060c}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.10);padding-bottom:14px}
+  .head .ttl{font-size:11px;letter-spacing:0.36em;color:#a78bfa;font-weight:800;text-transform:uppercase}
+  .head .axis{font-size:34px;font-weight:800;letter-spacing:-0.025em;line-height:1.0;margin:0;flex:1;padding-left:18px}
+  .head .idx{font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  .cell{padding:30px 22px 12px 22px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);position:relative;display:flex;flex-direction:column;justify-content:center;overflow:hidden;height:70px}
+  .cell .id{position:absolute;top:10px;left:14px;font-size:9px;letter-spacing:0.24em;color:#a1a1aa;font-weight:800;text-transform:uppercase}
+  .footer{position:absolute;bottom:24px;left:72px;right:72px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700}
+
+  /* type treatments — sized to fit a 60px-tall cell */
+  .t-gfill-2 { font-size:42px;font-weight:900;letter-spacing:-0.04em;line-height:1;margin:0;background:linear-gradient(135deg,#818cf8,#f472b6);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .t-gfill-4 { font-size:42px;font-weight:900;letter-spacing:-0.04em;line-height:1;margin:0;background:linear-gradient(135deg,#60a5fa 0%,#a78bfa 35%,#f472b6 70%,#fb923c 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .t-stroke{font-size:48px;font-weight:900;letter-spacing:-0.04em;line-height:1;color:transparent;-webkit-text-stroke:2px #f5f5f7;margin:0}
+  .t-stroke-thick{font-size:48px;font-weight:900;letter-spacing:-0.04em;line-height:1;color:transparent;-webkit-text-stroke:4px #f472b6;margin:0}
+  .t-echo{position:relative;height:54px;margin:0}
+  .t-echo span{position:absolute;left:0;top:0;font-size:42px;font-weight:900;letter-spacing:-0.04em;line-height:1}
+  .te1{color:rgba(167,139,250,0.15);transform:translateX(-26px)}
+  .te2{color:rgba(167,139,250,0.32);transform:translateX(-16px)}
+  .te3{color:rgba(167,139,250,0.55);transform:translateX(-8px)}
+  .te4{color:#f5f5f7}
+  .t-ls{position:relative;height:62px;margin:0}
+  .t-ls span{position:absolute;left:0;top:0;font-size:54px;font-weight:900;letter-spacing:-0.04em;line-height:1}
+  .ts7{color:rgba(244,114,182,0.10);transform:translate(20px,20px)}
+  .ts5{color:rgba(244,114,182,0.20);transform:translate(14px,14px)}
+  .ts3{color:rgba(244,114,182,0.40);transform:translate(7px,7px)}
+  .ts0{color:#f472b6}
+  .t-mixed{font-size:32px;font-weight:900;letter-spacing:-0.04em;line-height:1.05;margin:0}
+  .t-mixed .a{color:#f5f5f7}
+  .t-mixed .b{color:transparent;-webkit-text-stroke:2px #f5f5f7}
+  .t-mixed .c{background:linear-gradient(135deg,#818cf8,#f472b6);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .t-kinetic{display:inline-flex;gap:0;font-size:48px;font-weight:900;letter-spacing:-0.04em}
+  .t-kinetic span{display:inline-block}
+  .t-kinetic span:nth-child(1){transform:translateY(-12px);color:#a78bfa}
+  .t-kinetic span:nth-child(2){transform:translateY(-6px);color:#bfa6fb}
+  .t-kinetic span:nth-child(3){transform:translateY(0);color:#dbcffd}
+  .t-kinetic span:nth-child(4){transform:translateY(6px);color:#f472b6}
+  .t-kinetic span:nth-child(5){transform:translateY(12px);color:#fb923c}
+  .t-marquee{display:flex;gap:30px;font-size:36px;font-weight:900;letter-spacing:-0.02em;color:#27272a;white-space:nowrap;line-height:1}
+  .t-marquee em{font-style:normal;color:#a78bfa}
+  .t-dropcap{font-size:14px;color:#d4d4d8;line-height:1.55;font-weight:500;margin:0}
+  .t-dropcap::first-letter{font-size:84px;font-weight:900;letter-spacing:-0.04em;float:left;line-height:0.85;margin-right:12px;background:linear-gradient(135deg,#818cf8,#f472b6);-webkit-background-clip:text;background-clip:text;color:transparent}
+</style></head><body>
+<div class="slide">
+  <div class="head"><div class="ttl">atoms · axis 04</div><h1 class="axis" data-pptx-role="title">Type treatments</h1><div class="idx">04 / 10</div></div>
+  <div class="grid">
+    <div class="cell" data-atom="type.gfill-2"><span class="id">type.gfill-2</span><p class="t-gfill-2">VELOCITY.</p></div>
+    <div class="cell" data-atom="type.gfill-4"><span class="id">type.gfill-4</span><p class="t-gfill-4">VELOCITY.</p></div>
+    <div class="cell" data-atom="type.stroke"><span class="id">type.stroke</span><p class="t-stroke">VELOCITY.</p></div>
+    <div class="cell" data-atom="type.stroke-thick"><span class="id">type.stroke-thick</span><p class="t-stroke-thick">VELOCITY.</p></div>
+    <div class="cell" data-atom="type.echo"><span class="id">type.echo</span>
+      <div class="t-echo"><span class="te1">RUSH</span><span class="te2">RUSH</span><span class="te3">RUSH</span><span class="te4">RUSH</span></div>
+    </div>
+    <div class="cell" data-atom="type.longshadow"><span class="id">type.longshadow</span>
+      <div class="t-ls"><span class="ts7">SOLAR</span><span class="ts5">SOLAR</span><span class="ts3">SOLAR</span><span class="ts0">SOLAR</span></div>
+    </div>
+    <div class="cell" data-atom="type.mixed"><span class="id">type.mixed</span>
+      <div class="t-mixed"><span class="a">we ship</span> <span class="b">slides,</span> <span class="c">and systems.</span></div>
+    </div>
+    <div class="cell" data-atom="type.kinetic-baseline"><span class="id">type.kinetic-baseline</span>
+      <div class="t-kinetic"><span>R</span><span>I</span><span>S</span><span>E</span><span>.</span></div>
+    </div>
+    <div class="cell" data-atom="type.marquee" style="grid-column:span 2;height:54px;justify-content:center;padding:18px 22px 10px 22px">
+      <span class="id">type.marquee</span>
+      <div class="t-marquee">SHIP · <em>ITERATE</em> · SHIP · <em>ITERATE</em> · SHIP · <em>ITERATE</em> · SHIP · <em>ITERATE</em> · SHIP</div>
+    </div>
+    <div class="cell" data-atom="type.dropcap" style="grid-column:span 2;height:104px;padding:24px 22px 14px 22px"><span class="id">type.dropcap</span>
+      <p class="t-dropcap">There is a moment in every render where the system stops behaving like a screenshot tool and starts behaving like a compiler — every pixel that stays editable compounds across every translation, theme swap, and revision your team will ever ship.</p>
+    </div>
+  </div>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED</div><div>04 / 10 · TYPE TREATMENTS</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>atoms — 05 media masks</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:64px 72px;position:relative;overflow:hidden;background:#06060c}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.10);padding-bottom:14px}
+  .head .ttl{font-size:11px;letter-spacing:0.36em;color:#a78bfa;font-weight:800;text-transform:uppercase}
+  .head .axis{font-size:34px;font-weight:800;letter-spacing:-0.025em;line-height:1.0;margin:0;flex:1;padding-left:18px}
+  .head .idx{font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;justify-items:center}
+  .frame{position:relative;width:220px;height:240px;display:flex;align-items:center;justify-content:center}
+  .frame .id{position:absolute;left:0;bottom:-26px;font-size:9px;letter-spacing:0.24em;color:#a1a1aa;font-weight:800;text-transform:uppercase}
+  /* "imagery" via gradients */
+  .art-a{background:linear-gradient(160deg,#0ea5e9 0%,#a855f7 50%,#ec4899 100%)}
+  .art-b{background:linear-gradient(135deg,#fbbf24 0%,#f97316 50%,#dc2626 100%)}
+  .art-c{background:radial-gradient(circle at 30% 30%,#34d399 0%,#0ea5e9 50%,#1e1b4b 100%)}
+  .art-d{background:linear-gradient(45deg,#312e81 0%,#7c3aed 40%,#f472b6 100%)}
+  .art-e{background:conic-gradient(from 220deg,#fbbf24,#f472b6,#a78bfa,#34d399,#fbbf24)}
+  .art-f{background:linear-gradient(135deg,#fef3c7 0%,#fb923c 40%,#dc2626 100%)}
+  .art-g{background:linear-gradient(180deg,#0c4a6e 0%,#0ea5e9 40%,#67e8f9 100%)}
+  .art-h{background:linear-gradient(160deg,#1e1b4b 0%,#7c3aed 60%,#f472b6 100%)}
+  .m-disc{width:200px;height:200px;border-radius:50%}
+  .m-arch{width:200px;height:240px;border-radius:100px 100px 14px 14px}
+  .m-hex{width:200px;height:200px;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+  .m-para{width:220px;height:200px;clip-path:polygon(15% 0,100% 0,85% 100%,0 100%)}
+  .m-tri{width:220px;height:200px;clip-path:polygon(50% 0,100% 100%,0 100%)}
+  .m-diamond{width:200px;height:200px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+  .m-rounded{width:220px;height:200px;border-radius:32px}
+  /* Mosaic split: 4 quadrants of one composition with a gap */
+  .m-mosaic{width:220px;height:220px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6px}
+  .m-mosaic > div{background:linear-gradient(160deg,#1e1b4b,#7c3aed,#f472b6);border-radius:6px}
+  .footer{position:absolute;bottom:24px;left:72px;right:72px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700}
+</style></head><body>
+<div class="slide">
+  <div class="head"><div class="ttl">atoms · axis 05</div><h1 class="axis" data-pptx-role="title">Media masks</h1><div class="idx">05 / 10</div></div>
+  <div class="grid">
+    <div class="frame"><div class="m-disc art-a" data-atom="mask.disc"></div><span class="id">mask.disc</span></div>
+    <div class="frame"><div class="m-arch art-b" data-atom="mask.arch"></div><span class="id">mask.arch</span></div>
+    <div class="frame"><div class="m-hex art-c" data-atom="mask.hex"></div><span class="id">mask.hex</span></div>
+    <div class="frame"><div class="m-para art-d" data-atom="mask.parallelogram"></div><span class="id">mask.parallelogram</span></div>
+    <div class="frame"><div class="m-tri art-e" data-atom="mask.triangle"></div><span class="id">mask.triangle</span></div>
+    <div class="frame"><div class="m-diamond art-f" data-atom="mask.diamond"></div><span class="id">mask.diamond</span></div>
+    <div class="frame"><div class="m-rounded art-g" data-atom="mask.rounded"></div><span class="id">mask.rounded</span></div>
+    <div class="frame"><div class="m-mosaic" data-atom="mask.mosaic"><div></div><div></div><div></div><div></div></div><span class="id">mask.mosaic</span></div>
+  </div>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED</div><div>05 / 10 · MEDIA MASKS</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>atoms — 06 decorative tokens</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:64px 72px;position:relative;overflow:hidden;background:#06060c}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.10);padding-bottom:14px}
+  .head .ttl{font-size:11px;letter-spacing:0.36em;color:#a78bfa;font-weight:800;text-transform:uppercase}
+  .head .axis{font-size:34px;font-weight:800;letter-spacing:-0.025em;line-height:1.0;margin:0;flex:1;padding-left:18px}
+  .head .idx{font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:14px;height:520px}
+  .cell{padding:20px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+  .cell .id{position:absolute;top:10px;left:14px;font-size:9px;letter-spacing:0.24em;color:#a1a1aa;font-weight:800;text-transform:uppercase}
+  .cell .nm{font-size:11px;letter-spacing:0.18em;color:#71717a;text-transform:uppercase;font-weight:700;margin-top:14px}
+  .footer{position:absolute;bottom:24px;left:72px;right:72px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700}
+
+  .br-corners{position:relative;width:140px;height:90px}
+  .br-corners::before,.br-corners::after,.br-corners > i,.br-corners > b{content:"";position:absolute;width:18px;height:18px;border:2px solid #f472b6}
+  .br-corners::before{top:0;left:0;border-right:none;border-bottom:none}
+  .br-corners::after{top:0;right:0;border-left:none;border-bottom:none}
+  .br-corners > i{bottom:0;left:0;border-right:none;border-top:none}
+  .br-corners > b{bottom:0;right:0;border-left:none;border-top:none}
+  .br-corners .lab{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;letter-spacing:-0.02em;color:#f5f5f7}
+  /* Registration cross */
+  .reg{width:80px;height:80px;position:relative}
+  /* Drafting tick mark */
+  .tick-row{display:flex;align-items:center;gap:10px;font-size:10px;letter-spacing:0.18em;color:#a1a1aa;font-weight:700}
+  /* Asterisk */
+  .ast{font-size:88px;line-height:1;color:#fb923c;font-weight:900}
+  /* Dot leader */
+  .dl{display:flex;justify-content:space-between;align-items:center;width:200px;font-size:13px;color:#a1a1aa;font-weight:700;letter-spacing:0.04em}
+  .dl .dots{flex:1;border-bottom:2px dotted #52525b;margin:0 8px;height:1px;align-self:flex-end}
+  /* Index stamp */
+  .idx-stamp{display:flex;align-items:baseline;gap:6px;font-variant-numeric:tabular-nums;font-weight:900;letter-spacing:-0.02em}
+  .idx-stamp .a{font-size:60px;color:#f5f5f7}
+  .idx-stamp .b{font-size:24px;color:#71717a}
+  /* Stamp/seal */
+  .seal{position:relative;width:120px;height:120px}
+  /* Caret/asterisk badge */
+  .badge-row{display:flex;gap:14px;font-size:32px;font-weight:900;color:#f472b6}
+</style></head><body>
+<div class="slide">
+  <div class="head"><div class="ttl">atoms · axis 06</div><h1 class="axis" data-pptx-role="title">Decorative tokens</h1><div class="idx">06 / 10</div></div>
+  <div class="grid">
+    <div class="cell" data-atom="dec.corner-brackets"><span class="id">dec.corner-brackets</span>
+      <div class="br-corners"><i></i><b></b><div class="lab">FUTURE</div></div>
+      <div class="nm">corner brackets</div>
+    </div>
+    <div class="cell" data-atom="dec.registration"><span class="id">dec.registration</span>
+      <svg width="80" height="80" viewBox="0 0 80 80">
+        <circle cx="40" cy="40" r="28" fill="none" stroke="#f472b6" stroke-width="1.5"/>
+        <circle cx="40" cy="40" r="14" fill="none" stroke="#f472b6" stroke-width="1.5"/>
+        <line x1="0" y1="40" x2="80" y2="40" stroke="#f472b6" stroke-width="1.5"/>
+        <line x1="40" y1="0" x2="40" y2="80" stroke="#f472b6" stroke-width="1.5"/>
+        <circle cx="40" cy="40" r="3" fill="#f472b6"/>
+      </svg>
+      <div class="nm">registration</div>
+    </div>
+    <div class="cell" data-atom="dec.drafting-tick"><span class="id">dec.drafting-tick</span>
+      <svg width="220" height="40" viewBox="0 0 220 40">
+        <line x1="10" y1="20" x2="210" y2="20" stroke="#a1a1aa" stroke-width="1"/>
+        <line x1="10" y1="14" x2="10" y2="26" stroke="#a1a1aa" stroke-width="1.5"/>
+        <line x1="60" y1="16" x2="60" y2="24" stroke="#a1a1aa" stroke-width="1"/>
+        <line x1="110" y1="16" x2="110" y2="24" stroke="#a1a1aa" stroke-width="1"/>
+        <line x1="160" y1="16" x2="160" y2="24" stroke="#a1a1aa" stroke-width="1"/>
+        <line x1="210" y1="14" x2="210" y2="26" stroke="#a1a1aa" stroke-width="1.5"/>
+        <text x="10" y="38" font-size="9" fill="#71717a" font-family="Inter" font-weight="700" letter-spacing="0.18em">0</text>
+        <text x="200" y="38" font-size="9" fill="#71717a" font-family="Inter" font-weight="700" letter-spacing="0.18em">100</text>
+      </svg>
+      <div class="nm">drafting · ticks</div>
+    </div>
+    <div class="cell" data-atom="dec.asterisk"><span class="id">dec.asterisk</span>
+      <div class="ast">✱</div>
+      <div class="nm">asterisk</div>
+    </div>
+    <div class="cell" data-atom="dec.dot-leader"><span class="id">dec.dot-leader</span>
+      <div class="dl"><span>section</span><span class="dots"></span><span>p. 12</span></div>
+      <div class="nm">dot leader</div>
+    </div>
+    <div class="cell" data-atom="dec.arrow-glyph"><span class="id">dec.arrow-glyph</span>
+      <div class="badge-row"><span>↗</span><span>→</span><span>↘</span><span>↻</span></div>
+      <div class="nm">arrow glyphs</div>
+    </div>
+    <div class="cell" data-atom="dec.index-stamp"><span class="id">dec.index-stamp</span>
+      <div class="idx-stamp"><span class="a">04</span><span class="b">/ 12</span></div>
+      <div class="nm">index stamp</div>
+    </div>
+    <div class="cell" data-atom="dec.seal"><span class="id">dec.seal</span>
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="56" fill="none" stroke="#f472b6" stroke-width="2"/>
+        <circle cx="60" cy="60" r="44" fill="none" stroke="#f472b6" stroke-width="1"/>
+        <text x="60" y="56" font-size="13" fill="#f472b6" font-family="Inter" font-weight="900" text-anchor="middle" letter-spacing="0.18em">SHIPPED</text>
+        <text x="60" y="74" font-size="11" fill="#f472b6" font-family="Inter" font-weight="700" text-anchor="middle" letter-spacing="0.16em">2026 · Q2</text>
+      </svg>
+      <div class="nm">stamp / seal</div>
+    </div>
+  </div>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED</div><div>06 / 10 · DECORATIVE TOKENS</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>atoms — 07 data primitives</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:64px 72px;position:relative;overflow:hidden;background:#06060c}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.10);padding-bottom:14px}
+  .head .ttl{font-size:11px;letter-spacing:0.36em;color:#a78bfa;font-weight:800;text-transform:uppercase}
+  .head .axis{font-size:34px;font-weight:800;letter-spacing:-0.025em;line-height:1.0;margin:0;flex:1;padding-left:18px}
+  .head .idx{font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:1fr 1fr;gap:14px;height:540px}
+  .cell{padding:18px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);position:relative;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+  .cell .id{position:absolute;top:10px;left:14px;font-size:9px;letter-spacing:0.24em;color:#a1a1aa;font-weight:800;text-transform:uppercase}
+  .cell .v{font-size:28px;font-weight:800;letter-spacing:-0.025em;font-variant-numeric:tabular-nums;margin-top:6px}
+  .cell .lab{font-size:11px;letter-spacing:0.18em;color:#71717a;text-transform:uppercase;font-weight:700}
+  .footer{position:absolute;bottom:24px;left:72px;right:72px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700}
+
+  .hm{display:grid;grid-template-columns:repeat(8,1fr);gap:3px}
+  .hm i{display:block;height:14px;border-radius:3px;background:#1e1b4b}
+  .hm i.l1{background:#312e81}.hm i.l2{background:#4338ca}.hm i.l3{background:#6366f1}.hm i.l4{background:#a78bfa}.hm i.l5{background:#f472b6}
+  .lc{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+  .lc span{font-size:16px;font-weight:800;letter-spacing:-0.02em;color:#a1a1aa}
+  .lc span.it{font-style:italic;font-weight:900}
+  .lc span.up{letter-spacing:0.16em;text-transform:uppercase;font-size:13px}
+  .ticker{display:flex;gap:18px;font-size:13px;font-weight:700;letter-spacing:0.12em;color:#a1a1aa;font-variant-numeric:tabular-nums;text-transform:uppercase;white-space:nowrap;overflow:hidden}
+  .ticker .up{color:#34d399}
+  .ticker .dn{color:#f472b6}
+  .delta{display:flex;align-items:baseline;gap:6px}
+  .delta .v{font-size:48px;font-weight:900;letter-spacing:-0.04em}
+  .delta .arr{font-size:24px;font-weight:900;color:#34d399}
+  .delta .pct{font-size:18px;color:#34d399;font-weight:700}
+</style></head><body>
+<div class="slide">
+  <div class="head"><div class="ttl">atoms · axis 07</div><h1 class="axis" data-pptx-role="title">Data primitives</h1><div class="idx">07 / 10</div></div>
+  <div class="grid">
+    <div class="cell" data-atom="data.ring"><span class="id">data.ring</span>
+      <div class="lab">progress ring</div>
+      <svg viewBox="0 0 110 110" width="100%" height="120">
+        <circle cx="55" cy="55" r="44" fill="none" stroke="#27272a" stroke-width="9"/>
+        <circle cx="55" cy="55" r="44" fill="none" stroke="#a78bfa" stroke-width="9" stroke-linecap="round"
+                stroke-dasharray="276.46" stroke-dashoffset="69.11" transform="rotate(-90 55 55)"/>
+        <text x="55" y="60" font-size="22" font-weight="900" fill="#f5f5f7" font-family="Inter" text-anchor="middle">75</text>
+      </svg>
+      <div class="v">native</div>
+    </div>
+    <div class="cell" data-atom="data.gauge"><span class="id">data.gauge</span>
+      <div class="lab">gauge</div>
+      <svg viewBox="0 0 200 110" width="100%" height="120">
+        <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#27272a" stroke-width="14" stroke-linecap="round"/>
+        <path d="M 20 100 A 80 80 0 0 1 140 30" fill="none" stroke="#f472b6" stroke-width="14" stroke-linecap="round"/>
+        <circle cx="140" cy="30" r="6" fill="#fff"/>
+      </svg>
+      <div class="v">8.4</div>
+    </div>
+    <div class="cell" data-atom="data.sparkline"><span class="id">data.sparkline</span>
+      <div class="lab">sparkline · trend</div>
+      <svg viewBox="0 0 220 80" width="100%" height="100">
+        <path d="M 0 60 L 30 50 L 60 55 L 90 30 L 120 38 L 150 18 L 180 24 L 220 8" fill="none" stroke="#34d399" stroke-width="3"/>
+        <circle cx="220" cy="8" r="4" fill="#34d399"/>
+      </svg>
+      <div class="v" style="color:#34d399">+42.6%</div>
+    </div>
+    <div class="cell" data-atom="data.sparkbars"><span class="id">data.sparkbars</span>
+      <div class="lab">sparkbars · cohort</div>
+      <svg viewBox="0 0 220 80" width="100%" height="100">
+        <rect x="0" y="50" width="14" height="30" fill="#a78bfa"/>
+        <rect x="20" y="40" width="14" height="40" fill="#a78bfa"/>
+        <rect x="40" y="44" width="14" height="36" fill="#a78bfa"/>
+        <rect x="60" y="22" width="14" height="58" fill="#a78bfa"/>
+        <rect x="80" y="32" width="14" height="48" fill="#a78bfa"/>
+        <rect x="100" y="14" width="14" height="66" fill="#f472b6"/>
+        <rect x="120" y="20" width="14" height="60" fill="#a78bfa"/>
+        <rect x="140" y="6" width="14" height="74" fill="#f472b6"/>
+        <rect x="160" y="18" width="14" height="62" fill="#a78bfa"/>
+        <rect x="180" y="2" width="14" height="78" fill="#f472b6"/>
+      </svg>
+      <div class="v">$12.4M</div>
+    </div>
+    <div class="cell" data-atom="data.heatmap"><span class="id">data.heatmap</span>
+      <div class="lab">heatmap · 8×4</div>
+      <div class="hm" style="margin:8px 0 12px 0">
+        <i></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l2"></i><i class="l1"></i><i></i><i></i>
+        <i class="l1"></i><i class="l2"></i><i class="l4"></i><i class="l5"></i><i class="l3"></i><i class="l2"></i><i class="l1"></i><i></i>
+        <i class="l2"></i><i class="l3"></i><i class="l5"></i><i class="l5"></i><i class="l4"></i><i class="l2"></i><i class="l1"></i><i></i>
+        <i></i><i class="l1"></i><i class="l3"></i><i class="l4"></i><i class="l2"></i><i class="l1"></i><i></i><i></i>
+      </div>
+      <div class="v">28 dau</div>
+    </div>
+    <div class="cell" data-atom="data.kpi-delta"><span class="id">data.kpi-delta</span>
+      <div class="lab">kpi · delta</div>
+      <div class="delta"><span class="v">2.4M</span><span class="arr">▲</span><span class="pct">+18.2%</span></div>
+      <div class="lab" style="color:#52525b">vs Q1</div>
+    </div>
+    <div class="cell" data-atom="data.ticker" style="grid-column:span 2"><span class="id">data.ticker</span>
+      <div class="lab">ticker · live</div>
+      <div class="ticker">
+        <span>SHIP <span class="up">▲ 2,184</span></span><span>STAR <span class="up">▲ 14k</span></span><span>BUG <span class="dn">▼ 3</span></span><span>NET <span class="up">▲ 99.8%</span></span><span>LAT <span class="up">▲ 2.4s</span></span><span>ARR <span class="up">▲ 14.2M</span></span>
+      </div>
+    </div>
+    <div class="cell" data-atom="data.logo-cloud" style="grid-column:span 2"><span class="id">data.logo-cloud</span>
+      <div class="lab">logo cloud · trusted by</div>
+      <div class="lc"><span>vercel</span><span class="it">linear</span><span class="up">stripe</span><span class="up">notion</span><span class="it">cursor</span><span>raycast</span><span class="up">supabase</span><span>resend</span></div>
+    </div>
+  </div>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED</div><div>07 / 10 · DATA PRIMITIVES</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>atoms — 08 motion implication</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:64px 72px;position:relative;overflow:hidden;background:linear-gradient(180deg,#020617 0%,#1e1b4b 100%)}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.10);padding-bottom:14px}
+  .head .ttl{font-size:11px;letter-spacing:0.36em;color:#a78bfa;font-weight:800;text-transform:uppercase}
+  .head .axis{font-size:34px;font-weight:800;letter-spacing:-0.025em;line-height:1.0;margin:0;flex:1;padding-left:18px}
+  .head .idx{font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:14px;height:540px}
+  .cell{padding:18px;border-radius:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between}
+  .cell .id{position:absolute;top:10px;left:14px;font-size:9px;letter-spacing:0.24em;color:#a1a1aa;font-weight:800;text-transform:uppercase;z-index:5}
+  .cell .nm{font-size:11px;letter-spacing:0.18em;color:#71717a;text-transform:uppercase;font-weight:700}
+  .footer{position:absolute;bottom:24px;left:72px;right:72px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700}
+
+  /* Echo */
+  .m-echo{position:relative;height:80px;margin:24px 0 8px 0}
+  .m-echo span{position:absolute;left:0;top:0;font-size:64px;font-weight:900;letter-spacing:-0.04em;line-height:1}
+  .m-echo .e1{color:rgba(167,139,250,0.12);transform:translateX(-44px)}
+  .m-echo .e2{color:rgba(167,139,250,0.30);transform:translateX(-26px)}
+  .m-echo .e3{color:rgba(167,139,250,0.55);transform:translateX(-12px)}
+  .m-echo .e4{color:#fff}
+  /* Shutter */
+  .m-shutter{position:relative;height:120px;background:repeating-linear-gradient(90deg, rgba(255,255,255,0) 0 16px, rgba(255,255,255,0.10) 16px 18px)}
+  .m-shutter span{position:absolute;left:18px;top:50%;transform:translateY(-50%);font-size:48px;font-weight:900;letter-spacing:-0.04em;color:#fff}
+  /* Speed lines */
+  .m-speed{position:relative;height:120px;margin-top:18px}
+  /* Particles */
+  .m-particles{position:absolute;inset:0;pointer-events:none}
+  /* Comet */
+  /* Marquee skewed */
+  .m-marquee{display:flex;gap:22px;font-size:38px;font-weight:900;letter-spacing:-0.02em;color:rgba(255,255,255,0.22);transform:skewX(-8deg);white-space:nowrap;margin-top:18px}
+  .m-marquee em{font-style:normal;color:#f472b6}
+  /* Kinetic baseline */
+  .m-kinetic{display:inline-flex;font-size:64px;font-weight:900;letter-spacing:-0.04em;margin-top:18px}
+  .m-kinetic span{display:inline-block}
+  .m-kinetic span:nth-child(1){transform:translateY(-14px);color:#a78bfa}
+  .m-kinetic span:nth-child(2){transform:translateY(-7px);color:#bfa6fb}
+  .m-kinetic span:nth-child(3){transform:translateY(0);color:#f472b6}
+  .m-kinetic span:nth-child(4){transform:translateY(7px);color:#fb923c}
+  .m-kinetic span:nth-child(5){transform:translateY(14px);color:#facc15}
+</style></head><body>
+<div class="slide">
+  <div class="head"><div class="ttl">atoms · axis 08</div><h1 class="axis" data-pptx-role="title">Motion implication</h1><div class="idx">08 / 10</div></div>
+  <div class="grid">
+    <div class="cell" data-atom="motion.echo"><span class="id">motion.echo</span>
+      <div class="m-echo"><span class="e1">RUSH</span><span class="e2">RUSH</span><span class="e3">RUSH</span><span class="e4">RUSH</span></div>
+      <div class="nm">echo · ghost-stack</div>
+    </div>
+    <div class="cell" data-atom="motion.shutter"><span class="id">motion.shutter</span>
+      <div class="m-shutter"><span>SHUTTER</span></div>
+      <div class="nm">shutter · stripes</div>
+    </div>
+    <div class="cell" data-atom="motion.speed-lines"><span class="id">motion.speed-lines</span>
+      <svg viewBox="0 0 320 120" width="100%" height="120" class="m-speed">
+        <line x1="0" y1="20" x2="180" y2="20" stroke="#f472b6" stroke-width="2"/>
+        <line x1="40" y1="40" x2="220" y2="40" stroke="#f472b6" stroke-width="2" opacity="0.7"/>
+        <line x1="0" y1="60" x2="260" y2="60" stroke="#fff" stroke-width="3"/>
+        <line x1="80" y1="80" x2="240" y2="80" stroke="#a78bfa" stroke-width="2" opacity="0.7"/>
+        <line x1="20" y1="100" x2="200" y2="100" stroke="#a78bfa" stroke-width="2" opacity="0.4"/>
+        <circle cx="280" cy="60" r="14" fill="#fff"/>
+        <polygon points="270,52 286,52 280,40" fill="#f472b6"/>
+      </svg>
+      <div class="nm">speed lines · trail</div>
+    </div>
+    <div class="cell" data-atom="motion.particles"><span class="id">motion.particles</span>
+      <svg viewBox="0 0 320 200" width="100%" height="100%" style="margin-top:8px">
+        <g fill="#fff">
+          <circle cx="20" cy="20" r="1"/><circle cx="60" cy="50" r="1.5"/><circle cx="100" cy="20" r="1"/><circle cx="140" cy="80" r="1"/><circle cx="180" cy="30" r="2"/><circle cx="220" cy="60" r="1"/><circle cx="260" cy="100" r="1.5"/><circle cx="300" cy="40" r="1"/>
+          <circle cx="40" cy="120" r="1"/><circle cx="80" cy="160" r="1.5"/><circle cx="120" cy="140" r="1"/><circle cx="160" cy="180" r="2"/><circle cx="200" cy="120" r="1"/><circle cx="240" cy="160" r="1.5"/><circle cx="280" cy="180" r="1"/>
+          <circle cx="30" cy="80" r="0.8"/><circle cx="70" cy="100" r="0.8"/><circle cx="110" cy="60" r="0.8"/><circle cx="150" cy="120" r="0.8"/><circle cx="190" cy="100" r="0.8"/>
+        </g>
+        <circle cx="160" cy="100" r="32" fill="none" stroke="#a78bfa" stroke-width="1.5" opacity="0.8"/>
+        <circle cx="160" cy="100" r="6" fill="#f472b6"/>
+      </svg>
+      <div class="nm">particle · star-field</div>
+    </div>
+    <div class="cell" data-atom="motion.marquee"><span class="id">motion.marquee</span>
+      <div class="m-marquee">SHIP · <em>FAST</em> · SHIP · <em>FAST</em> · SHIP · <em>FAST</em></div>
+      <div class="nm">marquee · skewed</div>
+    </div>
+    <div class="cell" data-atom="motion.kinetic"><span class="id">motion.kinetic</span>
+      <div class="m-kinetic"><span>R</span><span>I</span><span>S</span><span>E</span><span>.</span></div>
+      <div class="nm">kinetic baseline</div>
+    </div>
+  </div>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED</div><div>08 / 10 · MOTION IMPLICATION</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>atoms — 09 ui mocks</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:64px 72px;position:relative;overflow:hidden;background:#06060c}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.10);padding-bottom:14px}
+  .head .ttl{font-size:11px;letter-spacing:0.36em;color:#a78bfa;font-weight:800;text-transform:uppercase}
+  .head .axis{font-size:34px;font-weight:800;letter-spacing:-0.025em;line-height:1.0;margin:0;flex:1;padding-left:18px}
+  .head .idx{font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .grid{display:grid;grid-template-columns:1.4fr 1fr;grid-template-rows:auto auto auto;gap:12px;height:540px}
+  .cell{padding:14px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);position:relative}
+  .cell .id{position:absolute;top:10px;left:14px;font-size:9px;letter-spacing:0.24em;color:#a1a1aa;font-weight:800;text-transform:uppercase}
+  .footer{position:absolute;bottom:24px;left:72px;right:72px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700}
+
+  /* Browser chrome */
+  .browser{margin:24px 8px 4px 8px;border-radius:10px;overflow:hidden;background:#0a0a14;border:1px solid rgba(255,255,255,0.10)}
+  .browser .bar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#1a1a24;border-bottom:1px solid rgba(255,255,255,0.06)}
+  .browser .dot{width:11px;height:11px;border-radius:50%}
+  .browser .url{flex:1;background:#0a0a14;border-radius:6px;padding:5px 10px;font-size:11px;color:#a1a1aa;font-family:Inter,sans-serif}
+  .browser .body{height:140px;background:linear-gradient(160deg,#1e1b4b,#312e81);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;letter-spacing:-0.02em;font-size:24px}
+  /* Code window */
+  .code{margin:24px 8px 4px 8px;border-radius:10px;overflow:hidden;background:#050510;border:1px solid rgba(255,255,255,0.08)}
+  .code .bar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#0a0a14;border-bottom:1px solid rgba(255,255,255,0.06)}
+  .code .dot{width:11px;height:11px;border-radius:50%}
+  .code .body{padding:14px 16px;font-family:"JetBrains Mono","SF Mono",Consolas,monospace;font-size:11px;line-height:1.7;color:#d4d4d8}
+  .code .body .k{color:#c084fc}.code .body .s{color:#facc15}.code .body .c{color:#52525b}.code .body .f{color:#34d399}
+  /* Tab strip */
+  .tabs{display:flex;gap:4px;margin:24px 8px 0 8px}
+  .tabs .tab{padding:8px 16px;border-radius:8px 8px 0 0;background:rgba(255,255,255,0.05);font-size:12px;color:#a1a1aa;font-weight:700;letter-spacing:0.04em}
+  .tabs .tab.on{background:#a78bfa;color:#06060c}
+  /* Search bar */
+  .search{display:flex;align-items:center;gap:10px;background:#0a0a14;border:1px solid rgba(255,255,255,0.10);border-radius:9999px;padding:10px 18px;margin:24px 8px 0 8px}
+  .search .ic{color:#a78bfa;font-size:14px}
+  .search .ph{color:#71717a;font-size:13px}
+  .search .kbd{margin-left:auto;font-size:10px;color:#71717a;font-family:monospace;background:rgba(255,255,255,0.04);padding:3px 8px;border-radius:4px;border:1px solid rgba(255,255,255,0.06)}
+  /* Toolbar */
+  .toolbar{display:flex;align-items:center;gap:18px;background:#0a0a14;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:8px 14px;margin:24px 8px 0 8px}
+  .toolbar .ic{font-size:14px;color:#a1a1aa;font-weight:700}
+  .toolbar .sp{flex:1}
+  /* Avatar cluster */
+  .av-cluster{display:flex;margin:24px 8px 0 8px;align-items:center}
+  .av{width:32px;height:32px;border-radius:50%;border:2px solid #06060c;margin-left:-8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#06060c}
+  .av:first-child{margin-left:0}
+  .av.a1{background:linear-gradient(135deg,#fde68a,#f472b6)}
+  .av.a2{background:linear-gradient(135deg,#34d399,#60a5fa)}
+  .av.a3{background:linear-gradient(135deg,#a78bfa,#f472b6)}
+  .av.a4{background:linear-gradient(135deg,#fb923c,#facc15)}
+  .av.a5{background:#27272a;color:#a1a1aa;font-weight:700}
+  .av-cluster .meta{margin-left:14px;font-size:13px;color:#a1a1aa;font-weight:600}
+  /* Toast */
+  .toast{margin:24px 8px 0 8px;padding:14px 18px;border-radius:12px;background:linear-gradient(135deg,rgba(99,102,241,0.20),rgba(244,114,182,0.10));border:1px solid rgba(167,139,250,0.40);display:flex;align-items:center;gap:14px}
+  .toast .dot{width:10px;height:10px;border-radius:50%;background:#34d399}
+  .toast .ttl{font-size:13px;font-weight:700;color:#f5f5f7}
+  .toast .sub{font-size:11px;color:#a1a1aa;margin-top:2px}
+</style></head><body>
+<div class="slide">
+  <div class="head"><div class="ttl">atoms · axis 09</div><h1 class="axis" data-pptx-role="title">UI mocks</h1><div class="idx">09 / 10</div></div>
+  <div class="grid">
+    <div class="cell" data-atom="ui.browser-chrome" style="grid-row:span 2">
+      <span class="id">ui.browser-chrome</span>
+      <div class="browser">
+        <div class="bar">
+          <div class="dot" style="background:#ef4444"></div>
+          <div class="dot" style="background:#facc15"></div>
+          <div class="dot" style="background:#34d399"></div>
+          <div class="url">slidify.sh / atoms</div>
+        </div>
+        <div class="body">slidify · atomic seed</div>
+      </div>
+      <div class="code" style="margin-top:16px">
+        <div class="bar"><div class="dot" style="background:#ef4444"></div><div class="dot" style="background:#facc15"></div><div class="dot" style="background:#34d399"></div></div>
+        <div class="body">
+          <span class="c"># compose a deck from atoms</span><br>
+          <span class="k">from</span> slidify <span class="k">import</span> convert<br>
+          deck = atoms.compose(<span class="s">"hero"</span>, <span class="s">"bento"</span>, <span class="s">"cta"</span>)<br>
+          <span class="f">convert</span>(deck, <span class="s">"out.pptx"</span>)
+        </div>
+      </div>
+    </div>
+    <div class="cell" data-atom="ui.tab-strip"><span class="id">ui.tab-strip</span>
+      <div class="tabs"><span class="tab on">Atoms</span><span class="tab">Recipes</span><span class="tab">Fonts</span><span class="tab">Probe</span></div>
+    </div>
+    <div class="cell" data-atom="ui.search"><span class="id">ui.search</span>
+      <div class="search"><span class="ic">⌕</span><span class="ph">search atoms…</span><span class="kbd">⌘ K</span></div>
+    </div>
+    <div class="cell" data-atom="ui.toolbar"><span class="id">ui.toolbar</span>
+      <div class="toolbar"><span class="ic">⊞</span><span class="ic">B</span><span class="ic">I</span><span class="ic">U</span><span class="sp"></span><span class="ic">↶</span><span class="ic">↷</span></div>
+    </div>
+    <div class="cell" data-atom="ui.avatar-cluster"><span class="id">ui.avatar-cluster</span>
+      <div class="av-cluster"><span class="av a1">VR</span><span class="av a2">JL</span><span class="av a3">MK</span><span class="av a4">TS</span><span class="av a5">+12</span><span class="meta">16 collaborators</span></div>
+    </div>
+    <div class="cell" data-atom="ui.toast"><span class="id">ui.toast</span>
+      <div class="toast"><span class="dot"></span><div><div class="ttl">Deck shipped</div><div class="sub">native_area_ratio · 0.97</div></div></div>
+    </div>
+  </div>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED</div><div>09 / 10 · UI MOCKS</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>atoms — 10 annotation primitives</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#fafaf7;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:64px 72px;position:relative;overflow:hidden;background:#fafaf7;color:#06060c}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px;border-bottom:1px solid rgba(0,0,0,0.10);padding-bottom:14px}
+  .head .ttl{font-size:11px;letter-spacing:0.36em;color:#7c3aed;font-weight:800;text-transform:uppercase}
+  .head .axis{font-size:34px;font-weight:800;letter-spacing:-0.025em;line-height:1.0;margin:0;flex:1;padding-left:18px;color:#06060c}
+  .head .idx{font-size:11px;letter-spacing:0.32em;color:#71717a;font-weight:700}
+  .canvas{position:relative;height:520px;background:#fff;border-radius:18px;border:1px dashed #d4d4d8;overflow:hidden}
+  /* Subtle grid */
+  .canvas .grid{position:absolute;inset:0;background-image:linear-gradient(0deg,rgba(0,0,0,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.04) 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+  /* Subject (the thing being annotated) */
+  .subject{position:absolute;left:46%;top:30%;width:200px;height:140px;border-radius:18px;background:linear-gradient(135deg,#a78bfa,#f472b6);box-shadow:0 16px 40px rgba(0,0,0,0.10)}
+  /* Leader line + dot */
+  .anno{position:absolute;font-size:11px;font-weight:700;color:#06060c;letter-spacing:0.06em;text-transform:uppercase}
+  .anno .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#f472b6;border:2px solid #06060c;margin-right:8px;vertical-align:middle}
+  .anno .lab{vertical-align:middle}
+  .footer{position:absolute;bottom:24px;left:72px;right:72px;display:flex;justify-content:space-between;font-size:11px;color:#71717a;letter-spacing:0.18em;font-weight:700}
+  .legend{position:absolute;bottom:14px;left:14px;font-size:9px;letter-spacing:0.18em;color:#71717a;font-weight:700;text-transform:uppercase}
+  .legend span{margin-right:14px}
+  .id-tag{position:absolute;font-size:9px;letter-spacing:0.18em;font-weight:800;color:#7c3aed;text-transform:uppercase}
+</style></head><body>
+<div class="slide">
+  <div class="head"><div class="ttl">atoms · axis 10</div><h1 class="axis" data-pptx-role="title">Annotation primitives</h1><div class="idx">10 / 10</div></div>
+  <div class="canvas">
+    <div class="grid"></div>
+    <div class="subject"></div>
+
+    <!-- Leader lines via inline SVG (full canvas overlay) -->
+    <svg viewBox="0 0 1136 520" width="100%" height="100%" style="position:absolute;inset:0">
+      <!-- leader 1: top-left to subject -->
+      <path d="M 200 80 L 240 100 L 540 195" fill="none" stroke="#06060c" stroke-width="1.2" stroke-linecap="round"/>
+      <circle cx="540" cy="195" r="4" fill="#f472b6" stroke="#06060c" stroke-width="1.5"/>
+      <!-- leader 2: right callout -->
+      <path d="M 900 110 L 870 130 L 750 215" fill="none" stroke="#06060c" stroke-width="1.2" stroke-linecap="round"/>
+      <circle cx="750" cy="215" r="4" fill="#f472b6" stroke="#06060c" stroke-width="1.5"/>
+      <!-- dimension line: bottom width -->
+      <line x1="540" y1="430" x2="745" y2="430" stroke="#06060c" stroke-width="1"/>
+      <line x1="540" y1="424" x2="540" y2="436" stroke="#06060c" stroke-width="1"/>
+      <line x1="745" y1="424" x2="745" y2="436" stroke="#06060c" stroke-width="1"/>
+      <text x="640" y="425" font-size="11" fill="#06060c" font-family="Inter" font-weight="700" text-anchor="middle" letter-spacing="0.12em">200 px</text>
+      <!-- dimension line: right height -->
+      <line x1="780" y1="195" x2="780" y2="335" stroke="#06060c" stroke-width="1"/>
+      <line x1="774" y1="195" x2="786" y2="195" stroke="#06060c" stroke-width="1"/>
+      <line x1="774" y1="335" x2="786" y2="335" stroke="#06060c" stroke-width="1"/>
+      <text x="794" y="270" font-size="11" fill="#06060c" font-family="Inter" font-weight="700" letter-spacing="0.12em">140 px</text>
+      <!-- target reticle -->
+      <g transform="translate(140 380)">
+        <circle cx="0" cy="0" r="22" fill="none" stroke="#7c3aed" stroke-width="1.2"/>
+        <circle cx="0" cy="0" r="11" fill="none" stroke="#7c3aed" stroke-width="1.2"/>
+        <line x1="-30" y1="0" x2="30" y2="0" stroke="#7c3aed" stroke-width="1"/>
+        <line x1="0" y1="-30" x2="0" y2="30" stroke="#7c3aed" stroke-width="1"/>
+        <circle cx="0" cy="0" r="2" fill="#7c3aed"/>
+      </g>
+    </svg>
+
+    <div class="anno" style="left:80px;top:60px"><span class="dot"></span><span class="lab">surf · hero · radius 18</span></div>
+    <div class="id-tag" style="left:80px;top:80px">anno.leader-line</div>
+    <div class="anno" style="right:80px;top:90px"><span class="lab">type · gfill-2 · 64px</span><span class="dot" style="margin-left:8px;margin-right:0"></span></div>
+    <div class="id-tag" style="right:80px;top:110px">anno.leader-line</div>
+    <div class="id-tag" style="left:46%;top:430px">anno.dimension</div>
+    <div class="id-tag" style="left:78%;top:160px;transform:rotate(-90deg);transform-origin:left top">anno.dimension</div>
+    <div class="anno" style="left:114px;top:430px"><span class="lab">target reticle</span></div>
+    <div class="id-tag" style="left:114px;top:450px">anno.target-reticle</div>
+
+    <!-- Callout pill -->
+    <div style="position:absolute;right:60px;bottom:80px;background:#06060c;color:#fff;padding:10px 14px;border-radius:9999px;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase">v0.4 · stable</div>
+    <div class="id-tag" style="right:60px;bottom:60px">anno.callout-pill</div>
+
+    <div class="legend"><span>● anchor-dot</span><span>— leader-line</span><span>⊕ target-reticle</span><span>▭ callout-pill</span></div>
+  </div>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED</div><div>10 / 10 · ANNOTATION PRIMITIVES</div></div>
+</div>
+</body></html>
