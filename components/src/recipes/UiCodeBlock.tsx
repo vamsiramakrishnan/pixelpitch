@@ -21,7 +21,7 @@ export default function UiCodeBlock(props: UiCodeBlockProps): ReactNode {
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="ui.code-block" data-recipe-version="1.0.0">
-      <SlotCode {...({ bbox: props.bbox } as unknown as ComponentProps<typeof SlotCode>)} />
+      <SlotCode {...({ bbox: props.bbox, code: props.code, language: props.language } as unknown as ComponentProps<typeof SlotCode>)} />
     </div>
   );
 }
@@ -35,7 +35,7 @@ export function uiCodeBlockToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof slotCodeToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, code: props.code, language: props.language } as unknown as Parameters<typeof slotCodeToIR>[0];
   const inner = slotCodeToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
@@ -47,8 +47,6 @@ export function uiCodeBlockToIR(
       axis: 'ui',
       primitive: 'slot.code',
       version: '1.0.0',
-      code: props.code ?? undefined,
-      language: props.language ?? undefined,
       showLineNumbers: props.showLineNumbers ?? undefined,
     },
     children: [{ ...inner, zOrder: 0 }],

@@ -21,7 +21,7 @@ export default function AnnoSticker(props: AnnoStickerProps): ReactNode {
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="anno.sticker" data-recipe-version="1.0.0">
-      <AnnotationBadge {...({ bbox: props.bbox, rotateDeg: props.rotateDeg, kind: 'sticker' } as unknown as ComponentProps<typeof AnnotationBadge>)} />
+      <AnnotationBadge {...({ bbox: props.bbox, body: props.body, rotateDeg: props.rotateDeg, kind: 'sticker' } as unknown as ComponentProps<typeof AnnotationBadge>)} />
     </div>
   );
 }
@@ -35,7 +35,7 @@ export function annoStickerToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox, rotateDeg: props.rotateDeg, kind: 'sticker' } as unknown as Parameters<typeof annotationBadgeToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, body: props.body, rotateDeg: props.rotateDeg, kind: 'sticker' } as unknown as Parameters<typeof annotationBadgeToIR>[0];
   const inner = annotationBadgeToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
@@ -47,7 +47,6 @@ export function annoStickerToIR(
       axis: 'anno',
       primitive: 'annotation.badge',
       version: '1.0.0',
-      body: props.body ?? undefined,
       bgColor: props.bgColor ?? undefined,
     },
     children: [{ ...inner, zOrder: 0 }],

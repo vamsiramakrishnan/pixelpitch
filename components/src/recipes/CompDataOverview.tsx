@@ -58,7 +58,7 @@ export function compDataOverviewToIR(
     { ...dataDonutToIR({ bbox: props.bbox } as never, tokens), zOrder: 10 },
     { ...dataBarSetHToIR({ bbox: props.bbox } as never, tokens), zOrder: 20 },
     { ...dataSparklineToIR({ bbox: props.bbox } as Parameters<typeof dataSparklineToIR>[0], tokens), recipeId: 'data.sparkline', zOrder: 30 },
-    { ...dataKpiRowToIR({ bbox: props.bbox } as never, tokens), zOrder: 40 },
+    { ...dataKpiRowToIR({ bbox: props.bbox, kpis: props.kpis } as never, tokens), zOrder: 40 },
     ],
   };
 }

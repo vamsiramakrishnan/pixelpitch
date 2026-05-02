@@ -56,9 +56,9 @@ export function compBigStatHeroToIR(
     },
     children: [
     { ...typeEyebrowRuledToIR({ bbox: props.bbox } as never, tokens), zOrder: 0 },
-    { ...typeBigNumberGradientToIR({ bbox: props.bbox, gradient: "tokens.gradient.accent-grad" } as never, tokens), zOrder: 10 },
+    { ...typeBigNumberGradientToIR({ bbox: props.bbox, value: props.value, unit: props.unit, gradient: "tokens.gradient.accent-grad" } as never, tokens), zOrder: 10 },
     { ...surfCardDepthToIR({ bbox: props.bbox } as never, tokens), zOrder: 20 },
-    { ...dataDeltaBadgeToIR({ bbox: props.bbox } as never, tokens), zOrder: 30 },
+    { ...dataDeltaBadgeToIR({ bbox: props.bbox, value: props.value } as never, tokens), zOrder: 30 },
     ],
   };
 }

@@ -19,7 +19,7 @@ export default function UiChecklist(props: UiChecklistProps): ReactNode {
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="ui.checklist" data-recipe-version="1.0.0">
-      <SlotList {...({ bbox: props.bbox } as unknown as ComponentProps<typeof SlotList>)} />
+      <SlotList {...({ bbox: props.bbox, items: props.items } as unknown as ComponentProps<typeof SlotList>)} />
     </div>
   );
 }
@@ -33,7 +33,7 @@ export function uiChecklistToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof slotListToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, items: props.items } as unknown as Parameters<typeof slotListToIR>[0];
   const inner = slotListToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
@@ -45,7 +45,6 @@ export function uiChecklistToIR(
       axis: 'ui',
       primitive: 'slot.list',
       version: '1.0.0',
-      items: props.items ?? undefined,
     },
     children: [{ ...inner, zOrder: 0 }],
   };

@@ -22,7 +22,7 @@ export default function AnnoCalloutBubble(props: AnnoCalloutBubbleProps): ReactN
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="anno.callout-bubble" data-recipe-version="1.0.0">
-      <AnnotationBadge {...({ bbox: props.bbox, kind: 'pill' } as unknown as ComponentProps<typeof AnnotationBadge>)} />
+      <AnnotationBadge {...({ bbox: props.bbox, body: props.body, kind: 'pill' } as unknown as ComponentProps<typeof AnnotationBadge>)} />
     </div>
   );
 }
@@ -36,7 +36,7 @@ export function annoCalloutBubbleToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox, kind: 'pill' } as unknown as Parameters<typeof annotationBadgeToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, body: props.body, kind: 'pill' } as unknown as Parameters<typeof annotationBadgeToIR>[0];
   const inner = annotationBadgeToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
@@ -48,7 +48,6 @@ export function annoCalloutBubbleToIR(
       axis: 'anno',
       primitive: 'annotation.badge',
       version: '1.0.0',
-      body: props.body ?? undefined,
       pointerSide: props.pointerSide ?? undefined,
       pointerOffset: props.pointerOffset ?? undefined,
       bgColor: props.bgColor ?? undefined,

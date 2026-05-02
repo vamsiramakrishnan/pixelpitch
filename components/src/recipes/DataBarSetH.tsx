@@ -20,7 +20,7 @@ export default function DataBarSetH(props: DataBarSetHProps): ReactNode {
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="data.bar-set-h" data-recipe-version="1.0.0">
-      <DataBar {...({ bbox: props.bbox } as unknown as ComponentProps<typeof DataBar>)} />
+      <DataBar {...({ bbox: props.bbox, bars: props.bars, max: props.max } as unknown as ComponentProps<typeof DataBar>)} />
     </div>
   );
 }
@@ -34,7 +34,7 @@ export function dataBarSetHToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof dataBarToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, bars: props.bars, max: props.max } as unknown as Parameters<typeof dataBarToIR>[0];
   const inner = dataBarToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
@@ -46,8 +46,6 @@ export function dataBarSetHToIR(
       axis: 'data',
       primitive: 'data.bar',
       version: '1.0.0',
-      bars: props.bars ?? undefined,
-      max: props.max ?? undefined,
     },
     children: [{ ...inner, zOrder: 0 }],
   };

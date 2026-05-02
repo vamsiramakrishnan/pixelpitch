@@ -49,7 +49,7 @@ export function compBentoMixedToIR(
       version: '1.0.0',
     },
     children: [
-    { ...surfBentoCellToIR({ bbox: props.bbox } as never, tokens), zOrder: 0 },
+    { ...surfBentoCellToIR({ bbox: props.bbox, cells: props.cells } as never, tokens), zOrder: 0 },
     { kind: 'group' as const, recipeId: 'surf.glass', bbox: props.bbox, zOrder: 10, metadata: { role: 'surf.glass', placeholder: true }, children: [] },
     { ...uiCodeBlockSyntaxToIR({ bbox: props.bbox } as never, tokens), zOrder: 20 },
     { kind: 'group' as const, recipeId: 'ui.avatar-cluster', bbox: props.bbox, zOrder: 30, metadata: { role: 'ui.avatar-cluster', placeholder: true }, children: [] },

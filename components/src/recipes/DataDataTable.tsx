@@ -22,7 +22,7 @@ export default function DataDataTable(props: DataDataTableProps): ReactNode {
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="data.data-table" data-recipe-version="1.0.0">
-      <DataTable {...({ bbox: props.bbox } as unknown as ComponentProps<typeof DataTable>)} />
+      <DataTable {...({ bbox: props.bbox, headers: props.headers, rows: props.rows, zebra: props.zebra, align: props.align } as unknown as ComponentProps<typeof DataTable>)} />
     </div>
   );
 }
@@ -36,7 +36,7 @@ export function dataDataTableToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof dataTableToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, headers: props.headers, rows: props.rows, zebra: props.zebra, align: props.align } as unknown as Parameters<typeof dataTableToIR>[0];
   const inner = dataTableToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
@@ -48,10 +48,6 @@ export function dataDataTableToIR(
       axis: 'data',
       primitive: 'data.table',
       version: '1.0.0',
-      headers: props.headers ?? undefined,
-      rows: props.rows ?? undefined,
-      zebra: props.zebra ?? undefined,
-      align: props.align ?? undefined,
     },
     children: [{ ...inner, zOrder: 0 }],
   };

@@ -19,7 +19,7 @@ export default function DecNumeralChapter(props: DecNumeralChapterProps): ReactN
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="dec.numeral-chapter" data-recipe-version="1.0.0">
-      <SlotNumeral {...({ bbox: props.bbox } as unknown as ComponentProps<typeof SlotNumeral>)} />
+      <SlotNumeral {...({ bbox: props.bbox, digits: props.digits } as unknown as ComponentProps<typeof SlotNumeral>)} />
     </div>
   );
 }
@@ -33,7 +33,7 @@ export function decNumeralChapterToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof slotNumeralToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, digits: props.digits } as unknown as Parameters<typeof slotNumeralToIR>[0];
   const inner = slotNumeralToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
@@ -45,7 +45,6 @@ export function decNumeralChapterToIR(
       axis: 'dec',
       primitive: 'slot.numeral',
       version: '1.0.0',
-      digits: props.digits ?? undefined,
     },
     children: [{ ...inner, zOrder: 0 }],
   };

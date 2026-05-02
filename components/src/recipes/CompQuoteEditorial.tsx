@@ -49,7 +49,7 @@ export function compQuoteEditorialToIR(
       version: '1.0.0',
     },
     children: [
-    { ...typePullquoteSerifToIR({ bbox: props.bbox } as never, tokens), zOrder: 0 },
+    { ...typePullquoteSerifToIR({ bbox: props.bbox, quote: props.quote, attribution: props.attribution } as never, tokens), zOrder: 0 },
     { kind: 'group' as const, recipeId: 'ui.avatar-cluster', bbox: props.bbox, zOrder: 10, metadata: { role: 'ui.avatar-cluster', placeholder: true }, children: [] },
     ],
   };

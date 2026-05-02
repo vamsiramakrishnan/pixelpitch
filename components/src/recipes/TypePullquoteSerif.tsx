@@ -21,7 +21,7 @@ export default function TypePullquoteSerif(props: TypePullquoteSerifProps): Reac
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="type.pullquote-serif" data-recipe-version="1.0.0">
-      <SlotQuote {...({ bbox: props.bbox } as unknown as ComponentProps<typeof SlotQuote>)} />
+      <SlotQuote {...({ bbox: props.bbox, quote: props.quote, attribution: props.attribution } as unknown as ComponentProps<typeof SlotQuote>)} />
     </div>
   );
 }
@@ -35,7 +35,7 @@ export function typePullquoteSerifToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof slotQuoteToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, quote: props.quote, attribution: props.attribution } as unknown as Parameters<typeof slotQuoteToIR>[0];
   const inner = slotQuoteToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
@@ -47,8 +47,6 @@ export function typePullquoteSerifToIR(
       axis: 'type',
       primitive: 'slot.quote',
       version: '1.0.0',
-      quote: props.quote ?? undefined,
-      attribution: props.attribution ?? undefined,
       size: props.size ?? undefined,
     },
     children: [{ ...inner, zOrder: 0 }],

@@ -19,7 +19,7 @@ export default function DataKpiRow(props: DataKpiRowProps): ReactNode {
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="data.kpi-row" data-recipe-version="1.0.0">
-      <_PrimitiveDataKpiRow {...({ bbox: props.bbox } as unknown as ComponentProps<typeof _PrimitiveDataKpiRow>)} />
+      <_PrimitiveDataKpiRow {...({ bbox: props.bbox, kpis: props.kpis } as unknown as ComponentProps<typeof _PrimitiveDataKpiRow>)} />
     </div>
   );
 }
@@ -33,7 +33,7 @@ export function dataKpiRowToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof _primitive_dataKpiRowToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, kpis: props.kpis } as unknown as Parameters<typeof _primitive_dataKpiRowToIR>[0];
   const inner = _primitive_dataKpiRowToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
@@ -45,7 +45,6 @@ export function dataKpiRowToIR(
       axis: 'data',
       primitive: 'data.kpi-row',
       version: '1.0.0',
-      kpis: props.kpis ?? undefined,
     },
     children: [{ ...inner, zOrder: 0 }],
   };

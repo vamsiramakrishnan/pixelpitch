@@ -22,7 +22,7 @@ export default function BgAuroraCorners(props: BgAuroraCornersProps): ReactNode 
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="bg.aurora-corners" data-recipe-version="1.0.0">
-      <SurfaceRadialBlob {...({ bbox: props.bbox } as unknown as ComponentProps<typeof SurfaceRadialBlob>)} />
+      <SurfaceRadialBlob {...({ bbox: props.bbox, colorTL: props.colorTL, colorTR: props.colorTR, colorBL: props.colorBL, colorBR: props.colorBR } as unknown as ComponentProps<typeof SurfaceRadialBlob>)} />
     </div>
   );
 }
@@ -36,7 +36,7 @@ export function bgAuroraCornersToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof surfaceRadialBlobToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, colorTL: props.colorTL, colorTR: props.colorTR, colorBL: props.colorBL, colorBR: props.colorBR } as unknown as Parameters<typeof surfaceRadialBlobToIR>[0];
   const inner = surfaceRadialBlobToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
@@ -48,10 +48,6 @@ export function bgAuroraCornersToIR(
       axis: 'bg',
       primitive: 'surface.radial-blob',
       version: '1.0.0',
-      colorTL: props.colorTL ?? undefined,
-      colorTR: props.colorTR ?? undefined,
-      colorBL: props.colorBL ?? undefined,
-      colorBR: props.colorBR ?? undefined,
     },
     children: [{ ...inner, zOrder: 0 }],
   };

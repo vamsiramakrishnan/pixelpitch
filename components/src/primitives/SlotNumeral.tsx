@@ -121,14 +121,23 @@ export function slotNumeralToIR(
   const spec = tokens.type(scale);
   const value = props.value ?? props.digits ?? '';
 
+  // gradient prop may be either:
+  //   - a `GradientKey` string ('accent-grad'), the legitimate use, or
+  //   - a `LinearGradient` object (token-resolved upstream, or supplied by
+  //     atoms.yaml `gradient: tokens.gradient.accent-grad` — the matcher
+  //     resolves the string to an object before calling).
+  // We only call `tokens.gradient(...)` when it's a string key.
+  const gradientKey = typeof props.gradient === 'string' ? props.gradient : undefined;
+  const gradientFill = gradientKey ? tokens.gradient(gradientKey) : undefined;
+
   // Single run, fill metadata routes the gradient through Python compiler.
   const baseRun: TextRun = {
     text: value,
     fontSizePx: spec.sizePx,
     fontWeight: spec.weight,
     fontFamily: spec.family,
-    color: props.gradient
-      ? tokens.gradient(props.gradient).stops[0]?.color ?? tokens.palette('ink-1')
+    color: gradientFill
+      ? gradientFill.stops[0]?.color ?? tokens.palette('ink-1')
       : (props.color ?? tokens.palette('ink-1')),
     italic: false,
     underline: false,
@@ -139,9 +148,9 @@ export function slotNumeralToIR(
     axis: 'slot',
     scale,
   };
-  if (props.gradient) {
-    metadata.gradientKey = props.gradient;
-    metadata.gradientFill = tokens.gradient(props.gradient);
+  if (gradientKey) {
+    metadata.gradientKey = gradientKey;
+    metadata.gradientFill = gradientFill;
   }
 
   return {

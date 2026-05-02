@@ -22,7 +22,7 @@ export default function DataDonutMultiSegment(props: DataDonutMultiSegmentProps)
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="data.donut-multi-segment" data-recipe-version="1.0.0">
-      <DataDonut {...({ bbox: props.bbox } as unknown as ComponentProps<typeof DataDonut>)} />
+      <DataDonut {...({ bbox: props.bbox, segments: props.segments } as unknown as ComponentProps<typeof DataDonut>)} />
     </div>
   );
 }
@@ -36,7 +36,7 @@ export function dataDonutMultiSegmentToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof dataDonutToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, segments: props.segments } as unknown as Parameters<typeof dataDonutToIR>[0];
   const inner = dataDonutToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
@@ -48,7 +48,6 @@ export function dataDonutMultiSegmentToIR(
       axis: 'data',
       primitive: 'data.donut',
       version: '1.0.0',
-      segments: props.segments ?? undefined,
       thicknessPx: props.thicknessPx ?? undefined,
       startDeg: props.startDeg ?? undefined,
       gapDeg: props.gapDeg ?? undefined,

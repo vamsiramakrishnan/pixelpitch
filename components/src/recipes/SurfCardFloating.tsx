@@ -20,7 +20,7 @@ export default function SurfCardFloating(props: SurfCardFloatingProps): ReactNod
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="surf.card-floating" data-recipe-version="1.0.0">
-      <SurfaceShapeFill {...({ bbox: props.bbox } as unknown as ComponentProps<typeof SurfaceShapeFill>)} />
+      <SurfaceShapeFill {...({ bbox: props.bbox, bgColor: props.bgColor, radius: props.radius } as unknown as ComponentProps<typeof SurfaceShapeFill>)} />
     </div>
   );
 }
@@ -34,7 +34,7 @@ export function surfCardFloatingToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof surfaceShapeFillToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, bgColor: props.bgColor, radius: props.radius } as unknown as Parameters<typeof surfaceShapeFillToIR>[0];
   const inner = surfaceShapeFillToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
@@ -46,8 +46,6 @@ export function surfCardFloatingToIR(
       axis: 'surf',
       primitive: 'surface.shape-fill',
       version: '1.0.0',
-      bgColor: props.bgColor ?? undefined,
-      radius: props.radius ?? undefined,
     },
     children: [{ ...inner, zOrder: 0 }],
   };

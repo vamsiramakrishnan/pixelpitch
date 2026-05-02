@@ -24,7 +24,7 @@ export default function DataConnector(props: DataConnectorProps): ReactNode {
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="data.connector" data-recipe-version="1.0.0">
-      <DiagramConnector {...({ bbox: props.bbox } as unknown as ComponentProps<typeof DiagramConnector>)} />
+      <DiagramConnector {...({ bbox: props.bbox, from: props.from, to: props.to, kind: props.kind } as unknown as ComponentProps<typeof DiagramConnector>)} />
     </div>
   );
 }
@@ -38,7 +38,7 @@ export function dataConnectorToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof diagramConnectorToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, from: props.from, to: props.to, kind: props.kind } as unknown as Parameters<typeof diagramConnectorToIR>[0];
   const inner = diagramConnectorToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
@@ -50,9 +50,6 @@ export function dataConnectorToIR(
       axis: 'data',
       primitive: 'diagram.connector',
       version: '1.0.0',
-      from: props.from ?? undefined,
-      to: props.to ?? undefined,
-      kind: props.kind ?? undefined,
       head: props.head ?? undefined,
       dashed: props.dashed ?? undefined,
       color: props.color ?? undefined,

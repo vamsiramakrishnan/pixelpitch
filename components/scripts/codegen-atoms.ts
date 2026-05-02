@@ -160,22 +160,47 @@ const PRIMITIVE_MAP: Record<string, PrimitiveSpec> = {
 };
 
 /**
- * Per-primitive prop forwarding table.
+ * Per-primitive prop interface manifest.
  *
- * Entries are atoms.yaml-style prop names that the primitive's IR helper
- * understands directly (so codegen forwards them verbatim). Anything not
- * listed here gets dropped into recipe metadata only — it doesn't reach
- * the primitive. `bbox` is always forwarded; we don't list it here.
+ * Lists every prop name the primitive's `*ToIR` helper understands.
+ * `bbox` is always implicitly accepted; we don't list it here.
  *
- * Used by `renderRecipeFile` to emit honest delegations: if a recipe
- * row's prop set intersects this list, the generated TSX threads those
- * props into the primitive call instead of stripping to bbox.
+ * The codegen uses this to compute name-overlap forwarding: for each recipe
+ * prop, if a same-named (or synonym-mapped) prop appears here, we forward it
+ * verbatim. Recipe props with no overlap get dropped into IR metadata only.
+ *
+ * This replaces the M3.5 `PRIMITIVE_PROPS_FORWARD` whitelist (which was
+ * partial — missed `body`, `pointerSide`, `bgColor`, etc.). Now every prop
+ * each primitive can accept is enumerated, and recipe→primitive forwarding
+ * is computed from the intersection of recipe.props and this set, expanded
+ * via PROP_SYNONYMS.
  */
-const PRIMITIVE_PROPS_FORWARD: Record<string, readonly string[]> = {
-  'surface.shape-fill':      ['fill', 'shape', 'radiusPx', 'border', 'shadows'],
+const PRIMITIVE_INTERFACE: Record<string, readonly string[]> = {
+  'frame.bento':             ['cells', 'gapPx'],
+  'frame.split':             ['ratio', 'orientation', 'gapPx'],
+  'frame.three-up':          ['gapPx'],
+  'frame.letterbox':         ['barColor', 'barFraction'],
+  'frame.section':           ['stripSide', 'stripWidthPx', 'stripColor'],
+  'frame.safe-area':         ['padding'],
+  'slot.heading':            ['text', 'scale', 'color', 'align'],
+  'slot.eyebrow':            ['text', 'color', 'ruleColor', 'withRule', 'ruleLengthPx'],
+  'slot.caption':            ['text', 'register', 'color', 'align'],
+  'slot.numeral':            ['value', 'digits', 'scale', 'color', 'gradient', 'align'],
+  'slot.quote':              ['text', 'quote', 'attribution', 'withMark', 'color', 'attributionColor', 'markColor', 'align'],
+  'slot.list':               ['items', 'marker', 'color', 'markerColor', 'rowGapPx', 'markerWidthPx'],
+  'slot.code':               ['code', 'language', 'bgColor', 'color', 'paddingPx'],
+  'data.sparkline':          ['values', 'strokeColor', 'strokeWidthPx', 'fillUnder', 'areaFill', 'withLastMarker', 'markerRadiusPx'],
+  'data.bar':                ['values', 'bars', 'orientation', 'color', 'max', 'gapPx', 'radiusPx', 'labels'],
+  'data.donut':              ['segments', 'innerRadiusFrac', 'holeColor', 'defaultColor', 'startAngleDeg'],
+  'data.kpi-row':            ['cells', 'kpis', 'withDividers', 'dividerColor', 'gapPx'],
+  'data.table':              ['headers', 'rows', 'align', 'zebra', 'withVerticalDividers', 'withRowDividers', 'headerBgColor', 'zebraColor', 'dividerColor'],
+  'diagram.connector':       ['from', 'to', 'kind', 'strokeColor', 'strokeWidthPx', 'strokeDasharray', 'markerStart', 'markerEnd', 'arrowSize'],
+  'diagram.timeline':        ['events', 'railColor', 'accentColor', 'railY'],
+  'chrome.escape-hatch':     ['cssPayload', 'intent', 'attempted'],
+  'surface.shape-fill':      ['fill', 'bgColor', 'shape', 'radius', 'radiusPx', 'border', 'shadows'],
   'surface.pattern-tile':    ['pattern', 'fgColor', 'bgColor', 'tilePx', 'featurePx', 'angleDeg'],
-  'surface.radial-blob':     ['color', 'cx', 'cy', 'intensity', 'shape'],
-  'surface.linear-fade':     ['color', 'direction', 'opacity', 'fadePct'],
+  'surface.radial-blob':     ['color', 'colorTL', 'colorTR', 'colorBL', 'colorBR', 'cx', 'cy', 'intensity', 'shape'],
+  'surface.linear-fade':     ['color', 'bgColor', 'direction', 'opacity', 'fadePct'],
   'decoration.shape-preset': ['preset', 'fill', 'stroke'],
   'decoration.line-stroke':  ['orientation', 'color', 'dash', 'thicknessPx'],
   'data.delta-badge':        ['value', 'direction', 'size', 'tone'],
@@ -184,9 +209,51 @@ const PRIMITIVE_PROPS_FORWARD: Record<string, readonly string[]> = {
   'diagram.flow-step':       ['n', 'label', 'accent', 'shape'],
   'chrome.window-frame':     ['chrome', 'url', 'body', 'theme'],
   'chrome.device-frame':     ['device', 'screenshotSrc', 'notch'],
-  'annotation.leader-line':  ['from', 'to', 'head', 'tail', 'dashed', 'color', 'thicknessPx'],
-  'annotation.badge':        ['label', 'kind', 'tone', 'rotateDeg'],
+  'annotation.leader-line':  ['from', 'to', 'leaderTo', 'anchor', 'head', 'tail', 'dashed', 'color', 'thicknessPx'],
+  'annotation.badge':        ['label', 'body', 'kind', 'tone', 'rotateDeg'],
 };
+
+/**
+ * Synonym map — atoms.yaml prop names that map to a primitive interface
+ * prop. Codegen treats both names as forwardable. The recipe interface
+ * keeps the atoms.yaml name; the generated wrapper passes it under the
+ * primitive's expected name (or under the same name when the primitive
+ * accepts the synonym directly).
+ *
+ * Most primitives now accept both names natively (see `PRIMITIVE_INTERFACE`
+ * entries listing both). This map is used as a fallback when only one
+ * name appears in the primitive interface but the recipe uses the other.
+ */
+const PROP_SYNONYMS: Record<string, string> = {
+  // common color aliases
+  bgColor:  'color',
+  fgColor:  'color',
+  textColor: 'color',
+  // body → label (used by anno.callout-bubble routing through annotation.badge)
+  body:     'label',
+  // label → text (used by type.eyebrow-ruled / type.eyebrow-tape forwarding to slot.eyebrow)
+  label:    'text',
+  // headline / heading / title → text (composite recipes forwarding to slot.heading)
+  headline: 'text',
+  heading:  'text',
+  title:    'text',
+  // eyebrow → text (composite recipes forwarding to slot.eyebrow)
+  eyebrow:  'text',
+  // lede / caption / body* fields → text (forwarding to slot.caption variants)
+  lede:     'text',
+  caption:  'text',
+  // value → digits / value (numeral / delta-badge accept either)
+  digits:   'value',
+  // attribution → attribution stays canonical; no synonym needed
+  // bbox is special-cased; never appears here
+  // colorTL/TR/BL/BR are positional (handled by primitive synonyms directly)
+};
+
+/**
+ * Backwards-compat re-export. Kept so external scripts that import the M3.5
+ * symbol still type-check; new code should use `PRIMITIVE_INTERFACE`.
+ */
+const PRIMITIVE_PROPS_FORWARD: Record<string, readonly string[]> = PRIMITIVE_INTERFACE;
 
 /**
  * Per-atom constant-prop injection.
@@ -488,26 +555,78 @@ function renderRecipeFile(
     }
 
     // Children IR construction.
+    //
+    // For each composed child, we forward (a) inline override props from the
+    // composes entry, and (b) parent recipe props whose names overlap the
+    // child's known prop interface (so a recipe with `headline: string` that
+    // composes `slot.heading` automatically threads `headline` → `text` via
+    // synonyms). Undefined parent props are dropped at runtime (JS-spread).
+    const parentPropNames = Object.keys(props);
     const childrenLines: string[] = [];
     resolved.forEach((r0, i) => {
       const inlineProps = r0.entry.props ?? {};
       const hasBboxOverride = inlineProps.bbox !== undefined;
       const bboxExpr = hasBboxOverride ? jsonStringify(inlineProps.bbox) : 'props.bbox';
+
+      // Determine which prop names the child accepts.
+      let childAccepts: Set<string> = new Set();
+      if (r0.kind === 'primitive') {
+        childAccepts = new Set(PRIMITIVE_INTERFACE[r0.atomId] ?? []);
+      } else if (r0.kind === 'recipe') {
+        // Look up the child recipe's prop set; we stashed it on the entry.
+        // For recipes wrapping a primitive, also include the primitive's
+        // accepted prop names — the recipe will forward them through.
+        const childRow = recipesByAtomId.get(r0.entry.atom) as
+          | (GeneratedRecipe & {
+              __rendererProps?: Record<string, PropEntry>;
+              __primitive?: string;
+            })
+          | undefined;
+        const childProps = childRow?.__rendererProps;
+        const fromRecipe = childProps ? Object.keys(childProps) : [];
+        const fromPrimitive = childRow?.__primitive
+          ? PRIMITIVE_INTERFACE[childRow.__primitive] ?? []
+          : [];
+        childAccepts = new Set<string>([...fromRecipe, ...fromPrimitive]);
+      }
+
       const propsObj: string[] = [];
+      const usedNames = new Set<string>();
       propsObj.push(`bbox: ${bboxExpr}`);
+      usedNames.add('bbox');
+
+      // Forward parent props to the child only by EXACT name match.
+      // Synonym-routing here would be ambiguous (e.g., a hero recipe with
+      // both `headline` and `eyebrow` would have both compete for `text`
+      // on every text-shaped child). Composite child layouts that need
+      // semantic threading of parent props should be hand-emitted as
+      // primitive nodes (per the M3.6 spec). Inline `composes:` overrides
+      // and per-child YAML stamps still flow through below.
+      const overrideNames = new Set(Object.keys(inlineProps));
+
+      for (const pp of parentPropNames) {
+        if (pp === 'bbox') continue;
+        if (childAccepts.has(pp) && !usedNames.has(pp) && !overrideNames.has(pp)) {
+          propsObj.push(`${jsKeyOf(pp)}: props.${pp}`);
+          usedNames.add(pp);
+        }
+      }
+
+      // Inline override props from the composes block (atoms.yaml-stamped
+      // constants like `intensity: low`). These come AFTER parent forwards
+      // so the YAML-declared override wins.
       for (const [k, v] of Object.entries(inlineProps)) {
         if (k === 'bbox') continue;
+        if (usedNames.has(k)) continue;
         propsObj.push(`${jsKeyOf(k)}: ${jsonStringify(v)}`);
+        usedNames.add(k);
       }
       const propsLit = `{ ${propsObj.join(', ')} }`;
+
       if (r0.kind === 'recipe') {
         childrenLines.push(`    { ...${r0.recipe.irHelper}(${propsLit} as never, tokens), zOrder: ${i * 10} },`);
       } else if (r0.kind === 'primitive') {
-        // Primitive *ToIR helpers accept their own prop type — pass only bbox,
-        // which every primitive accepts. Other inline props are ignored at the
-        // primitive level (composite YAML rows tend to override visual knobs
-        // that only Tier-B recipes consume).
-        childrenLines.push(`    { ...${r0.primitive.irHelper}({ bbox: ${bboxExpr} } as Parameters<typeof ${r0.primitive.irHelper}>[0], tokens), recipeId: '${r0.atomId}', zOrder: ${i * 10} },`);
+        childrenLines.push(`    { ...${r0.primitive.irHelper}(${propsLit} as Parameters<typeof ${r0.primitive.irHelper}>[0], tokens), recipeId: '${r0.atomId}', zOrder: ${i * 10} },`);
       } else {
         // Placeholder: legacy atom row without a renderer. Emit a
         // structurally-valid GroupNode whose recipeId matches the legacy id.
@@ -591,13 +710,38 @@ function renderRecipeFile(
       ? `import { default as ${primAlias}, ${prim.irHelper} as ${primIrAlias} } from '../primitives/${prim.file}';`
       : `import ${primAlias}, { ${primIrAlias} } from '../primitives/${prim.file}';`;
 
-    // Compute the forwarded prop set: the intersection of the recipe's
-    // declared props and the primitive's known prop list. Unknown extras stay
-    // on the recipe interface but get dropped into IR metadata only.
-    const forwardWhitelist = PRIMITIVE_PROPS_FORWARD[r.primitive ?? ''] ?? [];
+    // Compute the forwarded prop set via name-overlap: for each recipe prop,
+    // if it appears in the primitive's interface (or its synonym does),
+    // forward it. This replaces the M3.5 fixed whitelist (which silently
+    // dropped many props the primitive could have consumed).
+    const primitiveAccepts = PRIMITIVE_INTERFACE[r.primitive ?? ''] ?? [];
+    const primitiveAcceptsSet = new Set(primitiveAccepts);
     const recipePropNames = Object.keys(props);
-    const forwardedProps = forwardWhitelist.filter(p => recipePropNames.includes(p));
-    const droppedProps = recipePropNames.filter(p => p !== 'bbox' && !forwardedProps.includes(p));
+
+    // Each entry: { recipeProp: 'bgColor', primProp: 'color' } (or same name).
+    interface ForwardSpec {
+      recipeProp: string;
+      primProp: string;
+    }
+    const forwarded: ForwardSpec[] = [];
+    const usedPrimProps = new Set<string>();
+    const droppedProps: string[] = [];
+    for (const rp of recipePropNames) {
+      if (rp === 'bbox') continue;
+      if (primitiveAcceptsSet.has(rp) && !usedPrimProps.has(rp)) {
+        forwarded.push({ recipeProp: rp, primProp: rp });
+        usedPrimProps.add(rp);
+        continue;
+      }
+      const synonym = PROP_SYNONYMS[rp];
+      if (synonym && primitiveAcceptsSet.has(synonym) && !usedPrimProps.has(synonym)) {
+        forwarded.push({ recipeProp: rp, primProp: synonym });
+        usedPrimProps.add(synonym);
+        continue;
+      }
+      droppedProps.push(rp);
+    }
+    const forwardedNames = usedPrimProps;
 
     // Constant primitive props injected from the atom-id (e.g., `ui.browser-mac`
     // injects `chrome: 'mac'`). These don't appear on the recipe interface —
@@ -605,14 +749,18 @@ function renderRecipeFile(
     const constantProps = ATOM_CONSTANT_PROPS[atomId] ?? {};
     // If a constant prop name collides with a forwarded prop, the forwarded
     // (caller-supplied) value wins; otherwise the constant fills the gap.
-    const constantEntries = Object.entries(constantProps).filter(([k]) => !forwardedProps.includes(k));
+    const constantEntries = Object.entries(constantProps).filter(([k]) => !forwardedNames.has(k));
 
     // Render the primitive args object literal: bbox + every forwarded prop +
     // any atom-id-derived constants. JS spread drops undefineds at runtime,
     // so a flat shape is the cleanest surface.
     const primArgsParts = [
       'bbox: props.bbox',
-      ...forwardedProps.map(p => `${p}: props.${p}`),
+      ...forwarded.map(f =>
+        f.primProp === f.recipeProp
+          ? `${f.primProp}: props.${f.recipeProp}`
+          : `${f.primProp}: props.${f.recipeProp}`,
+      ),
       ...constantEntries.map(([k, v]) => `${k}: ${v}`),
     ];
     const primArgsLiteral = `{ ${primArgsParts.join(', ')} }`;
@@ -891,20 +1039,29 @@ function build(): BuildResult {
   }
 
   // 2. Pre-index Tier-B recipes by atom id (for composite child resolution).
+  // We stash non-public `__rendererProps` and `__primitive` fields so the
+  // composite emitter can introspect each child recipe's accepted prop set
+  // (including the primitive's prop interface when the recipe wraps one).
   const recipesByAtomId = new Map<string, GeneratedRecipe>();
   for (const row of rows) {
     const r = row.renderer;
     if (!r || r.tier !== 'B') continue;
     const aid = atomIdOf(row);
     if (!aid) continue;
-    recipesByAtomId.set(aid, {
+    const entry = {
       atomId: aid,
       component: r.component,
       irHelper: camelCase(r.component) + 'ToIR',
       version: r.version,
       rowId: row.id,
       composite: Array.isArray(r.composes) && r.composes.length > 0,
-    });
+      __rendererProps: r.props ?? {},
+      __primitive: r.primitive,
+    } as GeneratedRecipe & {
+      __rendererProps: Record<string, PropEntry>;
+      __primitive?: string;
+    };
+    recipesByAtomId.set(aid, entry);
   }
 
   // 3. Render each Tier-B file.

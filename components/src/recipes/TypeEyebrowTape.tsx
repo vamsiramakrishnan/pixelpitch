@@ -21,7 +21,7 @@ export default function TypeEyebrowTape(props: TypeEyebrowTapeProps): ReactNode 
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="type.eyebrow-tape" data-recipe-version="1.0.0">
-      <SlotEyebrow {...({ bbox: props.bbox } as unknown as ComponentProps<typeof SlotEyebrow>)} />
+      <SlotEyebrow {...({ bbox: props.bbox, text: props.label } as unknown as ComponentProps<typeof SlotEyebrow>)} />
     </div>
   );
 }
@@ -35,7 +35,7 @@ export function typeEyebrowTapeToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof slotEyebrowToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, text: props.label } as unknown as Parameters<typeof slotEyebrowToIR>[0];
   const inner = slotEyebrowToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
@@ -47,7 +47,6 @@ export function typeEyebrowTapeToIR(
       axis: 'type',
       primitive: 'slot.eyebrow',
       version: '1.0.0',
-      label: props.label ?? undefined,
       skewDeg: props.skewDeg ?? undefined,
       fill: props.fill ?? undefined,
     },

@@ -21,7 +21,7 @@ export default function DataDonut(props: DataDonutProps): ReactNode {
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="data.donut" data-recipe-version="1.0.0">
-      <_PrimitiveDataDonut {...({ bbox: props.bbox } as unknown as ComponentProps<typeof _PrimitiveDataDonut>)} />
+      <_PrimitiveDataDonut {...({ bbox: props.bbox, segments: props.segments } as unknown as ComponentProps<typeof _PrimitiveDataDonut>)} />
     </div>
   );
 }
@@ -35,7 +35,7 @@ export function dataDonutToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof _primitive_dataDonutToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, segments: props.segments } as unknown as Parameters<typeof _primitive_dataDonutToIR>[0];
   const inner = _primitive_dataDonutToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
@@ -47,7 +47,6 @@ export function dataDonutToIR(
       axis: 'data',
       primitive: 'data.donut',
       version: '1.0.0',
-      segments: props.segments ?? undefined,
       thicknessPx: props.thicknessPx ?? undefined,
       startDeg: props.startDeg ?? undefined,
     },

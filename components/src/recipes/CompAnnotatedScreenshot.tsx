@@ -52,7 +52,7 @@ export function compAnnotatedScreenshotToIR(
       version: '1.0.0',
     },
     children: [
-    { ...uiBrowserMacToIR({ bbox: props.bbox } as never, tokens), zOrder: 0 },
+    { ...uiBrowserMacToIR({ bbox: props.bbox, url: props.url } as never, tokens), zOrder: 0 },
     { ...annoNumberedHotspotToIR({ bbox: props.bbox } as never, tokens), zOrder: 10 },
     { ...annoTooltipToIR({ bbox: props.bbox } as never, tokens), zOrder: 20 },
     ],

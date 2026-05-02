@@ -21,7 +21,7 @@ export default function AnnoTooltip(props: AnnoTooltipProps): ReactNode {
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="anno.tooltip" data-recipe-version="1.0.0">
-      <AnnotationLeaderLine {...({ bbox: props.bbox } as unknown as ComponentProps<typeof AnnotationLeaderLine>)} />
+      <AnnotationLeaderLine {...({ bbox: props.bbox, leaderTo: props.leaderTo, color: props.bgColor } as unknown as ComponentProps<typeof AnnotationLeaderLine>)} />
     </div>
   );
 }
@@ -35,7 +35,7 @@ export function annoTooltipToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof annotationLeaderLineToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, leaderTo: props.leaderTo, color: props.bgColor } as unknown as Parameters<typeof annotationLeaderLineToIR>[0];
   const inner = annotationLeaderLineToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
@@ -48,8 +48,6 @@ export function annoTooltipToIR(
       primitive: 'annotation.leader-line',
       version: '1.0.0',
       body: props.body ?? undefined,
-      leaderTo: props.leaderTo ?? undefined,
-      bgColor: props.bgColor ?? undefined,
     },
     children: [{ ...inner, zOrder: 0 }],
   };

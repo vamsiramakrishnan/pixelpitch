@@ -22,7 +22,7 @@ export default function TypeBigNumberGradient(props: TypeBigNumberGradientProps)
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="type.big-number-gradient" data-recipe-version="1.0.0">
-      <SlotNumeral {...({ bbox: props.bbox } as unknown as ComponentProps<typeof SlotNumeral>)} />
+      <SlotNumeral {...({ bbox: props.bbox, value: props.value, gradient: props.gradient } as unknown as ComponentProps<typeof SlotNumeral>)} />
     </div>
   );
 }
@@ -36,7 +36,7 @@ export function typeBigNumberGradientToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof slotNumeralToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, value: props.value, gradient: props.gradient } as unknown as Parameters<typeof slotNumeralToIR>[0];
   const inner = slotNumeralToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
@@ -48,9 +48,7 @@ export function typeBigNumberGradientToIR(
       axis: 'type',
       primitive: 'slot.numeral',
       version: '1.0.0',
-      value: props.value ?? undefined,
       unit: props.unit ?? undefined,
-      gradient: props.gradient ?? undefined,
     },
     children: [{ ...inner, zOrder: 0 }],
   };
