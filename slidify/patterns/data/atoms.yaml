@@ -50,6 +50,54 @@ patterns:
       kind: observe
       metadata: { recipe: atom_comp, namespace: comp }
 
+  # Specific composition atoms — bento (2/3 up, 12-col) and the magazine /
+  # brutalist rule conventions. Priority sits *before* the namespace-wide
+  # `atom-comp-any` (50) so the specific recipe wins on ties.
+  - id: atom-comp-bento-3up
+    priority: 49
+    tag: structural
+    match:
+      anchor.data_atom_id: comp.bento-3up
+    emit:
+      kind: observe
+      metadata: { recipe: atom_comp_bento_3up, axis: comp, layout: bento-3-up }
+
+  - id: atom-comp-bento-2up
+    priority: 49
+    tag: structural
+    match:
+      anchor.data_atom_id: comp.bento-2up
+    emit:
+      kind: observe
+      metadata: { recipe: atom_comp_bento_2up, axis: comp, layout: bento-2-up }
+
+  - id: atom-comp-12col
+    priority: 49
+    tag: structural
+    match:
+      anchor.data_atom_id: comp.12col
+    emit:
+      kind: observe
+      metadata: { recipe: atom_comp_12col, axis: comp, layout: 12-col }
+
+  - id: atom-comp-magazine-left-rule
+    priority: 49
+    tag: structural
+    match:
+      anchor.data_atom_id: comp.magazine-left-rule
+    emit:
+      kind: observe
+      metadata: { recipe: atom_comp_magazine_left_rule, axis: comp, decorate: left-rule }
+
+  - id: atom-comp-brutalist-top-rule
+    priority: 49
+    tag: structural
+    match:
+      anchor.data_atom_id: comp.brutalist-top-rule
+    emit:
+      kind: observe
+      metadata: { recipe: atom_comp_brutalist_top_rule, axis: comp, decorate: top-rule }
+
   # ── background fields → NativeShape (gradient / repeating gradient) ─────
   - id: atom-bg-mesh
     priority: 52
@@ -123,6 +171,15 @@ patterns:
       confidence: 0.95
       metadata: { recipe: atom_bg_dot_lattice, axis: bg, fill: svg-circles }
 
+  - id: atom-bg-grid-overlay
+    priority: 52
+    match:
+      anchor.data_atom_id: bg.grid-overlay
+    emit:
+      kind: NativeSvg
+      confidence: 0.95
+      metadata: { recipe: atom_bg_grid_overlay, axis: bg, fill: svg-grid-lines }
+
   # ── surfaces (use existing decoration grammar where it overlaps) ────────
   - id: atom-surf-glass
     priority: 56
@@ -195,6 +252,18 @@ patterns:
       kind: NativeShape
       confidence: 0.95
       metadata: { recipe: atom_surf_polaroid, axis: surf, kind: framed-photo }
+
+  # Elevated stack — the multi-shadow elevation recipe rendered as native
+  # PPTX outerShdw layers (matches the brutalist-top-rule / elevated-card
+  # patterns in patterns.yaml).
+  - id: atom-surf-elevated-stack
+    priority: 56
+    match:
+      anchor.data_atom_id: surf.elevated-stack
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_surf_elevated_stack, axis: surf, decorate: elevation-multi-shadow }
 
   # ── type treatments → NativeText (per-run styling) ──────────────────────
   - id: atom-type-any
@@ -289,6 +358,45 @@ patterns:
       confidence: 0.95
       metadata: { recipe: atom_type_dropcap, axis: type, first-letter: oversized-gradient }
 
+  # Display-tight, editorial-serif, mono-tag, vertical-rail — register cues
+  # that the standalone matcher catches via font-family + tracking, but
+  # author-tagged atoms get their own canonical recipes here.
+  - id: atom-type-display-tight
+    priority: 58
+    match:
+      anchor.data_atom_id: type.display-tight
+    emit:
+      kind: NativeText
+      confidence: 0.99
+      metadata: { recipe: atom_type_display_tight, axis: type, register: display-tight }
+
+  - id: atom-type-editorial-serif
+    priority: 58
+    match:
+      anchor.data_atom_id: type.editorial-serif
+    emit:
+      kind: NativeText
+      confidence: 0.99
+      metadata: { recipe: atom_type_editorial_serif, axis: type, register: editorial-serif }
+
+  - id: atom-type-mono-tag
+    priority: 58
+    match:
+      anchor.data_atom_id: type.mono-tag
+    emit:
+      kind: NativeText
+      confidence: 0.99
+      metadata: { recipe: atom_type_mono_tag, axis: type, register: mono }
+
+  - id: atom-type-vertical-rail
+    priority: 58
+    match:
+      anchor.data_atom_id: type.vertical-rail
+    emit:
+      kind: NativeText
+      confidence: 0.99
+      metadata: { recipe: atom_type_vertical_rail, axis: type, register: vertical-rail }
+
   # ── media masks → NativeShape (clip-path polygon / radius) ──────────────
   - id: atom-mask-disc
     priority: 62
@@ -371,6 +479,26 @@ patterns:
       kind: NativeSvg
       confidence: 0.95
       metadata: { recipe: atom_dec, axis: dec }
+
+  # Specific decorative rules — top hairline and left hairline. Priority 65
+  # so they win over the namespace-wide `atom-dec-any` (66).
+  - id: atom-dec-top-rule
+    priority: 65
+    match:
+      anchor.data_atom_id: dec.top-rule
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_dec_top_rule, axis: dec, kind: hairline-top }
+
+  - id: atom-dec-left-rule
+    priority: 65
+    match:
+      anchor.data_atom_id: dec.left-rule
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_dec_left_rule, axis: dec, kind: hairline-left }
 
   # ── data primitives → NativeSvg (chart-like) ────────────────────────────
   - id: atom-data-ring
