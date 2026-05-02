@@ -17,21 +17,38 @@
       "import": "./dist/ir/index.mjs"
     }
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "ir-emit": "tsx scripts/ir-emit.ts",
-    "test:composites": "tsx scripts/test-composites.ts"
+    "test:composites": "tsx scripts/test-composites.ts",
+    "codegen-atoms": "tsx scripts/codegen-atoms.ts",
+    "codegen-atoms-check": "tsx scripts/codegen-atoms.ts --check"
   },
-  "keywords": ["slidify", "presentations", "pptx", "ir", "compiler"],
+  "keywords": [
+    "slidify",
+    "presentations",
+    "pptx",
+    "ir",
+    "compiler"
+  ],
   "license": "MIT",
-  "peerDependencies": { "react": ">=18" },
-  "dependencies": { "zod": "^3.23.8" },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.0.0",
     "@types/react": "^18.2.0",
+    "js-yaml": "^4.1.1",
     "react": "^18.2.0",
     "tsup": "^8.2.0",
     "tsx": "^4.16.0",

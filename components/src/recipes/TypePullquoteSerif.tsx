@@ -1,0 +1,52 @@
+// AUTO-GENERATED from slidify/patterns/data/atoms.yaml.
+// DO NOT EDIT — edit atoms.yaml + run `npm run codegen-atoms` instead.
+
+import type { ComponentProps, ReactNode } from 'react';
+import type { Bbox, GroupNodeT } from '../ir/schema';
+import { tokens as defaultTokens, type TokensApi } from '../tokens';
+import SlotQuote, { slotQuoteToIR } from '../primitives/SlotQuote';
+
+export const TypePullquoteSerifVersion = '1.0.0';
+
+export interface TypePullquoteSerifProps {
+  bbox: Bbox;
+  quote: string;
+  attribution?: string;
+  size?: 'sm' | 'lg';
+}
+
+export default function TypePullquoteSerif(props: TypePullquoteSerifProps): ReactNode {
+  // Codegen renders Tier-B recipes as a stable, recipe-id-stamped wrapper
+  // around the underlying primitive. Visual fidelity comes from the
+  // primitive; this wrapper exists so the IR carries the atom id.
+  return (
+    <div data-recipe-id="type.pullquote-serif" data-recipe-version="1.0.0">
+      <SlotQuote {...({ bbox: props.bbox } as unknown as ComponentProps<typeof SlotQuote>)} />
+    </div>
+  );
+}
+
+export function typePullquoteSerifToIR(
+  props: TypePullquoteSerifProps,
+  tokens: TokensApi = defaultTokens,
+): GroupNodeT {
+  // Delegate visual composition to the primitive, then re-stamp recipeId
+  // to the user-facing atom id (CONTRACT-v2 §A.5). Recipe-level props
+  // beyond bbox are intentionally not forwarded — primitive shapes are
+  // hand-tuned and the recipe row's prop set is for the matcher / LLM.
+  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof slotQuoteToIR>[0];
+  const inner = slotQuoteToIR(primitiveArgs, tokens);
+  return {
+    kind: 'group',
+    recipeId: 'type.pullquote-serif',
+    bbox: { ...props.bbox },
+    zOrder: 0,
+    metadata: {
+      role: 'type.pullquote-serif',
+      axis: 'type',
+      primitive: 'slot.quote',
+      version: '1.0.0',
+    },
+    children: [{ ...inner, zOrder: 0 }],
+  };
+}

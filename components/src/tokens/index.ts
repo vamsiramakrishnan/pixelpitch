@@ -33,6 +33,7 @@ export type {
   FontFamilyKey,
   GradientKey,
   GradientStopSpec,
+  LinearGradient,
   PaletteKey,
   RadiusKey,
   SpaceSlotKey,
