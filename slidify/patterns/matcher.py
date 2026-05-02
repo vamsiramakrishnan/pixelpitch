@@ -448,6 +448,27 @@ def _h_is_svg(unit, anchor, catalog, value):
     return anchor.is_svg == bool(value)
 
 
+@_handler("anchor.has_svg_shapes")
+def _h_has_svg_shapes(unit, anchor, catalog, value):
+    """True when the walker captured a non-empty ``svg_shapes`` list on the
+    anchor. Used to gate tier-0 ``NativeSvg`` emit so the recipe only fires
+    when the emitter has real geometry to render — SVGs that exceed
+    ``SVG_NATIVE_PATH_BUDGET`` come through with ``svg_shapes=None`` and
+    must defer to tier-1 / Raster instead of claiming the unit and emitting
+    an empty native-svg op."""
+    has = bool(anchor.svg_shapes)
+    return has if value else not has
+
+
+@_handler("anchor.is_table")
+def _h_is_table(unit, anchor, catalog, value):
+    """Anchor's ``is_table`` flag — set by the walker only when the table is
+    translatable (no nested tables, no embedded media, regular grid). Gates
+    tier-0 ``NativeTable`` emit so non-translatable tables fall through to
+    the existing pipeline."""
+    return bool(getattr(anchor, "is_table", False)) == bool(value)
+
+
 @_handler("anchor.opacity_max")
 def _h_anchor_opacity_max(unit, anchor, catalog, value):
     """Anchor's `opacity` is at most `value`. Use `0.95` as the typical

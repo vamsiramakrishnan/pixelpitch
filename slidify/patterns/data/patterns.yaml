@@ -1020,26 +1020,33 @@ patterns:
   # occurrence counts before adding the recipe.
   # =========================================================================
 
-  # ── 13× simple SVGs (svg_path_count <= SVG_NATIVE_PATH_BUDGET).
-  # Tier-1's `rule_simple_svg_raster` already routes these to NativeSvg, but
-  # tier-0 had no recipe so every render ate a tier-1 evaluation + harvester
-  # log entry. The matcher's `anchor.is_svg` predicate exists since Phase 2a;
-  # adding the tier-0 hit collapses the path.
+  # ── Simple SVGs (svg_path_count <= SVG_NATIVE_PATH_BUDGET) with shapes
+  # captured by the walker. Priority 8 lands AFTER must-raster gates (1–7)
+  # but BEFORE the typography pile (10–48): without that, an SVG containing
+  # <text> children (axis labels, chart annotations, US-state grid labels)
+  # gets matched by `footer-text` / `body-paragraph` etc. — `own_text: true`
+  # fires on the folded text descendants and the chart silently classifies
+  # as a single text frame, losing every line / polyline / rect.
+  # `anchor.has_svg_shapes: true` keeps the recipe quiet on SVGs the walker
+  # didn't capture (>200 primitives) so they defer to tier-1 / Raster.
   - id: native-svg-simple
-    priority: 88
+    priority: 8
     match:
       anchor.is_svg: true
+      anchor.has_svg_shapes: true
     emit:
       kind: NativeSvg
       confidence: 0.92
       metadata: { recipe: native_svg_simple, role: svg }
 
-  # ── 2× <table> elements with a translatable grid. Tier-1's
-  # `rule_native_table` routes these but, like simple-svg, tier-0 was silent.
+  # ── <table> elements with a translatable grid. Same priority story as the
+  # SVG rule above — needs to claim the unit before typography rules see
+  # the cell text and route the whole table to NativeText.
   - id: native-table
-    priority: 89
+    priority: 9
     match:
       anchor.tag_in: [TABLE]
+      anchor.is_table: true
     emit:
       kind: NativeTable
       confidence: 0.95

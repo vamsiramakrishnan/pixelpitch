@@ -20,14 +20,14 @@
       "kicker-from-css": 32,
       "title-h1": 14,
       "slide-solid-bg": 13,
+      "native-svg-simple": 10,
       "slide-gradient-wrapper": 8,
       "short-label": 7,
-      "body-paragraph": 6,
       "background-blend-mode-raster": 6,
-      "mono-text-container": 4
+      "body-paragraph": 5
     },
     "n_unmatched_sigs": 11,
-    "elapsed_s": 10.45
+    "elapsed_s": 10.67
   },
   {
     "deck": "recipes",
@@ -45,7 +45,7 @@
     },
     "top_pattern_hits": {},
     "n_unmatched_sigs": 0,
-    "elapsed_s": 10.46
+    "elapsed_s": 10.27
   },
   {
     "deck": "atoms",
@@ -74,7 +74,7 @@
       "tight-sans-eyebrow": 6
     },
     "n_unmatched_sigs": 2,
-    "elapsed_s": 5.06
+    "elapsed_s": 5.28
   },
   {
     "deck": "atoms",
@@ -92,7 +92,7 @@
     },
     "top_pattern_hits": {},
     "n_unmatched_sigs": 0,
-    "elapsed_s": 5.23
+    "elapsed_s": 5.16
   },
   {
     "deck": "sample_deck",
@@ -118,7 +118,7 @@
       "stat-card-composite": 1
     },
     "n_unmatched_sigs": 3,
-    "elapsed_s": 1.59
+    "elapsed_s": 1.61
   },
   {
     "deck": "sample_deck",
@@ -134,7 +134,7 @@
     },
     "top_pattern_hits": {},
     "n_unmatched_sigs": 0,
-    "elapsed_s": 1.62
+    "elapsed_s": 1.6
   },
   {
     "deck": "svg_stress",
@@ -157,7 +157,7 @@
       "slide-solid-bg": 1
     },
     "n_unmatched_sigs": 0,
-    "elapsed_s": 1.23
+    "elapsed_s": 1.24
   },
   {
     "deck": "svg_stress",
@@ -172,6 +172,6 @@
     },
     "top_pattern_hits": {},
     "n_unmatched_sigs": 0,
-    "elapsed_s": 1.23
+    "elapsed_s": 1.22
   }
 ]
