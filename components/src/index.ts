@@ -65,6 +65,12 @@ export type {
 } from './ir/schema';
 export { normalizeShadows, pathBbox } from './ir/normalize';
 
+// ---- Wave-2B / Crew M3 (Tier-A primitives) ---------------------------------
+//
+// Hand-written structural primitives consumed by codegen-emitted Tier-B
+// recipes. See `components/CONTRACT-v2.md` §B.1 for the roster.
+export * from './primitives';
+
 // ---- Wave-2 / Crew F2 (tokens) ---------------------------------------------
 export {
   DEFAULT_TOKENS,

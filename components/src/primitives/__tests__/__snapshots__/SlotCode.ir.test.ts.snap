@@ -1,0 +1,125 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`slotCodeToIR > emits a snapshot-stable code block with language pill 1`] = `
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100,
+      },
+      "borderRadiusPx": 16,
+      "fill": {
+        "color": "#0e0e1a",
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "role": "code-bg",
+      },
+      "recipeId": "slot.code.bg",
+      "shape": "rounded-rect",
+      "zOrder": 0,
+    },
+    {
+      "bbox": {
+        "h": 152,
+        "w": 552,
+        "x": 124,
+        "y": 124,
+      },
+      "kind": "text",
+      "metadata": {
+        "preserveWhitespace": true,
+        "role": "code-body",
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#d4d4d8",
+              "fontFamily": "JetBrains Mono, "SF Mono", monospace",
+              "fontSizePx": 14,
+              "fontWeight": 500,
+              "italic": false,
+              "text": "const x = 1;
+const y = 2;",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "slot.code.body",
+      "zOrder": 10,
+    },
+    {
+      "bbox": {
+        "h": 22,
+        "w": 92,
+        "x": 596,
+        "y": 112,
+      },
+      "borderRadiusPx": 9999,
+      "fill": {
+        "color": "#16162a",
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "role": "code-lang-pill-bg",
+      },
+      "recipeId": "slot.code.lang-pill",
+      "shape": "rounded-rect",
+      "zOrder": 20,
+    },
+    {
+      "bbox": {
+        "h": 22,
+        "w": 92,
+        "x": 596,
+        "y": 112,
+      },
+      "kind": "text",
+      "metadata": {
+        "language": "typescript",
+        "role": "code-lang-pill-text",
+      },
+      "paragraphs": [
+        {
+          "align": "center",
+          "runs": [
+            {
+              "color": "#a1a1aa",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 11,
+              "fontWeight": 600,
+              "italic": false,
+              "text": "TYPESCRIPT",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "slot.code.lang-pill",
+      "zOrder": 30,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "slot",
+    "language": "typescript",
+    "role": "slot.code",
+  },
+  "recipeId": "slot.code",
+  "zOrder": 0,
+}
+`;

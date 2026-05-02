@@ -1,0 +1,525 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`diagramTimelineToIR > emits a snapshot-stable 4-event timeline 1`] = `
+{
+  "bbox": {
+    "h": 240,
+    "w": 1080,
+    "x": 100,
+    "y": 200,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 1,
+        "w": 1080,
+        "x": 100,
+        "y": 319.5,
+      },
+      "commands": [
+        {
+          "op": "M",
+          "x": 100,
+          "y": 320,
+        },
+        {
+          "op": "L",
+          "x": 1180,
+          "y": 320,
+        },
+      ],
+      "fillRule": "nonzero",
+      "kind": "path",
+      "metadata": {
+        "role": "timeline-rail",
+      },
+      "recipeId": "diagram.timeline.rail",
+      "strokeColor": {
+        "alpha": 0.5,
+        "hex": "#ffffff",
+      },
+      "strokeLinecap": "butt",
+      "strokeLinejoin": "miter",
+      "strokeWidthPx": 1,
+      "zOrder": 0,
+    },
+    {
+      "bbox": {
+        "h": 12,
+        "w": 1,
+        "x": 153.5,
+        "y": 314,
+      },
+      "commands": [
+        {
+          "op": "M",
+          "x": 154,
+          "y": 314,
+        },
+        {
+          "op": "L",
+          "x": 154,
+          "y": 326,
+        },
+      ],
+      "fillRule": "nonzero",
+      "kind": "path",
+      "metadata": {
+        "index": 1,
+        "role": "timeline-tick",
+      },
+      "recipeId": "diagram.timeline.tick-1",
+      "strokeColor": "#a78bfa",
+      "strokeLinecap": "butt",
+      "strokeLinejoin": "miter",
+      "strokeWidthPx": 1,
+      "zOrder": 10,
+    },
+    {
+      "bbox": {
+        "h": 10,
+        "w": 10,
+        "x": 149,
+        "y": 315,
+      },
+      "borderRadiusPx": 0,
+      "fill": {
+        "color": "#a78bfa",
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "index": 1,
+        "role": "timeline-dot",
+      },
+      "recipeId": "diagram.timeline.dot-1",
+      "shape": "oval",
+      "zOrder": 11,
+    },
+    {
+      "bbox": {
+        "h": 18,
+        "w": 120,
+        "x": 94,
+        "y": 333,
+      },
+      "kind": "text",
+      "metadata": {
+        "index": 1,
+        "role": "timeline-date",
+        "value": "Q1 25",
+      },
+      "paragraphs": [
+        {
+          "align": "center",
+          "runs": [
+            {
+              "color": "#a1a1aa",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 13,
+              "fontWeight": 500,
+              "italic": false,
+              "text": "Q1 25",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "diagram.timeline.date-1",
+      "zOrder": 12,
+    },
+    {
+      "bbox": {
+        "h": 22,
+        "w": 160,
+        "x": 74,
+        "y": 355,
+      },
+      "kind": "text",
+      "metadata": {
+        "index": 1,
+        "role": "timeline-label",
+        "value": "Beta",
+      },
+      "paragraphs": [
+        {
+          "align": "center",
+          "runs": [
+            {
+              "color": "#f5f5f7",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 13,
+              "fontWeight": 600,
+              "italic": false,
+              "text": "BETA",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "diagram.timeline.label-1",
+      "zOrder": 13,
+    },
+    {
+      "bbox": {
+        "h": 12,
+        "w": 1,
+        "x": 477.5,
+        "y": 314,
+      },
+      "commands": [
+        {
+          "op": "M",
+          "x": 478,
+          "y": 314,
+        },
+        {
+          "op": "L",
+          "x": 478,
+          "y": 326,
+        },
+      ],
+      "fillRule": "nonzero",
+      "kind": "path",
+      "metadata": {
+        "index": 2,
+        "role": "timeline-tick",
+      },
+      "recipeId": "diagram.timeline.tick-2",
+      "strokeColor": "#a78bfa",
+      "strokeLinecap": "butt",
+      "strokeLinejoin": "miter",
+      "strokeWidthPx": 1,
+      "zOrder": 15,
+    },
+    {
+      "bbox": {
+        "h": 10,
+        "w": 10,
+        "x": 473,
+        "y": 315,
+      },
+      "borderRadiusPx": 0,
+      "fill": {
+        "color": "#a78bfa",
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "index": 2,
+        "role": "timeline-dot",
+      },
+      "recipeId": "diagram.timeline.dot-2",
+      "shape": "oval",
+      "zOrder": 16,
+    },
+    {
+      "bbox": {
+        "h": 18,
+        "w": 120,
+        "x": 418,
+        "y": 333,
+      },
+      "kind": "text",
+      "metadata": {
+        "index": 2,
+        "role": "timeline-date",
+        "value": "Q2 25",
+      },
+      "paragraphs": [
+        {
+          "align": "center",
+          "runs": [
+            {
+              "color": "#a1a1aa",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 13,
+              "fontWeight": 500,
+              "italic": false,
+              "text": "Q2 25",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "diagram.timeline.date-2",
+      "zOrder": 17,
+    },
+    {
+      "bbox": {
+        "h": 22,
+        "w": 160,
+        "x": 398,
+        "y": 355,
+      },
+      "kind": "text",
+      "metadata": {
+        "index": 2,
+        "role": "timeline-label",
+        "value": "GA",
+      },
+      "paragraphs": [
+        {
+          "align": "center",
+          "runs": [
+            {
+              "color": "#f5f5f7",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 13,
+              "fontWeight": 600,
+              "italic": false,
+              "text": "GA",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "diagram.timeline.label-2",
+      "zOrder": 18,
+    },
+    {
+      "bbox": {
+        "h": 12,
+        "w": 1,
+        "x": 801.5,
+        "y": 314,
+      },
+      "commands": [
+        {
+          "op": "M",
+          "x": 802,
+          "y": 314,
+        },
+        {
+          "op": "L",
+          "x": 802,
+          "y": 326,
+        },
+      ],
+      "fillRule": "nonzero",
+      "kind": "path",
+      "metadata": {
+        "index": 3,
+        "role": "timeline-tick",
+      },
+      "recipeId": "diagram.timeline.tick-3",
+      "strokeColor": "#a78bfa",
+      "strokeLinecap": "butt",
+      "strokeLinejoin": "miter",
+      "strokeWidthPx": 1,
+      "zOrder": 20,
+    },
+    {
+      "bbox": {
+        "h": 10,
+        "w": 10,
+        "x": 797,
+        "y": 315,
+      },
+      "borderRadiusPx": 0,
+      "fill": {
+        "color": "#a78bfa",
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "index": 3,
+        "role": "timeline-dot",
+      },
+      "recipeId": "diagram.timeline.dot-3",
+      "shape": "oval",
+      "zOrder": 21,
+    },
+    {
+      "bbox": {
+        "h": 18,
+        "w": 120,
+        "x": 742,
+        "y": 333,
+      },
+      "kind": "text",
+      "metadata": {
+        "index": 3,
+        "role": "timeline-date",
+        "value": "Q3 25",
+      },
+      "paragraphs": [
+        {
+          "align": "center",
+          "runs": [
+            {
+              "color": "#a1a1aa",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 13,
+              "fontWeight": 500,
+              "italic": false,
+              "text": "Q3 25",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "diagram.timeline.date-3",
+      "zOrder": 22,
+    },
+    {
+      "bbox": {
+        "h": 22,
+        "w": 160,
+        "x": 722,
+        "y": 355,
+      },
+      "kind": "text",
+      "metadata": {
+        "index": 3,
+        "role": "timeline-label",
+        "value": "Scale",
+      },
+      "paragraphs": [
+        {
+          "align": "center",
+          "runs": [
+            {
+              "color": "#f5f5f7",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 13,
+              "fontWeight": 600,
+              "italic": false,
+              "text": "SCALE",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "diagram.timeline.label-3",
+      "zOrder": 23,
+    },
+    {
+      "bbox": {
+        "h": 12,
+        "w": 1,
+        "x": 1125.5,
+        "y": 314,
+      },
+      "commands": [
+        {
+          "op": "M",
+          "x": 1126,
+          "y": 314,
+        },
+        {
+          "op": "L",
+          "x": 1126,
+          "y": 326,
+        },
+      ],
+      "fillRule": "nonzero",
+      "kind": "path",
+      "metadata": {
+        "index": 4,
+        "role": "timeline-tick",
+      },
+      "recipeId": "diagram.timeline.tick-4",
+      "strokeColor": "#a78bfa",
+      "strokeLinecap": "butt",
+      "strokeLinejoin": "miter",
+      "strokeWidthPx": 1,
+      "zOrder": 25,
+    },
+    {
+      "bbox": {
+        "h": 10,
+        "w": 10,
+        "x": 1121,
+        "y": 315,
+      },
+      "borderRadiusPx": 0,
+      "fill": {
+        "color": "#a78bfa",
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "index": 4,
+        "role": "timeline-dot",
+      },
+      "recipeId": "diagram.timeline.dot-4",
+      "shape": "oval",
+      "zOrder": 26,
+    },
+    {
+      "bbox": {
+        "h": 18,
+        "w": 120,
+        "x": 1066,
+        "y": 333,
+      },
+      "kind": "text",
+      "metadata": {
+        "index": 4,
+        "role": "timeline-date",
+        "value": "Q4 25",
+      },
+      "paragraphs": [
+        {
+          "align": "center",
+          "runs": [
+            {
+              "color": "#a1a1aa",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 13,
+              "fontWeight": 500,
+              "italic": false,
+              "text": "Q4 25",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "diagram.timeline.date-4",
+      "zOrder": 27,
+    },
+    {
+      "bbox": {
+        "h": 22,
+        "w": 160,
+        "x": 1046,
+        "y": 355,
+      },
+      "kind": "text",
+      "metadata": {
+        "index": 4,
+        "role": "timeline-label",
+        "value": "Series A",
+      },
+      "paragraphs": [
+        {
+          "align": "center",
+          "runs": [
+            {
+              "color": "#f5f5f7",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 13,
+              "fontWeight": 600,
+              "italic": false,
+              "text": "SERIES A",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "diagram.timeline.label-4",
+      "zOrder": 28,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "diagram",
+    "eventCount": 4,
+    "railY": 0.5,
+    "role": "diagram.timeline",
+  },
+  "recipeId": "diagram.timeline",
+  "zOrder": 0,
+}
+`;

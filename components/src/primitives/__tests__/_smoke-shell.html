@@ -1,0 +1,39 @@
+<!doctype html>
+<!--
+  Smoke-test slide shell. Each primitive's `<Name>.smoke.html` is a single
+  1280×720 slide preview, rendering the primitive at representative props
+  on a vercel-dark background.
+
+  This file is the empty template used by the per-primitive smoke files —
+  open any of them in a browser; no build step required.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tier-A primitive smoke shell</title>
+    <style>
+      :root {
+        --sf-surface-1: #070710;
+        --sf-ink-1: #f5f5f7;
+        --sf-ink-3: #a1a1aa;
+        --sf-accent: #a78bfa;
+      }
+      html, body { margin: 0; padding: 0; background: #0a0a0f; }
+      .slide {
+        position: relative;
+        width: 1280px;
+        height: 720px;
+        margin: 24px auto;
+        background: var(--sf-surface-1);
+        color: var(--sf-ink-1);
+        font-family: Inter, sans-serif;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide">
+      <!-- per-primitive content slotted here -->
+    </div>
+  </body>
+</html>

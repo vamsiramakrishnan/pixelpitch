@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8" /><title>frame.bento</title>
+<style>
+  body { margin:0; background:#0a0a0f; font-family:Inter,sans-serif; color:#f5f5f7; }
+  .slide { position:relative; width:1280px; height:720px; margin:24px auto; background:#070710; overflow:hidden; }
+  .grid { position:absolute; left:96px; top:96px; width:1088px; height:528px; }
+  .cell { position:absolute; outline:1px dashed rgba(255,255,255,0.12); border-radius:24px; padding:24px; box-sizing:border-box; color:#a1a1aa; font-size:13px; letter-spacing:0.18em; text-transform:uppercase; }
+  .c1 { left:0;     top:0;   width:520px; height:252px; }
+  .c2 { left:544px; top:0;   width:544px; height:252px; }
+  .c3 { left:0;     top:276px; width:1088px; height:252px; }
+</style></head>
+<body>
+  <div class="slide">
+    <div class="grid">
+      <div class="cell c1">cell 0,0</div>
+      <div class="cell c2">cell 0,1</div>
+      <div class="cell c3">cell 1,0 — colSpan=2</div>
+    </div>
+  </div>
+</body></html>
