@@ -15,7 +15,6 @@ subcommand) defaults to `convert`.
 
 from __future__ import annotations
 
-import asyncio
 import json
 import shutil
 import sys
@@ -27,6 +26,7 @@ from slidify import __version__
 from slidify.api import ConversionConfig, convert
 from slidify.cli.commands import run_convert
 from slidify.cli.errors import remediation_for
+from slidify.cli.exit_codes import QUALITY_GATE_FAILED, RECOVERABLE_ERROR
 from slidify.cli.presenters import to_json
 from slidify.cli_schema import fail as schema_fail
 from slidify.cli_schema import ok as schema_ok
@@ -140,7 +140,7 @@ def _run_convert(
                 click.echo(json.dumps({"error": msg, "type": "FileNotFoundError"}, indent=2))
             else:
                 click.echo(click.style(f"slidify: {msg}", fg="red"), err=True)
-            sys.exit(2)
+            sys.exit(RECOVERABLE_ERROR)
         source = input_path
 
     try:
@@ -163,7 +163,7 @@ def _run_convert(
             click.echo(click.style(f"slidify: conversion failed: {e}", fg="red"), err=True)
             for r in remediation:
                 click.echo(click.style("  → ", dim=True) + r, err=True)
-        sys.exit(2)
+        sys.exit(RECOVERABLE_ERROR)
 
     if json_out:
         # Augment with `_next` hints so an LLM agent gets concrete
@@ -190,7 +190,7 @@ def _run_convert(
 
     # Non-zero exit when the deck silently dropped shapes — useful for CI.
     if not result.editability_passed:
-        sys.exit(3)
+        sys.exit(QUALITY_GATE_FAILED)
 
 
 def _error_remediation(exc: BaseException) -> list[str]:
