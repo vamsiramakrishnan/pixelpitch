@@ -309,6 +309,15 @@ MATRIX: tuple[CompatRow, ...] = (
         "matcher routes to the canonical recipe in atoms.yaml. "
         "Catalog: examples/landing/atoms.html.",
     ),
+    CompatRow(
+        "Hints", "Implicit atom inference (no data-atom needed)",
+        Support.Native, "slidify.atom_inference.infer_atom_id",
+        "When the unit's structural signature matches a primed atom hash, "
+        "the matcher synthesises the data-atom hint at classify time so "
+        "the canonical recipe fires without an author tag. Priming table "
+        "lives in slidify/patterns/data/atom_signatures.json; rebuild with "
+        "`slidify prime-atom-cache`.",
+    ),
 
     # --- Notion-style block primitives -----------------------------------
     # Notion's blocks are "just HTML" once exported — toggles, callouts,

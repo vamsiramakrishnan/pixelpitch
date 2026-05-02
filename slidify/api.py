@@ -27,6 +27,7 @@ from pathlib import Path
 
 import structlog
 
+from slidify.atom_inference import infer_atom_id
 from slidify.cache import MemoryCache, StructuralCache
 from slidify.classifier.llm import LLMProvider, auto_select_backend, build_provider
 from slidify.classifier.tier1 import classify_tier1
@@ -356,8 +357,32 @@ def _classify_unit_tier12(
             metadata=cached.metadata,
             source_tier=f"cache:{cached.source_tier}",
         )
+    # Implicit-atom inference: when the unit's signature is recognised by
+    # the priming table and the author hasn't already tagged the markup,
+    # synthesise a `data-atom` hint so the existing tier-0 atom recipes
+    # fire on first run (no `data-atom` author hint required). Wrapped in
+    # a defensive try/except so a malformed atom_signatures.json never
+    # regresses the pipeline.
+    inferred_atom_id: str | None = None
+    try:
+        if unit.elements:
+            anchor = unit.elements[0]
+            if not (anchor.data_atom or "").strip():
+                inferred_atom_id = infer_atom_id(unit)
+                if inferred_atom_id:
+                    anchor.data_atom = inferred_atom_id
+    except Exception as e:  # pragma: no cover — defensive
+        log.debug("api.atom_inference_failed", error=str(e))
+        inferred_atom_id = None
     # Tier 0: pattern DB recipes (Tailwind / shadcn / common compositions).
     d = classify_tier0(unit, get_default_catalog(), stats=pattern_stats)
+    if d is not None and inferred_atom_id:
+        # Tag the metadata so callers can distinguish recipe-from-inference
+        # vs recipe-from-author-hint without re-deriving the signature.
+        meta = dict(d.metadata or {})
+        meta["atom_inference"] = "implicit"
+        meta["inferred_atom_id"] = inferred_atom_id
+        d = d.model_copy(update={"metadata": meta})
     if d is not None:
         cache.put(unit, d)
         return d
