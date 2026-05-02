@@ -31,9 +31,10 @@ export function typeBigNumberToIR(
   tokens: TokensApi = defaultTokens,
 ): GroupNodeT {
   // Delegate visual composition to the primitive, then re-stamp recipeId
-  // to the user-facing atom id (CONTRACT-v2 §A.5). Recipe-level props
-  // beyond bbox are intentionally not forwarded — primitive shapes are
-  // hand-tuned and the recipe row's prop set is for the matcher / LLM.
+  // to the user-facing atom id (CONTRACT-v2 §A.5). Forwarded props are
+  // the intersection of recipe props and the primitive's known prop set;
+  // unrecognized recipe props ride along inside metadata so reverse-mapping
+  // can still recover them.
   const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof slotNumeralToIR>[0];
   const inner = slotNumeralToIR(primitiveArgs, tokens);
   return {
@@ -46,6 +47,9 @@ export function typeBigNumberToIR(
       axis: 'type',
       primitive: 'slot.numeral',
       version: '1.0.0',
+      value: props.value ?? undefined,
+      unit: props.unit ?? undefined,
+      gradient: props.gradient ?? undefined,
     },
     children: [{ ...inner, zOrder: 0 }],
   };

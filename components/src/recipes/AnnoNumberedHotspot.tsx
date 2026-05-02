@@ -4,7 +4,7 @@
 import type { ComponentProps, ReactNode } from 'react';
 import type { Bbox, Color, GroupNodeT } from '../ir/schema';
 import { tokens as defaultTokens, type TokensApi } from '../tokens';
-import FrameSafeArea, { frameSafeAreaToIR } from '../primitives/FrameSafeArea';
+import AnnotationLeaderLine, { annotationLeaderLineToIR } from '../primitives/AnnotationLeaderLine';
 
 export const AnnoNumberedHotspotVersion = '1.0.0';
 
@@ -21,7 +21,7 @@ export default function AnnoNumberedHotspot(props: AnnoNumberedHotspotProps): Re
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="anno.numbered-hotspot" data-recipe-version="1.0.0">
-      <FrameSafeArea {...({ bbox: props.bbox } as unknown as ComponentProps<typeof FrameSafeArea>)} />
+      <AnnotationLeaderLine {...({ bbox: props.bbox } as unknown as ComponentProps<typeof AnnotationLeaderLine>)} />
     </div>
   );
 }
@@ -31,11 +31,12 @@ export function annoNumberedHotspotToIR(
   tokens: TokensApi = defaultTokens,
 ): GroupNodeT {
   // Delegate visual composition to the primitive, then re-stamp recipeId
-  // to the user-facing atom id (CONTRACT-v2 §A.5). Recipe-level props
-  // beyond bbox are intentionally not forwarded — primitive shapes are
-  // hand-tuned and the recipe row's prop set is for the matcher / LLM.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof frameSafeAreaToIR>[0];
-  const inner = frameSafeAreaToIR(primitiveArgs, tokens);
+  // to the user-facing atom id (CONTRACT-v2 §A.5). Forwarded props are
+  // the intersection of recipe props and the primitive's known prop set;
+  // unrecognized recipe props ride along inside metadata so reverse-mapping
+  // can still recover them.
+  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof annotationLeaderLineToIR>[0];
+  const inner = annotationLeaderLineToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
     recipeId: 'anno.numbered-hotspot',
@@ -44,8 +45,11 @@ export function annoNumberedHotspotToIR(
     metadata: {
       role: 'anno.numbered-hotspot',
       axis: 'anno',
-      primitive: 'frame.safe-area',
+      primitive: 'annotation.leader-line',
       version: '1.0.0',
+      n: props.n ?? undefined,
+      anchor: props.anchor ?? undefined,
+      bgColor: props.bgColor ?? undefined,
     },
     children: [{ ...inner, zOrder: 0 }],
   };

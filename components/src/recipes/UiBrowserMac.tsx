@@ -4,7 +4,7 @@
 import type { ComponentProps, ReactNode } from 'react';
 import type { Bbox, GroupNodeT } from '../ir/schema';
 import { tokens as defaultTokens, type TokensApi } from '../tokens';
-import FrameSafeArea, { frameSafeAreaToIR } from '../primitives/FrameSafeArea';
+import ChromeWindowFrame, { chromeWindowFrameToIR } from '../primitives/ChromeWindowFrame';
 
 export const UiBrowserMacVersion = '1.0.0';
 
@@ -19,7 +19,7 @@ export default function UiBrowserMac(props: UiBrowserMacProps): ReactNode {
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="ui.browser-mac" data-recipe-version="1.0.0">
-      <FrameSafeArea {...({ bbox: props.bbox } as unknown as ComponentProps<typeof FrameSafeArea>)} />
+      <ChromeWindowFrame {...({ bbox: props.bbox, url: props.url, chrome: 'mac' } as unknown as ComponentProps<typeof ChromeWindowFrame>)} />
     </div>
   );
 }
@@ -29,11 +29,12 @@ export function uiBrowserMacToIR(
   tokens: TokensApi = defaultTokens,
 ): GroupNodeT {
   // Delegate visual composition to the primitive, then re-stamp recipeId
-  // to the user-facing atom id (CONTRACT-v2 §A.5). Recipe-level props
-  // beyond bbox are intentionally not forwarded — primitive shapes are
-  // hand-tuned and the recipe row's prop set is for the matcher / LLM.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof frameSafeAreaToIR>[0];
-  const inner = frameSafeAreaToIR(primitiveArgs, tokens);
+  // to the user-facing atom id (CONTRACT-v2 §A.5). Forwarded props are
+  // the intersection of recipe props and the primitive's known prop set;
+  // unrecognized recipe props ride along inside metadata so reverse-mapping
+  // can still recover them.
+  const primitiveArgs = { bbox: props.bbox, url: props.url, chrome: 'mac' } as unknown as Parameters<typeof chromeWindowFrameToIR>[0];
+  const inner = chromeWindowFrameToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
     recipeId: 'ui.browser-mac',
@@ -42,7 +43,7 @@ export function uiBrowserMacToIR(
     metadata: {
       role: 'ui.browser-mac',
       axis: 'ui',
-      primitive: 'frame.safe-area',
+      primitive: 'chrome.window-frame',
       version: '1.0.0',
     },
     children: [{ ...inner, zOrder: 0 }],

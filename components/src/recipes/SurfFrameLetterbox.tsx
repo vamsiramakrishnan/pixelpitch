@@ -30,9 +30,10 @@ export function surfFrameLetterboxToIR(
   tokens: TokensApi = defaultTokens,
 ): GroupNodeT {
   // Delegate visual composition to the primitive, then re-stamp recipeId
-  // to the user-facing atom id (CONTRACT-v2 §A.5). Recipe-level props
-  // beyond bbox are intentionally not forwarded — primitive shapes are
-  // hand-tuned and the recipe row's prop set is for the matcher / LLM.
+  // to the user-facing atom id (CONTRACT-v2 §A.5). Forwarded props are
+  // the intersection of recipe props and the primitive's known prop set;
+  // unrecognized recipe props ride along inside metadata so reverse-mapping
+  // can still recover them.
   const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof frameLetterboxToIR>[0];
   const inner = frameLetterboxToIR(primitiveArgs, tokens);
   return {
@@ -45,6 +46,8 @@ export function surfFrameLetterboxToIR(
       axis: 'surf',
       primitive: 'frame.letterbox',
       version: '1.0.0',
+      bandPx: props.bandPx ?? undefined,
+      bgColor: props.bgColor ?? undefined,
     },
     children: [{ ...inner, zOrder: 0 }],
   };

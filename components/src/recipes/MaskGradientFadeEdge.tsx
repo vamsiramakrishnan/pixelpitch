@@ -4,7 +4,7 @@
 import type { ComponentProps, ReactNode } from 'react';
 import type { Bbox, GroupNodeT } from '../ir/schema';
 import { tokens as defaultTokens, type TokensApi } from '../tokens';
-import FrameSafeArea, { frameSafeAreaToIR } from '../primitives/FrameSafeArea';
+import SurfaceLinearFade, { surfaceLinearFadeToIR } from '../primitives/SurfaceLinearFade';
 
 export const MaskGradientFadeEdgeVersion = '1.0.0';
 
@@ -21,7 +21,7 @@ export default function MaskGradientFadeEdge(props: MaskGradientFadeEdgeProps): 
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="mask.gradient-fade-edge" data-recipe-version="1.0.0">
-      <FrameSafeArea {...({ bbox: props.bbox } as unknown as ComponentProps<typeof FrameSafeArea>)} />
+      <SurfaceLinearFade {...({ bbox: props.bbox, fadePct: props.fadePct } as unknown as ComponentProps<typeof SurfaceLinearFade>)} />
     </div>
   );
 }
@@ -31,11 +31,12 @@ export function maskGradientFadeEdgeToIR(
   tokens: TokensApi = defaultTokens,
 ): GroupNodeT {
   // Delegate visual composition to the primitive, then re-stamp recipeId
-  // to the user-facing atom id (CONTRACT-v2 §A.5). Recipe-level props
-  // beyond bbox are intentionally not forwarded — primitive shapes are
-  // hand-tuned and the recipe row's prop set is for the matcher / LLM.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof frameSafeAreaToIR>[0];
-  const inner = frameSafeAreaToIR(primitiveArgs, tokens);
+  // to the user-facing atom id (CONTRACT-v2 §A.5). Forwarded props are
+  // the intersection of recipe props and the primitive's known prop set;
+  // unrecognized recipe props ride along inside metadata so reverse-mapping
+  // can still recover them.
+  const primitiveArgs = { bbox: props.bbox, fadePct: props.fadePct } as unknown as Parameters<typeof surfaceLinearFadeToIR>[0];
+  const inner = surfaceLinearFadeToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
     recipeId: 'mask.gradient-fade-edge',
@@ -44,8 +45,10 @@ export function maskGradientFadeEdgeToIR(
     metadata: {
       role: 'mask.gradient-fade-edge',
       axis: 'mask',
-      primitive: 'frame.safe-area',
+      primitive: 'surface.linear-fade',
       version: '1.0.0',
+      src: props.src ?? undefined,
+      edge: props.edge ?? undefined,
     },
     children: [{ ...inner, zOrder: 0 }],
   };

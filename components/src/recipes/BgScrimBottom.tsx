@@ -4,7 +4,7 @@
 import type { ComponentProps, ReactNode } from 'react';
 import type { Bbox, Color, GroupNodeT } from '../ir/schema';
 import { tokens as defaultTokens, type TokensApi } from '../tokens';
-import FrameSafeArea, { frameSafeAreaToIR } from '../primitives/FrameSafeArea';
+import SurfaceLinearFade, { surfaceLinearFadeToIR } from '../primitives/SurfaceLinearFade';
 
 export const BgScrimBottomVersion = '1.0.0';
 
@@ -20,7 +20,7 @@ export default function BgScrimBottom(props: BgScrimBottomProps): ReactNode {
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="bg.scrim-bottom" data-recipe-version="1.0.0">
-      <FrameSafeArea {...({ bbox: props.bbox } as unknown as ComponentProps<typeof FrameSafeArea>)} />
+      <SurfaceLinearFade {...({ bbox: props.bbox, color: props.color, opacity: props.opacity, direction: 'bottom' } as unknown as ComponentProps<typeof SurfaceLinearFade>)} />
     </div>
   );
 }
@@ -30,11 +30,12 @@ export function bgScrimBottomToIR(
   tokens: TokensApi = defaultTokens,
 ): GroupNodeT {
   // Delegate visual composition to the primitive, then re-stamp recipeId
-  // to the user-facing atom id (CONTRACT-v2 §A.5). Recipe-level props
-  // beyond bbox are intentionally not forwarded — primitive shapes are
-  // hand-tuned and the recipe row's prop set is for the matcher / LLM.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof frameSafeAreaToIR>[0];
-  const inner = frameSafeAreaToIR(primitiveArgs, tokens);
+  // to the user-facing atom id (CONTRACT-v2 §A.5). Forwarded props are
+  // the intersection of recipe props and the primitive's known prop set;
+  // unrecognized recipe props ride along inside metadata so reverse-mapping
+  // can still recover them.
+  const primitiveArgs = { bbox: props.bbox, color: props.color, opacity: props.opacity, direction: 'bottom' } as unknown as Parameters<typeof surfaceLinearFadeToIR>[0];
+  const inner = surfaceLinearFadeToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
     recipeId: 'bg.scrim-bottom',
@@ -43,7 +44,7 @@ export function bgScrimBottomToIR(
     metadata: {
       role: 'bg.scrim-bottom',
       axis: 'bg',
-      primitive: 'frame.safe-area',
+      primitive: 'surface.linear-fade',
       version: '1.0.0',
     },
     children: [{ ...inner, zOrder: 0 }],

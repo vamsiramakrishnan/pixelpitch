@@ -141,6 +141,114 @@ const PRIMITIVE_MAP: Record<string, PrimitiveSpec> = {
   'diagram.connector':  { component: 'DiagramConnector',  file: 'DiagramConnector',  irHelper: 'diagramConnectorToIR' },
   'diagram.timeline':   { component: 'DiagramTimeline',   file: 'DiagramTimeline',   irHelper: 'diagramTimelineToIR' },
   'chrome.escape-hatch': { component: 'EscapeHatch',      file: 'EscapeHatch',       irHelper: 'escapeHatchToIR' },
+
+  // M3.5 — prop-compatible primitives that replace ghost-delegations.
+  'surface.shape-fill':    { component: 'SurfaceShapeFill',    file: 'SurfaceShapeFill',    irHelper: 'surfaceShapeFillToIR' },
+  'surface.pattern-tile':  { component: 'SurfacePatternTile',  file: 'SurfacePatternTile',  irHelper: 'surfacePatternTileToIR' },
+  'surface.radial-blob':   { component: 'SurfaceRadialBlob',   file: 'SurfaceRadialBlob',   irHelper: 'surfaceRadialBlobToIR' },
+  'surface.linear-fade':   { component: 'SurfaceLinearFade',   file: 'SurfaceLinearFade',   irHelper: 'surfaceLinearFadeToIR' },
+  'decoration.shape-preset': { component: 'DecorationShapePreset', file: 'DecorationShapePreset', irHelper: 'decorationShapePresetToIR' },
+  'decoration.line-stroke':  { component: 'DecorationLineStroke',  file: 'DecorationLineStroke',  irHelper: 'decorationLineStrokeToIR' },
+  'data.delta-badge':      { component: 'DataDeltaBadge',      file: 'DataDeltaBadge',      irHelper: 'dataDeltaBadgeToIR' },
+  'data.heatmap':          { component: 'DataHeatmap',          file: 'DataHeatmap',          irHelper: 'dataHeatmapToIR' },
+  'data.gauge':            { component: 'DataGauge',            file: 'DataGauge',            irHelper: 'dataGaugeToIR' },
+  'diagram.flow-step':     { component: 'DiagramFlowStep',     file: 'DiagramFlowStep',     irHelper: 'diagramFlowStepToIR' },
+  'chrome.window-frame':   { component: 'ChromeWindowFrame',   file: 'ChromeWindowFrame',   irHelper: 'chromeWindowFrameToIR' },
+  'chrome.device-frame':   { component: 'ChromeDeviceFrame',   file: 'ChromeDeviceFrame',   irHelper: 'chromeDeviceFrameToIR' },
+  'annotation.leader-line': { component: 'AnnotationLeaderLine', file: 'AnnotationLeaderLine', irHelper: 'annotationLeaderLineToIR' },
+  'annotation.badge':      { component: 'AnnotationBadge',      file: 'AnnotationBadge',      irHelper: 'annotationBadgeToIR' },
+};
+
+/**
+ * Per-primitive prop forwarding table.
+ *
+ * Entries are atoms.yaml-style prop names that the primitive's IR helper
+ * understands directly (so codegen forwards them verbatim). Anything not
+ * listed here gets dropped into recipe metadata only — it doesn't reach
+ * the primitive. `bbox` is always forwarded; we don't list it here.
+ *
+ * Used by `renderRecipeFile` to emit honest delegations: if a recipe
+ * row's prop set intersects this list, the generated TSX threads those
+ * props into the primitive call instead of stripping to bbox.
+ */
+const PRIMITIVE_PROPS_FORWARD: Record<string, readonly string[]> = {
+  'surface.shape-fill':      ['fill', 'shape', 'radiusPx', 'border', 'shadows'],
+  'surface.pattern-tile':    ['pattern', 'fgColor', 'bgColor', 'tilePx', 'featurePx', 'angleDeg'],
+  'surface.radial-blob':     ['color', 'cx', 'cy', 'intensity', 'shape'],
+  'surface.linear-fade':     ['color', 'direction', 'opacity', 'fadePct'],
+  'decoration.shape-preset': ['preset', 'fill', 'stroke'],
+  'decoration.line-stroke':  ['orientation', 'color', 'dash', 'thicknessPx'],
+  'data.delta-badge':        ['value', 'direction', 'size', 'tone'],
+  'data.heatmap':            ['cells', 'colorScale', 'gapPx', 'cornerPx'],
+  'data.gauge':              ['value', 'max', 'color', 'trackColor', 'sweepDeg', 'thicknessPx'],
+  'diagram.flow-step':       ['n', 'label', 'accent', 'shape'],
+  'chrome.window-frame':     ['chrome', 'url', 'body', 'theme'],
+  'chrome.device-frame':     ['device', 'screenshotSrc', 'notch'],
+  'annotation.leader-line':  ['from', 'to', 'head', 'tail', 'dashed', 'color', 'thicknessPx'],
+  'annotation.badge':        ['label', 'kind', 'tone', 'rotateDeg'],
+};
+
+/**
+ * Per-atom constant-prop injection.
+ *
+ * For atoms whose id encodes a primitive-required discriminator (e.g.,
+ * `ui.browser-mac` always passes `chrome: 'mac'` to chrome.window-frame;
+ * `dec.brace-left` always passes `preset: 'brace-left'` to
+ * decoration.shape-preset), codegen injects these constants alongside
+ * the forwarded props. The recipe interface stays minimal — these constants
+ * are NOT surfaced to the LLM caller, which keeps atoms.yaml's `props:`
+ * block focused on user-facing knobs only.
+ *
+ * Keys are atom ids. Values are JS expressions (rendered as-is into the
+ * primitive call), keyed by primitive-prop name.
+ */
+const ATOM_CONSTANT_PROPS: Record<string, Record<string, string>> = {
+  // chrome.window-frame variants
+  'ui.browser-mac':      { chrome: "'mac'" },
+  'ui.browser-win':      { chrome: "'win'" },
+  'ui.browser-minimal':  { chrome: "'minimal'" },
+  'ui.terminal-window':  { chrome: "'terminal'" },
+
+  // chrome.device-frame variants
+  'ui.device-phone':     { device: "'phone'" },
+  'ui.device-laptop':    { device: "'laptop'" },
+
+  // decoration.shape-preset — atom id IS the preset name (after the namespace).
+  'dec.brace-left':      { preset: "'brace-left'" },
+  'dec.brace-right':     { preset: "'brace-right'" },
+  'dec.brace-top':       { preset: "'brace-top'" },
+  'dec.brace-bottom':    { preset: "'brace-bottom'" },
+  'dec.plus':            { preset: "'plus'" },
+  'dec.star-5':          { preset: "'star-5'" },
+  'dec.star-6':          { preset: "'star-6'" },
+  'dec.arrow-right':     { preset: "'arrow-right'" },
+  'dec.arrow-left':      { preset: "'arrow-left'" },
+  'dec.arrow-up':        { preset: "'arrow-up'" },
+  'dec.arrow-down':      { preset: "'arrow-down'" },
+  'mask.octagon':        { preset: "'octagon'" },
+
+  // surface.linear-fade — atom id encodes which side fades.
+  'bg.scrim-bottom':     { direction: "'bottom'" },
+  'bg.scrim-top':        { direction: "'top'" },
+
+  // surface.pattern-tile — atom id encodes the pattern variant.
+  'bg.dot-lattice-fine':   { pattern: "'dots'", tilePx: '12', featurePx: '1' },
+  'bg.dot-lattice-coarse': { pattern: "'dots'", tilePx: '24', featurePx: '1.5' },
+  'bg.line-grid':          { pattern: "'lines-grid'" },
+  'bg.crosshatch':         { pattern: "'crosshatch'" },
+  'bg.diagonal':           { pattern: "'diagonal'" },
+
+  // decoration.line-stroke — atom id picks dash style.
+  'dec.hairline-rule':   { dash: "'solid'" },
+  'dec.dotted-rule':     { dash: "'dotted'" },
+
+  // annotation.badge variants
+  'anno.stamp-draft':    { kind: "'stamp'", tone: "'danger'", label: "'DRAFT'" },
+  'anno.stamp-new':      { kind: "'stamp'", tone: "'success'", label: "'NEW'" },
+  'anno.stamp-internal': { kind: "'stamp'", tone: "'warn'", label: "'INTERNAL'" },
+  'anno.sticker':        { kind: "'sticker'" },
+  'anno.callout-bubble': { kind: "'pill'" },
+  'surf.tape-band':      { kind: "'sticker'" },
 };
 
 // ---------------------------------------------------------------------------
@@ -483,6 +591,39 @@ function renderRecipeFile(
       ? `import { default as ${primAlias}, ${prim.irHelper} as ${primIrAlias} } from '../primitives/${prim.file}';`
       : `import ${primAlias}, { ${primIrAlias} } from '../primitives/${prim.file}';`;
 
+    // Compute the forwarded prop set: the intersection of the recipe's
+    // declared props and the primitive's known prop list. Unknown extras stay
+    // on the recipe interface but get dropped into IR metadata only.
+    const forwardWhitelist = PRIMITIVE_PROPS_FORWARD[r.primitive ?? ''] ?? [];
+    const recipePropNames = Object.keys(props);
+    const forwardedProps = forwardWhitelist.filter(p => recipePropNames.includes(p));
+    const droppedProps = recipePropNames.filter(p => p !== 'bbox' && !forwardedProps.includes(p));
+
+    // Constant primitive props injected from the atom-id (e.g., `ui.browser-mac`
+    // injects `chrome: 'mac'`). These don't appear on the recipe interface —
+    // they're determined by the atom row itself.
+    const constantProps = ATOM_CONSTANT_PROPS[atomId] ?? {};
+    // If a constant prop name collides with a forwarded prop, the forwarded
+    // (caller-supplied) value wins; otherwise the constant fills the gap.
+    const constantEntries = Object.entries(constantProps).filter(([k]) => !forwardedProps.includes(k));
+
+    // Render the primitive args object literal: bbox + every forwarded prop +
+    // any atom-id-derived constants. JS spread drops undefineds at runtime,
+    // so a flat shape is the cleanest surface.
+    const primArgsParts = [
+      'bbox: props.bbox',
+      ...forwardedProps.map(p => `${p}: props.${p}`),
+      ...constantEntries.map(([k, v]) => `${k}: ${v}`),
+    ];
+    const primArgsLiteral = `{ ${primArgsParts.join(', ')} }`;
+
+    // Recipe-level metadata stamps every dropped prop verbatim so the
+    // matcher / IR-consumer still sees the user's intent even when the
+    // primitive doesn't natively consume it.
+    const metadataExtra = droppedProps.length > 0
+      ? droppedProps.map(p => `      ${jsKeyOf(p)}: props.${p} ?? undefined,`).join('\n') + '\n'
+      : '';
+
     const importLines = [
       "import type { ComponentProps, ReactNode } from 'react';",
       irImportLine,
@@ -505,7 +646,7 @@ function renderRecipeFile(
       `  // primitive; this wrapper exists so the IR carries the atom id.`,
       `  return (`,
       `    <div data-recipe-id="${atomId}" data-recipe-version="${r.version}">`,
-      `      <${primAlias} {...({ bbox: props.bbox } as unknown as ComponentProps<typeof ${primAlias}>)} />`,
+      `      <${primAlias} {...(${primArgsLiteral} as unknown as ComponentProps<typeof ${primAlias}>)} />`,
       `    </div>`,
       `  );`,
       `}`,
@@ -515,10 +656,11 @@ function renderRecipeFile(
       `  tokens: TokensApi = defaultTokens,`,
       `): GroupNodeT {`,
       `  // Delegate visual composition to the primitive, then re-stamp recipeId`,
-      `  // to the user-facing atom id (CONTRACT-v2 §A.5). Recipe-level props`,
-      `  // beyond bbox are intentionally not forwarded — primitive shapes are`,
-      `  // hand-tuned and the recipe row's prop set is for the matcher / LLM.`,
-      `  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof ${primIrAlias}>[0];`,
+      `  // to the user-facing atom id (CONTRACT-v2 §A.5). Forwarded props are`,
+      `  // the intersection of recipe props and the primitive's known prop set;`,
+      `  // unrecognized recipe props ride along inside metadata so reverse-mapping`,
+      `  // can still recover them.`,
+      `  const primitiveArgs = ${primArgsLiteral} as unknown as Parameters<typeof ${primIrAlias}>[0];`,
       `  const inner = ${primIrAlias}(primitiveArgs, tokens);`,
       `  return {`,
       `    kind: 'group',`,
@@ -530,6 +672,7 @@ function renderRecipeFile(
       `      axis: '${axisOf(atomId)}',`,
       `      primitive: '${r.primitive}',`,
       `      version: '${r.version}',`,
+      metadataExtra +
       `    },`,
       `    children: [{ ...inner, zOrder: 0 }],`,
       `  };`,
@@ -958,6 +1101,7 @@ export {
   checkDrift,
   loadManifest,
   PRIMITIVE_MAP,
+  PRIMITIVE_PROPS_FORWARD,
   renderRecipeFile,
   renderIndexFile,
   renderJsonSchema,

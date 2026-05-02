@@ -34,9 +34,10 @@ export function dataConnectorToIR(
   tokens: TokensApi = defaultTokens,
 ): GroupNodeT {
   // Delegate visual composition to the primitive, then re-stamp recipeId
-  // to the user-facing atom id (CONTRACT-v2 §A.5). Recipe-level props
-  // beyond bbox are intentionally not forwarded — primitive shapes are
-  // hand-tuned and the recipe row's prop set is for the matcher / LLM.
+  // to the user-facing atom id (CONTRACT-v2 §A.5). Forwarded props are
+  // the intersection of recipe props and the primitive's known prop set;
+  // unrecognized recipe props ride along inside metadata so reverse-mapping
+  // can still recover them.
   const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof diagramConnectorToIR>[0];
   const inner = diagramConnectorToIR(primitiveArgs, tokens);
   return {
@@ -49,6 +50,12 @@ export function dataConnectorToIR(
       axis: 'data',
       primitive: 'diagram.connector',
       version: '1.0.0',
+      from: props.from ?? undefined,
+      to: props.to ?? undefined,
+      kind: props.kind ?? undefined,
+      head: props.head ?? undefined,
+      dashed: props.dashed ?? undefined,
+      color: props.color ?? undefined,
     },
     children: [{ ...inner, zOrder: 0 }],
   };

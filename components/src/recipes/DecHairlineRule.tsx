@@ -4,7 +4,7 @@
 import type { ComponentProps, ReactNode } from 'react';
 import type { Bbox, Color, GroupNodeT } from '../ir/schema';
 import { tokens as defaultTokens, type TokensApi } from '../tokens';
-import FrameSafeArea, { frameSafeAreaToIR } from '../primitives/FrameSafeArea';
+import DecorationLineStroke, { decorationLineStrokeToIR } from '../primitives/DecorationLineStroke';
 
 export const DecHairlineRuleVersion = '1.0.0';
 
@@ -21,7 +21,7 @@ export default function DecHairlineRule(props: DecHairlineRuleProps): ReactNode 
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="dec.hairline-rule" data-recipe-version="1.0.0">
-      <FrameSafeArea {...({ bbox: props.bbox } as unknown as ComponentProps<typeof FrameSafeArea>)} />
+      <DecorationLineStroke {...({ bbox: props.bbox, orientation: props.orientation, color: props.color, thicknessPx: props.thicknessPx, dash: 'solid' } as unknown as ComponentProps<typeof DecorationLineStroke>)} />
     </div>
   );
 }
@@ -31,11 +31,12 @@ export function decHairlineRuleToIR(
   tokens: TokensApi = defaultTokens,
 ): GroupNodeT {
   // Delegate visual composition to the primitive, then re-stamp recipeId
-  // to the user-facing atom id (CONTRACT-v2 §A.5). Recipe-level props
-  // beyond bbox are intentionally not forwarded — primitive shapes are
-  // hand-tuned and the recipe row's prop set is for the matcher / LLM.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof frameSafeAreaToIR>[0];
-  const inner = frameSafeAreaToIR(primitiveArgs, tokens);
+  // to the user-facing atom id (CONTRACT-v2 §A.5). Forwarded props are
+  // the intersection of recipe props and the primitive's known prop set;
+  // unrecognized recipe props ride along inside metadata so reverse-mapping
+  // can still recover them.
+  const primitiveArgs = { bbox: props.bbox, orientation: props.orientation, color: props.color, thicknessPx: props.thicknessPx, dash: 'solid' } as unknown as Parameters<typeof decorationLineStrokeToIR>[0];
+  const inner = decorationLineStrokeToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
     recipeId: 'dec.hairline-rule',
@@ -44,7 +45,7 @@ export function decHairlineRuleToIR(
     metadata: {
       role: 'dec.hairline-rule',
       axis: 'dec',
-      primitive: 'frame.safe-area',
+      primitive: 'decoration.line-stroke',
       version: '1.0.0',
     },
     children: [{ ...inner, zOrder: 0 }],

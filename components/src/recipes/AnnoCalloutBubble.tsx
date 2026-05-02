@@ -4,7 +4,7 @@
 import type { ComponentProps, ReactNode } from 'react';
 import type { Bbox, Color, GroupNodeT } from '../ir/schema';
 import { tokens as defaultTokens, type TokensApi } from '../tokens';
-import FrameSafeArea, { frameSafeAreaToIR } from '../primitives/FrameSafeArea';
+import AnnotationBadge, { annotationBadgeToIR } from '../primitives/AnnotationBadge';
 
 export const AnnoCalloutBubbleVersion = '1.0.0';
 
@@ -22,7 +22,7 @@ export default function AnnoCalloutBubble(props: AnnoCalloutBubbleProps): ReactN
   // primitive; this wrapper exists so the IR carries the atom id.
   return (
     <div data-recipe-id="anno.callout-bubble" data-recipe-version="1.0.0">
-      <FrameSafeArea {...({ bbox: props.bbox } as unknown as ComponentProps<typeof FrameSafeArea>)} />
+      <AnnotationBadge {...({ bbox: props.bbox, kind: 'pill' } as unknown as ComponentProps<typeof AnnotationBadge>)} />
     </div>
   );
 }
@@ -32,11 +32,12 @@ export function annoCalloutBubbleToIR(
   tokens: TokensApi = defaultTokens,
 ): GroupNodeT {
   // Delegate visual composition to the primitive, then re-stamp recipeId
-  // to the user-facing atom id (CONTRACT-v2 §A.5). Recipe-level props
-  // beyond bbox are intentionally not forwarded — primitive shapes are
-  // hand-tuned and the recipe row's prop set is for the matcher / LLM.
-  const primitiveArgs = { bbox: props.bbox } as unknown as Parameters<typeof frameSafeAreaToIR>[0];
-  const inner = frameSafeAreaToIR(primitiveArgs, tokens);
+  // to the user-facing atom id (CONTRACT-v2 §A.5). Forwarded props are
+  // the intersection of recipe props and the primitive's known prop set;
+  // unrecognized recipe props ride along inside metadata so reverse-mapping
+  // can still recover them.
+  const primitiveArgs = { bbox: props.bbox, kind: 'pill' } as unknown as Parameters<typeof annotationBadgeToIR>[0];
+  const inner = annotationBadgeToIR(primitiveArgs, tokens);
   return {
     kind: 'group',
     recipeId: 'anno.callout-bubble',
@@ -45,8 +46,12 @@ export function annoCalloutBubbleToIR(
     metadata: {
       role: 'anno.callout-bubble',
       axis: 'anno',
-      primitive: 'frame.safe-area',
+      primitive: 'annotation.badge',
       version: '1.0.0',
+      body: props.body ?? undefined,
+      pointerSide: props.pointerSide ?? undefined,
+      pointerOffset: props.pointerOffset ?? undefined,
+      bgColor: props.bgColor ?? undefined,
     },
     children: [{ ...inner, zOrder: 0 }],
   };
