@@ -88,6 +88,13 @@ class DomElement(BaseModel):
     background_image: str = "none"
     border: str = "none"
     border_top: str = "none"
+    # Per-side borders (right/bottom/left). Captured so the matcher can
+    # recognize asymmetric border patterns — accent stripes, brutalist
+    # top rules, magazine left-rule kickers — that the symmetric
+    # ``border`` shorthand collapses away when the four sides differ.
+    border_right: str = "none"
+    border_bottom: str = "none"
+    border_left: str = "none"
     border_radius: str = "0px"
     box_shadow: str = "none"
     filter: str = "none"
@@ -98,6 +105,13 @@ class DomElement(BaseModel):
     mix_blend_mode: str = "normal"
     backdrop_filter: str = "none"
     background_clip: str = "border-box"
+    # CSS mask-image / -webkit-mask-image. The crisper cousin of clip-path —
+    # silently lost today; captured so the matcher can route to Raster
+    # rather than emit an unmasked shape.
+    mask_image: str = "none"
+    # background-blend-mode — multiple backgrounds composed via Porter-Duff.
+    # PPTX has no equivalent; captured so the classifier can raster.
+    background_blend_mode: str = "normal"
     text: str | None = None
     is_text_container: bool = False
     runs: list[TextRun] | None = None
@@ -107,6 +121,28 @@ class DomElement(BaseModel):
     color: str = "rgb(0, 0, 0)"
     text_align: str = "start"
     line_height: str = "normal"
+    # Numeric letter-spacing in px (resolved from "normal" / "0.05em" / "1.2px").
+    # Designer-grade tracking is one of the most reliable register cues —
+    # widely-tracked uppercase = kicker, tight negative = display headline.
+    letter_spacing: str = "normal"
+    # CSS text-shadow; PPTX text frames support outerShdw on text runs but
+    # the recipe layer needs the raw value to decide.
+    text_shadow: str = "none"
+    # Vertical / sideways type via writing-mode (vertical-rl / vertical-lr /
+    # sideways-*). A strong design signal (rail callouts, magazine spines)
+    # that today passes silently as horizontal text.
+    writing_mode: str = "horizontal-tb"
+    # Layout intent — captured for the matcher's composition predicates.
+    # ``aspect_ratio`` is the resolved ratio string (e.g. "1 / 1", "auto");
+    # ``grid_template_columns`` and ``gap`` make bento / dashboard
+    # compositions identifiable as such instead of as a heap of cards.
+    aspect_ratio: str = "auto"
+    grid_template_columns: str = "none"
+    gap: str = "normal"
+    # <img> placement — needed to round-trip <a:srcRect> crop on PPTX
+    # blipFill so an `object-fit: cover` photo doesn't squash on emit.
+    object_fit: str = "fill"
+    object_position: str = "50% 50%"
     has_before: bool = False
     has_after: bool = False
     before_content: str | None = None

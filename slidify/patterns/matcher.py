@@ -13,6 +13,7 @@ of (unit, anchor, catalog) → bool. Adding a new clause type means extending
 from __future__ import annotations
 
 import fnmatch
+import re
 from dataclasses import dataclass, field
 from functools import lru_cache
 from importlib import resources
@@ -24,7 +25,7 @@ from slidify.geom import parse_px
 from slidify.gradients import parse_gradient
 from slidify.models import Decision, DecisionKind, DomElement, VisualUnit
 from slidify.patterns.tailwind import TailwindCatalog, _split_classes
-from slidify.shadows import is_translatable_shadow
+from slidify.shadows import _split_top_level, is_translatable_shadow
 
 # ---------------------------------------------------------------------------
 # Pattern dataclasses
@@ -575,6 +576,368 @@ def _h_children_only_text(unit, anchor, catalog, value):
         if not has_text:
             return not bool(value)
     return bool(value)
+
+
+# ---------------------------------------------------------------------------
+# Phase 2a: extended predicate vocabulary
+# ---------------------------------------------------------------------------
+
+
+def _parse_border_side(side: str) -> tuple[float, str]:
+    """Return (width_px, style) for one CSS per-side border string.
+
+    Examples: "none" → (0, "none"); "4px solid rgb(...)" → (4.0, "solid");
+    "0px none rgb(...)" → (0, "none")."""
+    s = (side or "").strip()
+    if not s or s.lower() == "none":
+        return (0.0, "none")
+    parts = s.split()
+    width = parse_px(parts[0]) if parts else 0.0
+    style = parts[1].lower() if len(parts) >= 2 else "none"
+    if width <= 0.0:
+        style = "none"
+    return (width, style)
+
+
+@_handler("anchor.border_per_side")
+def _h_border_per_side(unit, anchor, catalog, value):
+    if not isinstance(value, dict):
+        return False
+    sides = {
+        "top": _parse_border_side(anchor.border_top),
+        "right": _parse_border_side(anchor.border_right),
+        "bottom": _parse_border_side(anchor.border_bottom),
+        "left": _parse_border_side(anchor.border_left),
+    }
+    for side, want in value.items():
+        if side not in sides:
+            return False
+        width, style = sides[side]
+        w = (want or "").lower()
+        if w == "none":
+            if style != "none":
+                return False
+        elif w == "any":
+            if style == "none":
+                return False
+        else:
+            if style != w:
+                return False
+    return True
+
+
+@_handler("anchor.border_top_width_min")
+def _h_border_top_w_min(unit, anchor, catalog, value):
+    width, _ = _parse_border_side(anchor.border_top)
+    return width >= float(value)
+
+
+@_handler("anchor.border_left_width_min")
+def _h_border_left_w_min(unit, anchor, catalog, value):
+    width, _ = _parse_border_side(anchor.border_left)
+    return width >= float(value)
+
+
+@_handler("anchor.has_asymmetric_border")
+def _h_asymmetric_border(unit, anchor, catalog, value):
+    sides = [
+        (anchor.border_top or "none").strip(),
+        (anchor.border_right or "none").strip(),
+        (anchor.border_bottom or "none").strip(),
+        (anchor.border_left or "none").strip(),
+    ]
+    parsed = [_parse_border_side(s) for s in sides]
+    any_visible = any(w > 0 for w, _ in parsed)
+    uniform = all(s == sides[0] for s in sides)
+    is_asym = any_visible and not uniform
+    return is_asym == bool(value)
+
+
+@_handler("anchor.shadow_layers_min")
+def _h_shadow_layers_min(unit, anchor, catalog, value):
+    s = (anchor.box_shadow or "").strip()
+    if not s or s.lower() == "none":
+        n = 0
+    else:
+        n = len([p for p in _split_top_level(s, ",") if p])
+    return n >= int(value)
+
+
+@_handler("anchor.radius_px_range")
+def _h_radius_range(unit, anchor, catalog, value):
+    if not isinstance(value, list) or len(value) != 2:
+        return False
+    lo, hi = value
+    r = parse_px(anchor.border_radius)
+    if lo is not None and r < float(lo):
+        return False
+    if hi is not None and r > float(hi):
+        return False
+    return True
+
+
+_DISPLAY_NAME_TOKENS = (
+    "display", "black", "bebas", "anton", "oswald", "archivo black", "druk",
+    "editorial",
+)
+_MONO_NAME_TOKENS = ("mono", "courier", "menlo", "consolas", "monaco")
+
+
+def _classify_font_family(family: str) -> str:
+    f = (family or "").lower()
+    if any(t in f for t in _MONO_NAME_TOKENS):
+        return "mono"
+    has_serif = "serif" in f and "sans-serif" not in f
+    if has_serif:
+        # Check that the "serif" hit isn't just inside "sans-serif"
+        stripped = f.replace("sans-serif", "")
+        if "serif" in stripped:
+            return "serif"
+    if any(t in f for t in _DISPLAY_NAME_TOKENS):
+        return "display"
+    return "sans"
+
+
+@_handler("anchor.font_family_family")
+def _h_font_family_family(unit, anchor, catalog, value):
+    families = value if isinstance(value, list) else [value]
+    return _classify_font_family(anchor.font_family) in families
+
+
+def _parse_letter_spacing_px(ls: str) -> float:
+    s = (ls or "").strip().lower()
+    if not s or s == "normal":
+        return 0.0
+    if s.endswith("px"):
+        return parse_px(s)
+    return 0.0  # em / other units unresolved here
+
+
+@_handler("anchor.letter_spacing_px_min")
+def _h_ls_min(unit, anchor, catalog, value):
+    return _parse_letter_spacing_px(anchor.letter_spacing) >= float(value)
+
+
+@_handler("anchor.letter_spacing_px_max")
+def _h_ls_max(unit, anchor, catalog, value):
+    return _parse_letter_spacing_px(anchor.letter_spacing) <= float(value)
+
+
+@_handler("anchor.has_text_shadow")
+def _h_has_text_shadow(unit, anchor, catalog, value):
+    has = bool(anchor.text_shadow) and anchor.text_shadow not in ("none", "")
+    return has == bool(value)
+
+
+@_handler("anchor.writing_mode_in")
+def _h_writing_mode_in(unit, anchor, catalog, value):
+    modes = value if isinstance(value, list) else [value]
+    return (anchor.writing_mode or "horizontal-tb") in modes
+
+
+def _parse_aspect_ratio(s: str) -> float | None:
+    if not s:
+        return None
+    txt = s.strip().lower()
+    if not txt or txt == "auto":
+        return None
+    if "/" in txt:
+        a, _, b = txt.partition("/")
+        try:
+            num = float(a.strip())
+            den = float(b.strip())
+            if den == 0:
+                return None
+            return num / den
+        except ValueError:
+            return None
+    try:
+        return float(txt)
+    except ValueError:
+        return None
+
+
+@_handler("anchor.aspect_ratio_range")
+def _h_aspect_ratio_range(unit, anchor, catalog, value):
+    if not isinstance(value, list) or len(value) != 2:
+        return False
+    lo, hi = value
+    ratio = _parse_aspect_ratio(anchor.aspect_ratio)
+    if ratio is None:
+        h = anchor.bbox.h
+        if h <= 0:
+            return False
+        ratio = anchor.bbox.w / h
+    if lo is not None and ratio < float(lo):
+        return False
+    if hi is not None and ratio > float(hi):
+        return False
+    return True
+
+
+@_handler("anchor.is_grid_container")
+def _h_is_grid(unit, anchor, catalog, value):
+    has = bool(anchor.grid_template_columns) and anchor.grid_template_columns not in ("none", "")
+    return has == bool(value)
+
+
+_REPEAT_RE = re.compile(r"^repeat\(\s*(\d+)\s*,", re.IGNORECASE)
+
+
+def _count_grid_tracks(tracks: str) -> int | None:
+    s = (tracks or "").strip()
+    if not s or s.lower() == "none":
+        return 0
+    m = _REPEAT_RE.match(s)
+    if m:
+        try:
+            return int(m.group(1))
+        except ValueError:
+            return None
+    # Strip named-line brackets like "[col-start] 1fr [col-end]".
+    cleaned = re.sub(r"\[[^\]]*\]", "", s)
+    tokens = cleaned.split()
+    return len(tokens) if tokens else None
+
+
+@_handler("anchor.grid_columns_count")
+def _h_grid_cols(unit, anchor, catalog, value):
+    n = _count_grid_tracks(anchor.grid_template_columns)
+    if n is None:
+        return False
+    return n == int(value)
+
+
+@_handler("anchor.gap_px_min")
+def _h_gap_min(unit, anchor, catalog, value):
+    s = (anchor.gap or "").strip().lower()
+    if not s or s == "normal":
+        first = 0.0
+    else:
+        token = s.split()[0]
+        first = parse_px(token)
+    return first >= float(value)
+
+
+def _aspect_of(bbox) -> float | None:
+    if bbox.h <= 0 or bbox.w <= 0:
+        return None
+    return bbox.w / bbox.h
+
+
+@_handler("siblings_uniform_aspect")
+def _h_siblings_uniform_aspect(unit, anchor, catalog, value):
+    if not isinstance(value, dict):
+        return False
+    tol = float(value.get("tolerance", 0.15))
+    n_min = int(value.get("n_min", 3))
+    if len(unit.children) < n_min:
+        return False
+    ratios: list[float] = []
+    for c in unit.children:
+        if not c.elements:
+            return False
+        r = _aspect_of(c.elements[0].bbox)
+        if r is None:
+            return False
+        ratios.append(r)
+    mean = sum(ratios) / len(ratios)
+    if mean <= 0:
+        return False
+    return all(abs(r - mean) / mean <= tol for r in ratios)
+
+
+@_handler("siblings_icon_text_pair")
+def _h_siblings_icon_text_pair(unit, anchor, catalog, value):
+    def _is_icon(el: DomElement) -> bool:
+        return bool(el.is_svg) and max(el.bbox.w, el.bbox.h) <= 48
+    def _is_text(el: DomElement) -> bool:
+        if el.text and el.text.strip():
+            return True
+        if el.runs and any(r.text.strip() for r in el.runs if not r.is_break):
+            return True
+        return False
+    pairs: list[tuple[DomElement, DomElement]] = []
+    if len(unit.children) == 2:
+        c0, c1 = unit.children[0].elements, unit.children[1].elements
+        if c0 and c1:
+            pairs.append((c0[0], c1[0]))
+    if len(unit.elements) == 2:
+        pairs.append((unit.elements[0], unit.elements[1]))
+    has_pair = any(
+        (_is_icon(a) and _is_text(b)) or (_is_icon(b) and _is_text(a))
+        for a, b in pairs
+    )
+    return has_pair == bool(value)
+
+
+@_handler("child.is_svg_icon_max_px")
+def _h_child_svg_icon(unit, anchor, catalog, value):
+    cap = float(value)
+    for c in unit.children:
+        if not c.elements:
+            continue
+        a = c.elements[0]
+        if a.is_svg and max(a.bbox.w, a.bbox.h) <= cap:
+            return True
+    return False
+
+
+@_handler("bbox.slide_y_band")
+def _h_slide_y_band(unit, anchor, catalog, value):
+    band = str(value).lower()
+    y = unit.bbox.y
+    h = unit.bbox.h
+    midpoint = y + h / 2
+    bottom = y + h
+    if band == "top":
+        return y < 80
+    if band == "upper-third":
+        return 80 <= midpoint < 240
+    if band == "center":
+        return 240 <= midpoint < 480
+    if band == "lower-third":
+        return 480 <= midpoint < 640
+    if band == "bottom":
+        return bottom >= 640
+    return False
+
+
+@_handler("mask_image")
+def _h_mask_image(unit, anchor, catalog, value):
+    has = any(
+        (getattr(e, "mask_image", None) or "none") not in ("none", "", None)
+        for e in unit.all_elements()
+    )
+    return (value == "any") if has else (value == "none")
+
+
+@_handler("background_blend_mode")
+def _h_bg_blend_mode(unit, anchor, catalog, value):
+    has = any(
+        (getattr(e, "background_blend_mode", None) or "normal") not in ("normal", "", None)
+        for e in unit.all_elements()
+    )
+    return (value == "any") if has else (value == "none")
+
+
+@_handler("pseudo.has_gradient")
+def _h_pseudo_has_gradient(unit, anchor, catalog, value):
+    found = False
+    for e in unit.all_elements():
+        for has_flag, style in (
+            (e.has_before, e.pseudo_before_style),
+            (e.has_after, e.pseudo_after_style),
+        ):
+            if not has_flag or not isinstance(style, dict):
+                continue
+            bg = style.get("background_image") or ""
+            if "gradient(" in bg:
+                found = True
+                break
+        if found:
+            break
+    return found == bool(value)
 
 
 # ---------------------------------------------------------------------------
