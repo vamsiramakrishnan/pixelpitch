@@ -87,11 +87,16 @@ function fillToCssBackground(fill: Fill): string {
       .join(', ');
     return `linear-gradient(${fill.angleDeg}deg, ${stops})`;
   }
-  // radial
-  const stops = fill.stops
-    .map(s => `${colorToCss(s.color)} ${(s.position * 100).toFixed(1)}%`)
-    .join(', ');
-  return `radial-gradient(${fill.shape} at ${fill.cx * 100}% ${fill.cy * 100}%, ${stops})`;
+  if (fill.kind === 'radial-gradient') {
+    const stops = fill.stops
+      .map(s => `${colorToCss(s.color)} ${(s.position * 100).toFixed(1)}%`)
+      .join(', ');
+    return `radial-gradient(${fill.shape} at ${fill.cx * 100}% ${fill.cy * 100}%, ${stops})`;
+  }
+  // Wave-2: pattern fills are emitted natively by the Python compiler;
+  // the HTML preview falls back to the foreground color so the slide is
+  // still visible. Crews wanting a true CSS preview can swap this later.
+  return colorToCss(fill.fgColor);
 }
 
 function colorToCss(c: { hex: string; alpha?: number } | string): string {

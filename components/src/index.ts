@@ -52,3 +52,15 @@ export type {
   RasterNode,
   GroupNodeT,
 } from './ir/schema';
+
+// ---- Wave-2 / Crew F1 (IR extensions) ---------------------------------------
+export type {
+  PathShapeNode,
+  PathCommand,
+  Arrowhead,
+  ArrowheadKind,
+  ArrowheadSize,
+  ClipPath,
+  PatternFill,
+} from './ir/schema';
+export { normalizeShadows, pathBbox } from './ir/normalize';
