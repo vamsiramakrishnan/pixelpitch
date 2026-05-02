@@ -27,8 +27,13 @@ export type BlobShape = 'circle' | 'ellipse';
 
 export interface SurfaceRadialBlobProps {
   bbox: Bbox;
-  /** Center color (full alpha at the inner stop). */
-  color: Color;
+  /** Center color (full alpha at the inner stop). Optional — defaults to accent. */
+  color?: Color;
+  /** Synonym for `color` — atoms.yaml uses `colorTL` for some recipes. */
+  colorTL?: Color;
+  colorTR?: Color;
+  colorBL?: Color;
+  colorBR?: Color;
   /** Center X (0..1 within bbox). Default `0.5`. */
   cx?: number;
   /** Center Y (0..1 within bbox). Default `0.5`. */
@@ -58,11 +63,23 @@ function withAlpha(color: Color, alpha: number): Color {
 // React preview
 // ---------------------------------------------------------------------------
 
+function resolveColor(props: SurfaceRadialBlobProps, tokens: TokensApi): Color {
+  return (
+    props.color ??
+    props.colorTL ??
+    props.colorTR ??
+    props.colorBL ??
+    props.colorBR ??
+    tokens.palette('accent')
+  );
+}
+
 export default function SurfaceRadialBlob(props: SurfaceRadialBlobProps): ReactNode {
   const cx = props.cx ?? 0.5;
   const cy = props.cy ?? 0.5;
-  const inner = withAlpha(props.color, INTENSITY_ALPHA[props.intensity ?? 'med']);
-  const outer = withAlpha(props.color, 0);
+  const color = resolveColor(props, defaultTokens);
+  const inner = withAlpha(color, INTENSITY_ALPHA[props.intensity ?? 'med']);
+  const outer = withAlpha(color, 0);
   const fillCss = fillToCss({
     kind: 'radial-gradient',
     shape: props.shape ?? 'ellipse',
@@ -96,14 +113,15 @@ export default function SurfaceRadialBlob(props: SurfaceRadialBlobProps): ReactN
 
 export function surfaceRadialBlobToIR(
   props: SurfaceRadialBlobProps,
-  _tokens: TokensApi = defaultTokens,
+  tokens: TokensApi = defaultTokens,
 ): GroupNodeT {
   const cx = props.cx ?? 0.5;
   const cy = props.cy ?? 0.5;
   const intensity = props.intensity ?? 'med';
   const shape = props.shape ?? 'ellipse';
-  const inner = withAlpha(props.color, INTENSITY_ALPHA[intensity]);
-  const outer = withAlpha(props.color, 0);
+  const color = resolveColor(props, tokens);
+  const inner = withAlpha(color, INTENSITY_ALPHA[intensity]);
+  const outer = withAlpha(color, 0);
 
   const node: ShapeNode = {
     kind: 'shape',

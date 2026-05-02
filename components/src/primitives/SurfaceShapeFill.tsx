@@ -31,8 +31,12 @@ export type SurfaceShape = 'rect' | 'rounded-rect' | 'oval';
 
 export interface SurfaceShapeFillProps {
   bbox: Bbox;
-  /** Fill discriminated union — solid, gradient, pattern, or none. */
-  fill: Fill;
+  /** Fill discriminated union — solid, gradient, pattern, or none. Optional — defaults to a solid surface-2. */
+  fill?: Fill;
+  /** Synonym for `fill.color` when atoms.yaml uses `bgColor`. */
+  bgColor?: import('../ir/schema').Color;
+  /** Synonym for `radiusPx` — atoms.yaml uses `radius` for some recipes. */
+  radius?: number;
   /** Shape geometry. Default `'rounded-rect'`. */
   shape?: SurfaceShape;
   /** Corner radius (px). Honored only for `'rounded-rect'`. Default `0`. */
@@ -48,9 +52,16 @@ export interface SurfaceShapeFillProps {
 // React preview
 // ---------------------------------------------------------------------------
 
+function resolveFill(props: SurfaceShapeFillProps, tokens: TokensApi): Fill {
+  if (props.fill) return props.fill;
+  if (props.bgColor) return { kind: 'solid', color: props.bgColor };
+  return { kind: 'solid', color: tokens.palette('surface-2') };
+}
+
 export default function SurfaceShapeFill(props: SurfaceShapeFillProps): ReactNode {
   const shape = props.shape ?? 'rounded-rect';
-  const radius = shape === 'oval' ? 9999 : (props.radiusPx ?? 0);
+  const radius = shape === 'oval' ? 9999 : (props.radiusPx ?? props.radius ?? 0);
+  const fill = resolveFill(props, defaultTokens);
   const borderCss = props.border
     ? `${props.border.width}px ${props.border.style} ${colorToCss(props.border.color)}`
     : undefined;
@@ -66,7 +77,7 @@ export default function SurfaceShapeFill(props: SurfaceShapeFillProps): ReactNod
         top: props.bbox.y,
         width: props.bbox.w,
         height: props.bbox.h,
-        background: fillToCss(props.fill),
+        background: fillToCss(fill),
         borderRadius: radius,
         border: borderCss,
         boxShadow: shadowCss,
@@ -84,10 +95,11 @@ export default function SurfaceShapeFill(props: SurfaceShapeFillProps): ReactNod
 
 export function surfaceShapeFillToIR(
   props: SurfaceShapeFillProps,
-  _tokens: TokensApi = defaultTokens,
+  tokens: TokensApi = defaultTokens,
 ): GroupNodeT {
   const shape: SurfaceShape = props.shape ?? 'rounded-rect';
-  const radius = shape === 'oval' ? 0 : (props.radiusPx ?? 0);
+  const radius = shape === 'oval' ? 0 : (props.radiusPx ?? props.radius ?? 0);
+  const fill = resolveFill(props, tokens);
 
   const node: ShapeNode = {
     kind: 'shape',
@@ -101,7 +113,7 @@ export function surfaceShapeFillToIR(
     },
     shape,
     borderRadiusPx: radius,
-    fill: props.fill,
+    fill,
     ...(props.border ? { border: props.border } : {}),
     ...(props.shadows && props.shadows.length > 0 ? { shadows: props.shadows.slice(0, 4) } : {}),
   };

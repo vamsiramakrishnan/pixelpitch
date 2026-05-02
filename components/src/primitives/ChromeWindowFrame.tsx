@@ -33,8 +33,8 @@ export type WindowFrameTheme = 'dark' | 'light';
 
 export interface ChromeWindowFrameProps {
   bbox: Bbox;
-  /** Chrome style. */
-  chrome: WindowChromeKind;
+  /** Chrome style. Optional — defaults to 'minimal'. */
+  chrome?: WindowChromeKind;
   /** URL displayed in the address strip (browsers). */
   url?: string;
   /** Body text — terminal output, code, or empty. */
@@ -84,13 +84,14 @@ const TITLEBAR_H = 28;
 
 export default function ChromeWindowFrame(props: ChromeWindowFrameProps): ReactNode {
   const t = defaultTokens;
-  const theme: WindowFrameTheme = props.theme ?? (props.chrome === 'terminal' ? 'dark' : 'dark');
+  const chrome: WindowChromeKind = props.chrome ?? 'minimal';
+  const theme: WindowFrameTheme = props.theme ?? (chrome === 'terminal' ? 'dark' : 'dark');
   const f = frameTokens(t, theme);
-  const showUrl = props.chrome !== 'terminal' && (props.url !== undefined);
+  const showUrl = chrome !== 'terminal' && (props.url !== undefined);
   return (
     <div
       data-recipe-id="chrome.window-frame"
-      data-chrome={props.chrome}
+      data-chrome={chrome}
       style={{
         position: 'absolute',
         left: props.bbox.x,
@@ -100,7 +101,7 @@ export default function ChromeWindowFrame(props: ChromeWindowFrameProps): ReactN
         background: colorToCss(f.surface),
         borderRadius: 12,
         overflow: 'hidden',
-        fontFamily: props.chrome === 'terminal' ? t.fonts.mono : t.fonts.sans,
+        fontFamily: chrome === 'terminal' ? t.fonts.mono : t.fonts.sans,
         color: colorToCss(f.text),
       }}
     >
@@ -114,14 +115,14 @@ export default function ChromeWindowFrame(props: ChromeWindowFrameProps): ReactN
           padding: '0 10px',
         }}
       >
-        {props.chrome === 'mac' && (
+        {chrome === 'mac' && (
           <>
             <span style={{ width: 12, height: 12, borderRadius: '50%', background: colorToCss(f.red) }} />
             <span style={{ width: 12, height: 12, borderRadius: '50%', background: colorToCss(f.yellow) }} />
             <span style={{ width: 12, height: 12, borderRadius: '50%', background: colorToCss(f.green) }} />
           </>
         )}
-        {props.chrome === 'win' && (
+        {chrome === 'win' && (
           <>
             <span style={{ marginLeft: 'auto', width: 14, height: 14, background: colorToCss(f.dim) }} />
             <span style={{ width: 14, height: 14, background: colorToCss(f.dim) }} />
@@ -145,6 +146,7 @@ export function chromeWindowFrameToIR(
   props: ChromeWindowFrameProps,
   tokens: TokensApi = defaultTokens,
 ): GroupNodeT {
+  const chrome: WindowChromeKind = props.chrome ?? 'minimal';
   const theme: WindowFrameTheme = props.theme ?? 'dark';
   const f = frameTokens(tokens, theme);
   const children: IRNode[] = [];
@@ -154,7 +156,7 @@ export function chromeWindowFrameToIR(
     recipeId: 'chrome.window-frame.surface',
     bbox: { ...props.bbox },
     zOrder: 0,
-    metadata: { role: 'window-surface', chrome: props.chrome, theme },
+    metadata: { role: 'window-surface', chrome, theme },
     shape: 'rounded-rect',
     borderRadiusPx: 12,
     fill: { kind: 'solid', color: f.surface },
@@ -181,7 +183,7 @@ export function chromeWindowFrameToIR(
 
   // Controls (traffic lights for mac, square buttons for win, nothing for minimal/terminal).
   const controlChildren: ShapeNode[] = [];
-  if (props.chrome === 'mac') {
+  if (chrome === 'mac') {
     const colors = [f.red, f.yellow, f.green];
     colors.forEach((c, i) => {
       controlChildren.push({
@@ -195,7 +197,7 @@ export function chromeWindowFrameToIR(
         fill: { kind: 'solid', color: c },
       });
     });
-  } else if (props.chrome === 'win') {
+  } else if (chrome === 'win') {
     const dims = [f.dim, f.dim, f.red];
     dims.forEach((c, i) => {
       controlChildren.push({
@@ -218,7 +220,7 @@ export function chromeWindowFrameToIR(
   children.push(...controlChildren);
 
   // URL strip — text inside the title bar.
-  if (props.chrome !== 'terminal' && props.url !== undefined) {
+  if (chrome !== 'terminal' && props.url !== undefined) {
     const urlBbox: Bbox = {
       x: props.bbox.x + 80,
       y: props.bbox.y,
@@ -266,7 +268,7 @@ export function chromeWindowFrameToIR(
           text: props.body,
           fontSizePx: 12,
           fontWeight: 400,
-          fontFamily: props.chrome === 'terminal' ? tokens.fonts.mono : tokens.fonts.mono,
+          fontFamily: chrome === 'terminal' ? tokens.fonts.mono : tokens.fonts.mono,
           color: f.text,
           italic: false,
           underline: false,
@@ -285,7 +287,7 @@ export function chromeWindowFrameToIR(
     metadata: {
       role: 'chrome.window-frame',
       axis: 'chrome',
-      chrome: props.chrome,
+      chrome,
       theme,
     },
     children,

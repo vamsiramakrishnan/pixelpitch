@@ -31,8 +31,8 @@ export type DeviceKind = 'phone' | 'laptop';
 
 export interface ChromeDeviceFrameProps {
   bbox: Bbox;
-  /** Phone or laptop. */
-  device: DeviceKind;
+  /** Phone or laptop. Optional — defaults to 'phone'. */
+  device?: DeviceKind;
   /** Optional screenshot URL / data: URI. */
   screenshotSrc?: string;
   /** Phone only — render a notch. Default `true`. */
@@ -49,14 +49,15 @@ const LAPTOP_BASE = 18;
 
 export default function ChromeDeviceFrame(props: ChromeDeviceFrameProps): ReactNode {
   const t = defaultTokens;
-  const isPhone = props.device === 'phone';
+  const device: DeviceKind = props.device ?? 'phone';
+  const isPhone = device === 'phone';
   const bezelColor = colorToCss(t.palette('ink-1'));
   const placeholderColor = colorToCss(t.palette('surface-3'));
   const bezelPad = isPhone ? PHONE_BEZEL : LAPTOP_BEZEL;
   return (
     <div
       data-recipe-id="chrome.device-frame"
-      data-device={props.device}
+      data-device={device}
       style={{
         position: 'absolute',
         left: props.bbox.x,
@@ -103,7 +104,8 @@ export function chromeDeviceFrameToIR(
   props: ChromeDeviceFrameProps,
   tokens: TokensApi = defaultTokens,
 ): GroupNodeT {
-  const isPhone = props.device === 'phone';
+  const device: DeviceKind = props.device ?? 'phone';
+  const isPhone = device === 'phone';
   const children: IRNode[] = [];
 
   // Bezel
@@ -112,7 +114,7 @@ export function chromeDeviceFrameToIR(
     recipeId: 'chrome.device-frame.bezel',
     bbox: { ...props.bbox },
     zOrder: 0,
-    metadata: { role: 'device-bezel', device: props.device },
+    metadata: { role: 'device-bezel', device },
     shape: 'rounded-rect',
     borderRadiusPx: isPhone ? 36 : 12,
     fill: { kind: 'solid', color: tokens.palette('ink-1') },
@@ -204,7 +206,7 @@ export function chromeDeviceFrameToIR(
     metadata: {
       role: 'chrome.device-frame',
       axis: 'chrome',
-      device: props.device,
+      device,
       hasScreenshot: !!props.screenshotSrc,
       notch: isPhone ? props.notch !== false : undefined,
     },

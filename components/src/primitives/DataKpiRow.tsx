@@ -39,7 +39,10 @@ export interface KpiCell {
 
 export interface DataKpiRowProps {
   bbox: Bbox;
-  cells: KpiCell[];
+  /** KPI cells. Optional — defaults to []. Synonym: `kpis`. */
+  cells?: KpiCell[];
+  /** Synonym for `cells` — atoms.yaml uses `kpis` for some recipes. */
+  kpis?: KpiCell[];
   /** Render hairline dividers between cells. Default `false`. */
   withDividers?: boolean;
   /** Divider color. Default `tokens.palette('divider', 0.4)`. */
@@ -78,7 +81,7 @@ export default function DataKpiRow(props: DataKpiRowProps): ReactNode {
         gap,
       }}
     >
-      {props.cells.map((cell, i) => (
+      {(props.cells ?? props.kpis ?? []).map((cell, i) => (
         <div
           key={i}
           data-recipe-id={`data.kpi-row.cell-${i + 1}`}
@@ -88,9 +91,9 @@ export default function DataKpiRow(props: DataKpiRowProps): ReactNode {
             flexDirection: 'column',
             justifyContent: 'flex-end',
             paddingRight:
-              props.withDividers && i < props.cells.length - 1 ? gap / 2 : 0,
+              props.withDividers && i < (props.cells ?? props.kpis ?? []).length - 1 ? gap / 2 : 0,
             borderRight:
-              props.withDividers && i < props.cells.length - 1
+              props.withDividers && i < (props.cells ?? props.kpis ?? []).length - 1
                 ? `1px solid ${dividerColor}`
                 : undefined,
           }}
@@ -149,12 +152,13 @@ export function dataKpiRowToIR(
   const dividerColor = props.dividerColor ?? tokens.palette('divider', 0.4);
   const gap = props.gapPx ?? tokens.slot('gutter');
 
-  const n = props.cells.length;
+  const cells = props.cells ?? props.kpis ?? [];
+  const n = cells.length;
   const totalGap = gap * Math.max(0, n - 1);
   const cellW = n > 0 ? (props.bbox.w - totalGap) / n : 0;
 
   const children: IRNode[] = [];
-  props.cells.forEach((cell, i) => {
+  cells.forEach((cell, i) => {
     const cellX = props.bbox.x + i * (cellW + gap);
     const valueY = props.bbox.y + props.bbox.h - numeral.sizePx - (cell.delta ? DELTA_H + 8 : 0);
     const labelY = valueY - LABEL_H - 8;

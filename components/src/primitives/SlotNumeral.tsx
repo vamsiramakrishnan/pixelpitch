@@ -32,8 +32,10 @@ export type NumeralScale = 'numeral-md' | 'numeral-xl' | 'numeral-2xl';
 
 export interface SlotNumeralProps {
   bbox: Bbox;
-  /** The number / digit string. Treated as a single glyph run. */
-  value: string;
+  /** The number / digit string. Treated as a single glyph run. Optional — defaults to ''. */
+  value?: string;
+  /** Synonym for `value` — atoms.yaml uses `digits`. Either resolves the same. */
+  digits?: string;
   /** Numeric scale. Default `'numeral-md'`. */
   scale?: NumeralScale;
   /** Solid color when `gradient` is unset. Default `tokens.palette('ink-1')`. */
@@ -52,6 +54,7 @@ export default function SlotNumeral(props: SlotNumeralProps): ReactNode {
   const t = defaultTokens;
   const scale = props.scale ?? 'numeral-md';
   const spec = t.type(scale);
+  const value = props.value ?? props.digits ?? '';
   if (props.gradient) {
     const grad = t.gradient(props.gradient);
     const stops = grad.stops
@@ -78,7 +81,7 @@ export default function SlotNumeral(props: SlotNumeralProps): ReactNode {
           color: 'transparent',
         }}
       >
-        {props.value}
+        {value}
       </div>
     );
   }
@@ -116,10 +119,11 @@ export function slotNumeralToIR(
 ): TextNode {
   const scale = props.scale ?? 'numeral-md';
   const spec = tokens.type(scale);
+  const value = props.value ?? props.digits ?? '';
 
   // Single run, fill metadata routes the gradient through Python compiler.
   const baseRun: TextRun = {
-    text: props.value,
+    text: value,
     fontSizePx: spec.sizePx,
     fontWeight: spec.weight,
     fontFamily: spec.family,

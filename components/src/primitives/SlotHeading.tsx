@@ -36,7 +36,8 @@ export type HeadingScale = Extract<
 
 export interface SlotHeadingProps {
   bbox: Bbox;
-  text: string;
+  /** Heading text. Optional — defaults to empty string. */
+  text?: string;
   /** Type-scale key. Default `'slide-title'`. */
   scale?: HeadingScale;
   /** Text color. Default `tokens.palette('ink-1')`. */
@@ -73,7 +74,7 @@ export default function SlotHeading(props: SlotHeadingProps): ReactNode {
         textAlign: props.align ?? 'left',
       }}
     >
-      {props.text}
+      {props.text ?? ''}
     </div>
   );
 }
@@ -99,7 +100,7 @@ export function slotHeadingToIR(
       {
         runs: [
           {
-            text: props.text,
+            text: props.text ?? '',
             fontSizePx: spec.sizePx,
             fontWeight: spec.weight,
             fontFamily: spec.family,

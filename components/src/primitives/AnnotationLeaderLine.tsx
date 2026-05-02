@@ -26,10 +26,14 @@ export interface LeaderPoint { x: number; y: number; }
 
 export interface AnnotationLeaderLineProps {
   bbox: Bbox;
-  /** Start anchor (slide-pixel coords). */
-  from: LeaderPoint;
-  /** End anchor (slide-pixel coords). */
-  to: LeaderPoint;
+  /** Start anchor (slide-pixel coords). Optional — defaults to bbox left mid. */
+  from?: LeaderPoint;
+  /** End anchor (slide-pixel coords). Optional — defaults to bbox right mid. */
+  to?: LeaderPoint;
+  /** Synonym for `to` — atoms.yaml uses `leaderTo` for some recipes. */
+  leaderTo?: LeaderPoint;
+  /** Synonym for `from` — atoms.yaml uses `anchor` for some recipes. */
+  anchor?: LeaderPoint;
   /** Arrowhead at the start. Default `{ kind: 'none' }`. */
   head?: Arrowhead;
   /** Arrowhead at the end. Default `{ kind: 'arrow', size: 'md' }`. */
@@ -46,12 +50,25 @@ export interface AnnotationLeaderLineProps {
 // React preview
 // ---------------------------------------------------------------------------
 
+function resolveLeader(props: AnnotationLeaderLineProps): {
+  from: LeaderPoint;
+  to: LeaderPoint;
+} {
+  const midY = props.bbox.y + props.bbox.h / 2;
+  const from =
+    props.from ?? props.anchor ?? { x: props.bbox.x, y: midY };
+  const to =
+    props.to ?? props.leaderTo ?? { x: props.bbox.x + props.bbox.w, y: midY };
+  return { from, to };
+}
+
 export default function AnnotationLeaderLine(
   props: AnnotationLeaderLineProps,
 ): ReactNode {
   const t = defaultTokens;
   const color = colorToCss(props.color ?? t.palette('ink-2'));
   const thickness = props.thicknessPx ?? 1.5;
+  const { from, to } = resolveLeader(props);
   return (
     <div
       data-recipe-id="annotation.leader-line"
@@ -70,10 +87,10 @@ export default function AnnotationLeaderLine(
         viewBox={`${props.bbox.x} ${props.bbox.y} ${props.bbox.w} ${props.bbox.h}`}
       >
         <line
-          x1={props.from.x}
-          y1={props.from.y}
-          x2={props.to.x}
-          y2={props.to.y}
+          x1={from.x}
+          y1={from.y}
+          x2={to.x}
+          y2={to.y}
           stroke={color}
           strokeWidth={thickness}
           strokeDasharray={props.dashed ? '4 4' : undefined}
@@ -94,6 +111,7 @@ export function annotationLeaderLineToIR(
   const color = props.color ?? tokens.palette('ink-2');
   const thickness = props.thicknessPx ?? 1.5;
   const dash = props.dashed ? [thickness * 3, thickness * 2] : undefined;
+  const { from, to } = resolveLeader(props);
 
   const path: PathShapeNode = {
     kind: 'path',
@@ -103,13 +121,13 @@ export function annotationLeaderLineToIR(
     metadata: {
       role: 'annotation.leader-line',
       axis: 'annotation',
-      from: props.from,
-      to: props.to,
+      from,
+      to,
       dashed: !!props.dashed,
     },
     commands: [
-      { op: 'M', x: props.from.x, y: props.from.y },
-      { op: 'L', x: props.to.x, y: props.to.y },
+      { op: 'M', x: from.x, y: from.y },
+      { op: 'L', x: to.x, y: to.y },
     ],
     fillRule: 'nonzero',
     strokeWidthPx: thickness,
@@ -129,8 +147,8 @@ export function annotationLeaderLineToIR(
     metadata: {
       role: 'annotation.leader-line',
       axis: 'annotation',
-      from: props.from,
-      to: props.to,
+      from,
+      to,
       dashed: !!props.dashed,
       thicknessPx: thickness,
     },

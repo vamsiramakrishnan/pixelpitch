@@ -37,7 +37,8 @@ export interface TimelineEvent {
 
 export interface DiagramTimelineProps {
   bbox: Bbox;
-  events: TimelineEvent[];
+  /** Timeline events. Optional — defaults to []. */
+  events?: TimelineEvent[];
   /** Rail color. Default `tokens.palette('divider', 0.5)`. */
   railColor?: Color;
   /** Tick + dot color. Default `tokens.palette('accent')`. */
@@ -85,7 +86,7 @@ export default function DiagramTimeline(props: DiagramTimelineProps): ReactNode 
           background: rail,
         }}
       />
-      {props.events.map((ev, i) => {
+      {(props.events ?? []).map((ev, i) => {
         const x = ev.at * props.bbox.w;
         return (
           <div key={i} style={{ position: 'absolute', left: 0, top: 0 }}>
@@ -189,8 +190,9 @@ export function diagramTimelineToIR(
   };
   children.push(rail);
 
+  const events = props.events ?? [];
   // Events
-  props.events.forEach((ev, i) => {
+  events.forEach((ev, i) => {
     const x = props.bbox.x + ev.at * props.bbox.w;
 
     const tick: PathShapeNode = {
@@ -282,7 +284,7 @@ export function diagramTimelineToIR(
     metadata: {
       role: 'diagram.timeline',
       axis: 'diagram',
-      eventCount: props.events.length,
+      eventCount: events.length,
       railY: props.railY ?? 0.5,
     },
     children,

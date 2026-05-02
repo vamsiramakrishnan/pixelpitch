@@ -29,10 +29,10 @@ export type FlowStepShape = 'circle' | 'pill';
 
 export interface DiagramFlowStepProps {
   bbox: Bbox;
-  /** Numeral or short tag (e.g., `1`, `'Q1'`). */
-  n: number | string;
-  /** Step caption. */
-  label: string;
+  /** Numeral or short tag (e.g., `1`, `'Q1'`). Optional — defaults to '?'. */
+  n?: number | string;
+  /** Step caption. Optional — defaults to ''. */
+  label?: string;
   /** Accent color for the dot fill. Default `tokens.palette('accent')`. */
   accent?: Color;
   /** Dot shape. Default `'circle'`. */
@@ -47,6 +47,8 @@ const DOT_DIAM = 36;
 
 export default function DiagramFlowStep(props: DiagramFlowStepProps): ReactNode {
   const t = defaultTokens;
+  const n = props.n ?? '?';
+  const labelText = props.label ?? '';
   const accent = colorToCss(props.accent ?? t.palette('accent'));
   const ink = colorToCss(t.palette('ink-1'));
   const inkInverse = colorToCss(t.palette('ink-inverse'));
@@ -82,7 +84,7 @@ export default function DiagramFlowStep(props: DiagramFlowStepProps): ReactNode 
           flexShrink: 0,
         }}
       >
-        {props.n}
+        {n}
       </div>
       <div
         data-recipe-id="diagram.flow-step.label"
@@ -91,7 +93,7 @@ export default function DiagramFlowStep(props: DiagramFlowStepProps): ReactNode 
           fontSize: 14,
         }}
       >
-        {props.label}
+        {labelText}
       </div>
     </div>
   );
@@ -105,6 +107,8 @@ export function diagramFlowStepToIR(
   props: DiagramFlowStepProps,
   tokens: TokensApi = defaultTokens,
 ): GroupNodeT {
+  const n = props.n ?? '?';
+  const labelText = props.label ?? '';
   const accent = props.accent ?? tokens.palette('accent');
   const ink = tokens.palette('ink-1');
   const inkInverse = tokens.palette('ink-inverse');
@@ -128,7 +132,7 @@ export function diagramFlowStepToIR(
     recipeId: 'diagram.flow-step.dot',
     bbox: dotBbox,
     zOrder: 0,
-    metadata: { role: 'flow-step-dot', shape, n: props.n },
+    metadata: { role: 'flow-step-dot', shape, n },
     shape: shape === 'pill' ? 'rounded-rect' : 'oval',
     borderRadiusPx: 9999,
     fill: { kind: 'solid', color: accent },
@@ -142,7 +146,7 @@ export function diagramFlowStepToIR(
     metadata: { role: 'flow-step-numeral' },
     paragraphs: [{
       runs: [{
-        text: String(props.n),
+        text: String(n),
         fontSizePx: 14,
         fontWeight: 700,
         fontFamily: tokens.fonts.sans,
@@ -162,7 +166,7 @@ export function diagramFlowStepToIR(
     metadata: { role: 'flow-step-label' },
     paragraphs: [{
       runs: [{
-        text: props.label,
+        text: labelText,
         fontSizePx: 14,
         fontWeight: 500,
         fontFamily: tokens.fonts.sans,
@@ -182,7 +186,7 @@ export function diagramFlowStepToIR(
     metadata: {
       role: 'diagram.flow-step',
       axis: 'diagram',
-      n: props.n,
+      n,
       shape,
     },
     children: [dot, numeral, label],

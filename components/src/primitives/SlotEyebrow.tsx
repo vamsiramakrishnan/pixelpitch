@@ -28,7 +28,8 @@ export type EyebrowRulePosition = 'before' | 'after' | 'none';
 
 export interface SlotEyebrowProps {
   bbox: Bbox;
-  text: string;
+  /** Eyebrow text. Optional — defaults to empty string. */
+  text?: string;
   /** Text color. Default `tokens.palette('ink-3')`. */
   color?: Color;
   /** Rule color. Default `tokens.palette('ruler', 0.4)`. */
@@ -51,6 +52,7 @@ export default function SlotEyebrow(props: SlotEyebrowProps): ReactNode {
   const ruleColor = colorToCss(props.ruleColor ?? t.palette('ruler', 0.4));
   const ruleLen = props.ruleLengthPx ?? 32;
   const rule = props.withRule ?? 'none';
+  const textValue = props.text ?? '';
   return (
     <div
       data-recipe-id="slot.eyebrow"
@@ -74,7 +76,7 @@ export default function SlotEyebrow(props: SlotEyebrowProps): ReactNode {
       {rule === 'before' && (
         <span style={{ display: 'inline-block', width: ruleLen, height: 1, background: ruleColor }} />
       )}
-      <span>{props.text}</span>
+      <span>{textValue}</span>
       {rule === 'after' && (
         <span style={{ display: 'inline-block', width: ruleLen, height: 1, background: ruleColor }} />
       )}
@@ -96,6 +98,7 @@ export function slotEyebrowToIR(
   const ruleLen = props.ruleLengthPx ?? 32;
   const rulePos = props.withRule ?? 'none';
   const ruleGap = 12;
+  const textValue = props.text ?? '';
 
   const children: IRNode[] = [];
   let textX = props.bbox.x;
@@ -128,7 +131,7 @@ export function slotEyebrowToIR(
       {
         runs: [
           {
-            text: props.text.toUpperCase(),
+            text: textValue.toUpperCase(),
             fontSizePx: spec.sizePx,
             fontWeight: spec.weight,
             fontFamily: spec.family,

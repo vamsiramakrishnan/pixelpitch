@@ -31,8 +31,10 @@ export type CellAlign = 'left' | 'center' | 'right';
 
 export interface DataTableProps {
   bbox: Bbox;
-  headers: string[];
-  rows: string[][];
+  /** Header labels. Optional — defaults to []. */
+  headers?: string[];
+  /** Body rows. Optional — defaults to []. */
+  rows?: string[][];
   /** Per-column alignment. Default `'left'`. */
   align?: CellAlign[];
   /** Zebra alternating row tint. Default `true`. */
@@ -75,7 +77,9 @@ export default function DataTable(props: DataTableProps): ReactNode {
   const zebraColor = colorToCss(props.zebraColor ?? t.palette('surface-2', 0.4));
   const dividerColor = colorToCss(props.dividerColor ?? t.palette('divider', 0.4));
   const headerH = eyebrow.sizePx + HEADER_PAD * 2;
-  const align = props.align ?? props.headers.map(() => 'left' as CellAlign);
+  const headers = props.headers ?? [];
+  const rows = props.rows ?? [];
+  const align = props.align ?? headers.map(() => 'left' as CellAlign);
   return (
     <div
       data-recipe-id="data.table"
@@ -90,7 +94,7 @@ export default function DataTable(props: DataTableProps): ReactNode {
       }}
     >
       <div style={{ display: 'flex', height: headerH, background: headerBg, borderBottom: `1px solid ${dividerColor}` }}>
-        {props.headers.map((h, c) => (
+        {headers.map((h, c) => (
           <div
             key={c}
             data-recipe-id={`data.table.header-${c + 1}`}
@@ -105,7 +109,7 @@ export default function DataTable(props: DataTableProps): ReactNode {
               color: headerColor,
               textAlign: align[c] ?? 'left',
               borderRight:
-                props.withVerticalDividers && c < props.headers.length - 1
+                props.withVerticalDividers && c < headers.length - 1
                   ? `1px solid ${dividerColor}`
                   : undefined,
             }}
@@ -114,14 +118,14 @@ export default function DataTable(props: DataTableProps): ReactNode {
           </div>
         ))}
       </div>
-      {props.rows.map((row, r) => (
+      {rows.map((row, r) => (
         <div
           key={r}
           style={{
             display: 'flex',
             flex: 1,
             background: props.zebra && r % 2 === 1 ? zebraColor : 'transparent',
-            borderBottom: props.withRowDividers && r < props.rows.length - 1 ? `1px solid ${dividerColor}` : undefined,
+            borderBottom: props.withRowDividers && r < rows.length - 1 ? `1px solid ${dividerColor}` : undefined,
           }}
         >
           {row.map((cell, c) => (
@@ -167,9 +171,11 @@ export function dataTableToIR(
   const zebraColor = props.zebraColor ?? tokens.palette('surface-2', 0.4);
   const dividerColor = props.dividerColor ?? tokens.palette('divider', 0.4);
 
-  const cols = props.headers.length;
-  const rowCount = props.rows.length;
-  const align = props.align ?? props.headers.map(() => 'left' as CellAlign);
+  const headers = props.headers ?? [];
+  const rows = props.rows ?? [];
+  const cols = headers.length;
+  const rowCount = rows.length;
+  const align = props.align ?? headers.map(() => 'left' as CellAlign);
   const headerH = eyebrow.sizePx + HEADER_PAD * 2;
   const cw = colWidth(props.bbox, cols);
   const rh = rowHeight(props.bbox, headerH, rowCount);
@@ -282,7 +288,7 @@ export function dataTableToIR(
   }
 
   // Headers
-  props.headers.forEach((h, c) => {
+  headers.forEach((h, c) => {
     const cellBbox: Bbox = {
       x: props.bbox.x + c * cw + HEADER_PAD,
       y: props.bbox.y + HEADER_PAD,
@@ -316,7 +322,7 @@ export function dataTableToIR(
   });
 
   // Cells
-  props.rows.forEach((row, r) => {
+  rows.forEach((row, r) => {
     row.forEach((cell, c) => {
       const cellBbox: Bbox = {
         x: props.bbox.x + c * cw + CELL_PAD,

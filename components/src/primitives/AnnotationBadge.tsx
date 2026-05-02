@@ -34,10 +34,12 @@ export type BadgeTone = 'info' | 'success' | 'warn' | 'danger' | 'neutral';
 
 export interface AnnotationBadgeProps {
   bbox: Bbox;
-  /** Label text. */
-  label: string;
-  /** Visual variant. */
-  kind: BadgeKind;
+  /** Label text. Optional — defaults to ''. */
+  label?: string;
+  /** Synonym for `label` — atoms.yaml uses `body` for some recipes. */
+  body?: string;
+  /** Visual variant. Default `'pill'`. */
+  kind?: BadgeKind;
   /** Tone — drives bg + text + border. Default `'info'`. */
   tone?: BadgeTone;
   /** Rotation, degrees CW. Honored on stamps + stickers; ignored on pills. */
@@ -64,16 +66,18 @@ function tonePalette(tokens: TokensApi, tone: BadgeTone): Tones {
 
 export default function AnnotationBadge(props: AnnotationBadgeProps): ReactNode {
   const t = defaultTokens;
+  const kind = props.kind ?? 'pill';
+  const labelText = props.label ?? props.body ?? '';
   const tone = props.tone ?? 'info';
   const palette = tonePalette(t, tone);
   const rotation = props.rotateDeg ?? 0;
-  const isPill = props.kind === 'pill';
-  const isStamp = props.kind === 'stamp';
-  const isSticker = props.kind === 'sticker';
+  const isPill = kind === 'pill';
+  const isStamp = kind === 'stamp';
+  const isSticker = kind === 'sticker';
   return (
     <div
       data-recipe-id="annotation.badge"
-      data-kind={props.kind}
+      data-kind={kind}
       style={{
         position: 'absolute',
         left: props.bbox.x,
@@ -99,7 +103,7 @@ export default function AnnotationBadge(props: AnnotationBadgeProps): ReactNode 
         boxSizing: 'border-box',
       }}
     >
-      {props.label}
+      {labelText}
     </div>
   );
 }
@@ -112,12 +116,14 @@ export function annotationBadgeToIR(
   props: AnnotationBadgeProps,
   tokens: TokensApi = defaultTokens,
 ): GroupNodeT {
+  const kind: BadgeKind = props.kind ?? 'pill';
+  const labelText = props.label ?? props.body ?? '';
   const tone = props.tone ?? 'info';
   const palette = tonePalette(tokens, tone);
   const rotation = props.rotateDeg ?? 0;
-  const isPill = props.kind === 'pill';
-  const isStamp = props.kind === 'stamp';
-  const isSticker = props.kind === 'sticker';
+  const isPill = kind === 'pill';
+  const isStamp = kind === 'stamp';
+  const isSticker = kind === 'sticker';
 
   const radiusPx = isPill ? 9999 : isSticker ? 12 : 4;
 
@@ -130,7 +136,7 @@ export function annotationBadgeToIR(
     recipeId: 'annotation.badge.bg',
     bbox: { ...props.bbox },
     zOrder: 0,
-    metadata: { role: 'annotation-badge-bg', kind: props.kind, tone, rotateDeg: rotation },
+    metadata: { role: 'annotation-badge-bg', kind, tone, rotateDeg: rotation },
     shape: 'rounded-rect',
     borderRadiusPx: radiusPx,
     fill: { kind: 'solid', color: palette.bg },
@@ -143,10 +149,10 @@ export function annotationBadgeToIR(
     recipeId: 'annotation.badge.label',
     bbox: { ...props.bbox },
     zOrder: 10,
-    metadata: { role: 'annotation-badge-label', label: props.label },
+    metadata: { role: 'annotation-badge-label', label: labelText },
     paragraphs: [{
       runs: [{
-        text: isStamp ? props.label.toUpperCase() : props.label,
+        text: isStamp ? labelText.toUpperCase() : labelText,
         fontSizePx: isPill ? 12 : 14,
         fontWeight: isPill ? 600 : 700,
         fontFamily: tokens.fonts.sans,
@@ -166,10 +172,10 @@ export function annotationBadgeToIR(
     metadata: {
       role: 'annotation.badge',
       axis: 'annotation',
-      kind: props.kind,
+      kind,
       tone,
       rotateDeg: rotation,
-      label: props.label,
+      label: labelText,
     },
     children: [bg, label],
   };

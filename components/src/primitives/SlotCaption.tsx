@@ -25,7 +25,8 @@ export type CaptionRegister = 'caption' | 'body' | 'lede';
 
 export interface SlotCaptionProps {
   bbox: Bbox;
-  text: string;
+  /** Caption text. Optional — defaults to empty string. */
+  text?: string;
   /** Type register. Default `'caption'`. */
   register?: CaptionRegister;
   /** Text color. Default `tokens.palette('ink-3')` (caption / body) or `'ink-2'` (lede). */
@@ -66,7 +67,7 @@ export default function SlotCaption(props: SlotCaptionProps): ReactNode {
         textAlign: props.align ?? 'left',
       }}
     >
-      {props.text}
+      {props.text ?? ''}
     </div>
   );
 }
@@ -92,7 +93,7 @@ export function slotCaptionToIR(
       {
         runs: [
           {
-            text: props.text,
+            text: props.text ?? '',
             fontSizePx: spec.sizePx,
             fontWeight: spec.weight,
             fontFamily: spec.family,

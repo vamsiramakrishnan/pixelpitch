@@ -20,6 +20,7 @@
 
 import type { ReactNode } from 'react';
 import type {
+  Bbox,
   Color,
   PathCommand,
   PathShapeNode,
@@ -32,8 +33,12 @@ import { colorToCss } from './_shared';
 export type ConnectorKind = 'straight' | 'orthogonal' | 'curved';
 
 export interface DiagramConnectorProps {
-  from: { x: number; y: number };
-  to: { x: number; y: number };
+  /** Optional bbox — when provided, from/to default to its left/right midpoints. */
+  bbox?: Bbox;
+  /** Start anchor. Optional when `bbox` is set. */
+  from?: { x: number; y: number };
+  /** End anchor. Optional when `bbox` is set. */
+  to?: { x: number; y: number };
   /** Routing style. Default `'straight'`. */
   kind?: ConnectorKind;
   /** Stroke color. Default `tokens.palette('ink-3')`. */
@@ -131,12 +136,31 @@ function commandsBbox(cmds: PathCommand[]) {
 // React preview
 // ---------------------------------------------------------------------------
 
+function resolveAnchors(props: DiagramConnectorProps): {
+  from: { x: number; y: number };
+  to: { x: number; y: number };
+} {
+  if (props.from && props.to) return { from: props.from, to: props.to };
+  if (props.bbox) {
+    const midY = props.bbox.y + props.bbox.h / 2;
+    return {
+      from: props.from ?? { x: props.bbox.x, y: midY },
+      to: props.to ?? { x: props.bbox.x + props.bbox.w, y: midY },
+    };
+  }
+  return {
+    from: props.from ?? { x: 0, y: 0 },
+    to: props.to ?? { x: 100, y: 0 },
+  };
+}
+
 export default function DiagramConnector(props: DiagramConnectorProps): ReactNode {
   const t = defaultTokens;
   const stroke = colorToCss(props.strokeColor ?? t.palette('ink-3'));
   const sw = props.strokeWidthPx ?? 2;
   const kind = props.kind ?? 'straight';
-  const cmds = buildCommands(props.from, props.to, kind);
+  const { from, to } = resolveAnchors(props);
+  const cmds = buildCommands(from, to, kind);
   const bbox = commandsBbox(cmds);
   const dash = props.strokeDasharray?.join(' ');
   // SVG path string in absolute coords
@@ -185,7 +209,8 @@ export function diagramConnectorToIR(
   const stroke = props.strokeColor ?? tokens.palette('ink-3');
   const sw = props.strokeWidthPx ?? 2;
   const kind = props.kind ?? 'straight';
-  const cmds = buildCommands(props.from, props.to, kind);
+  const { from, to } = resolveAnchors(props);
+  const cmds = buildCommands(from, to, kind);
   const bbox = commandsBbox(cmds);
 
   const markerEnd: Arrowhead = props.markerEnd ?? {
@@ -203,8 +228,8 @@ export function diagramConnectorToIR(
       role: 'diagram.connector',
       axis: 'diagram',
       kind,
-      from: props.from,
-      to: props.to,
+      from,
+      to,
     },
     commands: cmds,
     fillRule: 'nonzero',

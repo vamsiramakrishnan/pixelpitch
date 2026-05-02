@@ -26,8 +26,8 @@ import { colorToCss } from './_shared';
 
 export interface DataGaugeProps {
   bbox: Bbox;
-  /** Current reading. Clamped to [0, max]. */
-  value: number;
+  /** Current reading. Clamped to [0, max]. Optional — defaults to 0. */
+  value?: number;
   /** Domain max. Default `100`. */
   max?: number;
   /** Color of the value arc. Default `tokens.palette('accent')`. */
@@ -86,7 +86,7 @@ function geom(props: DataGaugeProps): Geom {
   const startDeg = -90 - sweep / 2;
   const endDeg = -90 + sweep / 2;
   const max = props.max ?? 100;
-  const v = Math.max(0, Math.min(max, props.value));
+  const v = Math.max(0, Math.min(max, props.value ?? 0));
   const valueDeg = startDeg + (v / max) * sweep;
   const cx = props.bbox.x + props.bbox.w / 2;
   const cy = props.bbox.y + props.bbox.h - thickness;
@@ -161,7 +161,7 @@ export function dataGaugeToIR(
     recipeId: 'data.gauge.value',
     bbox: { ...props.bbox },
     zOrder: 10,
-    metadata: { role: 'gauge-value', value: props.value, max: props.max ?? 100 },
+    metadata: { role: 'gauge-value', value: props.value ?? 0, max: props.max ?? 100 },
     commands: arcCommands(g.cx, g.cy, g.r, g.startDeg, g.valueDeg),
     fillRule: 'nonzero',
     strokeWidthPx: thickness,
@@ -178,7 +178,7 @@ export function dataGaugeToIR(
     metadata: {
       role: 'data.gauge',
       axis: 'data',
-      value: props.value,
+      value: props.value ?? 0,
       max: props.max ?? 100,
       sweepDeg: props.sweepDeg ?? 180,
       thicknessPx: thickness,

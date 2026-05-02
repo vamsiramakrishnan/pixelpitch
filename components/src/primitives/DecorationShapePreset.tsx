@@ -39,8 +39,8 @@ export type ShapePreset =
 
 export interface DecorationShapePresetProps {
   bbox: Bbox;
-  /** Which F1 preset to render. */
-  preset: ShapePreset;
+  /** Which F1 preset to render. Optional — defaults to 'rect'. */
+  preset?: ShapePreset;
   /** Optional fill — solid color, gradient, or pattern. Defaults to `tokens.palette('accent')`. */
   fill?: Fill;
   /** Optional stroke. */
@@ -74,17 +74,18 @@ const PREVIEW_CLIP: Partial<Record<ShapePreset, string>> = {
 export default function DecorationShapePreset(
   props: DecorationShapePresetProps,
 ): ReactNode {
+  const preset = props.preset ?? 'rect';
   const fill = props.fill ?? { kind: 'solid' as const, color: defaultTokens.palette('accent') };
-  const clip = PREVIEW_CLIP[props.preset];
-  const isOval = props.preset === 'oval';
-  const isRound = props.preset === 'rounded-rect';
+  const clip = PREVIEW_CLIP[preset];
+  const isOval = preset === 'oval';
+  const isRound = preset === 'rounded-rect';
   const borderCss = props.stroke
     ? `${props.stroke.widthPx}px solid ${colorToCss(props.stroke.color)}`
     : undefined;
   return (
     <div
       data-recipe-id="decoration.shape-preset"
-      data-preset={props.preset}
+      data-preset={preset}
       style={{
         position: 'absolute',
         left: props.bbox.x,
@@ -110,6 +111,7 @@ export function decorationShapePresetToIR(
   props: DecorationShapePresetProps,
   tokens: TokensApi = defaultTokens,
 ): GroupNodeT {
+  const preset: ShapePreset = props.preset ?? 'rect';
   const fill: Fill = props.fill ?? { kind: 'solid', color: tokens.palette('accent') };
   const border: Border | undefined = props.stroke
     ? {
@@ -127,9 +129,9 @@ export function decorationShapePresetToIR(
     metadata: {
       role: 'decoration.shape-preset',
       axis: 'decoration',
-      preset: props.preset,
+      preset,
     },
-    shape: props.preset,
+    shape: preset,
     borderRadiusPx: 0,
     fill,
     ...(border ? { border } : {}),
@@ -143,7 +145,7 @@ export function decorationShapePresetToIR(
     metadata: {
       role: 'decoration.shape-preset',
       axis: 'decoration',
-      preset: props.preset,
+      preset,
     },
     children: [node],
   };

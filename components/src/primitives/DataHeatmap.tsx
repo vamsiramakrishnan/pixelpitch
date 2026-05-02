@@ -24,8 +24,8 @@ import { colorToCss } from './_shared';
 
 export interface DataHeatmapProps {
   bbox: Bbox;
-  /** `cells[r][c]` — value in 0..1 (clamped). Ragged rows are padded right. */
-  cells: number[][];
+  /** `cells[r][c]` — value in 0..1 (clamped). Optional — defaults to []. */
+  cells?: number[][];
   /** [low, high] color stops. Defaults to `[ink-3 alpha 0.05, accent]`. */
   colorScale?: [Color, Color];
   /** Inter-cell gap, px. Default `2`. */
@@ -59,8 +59,9 @@ function lerpAlpha(low: Color, high: Color, t: number): Color {
 
 export default function DataHeatmap(props: DataHeatmapProps): ReactNode {
   const t = defaultTokens;
-  const cols = Math.max(0, ...props.cells.map(r => r.length));
-  const rows = props.cells.length;
+  const cells = props.cells ?? [];
+  const cols = Math.max(0, ...cells.map(r => r.length));
+  const rows = cells.length;
   const gap = props.gapPx ?? 2;
   const corner = props.cornerPx ?? 2;
   const scale: [Color, Color] = props.colorScale ?? [t.palette('ink-3', 0.05), t.palette('accent')];
@@ -79,7 +80,7 @@ export default function DataHeatmap(props: DataHeatmapProps): ReactNode {
         gap,
       }}
     >
-      {props.cells.flatMap((row, r) =>
+      {cells.flatMap((row, r) =>
         row.map((value, c) => {
           const color = lerpAlpha(scale[0], scale[1], value);
           return (
@@ -106,8 +107,9 @@ export function dataHeatmapToIR(
   props: DataHeatmapProps,
   tokens: TokensApi = defaultTokens,
 ): GroupNodeT {
-  const rows = props.cells.length;
-  const cols = Math.max(0, ...props.cells.map(r => r.length));
+  const cells = props.cells ?? [];
+  const rows = cells.length;
+  const cols = Math.max(0, ...cells.map(r => r.length));
   const gap = props.gapPx ?? 2;
   const corner = props.cornerPx ?? 2;
   const scale: [Color, Color] = props.colorScale ?? [tokens.palette('ink-3', 0.05), tokens.palette('accent')];
@@ -117,8 +119,8 @@ export function dataHeatmapToIR(
 
   const children: ShapeNode[] = [];
   for (let r = 0; r < rows; r += 1) {
-    for (let c = 0; c < (props.cells[r]?.length ?? 0); c += 1) {
-      const value = props.cells[r]?.[c] ?? 0;
+    for (let c = 0; c < (cells[r]?.length ?? 0); c += 1) {
+      const value = cells[r]?.[c] ?? 0;
       const color = lerpAlpha(scale[0], scale[1], value);
       children.push({
         kind: 'shape',

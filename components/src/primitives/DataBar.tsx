@@ -29,7 +29,10 @@ export type BarOrientation = 'horizontal' | 'vertical';
 
 export interface DataBarProps {
   bbox: Bbox;
-  values: number[];
+  /** Bar values. Optional — defaults to []. Synonym: `bars`. */
+  values?: number[];
+  /** Synonym for `values` — atoms.yaml uses `bars` for some recipes. */
+  bars?: number[];
   /** Bar orientation. Default `'vertical'`. */
   orientation?: BarOrientation;
   /** Bar fill color. Default `tokens.palette('accent')`. */
@@ -93,9 +96,10 @@ export default function DataBar(props: DataBarProps): ReactNode {
   const orient = props.orientation ?? 'vertical';
   const color = colorToCss(props.color ?? t.palette('accent'));
   const gap = props.gapPx ?? t.slot('gutter-tight');
-  const max = props.max ?? (props.values.length ? Math.max(...props.values) : 1);
+  const values = props.values ?? props.bars ?? [];
+  const max = props.max ?? (values.length ? Math.max(...values) : 1);
   const r = props.radiusPx ?? 4;
-  const bars = layoutBars(props.values, props.bbox, orient, gap, max);
+  const bars = layoutBars(values, props.bbox, orient, gap, max);
   return (
     <div
       data-recipe-id="data.bar"
@@ -137,9 +141,10 @@ export function dataBarToIR(
   const orient = props.orientation ?? 'vertical';
   const color = props.color ?? tokens.palette('accent');
   const gap = props.gapPx ?? tokens.slot('gutter-tight');
-  const max = props.max ?? (props.values.length ? Math.max(...props.values) : 1);
+  const values = props.values ?? props.bars ?? [];
+  const max = props.max ?? (values.length ? Math.max(...values) : 1);
   const radius = props.radiusPx ?? 4;
-  const bars = layoutBars(props.values, props.bbox, orient, gap, max);
+  const bars = layoutBars(values, props.bbox, orient, gap, max);
 
   const children: IRNode[] = bars.map(b => {
     const node: ShapeNode = {

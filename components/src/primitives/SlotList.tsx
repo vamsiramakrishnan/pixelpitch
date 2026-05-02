@@ -34,7 +34,8 @@ export type ListMarker = 'bullet' | 'check' | 'numbered' | 'dash';
 
 export interface SlotListProps {
   bbox: Bbox;
-  items: string[];
+  /** List items. Optional — defaults to []. */
+  items?: string[];
   /** Marker style. Default `'bullet'`. */
   marker?: ListMarker;
   /** Item text color. Default `tokens.palette('ink-1')`. */
@@ -86,7 +87,7 @@ export default function SlotList(props: SlotListProps): ReactNode {
         gap,
       }}
     >
-      {props.items.map((item, i) => (
+      {(props.items ?? []).map((item, i) => (
         <div key={i} style={{ display: 'flex', gap: MARKER_GAP }}>
           <div
             data-recipe-id={`slot.list.marker-${i + 1}`}
@@ -148,13 +149,14 @@ export function slotListToIR(
   const markerW = props.markerWidthPx ?? 32;
   const rowGap = props.rowGapPx ?? 12;
 
-  const itemCount = Math.max(1, props.items.length);
+  const items = props.items ?? [];
+  const itemCount = Math.max(1, items.length);
   const totalGap = rowGap * (itemCount - 1);
   const rowH = (props.bbox.h - totalGap) / itemCount;
 
   const children: IRNode[] = [];
 
-  props.items.forEach((label, i) => {
+  items.forEach((label, i) => {
     const rowY = props.bbox.y + i * (rowH + rowGap);
     const markerBbox: Bbox = { x: props.bbox.x, y: rowY, w: markerW, h: rowH };
     const labelBbox: Bbox = {
@@ -254,7 +256,7 @@ export function slotListToIR(
     recipeId: 'slot.list',
     bbox: { ...props.bbox },
     zOrder: 0,
-    metadata: { role: 'slot.list', axis: 'slot', marker, count: props.items.length },
+    metadata: { role: 'slot.list', axis: 'slot', marker, count: items.length },
     children,
   };
 }

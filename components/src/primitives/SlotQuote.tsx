@@ -27,8 +27,10 @@ import { colorToCss } from './_shared';
 
 export interface SlotQuoteProps {
   bbox: Bbox;
-  /** The quote body text. */
-  text: string;
+  /** The quote body text. Optional — defaults to ''. */
+  text?: string;
+  /** Synonym for `text` — atoms.yaml uses `quote` for some recipes. */
+  quote?: string;
   /** Attribution line, e.g. `'— Jane Doe, CEO'`. */
   attribution?: string;
   /** Render a large opening quote glyph. Default `false`. */
@@ -57,6 +59,7 @@ export default function SlotQuote(props: SlotQuoteProps): ReactNode {
   const color = colorToCss(props.color ?? t.palette('ink-1'));
   const attrColor = colorToCss(props.attributionColor ?? t.palette('ink-3'));
   const markColor = colorToCss(props.markColor ?? t.palette('accent', 0.6));
+  const text = props.text ?? props.quote ?? '';
   return (
     <div
       data-recipe-id="slot.quote"
@@ -96,7 +99,7 @@ export default function SlotQuote(props: SlotQuoteProps): ReactNode {
           color,
         }}
       >
-        {props.text}
+        {text}
       </div>
       {props.attribution && (
         <div
@@ -129,6 +132,7 @@ export function slotQuoteToIR(
   const attrColor = props.attributionColor ?? tokens.palette('ink-3');
   const markColor = props.markColor ?? tokens.palette('accent', 0.6);
   const align = props.align ?? 'left';
+  const text = props.text ?? props.quote ?? '';
 
   const children: IRNode[] = [];
   let cursorY = props.bbox.y;
@@ -176,7 +180,7 @@ export function slotQuoteToIR(
       {
         runs: [
           {
-            text: props.text,
+            text,
             fontSizePx: lede.sizePx,
             fontWeight: lede.weight,
             fontFamily: lede.family,

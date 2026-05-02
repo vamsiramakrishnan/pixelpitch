@@ -27,10 +27,10 @@ export type LineDash = 'solid' | 'dotted' | 'dashed';
 
 export interface DecorationLineStrokeProps {
   bbox: Bbox;
-  /** Direction of the stroke. */
-  orientation: LineOrientation;
-  /** Stroke color. */
-  color: Color;
+  /** Direction of the stroke. Optional — defaults to 'h'. */
+  orientation?: LineOrientation;
+  /** Stroke color. Optional — defaults to ruler tint. */
+  color?: Color;
   /** Solid / dotted / dashed. Default `'solid'`. */
   dash?: LineDash;
   /** Stroke thickness, px. Default `1`. */
@@ -52,8 +52,10 @@ export default function DecorationLineStroke(
 ): ReactNode {
   const thickness = props.thicknessPx ?? 1;
   const dash = props.dash ?? 'solid';
-  const isHorizontal = props.orientation === 'h';
-  const css = colorToCss(props.color);
+  const orientation: LineOrientation = props.orientation ?? 'h';
+  const isHorizontal = orientation === 'h';
+  const color = props.color ?? defaultTokens.palette('ruler');
+  const css = colorToCss(color);
   const styleSuffix = dash === 'solid' ? css : `${css} ${dash === 'dotted' ? 'dotted' : 'dashed'}`;
   return (
     <div
@@ -79,11 +81,13 @@ export default function DecorationLineStroke(
 
 export function decorationLineStrokeToIR(
   props: DecorationLineStrokeProps,
-  _tokens: TokensApi = defaultTokens,
+  tokens: TokensApi = defaultTokens,
 ): GroupNodeT {
   const thickness = props.thicknessPx ?? 1;
   const dash = props.dash ?? 'solid';
-  const isHorizontal = props.orientation === 'h';
+  const orientation: LineOrientation = props.orientation ?? 'h';
+  const isHorizontal = orientation === 'h';
+  const color = props.color ?? tokens.palette('ruler');
   const midY = props.bbox.y + props.bbox.h / 2;
   const midX = props.bbox.x + props.bbox.w / 2;
 
@@ -97,7 +101,7 @@ export function decorationLineStrokeToIR(
     metadata: {
       role: 'decoration.line-stroke',
       axis: 'decoration',
-      orientation: props.orientation,
+      orientation,
       dash,
       thicknessPx: thickness,
     },
@@ -112,7 +116,7 @@ export function decorationLineStrokeToIR(
         ],
     fillRule: 'nonzero',
     strokeWidthPx: thickness,
-    strokeColor: props.color,
+    strokeColor: color,
     strokeLinecap: dash === 'dotted' ? 'round' : 'butt',
     strokeLinejoin: 'miter',
     ...(dashArray ? { strokeDasharray: dashArray } : {}),
@@ -126,7 +130,7 @@ export function decorationLineStrokeToIR(
     metadata: {
       role: 'decoration.line-stroke',
       axis: 'decoration',
-      orientation: props.orientation,
+      orientation,
       dash,
       thicknessPx: thickness,
     },

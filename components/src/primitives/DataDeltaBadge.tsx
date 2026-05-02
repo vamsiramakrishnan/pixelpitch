@@ -29,8 +29,8 @@ export type DeltaTone = 'success' | 'danger' | 'neutral';
 
 export interface DataDeltaBadgeProps {
   bbox: Bbox;
-  /** Display value, e.g. '+29.4%'. */
-  value: string;
+  /** Display value, e.g. '+29.4%'. Optional — defaults to ''. */
+  value?: string;
   /** Direction glyph. Default `'up'`. */
   direction?: DeltaDirection;
   /** Size tier. Default `'md'`. */
@@ -99,7 +99,7 @@ export default function DataDeltaBadge(props: DataDeltaBadgeProps): ReactNode {
       }}
     >
       <span aria-hidden="true">{ARROW[direction]}</span>
-      <span>{props.value}</span>
+      <span>{props.value ?? ''}</span>
     </div>
   );
 }
@@ -117,7 +117,8 @@ export function dataDeltaBadgeToIR(
   const tone = props.tone ?? defaultTone(direction);
   const palette = tonePalette(tokens, tone);
   const sz = SIZE_PX[size];
-  const text = `${ARROW[direction]} ${props.value}`;
+  const value = props.value ?? '';
+  const text = `${ARROW[direction]} ${value}`;
 
   const bg: ShapeNode = {
     kind: 'shape',
@@ -135,7 +136,7 @@ export function dataDeltaBadgeToIR(
     recipeId: 'data.delta-badge.label',
     bbox: { ...props.bbox },
     zOrder: 10,
-    metadata: { role: 'delta-badge-label', direction, value: props.value },
+    metadata: { role: 'delta-badge-label', direction, value },
     paragraphs: [
       {
         runs: [
@@ -165,7 +166,7 @@ export function dataDeltaBadgeToIR(
       direction,
       size,
       tone,
-      value: props.value,
+      value,
     },
     children: [bg, label],
   };

@@ -30,8 +30,8 @@ import { colorToCss } from './_shared';
 
 export interface DataSparklineProps {
   bbox: Bbox;
-  /** Series values. Min length 2. */
-  values: number[];
+  /** Series values. Min length 2. Optional — defaults to []. */
+  values?: number[];
   /** Stroke color. Default `tokens.palette('accent')`. */
   strokeColor?: Color;
   /** Stroke width px. Default 2. */
@@ -101,7 +101,8 @@ export default function DataSparkline(props: DataSparklineProps): ReactNode {
   const t = defaultTokens;
   const stroke = colorToCss(props.strokeColor ?? t.palette('accent'));
   const sw = props.strokeWidthPx ?? 2;
-  const { pts, baselineY } = buildPoints(props.values, props.bbox);
+  const values = props.values ?? [];
+  const { pts, baselineY } = buildPoints(values, props.bbox);
   const last = pts[pts.length - 1]!;
   const r = props.markerRadiusPx ?? 4;
   const showMarker = props.withLastMarker ?? true;
@@ -149,7 +150,8 @@ export function dataSparklineToIR(
 ): GroupNodeT {
   const stroke = props.strokeColor ?? tokens.palette('accent');
   const sw = props.strokeWidthPx ?? 2;
-  const { pts, baselineY } = buildPoints(props.values, props.bbox);
+  const values = props.values ?? [];
+  const { pts, baselineY } = buildPoints(values, props.bbox);
   const last = pts[pts.length - 1]!;
   const r = props.markerRadiusPx ?? 4;
   const showMarker = props.withLastMarker ?? true;
@@ -186,7 +188,7 @@ export function dataSparklineToIR(
     recipeId: 'data.sparkline.line',
     bbox: { ...props.bbox },
     zOrder: 10,
-    metadata: { role: 'sparkline-line', samples: props.values.length },
+    metadata: { role: 'sparkline-line', samples: values.length },
     commands: lineCommands(pts),
     fillRule: 'nonzero',
     strokeWidthPx: sw,
@@ -218,7 +220,7 @@ export function dataSparklineToIR(
     metadata: {
       role: 'data.sparkline',
       axis: 'data',
-      sampleCount: props.values.length,
+      sampleCount: values.length,
       fillUnder: !!props.fillUnder,
     },
     children,

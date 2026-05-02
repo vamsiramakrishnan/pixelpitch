@@ -27,10 +27,10 @@ export type PatternKind = PatternFill['pattern'];
 
 export interface SurfacePatternTileProps {
   bbox: Bbox;
-  /** Which native pattern to tile. */
-  pattern: PatternKind;
-  /** Pattern foreground (the dots / line strokes). */
-  fgColor: Color;
+  /** Which native pattern to tile. Optional — defaults to 'dots'. */
+  pattern?: PatternKind;
+  /** Pattern foreground (the dots / line strokes). Optional — defaults to ruler tint. */
+  fgColor?: Color;
   /** Optional backdrop fill. Omit for transparent. */
   bgColor?: Color;
   /** Tile size in slide pixels. Used for both width + height. Default `16`. */
@@ -48,10 +48,11 @@ export interface SurfacePatternTileProps {
 // ---------------------------------------------------------------------------
 
 function previewBackground(props: SurfacePatternTileProps): string {
-  const fg = colorToCss(props.fgColor);
+  const fg = colorToCss(props.fgColor ?? defaultTokens.palette('ruler'));
   const tile = props.tilePx ?? 16;
   const feat = props.featurePx ?? 1;
-  switch (props.pattern) {
+  const pattern = props.pattern ?? 'dots';
+  switch (pattern) {
     case 'dots':
       return `radial-gradient(${fg} ${feat}px, transparent ${feat + 0.5}px) 0 0 / ${tile}px ${tile}px`;
     case 'lines-h':
@@ -106,11 +107,13 @@ export function surfacePatternTileToIR(
   const tile = props.tilePx ?? 16;
   const feature = props.featurePx ?? 1;
   const angle = props.angleDeg ?? 0;
+  const pattern: PatternKind = props.pattern ?? 'dots';
+  const fgColor: Color = props.fgColor ?? _tokens.palette('ruler');
 
   const fill: PatternFill = {
     kind: 'pattern',
-    pattern: props.pattern,
-    fgColor: props.fgColor,
+    pattern,
+    fgColor,
     ...(props.bgColor ? { bgColor: props.bgColor } : {}),
     tileWidthPx: tile,
     tileHeightPx: tile,
@@ -126,7 +129,7 @@ export function surfacePatternTileToIR(
     metadata: {
       role: 'surface.pattern-tile',
       axis: 'surface',
-      pattern: props.pattern,
+      pattern,
       tilePx: tile,
       featurePx: feature,
     },
@@ -143,7 +146,7 @@ export function surfacePatternTileToIR(
     metadata: {
       role: 'surface.pattern-tile',
       axis: 'surface',
-      pattern: props.pattern,
+      pattern,
       tilePx: tile,
       featurePx: feature,
       angleDeg: angle,

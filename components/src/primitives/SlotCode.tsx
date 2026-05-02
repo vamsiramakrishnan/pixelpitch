@@ -26,8 +26,8 @@ import { colorToCss } from './_shared';
 
 export interface SlotCodeProps {
   bbox: Bbox;
-  /** Code text. Newlines preserved. */
-  code: string;
+  /** Code text. Newlines preserved. Optional — defaults to ''. */
+  code?: string;
   /** Optional language label, e.g. `'typescript'`. */
   language?: string;
   /** Background tint. Default `tokens.palette('surface-2')`. */
@@ -77,7 +77,7 @@ export default function SlotCode(props: SlotCodeProps): ReactNode {
         overflow: 'hidden',
       }}
     >
-      {props.code}
+      {props.code ?? ''}
       {props.language && (
         <div
           data-recipe-id="slot.code.lang-pill"
@@ -148,7 +148,7 @@ export function slotCodeToIR(
       {
         runs: [
           {
-            text: props.code,
+            text: props.code ?? '',
             fontSizePx: mono.sizePx,
             fontWeight: mono.weight,
             fontFamily: mono.family,

@@ -36,7 +36,8 @@ export interface DonutSegment {
 
 export interface DataDonutProps {
   bbox: Bbox;
-  segments: DonutSegment[];
+  /** Donut segments. Optional — defaults to []. */
+  segments?: DonutSegment[];
   /** Inner hole radius as fraction of outer radius. Default 0.6 (donut). */
   innerRadiusFrac?: number;
   /** Hole fill (matches slide bg). Default `tokens.palette('surface-1')`. */
@@ -121,7 +122,8 @@ export default function DataDonut(props: DataDonutProps): ReactNode {
   const innerFrac = props.innerRadiusFrac ?? 0.6;
   const startAngle = props.startAngleDeg ?? -90;
   const g = geom(props.bbox, innerFrac);
-  const total = props.segments.reduce((s, x) => s + x.value, 0) || 1;
+  const segments = props.segments ?? [];
+  const total = segments.reduce((s, x) => s + x.value, 0) || 1;
   const defaultColor = props.defaultColor ?? t.palette('accent');
   const hole = colorToCss(props.holeColor ?? t.palette('surface-1'));
   let cursor = startAngle;
@@ -137,7 +139,7 @@ export default function DataDonut(props: DataDonutProps): ReactNode {
       }}
     >
       <svg width={props.bbox.w} height={props.bbox.h} viewBox={`${props.bbox.x} ${props.bbox.y} ${props.bbox.w} ${props.bbox.h}`}>
-        {props.segments.map((seg, i) => {
+        {segments.map((seg, i) => {
           const sweep = (seg.value / total) * 360;
           const cmds = segmentCommands(g.cx, g.cy, g.r, g.innerR, cursor, cursor + sweep);
           cursor += sweep;
@@ -169,13 +171,14 @@ export function dataDonutToIR(
   const innerFrac = props.innerRadiusFrac ?? 0.6;
   const startAngle = props.startAngleDeg ?? -90;
   const g = geom(props.bbox, innerFrac);
-  const total = props.segments.reduce((s, x) => s + x.value, 0) || 1;
+  const segments = props.segments ?? [];
+  const total = segments.reduce((s, x) => s + x.value, 0) || 1;
   const defaultColor = props.defaultColor ?? tokens.palette('accent');
   const holeColor = props.holeColor ?? tokens.palette('surface-1');
 
   const children: IRNode[] = [];
   let cursor = startAngle;
-  props.segments.forEach((seg, i) => {
+  segments.forEach((seg, i) => {
     const sweep = (seg.value / total) * 360;
     const segColor = seg.color ?? defaultColor;
     const cmds = segmentCommands(g.cx, g.cy, g.r, g.innerR, cursor, cursor + sweep);
@@ -213,7 +216,7 @@ export function dataDonutToIR(
         w: g.innerR * 2,
         h: g.innerR * 2,
       },
-      zOrder: props.segments.length * 10,
+      zOrder: segments.length * 10,
       metadata: { role: 'donut-hole' },
       shape: 'oval',
       borderRadiusPx: 0,
@@ -230,7 +233,7 @@ export function dataDonutToIR(
     metadata: {
       role: 'data.donut',
       axis: 'data',
-      segmentCount: props.segments.length,
+      segmentCount: segments.length,
       innerRadiusFrac: innerFrac,
       startAngleDeg: startAngle,
     },
