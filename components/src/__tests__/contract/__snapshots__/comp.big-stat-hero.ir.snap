@@ -8,26 +8,86 @@
   "children": [
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 120,
+        "w": 240,
+        "x": 430,
+        "y": 140
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 120,
+            "w": 240,
+            "x": 430,
+            "y": 140
           },
           "children": [
             {
               "bbox": {
-                "h": 200,
-                "w": 600,
-                "x": 100,
-                "y": 100
+                "h": 120,
+                "w": 240,
+                "x": 430,
+                "y": 140
+              },
+              "borderRadiusPx": 0,
+              "fill": {
+                "color": "#0e0e1a",
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "axis": "surface",
+                "role": "surface.shape-fill",
+                "shape": "rounded-rect"
+              },
+              "recipeId": "surface.shape-fill",
+              "shape": "rounded-rect",
+              "zOrder": 0
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "surface",
+            "radiusPx": 0,
+            "role": "surface.shape-fill",
+            "shape": "rounded-rect"
+          },
+          "recipeId": "surface.shape-fill",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "surf",
+        "primitive": "surface.shape-fill",
+        "role": "surf.card-depth",
+        "version": "1.0.0"
+      },
+      "recipeId": "surf.card-depth",
+      "zOrder": 0
+    },
+    {
+      "bbox": {
+        "h": 8,
+        "w": 510,
+        "x": 145,
+        "y": 120
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 8,
+            "w": 510,
+            "x": 145,
+            "y": 120
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 8,
+                "w": 510,
+                "x": 145,
+                "y": 120
               },
               "kind": "text",
               "metadata": {
@@ -43,7 +103,7 @@
                       "fontSizePx": 13,
                       "fontWeight": 600,
                       "italic": false,
-                      "text": "",
+                      "text": "EYEBROW",
                       "underline": false
                     }
                   ]
@@ -71,22 +131,22 @@
         "version": "1.0.0"
       },
       "recipeId": "type.eyebrow-ruled",
-      "zOrder": 0
+      "zOrder": 10
     },
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 110.00000000000001,
+        "w": 270,
+        "x": 145,
+        "y": 136
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 110.00000000000001,
+            "w": 270,
+            "x": 145,
+            "y": 136
           },
           "kind": "text",
           "metadata": {
@@ -141,90 +201,30 @@
         "version": "1.0.0"
       },
       "recipeId": "type.big-number-gradient",
-      "zOrder": 10
-    },
-    {
-      "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
-      },
-      "children": [
-        {
-          "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
-          },
-          "children": [
-            {
-              "bbox": {
-                "h": 200,
-                "w": 600,
-                "x": 100,
-                "y": 100
-              },
-              "borderRadiusPx": 0,
-              "fill": {
-                "color": "#0e0e1a",
-                "kind": "solid"
-              },
-              "kind": "shape",
-              "metadata": {
-                "axis": "surface",
-                "role": "surface.shape-fill",
-                "shape": "rounded-rect"
-              },
-              "recipeId": "surface.shape-fill",
-              "shape": "rounded-rect",
-              "zOrder": 0
-            }
-          ],
-          "kind": "group",
-          "metadata": {
-            "axis": "surface",
-            "radiusPx": 0,
-            "role": "surface.shape-fill",
-            "shape": "rounded-rect"
-          },
-          "recipeId": "surface.shape-fill",
-          "zOrder": 0
-        }
-      ],
-      "kind": "group",
-      "metadata": {
-        "axis": "surf",
-        "primitive": "surface.shape-fill",
-        "role": "surf.card-depth",
-        "version": "1.0.0"
-      },
-      "recipeId": "surf.card-depth",
       "zOrder": 20
     },
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 12,
+        "w": 90,
+        "x": 460,
+        "y": 224
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 12,
+            "w": 90,
+            "x": 460,
+            "y": 224
           },
           "children": [
             {
               "bbox": {
-                "h": 200,
-                "w": 600,
-                "x": 100,
-                "y": 100
+                "h": 12,
+                "w": 90,
+                "x": 460,
+                "y": 224
               },
               "borderRadiusPx": 9999,
               "fill": {
@@ -245,16 +245,16 @@
             },
             {
               "bbox": {
-                "h": 200,
-                "w": 600,
-                "x": 100,
-                "y": 100
+                "h": 12,
+                "w": 90,
+                "x": 460,
+                "y": 224
               },
               "kind": "text",
               "metadata": {
                 "direction": "up",
                 "role": "delta-badge-label",
-                "value": "Sample"
+                "value": ""
               },
               "paragraphs": [
                 {
@@ -266,7 +266,7 @@
                       "fontSizePx": 13,
                       "fontWeight": 600,
                       "italic": false,
-                      "text": "▲ Sample",
+                      "text": "▲ ",
                       "underline": false
                     }
                   ]
@@ -283,7 +283,7 @@
             "role": "data.delta-badge",
             "size": "md",
             "tone": "success",
-            "value": "Sample"
+            "value": ""
           },
           "recipeId": "data.delta-badge",
           "zOrder": 0

@@ -55,9 +55,9 @@ export function compHeroInvestorToIR(
     children: [
     { kind: 'group' as const, recipeId: 'bg.aurora-band', bbox: props.bbox, zOrder: 0, metadata: { role: 'bg.aurora-band', placeholder: true }, children: [] },
     { ...bgAuroraCornersToIR({ bbox: props.bbox, intensity: "low" } as never, tokens), zOrder: 10 },
-    { ...typeEyebrowRuledToIR({ bbox: props.bbox } as never, tokens), zOrder: 20 },
-    { ...typeBigNumberGradientToIR({ bbox: props.bbox } as never, tokens), zOrder: 30 },
-    { ...typePullquoteSerifToIR({ bbox: props.bbox } as never, tokens), zOrder: 40 },
+    { ...typeEyebrowRuledToIR({ bbox: { x: props.bbox.x + 0.075 * props.bbox.w, y: props.bbox.y + 0.12 * props.bbox.h, w: 0.85 * props.bbox.w, h: 0.04 * props.bbox.h }, label: props.eyebrow } as never, tokens), zOrder: 20 },
+    { ...typeBigNumberGradientToIR({ bbox: { x: props.bbox.x + 0.075 * props.bbox.w, y: props.bbox.y + 0.2 * props.bbox.h, w: 0.85 * props.bbox.w, h: 0.45 * props.bbox.h }, value: props.headline } as never, tokens), zOrder: 30 },
+    { ...typePullquoteSerifToIR({ bbox: { x: props.bbox.x + 0.075 * props.bbox.w, y: props.bbox.y + 0.72 * props.bbox.h, w: 0.7 * props.bbox.w, h: 0.18 * props.bbox.h }, quote: props.lede } as never, tokens), zOrder: 40 },
     ],
   };
 }

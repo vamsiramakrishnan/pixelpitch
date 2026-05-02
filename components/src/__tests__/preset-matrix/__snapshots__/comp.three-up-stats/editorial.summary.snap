@@ -1,10 +1,10 @@
 {
-  "native_area_px2": 3686400,
-  "native_ratio": 4,
+  "native_area_px2": 505728.0000000001,
+  "native_ratio": 0.5488,
   "preset": "editorial",
   "raster_nodes": 0,
   "recipe": "comp.three-up-stats",
   "root_area_px2": 921600,
-  "status": "strict",
-  "total_nodes": 12
+  "status": "observe",
+  "total_nodes": 26
 }

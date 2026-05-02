@@ -566,7 +566,33 @@ function renderRecipeFile(
     resolved.forEach((r0, i) => {
       const inlineProps = r0.entry.props ?? {};
       const hasBboxOverride = inlineProps.bbox !== undefined;
-      const bboxExpr = hasBboxOverride ? jsonStringify(inlineProps.bbox) : 'props.bbox';
+      // Composite layout: a bbox override may be:
+      //   - absolute: { x, y, w, h } in slide-pixel space (any value > 1)
+      //   - relative: { x, y, w, h } where ALL four are 0..1 fractions
+      //               of the parent bbox (treated as a fractional rect).
+      // The relative form is what most comp.* atoms want — tile children
+      // inside the parent rather than overlaying them all at full bbox.
+      let bboxExpr: string;
+      if (hasBboxOverride) {
+        const ov = inlineProps.bbox as Record<string, number>;
+        const allFrac =
+          typeof ov.x === 'number' && typeof ov.y === 'number' &&
+          typeof ov.w === 'number' && typeof ov.h === 'number' &&
+          ov.x >= 0 && ov.x <= 1 && ov.y >= 0 && ov.y <= 1 &&
+          ov.w > 0 && ov.w <= 1 && ov.h > 0 && ov.h <= 1;
+        if (allFrac) {
+          // Inline a runtime sub-bbox computation.
+          bboxExpr =
+            `{ x: props.bbox.x + ${ov.x} * props.bbox.w, ` +
+            `y: props.bbox.y + ${ov.y} * props.bbox.h, ` +
+            `w: ${ov.w} * props.bbox.w, ` +
+            `h: ${ov.h} * props.bbox.h }`;
+        } else {
+          bboxExpr = jsonStringify(ov);
+        }
+      } else {
+        bboxExpr = 'props.bbox';
+      }
 
       // Determine which prop names the child accepts.
       let childAccepts: Set<string> = new Set();
@@ -612,13 +638,22 @@ function renderRecipeFile(
         }
       }
 
-      // Inline override props from the composes block (atoms.yaml-stamped
-      // constants like `intensity: low`). These come AFTER parent forwards
-      // so the YAML-declared override wins.
+      // Inline override props from the composes block. Two flavors:
+      //   - Constants: `intensity: low` — emitted as JS literals.
+      //   - Parent-prop refs: `'@parent.eyebrow'` — emitted as
+      //     `props.eyebrow`, so the parent recipe's runtime value
+      //     reaches the child even when names diverge (eyebrow → label).
+      // These come AFTER exact-name parent forwards so the YAML
+      // override always wins.
       for (const [k, v] of Object.entries(inlineProps)) {
         if (k === 'bbox') continue;
         if (usedNames.has(k)) continue;
-        propsObj.push(`${jsKeyOf(k)}: ${jsonStringify(v)}`);
+        if (typeof v === 'string' && v.startsWith('@parent.')) {
+          const parentName = v.slice('@parent.'.length);
+          propsObj.push(`${jsKeyOf(k)}: props.${parentName}`);
+        } else {
+          propsObj.push(`${jsKeyOf(k)}: ${jsonStringify(v)}`);
+        }
         usedNames.add(k);
       }
       const propsLit = `{ ${propsObj.join(', ')} }`;

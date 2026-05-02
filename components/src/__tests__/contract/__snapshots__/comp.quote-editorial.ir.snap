@@ -8,26 +8,26 @@
   "children": [
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 90,
+        "w": 480,
+        "x": 160,
+        "y": 140
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 90,
+            "w": 480,
+            "x": 160,
+            "y": 140
           },
           "children": [
             {
               "bbox": {
-                "h": 200,
-                "w": 600,
-                "x": 100,
-                "y": 100
+                "h": 90,
+                "w": 480,
+                "x": 160,
+                "y": 140
               },
               "kind": "text",
               "metadata": {
@@ -73,22 +73,6 @@
       },
       "recipeId": "type.pullquote-serif",
       "zOrder": 0
-    },
-    {
-      "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
-      },
-      "children": [],
-      "kind": "group",
-      "metadata": {
-        "placeholder": true,
-        "role": "ui.avatar-cluster"
-      },
-      "recipeId": "ui.avatar-cluster",
-      "zOrder": 10
     }
   ],
   "kind": "group",

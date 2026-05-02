@@ -2575,11 +2575,24 @@ patterns:
       component: CompHeroInvestor
       tier: B
       composes:
+        # Backgrounds overlay at full bbox (no layout).
         - { atom: bg.aurora-band }
         - { atom: bg.aurora-corners, props: { intensity: low } }
-        - { atom: type.eyebrow-ruled }
-        - { atom: type.big-number-gradient }
-        - { atom: type.pullquote-serif }
+        # Eyebrow at the top, single line.
+        - atom: type.eyebrow-ruled
+          props:
+            bbox:  { x: 0.075, y: 0.12, w: 0.85, h: 0.04 }
+            label: '@parent.eyebrow'
+        # Display headline, large block in the upper-middle.
+        - atom: type.big-number-gradient
+          props:
+            bbox:  { x: 0.075, y: 0.20, w: 0.85, h: 0.45 }
+            value: '@parent.headline'
+        # Lede paragraph below the headline.
+        - atom: type.pullquote-serif
+          props:
+            bbox:  { x: 0.075, y: 0.72, w: 0.70, h: 0.18 }
+            quote: '@parent.lede'
       version: 1.0.0
       props:
         bbox:     { type: bbox,   required: true }
@@ -2604,8 +2617,14 @@ patterns:
       tier: B
       composes:
         - { atom: bg.aurora-corners, props: { intensity: med } }
-        - { atom: type.eyebrow-ruled }
-        - { atom: type.big-number-gradient }
+        - atom: type.eyebrow-ruled
+          props:
+            bbox:  { x: 0.075, y: 0.10, w: 0.85, h: 0.04 }
+            label: '@parent.eyebrow'
+        - atom: type.big-number-gradient
+          props:
+            bbox:  { x: 0.075, y: 0.20, w: 0.85, h: 0.45 }
+            value: '@parent.headline'
       version: 1.0.0
       props:
         bbox:     { type: bbox,   required: true }
@@ -2629,9 +2648,21 @@ patterns:
       component: CompAgenda2col
       tier: B
       composes:
-        - { atom: type.eyebrow-ruled }
-        - { atom: dec.hairline-rule }
-        - { atom: type.numerals-tabular }
+        - atom: type.eyebrow-ruled
+          props:
+            bbox:  { x: 0.075, y: 0.12, w: 0.85, h: 0.04 }
+            label: 'Agenda'
+        - atom: type.big-number-gradient
+          props:
+            bbox:  { x: 0.075, y: 0.18, w: 0.85, h: 0.18 }
+            value: '@parent.headline'
+        - atom: dec.hairline-rule
+          props:
+            bbox: { x: 0.075, y: 0.40, w: 0.85, h: 0.005 }
+        - atom: type.numerals-tabular
+          props:
+            bbox:   { x: 0.075, y: 0.45, w: 0.85, h: 0.40 }
+            digits: '01 · 02 · 03 · 04 · 05 · 06'
       version: 1.0.0
       props:
         bbox:     { type: bbox,   required: true }
@@ -2654,8 +2685,17 @@ patterns:
       component: CompAgendaToc
       tier: B
       composes:
-        - { atom: type.eyebrow-ruled }
-        - { atom: dec.hairline-rule }
+        - atom: type.eyebrow-ruled
+          props:
+            bbox:  { x: 0.075, y: 0.12, w: 0.85, h: 0.04 }
+            label: 'Today'
+        - atom: type.big-number-gradient
+          props:
+            bbox:  { x: 0.075, y: 0.18, w: 0.85, h: 0.16 }
+            value: 'What we will cover'
+        - atom: dec.hairline-rule
+          props:
+            bbox: { x: 0.075, y: 0.42, w: 0.85, h: 0.005 }
       version: 1.0.0
       props:
         bbox:  { type: bbox,  required: true }
@@ -2677,10 +2717,24 @@ patterns:
       component: CompBigStatHero
       tier: B
       composes:
-        - { atom: type.eyebrow-ruled }
-        - { atom: type.big-number-gradient, props: { gradient: 'tokens.gradient.accent-grad' } }
-        - { atom: surf.card-depth }
-        - { atom: data.delta-badge }
+        # Side card behind the big stat — overlay-style background.
+        - atom: surf.card-depth
+          props:
+            bbox: { x: 0.55, y: 0.20, w: 0.40, h: 0.60 }
+        - atom: type.eyebrow-ruled
+          props:
+            bbox:  { x: 0.075, y: 0.10, w: 0.85, h: 0.04 }
+            label: '@parent.eyebrow'
+        - atom: type.big-number-gradient
+          props:
+            bbox:     { x: 0.075, y: 0.18, w: 0.45, h: 0.55 }
+            value:    '@parent.value'
+            unit:     '@parent.unit'
+            gradient: 'tokens.gradient.accent-grad'
+        - atom: data.delta-badge
+          props:
+            bbox:  { x: 0.60, y: 0.62, w: 0.15, h: 0.06 }
+            value: '@parent.delta'
       version: 1.0.0
       props:
         bbox:     { type: bbox,   required: true }
@@ -2706,10 +2760,34 @@ patterns:
       component: CompThreeUpStats
       tier: B
       composes:
-        - { atom: type.eyebrow-ruled }
-        - { atom: surf.card-raised }
-        - { atom: data.bullet-bar }
-        - { atom: data.delta-badge }
+        - atom: type.eyebrow-ruled
+          props:
+            bbox:  { x: 0.075, y: 0.10, w: 0.85, h: 0.04 }
+            label: '@parent.eyebrow'
+        - atom: type.big-number-gradient
+          props:
+            bbox:  { x: 0.075, y: 0.18, w: 0.85, h: 0.10 }
+            value: '@parent.headline'
+        # Three side-by-side cards.
+        - atom: surf.card-raised
+          props:
+            bbox: { x: 0.075, y: 0.40, w: 0.265, h: 0.45 }
+        - atom: surf.card-raised
+          props:
+            bbox: { x: 0.367, y: 0.40, w: 0.265, h: 0.45 }
+        - atom: surf.card-raised
+          props:
+            bbox: { x: 0.660, y: 0.40, w: 0.265, h: 0.45 }
+        # Delta badges anchored bottom-left of each card.
+        - atom: data.delta-badge
+          props:
+            bbox: { x: 0.10, y: 0.74, w: 0.20, h: 0.06 }
+        - atom: data.delta-badge
+          props:
+            bbox: { x: 0.392, y: 0.74, w: 0.20, h: 0.06 }
+        - atom: data.delta-badge
+          props:
+            bbox: { x: 0.685, y: 0.74, w: 0.20, h: 0.06 }
       version: 1.0.0
       props:
         bbox:     { type: bbox,   required: true }
@@ -2733,8 +2811,11 @@ patterns:
       component: CompQuoteEditorial
       tier: B
       composes:
-        - { atom: type.pullquote-serif }
-        - { atom: ui.avatar-cluster }
+        - atom: type.pullquote-serif
+          props:
+            bbox:        { x: 0.10, y: 0.20, w: 0.80, h: 0.45 }
+            quote:       '@parent.quote'
+            attribution: '@parent.attribution'
       version: 1.0.0
       props:
         bbox:        { type: bbox,   required: true }
@@ -2758,8 +2839,14 @@ patterns:
       tier: B
       composes:
         - { atom: bg.aurora-corners, props: { intensity: high } }
-        - { atom: dec.numeral-chapter }
-        - { atom: type.eyebrow-ruled }
+        - atom: dec.numeral-chapter
+          props:
+            bbox:   { x: 0.05, y: 0.15, w: 0.55, h: 0.55 }
+            digits: '@parent.chapter'
+        - atom: type.eyebrow-ruled
+          props:
+            bbox:  { x: 0.05, y: 0.78, w: 0.85, h: 0.04 }
+            label: '@parent.title'
       version: 1.0.0
       props:
         bbox:    { type: bbox,   required: true }
@@ -2782,9 +2869,17 @@ patterns:
       component: CompRoadmapQuarterly
       tier: B
       composes:
-        - { atom: type.eyebrow-ruled }
-        - { atom: data.connector }
-        - { atom: ui.stepper }
+        - atom: type.eyebrow-ruled
+          props:
+            bbox:  { x: 0.075, y: 0.10, w: 0.85, h: 0.04 }
+            label: '@parent.eyebrow'
+        - atom: type.big-number-gradient
+          props:
+            bbox:  { x: 0.075, y: 0.18, w: 0.85, h: 0.12 }
+            value: 'Roadmap'
+        - atom: ui.stepper
+          props:
+            bbox: { x: 0.10, y: 0.45, w: 0.80, h: 0.20 }
       version: 1.0.0
       props:
         bbox:     { type: bbox,   required: true }
@@ -2807,9 +2902,27 @@ patterns:
       component: CompTeamGrid
       tier: B
       composes:
-        - { atom: type.eyebrow-ruled }
-        - { atom: surf.card-raised }
-        - { atom: ui.avatar-cluster }
+        - atom: type.eyebrow-ruled
+          props:
+            bbox:  { x: 0.075, y: 0.10, w: 0.85, h: 0.04 }
+            label: 'Team'
+        - atom: type.big-number-gradient
+          props:
+            bbox:  { x: 0.075, y: 0.18, w: 0.85, h: 0.12 }
+            value: '@parent.headline'
+        # 2x3 grid of cards (standard team grid layout).
+        - atom: surf.card-raised
+          props: { bbox: { x: 0.075, y: 0.40, w: 0.265, h: 0.20 } }
+        - atom: surf.card-raised
+          props: { bbox: { x: 0.367, y: 0.40, w: 0.265, h: 0.20 } }
+        - atom: surf.card-raised
+          props: { bbox: { x: 0.660, y: 0.40, w: 0.265, h: 0.20 } }
+        - atom: surf.card-raised
+          props: { bbox: { x: 0.075, y: 0.65, w: 0.265, h: 0.20 } }
+        - atom: surf.card-raised
+          props: { bbox: { x: 0.367, y: 0.65, w: 0.265, h: 0.20 } }
+        - atom: surf.card-raised
+          props: { bbox: { x: 0.660, y: 0.65, w: 0.265, h: 0.20 } }
       version: 1.0.0
       props:
         bbox:     { type: bbox,   required: true }
@@ -2833,7 +2946,14 @@ patterns:
       tier: B
       composes:
         - { atom: bg.aurora-corners, props: { intensity: high } }
-        - { atom: type.big-number-gradient }
+        - atom: type.big-number-gradient
+          props:
+            bbox:  { x: 0.075, y: 0.32, w: 0.85, h: 0.36 }
+            value: '@parent.headline'
+        - atom: type.eyebrow-ruled
+          props:
+            bbox:  { x: 0.075, y: 0.74, w: 0.85, h: 0.04 }
+            label: '@parent.cta'
       version: 1.0.0
       props:
         bbox:     { type: bbox,   required: true }
@@ -2856,10 +2976,21 @@ patterns:
       component: CompBentoMixed
       tier: B
       composes:
-        - { atom: surf.bento-cell }
-        - { atom: surf.glass }
-        - { atom: ui.code-block-syntax }
-        - { atom: ui.avatar-cluster }
+        # 4-cell bento layout: tall card on left, three smaller on right.
+        - atom: surf.bento-cell
+          props: { bbox: { x: 0.075, y: 0.10, w: 0.42, h: 0.80 } }
+        - atom: surf.bento-cell
+          props: { bbox: { x: 0.520, y: 0.10, w: 0.405, h: 0.38 } }
+        - atom: surf.bento-cell
+          props: { bbox: { x: 0.520, y: 0.52, w: 0.193, h: 0.38 } }
+        - atom: surf.bento-cell
+          props: { bbox: { x: 0.732, y: 0.52, w: 0.193, h: 0.38 } }
+        # Code block fills the tall left card.
+        - atom: ui.code-block-syntax
+          props:
+            bbox: { x: 0.10, y: 0.13, w: 0.37, h: 0.74 }
+            code: 'await convert(\"deck.html\", \"out.pptx\")'
+            language: 'typescript'
       version: 1.0.0
       props:
         bbox:  { type: bbox,  required: true }
@@ -2881,9 +3012,19 @@ patterns:
       component: CompAnnotatedScreenshot
       tier: B
       composes:
-        - { atom: ui.browser-mac }
-        - { atom: anno.numbered-hotspot }
-        - { atom: anno.tooltip }
+        - atom: ui.browser-mac
+          props:
+            bbox: { x: 0.075, y: 0.10, w: 0.85, h: 0.75 }
+            url:  '@parent.url'
+        - atom: anno.numbered-hotspot
+          props:
+            bbox: { x: 0.20, y: 0.30, w: 0.05, h: 0.07 }
+        - atom: anno.numbered-hotspot
+          props:
+            bbox: { x: 0.55, y: 0.50, w: 0.05, h: 0.07 }
+        - atom: anno.tooltip
+          props:
+            bbox: { x: 0.27, y: 0.30, w: 0.18, h: 0.07 }
       version: 1.0.0
       props:
         bbox:        { type: bbox,   required: true }
@@ -2907,11 +3048,24 @@ patterns:
       component: CompDataOverview
       tier: B
       composes:
-        - { atom: type.eyebrow-ruled }
-        - { atom: data.donut }
-        - { atom: data.bar-set-h }
-        - { atom: data.sparkline }
-        - { atom: data.kpi-row }
+        - atom: type.eyebrow-ruled
+          props:
+            bbox:  { x: 0.075, y: 0.08, w: 0.85, h: 0.04 }
+            label: 'Data overview'
+        - atom: type.big-number-gradient
+          props:
+            bbox:  { x: 0.075, y: 0.14, w: 0.85, h: 0.10 }
+            value: '@parent.headline'
+        # Top row: donut, horizontal bars, sparkline.
+        - atom: data.donut
+          props: { bbox: { x: 0.075, y: 0.30, w: 0.20, h: 0.30 } }
+        - atom: data.bar-set-h
+          props: { bbox: { x: 0.32, y: 0.30, w: 0.32, h: 0.30 } }
+        - atom: data.sparkline
+          props: { bbox: { x: 0.66, y: 0.30, w: 0.27, h: 0.30 } }
+        # Bottom row: KPI strip across full width.
+        - atom: data.kpi-row
+          props: { bbox: { x: 0.075, y: 0.68, w: 0.85, h: 0.22 } }
       version: 1.0.0
       props:
         bbox:     { type: bbox,   required: true }

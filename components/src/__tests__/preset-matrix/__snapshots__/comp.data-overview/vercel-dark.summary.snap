@@ -1,10 +1,10 @@
 {
-  "native_area_px2": 2029888,
-  "native_ratio": 2.2026,
+  "native_area_px2": 201180.16,
+  "native_ratio": 0.2183,
   "preset": "vercel-dark",
   "raster_nodes": 0,
   "recipe": "comp.data-overview",
   "root_area_px2": 921600,
-  "status": "strict",
-  "total_nodes": 13
+  "status": "observe",
+  "total_nodes": 15
 }

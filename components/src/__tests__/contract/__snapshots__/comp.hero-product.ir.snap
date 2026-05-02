@@ -91,26 +91,26 @@
     },
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 8,
+        "w": 510,
+        "x": 145,
+        "y": 120
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 8,
+            "w": 510,
+            "x": 145,
+            "y": 120
           },
           "children": [
             {
               "bbox": {
-                "h": 200,
-                "w": 600,
-                "x": 100,
-                "y": 100
+                "h": 8,
+                "w": 510,
+                "x": 145,
+                "y": 120
               },
               "kind": "text",
               "metadata": {
@@ -126,7 +126,7 @@
                       "fontSizePx": 13,
                       "fontWeight": 600,
                       "italic": false,
-                      "text": "",
+                      "text": "EYEBROW",
                       "underline": false
                     }
                   ]
@@ -158,18 +158,18 @@
     },
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 90,
+        "w": 510,
+        "x": 145,
+        "y": 140
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 90,
+            "w": 510,
+            "x": 145,
+            "y": 140
           },
           "kind": "text",
           "metadata": {
@@ -187,7 +187,7 @@
                   "fontSizePx": 88,
                   "fontWeight": 800,
                   "italic": false,
-                  "text": "",
+                  "text": "Headline",
                   "underline": false
                 }
               ]

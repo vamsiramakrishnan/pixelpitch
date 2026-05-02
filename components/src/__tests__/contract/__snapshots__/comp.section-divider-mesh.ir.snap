@@ -91,18 +91,18 @@
     },
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 110.00000000000001,
+        "w": 330,
+        "x": 130,
+        "y": 130
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 110.00000000000001,
+            "w": 330,
+            "x": 130,
+            "y": 130
           },
           "kind": "text",
           "metadata": {
@@ -120,7 +120,7 @@
                   "fontSizePx": 88,
                   "fontWeight": 800,
                   "italic": false,
-                  "text": "",
+                  "text": "Sample",
                   "underline": false
                 }
               ]
@@ -142,26 +142,26 @@
     },
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 8,
+        "w": 510,
+        "x": 130,
+        "y": 256
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 8,
+            "w": 510,
+            "x": 130,
+            "y": 256
           },
           "children": [
             {
               "bbox": {
-                "h": 200,
-                "w": 600,
-                "x": 100,
-                "y": 100
+                "h": 8,
+                "w": 510,
+                "x": 130,
+                "y": 256
               },
               "kind": "text",
               "metadata": {
@@ -177,7 +177,7 @@
                       "fontSizePx": 13,
                       "fontWeight": 600,
                       "italic": false,
-                      "text": "",
+                      "text": "HEADLINE",
                       "underline": false
                     }
                   ]

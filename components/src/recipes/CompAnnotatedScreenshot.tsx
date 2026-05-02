@@ -52,9 +52,10 @@ export function compAnnotatedScreenshotToIR(
       version: '1.0.0',
     },
     children: [
-    { ...uiBrowserMacToIR({ bbox: props.bbox, url: props.url } as never, tokens), zOrder: 0 },
-    { ...annoNumberedHotspotToIR({ bbox: props.bbox } as never, tokens), zOrder: 10 },
-    { ...annoTooltipToIR({ bbox: props.bbox } as never, tokens), zOrder: 20 },
+    { ...uiBrowserMacToIR({ bbox: { x: props.bbox.x + 0.075 * props.bbox.w, y: props.bbox.y + 0.1 * props.bbox.h, w: 0.85 * props.bbox.w, h: 0.75 * props.bbox.h }, url: props.url } as never, tokens), zOrder: 0 },
+    { ...annoNumberedHotspotToIR({ bbox: { x: props.bbox.x + 0.2 * props.bbox.w, y: props.bbox.y + 0.3 * props.bbox.h, w: 0.05 * props.bbox.w, h: 0.07 * props.bbox.h } } as never, tokens), zOrder: 10 },
+    { ...annoNumberedHotspotToIR({ bbox: { x: props.bbox.x + 0.55 * props.bbox.w, y: props.bbox.y + 0.5 * props.bbox.h, w: 0.05 * props.bbox.w, h: 0.07 * props.bbox.h } } as never, tokens), zOrder: 20 },
+    { ...annoTooltipToIR({ bbox: { x: props.bbox.x + 0.27 * props.bbox.w, y: props.bbox.y + 0.3 * props.bbox.h, w: 0.18 * props.bbox.w, h: 0.07 * props.bbox.h } } as never, tokens), zOrder: 30 },
     ],
   };
 }

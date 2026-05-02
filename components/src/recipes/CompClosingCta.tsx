@@ -6,6 +6,7 @@ import type { Bbox, GroupNodeT } from '../ir/schema';
 import { tokens as defaultTokens, type TokensApi } from '../tokens';
 import { bgAuroraCornersToIR } from './BgAuroraCorners';
 import { typeBigNumberGradientToIR } from './TypeBigNumberGradient';
+import { typeEyebrowRuledToIR } from './TypeEyebrowRuled';
 
 export const CompClosingCtaVersion = '1.0.0';
 
@@ -51,7 +52,8 @@ export function compClosingCtaToIR(
     },
     children: [
     { ...bgAuroraCornersToIR({ bbox: props.bbox, intensity: "high" } as never, tokens), zOrder: 0 },
-    { ...typeBigNumberGradientToIR({ bbox: props.bbox } as never, tokens), zOrder: 10 },
+    { ...typeBigNumberGradientToIR({ bbox: { x: props.bbox.x + 0.075 * props.bbox.w, y: props.bbox.y + 0.32 * props.bbox.h, w: 0.85 * props.bbox.w, h: 0.36 * props.bbox.h }, value: props.headline } as never, tokens), zOrder: 10 },
+    { ...typeEyebrowRuledToIR({ bbox: { x: props.bbox.x + 0.075 * props.bbox.w, y: props.bbox.y + 0.74 * props.bbox.h, w: 0.85 * props.bbox.w, h: 0.04 * props.bbox.h }, label: props.cta } as never, tokens), zOrder: 20 },
     ],
   };
 }

@@ -52,8 +52,8 @@ export function compSectionDividerMeshToIR(
     },
     children: [
     { ...bgAuroraCornersToIR({ bbox: props.bbox, intensity: "high" } as never, tokens), zOrder: 0 },
-    { ...decNumeralChapterToIR({ bbox: props.bbox } as never, tokens), zOrder: 10 },
-    { ...typeEyebrowRuledToIR({ bbox: props.bbox } as never, tokens), zOrder: 20 },
+    { ...decNumeralChapterToIR({ bbox: { x: props.bbox.x + 0.05 * props.bbox.w, y: props.bbox.y + 0.15 * props.bbox.h, w: 0.55 * props.bbox.w, h: 0.55 * props.bbox.h }, digits: props.chapter } as never, tokens), zOrder: 10 },
+    { ...typeEyebrowRuledToIR({ bbox: { x: props.bbox.x + 0.05 * props.bbox.w, y: props.bbox.y + 0.78 * props.bbox.h, w: 0.85 * props.bbox.w, h: 0.04 * props.bbox.h }, label: props.title } as never, tokens), zOrder: 20 },
     ],
   };
 }

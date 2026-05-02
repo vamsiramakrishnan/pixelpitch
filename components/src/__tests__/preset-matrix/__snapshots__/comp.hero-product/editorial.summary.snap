@@ -1,10 +1,10 @@
 {
-  "native_area_px2": 2764800,
-  "native_ratio": 3,
+  "native_area_px2": 1305446.4,
+  "native_ratio": 1.4165,
   "preset": "editorial",
   "raster_nodes": 0,
   "recipe": "comp.hero-product",
   "root_area_px2": 921600,
-  "status": "strict",
+  "status": "observe",
   "total_nodes": 8
 }

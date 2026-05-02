@@ -8,26 +8,26 @@
   "children": [
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 8,
+        "w": 510,
+        "x": 145,
+        "y": 120
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 8,
+            "w": 510,
+            "x": 145,
+            "y": 120
           },
           "children": [
             {
               "bbox": {
-                "h": 200,
-                "w": 600,
-                "x": 100,
-                "y": 100
+                "h": 8,
+                "w": 510,
+                "x": 145,
+                "y": 120
               },
               "kind": "text",
               "metadata": {
@@ -43,7 +43,7 @@
                       "fontSizePx": 13,
                       "fontWeight": 600,
                       "italic": false,
-                      "text": "",
+                      "text": "TEAM",
                       "underline": false
                     }
                   ]
@@ -75,26 +75,77 @@
     },
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 24,
+        "w": 510,
+        "x": 145,
+        "y": 136
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 24,
+            "w": 510,
+            "x": 145,
+            "y": 136
+          },
+          "kind": "text",
+          "metadata": {
+            "axis": "slot",
+            "role": "slot.numeral",
+            "scale": "numeral-md"
+          },
+          "paragraphs": [
+            {
+              "align": "left",
+              "runs": [
+                {
+                  "color": "#f5f5f7",
+                  "fontFamily": "Inter, sans-serif",
+                  "fontSizePx": 88,
+                  "fontWeight": 800,
+                  "italic": false,
+                  "text": "Headline",
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "slot.numeral",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "type",
+        "primitive": "slot.numeral",
+        "role": "type.big-number-gradient",
+        "version": "1.0.0"
+      },
+      "recipeId": "type.big-number-gradient",
+      "zOrder": 10
+    },
+    {
+      "bbox": {
+        "h": 40,
+        "w": 159,
+        "x": 145,
+        "y": 180
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 40,
+            "w": 159,
+            "x": 145,
+            "y": 180
           },
           "children": [
             {
               "bbox": {
-                "h": 200,
-                "w": 600,
-                "x": 100,
-                "y": 100
+                "h": 40,
+                "w": 159,
+                "x": 145,
+                "y": 180
               },
               "borderRadiusPx": 0,
               "fill": {
@@ -131,23 +182,307 @@
         "version": "1.0.0"
       },
       "recipeId": "surf.card-raised",
-      "zOrder": 10
+      "zOrder": 20
     },
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 40,
+        "w": 159,
+        "x": 320.2,
+        "y": 180
       },
-      "children": [],
+      "children": [
+        {
+          "bbox": {
+            "h": 40,
+            "w": 159,
+            "x": 320.2,
+            "y": 180
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 40,
+                "w": 159,
+                "x": 320.2,
+                "y": 180
+              },
+              "borderRadiusPx": 0,
+              "fill": {
+                "color": "#0e0e1a",
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "axis": "surface",
+                "role": "surface.shape-fill",
+                "shape": "rounded-rect"
+              },
+              "recipeId": "surface.shape-fill",
+              "shape": "rounded-rect",
+              "zOrder": 0
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "surface",
+            "radiusPx": 0,
+            "role": "surface.shape-fill",
+            "shape": "rounded-rect"
+          },
+          "recipeId": "surface.shape-fill",
+          "zOrder": 0
+        }
+      ],
       "kind": "group",
       "metadata": {
-        "placeholder": true,
-        "role": "ui.avatar-cluster"
+        "axis": "surf",
+        "primitive": "surface.shape-fill",
+        "role": "surf.card-raised",
+        "version": "1.0.0"
       },
-      "recipeId": "ui.avatar-cluster",
-      "zOrder": 20
+      "recipeId": "surf.card-raised",
+      "zOrder": 30
+    },
+    {
+      "bbox": {
+        "h": 40,
+        "w": 159,
+        "x": 496,
+        "y": 180
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 40,
+            "w": 159,
+            "x": 496,
+            "y": 180
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 40,
+                "w": 159,
+                "x": 496,
+                "y": 180
+              },
+              "borderRadiusPx": 0,
+              "fill": {
+                "color": "#0e0e1a",
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "axis": "surface",
+                "role": "surface.shape-fill",
+                "shape": "rounded-rect"
+              },
+              "recipeId": "surface.shape-fill",
+              "shape": "rounded-rect",
+              "zOrder": 0
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "surface",
+            "radiusPx": 0,
+            "role": "surface.shape-fill",
+            "shape": "rounded-rect"
+          },
+          "recipeId": "surface.shape-fill",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "surf",
+        "primitive": "surface.shape-fill",
+        "role": "surf.card-raised",
+        "version": "1.0.0"
+      },
+      "recipeId": "surf.card-raised",
+      "zOrder": 40
+    },
+    {
+      "bbox": {
+        "h": 40,
+        "w": 159,
+        "x": 145,
+        "y": 230
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 40,
+            "w": 159,
+            "x": 145,
+            "y": 230
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 40,
+                "w": 159,
+                "x": 145,
+                "y": 230
+              },
+              "borderRadiusPx": 0,
+              "fill": {
+                "color": "#0e0e1a",
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "axis": "surface",
+                "role": "surface.shape-fill",
+                "shape": "rounded-rect"
+              },
+              "recipeId": "surface.shape-fill",
+              "shape": "rounded-rect",
+              "zOrder": 0
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "surface",
+            "radiusPx": 0,
+            "role": "surface.shape-fill",
+            "shape": "rounded-rect"
+          },
+          "recipeId": "surface.shape-fill",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "surf",
+        "primitive": "surface.shape-fill",
+        "role": "surf.card-raised",
+        "version": "1.0.0"
+      },
+      "recipeId": "surf.card-raised",
+      "zOrder": 50
+    },
+    {
+      "bbox": {
+        "h": 40,
+        "w": 159,
+        "x": 320.2,
+        "y": 230
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 40,
+            "w": 159,
+            "x": 320.2,
+            "y": 230
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 40,
+                "w": 159,
+                "x": 320.2,
+                "y": 230
+              },
+              "borderRadiusPx": 0,
+              "fill": {
+                "color": "#0e0e1a",
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "axis": "surface",
+                "role": "surface.shape-fill",
+                "shape": "rounded-rect"
+              },
+              "recipeId": "surface.shape-fill",
+              "shape": "rounded-rect",
+              "zOrder": 0
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "surface",
+            "radiusPx": 0,
+            "role": "surface.shape-fill",
+            "shape": "rounded-rect"
+          },
+          "recipeId": "surface.shape-fill",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "surf",
+        "primitive": "surface.shape-fill",
+        "role": "surf.card-raised",
+        "version": "1.0.0"
+      },
+      "recipeId": "surf.card-raised",
+      "zOrder": 60
+    },
+    {
+      "bbox": {
+        "h": 40,
+        "w": 159,
+        "x": 496,
+        "y": 230
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 40,
+            "w": 159,
+            "x": 496,
+            "y": 230
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 40,
+                "w": 159,
+                "x": 496,
+                "y": 230
+              },
+              "borderRadiusPx": 0,
+              "fill": {
+                "color": "#0e0e1a",
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "axis": "surface",
+                "role": "surface.shape-fill",
+                "shape": "rounded-rect"
+              },
+              "recipeId": "surface.shape-fill",
+              "shape": "rounded-rect",
+              "zOrder": 0
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "surface",
+            "radiusPx": 0,
+            "role": "surface.shape-fill",
+            "shape": "rounded-rect"
+          },
+          "recipeId": "surface.shape-fill",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "surf",
+        "primitive": "surface.shape-fill",
+        "role": "surf.card-raised",
+        "version": "1.0.0"
+      },
+      "recipeId": "surf.card-raised",
+      "zOrder": 70
     }
   ],
   "kind": "group",

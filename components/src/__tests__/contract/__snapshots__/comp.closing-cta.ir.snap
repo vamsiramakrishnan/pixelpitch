@@ -91,18 +91,18 @@
     },
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 72,
+        "w": 510,
+        "x": 145,
+        "y": 164
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 72,
+            "w": 510,
+            "x": 145,
+            "y": 164
           },
           "kind": "text",
           "metadata": {
@@ -120,7 +120,7 @@
                   "fontSizePx": 88,
                   "fontWeight": 800,
                   "italic": false,
-                  "text": "",
+                  "text": "Headline",
                   "underline": false
                 }
               ]
@@ -139,6 +139,73 @@
       },
       "recipeId": "type.big-number-gradient",
       "zOrder": 10
+    },
+    {
+      "bbox": {
+        "h": 8,
+        "w": 510,
+        "x": 145,
+        "y": 248
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 8,
+            "w": 510,
+            "x": 145,
+            "y": 248
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 8,
+                "w": 510,
+                "x": 145,
+                "y": 248
+              },
+              "kind": "text",
+              "metadata": {
+                "role": "eyebrow-text"
+              },
+              "paragraphs": [
+                {
+                  "align": "left",
+                  "runs": [
+                    {
+                      "color": "#a1a1aa",
+                      "fontFamily": "Inter, sans-serif",
+                      "fontSizePx": 13,
+                      "fontWeight": 600,
+                      "italic": false,
+                      "text": "",
+                      "underline": false
+                    }
+                  ]
+                }
+              ],
+              "recipeId": "slot.eyebrow.text",
+              "zOrder": 10
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "slot",
+            "role": "slot.eyebrow",
+            "withRule": "none"
+          },
+          "recipeId": "slot.eyebrow",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "type",
+        "primitive": "slot.eyebrow",
+        "role": "type.eyebrow-ruled",
+        "version": "1.0.0"
+      },
+      "recipeId": "type.eyebrow-ruled",
+      "zOrder": 20
     }
   ],
   "kind": "group",

@@ -1,10 +1,10 @@
 {
-  "native_area_px2": 1843200,
-  "native_ratio": 2,
+  "native_area_px2": 1234944,
+  "native_ratio": 1.34,
   "preset": "linear-light",
   "raster_nodes": 0,
   "recipe": "comp.closing-cta",
   "root_area_px2": 921600,
-  "status": "strict",
-  "total_nodes": 5
+  "status": "observe",
+  "total_nodes": 8
 }

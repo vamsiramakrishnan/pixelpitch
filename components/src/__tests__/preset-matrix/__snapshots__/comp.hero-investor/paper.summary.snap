@@ -1,10 +1,10 @@
 {
-  "native_area_px2": 3686400,
-  "native_ratio": 4,
+  "native_area_px2": 1421568,
+  "native_ratio": 1.5425,
   "preset": "paper",
   "raster_nodes": 0,
   "recipe": "comp.hero-investor",
   "root_area_px2": 921600,
-  "status": "strict",
+  "status": "observe",
   "total_nodes": 12
 }

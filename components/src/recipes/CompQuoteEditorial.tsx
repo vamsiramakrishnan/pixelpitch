@@ -49,8 +49,7 @@ export function compQuoteEditorialToIR(
       version: '1.0.0',
     },
     children: [
-    { ...typePullquoteSerifToIR({ bbox: props.bbox, quote: props.quote, attribution: props.attribution } as never, tokens), zOrder: 0 },
-    { kind: 'group' as const, recipeId: 'ui.avatar-cluster', bbox: props.bbox, zOrder: 10, metadata: { role: 'ui.avatar-cluster', placeholder: true }, children: [] },
+    { ...typePullquoteSerifToIR({ bbox: { x: props.bbox.x + 0.1 * props.bbox.w, y: props.bbox.y + 0.2 * props.bbox.h, w: 0.8 * props.bbox.w, h: 0.45 * props.bbox.h }, quote: props.quote, attribution: props.attribution } as never, tokens), zOrder: 0 },
     ],
   };
 }

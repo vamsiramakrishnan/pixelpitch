@@ -49,10 +49,11 @@ export function compBentoMixedToIR(
       version: '1.0.0',
     },
     children: [
-    { ...surfBentoCellToIR({ bbox: props.bbox, cells: props.cells } as never, tokens), zOrder: 0 },
-    { kind: 'group' as const, recipeId: 'surf.glass', bbox: props.bbox, zOrder: 10, metadata: { role: 'surf.glass', placeholder: true }, children: [] },
-    { ...uiCodeBlockSyntaxToIR({ bbox: props.bbox } as never, tokens), zOrder: 20 },
-    { kind: 'group' as const, recipeId: 'ui.avatar-cluster', bbox: props.bbox, zOrder: 30, metadata: { role: 'ui.avatar-cluster', placeholder: true }, children: [] },
+    { ...surfBentoCellToIR({ bbox: { x: props.bbox.x + 0.075 * props.bbox.w, y: props.bbox.y + 0.1 * props.bbox.h, w: 0.42 * props.bbox.w, h: 0.8 * props.bbox.h }, cells: props.cells } as never, tokens), zOrder: 0 },
+    { ...surfBentoCellToIR({ bbox: { x: props.bbox.x + 0.52 * props.bbox.w, y: props.bbox.y + 0.1 * props.bbox.h, w: 0.405 * props.bbox.w, h: 0.38 * props.bbox.h }, cells: props.cells } as never, tokens), zOrder: 10 },
+    { ...surfBentoCellToIR({ bbox: { x: props.bbox.x + 0.52 * props.bbox.w, y: props.bbox.y + 0.52 * props.bbox.h, w: 0.193 * props.bbox.w, h: 0.38 * props.bbox.h }, cells: props.cells } as never, tokens), zOrder: 20 },
+    { ...surfBentoCellToIR({ bbox: { x: props.bbox.x + 0.732 * props.bbox.w, y: props.bbox.y + 0.52 * props.bbox.h, w: 0.193 * props.bbox.w, h: 0.38 * props.bbox.h }, cells: props.cells } as never, tokens), zOrder: 30 },
+    { ...uiCodeBlockSyntaxToIR({ bbox: { x: props.bbox.x + 0.1 * props.bbox.w, y: props.bbox.y + 0.13 * props.bbox.h, w: 0.37 * props.bbox.w, h: 0.74 * props.bbox.h }, code: "await convert(\\\"deck.html\\\", \\\"out.pptx\\\")", language: "typescript" } as never, tokens), zOrder: 40 },
     ],
   };
 }

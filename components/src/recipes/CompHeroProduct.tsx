@@ -53,8 +53,8 @@ export function compHeroProductToIR(
     },
     children: [
     { ...bgAuroraCornersToIR({ bbox: props.bbox, intensity: "med" } as never, tokens), zOrder: 0 },
-    { ...typeEyebrowRuledToIR({ bbox: props.bbox } as never, tokens), zOrder: 10 },
-    { ...typeBigNumberGradientToIR({ bbox: props.bbox } as never, tokens), zOrder: 20 },
+    { ...typeEyebrowRuledToIR({ bbox: { x: props.bbox.x + 0.075 * props.bbox.w, y: props.bbox.y + 0.1 * props.bbox.h, w: 0.85 * props.bbox.w, h: 0.04 * props.bbox.h }, label: props.eyebrow } as never, tokens), zOrder: 10 },
+    { ...typeBigNumberGradientToIR({ bbox: { x: props.bbox.x + 0.075 * props.bbox.w, y: props.bbox.y + 0.2 * props.bbox.h, w: 0.85 * props.bbox.w, h: 0.45 * props.bbox.h }, value: props.headline } as never, tokens), zOrder: 20 },
     ],
   };
 }

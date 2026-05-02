@@ -8,26 +8,26 @@
   "children": [
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 150,
+        "w": 510,
+        "x": 145,
+        "y": 120
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 150,
+            "w": 510,
+            "x": 145,
+            "y": 120
           },
           "children": [
             {
               "bbox": {
-                "h": 200,
-                "w": 600,
-                "x": 100,
-                "y": 100
+                "h": 150,
+                "w": 510,
+                "x": 145,
+                "y": 120
               },
               "borderRadiusPx": 12,
               "fill": {
@@ -47,9 +47,9 @@
             {
               "bbox": {
                 "h": 28,
-                "w": 600,
-                "x": 100,
-                "y": 100
+                "w": 510,
+                "x": 145,
+                "y": 120
               },
               "borderRadiusPx": 0,
               "fill": {
@@ -68,8 +68,8 @@
               "bbox": {
                 "h": 12,
                 "w": 12,
-                "x": 112,
-                "y": 108
+                "x": 157,
+                "y": 128
               },
               "borderRadiusPx": 0,
               "fill": {
@@ -90,8 +90,8 @@
               "bbox": {
                 "h": 12,
                 "w": 12,
-                "x": 130,
-                "y": 108
+                "x": 175,
+                "y": 128
               },
               "borderRadiusPx": 0,
               "fill": {
@@ -112,8 +112,8 @@
               "bbox": {
                 "h": 12,
                 "w": 12,
-                "x": 148,
-                "y": 108
+                "x": 193,
+                "y": 128
               },
               "borderRadiusPx": 0,
               "fill": {
@@ -154,37 +154,37 @@
     },
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 14.000000000000002,
+        "w": 30,
+        "x": 220,
+        "y": 160
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 14.000000000000002,
+            "w": 30,
+            "x": 220,
+            "y": 160
           },
           "children": [
             {
               "bbox": {
-                "h": 200,
-                "w": 600,
-                "x": 100,
-                "y": 100
+                "h": 14.000000000000002,
+                "w": 30,
+                "x": 220,
+                "y": 160
               },
               "commands": [
                 {
                   "op": "M",
-                  "x": 100,
-                  "y": 200
+                  "x": 220,
+                  "y": 167
                 },
                 {
                   "op": "L",
-                  "x": 700,
-                  "y": 200
+                  "x": 250,
+                  "y": 167
                 }
               ],
               "fillRule": "nonzero",
@@ -197,13 +197,13 @@
                 "axis": "annotation",
                 "dashed": false,
                 "from": {
-                  "x": 100,
-                  "y": 200
+                  "x": 220,
+                  "y": 167
                 },
                 "role": "annotation.leader-line",
                 "to": {
-                  "x": 700,
-                  "y": 200
+                  "x": 250,
+                  "y": 167
                 }
               },
               "recipeId": "annotation.leader-line",
@@ -219,14 +219,14 @@
             "axis": "annotation",
             "dashed": false,
             "from": {
-              "x": 100,
-              "y": 200
+              "x": 220,
+              "y": 167
             },
             "role": "annotation.leader-line",
             "thicknessPx": 1.5,
             "to": {
-              "x": 700,
-              "y": 200
+              "x": 250,
+              "y": 167
             }
           },
           "recipeId": "annotation.leader-line",
@@ -245,37 +245,37 @@
     },
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 14.000000000000002,
+        "w": 30,
+        "x": 430,
+        "y": 200
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 14.000000000000002,
+            "w": 30,
+            "x": 430,
+            "y": 200
           },
           "children": [
             {
               "bbox": {
-                "h": 200,
-                "w": 600,
-                "x": 100,
-                "y": 100
+                "h": 14.000000000000002,
+                "w": 30,
+                "x": 430,
+                "y": 200
               },
               "commands": [
                 {
                   "op": "M",
-                  "x": 100,
-                  "y": 200
+                  "x": 430,
+                  "y": 207
                 },
                 {
                   "op": "L",
-                  "x": 700,
-                  "y": 200
+                  "x": 460,
+                  "y": 207
                 }
               ],
               "fillRule": "nonzero",
@@ -288,13 +288,13 @@
                 "axis": "annotation",
                 "dashed": false,
                 "from": {
-                  "x": 100,
-                  "y": 200
+                  "x": 430,
+                  "y": 207
                 },
                 "role": "annotation.leader-line",
                 "to": {
-                  "x": 700,
-                  "y": 200
+                  "x": 460,
+                  "y": 207
                 }
               },
               "recipeId": "annotation.leader-line",
@@ -310,14 +310,105 @@
             "axis": "annotation",
             "dashed": false,
             "from": {
-              "x": 100,
-              "y": 200
+              "x": 430,
+              "y": 207
             },
             "role": "annotation.leader-line",
             "thicknessPx": 1.5,
             "to": {
-              "x": 700,
-              "y": 200
+              "x": 460,
+              "y": 207
+            }
+          },
+          "recipeId": "annotation.leader-line",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "anno",
+        "primitive": "annotation.leader-line",
+        "role": "anno.numbered-hotspot",
+        "version": "1.0.0"
+      },
+      "recipeId": "anno.numbered-hotspot",
+      "zOrder": 20
+    },
+    {
+      "bbox": {
+        "h": 14.000000000000002,
+        "w": 108,
+        "x": 262,
+        "y": 160
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 14.000000000000002,
+            "w": 108,
+            "x": 262,
+            "y": 160
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 14.000000000000002,
+                "w": 108,
+                "x": 262,
+                "y": 160
+              },
+              "commands": [
+                {
+                  "op": "M",
+                  "x": 262,
+                  "y": 167
+                },
+                {
+                  "op": "L",
+                  "x": 370,
+                  "y": 167
+                }
+              ],
+              "fillRule": "nonzero",
+              "kind": "path",
+              "markerEnd": {
+                "kind": "arrow",
+                "size": "md"
+              },
+              "metadata": {
+                "axis": "annotation",
+                "dashed": false,
+                "from": {
+                  "x": 262,
+                  "y": 167
+                },
+                "role": "annotation.leader-line",
+                "to": {
+                  "x": 370,
+                  "y": 167
+                }
+              },
+              "recipeId": "annotation.leader-line",
+              "strokeColor": "#d4d4d8",
+              "strokeLinecap": "round",
+              "strokeLinejoin": "miter",
+              "strokeWidthPx": 1.5,
+              "zOrder": 0
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "annotation",
+            "dashed": false,
+            "from": {
+              "x": 262,
+              "y": 167
+            },
+            "role": "annotation.leader-line",
+            "thicknessPx": 1.5,
+            "to": {
+              "x": 370,
+              "y": 167
             }
           },
           "recipeId": "annotation.leader-line",
@@ -332,7 +423,7 @@
         "version": "1.0.0"
       },
       "recipeId": "anno.tooltip",
-      "zOrder": 20
+      "zOrder": 30
     }
   ],
   "kind": "group",

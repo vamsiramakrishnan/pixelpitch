@@ -8,18 +8,18 @@
   "children": [
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 160,
+        "w": 252,
+        "x": 145,
+        "y": 120
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 160,
+            "w": 252,
+            "x": 145,
+            "y": 120
           },
           "children": [],
           "kind": "group",
@@ -47,42 +47,143 @@
     },
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
-      },
-      "children": [],
-      "kind": "group",
-      "metadata": {
-        "placeholder": true,
-        "role": "surf.glass"
-      },
-      "recipeId": "surf.glass",
-      "zOrder": 10
-    },
-    {
-      "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 76,
+        "w": 243.00000000000003,
+        "x": 412,
+        "y": 120
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 76,
+            "w": 243.00000000000003,
+            "x": 412,
+            "y": 120
+          },
+          "children": [],
+          "kind": "group",
+          "metadata": {
+            "axis": "frame",
+            "cellCount": 0,
+            "columns": 1,
+            "gap": 24,
+            "role": "frame.bento",
+            "rows": 1
+          },
+          "recipeId": "frame.bento",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "surf",
+        "primitive": "frame.bento",
+        "role": "surf.bento-cell",
+        "version": "1.0.0"
+      },
+      "recipeId": "surf.bento-cell",
+      "zOrder": 10
+    },
+    {
+      "bbox": {
+        "h": 76,
+        "w": 115.8,
+        "x": 412,
+        "y": 204
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 76,
+            "w": 115.8,
+            "x": 412,
+            "y": 204
+          },
+          "children": [],
+          "kind": "group",
+          "metadata": {
+            "axis": "frame",
+            "cellCount": 0,
+            "columns": 1,
+            "gap": 24,
+            "role": "frame.bento",
+            "rows": 1
+          },
+          "recipeId": "frame.bento",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "surf",
+        "primitive": "frame.bento",
+        "role": "surf.bento-cell",
+        "version": "1.0.0"
+      },
+      "recipeId": "surf.bento-cell",
+      "zOrder": 20
+    },
+    {
+      "bbox": {
+        "h": 76,
+        "w": 115.8,
+        "x": 539.2,
+        "y": 204
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 76,
+            "w": 115.8,
+            "x": 539.2,
+            "y": 204
+          },
+          "children": [],
+          "kind": "group",
+          "metadata": {
+            "axis": "frame",
+            "cellCount": 0,
+            "columns": 1,
+            "gap": 24,
+            "role": "frame.bento",
+            "rows": 1
+          },
+          "recipeId": "frame.bento",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "surf",
+        "primitive": "frame.bento",
+        "role": "surf.bento-cell",
+        "version": "1.0.0"
+      },
+      "recipeId": "surf.bento-cell",
+      "zOrder": 30
+    },
+    {
+      "bbox": {
+        "h": 148,
+        "w": 222,
+        "x": 160,
+        "y": 126
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 148,
+            "w": 222,
+            "x": 160,
+            "y": 126
           },
           "children": [
             {
               "bbox": {
-                "h": 200,
-                "w": 600,
-                "x": 100,
-                "y": 100
+                "h": 148,
+                "w": 222,
+                "x": 160,
+                "y": 126
               },
               "borderRadiusPx": 16,
               "fill": {
@@ -99,10 +200,10 @@
             },
             {
               "bbox": {
-                "h": 152,
-                "w": 552,
-                "x": 124,
-                "y": 124
+                "h": 100,
+                "w": 174,
+                "x": 184,
+                "y": 150
               },
               "kind": "text",
               "metadata": {
@@ -119,7 +220,7 @@
                       "fontSizePx": 14,
                       "fontWeight": 500,
                       "italic": false,
-                      "text": "",
+                      "text": "await convert(\\\"deck.html\\\", \\\"out.pptx\\\")",
                       "underline": false
                     }
                   ]
@@ -127,12 +228,63 @@
               ],
               "recipeId": "slot.code.body",
               "zOrder": 10
+            },
+            {
+              "bbox": {
+                "h": 22,
+                "w": 92,
+                "x": 278,
+                "y": 138
+              },
+              "borderRadiusPx": 9999,
+              "fill": {
+                "color": "#16162a",
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "role": "code-lang-pill-bg"
+              },
+              "recipeId": "slot.code.lang-pill",
+              "shape": "rounded-rect",
+              "zOrder": 20
+            },
+            {
+              "bbox": {
+                "h": 22,
+                "w": 92,
+                "x": 278,
+                "y": 138
+              },
+              "kind": "text",
+              "metadata": {
+                "language": "typescript",
+                "role": "code-lang-pill-text"
+              },
+              "paragraphs": [
+                {
+                  "align": "center",
+                  "runs": [
+                    {
+                      "color": "#a1a1aa",
+                      "fontFamily": "Inter, sans-serif",
+                      "fontSizePx": 11,
+                      "fontWeight": 600,
+                      "italic": false,
+                      "text": "TYPESCRIPT",
+                      "underline": false
+                    }
+                  ]
+                }
+              ],
+              "recipeId": "slot.code.lang-pill",
+              "zOrder": 30
             }
           ],
           "kind": "group",
           "metadata": {
             "axis": "slot",
-            "language": null,
+            "language": "typescript",
             "role": "slot.code"
           },
           "recipeId": "slot.code",
@@ -147,23 +299,7 @@
         "version": "1.0.0"
       },
       "recipeId": "ui.code-block-syntax",
-      "zOrder": 20
-    },
-    {
-      "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
-      },
-      "children": [],
-      "kind": "group",
-      "metadata": {
-        "placeholder": true,
-        "role": "ui.avatar-cluster"
-      },
-      "recipeId": "ui.avatar-cluster",
-      "zOrder": 30
+      "zOrder": 40
     }
   ],
   "kind": "group",

@@ -8,26 +8,26 @@
   "children": [
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 8,
+        "w": 510,
+        "x": 145,
+        "y": 120
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 8,
+            "w": 510,
+            "x": 145,
+            "y": 120
           },
           "children": [
             {
               "bbox": {
-                "h": 200,
-                "w": 600,
-                "x": 100,
-                "y": 100
+                "h": 8,
+                "w": 510,
+                "x": 145,
+                "y": 120
               },
               "kind": "text",
               "metadata": {
@@ -43,7 +43,7 @@
                       "fontSizePx": 13,
                       "fontWeight": 600,
                       "italic": false,
-                      "text": "",
+                      "text": "EYEBROW",
                       "underline": false
                     }
                   ]
@@ -75,96 +75,79 @@
     },
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 24,
+        "w": 510,
+        "x": 145,
+        "y": 136
       },
       "children": [
         {
           "bbox": {
-            "h": 1,
-            "w": 600,
-            "x": 100,
-            "y": 200
+            "h": 24,
+            "w": 510,
+            "x": 145,
+            "y": 136
           },
-          "commands": [
+          "kind": "text",
+          "metadata": {
+            "axis": "slot",
+            "role": "slot.numeral",
+            "scale": "numeral-md"
+          },
+          "paragraphs": [
             {
-              "op": "M",
-              "x": 100,
-              "y": 200
-            },
-            {
-              "op": "L",
-              "x": 700,
-              "y": 200
+              "align": "left",
+              "runs": [
+                {
+                  "color": "#f5f5f7",
+                  "fontFamily": "Inter, sans-serif",
+                  "fontSizePx": 88,
+                  "fontWeight": 800,
+                  "italic": false,
+                  "text": "Roadmap",
+                  "underline": false
+                }
+              ]
             }
           ],
-          "fillRule": "nonzero",
-          "kind": "path",
-          "markerEnd": {
-            "kind": "arrow",
-            "size": "md"
-          },
-          "markerStart": {
-            "kind": "none",
-            "size": "md"
-          },
-          "metadata": {
-            "axis": "diagram",
-            "from": {
-              "x": 100,
-              "y": 200
-            },
-            "kind": "straight",
-            "role": "diagram.connector",
-            "to": {
-              "x": 700,
-              "y": 200
-            }
-          },
-          "recipeId": "diagram.connector",
-          "strokeColor": "#a1a1aa",
-          "strokeLinecap": "round",
-          "strokeLinejoin": "round",
-          "strokeWidthPx": 2,
+          "recipeId": "slot.numeral",
           "zOrder": 0
         }
       ],
       "kind": "group",
       "metadata": {
-        "axis": "data",
-        "primitive": "diagram.connector",
-        "role": "data.connector",
+        "axis": "type",
+        "primitive": "slot.numeral",
+        "role": "type.big-number-gradient",
         "version": "1.0.0"
       },
-      "recipeId": "data.connector",
+      "recipeId": "type.big-number-gradient",
       "zOrder": 10
     },
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 40,
+        "w": 480,
+        "x": 160,
+        "y": 190
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 40,
+            "w": 480,
+            "x": 160,
+            "y": 190
           },
           "children": [],
           "kind": "group",
           "metadata": {
             "axis": "frame",
             "innerBbox": {
-              "h": 8,
-              "w": 408,
-              "x": 196,
-              "y": 196
+              "h": 0,
+              "w": 288,
+              "x": 256,
+              "y": 286
             },
             "insetPx": 96,
             "padding": "cozy",

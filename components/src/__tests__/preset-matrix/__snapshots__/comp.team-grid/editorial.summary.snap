@@ -1,10 +1,10 @@
 {
-  "native_area_px2": 1843200,
-  "native_ratio": 2,
+  "native_area_px2": 418406.39999999997,
+  "native_ratio": 0.454,
   "preset": "editorial",
   "raster_nodes": 0,
   "recipe": "comp.team-grid",
   "root_area_px2": 921600,
-  "status": "strict",
-  "total_nodes": 7
+  "status": "observe",
+  "total_nodes": 23
 }

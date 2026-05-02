@@ -8,26 +8,26 @@
   "children": [
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 8,
+        "w": 510,
+        "x": 145,
+        "y": 124
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 8,
+            "w": 510,
+            "x": 145,
+            "y": 124
           },
           "children": [
             {
               "bbox": {
-                "h": 200,
-                "w": 600,
-                "x": 100,
-                "y": 100
+                "h": 8,
+                "w": 510,
+                "x": 145,
+                "y": 124
               },
               "kind": "text",
               "metadata": {
@@ -43,7 +43,7 @@
                       "fontSizePx": 13,
                       "fontWeight": 600,
                       "italic": false,
-                      "text": "",
+                      "text": "AGENDA",
                       "underline": false
                     }
                   ]
@@ -75,37 +75,88 @@
     },
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 36,
+        "w": 510,
+        "x": 145,
+        "y": 136
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 36,
+            "w": 510,
+            "x": 145,
+            "y": 136
+          },
+          "kind": "text",
+          "metadata": {
+            "axis": "slot",
+            "role": "slot.numeral",
+            "scale": "numeral-md"
+          },
+          "paragraphs": [
+            {
+              "align": "left",
+              "runs": [
+                {
+                  "color": "#f5f5f7",
+                  "fontFamily": "Inter, sans-serif",
+                  "fontSizePx": 88,
+                  "fontWeight": 800,
+                  "italic": false,
+                  "text": "Headline",
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "slot.numeral",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "type",
+        "primitive": "slot.numeral",
+        "role": "type.big-number-gradient",
+        "version": "1.0.0"
+      },
+      "recipeId": "type.big-number-gradient",
+      "zOrder": 10
+    },
+    {
+      "bbox": {
+        "h": 1,
+        "w": 510,
+        "x": 145,
+        "y": 180
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 1,
+            "w": 510,
+            "x": 145,
+            "y": 180
           },
           "children": [
             {
               "bbox": {
-                "h": 200,
-                "w": 600,
-                "x": 100,
-                "y": 100
+                "h": 1,
+                "w": 510,
+                "x": 145,
+                "y": 180
               },
               "commands": [
                 {
                   "op": "M",
-                  "x": 100,
-                  "y": 200
+                  "x": 145,
+                  "y": 180.5
                 },
                 {
                   "op": "L",
-                  "x": 700,
-                  "y": 200
+                  "x": 655,
+                  "y": 180.5
                 }
               ],
               "fillRule": "nonzero",
@@ -148,22 +199,22 @@
         "version": "1.0.0"
       },
       "recipeId": "dec.hairline-rule",
-      "zOrder": 10
+      "zOrder": 20
     },
     {
       "bbox": {
-        "h": 200,
-        "w": 600,
-        "x": 100,
-        "y": 100
+        "h": 80,
+        "w": 510,
+        "x": 145,
+        "y": 190
       },
       "children": [
         {
           "bbox": {
-            "h": 200,
-            "w": 600,
-            "x": 100,
-            "y": 100
+            "h": 80,
+            "w": 510,
+            "x": 145,
+            "y": 190
           },
           "kind": "text",
           "metadata": {
@@ -194,12 +245,13 @@
       "kind": "group",
       "metadata": {
         "axis": "type",
+        "digits": "01 · 02 · 03 · 04 · 05 · 06",
         "primitive": "slot.caption",
         "role": "type.numerals-tabular",
         "version": "1.0.0"
       },
       "recipeId": "type.numerals-tabular",
-      "zOrder": 20
+      "zOrder": 30
     }
   ],
   "kind": "group",

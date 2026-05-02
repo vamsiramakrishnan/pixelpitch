@@ -55,10 +55,10 @@ export function compBigStatHeroToIR(
       version: '1.0.0',
     },
     children: [
-    { ...typeEyebrowRuledToIR({ bbox: props.bbox } as never, tokens), zOrder: 0 },
-    { ...typeBigNumberGradientToIR({ bbox: props.bbox, value: props.value, unit: props.unit, gradient: "tokens.gradient.accent-grad" } as never, tokens), zOrder: 10 },
-    { ...surfCardDepthToIR({ bbox: props.bbox } as never, tokens), zOrder: 20 },
-    { ...dataDeltaBadgeToIR({ bbox: props.bbox, value: props.value } as never, tokens), zOrder: 30 },
+    { ...surfCardDepthToIR({ bbox: { x: props.bbox.x + 0.55 * props.bbox.w, y: props.bbox.y + 0.2 * props.bbox.h, w: 0.4 * props.bbox.w, h: 0.6 * props.bbox.h } } as never, tokens), zOrder: 0 },
+    { ...typeEyebrowRuledToIR({ bbox: { x: props.bbox.x + 0.075 * props.bbox.w, y: props.bbox.y + 0.1 * props.bbox.h, w: 0.85 * props.bbox.w, h: 0.04 * props.bbox.h }, label: props.eyebrow } as never, tokens), zOrder: 10 },
+    { ...typeBigNumberGradientToIR({ bbox: { x: props.bbox.x + 0.075 * props.bbox.w, y: props.bbox.y + 0.18 * props.bbox.h, w: 0.45 * props.bbox.w, h: 0.55 * props.bbox.h }, value: props.value, unit: props.unit, gradient: "tokens.gradient.accent-grad" } as never, tokens), zOrder: 20 },
+    { ...dataDeltaBadgeToIR({ bbox: { x: props.bbox.x + 0.6 * props.bbox.w, y: props.bbox.y + 0.62 * props.bbox.h, w: 0.15 * props.bbox.w, h: 0.06 * props.bbox.h }, value: props.delta } as never, tokens), zOrder: 30 },
     ],
   };
 }

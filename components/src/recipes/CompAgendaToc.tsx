@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import type { Bbox, GroupNodeT } from '../ir/schema';
 import { tokens as defaultTokens, type TokensApi } from '../tokens';
 import { decHairlineRuleToIR } from './DecHairlineRule';
+import { typeBigNumberGradientToIR } from './TypeBigNumberGradient';
 import { typeEyebrowRuledToIR } from './TypeEyebrowRuled';
 
 export const CompAgendaTocVersion = '1.0.0';
@@ -49,8 +50,9 @@ export function compAgendaTocToIR(
       version: '1.0.0',
     },
     children: [
-    { ...typeEyebrowRuledToIR({ bbox: props.bbox } as never, tokens), zOrder: 0 },
-    { ...decHairlineRuleToIR({ bbox: props.bbox } as never, tokens), zOrder: 10 },
+    { ...typeEyebrowRuledToIR({ bbox: { x: props.bbox.x + 0.075 * props.bbox.w, y: props.bbox.y + 0.12 * props.bbox.h, w: 0.85 * props.bbox.w, h: 0.04 * props.bbox.h }, label: "Today" } as never, tokens), zOrder: 0 },
+    { ...typeBigNumberGradientToIR({ bbox: { x: props.bbox.x + 0.075 * props.bbox.w, y: props.bbox.y + 0.18 * props.bbox.h, w: 0.85 * props.bbox.w, h: 0.16 * props.bbox.h }, value: "What we will cover" } as never, tokens), zOrder: 10 },
+    { ...decHairlineRuleToIR({ bbox: { x: props.bbox.x + 0.075 * props.bbox.w, y: props.bbox.y + 0.42 * props.bbox.h, w: 0.85 * props.bbox.w, h: 0.005 * props.bbox.h } } as never, tokens), zOrder: 20 },
     ],
   };
 }
