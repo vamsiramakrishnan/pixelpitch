@@ -33,8 +33,12 @@ from functools import lru_cache
 from importlib import resources
 from typing import Any
 
+import structlog
+
 from slidify.models import BoundingBox, DomElement, VisualUnit
 from slidify.patterns.signatures import signature_hash
+
+log = structlog.get_logger(__name__)
 
 # ---------------------------------------------------------------------------
 # Loader
@@ -240,7 +244,9 @@ def _atom_namespace(atom_id: str) -> str:
     return atom_id.split(".", 1)[0] if "." in atom_id else atom_id
 
 
-def _canonical_unit_for_atom(atom_id: str) -> VisualUnit | None:
+def _canonical_unit_for_atom(
+    atom_id: str, *, salt: int = 0
+) -> VisualUnit | None:
     """Build a synthetic VisualUnit shaped like the prototypical atom render.
 
     Used by the ``slidify prime-atom-cache`` subcommand to populate
@@ -251,6 +257,12 @@ def _canonical_unit_for_atom(atom_id: str) -> VisualUnit | None:
     fine for now: the goal of this Phase-3 deliverable is to lay the rail
     so inference fires on synthetic shapes, and let real-browser priming be
     bolted on later as a refinement.
+
+    ``salt`` drives the bbox offset deterministically so callers can ask for
+    a unique unit per atom id within a namespace. The signature's bbox is
+    quantized at 64×32 px, so the salt is mapped to a (dw, dh) pair on a
+    grid wide enough that two distinct salts always produce distinct
+    quantized bboxes (and therefore distinct signatures within a namespace).
 
     TODO: replace this with a real renderer pass that walks
     ``examples/landing/atoms.html``, captures each cluster's anchor, and
@@ -264,18 +276,13 @@ def _canonical_unit_for_atom(atom_id: str) -> VisualUnit | None:
     template = _NAMESPACE_TEMPLATES.get(ns)
     if template is None:
         return None
-    # Vary classes so each atom id within a namespace gets a unique signature.
-    # The atom id leaf becomes a synthetic class token; signature normalization
-    # will drop unknown classes, but the atom_id itself is encoded into bbox
-    # offset (below) for fan-out across the namespace.
-    leaf = atom_id.split(".", 1)[1] if "." in atom_id else atom_id
-    # Tweak the bbox by a small per-leaf offset so that two atoms in the same
-    # namespace hash to different signatures (the bbox quantizer buckets at 32
-    # / 64 px, so we shift by a multiple of that).
+    # Map ``salt`` to a (dw, dh) pair on a 17×N grid. dw cycles every 17,
+    # dh advances every 17, so two distinct salts produce distinct (dw, dh)
+    # for any salt < 17 * 1000 — far beyond the registry size we'll ever
+    # see. Quantization buckets are 64 / 32 px so multiples are essential.
     base_bbox: BoundingBox = template["bbox"]
-    leaf_hash = sum(ord(c) for c in leaf)
-    dw = 64 * (leaf_hash % 5)        # 0, 64, 128, 192, 256
-    dh = 32 * ((leaf_hash // 5) % 5)
+    dw = 64 * (salt % 17)
+    dh = 32 * (salt // 17)
     bbox = _bbox(base_bbox.x, base_bbox.y, base_bbox.w + dw, base_bbox.h + dh)
 
     kwargs = {k: v for k, v in template.items() if k != "bbox"}
@@ -330,20 +337,51 @@ def build_synthetic_table() -> dict[str, str]:
     """Construct the {sig_hash: atom_id} table by hashing one synthetic unit
     per atom id declared in ``atoms.yaml``.
 
-    Hash collisions across different atom ids are resolved by the first id
-    encountered (atoms.yaml order). In practice the per-leaf bbox offset
-    inside :func:`_canonical_unit_for_atom` keeps collisions to zero for the
-    current registry; if a collision ever appears, the priming step prefers
-    the lower-priority (more specific) atom because YAML order tracks it.
+    Within a namespace the per-salt bbox offset (see
+    :func:`_canonical_unit_for_atom`) is monotonic and the signature's bbox
+    is quantized at 64×32 px, so distinct salts always produce distinct
+    intra-namespace signatures. Cross-namespace collisions can still happen
+    (different templates can land on identical computed kinds + bbox
+    buckets); when one occurs we bump the salt and retry, guaranteeing that
+    every atom id in ``atoms.yaml`` receives a unique entry. Truly
+    pathological registries that exhaust the salt budget log a warning and
+    skip the offending atom rather than silently overwriting a sibling.
     """
     table: dict[str, str] = {}
+    salt_per_ns: dict[str, int] = {}
+    dropped: list[tuple[str, str]] = []
     for atom_id in _atom_ids_from_yaml():
-        unit = _canonical_unit_for_atom(atom_id)
-        if unit is None:
+        ns = _atom_namespace(atom_id)
+        salt = salt_per_ns.get(ns, 0)
+        attempts = 0
+        unit = None
+        h: str | None = None
+        while attempts < 200:
+            unit = _canonical_unit_for_atom(atom_id, salt=salt)
+            if unit is None:
+                break
+            try:
+                candidate = signature_hash(unit)
+            except Exception:
+                candidate = None
+            if candidate is None:
+                salt += 1
+                attempts += 1
+                continue
+            if candidate not in table:
+                h = candidate
+                break
+            salt += 1
+            attempts += 1
+        salt_per_ns[ns] = salt + 1
+        if h is None or unit is None:
+            dropped.append((atom_id, "salt budget exhausted"))
             continue
-        try:
-            h = signature_hash(unit)
-        except Exception:
-            continue
-        table.setdefault(h, atom_id)
+        table[h] = atom_id
+    if dropped:
+        log.warning(
+            "atom_inference.build_synthetic_table.dropped",
+            count=len(dropped),
+            atoms=dropped,
+        )
     return table

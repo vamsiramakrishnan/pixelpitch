@@ -120,13 +120,26 @@ def test_canonical_unit_unknown_namespace_returns_none():
     assert _canonical_unit_for_atom("") is None
 
 
-def test_canonical_units_within_namespace_have_distinct_signatures():
-    """Two atoms in the same namespace produce different signature hashes
-    (the per-leaf bbox offset varies them)."""
-    a = _canonical_unit_for_atom("bg.mesh")
-    b = _canonical_unit_for_atom("bg.conic")
-    assert a is not None and b is not None
-    assert signature_hash(a) != signature_hash(b)
+def test_canonical_units_distinct_per_salt():
+    """Distinct salts within a namespace must produce distinct signature
+    hashes — that's the contract `build_synthetic_table` relies on to
+    pack every atom id into the priming table without collisions."""
+    a = _canonical_unit_for_atom("bg.mesh", salt=0)
+    b = _canonical_unit_for_atom("bg.mesh", salt=1)
+    c = _canonical_unit_for_atom("bg.mesh", salt=2)
+    assert a is not None and b is not None and c is not None
+    sigs = {signature_hash(a), signature_hash(b), signature_hash(c)}
+    assert len(sigs) == 3
+
+
+def test_build_synthetic_table_assigns_unique_entry_per_atom():
+    """The priming table must keep one entry per declared atom id —
+    silently dropping atoms on collision was the Codex P1 finding."""
+    from slidify.atom_inference import _atom_ids_from_yaml
+    table = build_synthetic_table()
+    declared = _atom_ids_from_yaml()
+    assert len(table) == len(declared)
+    assert set(table.values()) == set(declared)
 
 
 def test_build_synthetic_table_is_nonempty():

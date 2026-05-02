@@ -51,9 +51,10 @@ def test_promote_yaml_appends_stubs(tmp_path: Path):
     sb = by_id["harvested-aaaaaaaa"]
     assert sb["emit"]["kind"] == "Raster"
     assert sb["emit"]["confidence"] == 0.5
-    assert sb["match"]["anchor.tag_in"] == ["div"]
-    # Inferred tag for the section signature.
-    assert by_id["harvested-bbbbbbbb"]["match"]["anchor.tag_in"] == ["section"]
+    # Tag is uppercased so the matcher's case-sensitive `anchor.tag_in`
+    # predicate hits real DOM tagName values (always uppercase).
+    assert sb["match"]["anchor.tag_in"] == ["DIV"]
+    assert by_id["harvested-bbbbbbbb"]["match"]["anchor.tag_in"] == ["SECTION"]
 
 
 def test_promote_yaml_is_idempotent(tmp_path: Path):

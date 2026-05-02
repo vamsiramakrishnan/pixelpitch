@@ -380,14 +380,20 @@ _PROMOTE_YAML_HEADER = (
 
 
 def _infer_tag_from_sig(sig: str) -> str:
-    """Pull the leading tag (e.g. `div`, `h1`) off a signature string.
+    """Pull the leading tag off a signature and return it as the matcher
+    expects it (uppercase).
 
-    Returns ``"div"`` as a safe default when the signature is unparseable.
+    Signatures are emitted lowercase by ``signatures.signature``, but the
+    DOM walker stores ``tagName`` uppercase and the matcher's
+    ``anchor.tag_in`` predicate is case-sensitive. Without this conversion
+    every harvested stub would match nothing, defeating the review queue.
+
+    Returns ``"DIV"`` as a safe default when the signature is unparseable.
     """
     if not sig:
-        return "div"
+        return "DIV"
     head = sig.split("(", 1)[0].strip()
-    return head.lower() or "div"
+    return head.upper() or "DIV"
 
 
 def _build_promotion_stubs(
