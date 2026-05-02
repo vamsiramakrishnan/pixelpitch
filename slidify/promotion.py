@@ -20,6 +20,7 @@ from slidify.models import (
     Decision,
     DecisionKind,
     EmitOp,
+    ExclusivityViolation,
     VisualUnit,
 )
 from slidify.shadows import is_translatable_shadow
@@ -288,6 +289,17 @@ def promote(
     return out
 
 
+def _has_mixed_content_anchor(unit: VisualUnit) -> bool:
+    """True iff the unit's anchor element carries a non-empty
+    ``mixed_content_text``. Used by ``to_emit_ops`` to keep child units
+    visible when the parent emits as a Hybrid text-leaf alongside blocks.
+    """
+    if not unit.elements:
+        return False
+    anchor = unit.elements[0]
+    return bool((getattr(anchor, "mixed_content_text", None) or "").strip())
+
+
 def to_emit_ops(
     roots: list[VisualUnit], decisions: dict[str, Decision]
 ) -> list[EmitOp]:
@@ -340,7 +352,14 @@ def to_emit_ops(
             return
 
         # Native parent: emit self, then children. NativeText / NativeBullet /
-        # NativePicture absorb their region — children should not also emit.
+        # NativePicture / NativeSvg normally absorb their region — children
+        # would just stack a duplicate on top. Exception: when the parent's
+        # own text comes from a `mixed_content_text` capture (parent has
+        # direct text alongside block descendants — the editorial
+        # `<div class="meta-value">parent text<span class="sub">child</span></div>`
+        # pattern), the children are *separate units* with their own text
+        # at distinct bboxes, so the absorb-children rule would silently
+        # drop them. Visit children in that case.
         ops.append(
             EmitOp(
                 unit_id=unit.id,
@@ -351,12 +370,13 @@ def to_emit_ops(
             )
         )
         counter[0] += 1
-        if decision.kind in (
+        absorbing = decision.kind in (
             DecisionKind.NativeText,
             DecisionKind.NativeBullet,
             DecisionKind.NativePicture,
             DecisionKind.NativeSvg,
-        ):
+        )
+        if absorbing and not _has_mixed_content_anchor(unit):
             return
         for c in unit.children:
             visit(c)
@@ -364,3 +384,85 @@ def to_emit_ops(
     for r in roots:
         visit(r)
     return ops
+
+
+# ---------------------------------------------------------------------------
+# Emit-pathway exclusivity audit
+# ---------------------------------------------------------------------------
+
+# Kinds whose own frame visually absorbs the parent region — when one of
+# these emits AND a descendant unit also emits with overlapping bbox, the
+# .pptx ends up with stacked shapes covering the same pixels. Mirrors the
+# absorbing set used inside ``to_emit_ops``; ``NativeTable`` is added here
+# because a table cell is just as much an absorbing surface as a text
+# frame.
+_ABSORBING_KINDS = {
+    DecisionKind.NativeText,
+    DecisionKind.NativeBullet,
+    DecisionKind.NativePicture,
+    DecisionKind.NativeSvg,
+    DecisionKind.NativeTable,
+}
+
+# Min descendant/parent overlap before a violation is logged. Below this
+# threshold the descendant is mostly outside the parent — could happen for
+# off-bbox decoration shifted past the parent edge, no real visual
+# duplicate. Keeps the audit's noise floor low.
+_MIN_OVERLAP_RATIO = 0.5
+
+
+def audit_emit_exclusivity(
+    roots: list[VisualUnit],
+    decisions: dict[str, Decision],
+    ops: list[EmitOp],
+    *,
+    slide_index: int = 0,
+) -> list[ExclusivityViolation]:
+    """Walk emit ops; flag absorbing-parent + descendant-emit overlaps.
+
+    Returns the empty list when emit pathways are clean. The legitimate
+    Phase-A hybrid case (parent anchor carries ``mixed_content_text``) is
+    explicitly skipped — that pathway is intended.
+    """
+    from slidify.units import flatten
+
+    flat = flatten(roots)
+    unit_by_id: dict[str, VisualUnit] = {u.id: u for u in flat}
+    op_by_unit_id: dict[str, EmitOp] = {o.unit_id: o for o in ops}
+
+    out: list[ExclusivityViolation] = []
+    for op in ops:
+        if op.decision.kind not in _ABSORBING_KINDS:
+            continue
+        parent = unit_by_id.get(op.unit_id)
+        if parent is None:
+            continue
+        if _has_mixed_content_anchor(parent):
+            continue  # Phase-A legitimate hybrid emit
+        # Walk descendants iteratively (skip the parent itself).
+        stack = list(parent.children)
+        while stack:
+            d = stack.pop()
+            stack.extend(d.children)
+            d_op = op_by_unit_id.get(d.id)
+            if d_op is None:
+                continue
+            overlap = d.bbox.overlap_ratio(parent.bbox)
+            if overlap < _MIN_OVERLAP_RATIO:
+                continue
+            out.append(
+                ExclusivityViolation(
+                    parent_unit_id=parent.id,
+                    parent_kind=op.decision.kind.value,
+                    parent_bbox_w=parent.bbox.w,
+                    parent_bbox_h=parent.bbox.h,
+                    descendant_unit_id=d.id,
+                    descendant_kind=d_op.decision.kind.value,
+                    descendant_bbox_w=d.bbox.w,
+                    descendant_bbox_h=d.bbox.h,
+                    overlap_ratio=overlap,
+                    reason="absorbing parent + descendant emit; visual duplicate likely",
+                    slide_index=slide_index,
+                )
+            )
+    return out

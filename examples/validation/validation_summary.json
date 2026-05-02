@@ -1,0 +1,177 @@
+[
+  {
+    "deck": "recipes",
+    "label": "cold",
+    "pptx": "/tmp/pptx_artifacts/recipes.cold.pptx",
+    "n_slides": 16,
+    "native_area_ratio": 1.0,
+    "cache_hit_rate": 0.5335,
+    "pattern_coverage": 0.875,
+    "decisions_by_tier": {
+      "tier0": 172,
+      "cache:tier0": 227,
+      "tier2": 7,
+      "promotion": 17,
+      "tier1": 20,
+      "cache:tier1": 13,
+      "cache:tier2": 7
+    },
+    "top_pattern_hits": {
+      "kicker-from-css": 41,
+      "title-h1": 14,
+      "slide-solid-bg": 13,
+      "slide-gradient-wrapper": 12,
+      "mixed-content-text-leaf": 12,
+      "editorial-bottom-rule": 11,
+      "native-svg-simple": 10,
+      "decoration-card": 6
+    },
+    "n_unmatched_sigs": 25,
+    "elapsed_s": 10.71
+  },
+  {
+    "deck": "recipes",
+    "label": "warm",
+    "pptx": "/tmp/pptx_artifacts/recipes.warm.pptx",
+    "n_slides": 16,
+    "native_area_ratio": 1.0,
+    "cache_hit_rate": 1.0,
+    "pattern_coverage": 0.0,
+    "decisions_by_tier": {
+      "cache:tier0": 399,
+      "cache:tier2": 14,
+      "promotion": 17,
+      "cache:tier1": 33
+    },
+    "top_pattern_hits": {},
+    "n_unmatched_sigs": 0,
+    "elapsed_s": 10.32
+  },
+  {
+    "deck": "atoms",
+    "label": "cold",
+    "pptx": "/tmp/pptx_artifacts/atoms.cold.pptx",
+    "n_slides": 10,
+    "native_area_ratio": 1.0,
+    "cache_hit_rate": 0.6229,
+    "pattern_coverage": 0.9607,
+    "decisions_by_tier": {
+      "tier0": 163,
+      "cache:tier0": 280,
+      "promotion": 8,
+      "tier1": 2,
+      "cache:tier1": 14,
+      "tier2": 5
+    },
+    "top_pattern_hits": {
+      "kicker-from-css": 23,
+      "native-svg-simple": 11,
+      "gradient-card-no-text": 10,
+      "decorated-card-mixed-content": 8,
+      "slide-solid-bg": 8,
+      "atom-dec-any": 8,
+      "background-blend-mode-raster": 6,
+      "decoration-card": 5
+    },
+    "n_unmatched_sigs": 7,
+    "elapsed_s": 5.12
+  },
+  {
+    "deck": "atoms",
+    "label": "warm",
+    "pptx": "/tmp/pptx_artifacts/atoms.warm.pptx",
+    "n_slides": 10,
+    "native_area_ratio": 1.0,
+    "cache_hit_rate": 1.0,
+    "pattern_coverage": 0.0,
+    "decisions_by_tier": {
+      "cache:tier0": 443,
+      "promotion": 8,
+      "cache:tier1": 16,
+      "cache:tier2": 5
+    },
+    "top_pattern_hits": {},
+    "n_unmatched_sigs": 0,
+    "elapsed_s": 5.15
+  },
+  {
+    "deck": "sample_deck",
+    "label": "cold",
+    "pptx": "/tmp/pptx_artifacts/sample_deck.cold.pptx",
+    "n_slides": 3,
+    "native_area_ratio": 1.0,
+    "cache_hit_rate": 0.3684,
+    "pattern_coverage": 0.75,
+    "decisions_by_tier": {
+      "tier0": 9,
+      "tier1": 3,
+      "cache:tier0": 7
+    },
+    "top_pattern_hits": {
+      "text-card-composite": 2,
+      "footer-text": 1,
+      "tight-sans-eyebrow": 1,
+      "body-paragraph": 1,
+      "subtitle": 1,
+      "slide-solid-bg": 1,
+      "short-label": 1,
+      "stat-card-composite": 1
+    },
+    "n_unmatched_sigs": 3,
+    "elapsed_s": 1.59
+  },
+  {
+    "deck": "sample_deck",
+    "label": "warm",
+    "pptx": "/tmp/pptx_artifacts/sample_deck.warm.pptx",
+    "n_slides": 3,
+    "native_area_ratio": 1.0,
+    "cache_hit_rate": 1.0,
+    "pattern_coverage": 0.0,
+    "decisions_by_tier": {
+      "cache:tier0": 16,
+      "cache:tier1": 3
+    },
+    "top_pattern_hits": {},
+    "n_unmatched_sigs": 0,
+    "elapsed_s": 1.52
+  },
+  {
+    "deck": "svg_stress",
+    "label": "cold",
+    "pptx": "/tmp/pptx_artifacts/svg_stress.cold.pptx",
+    "n_slides": 1,
+    "native_area_ratio": 1.0,
+    "cache_hit_rate": 0.0909,
+    "pattern_coverage": 1.0,
+    "decisions_by_tier": {
+      "tier0": 10,
+      "cache:tier0": 1
+    },
+    "top_pattern_hits": {
+      "native-svg-simple": 3,
+      "kicker-from-css": 2,
+      "decorated-card-mixed-content": 2,
+      "text-card-composite": 1,
+      "title-h1": 1,
+      "slide-solid-bg": 1
+    },
+    "n_unmatched_sigs": 0,
+    "elapsed_s": 1.24
+  },
+  {
+    "deck": "svg_stress",
+    "label": "warm",
+    "pptx": "/tmp/pptx_artifacts/svg_stress.warm.pptx",
+    "n_slides": 1,
+    "native_area_ratio": 1.0,
+    "cache_hit_rate": 1.0,
+    "pattern_coverage": 0.0,
+    "decisions_by_tier": {
+      "cache:tier0": 11
+    },
+    "top_pattern_hits": {},
+    "n_unmatched_sigs": 0,
+    "elapsed_s": 1.19
+  }
+]

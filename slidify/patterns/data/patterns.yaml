@@ -94,6 +94,29 @@ patterns:
       confidence: 0.9
       metadata: { recipe: pptx_unsupported_bg_image_url }
 
+  # CSS mask-image / -webkit-mask-image — silently lost by the native
+  # emitters. Route to Raster so the masked composition survives the
+  # round-trip even though we can't reconstruct the alpha mask in PPTX.
+  - id: mask-image-raster
+    priority: 8
+    match:
+      mask_image: any
+    emit:
+      kind: Raster
+      confidence: 0.95
+      metadata: { recipe: mask_image_raster }
+
+  # background-blend-mode — multiple backgrounds composed via Porter-Duff.
+  # PPTX has no equivalent, so unit must raster to keep the blend visible.
+  - id: background-blend-mode-raster
+    priority: 9
+    match:
+      background_blend_mode: any
+    emit:
+      kind: Raster
+      confidence: 0.95
+      metadata: { recipe: background_blend_mode_raster }
+
   # =========================================================================
   # TYPOGRAPHY  — leaf or text-container units that classify as NativeText
   # with a known role/size/weight.
@@ -356,6 +379,124 @@ patterns:
       kind: NativeText
       confidence: 0.8
       metadata: { recipe: micro_text, role: caption }
+
+  # Vertical / sideways type via CSS writing-mode. Rail callouts and
+  # magazine spines: the unit's footprint is narrow + tall, copy is short.
+  # We claim it as NativeText so the LLM tier doesn't get asked even if
+  # the downstream emitter rasters today — recipe records the intent.
+  - id: vertical-rail-text
+    priority: 28
+    match:
+      anchor.writing_mode_in: [vertical-rl, vertical-lr, sideways-rl, sideways-lr]
+      own_text: true
+      bbox.w_max: 80
+      bbox.h_min: 100
+      text_length_min: 4
+      text_length_max: 40
+    emit:
+      kind: NativeText
+      confidence: 0.9
+      metadata: { recipe: vertical_rail, role: rail }
+
+  # Display-register headline: oversized, negative tracking, display family.
+  # Excludes H1/H2 so the dedicated title-h1 / title-h2 recipes still win
+  # for semantic headings; this catches DIV/SPAN/P "design display" copy.
+  - id: display-headline-tight
+    priority: 33
+    match:
+      anchor.tag_not_in: [H1, H2]
+      children: none
+      own_text: true
+      font_size_px_min: 56
+      anchor.font_family_family: display
+      anchor.letter_spacing_px_max: -0.5
+    emit:
+      kind: NativeText
+      confidence: 0.92
+      metadata: { recipe: display_headline, role: title, register: display-tight }
+
+  # Editorial serif headline: large size, serif family. Same H1/H2 carve-out
+  # as display-headline-tight so the semantic title recipes keep priority.
+  - id: editorial-serif-headline
+    priority: 34
+    match:
+      anchor.tag_not_in: [H1, H2]
+      children: none
+      own_text: true
+      font_size_px_min: 40
+      anchor.font_family_family: serif
+    emit:
+      kind: NativeText
+      confidence: 0.9
+      metadata: { recipe: editorial_serif, role: heading, register: editorial }
+
+  # Mono-tag: short monospace label (build IDs, status chips, inline code).
+  - id: mono-tag-text
+    priority: 35
+    match:
+      children: none
+      own_text: true
+      anchor.font_family_family: mono
+      font_size_px_max: 16
+      text_length_max: 60
+    emit:
+      kind: NativeText
+      confidence: 0.9
+      metadata: { recipe: mono_tag, role: tag, register: mono }
+
+  # Brutalist top-rule: a thick top border with no matching sides — the
+  # visual is the rule itself, children sit on top of it via z-ordering.
+  - id: brutalist-top-rule
+    priority: 36
+    match:
+      anchor.border_top_width_min: 4
+      anchor.has_asymmetric_border: true
+      children: any
+    emit:
+      kind: NativeShape
+      confidence: 0.88
+      metadata: { recipe: brutalist_top_rule, decorate: top-rule }
+
+  # Magazine left-rule: thick left border (pull-quote / kicker convention).
+  - id: magazine-left-rule
+    priority: 37
+    match:
+      anchor.border_left_width_min: 4
+      anchor.has_asymmetric_border: true
+    emit:
+      kind: NativeShape
+      confidence: 0.88
+      metadata: { recipe: magazine_left_rule, decorate: left-rule }
+
+  # Pill detected purely from a huge corner radius (no class hint required).
+  # Tighter footprint than pill-tailwind so this catches CSS-only pills the
+  # class-based recipe misses without grabbing every rounded button.
+  - id: pill-radius-only
+    priority: 38
+    match:
+      children: none
+      own_text: true
+      anchor.radius_px_range: [80, 9999]
+      bbox.h_max: 64
+      bbox.w_max: 320
+      text_length_max: 60
+    emit:
+      kind: NativeText
+      confidence: 0.9
+      metadata: { recipe: pill_by_radius }
+
+  # Text with CSS text-shadow — high-emphasis copy worth recording so the
+  # PPTX run can carry an outerShdw on the run instead of being rastered.
+  - id: text-shadow-text
+    priority: 39
+    match:
+      children: none
+      own_text: true
+      anchor.has_text_shadow: true
+    emit:
+      kind: NativeText
+      confidence: 0.88
+      metadata: { recipe: text_with_shadow, role: emphasis }
 
   # =========================================================================
   # STAT NUMBERS — large display digits (KPI emphasis).
@@ -623,6 +764,88 @@ patterns:
       confidence: 0.9
       metadata: { recipe: feature_card_with_icon }
 
+  # Elevated card: a parent unit with a stack of three or more box-shadows
+  # (the canonical "soft-then-deep" elevation recipe). Tagged structural so
+  # the children still self-classify; the recipe records elevation intent.
+  - id: elevated-card
+    priority: 73
+    tag: structural
+    match:
+      anchor.shadow_layers_min: 3
+      children: any
+      transform: none
+    emit:
+      kind: observe
+      confidence: 0.9
+      metadata: { recipe: elevated_card, decorate: elevation-stack }
+
+  # Pseudo-element gradient halo: ::before/::after carries a CSS gradient.
+  # Records the decoration so the host element survives but the LLM tier
+  # doesn't get asked to re-derive the halo intent.
+  - id: pseudo-gradient-glyph
+    priority: 74
+    tag: structural
+    match:
+      pseudo.has_gradient: true
+      children: none
+    emit:
+      kind: observe
+      confidence: 0.85
+      metadata: { recipe: pseudo_gradient_glyph, decorate: pseudo-halo }
+
+  # Feature row: small <svg> icon paired with adjacent text — common in
+  # benefit lists and toolbars. Structural so each child still classifies.
+  - id: feature-icon-text-row
+    priority: 78
+    tag: structural
+    match:
+      siblings_icon_text_pair: true
+      bbox.h_max: 80
+    emit:
+      kind: observe
+      confidence: 0.9
+      metadata: { recipe: feature_row }
+
+  # =========================================================================
+  # BENTO / GRID compositions — record the layout intent so emit can group
+  # children predictably. Structural-only (no decision override).
+  # =========================================================================
+
+  - id: bento-grid-3up
+    priority: 85
+    tag: structural
+    match:
+      anchor.is_grid_container: true
+      anchor.grid_columns_count: 3
+      siblings_uniform_aspect: { tolerance: 0.20, n_min: 3 }
+    emit:
+      kind: observe
+      confidence: 0.9
+      metadata: { recipe: bento_grid, layout: 3-up }
+
+  - id: bento-grid-2up
+    priority: 86
+    tag: structural
+    match:
+      anchor.is_grid_container: true
+      anchor.grid_columns_count: 2
+      siblings_uniform_aspect: { tolerance: 0.20, n_min: 2 }
+    emit:
+      kind: observe
+      confidence: 0.9
+      metadata: { recipe: bento_grid, layout: 2-up }
+
+  - id: bento-grid-12col
+    priority: 87
+    tag: structural
+    match:
+      anchor.is_grid_container: true
+      anchor.grid_columns_count: 12
+    emit:
+      kind: observe
+      confidence: 0.9
+      metadata: { recipe: bento_grid, layout: 12-col }
+
   # =========================================================================
   # SECTION HEADERS — kicker + title pair near top of slide.
   # =========================================================================
@@ -773,3 +996,204 @@ patterns:
       kind: NativeShape
       confidence: 0.85
       metadata: { recipe: slide_solid_bg }
+
+  # Top-strip gradient band: a slim <body>/<html> bar pinned to the top of
+  # the slide. Matches only when the unit's height stays under ~96px so a
+  # full-bleed gradient body still routes via slide-gradient-bg above.
+  - id: top-strip-bg-band
+    priority: 205
+    match:
+      anchor.tag_in: [BODY, HTML]
+      bg_image_kind: gradient
+      bbox.slide_y_band: top
+      bbox.h_max: 96
+    emit:
+      kind: NativeShape
+      confidence: 0.88
+      metadata: { recipe: top_band }
+
+  # =========================================================================
+  # HARVESTER ITER 1 — patterns added from /tmp/corpus harvest run.
+  # Each entry below was the dominant cluster of one tier-0 miss family;
+  # adding a recipe converts the LLM/tier-2 fallback path into a deterministic
+  # cache hit on second runs. Numbers in the comments are the iter-1
+  # occurrence counts before adding the recipe.
+  # =========================================================================
+
+  # ── Simple SVGs (svg_path_count <= SVG_NATIVE_PATH_BUDGET) with shapes
+  # captured by the walker. Priority 8 lands AFTER must-raster gates (1–7)
+  # but BEFORE the typography pile (10–48): without that, an SVG containing
+  # <text> children (axis labels, chart annotations, US-state grid labels)
+  # gets matched by `footer-text` / `body-paragraph` etc. — `own_text: true`
+  # fires on the folded text descendants and the chart silently classifies
+  # as a single text frame, losing every line / polyline / rect.
+  # `anchor.has_svg_shapes: true` keeps the recipe quiet on SVGs the walker
+  # didn't capture (>200 primitives) so they defer to tier-1 / Raster.
+  - id: native-svg-simple
+    priority: 8
+    match:
+      anchor.is_svg: true
+      anchor.has_svg_shapes: true
+    emit:
+      kind: NativeSvg
+      confidence: 0.92
+      metadata: { recipe: native_svg_simple, role: svg }
+
+  # ── <table> elements with a translatable grid. Same priority story as the
+  # SVG rule above — needs to claim the unit before typography rules see
+  # the cell text and route the whole table to NativeText.
+  - id: native-table
+    priority: 9
+    match:
+      anchor.tag_in: [TABLE]
+      anchor.is_table: true
+    emit:
+      kind: NativeTable
+      confidence: 0.95
+      metadata: { recipe: native_table, role: table }
+
+  # ── Mixed-content elements: a parent <div> with direct text AND block
+  # descendants (e.g. editorial ``<div class="meta-value">Helmsworth
+  # Industries...<span class="sub" style="display:block">Steering
+  # committee...</span></div>``). The walker captures the parent's own
+  # text fragment as ``mixed_content_text``; this recipe routes the unit
+  # to NativeText so the parent's text leaf emits above the child stack
+  # instead of silently disappearing. Children classify themselves and
+  # render below per the existing promotion DAG.
+  - id: mixed-content-text-leaf
+    priority: 28
+    match:
+      anchor.has_mixed_content: true
+    emit:
+      kind: NativeText
+      confidence: 0.88
+      metadata: { recipe: mixed_content_text, role: body }
+
+  # ── 3× monospace text containers (terminal/code blocks). The existing
+  # `code-block-tailwind` recipe requires a dark bg; this catches mono-typeset
+  # bodies on any background.
+  - id: mono-text-container
+    priority: 33
+    match:
+      anchor.tag_in: [DIV, P, SPAN, PRE]
+      own_text: true
+      anchor.font_family_family: mono
+      text_length_min: 8
+    emit:
+      kind: NativeText
+      confidence: 0.92
+      metadata: { recipe: mono_text_container, role: code }
+
+  # ── 4× sans-serif text containers with tight tracking, no specific
+  # heading tag. The display-headline-tight recipe required negative
+  # letter-spacing AND large font; this is the looser fallback for tight
+  # headlines emitted as <div> instead of <h1/h2>.
+  - id: tight-display-container
+    priority: 34
+    match:
+      anchor.tag_in: [DIV, P]
+      own_text: true
+      is_text_container: true
+      anchor.font_family_family: sans
+      anchor.letter_spacing_px_max: 0.4
+      font_size_px_min: 24
+      text_length_min: 4
+    emit:
+      kind: NativeText
+      confidence: 0.88
+      metadata: { recipe: tight_display_container, role: heading }
+
+  # ── 12× decorated cards with mixed content (bg + border + radius, but
+  # children include images / SVG icons / nested cards — so
+  # text-card-composite's children_only_text predicate misses them).
+  # Emit a real NativeShape for the card so children z-stack on top via the
+  # existing promotion DAG. Without a decision the harvester re-fires every
+  # render and tier-2 pays the cost.
+  - id: decorated-card-mixed-content
+    priority: 79
+    match:
+      anchor.tag_in: [DIV, SECTION, ARTICLE]
+      children: any
+      n_children_min: 1
+      n_children_max: 16
+      has_visible_decoration: true
+      transform: none
+      filter: none
+      bg_image_kind: none
+    emit:
+      kind: NativeShape
+      confidence: 0.88
+      metadata: { recipe: decorated_card_mixed }
+
+  # =========================================================================
+  # HARVESTER ITER 2 — second pass after iter-1 patterns shipped.
+  # =========================================================================
+
+  # ── 6× radial-gradient slide-sized divs (mesh / hero backgrounds painted
+  # on a wrapper <div class="slide"> instead of <body>). The slide-gradient-bg
+  # recipe only matches BODY/HTML anchors; this catches the wrapper case.
+  - id: slide-gradient-wrapper
+    priority: 199
+    match:
+      anchor.tag_in: [DIV, SECTION, MAIN]
+      bg_image_kind: gradient
+      bbox.w_min: 1024
+      bbox.h_min: 600
+      children: any
+    emit:
+      kind: NativeShape
+      confidence: 0.88
+      metadata: { recipe: slide_gradient_wrapper }
+
+  # ── 3× asymmetric bottom border (accent underline). Mirrors
+  # brutalist-top-rule / magazine-left-rule for the bottom side — common in
+  # editorial layouts as the "section closer" rule.
+  - id: editorial-bottom-rule
+    priority: 38
+    match:
+      anchor.has_asymmetric_border: true
+      anchor.border_per_side: { bottom: solid }
+      children: any
+    emit:
+      kind: NativeShape
+      confidence: 0.85
+      metadata: { recipe: editorial_bottom_rule, decorate: bottom-rule }
+
+  # ── 6× generic short text containers — sans, no specific tracking, sub-24-
+  # char text, mid-size font. Body-paragraph requires text_length_min:24,
+  # short-label caps the font at 18px; this fills the band between them
+  # (12–24px / 4–24 chars) so taglines, eyebrows, and inline labels emit
+  # natively instead of paying the tier-1/2 round trip.
+  - id: short-sans-container
+    priority: 41
+    match:
+      anchor.tag_in: [DIV, P, SPAN]
+      own_text: true
+      anchor.font_family_family: sans
+      font_size_px_min: 12
+      font_size_px_max: 28
+      text_length_min: 4
+      text_length_max: 24
+    emit:
+      kind: NativeText
+      confidence: 0.85
+      metadata: { recipe: short_sans_container, role: label }
+
+  # ── 1× sans-serif tight-tracking <div> headlines too small for
+  # tight-display-container's font_size_px_min:24 cutoff (e.g. 18px taglines
+  # set in negative tracking). Caught here so they emit as headings rather
+  # than as raw body.
+  - id: tight-sans-eyebrow
+    priority: 42
+    match:
+      anchor.tag_in: [DIV, P]
+      own_text: true
+      anchor.font_family_family: sans
+      anchor.letter_spacing_px_max: 0.0
+      font_size_px_min: 14
+      font_size_px_max: 24
+      text_length_min: 4
+    emit:
+      kind: NativeText
+      confidence: 0.85
+      metadata: { recipe: tight_sans_eyebrow, role: subheading }

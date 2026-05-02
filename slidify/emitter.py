@@ -404,6 +404,7 @@ class Emitter:
             for e in unit.all_elements()
             if (e.text and e.text.strip())
             or (e.runs and any(r.text.strip() for r in e.runs if not r.is_break))
+            or (getattr(e, "mixed_content_text", None) or "").strip()
         ]
         if not text_elems:
             return None
@@ -422,7 +423,16 @@ class Emitter:
         # boxes over the unit's bbox — the unit bbox is the CSS box-model
         # container, which is often padded or oversized vs. the actual
         # text. The union is the truth: where the type really sat.
-        emit_bbox = _union_line_box(unit) or op.bbox
+        #
+        # Exception: when the anchor carries `mixed_content_text` (parent
+        # text alongside block children), the line-box union pulls in the
+        # children's positions and would render the parent's text frame
+        # ON TOP of the child unit. Use the anchor's own bbox so the
+        # parent's text sits in its intended slot above the children.
+        if (getattr(anchor, "mixed_content_text", None) or "").strip():
+            emit_bbox = anchor.bbox
+        else:
+            emit_bbox = _union_line_box(unit) or op.bbox
 
         # Give multi-run inline text containers some horizontal slack so font
         # substitution doesn't wrap them. CSS sizes flex-item widths by their
@@ -521,7 +531,9 @@ class Emitter:
         text_elems = [
             e
             for e in unit.all_elements()
-            if (e.text and e.text.strip()) or (e.runs and any(r.text.strip() for r in e.runs if not r.is_break))
+            if (e.text and e.text.strip())
+            or (e.runs and any(r.text.strip() for r in e.runs if not r.is_break))
+            or (getattr(e, "mixed_content_text", None) or "").strip()
         ]
         # Leaf-text-wins: when a text-bearing parent has text-bearing
         # descendants in the same list, the descendants will paint the
@@ -741,7 +753,15 @@ class Emitter:
             while paragraphs and not paragraphs[-1]:
                 paragraphs.pop()
             return paragraphs
-        text = (e.pptx_text or e.text or "").strip()
+        # `mixed_content_text` is the parent's own direct-text fragment when
+        # an element ALSO has block descendants (`<div>parent text<div
+        # class="sub">child</div></div>`). The walker captures it on the
+        # parent and the children classify themselves; without this fallback
+        # the parent's text would silently disappear because `text` is only
+        # set on leaf-text and text-container elements.
+        text = (
+            e.pptx_text or e.text or getattr(e, "mixed_content_text", None) or ""
+        ).strip()
         if not text:
             return []
         return [

@@ -26,7 +26,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 # Bump this when rows change so consumers can pin / detect drift.
-MATRIX_VERSION = "2"
+MATRIX_VERSION = "4"
 
 
 class Support(str, Enum):
@@ -96,9 +96,22 @@ MATRIX: tuple[CompatRow, ...] = (
         "Browser-derived per-line getClientRects() carry exact line positions.",
     ),
     CompatRow(
-        "Typography", "text-shadow", Support.Unsupported,
-        "slidify.classifier.tier1.RULES",
-        "Currently dropped; only box-shadow has a translator.",
+        "Typography", "text-shadow", Support.Partial,
+        "slidify.dom_walker.WALKER_JS",
+        "Captured on every element so the matcher can reason about it; "
+        "OOXML emit is per-shape outerShdw on the run, not yet wired in.",
+    ),
+    CompatRow(
+        "Typography", "letter-spacing (numeric / em / px)", Support.Native,
+        "slidify.dom_walker.WALKER_JS",
+        "Captured as the resolved px value so the matcher can route to "
+        "kicker / display registers; emitter applies via run.font.spacing.",
+    ),
+    CompatRow(
+        "Typography", "writing-mode (vertical-rl / vertical-lr / sideways-*)",
+        Support.Partial, "slidify.dom_walker.WALKER_JS",
+        "Captured for matcher; vertical type rasterizes for now (PPTX text "
+        "frames support vertical via bodyPr but the run pipeline doesn't yet).",
     ),
     CompatRow(
         "Typography", "background-clip: text + background-image: url()",
@@ -144,6 +157,13 @@ MATRIX: tuple[CompatRow, ...] = (
         "slidify.shadows.parse_box_shadows",
         "Inset shadows degrade to outer; spread + blur honored.",
     ),
+    CompatRow(
+        "Borders", "Asymmetric per-side borders (border-top / -right / -bottom / -left)",
+        Support.Partial, "slidify.dom_walker.WALKER_JS",
+        "All four sides captured so the matcher can recognize accent-stripe, "
+        "magazine-rule, and brutalist top-rule patterns. Emit currently uses "
+        "the dominant side's color/width.",
+    ),
 
     # --- Transforms / clipping / effects ---------------------------------
     CompatRow(
@@ -177,6 +197,18 @@ MATRIX: tuple[CompatRow, ...] = (
         "Frosted-glass needs a live blur; baked via raster crop.",
     ),
     CompatRow(
+        "Effects", "mask-image / -webkit-mask-image", Support.Raster,
+        "slidify.dom_walker.WALKER_JS",
+        "Captured so units carrying a mask route to Raster instead of "
+        "emitting an unmasked shape; native translation is roadmap.",
+    ),
+    CompatRow(
+        "Effects", "background-blend-mode", Support.Raster,
+        "slidify.dom_walker.WALKER_JS",
+        "Multi-background Porter-Duff compositing; PPTX has no equivalent. "
+        "Captured so the unit raster-crops cleanly.",
+    ),
+    CompatRow(
         "Effects", "opacity (< 1)", Support.Native,
         "slidify.emitter.Emitter._set_solid_fill_alpha",
         "Solid + image opacity baked into the shape / pixels at emit time.",
@@ -197,6 +229,24 @@ MATRIX: tuple[CompatRow, ...] = (
         "Layout", "overflow: hidden", Support.Partial,
         "slidify.classifier.tier1.RULES",
         "Children that overflow the viewport are clipped at slide bounds.",
+    ),
+    CompatRow(
+        "Layout", "CSS Grid (template-columns / gap)", Support.Native,
+        "slidify.dom_walker.WALKER_JS",
+        "Grid template + gap captured so the matcher can recognize bento / "
+        "dashboard / 12-col compositions; resolved geometry survives via bbox.",
+    ),
+    CompatRow(
+        "Layout", "aspect-ratio", Support.Native,
+        "slidify.dom_walker.WALKER_JS",
+        "Captured so square-tile / cinema / golden compositions can be matched "
+        "and routed to mask presets independent of class names.",
+    ),
+    CompatRow(
+        "Layout", "object-fit / object-position (on <img>)", Support.Partial,
+        "slidify.dom_walker.WALKER_JS",
+        "Captured so the picture emit can apply <a:srcRect> crop; default "
+        "fill behavior preserves the rendered look.",
     ),
 
     # --- HTML primitives -------------------------------------------------
@@ -258,6 +308,15 @@ MATRIX: tuple[CompatRow, ...] = (
         "Tags a cluster as a known atom (bg.mesh, surf.glass, type.echo, …); "
         "matcher routes to the canonical recipe in atoms.yaml. "
         "Catalog: examples/landing/atoms.html.",
+    ),
+    CompatRow(
+        "Hints", "Implicit atom inference (no data-atom needed)",
+        Support.Native, "slidify.atom_inference.infer_atom_id",
+        "When the unit's structural signature matches a primed atom hash, "
+        "the matcher synthesises the data-atom hint at classify time so "
+        "the canonical recipe fires without an author tag. Priming table "
+        "lives in slidify/patterns/data/atom_signatures.json; rebuild with "
+        "`slidify prime-atom-cache`.",
     ),
 
     # --- Notion-style block primitives -----------------------------------
@@ -580,6 +639,26 @@ MATRIX: tuple[CompatRow, ...] = (
         "A11y", "Reading order via DOM order", Support.Native,
         "slidify.promotion.to_emit_ops",
         "Emit op z-order respects DOM source order.",
+    ),
+
+    # --- Diagnostics -----------------------------------------------------
+    CompatRow(
+        "Diagnostics", "Unit coverage oracle (DOM text → unit map)",
+        Support.Native, "slidify.unit_coverage.find_coverage_gaps",
+        "Reports DOM elements with text content whose region isn't covered by "
+        "any produced VisualUnit. The dual of the harvester: harvester finds "
+        "unrecognised shapes, this finds dropped content. Surface via "
+        "ConversionResult.coverage_gaps and the convert summary.",
+    ),
+    CompatRow(
+        "Diagnostics", "Emit-pathway exclusivity audit",
+        Support.Native, "slidify.promotion.audit_emit_exclusivity",
+        "Flags emit ops where an absorbing parent (NativeText / NativeBullet "
+        "/ NativePicture / NativeSvg / NativeTable) overlaps a descendant unit "
+        "that ALSO emits — the structural fingerprint of visual duplication. "
+        "Allows the legitimate Phase-A hybrid case (parent has "
+        "mixed_content_text). Surface via "
+        "ConversionResult.exclusivity_violations.",
     ),
 )
 

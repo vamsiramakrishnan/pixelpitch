@@ -330,6 +330,16 @@ def _print_summary(result) -> None:
             D(f"Unmatched signatures  {len(result.unmatched_signatures)} "
               "(run `slidify harvest` to surface candidates)")
         )
+    if result.coverage_gaps:
+        click.echo(
+            D(f"Coverage gaps         {len(result.coverage_gaps)} "
+              "(DOM text not in any unit)")
+        )
+    if result.exclusivity_violations:
+        click.echo(
+            D(f"Emit duplicates       {len(result.exclusivity_violations)} "
+              "(parent+descendant overlap)")
+        )
     click.echo(D("─" * 64))
 
 
@@ -360,6 +370,148 @@ async def _harvest_one(html_path: Path) -> list[UnmatchedSignature]:
             pass
 
 
+_PROMOTE_YAML_HEADER = (
+    "# AUTO-GENERATED queue of harvested pattern stubs.\n"
+    "#\n"
+    "# Each entry was written by `slidify harvest --promote-yaml` from an\n"
+    "# unmatched DOM signature observed in a real deck. Stubs default to\n"
+    "# `kind: Raster` so a stub never silently regresses fidelity. A human\n"
+    "# (or LLM) reviewer should:\n"
+    "#   1. Tighten the `match` clauses (the auto-inferred `anchor.tag_in`\n"
+    "#      is the lowest-resolution predicate that fits the signature).\n"
+    "#   2. Promote `kind` from `Raster` to `NativeShape` / `NativeText` /\n"
+    "#      `NativeSvg` once the recipe is correct.\n"
+    "#   3. Move the entry into `slidify/patterns/data/patterns.yaml` (or\n"
+    "#      `atoms.yaml` for atom-keyed recipes) and delete it from here.\n"
+    "#\n"
+    "# Re-running `slidify harvest --promote-yaml` is idempotent: existing\n"
+    "# `id:` values are preserved.\n"
+)
+
+
+def _infer_tag_from_sig(sig: str) -> str:
+    """Pull the leading tag off a signature and return it as the matcher
+    expects it (uppercase).
+
+    Signatures are emitted lowercase by ``signatures.signature``, but the
+    DOM walker stores ``tagName`` uppercase and the matcher's
+    ``anchor.tag_in`` predicate is case-sensitive. Without this conversion
+    every harvested stub would match nothing, defeating the review queue.
+
+    Returns ``"DIV"`` as a safe default when the signature is unparseable.
+    """
+    if not sig:
+        return "DIV"
+    head = sig.split("(", 1)[0].strip()
+    return head.upper() or "DIV"
+
+
+def _build_promotion_stubs(
+    sigs: list[UnmatchedSignature], min_count: int
+) -> list[dict]:
+    """Build YAML-serialisable stub dicts from unmatched signatures."""
+    stubs: list[dict] = []
+    for sig in sigs:
+        if sig.n_occurrences < min_count:
+            continue
+        tag = _infer_tag_from_sig(sig.sig)
+        stubs.append({
+            "id": f"harvested-{sig.sig_hash[:8]}",
+            "priority": 999,
+            "match": {
+                "anchor.tag_in": [tag],
+            },
+            "_meta": {
+                "originating_signature": sig.sig,
+                "occurrences": sig.n_occurrences,
+                "sample_classes": sig.sample_classes,
+            },
+            "emit": {
+                "kind": "Raster",
+                "confidence": 0.5,
+                "metadata": {
+                    "recipe": f"harvested_{sig.sig_hash[:8]}",
+                    "source": "harvester",
+                },
+            },
+        })
+    return stubs
+
+
+def promote_unmatched_to_yaml(
+    sigs: list[UnmatchedSignature],
+    out_path: Path,
+    *,
+    min_count: int = 3,
+) -> int:
+    """Append harvested stubs to ``out_path``. Returns the number of NEW
+    stub entries written (existing ids are preserved, not duplicated).
+
+    Pulled out of the CLI body so tests can drive it without spawning
+    a click context.
+    """
+    import yaml
+
+    new_stubs = _build_promotion_stubs(sigs, min_count)
+    if not new_stubs:
+        return 0
+
+    existing: dict = {}
+    if out_path.exists():
+        try:
+            existing = yaml.safe_load(out_path.read_text(encoding="utf-8")) or {}
+        except yaml.YAMLError:
+            existing = {}
+
+    existing_patterns = list(existing.get("patterns", []) or [])
+    seen_ids = {p.get("id") for p in existing_patterns if isinstance(p, dict)}
+
+    n_new = 0
+    for stub in new_stubs:
+        if stub["id"] in seen_ids:
+            continue
+        # Strip the `_meta` helper key; it would otherwise leak into the
+        # YAML body. We re-emit the same info as inline comments below.
+        meta = stub.pop("_meta", {})
+        existing_patterns.append(stub)
+        seen_ids.add(stub["id"])
+        # Stash the meta back so the YAML dumper writes it as a body comment.
+        stub["_meta"] = meta  # round-trip for the comment block
+        n_new += 1
+
+    payload = {"patterns": existing_patterns}
+
+    # We hand-build the YAML so we can interleave per-stub comments
+    # describing the originating signature / occurrence count / sample
+    # classes — readers should never need to cross-reference a separate
+    # report to understand why a stub appeared.
+    lines: list[str] = [_PROMOTE_YAML_HEADER, "patterns:\n"]
+    for entry in payload["patterns"]:
+        meta = entry.pop("_meta", None) if isinstance(entry, dict) else None
+        if isinstance(meta, dict) and meta:
+            sig_line = (meta.get("originating_signature") or "")[:120]
+            occ = meta.get("occurrences", "?")
+            cls = (meta.get("sample_classes") or "")[:80]
+            lines.append("\n")
+            lines.append(f"  # Originating signature: {sig_line}\n")
+            lines.append(f"  # Occurrences in corpus: {occ}\n")
+            if cls:
+                lines.append(f"  # Sample classes: {cls}\n")
+            lines.append(
+                "  # AUTO-GENERATED — review before promoting from Raster default.\n"
+            )
+        block = yaml.safe_dump(
+            [entry], sort_keys=False, default_flow_style=False, indent=2
+        )
+        # `safe_dump([entry])` produces lines starting with "- "; we want
+        # them indented under `patterns:` — they already are (2-space indent
+        # by default), so just append.
+        lines.append(block)
+
+    out_path.write_text("".join(lines), encoding="utf-8")
+    return n_new
+
+
 @click.command(name="harvest")
 @click.argument(
     "input_path",
@@ -378,7 +530,33 @@ async def _harvest_one(html_path: Path) -> list[UnmatchedSignature]:
     default=None,
     help="Write the full ranked report as JSON to this path.",
 )
-def harvest(input_path: Path, top: int, out_json: Path | None) -> None:
+@click.option(
+    "--promote-yaml",
+    "promote_yaml",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=None,
+    help=(
+        "Append a YAML stub for each unmatched signature with at least "
+        "--min-count occurrences. The output file becomes a deterministic "
+        "review queue: a human / LLM tightens the `match` clauses and "
+        "promotes `kind: Raster` to a native emit kind."
+    ),
+)
+@click.option(
+    "--min-count",
+    "min_count",
+    type=int,
+    default=3,
+    show_default=True,
+    help="Minimum occurrences before --promote-yaml writes a stub.",
+)
+def harvest(
+    input_path: Path,
+    top: int,
+    out_json: Path | None,
+    promote_yaml: Path | None,
+    min_count: int,
+) -> None:
     """Run slidify across a corpus and report the most-common unmatched signatures.
 
     Use the output to author new entries in `slidify/patterns/data/patterns.yaml`.
@@ -428,6 +606,126 @@ def harvest(input_path: Path, top: int, out_json: Path | None) -> None:
         payload = [s.model_dump() for s in ranked]
         out_json.write_text(json.dumps(payload, indent=2), encoding="utf-8")
         click.echo(f"\nWrote full report: {out_json}")
+
+    if promote_yaml:
+        n_new = promote_unmatched_to_yaml(ranked, promote_yaml, min_count=min_count)
+        click.echo(
+            f"\nPromoted {n_new} stub(s) (min_count={min_count}) → {promote_yaml}"
+        )
+
+
+# ---------------------------------------------------------------------------
+# prime-atom-cache — populate atom_signatures.json deterministically
+# ---------------------------------------------------------------------------
+
+
+@click.command(name="prime-atom-cache")
+@click.option(
+    "--source",
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    default=None,
+    multiple=True,
+    help=(
+        "HTML file to render and walk for atom signatures. May be passed "
+        "multiple times to combine signatures from several reference decks "
+        "(e.g. --source examples/landing/atoms.html "
+        "--source examples/landing/recipes.html). When omitted, a synthetic "
+        "table is built from atoms.yaml without spinning up a browser."
+    ),
+)
+@click.option(
+    "--no-synthetic-fallback",
+    is_flag=True,
+    default=False,
+    help=(
+        "When --source is given, only emit signatures the browser actually "
+        "captured. By default any atom in atoms.yaml that the source HTML "
+        "doesn't demonstrate gets a synthetic entry so the table stays "
+        "complete."
+    ),
+)
+@click.option(
+    "--out",
+    "out_path",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=None,
+    help=(
+        "Destination JSON. Defaults to "
+        "slidify/patterns/data/atom_signatures.json (the in-package table)."
+    ),
+)
+def prime_atom_cache_cmd(
+    source: tuple[Path, ...],
+    no_synthetic_fallback: bool,
+    out_path: Path | None,
+) -> None:
+    """Build the priming table that backs `infer_atom_id`.
+
+    Two modes:
+
+      * Default (no ``--source``) — walks ``atoms.yaml``, constructs one
+        synthetic ``VisualUnit`` per atom id, hashes it. Fast and
+        dependency-free; the signatures don't match real browser renders
+        though, so implicit inference rarely fires on actual decks. Useful
+        for laying rail in CI/sandbox environments without Chromium.
+
+      * ``--source PATH`` — renders the HTML through Playwright + Chromium,
+        walks the DOM, clusters into visual units, and hashes every unit
+        whose anchor carries ``data-atom``. These signatures match what
+        the convert pipeline computes for real decks, so implicit inference
+        actually fires. This is the production priming mode.
+
+    Falls back to synthetic if a ``--source`` walk raises (e.g. Chromium
+    missing) so the command always produces a usable table.
+    """
+    import asyncio
+
+    from slidify.atom_inference import (
+        build_browser_table,
+        build_hybrid_table,
+        build_synthetic_table,
+    )
+
+    if source:
+        sources = list(source)
+        try:
+            if no_synthetic_fallback:
+                table = asyncio.run(build_browser_table(sources))
+                click.echo(
+                    f"Browser-primed {len(table)} entries from "
+                    f"{len(sources)} source(s).",
+                    err=True,
+                )
+            else:
+                table = asyncio.run(build_hybrid_table(sources))
+                click.echo(
+                    f"Hybrid-primed {len(table)} entries from "
+                    f"{len(sources)} source(s) (browser + synthetic backstop).",
+                    err=True,
+                )
+        except Exception as e:
+            click.echo(
+                f"warning: browser priming failed ({type(e).__name__}: {e}); "
+                "falling back to synthetic table.",
+                err=True,
+            )
+            table = build_synthetic_table()
+    else:
+        table = build_synthetic_table()
+
+    payload = {"version": 1, "entries": dict(sorted(table.items()))}
+
+    if out_path is None:
+        from importlib import resources
+
+        pkg = resources.files("slidify.patterns.data")
+        out_path = Path(str(pkg / "atom_signatures.json"))
+
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(
+        json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8"
+    )
+    click.echo(f"Wrote {len(table)} entries → {out_path}")
 
 
 # ---------------------------------------------------------------------------
@@ -508,6 +806,7 @@ def convert_cmd(
 
 
 cli.add_command(harvest)
+cli.add_command(prime_atom_cache_cmd)
 
 
 # ---------------------------------------------------------------------------
@@ -1260,6 +1559,7 @@ def main() -> None:
     known_subs = {
         "convert", "harvest", "compat", "capture-gif",
         "doctor", "version", "manifest", "guide", "field",
+        "prime-atom-cache",
         "--help", "-h", "--version", "-V",
     }
     if args and not args[0].startswith("-") and args[0] not in known_subs:

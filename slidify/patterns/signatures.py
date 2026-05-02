@@ -17,7 +17,8 @@ from __future__ import annotations
 import hashlib
 from dataclasses import dataclass
 
-from slidify.gradients import parse_gradient
+from slidify.geom import parse_px
+from slidify.gradients import LinearGradient, RadialGradient, parse_gradient
 from slidify.models import DomElement, VisualUnit
 from slidify.patterns.tailwind import _split_classes
 from slidify.shadows import is_translatable_shadow
@@ -47,6 +48,16 @@ _KEPT_CLASS_PREFIXES: tuple[str, ...] = (
     "items-",
     "justify-",
     "gap-",
+    # Phase 2b: high-signal typography / layout class families that
+    # carry register intent (serif vs sans, tracking-tight headlines,
+    # leading-loose body, aspect-* ratios) so the signature reflects them.
+    "font-serif",
+    "font-sans",
+    "font-mono",
+    "tracking-tight",
+    "leading-tight",
+    "leading-loose",
+    "aspect-",
 )
 
 _DROPPED_CLASS_EXACT: frozenset[str] = frozenset({
@@ -105,6 +116,177 @@ def _quantize(v: float, bucket: int = 32) -> int:
     return int(v // bucket) * bucket
 
 
+def _gradient_tag(bg: str) -> str:
+    """Return `grad/n<stops>/<dir>` for a parsed gradient, or `grad` on failure."""
+    grad = parse_gradient(bg)
+    if grad is None:
+        return "grad"
+    stops = min(len(grad.stops), 8)
+    if isinstance(grad, LinearGradient):
+        # Bucket angle to nearest 45° (0..315). CSS angles are normalized mod 360.
+        ang = grad.angle_deg % 360.0
+        bucket = int(round(ang / 45.0)) * 45
+        bucket = bucket % 360
+        direction = f"d{bucket}"
+    elif isinstance(grad, RadialGradient):
+        direction = "r"
+    else:
+        direction = "d0"
+    return f"grad/n{stops}/{direction}"
+
+
+def _shadow_layer_count(value: str) -> int:
+    """Count the comma-separated layers of a CSS box-shadow (cap at 6)."""
+    if not value:
+        return 0
+    depth = 0
+    n = 1
+    for ch in value:
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+        elif ch == "," and depth == 0:
+            n += 1
+    return min(n, 6)
+
+
+_RADIUS_BUCKETS = (0, 4, 8, 12, 16, 24, 32, 9999)
+
+
+def _radius_bucket(value: str) -> int:
+    """Return the largest bucket ≤ parsed px value (or 9999 for pill)."""
+    px = parse_px(value)
+    if px <= 0:
+        return 0
+    # Treat very large values (>=999px) as pill / fully rounded.
+    if px >= 999:
+        return 9999
+    bucket = 0
+    for b in _RADIUS_BUCKETS:
+        if b == 9999:
+            continue
+        if px >= b:
+            bucket = b
+    return bucket
+
+
+def _border_side_width(value: str) -> float:
+    """Return the parsed-px width of a per-side border shorthand, 0 if none."""
+    if not value or value == "none":
+        return 0.0
+    parts = value.split()
+    if not parts:
+        return 0.0
+    return parse_px(parts[0])
+
+
+def _border_side_signature(value: str) -> tuple[float, str, str]:
+    """Tuple (width, style, color) used to detect (a)symmetry between sides."""
+    if not value or value == "none":
+        return (0.0, "", "")
+    parts = value.split()
+    width = parse_px(parts[0]) if parts else 0.0
+    style = parts[1] if len(parts) > 1 else ""
+    color = " ".join(parts[2:]) if len(parts) > 2 else ""
+    return (width, style, color)
+
+
+def _asymmetric_border_tag(anchor: DomElement) -> str | None:
+    """Return `brd-asym<sides>` when sides differ, else None."""
+    sides = (
+        ("T", anchor.border_top),
+        ("R", anchor.border_right),
+        ("B", anchor.border_bottom),
+        ("L", anchor.border_left),
+    )
+    widths = [(initial, _border_side_width(v), v) for initial, v in sides]
+    present = [(initial, v) for initial, w, v in widths if w > 0]
+    if not present:
+        return None
+    sigs = [_border_side_signature(v) for _, v in sides]
+    # All four sides identical (and at least one present) → uniform, skip.
+    if len(set(sigs)) == 1:
+        return None
+    return "brd-asym" + "".join(initial for initial, _ in present)
+
+
+def _classify_face(family: str) -> str:
+    """Mirror matcher._classify_font_family without importing it."""
+    f = (family or "").lower()
+    mono_tokens = ("mono", "courier", "menlo", "consolas", "monaco")
+    if any(t in f for t in mono_tokens):
+        return "mono"
+    if "serif" in f and "sans-serif" not in f:
+        stripped = f.replace("sans-serif", "")
+        if "serif" in stripped:
+            return "serif"
+    display_tokens = (
+        "display", "black", "bebas", "anton", "oswald",
+        "archivo black", "druk", "editorial",
+    )
+    if any(t in f for t in display_tokens):
+        return "display"
+    return "sans"
+
+
+def _letter_spacing_register(value: str) -> str | None:
+    """Return tight/wide/widest, or None if value resolves to normal/0."""
+    s = (value or "").strip().lower()
+    if not s or s == "normal":
+        return None
+    px = parse_px(s)
+    if px == 0.0:
+        # Try a bare numeric value (em / unitless are not resolvable here).
+        return None
+    if px < -0.5:
+        return "tight"
+    if px <= 0.4:
+        return None  # normal bucket — skip
+    if px <= 1.6:
+        return "wide"
+    return "widest"
+
+
+def _aspect_bucket(ratio: float) -> str:
+    if ratio < 0.6:
+        return "tall"
+    if ratio < 0.85:
+        return "portrait"
+    if ratio < 1.18:
+        return "square"
+    if ratio < 1.5:
+        return "landscape"
+    if ratio < 2.2:
+        return "wide"
+    return "ultra"
+
+
+def _grid_column_count(value: str) -> int:
+    """Parse `grid-template-columns` into a column count (capped at 12)."""
+    s = (value or "").strip()
+    if not s or s == "none":
+        return 0
+    low = s.lower()
+    # repeat(N, ...) → N
+    if low.startswith("repeat"):
+        # Find first arg of repeat(...)
+        try:
+            inner = s[s.index("(") + 1 : s.rindex(")")]
+            first = inner.split(",", 1)[0].strip()
+            n = int(float(first))
+            return min(n, 12)
+        except (ValueError, IndexError):
+            pass
+    # Otherwise count whitespace tokens, skipping `[name]` segments.
+    n = 0
+    for tok in s.split():
+        if tok.startswith("[") or tok.endswith("]"):
+            continue
+        n += 1
+    return min(n, 12)
+
+
 def _anchor_kind(anchor: DomElement) -> str:
     """Compress anchor properties into a shape-relevant kind tag."""
     bits: list[str] = []
@@ -113,13 +295,19 @@ def _anchor_kind(anchor: DomElement) -> str:
         if "url(" in bg:
             bits.append("bgi=url")
         elif parse_gradient(bg):
-            bits.append("bgi=grad")
+            # Phase 2b axis 1: gradient stop count + direction bucket.
+            bits.append("bgi=" + _gradient_tag(bg))
         else:
             bits.append("bgi=other")
     if anchor.background_color and anchor.background_color != "rgba(0, 0, 0, 0)":
         bits.append("bg")
     if anchor.box_shadow and anchor.box_shadow != "none":
-        bits.append("shdw=" + ("t" if is_translatable_shadow(anchor.box_shadow) else "x"))
+        if is_translatable_shadow(anchor.box_shadow):
+            # Phase 2b axis 2: shadow elevation (layer count).
+            n_layers = _shadow_layer_count(anchor.box_shadow)
+            bits.append(f"shdw=t/L{n_layers}")
+        else:
+            bits.append("shdw=x")
     if anchor.border and anchor.border != "none":
         # parse a non-zero width
         first = anchor.border.split()
@@ -145,6 +333,83 @@ def _anchor_kind(anchor: DomElement) -> str:
         bits.append("txt")
     if anchor.is_text_container:
         bits.append("txtc")
+
+    # ------------------------------------------------------------------
+    # Phase 2b — new high-signal axes. Order is significant: appended
+    # after the existing tags so cache keys remain stable when an axis
+    # is added or removed.
+    # ------------------------------------------------------------------
+
+    # Axis 3: border-radius bucket.
+    rb = _radius_bucket(anchor.border_radius)
+    if rb > 0:
+        bits.append(f"r{rb}")
+
+    # Axis 4: asymmetric per-side borders.
+    asym = _asymmetric_border_tag(anchor)
+    if asym is not None:
+        bits.append(asym)
+
+    # Axis 5: clip-path preset. Lazy import to avoid circular deps.
+    cp = (anchor.clip_path or "").strip()
+    if cp and cp.lower() != "none":
+        from slidify.preset_shapes import clip_path_to_preset
+
+        match = clip_path_to_preset(cp, anchor.bbox)
+        if match is not None:
+            bits.append(f"clip={int(match.preset)}")
+        else:
+            bits.append("clip=raw")
+
+    # Axis 6: font family register (only when this anchor carries text).
+    has_text = bool(anchor.text and anchor.text.strip()) or anchor.is_text_container
+    if has_text:
+        bits.append(f"face={_classify_face(anchor.font_family)}")
+
+    # Axis 7: letter-spacing register.
+    ls = _letter_spacing_register(anchor.letter_spacing)
+    if ls is not None:
+        bits.append(f"tr={ls}")
+
+    # Axis 8: writing mode (any vertical/sideways collapses to v).
+    wm = anchor.writing_mode or "horizontal-tb"
+    if wm != "horizontal-tb":
+        bits.append("wm=v")
+
+    # Axis 9: explicit aspect-ratio bucket (skip when "auto" — bbox quantize
+    # already encodes the rendered aspect; only EXPLICIT intent fires this).
+    ar_value = (anchor.aspect_ratio or "auto").strip()
+    if ar_value and ar_value.lower() != "auto":
+        # Resolved aspect_ratio is typically "W / H" (e.g. "1 / 1", "16 / 9").
+        try:
+            if "/" in ar_value:
+                w_str, h_str = ar_value.split("/", 1)
+                w_num = float(w_str.strip())
+                h_num = float(h_str.strip())
+                ratio = w_num / h_num if h_num else 0.0
+            else:
+                ratio = float(ar_value)
+            if ratio > 0:
+                bits.append(f"ar={_aspect_bucket(ratio)}")
+        except ValueError:
+            pass
+
+    # Axis 10: grid container.
+    gc = _grid_column_count(anchor.grid_template_columns)
+    if gc > 0:
+        bits.append(f"grid={gc}")
+
+    # Axis 11: text-shadow / mask-image / background-blend-mode presence.
+    if anchor.text_shadow and anchor.text_shadow not in ("none", ""):
+        bits.append("tshdw")
+    if anchor.mask_image and anchor.mask_image not in ("none", ""):
+        bits.append("mask")
+    if (
+        anchor.background_blend_mode
+        and anchor.background_blend_mode not in ("normal", "")
+    ):
+        bits.append("bblend")
+
     return "+".join(bits)
 
 
