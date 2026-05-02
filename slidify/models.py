@@ -305,6 +305,15 @@ class ConversionResult(BaseModel):
     # here lets authors and agents catch the failure mode at compile time
     # instead of eyeballing PNGs. Empty = nothing overflowed.
     overflow_elements: list["OverflowElement"] = Field(default_factory=list)
+    # EscapeHatch metering — surface area for raster fallbacks emitted via
+    # the chrome.escape-hatch atom (CONTRACT-v2 §F). M4 stubs the field so
+    # downstream callers / dashboards / contracts see a stable shape; M6
+    # fills `value` (overall escape rate, 0..1), `byIntent` (per-intent
+    # escape ratio), and `atomCandidates` (harvester-flagged shapes that
+    # repeatedly fall through to the escape hatch and should be promoted to
+    # first-class atoms). Until then the stub is always zero / empty.
+    # TODO(M6): wire to chrome.escape-hatch RasterNode metadata
+    escape_rate: "EscapeRate" = Field(default_factory=lambda: EscapeRate())
 
 
 class OverflowElement(BaseModel):
@@ -332,6 +341,36 @@ class OverflowElement(BaseModel):
     # (shrink the row, swap to a longer-friendly atom, mark the bleed
     # intentional). Empty when no atom is implicated.
     hint: str = ""
+
+
+class EscapeRate(BaseModel):
+    """Per-conversion EscapeHatch metering (CONTRACT-v2 §F.4).
+
+    M4 stubs this OUT — every field is zero/empty. M6 wires `value`,
+    `byIntent`, and `atomCandidates` to the chrome.escape-hatch atom's
+    RasterNode metadata.
+
+    Field shape is contract-stable: dashboards and downstream tools
+    (manifest pivot, atoms.yaml authoring) can consume the keys today and
+    get real numbers once M6 lands.
+
+    Schema (also serialised under camelCase aliases via `model_dump`):
+
+        value          : float in [0, 1] — fraction of slide visual area
+                          delegated to the escape hatch.
+        byIntent       : dict[str, float] — per intent (e.g. "data.chart",
+                          "media.image") of the same fraction.
+        atomCandidates : list[str] — atom ids surfaced by the harvester
+                          that the escape hatch repeatedly absorbed and
+                          which deserve promotion to first-class atoms.
+    """
+
+    model_config = ConfigDict(populate_by_name=True)
+
+    # TODO(M6): wire to chrome.escape-hatch RasterNode metadata.
+    value: float = Field(default=0.0)
+    by_intent: dict[str, float] = Field(default_factory=dict, alias="byIntent")
+    atom_candidates: list[str] = Field(default_factory=list, alias="atomCandidates")
 
 
 ConversionResult.model_rebuild()

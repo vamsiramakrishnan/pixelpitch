@@ -25,7 +25,6 @@ import click
 
 from slidify import __version__
 from slidify.api import ConversionConfig, convert
-from slidify.models import UnmatchedSignature
 
 # ---------------------------------------------------------------------------
 # convert
@@ -235,7 +234,8 @@ def _next_steps(result) -> list[str]:
     if result.unmatched_signatures:
         hints.append(
             f"{len(result.unmatched_signatures)} unmatched DOM signatures recorded. "
-            "Run `slidify harvest <corpus_dir>` to surface Tier-0 candidates."
+            "Run `slidify harvest <corpus_dir> --output clusters.json` "
+            "to surface Tier-0 candidates."
         )
     if not hints:
         hints.append("Open the .pptx in PowerPoint to verify editability.")
@@ -338,96 +338,140 @@ def _print_summary(result) -> None:
 # ---------------------------------------------------------------------------
 
 
-def _harvest_inputs(input_path: Path) -> list[Path]:
-    if input_path.is_file():
-        return [input_path]
-    return sorted(p for p in input_path.glob("**/*.html") if p.is_file())
-
-
-async def _harvest_one(html_path: Path) -> list[UnmatchedSignature]:
-    from tempfile import NamedTemporaryFile
-
-    cfg = ConversionConfig(run_oracle=False, run_tier3=False, keep_plans_for_oracle=False)
-    with NamedTemporaryFile(suffix=".pptx", delete=False) as tf:
-        out = Path(tf.name)
-    try:
-        result = await convert(html_path, out, cfg)
-        return list(result.unmatched_signatures)
-    finally:
-        try:
-            out.unlink()
-        except FileNotFoundError:
-            pass
-
-
 @click.command(name="harvest")
 @click.argument(
     "input_path",
     type=click.Path(exists=True, dir_okay=True, file_okay=True, path_type=Path),
 )
 @click.option(
-    "--top",
-    type=int,
-    default=20,
-    show_default=True,
-    help="Number of most-common unmatched signatures to report.",
+    "--output", "-o", "output_path",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=None,
+    help="Write clusters.json (CONTRACT-v2 §G.3 schema) to this path.",
 )
+@click.option(
+    "--top-n",
+    type=int,
+    default=50,
+    show_default=True,
+    help="Cap the number of clusters written to clusters.json.",
+)
+@click.option(
+    "--min-occurrences",
+    type=int,
+    default=1,
+    show_default=True,
+    help="Drop clusters whose total instance count is below this threshold.",
+)
+# Back-compat aliases for the previous flags. Emit a deprecation note when used.
 @click.option(
     "--out-json",
     type=click.Path(dir_okay=False, path_type=Path),
     default=None,
-    help="Write the full ranked report as JSON to this path.",
+    hidden=True,
 )
-def harvest(input_path: Path, top: int, out_json: Path | None) -> None:
-    """Run slidify across a corpus and report the most-common unmatched signatures.
+@click.option(
+    "--top",
+    type=int,
+    default=None,
+    hidden=True,
+)
+def harvest(
+    input_path: Path,
+    output_path: Path | None,
+    top_n: int,
+    min_occurrences: int,
+    out_json: Path | None,
+    top: int | None,
+) -> None:
+    """Run slidify across a corpus and emit clustered Tier-0 candidate atoms.
 
-    Use the output to author new entries in `slidify/patterns/data/patterns.yaml`.
-    Each unmatched signature represents a structural shape the heuristic
-    pipeline currently has to guess at — adding a Tier-0 recipe for it makes
-    the engine cheaper and more accurate for everyone.
+    Walks INPUT_PATH for *.html files, runs the slidify fast pipeline on each,
+    and aggregates every Tier-0 miss (`UnmatchedSignature`) into clusters keyed
+    by structural signature hash. Each cluster ships with a heuristic atom-id
+    + axis proposal so designers can promote the most-common shapes into
+    `atoms.yaml` (and patterns.yaml) without re-walking the corpus by hand.
+
+    See CONTRACT-v2 §G.3 for the clusters.json schema.
     """
-    html_paths = _harvest_inputs(input_path)
-    if not html_paths:
-        click.echo(f"No HTML files found under {input_path}", err=True)
+    from slidify.harvester import aggregate_corpus, report_to_dict, write_report
+
+    # Resolve back-compat aliases.
+    if out_json is not None and output_path is None:
+        output_path = out_json
+        click.echo(
+            click.style(
+                "warning: --out-json is deprecated; use --output / -o.",
+                fg="yellow",
+            ),
+            err=True,
+        )
+    if top is not None:
+        top_n = top
+        click.echo(
+            click.style(
+                "warning: --top is deprecated; use --top-n.",
+                fg="yellow",
+            ),
+            err=True,
+        )
+
+    if not input_path.exists():
+        click.echo(f"slidify harvest: input path does not exist: {input_path}", err=True)
+        sys.exit(2)
+
+    click.echo(f"Harvesting {input_path}…")
+
+    def _on_progress(path: Path, n_sigs: int) -> None:
+        click.echo(f"  {path.name:<48} {n_sigs:>4d} unmatched")
+
+    report = aggregate_corpus(
+        input_path,
+        min_occurrences=min_occurrences,
+        on_progress=_on_progress,
+    )
+
+    if report.decks_processed == 0:
+        click.echo(f"slidify harvest: no decks processed under {input_path}", err=True)
         sys.exit(1)
 
-    click.echo(f"Harvesting {len(html_paths)} file(s)…")
-
-    aggregate: dict[str, UnmatchedSignature] = {}
-    for path in html_paths:
-        try:
-            sigs = asyncio.run(_harvest_one(path))
-        except Exception as e:
-            click.echo(f"  {path}: ERROR — {e}", err=True)
-            continue
-        for s in sigs:
-            existing = aggregate.get(s.sig_hash)
-            if existing is None:
-                aggregate[s.sig_hash] = s.model_copy()
-            else:
-                existing.n_occurrences += s.n_occurrences
-
-    ranked = sorted(aggregate.values(), key=lambda u: -u.n_occurrences)
-    click.echo(f"\nUnique unmatched signatures: {len(ranked)}")
-    click.echo(f"Total occurrences: {sum(u.n_occurrences for u in ranked)}\n")
-
-    click.echo(f"Top {min(top, len(ranked))} by occurrence:")
-    click.echo("─" * 80)
-    for i, sig in enumerate(ranked[:top], 1):
-        cls_short = (sig.sample_classes or "—")[:64]
-        text_short = (sig.sample_text or "—")[:40]
+    click.echo("")
+    click.echo(f"Decks processed       : {report.decks_processed}")
+    click.echo(f"Total unmatched units : {report.total_unmatched}")
+    click.echo(f"Unique signatures     : {report.unique_signatures}")
+    if report.errors:
         click.echo(
-            f"{i:3d}. ×{sig.n_occurrences:<4d} {sig.bbox_w:>4d}×{sig.bbox_h:<3d}  "
-            f"hash={sig.sig_hash}"
+            click.style(f"Per-deck errors       : {len(report.errors)}", fg="yellow")
         )
-        click.echo(f"      classes : {cls_short}")
-        click.echo(f"      sample  : {text_short}")
-        click.echo(f"      sig     : {sig.sig[:120]}")
 
-    if out_json:
-        payload = [s.model_dump() for s in ranked]
-        out_json.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-        click.echo(f"\nWrote full report: {out_json}")
+    n_show = min(top_n, len(report.clusters))
+    if n_show:
+        click.echo("")
+        click.echo(f"Top {n_show} clusters:")
+        click.echo("─" * 80)
+        for c in report.clusters[:n_show]:
+            cand = report.candidates.get(c.id)
+            atom = cand.candidate_atom_id if cand else "?"
+            axis = cand.candidate_axis if cand else "?"
+            click.echo(
+                f"  {c.id}  ×{c.instances:<4d}  "
+                f"{int(c.bbox_typical.get('w_avg', 0)):>4d}×"
+                f"{int(c.bbox_typical.get('h_avg', 0)):<3d}  "
+                f"→ {axis}  {atom}"
+            )
+            if c.sample_classes:
+                click.echo(f"      classes : {', '.join(c.sample_classes[:3])}")
+
+    if output_path is not None:
+        write_report(report, output_path, top_n=top_n)
+        click.echo("")
+        click.echo(f"Wrote clusters.json   : {output_path}")
+    else:
+        # Echo a compact JSON-only payload so callers can pipe it.
+        click.echo("")
+        click.echo("(no --output supplied — pass --output PATH to persist clusters.json)")
+        if click.get_current_context().obj == {"emit_json": True}:  # pragma: no cover
+            click.echo(json.dumps(report_to_dict(report, top_n=top_n), indent=2))
 
 
 # ---------------------------------------------------------------------------
@@ -854,11 +898,11 @@ _MANIFEST: dict = {
         },
         {
             "name": "harvest",
-            "summary": "Run a corpus and rank unmatched DOM signatures (Tier-0 candidates).",
-            "usage": "slidify harvest <dir> [--top N] [--out-json PATH]",
+            "summary": "Run a corpus and emit clustered Tier-0 candidate atoms.",
+            "usage": "slidify harvest <dir> [--output PATH] [--top-n N] [--min-occurrences N]",
             "examples": [
-                {"desc": "Top 20 unmatched signatures across a corpus",
-                 "cmd":  "slidify harvest examples/corpus/ --top 20 --out-json harvest.json"},
+                {"desc": "Mine a corpus and write clusters.json",
+                 "cmd":  "slidify harvest examples/corpus/ --output clusters.json --top-n 50"},
             ],
         },
         {

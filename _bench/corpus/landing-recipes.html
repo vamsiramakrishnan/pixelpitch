@@ -1,0 +1,931 @@
+<!--
+  slidify · landing-page atomic seed · RECIPES (1/4)
+  ===================================================
+  Award-winning compositions. Each slide stacks 4–8 atoms across axes; the
+  manifest comment + data-atom-uses attribute names them.
+  Authored against .claude/skills/slide-author/SKILL.md viewport math.
+-->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>recipes — 01 hero image-fill</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;
+         background: radial-gradient(ellipse 1100px 760px at 50% 40%,#1e1b4b 0%,#0a0a14 55%,#020208 100%)}
+  .aurora-a{position:absolute;top:-180px;left:-120px;width:720px;height:720px;border-radius:50%;
+            background: radial-gradient(circle, rgba(167,139,250,0.34) 0%, transparent 70%)}
+  .aurora-b{position:absolute;bottom:-220px;right:-160px;width:880px;height:880px;border-radius:50%;
+            background: radial-gradient(circle, rgba(244,114,182,0.30) 0%, transparent 72%)}
+  .stars{position:absolute;inset:0}
+  .frame{position:absolute;inset:48px;border:1px solid rgba(255,255,255,0.08);border-radius:18px;pointer-events:none}
+  .corners-tl,.corners-tr,.corners-bl,.corners-br{position:absolute;width:24px;height:24px;border:2px solid #f472b6}
+  .corners-tl{top:48px;left:48px;border-right:none;border-bottom:none}
+  .corners-tr{top:48px;right:48px;border-left:none;border-bottom:none}
+  .corners-bl{bottom:48px;left:48px;border-right:none;border-top:none}
+  .corners-br{bottom:48px;right:48px;border-left:none;border-top:none}
+  .stamp-top{position:absolute;top:84px;left:0;right:0;text-align:center;font-size:11px;letter-spacing:0.42em;color:#a78bfa;font-weight:800;text-transform:uppercase}
+  .stamp-bot{position:absolute;bottom:84px;left:0;right:0;text-align:center;font-size:11px;letter-spacing:0.42em;color:#71717a;font-weight:700;text-transform:uppercase}
+  .ed{position:absolute;top:50%;right:84px;transform:translateY(-50%) rotate(-90deg);transform-origin:right center;
+      font-size:11px;letter-spacing:0.42em;color:#a78bfa;font-weight:800;text-transform:uppercase}
+  .word{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;
+        font-size:280px;font-weight:900;letter-spacing:-0.05em;line-height:1;margin:0;
+        background: linear-gradient(135deg,#60a5fa 0%,#a78bfa 30%,#f472b6 65%,#fb923c 100%);
+        -webkit-background-clip:text;background-clip:text;color:transparent}
+</style></head><body>
+<!-- atoms used: bg.mesh, comp.centered, type.gfill-4, motion.particles, dec.corner-brackets, comp.edge-rotated -->
+<div class="slide" data-atom-uses="bg.mesh,comp.centered,type.gfill-4,motion.particles,dec.corner-brackets,comp.edge-rotated">
+  <div class="aurora-a" data-atom="bg.mesh" data-pptx-allow-overflow="true"></div>
+  <div class="aurora-b" data-pptx-allow-overflow="true"></div>
+  <svg class="stars" viewBox="0 0 1280 720" data-atom="motion.particles">
+    <g fill="#f5f5f7">
+      <circle cx="120" cy="180" r="1"/><circle cx="240" cy="120" r="1.4"/><circle cx="380" cy="220" r="1"/>
+      <circle cx="540" cy="140" r="1.6"/><circle cx="720" cy="180" r="1"/><circle cx="900" cy="120" r="1.2"/>
+      <circle cx="1080" cy="200" r="1.4"/><circle cx="1180" cy="140" r="1"/>
+      <circle cx="160" cy="540" r="1"/><circle cx="320" cy="600" r="1.3"/><circle cx="480" cy="560" r="1"/>
+      <circle cx="640" cy="620" r="1.6"/><circle cx="820" cy="580" r="1"/><circle cx="1000" cy="600" r="1.2"/>
+      <circle cx="1140" cy="540" r="1"/>
+    </g>
+  </svg>
+  <div class="frame"></div>
+  <div class="corners-tl" data-atom="dec.corner-brackets"></div>
+  <div class="corners-tr"></div><div class="corners-bl"></div><div class="corners-br"></div>
+  <div class="stamp-top">ISSUE 04 · 2026 · A FILM ABOUT SHIPPING</div>
+  <h1 class="word" data-pptx-role="title" data-atom="type.gfill-4">FUTURE.</h1>
+  <div class="ed" data-atom="comp.edge-rotated">SLIDIFY · ATOMIC SEED · RECIPE 01</div>
+  <div class="stamp-bot">EDITORIAL · CHAPTER ONE</div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>recipes — 02 ghost numeral chapter</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#020208;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;padding:80px 96px;
+         background: linear-gradient(180deg,#020617 0%,#1e1b4b 28%,#7c3aed 52%,#db2777 75%,#020208 100%)}
+  .ghost{position:absolute;left:-40px;top:-80px;font-size:680px;font-weight:900;letter-spacing:-0.08em;line-height:0.85;
+         color:transparent;-webkit-text-stroke:2px rgba(255,255,255,0.10);margin:0;font-variant-numeric:tabular-nums}
+  .kicker{font-size:13px;letter-spacing:0.42em;text-transform:uppercase;color:#fde68a;font-weight:800;margin-bottom:18px;position:relative}
+  .h1{font-size:72px;font-weight:800;letter-spacing:-0.035em;line-height:1.0;margin:0 0 18px 0;max-width:880px;position:relative;color:#f5f5f7}
+  .h1 .accent{background:linear-gradient(135deg,#fde68a 0%,#f472b6 100%);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:900}
+  .lede{font-size:20px;color:rgba(255,255,255,0.84);line-height:1.5;max-width:660px;font-weight:500;margin:0;position:relative}
+  .meta{position:absolute;bottom:64px;left:96px;right:96px;display:flex;justify-content:space-between;align-items:flex-end;font-size:12px;color:rgba(255,255,255,0.55);letter-spacing:0.18em;font-weight:700;text-transform:uppercase}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:9999px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.16);font-size:12px;font-weight:600;letter-spacing:0;color:#f5f5f7;margin-bottom:24px;text-transform:none}
+  .pill .dot{width:8px;height:8px;border-radius:50%;background:#34d399}
+</style></head><body>
+<!-- atoms used: bg.aurora-band, type.stroke (ghost numeral), comp.thirds, dec.index-stamp, type.gfill-2 -->
+<div class="slide" data-atom-uses="bg.aurora-band,type.stroke,comp.thirds,dec.index-stamp,type.gfill-2">
+  <div class="ghost" data-atom="type.stroke" data-pptx-allow-overflow="true">02</div>
+  <div class="pill"><span class="dot"></span>chapter two of four</div>
+  <div class="kicker" data-atom="dec.index-stamp">CHAPTER · 02 / 04</div>
+  <h1 class="h1" data-pptx-role="title" data-atom="type.gfill-2">A new render path that <span class="accent">stays alive</span> after the meeting.</h1>
+  <p class="lede">Render in headless Chromium. Cluster into atomic visual units. Translate gradients, shadows, and shapes into native PPTX. Edit the result in PowerPoint as if a designer authored it by hand.</p>
+  <div class="meta"><div>SLIDIFY · ATOMIC SEED</div><div>02 / 16 · CHAPTER DIVIDER</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>recipes — 03 manifesto duotone</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#fef3c7;background:#1e1b4b;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;padding:96px 120px;
+         background: linear-gradient(160deg,#1e1b4b 0%,#7c3aed 50%,#db2777 100%)}
+  .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0) 50%,rgba(0,0,0,0.55) 100%)}
+  .grain-dots{position:absolute;inset:0;background-image:radial-gradient(circle at 25% 25%,rgba(255,255,255,0.08) 1px,transparent 1px);background-size:32px 32px}
+  .kicker{font-size:13px;letter-spacing:0.48em;text-transform:uppercase;color:#fde68a;font-weight:800;margin-bottom:22px;position:relative}
+  .quote{font-family:"Playfair Display","Didot",Georgia,serif;font-size:62px;font-weight:400;font-style:italic;line-height:1.08;letter-spacing:-0.02em;margin:0;max-width:1040px;position:relative;color:#fef3c7}
+  .quote em{font-style:italic;font-weight:700;background:linear-gradient(135deg,#fde68a 0%,#f472b6 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .author-row{position:relative;display:flex;align-items:center;gap:18px;margin-top:48px}
+  .ast{font-size:48px;color:#fde68a;font-weight:900;line-height:1}
+  .author{font-size:16px;color:rgba(255,255,255,0.84);font-weight:600}
+  .author .ttl{display:block;font-size:13px;color:rgba(255,255,255,0.62);font-weight:500;margin-top:2px;letter-spacing:0.06em;text-transform:uppercase}
+  .meta{position:absolute;bottom:48px;left:120px;right:120px;display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,0.55);letter-spacing:0.18em;font-weight:700;text-transform:uppercase}
+</style></head><body>
+<!-- atoms used: bg.duotone, type.dropcap (italic display), dec.asterisk, comp.centered, type.gfill-2 -->
+<div class="slide" data-atom-uses="bg.duotone,dec.asterisk,comp.centered,type.gfill-2">
+  <div class="veil" data-atom="bg.duotone"></div>
+  <div class="grain-dots"></div>
+  <div class="kicker">MANIFESTO · A LUXURY POSITION</div>
+  <h1 class="quote" data-pptx-role="title" data-atom="type.gfill-2">Rasterization is the <em>failure mode,</em> not the goal — every pixel that stays editable compounds across every translation.</h1>
+  <div class="author-row">
+    <div class="ast" data-atom="dec.asterisk">✱</div>
+    <div class="author">Vamsi Ramakrishnan<span class="ttl">Founder · Pixelpitch Labs · 2026</span></div>
+  </div>
+  <div class="meta"><div>SLIDIFY · ATOMIC SEED</div><div>03 / 16 · MANIFESTO</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>recipes — 04 magazine cover</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#06060c;background:#fafaf7;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#fafaf7;padding:56px 72px;display:grid;grid-template-columns:1fr 380px;gap:40px}
+  .left{display:flex;flex-direction:column;justify-content:space-between;position:relative}
+  .top-row{display:flex;align-items:center;justify-content:space-between}
+  .brand{font-family:"Playfair Display",Georgia,serif;font-size:24px;font-weight:700;font-style:italic;letter-spacing:-0.02em}
+  .issue{font-size:11px;letter-spacing:0.36em;color:#7c3aed;font-weight:800;text-transform:uppercase}
+  .display{font-family:"Bebas Neue","Anton",Impact,sans-serif;font-size:148px;font-weight:400;letter-spacing:0.005em;line-height:0.88;margin:0;color:#06060c;text-transform:uppercase}
+  .display .accent{color:#dc2626}
+  .lede{font-family:"Source Serif Pro",Georgia,serif;font-size:15px;line-height:1.5;color:#3f3f46;max-width:520px;margin:14px 0 0 0}
+  .toc{display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;font-size:12px;font-weight:600;align-items:baseline}
+  .toc .num{color:#7c3aed;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:0.08em}
+  .toc .label{color:#06060c}
+  .toc .pg{color:#71717a;font-variant-numeric:tabular-nums}
+  .toc-section{display:flex;flex-direction:column;gap:6px;border-top:1px solid #06060c;padding-top:14px;max-width:520px}
+  .toc-h{font-size:10px;letter-spacing:0.42em;color:#7c3aed;font-weight:800;text-transform:uppercase;margin-bottom:6px}
+  .right{position:relative;display:flex;flex-direction:column;justify-content:flex-end;gap:18px}
+  .arch{height:440px;border-radius:190px 190px 14px 14px;background:
+        radial-gradient(circle at 50% 30%,#fde68a 0%,transparent 45%),
+        linear-gradient(160deg,#0c4a6e 0%,#a855f7 50%,#ec4899 100%);position:relative;overflow:hidden}
+  .arch .meta{position:absolute;left:14px;bottom:14px;font-family:"JetBrains Mono",monospace;font-size:10px;color:rgba(255,255,255,0.85);letter-spacing:0.12em;font-weight:700;background:rgba(0,0,0,0.30);padding:5px 9px;border-radius:6px}
+  .cap{font-family:"Source Serif Pro",Georgia,serif;font-size:13px;font-style:italic;color:#52525b;line-height:1.45}
+  .cap b{color:#06060c;font-weight:700;font-style:normal;letter-spacing:0.08em;text-transform:uppercase;font-size:11px;margin-right:6px}
+</style></head><body>
+<!-- atoms used: comp.split-60, mask.arch, dec.index-stamp, dec.dot-leader, surf.polaroid (caption frame) -->
+<div class="slide" data-atom-uses="comp.split-60,mask.arch,dec.index-stamp,dec.dot-leader">
+  <div class="left">
+    <div class="top-row">
+      <div class="brand">atelier <em style="font-style:normal;color:#7c3aed">.</em></div>
+      <div class="issue" data-atom="dec.index-stamp">ISSUE 04 · MMXXVI</div>
+    </div>
+    <div>
+      <h1 class="display" data-pptx-role="title">A FILM<br>ABOUT<br><span class="accent">SHIPPING.</span></h1>
+      <p class="lede">How a small team in Brooklyn built a compiler that turns browsers into editable PowerPoint — and why every screenshot tool was the wrong abstraction.</p>
+    </div>
+    <div class="toc-section" data-atom="dec.dot-leader">
+      <div class="toc-h">In this issue</div>
+      <div class="toc">
+        <div class="num">01</div><div class="label">Why presentations were broken</div><div class="pg">p. 12</div>
+        <div class="num">02</div><div class="label">Render. Cluster. Classify. Emit.</div><div class="pg">p. 28</div>
+        <div class="num">03</div><div class="label">The atomic seed</div><div class="pg">p. 44</div>
+        <div class="num">04</div><div class="label">A landing page in twelve atoms</div><div class="pg">p. 62</div>
+      </div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="arch" data-atom="mask.arch"><div class="meta">04 / SUBJECT · STILL · 2026</div></div>
+    <p class="cap"><b>Cover</b>The render pipeline, photographed in long exposure. By Pixelpitch Labs.</p>
+  </div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>recipes — 05 bento</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:56px 64px 48px 64px;position:relative;overflow:hidden;
+         background:radial-gradient(ellipse 1100px 700px at 80% 20%,#1e1b4b 0%,#0a0a14 60%,#020208 100%)}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px}
+  .kicker{font-size:11px;letter-spacing:0.42em;text-transform:uppercase;color:#a78bfa;font-weight:800}
+  .h1{font-size:34px;font-weight:800;letter-spacing:-0.025em;margin:6px 0 0 0;line-height:1.05}
+  .idx{font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:14px;height:480px}
+  .tile{padding:20px 22px;border-radius:18px;position:relative;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+  .tile .lab{font-size:10px;letter-spacing:0.28em;color:#a1a1aa;font-weight:800;text-transform:uppercase}
+  .tile .v{font-size:38px;font-weight:900;letter-spacing:-0.03em;line-height:1;font-variant-numeric:tabular-nums}
+  .tile .sub{font-size:12px;color:#a1a1aa;line-height:1.45;margin-top:6px}
+  .t-hero{grid-row:span 2;background:linear-gradient(160deg,rgba(99,102,241,0.30),rgba(244,114,182,0.20));border:1px solid rgba(167,139,250,0.55);box-shadow:0 0 80px rgba(139,92,246,0.30)}
+  .t-glass{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.18);box-shadow:inset 0 1px 0 rgba(255,255,255,0.16),0 16px 40px rgba(0,0,0,0.35)}
+  .t-spotlight{background:radial-gradient(circle at 50% 30%,rgba(244,114,182,0.40),rgba(99,102,241,0.16) 40%,rgba(0,0,0,0.55) 100%);border:1px solid rgba(255,255,255,0.10)}
+  .t-aurora{background:linear-gradient(180deg,rgba(99,102,241,0.20),rgba(167,139,250,0.10) 30%,rgba(244,114,182,0.18) 60%,rgba(251,146,60,0.10));border:1px solid rgba(255,255,255,0.10);transform:rotate(-2deg)}
+  .t-recessed{background:#050510;border:1px solid rgba(255,255,255,0.05);box-shadow:inset 0 2px 8px rgba(0,0,0,0.55);font-family:"JetBrains Mono",monospace}
+  .t-recessed .code{font-size:11px;color:#34d399;line-height:1.7;letter-spacing:0.02em}
+  .t-recessed .code .c{color:#52525b}.t-recessed .code .k{color:#c084fc}
+  .meta{position:absolute;bottom:24px;left:64px;right:64px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700;text-transform:uppercase}
+  .ring{display:inline-block;width:64px;height:64px}
+</style></head><body>
+<!-- atoms used: bg.mesh, comp.bento, surf.hero, surf.glass, surf.spotlight, surf.aurora, surf.recessed, data.ring, data.kpi-delta -->
+<div class="slide" data-atom-uses="bg.mesh,comp.bento,surf.hero,surf.glass,surf.spotlight,surf.aurora,surf.recessed,data.ring,data.kpi-delta">
+  <div class="head">
+    <div><div class="kicker">PRODUCT · OVERVIEW</div><h1 class="h1" data-pptx-role="title">A bento of every primitive a deck needs.</h1></div>
+    <div class="idx">05 / 16 · BENTO</div>
+  </div>
+  <div class="grid" data-atom="comp.bento">
+    <div class="tile t-hero" data-atom="surf.hero" data-slidify-decorate="hero">
+      <div class="lab">FEATURED · NATIVE-AREA RATIO</div>
+      <div>
+        <svg class="ring" viewBox="0 0 64 64" data-atom="data.ring">
+          <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="6"/>
+          <circle cx="32" cy="32" r="26" fill="none" stroke="#a78bfa" stroke-width="6" stroke-linecap="round" stroke-dasharray="163.4" stroke-dashoffset="8.2" transform="rotate(-90 32 32)"/>
+        </svg>
+        <div class="v" style="margin-top:14px">95<span style="font-size:24px;color:#a78bfa">%</span></div>
+        <div class="sub">of slide area emits as native, editable PPTX shapes — gradients, shadows, text frames, real preset shapes.</div>
+      </div>
+    </div>
+    <div class="tile t-glass" data-atom="surf.glass" data-slidify-decorate="glass">
+      <div class="lab">▲ ARR</div>
+      <div><div class="v" data-atom="data.kpi-delta">$12.4M</div><div class="sub" style="color:#34d399">+18.2% Q-o-Q</div></div>
+    </div>
+    <div class="tile t-spotlight" data-atom="surf.spotlight" data-slidify-decorate="spotlight">
+      <div class="lab">UPTIME · 90D</div>
+      <div><div class="v">99.98<span style="font-size:24px">%</span></div><div class="sub">5,182 of 5,184 deploys passed SSIM ≥ 0.95.</div></div>
+    </div>
+    <div class="tile t-aurora" data-atom="surf.aurora" data-slidify-decorate="aurora" data-pptx-allow-overflow="true">
+      <div class="lab">▲ DECKS / WEEK</div>
+      <div><div class="v">1,184</div><div class="sub">Across 318 teams in production.</div></div>
+    </div>
+    <div class="tile t-recessed" data-atom="surf.recessed" data-slidify-decorate="recessed">
+      <div class="lab" style="color:#71717a">$ slidify --quiet</div>
+      <div class="code">
+        <span class="c"># compose from atoms</span><br>
+        <span class="k">deck</span>.compose(<br>&nbsp;&nbsp;"hero", "bento")<br>
+        → out.pptx ✓
+      </div>
+    </div>
+  </div>
+  <div class="meta"><div>SLIDIFY · ATOMIC SEED</div><div>05 / 16 · BENTO</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>recipes — 06 anatomy</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#06060c;background:#fafaf7;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:48px 64px 40px 64px;position:relative;overflow:hidden;background:#fafaf7}
+  .grid-bg{position:absolute;inset:0;background-image:linear-gradient(0deg,rgba(0,0,0,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.04) 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px;position:relative}
+  .kicker{font-size:11px;letter-spacing:0.42em;text-transform:uppercase;color:#7c3aed;font-weight:800}
+  .h1{font-size:30px;font-weight:800;letter-spacing:-0.025em;margin:6px 0 0 0;line-height:1.05;max-width:880px}
+  .idx{font-size:11px;letter-spacing:0.32em;color:#71717a;font-weight:700}
+  .canvas{position:relative;height:520px}
+  .browser{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:540px;border-radius:12px;overflow:hidden;background:#fff;border:1px solid rgba(0,0,0,0.10);box-shadow:0 24px 60px rgba(0,0,0,0.10)}
+  .browser .bar{display:flex;align-items:center;gap:8px;padding:9px 12px;background:#f4f4ee;border-bottom:1px solid rgba(0,0,0,0.06)}
+  .browser .dot{width:11px;height:11px;border-radius:50%}
+  .browser .url{flex:1;background:#fff;border-radius:6px;padding:5px 10px;font-size:11px;color:#52525b;font-family:Inter,sans-serif;border:1px solid rgba(0,0,0,0.06)}
+  .browser .body{height:200px;background:linear-gradient(160deg,#a78bfa 0%,#f472b6 100%);position:relative;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;letter-spacing:-0.02em;font-size:32px}
+  .anno-svg{position:absolute;inset:0;pointer-events:none}
+  .lab{position:absolute;font-size:10px;font-weight:800;letter-spacing:0.18em;color:#06060c;text-transform:uppercase;background:#06060c;color:#fafaf7;padding:5px 10px;border-radius:6px}
+  .lab .v{display:block;font-size:9px;color:#a78bfa;margin-top:2px;font-family:"JetBrains Mono",monospace;letter-spacing:0.04em;text-transform:none}
+  .meta{position:absolute;bottom:24px;left:64px;right:64px;display:flex;justify-content:space-between;font-size:11px;color:#71717a;letter-spacing:0.18em;font-weight:700;text-transform:uppercase}
+</style></head><body>
+<!-- atoms used: bg.paper, ui.browser-chrome, anno.leader-line, anno.dimension, anno.callout-pill, dec.drafting-tick -->
+<div class="slide" data-atom-uses="ui.browser-chrome,anno.leader-line,anno.dimension,anno.callout-pill,dec.drafting-tick">
+  <div class="grid-bg"></div>
+  <div class="head"><div><div class="kicker">PRODUCT · ANATOMY</div><h1 class="h1" data-pptx-role="title">Every cluster routed to a native primitive — annotated.</h1></div><div class="idx">06 / 16 · ANATOMY</div></div>
+  <div class="canvas">
+    <svg class="anno-svg" viewBox="0 0 1152 520" data-atom="anno.leader-line">
+      <path d="M 140 100 L 220 130 L 380 230" fill="none" stroke="#06060c" stroke-width="1.2"/>
+      <circle cx="380" cy="230" r="4" fill="#f472b6" stroke="#06060c" stroke-width="1.5"/>
+      <path d="M 1010 100 L 920 140 L 770 230" fill="none" stroke="#06060c" stroke-width="1.2"/>
+      <circle cx="770" cy="230" r="4" fill="#f472b6" stroke="#06060c" stroke-width="1.5"/>
+      <path d="M 110 380 L 220 360 L 380 320" fill="none" stroke="#06060c" stroke-width="1.2"/>
+      <circle cx="380" cy="320" r="4" fill="#34d399" stroke="#06060c" stroke-width="1.5"/>
+      <path d="M 1040 380 L 920 360 L 770 320" fill="none" stroke="#06060c" stroke-width="1.2"/>
+      <circle cx="770" cy="320" r="4" fill="#34d399" stroke="#06060c" stroke-width="1.5"/>
+      <line x1="380" y1="430" x2="770" y2="430" stroke="#06060c" stroke-width="1"/>
+      <line x1="380" y1="424" x2="380" y2="436" stroke="#06060c" stroke-width="1"/>
+      <line x1="770" y1="424" x2="770" y2="436" stroke="#06060c" stroke-width="1"/>
+      <text x="575" y="425" font-size="11" fill="#06060c" font-family="Inter" font-weight="800" text-anchor="middle" letter-spacing="0.16em">540 PX · NATIVE PICTURE</text>
+    </svg>
+    <div class="browser" data-atom="ui.browser-chrome">
+      <div class="bar"><div class="dot" style="background:#ef4444"></div><div class="dot" style="background:#facc15"></div><div class="dot" style="background:#34d399"></div><div class="url">slidify.sh / atomic-seed</div></div>
+      <div class="body">slidify · atomic seed</div>
+    </div>
+    <div class="lab" style="left:14px;top:74px">CHROME BAR<span class="v">→ NativeShape</span></div>
+    <div class="lab" style="right:14px;top:74px">URL FIELD<span class="v">→ NativeText</span></div>
+    <div class="lab" style="left:14px;top:354px">HERO GRADIENT<span class="v">→ NativeShape · gradFill</span></div>
+    <div class="lab" style="right:14px;top:354px">CTA TEXT<span class="v">→ NativeText · per-run</span></div>
+  </div>
+  <div class="meta"><div>SLIDIFY · ATOMIC SEED</div><div>06 / 16 · ANATOMY</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>recipes — 07 spec sheet blueprint</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:"JetBrains Mono","IBM Plex Mono",Menlo,monospace;color:#67e8f9;background:#020617;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:48px 64px 40px 64px;position:relative;overflow:hidden;background:#020617}
+  .blueprint-grid{position:absolute;inset:0;background-image:linear-gradient(0deg,rgba(103,232,249,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(103,232,249,0.06) 1px,transparent 1px);background-size:40px 40px;opacity:0.7}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px;border-bottom:1px solid rgba(103,232,249,0.30);padding-bottom:12px;position:relative}
+  .h1{font-size:24px;font-weight:700;letter-spacing:-0.01em;color:#67e8f9;margin:0}
+  .stamp{font-size:10px;letter-spacing:0.24em;color:rgba(103,232,249,0.70);font-weight:700;text-transform:uppercase}
+  .stamp .mid{color:#a78bfa}
+  .grid{display:grid;grid-template-columns:1.2fr 1fr;gap:18px;height:520px;position:relative}
+  .blueprint{background:rgba(103,232,249,0.04);border:1px solid rgba(103,232,249,0.30);border-radius:10px;padding:24px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .specs{display:grid;grid-template-rows:auto auto auto;gap:12px}
+  .spec-card{background:rgba(103,232,249,0.04);border:1px solid rgba(103,232,249,0.30);border-radius:10px;padding:18px}
+  .spec-card .lab{font-size:10px;letter-spacing:0.18em;color:rgba(103,232,249,0.60);font-weight:700;text-transform:uppercase;margin-bottom:8px}
+  .spec-card .row{display:flex;justify-content:space-between;font-size:12px;line-height:1.55;color:#94a3b8}
+  .spec-card .row b{color:#67e8f9;font-weight:700}
+  .meta{position:absolute;bottom:18px;left:64px;right:64px;display:flex;justify-content:space-between;font-size:10px;color:rgba(103,232,249,0.60);letter-spacing:0.18em;font-weight:700;text-transform:uppercase}
+</style></head><body>
+<!-- atoms used: bg.dot-lattice, dec.drafting-tick, dec.registration, anno.dimension (blueprint register) -->
+<div class="slide" data-atom-uses="bg.dot-lattice,dec.drafting-tick,dec.registration,anno.dimension">
+  <div class="blueprint-grid" data-atom="bg.dot-lattice"></div>
+  <div class="head">
+    <h1 class="h1" data-pptx-role="title">$&nbsp;slidify spec --version 0.4 --target landing-page</h1>
+    <div class="stamp">REV · <span class="mid">04.A</span> · 2026·05·01</div>
+  </div>
+  <div class="grid">
+    <div class="blueprint">
+      <svg viewBox="0 0 480 380" width="100%" height="100%">
+        <rect x="60" y="60" width="360" height="240" fill="none" stroke="#67e8f9" stroke-width="1.5" stroke-dasharray="4,4"/>
+        <rect x="100" y="100" width="280" height="120" fill="none" stroke="#67e8f9" stroke-width="2"/>
+        <rect x="100" y="240" width="120" height="40" rx="20" fill="#67e8f9" opacity="0.20"/>
+        <rect x="100" y="240" width="120" height="40" rx="20" fill="none" stroke="#67e8f9" stroke-width="1.5"/>
+        <text x="240" y="170" font-family="JetBrains Mono" font-size="22" font-weight="700" fill="#67e8f9" text-anchor="middle">slide.compose()</text>
+        <text x="160" y="265" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#67e8f9" text-anchor="middle">CTA · TACTILE</text>
+        <line x1="60" y1="40" x2="420" y2="40" stroke="#67e8f9" stroke-width="1"/>
+        <line x1="60" y1="34" x2="60" y2="46" stroke="#67e8f9" stroke-width="1"/>
+        <line x1="420" y1="34" x2="420" y2="46" stroke="#67e8f9" stroke-width="1"/>
+        <text x="240" y="32" font-family="JetBrains Mono" font-size="11" fill="#67e8f9" text-anchor="middle">1280 PX</text>
+        <line x1="40" y1="60" x2="40" y2="300" stroke="#67e8f9" stroke-width="1"/>
+        <line x1="34" y1="60" x2="46" y2="60" stroke="#67e8f9" stroke-width="1"/>
+        <line x1="34" y1="300" x2="46" y2="300" stroke="#67e8f9" stroke-width="1"/>
+        <text x="20" y="180" font-family="JetBrains Mono" font-size="11" fill="#67e8f9" text-anchor="middle" transform="rotate(-90 20 180)">720 PX</text>
+        <g transform="translate(440 320)" data-atom="dec.registration">
+          <circle cx="0" cy="0" r="20" fill="none" stroke="#a78bfa" stroke-width="1"/>
+          <circle cx="0" cy="0" r="10" fill="none" stroke="#a78bfa" stroke-width="1"/>
+          <line x1="-26" y1="0" x2="26" y2="0" stroke="#a78bfa" stroke-width="1"/>
+          <line x1="0" y1="-26" x2="0" y2="26" stroke="#a78bfa" stroke-width="1"/>
+        </g>
+      </svg>
+    </div>
+    <div class="specs">
+      <div class="spec-card">
+        <div class="lab">FRAME</div>
+        <div class="row"><span>viewport.w</span><b>1280 PX</b></div>
+        <div class="row"><span>viewport.h</span><b>720 PX</b></div>
+        <div class="row"><span>safe-area</span><b>1136 × 510 PX</b></div>
+      </div>
+      <div class="spec-card">
+        <div class="lab">EMIT</div>
+        <div class="row"><span>native_area_ratio</span><b style="color:#34d399">≥ 0.95</b></div>
+        <div class="row"><span>fonts.embedded</span><b>9 families</b></div>
+        <div class="row"><span>tier-0 hits</span><b>247 / 318</b></div>
+      </div>
+      <div class="spec-card">
+        <div class="lab">COMPOSITION</div>
+        <div class="row"><span>atoms / slide</span><b>4 — 8</b></div>
+        <div class="row"><span>axes / cluster</span><b>≤ 1</b></div>
+        <div class="row"><span>z-stack depth</span><b>≤ 4</b></div>
+      </div>
+    </div>
+  </div>
+  <div class="meta"><div>SLIDIFY · BLUEPRINT</div><div>07 / 16 · SPEC SHEET</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>recipes — 08 process ring</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:48px 64px 40px 64px;position:relative;overflow:hidden;
+         background:radial-gradient(ellipse 1100px 760px at 50% 50%,#1e1b4b 0%,#0a0a14 60%,#020208 100%)}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px;position:relative;border-bottom:1px solid rgba(255,255,255,0.10);padding-bottom:12px}
+  .kicker{font-size:11px;letter-spacing:0.42em;text-transform:uppercase;color:#a78bfa;font-weight:800}
+  .h1{font-size:30px;font-weight:800;letter-spacing:-0.025em;margin:6px 0 0 0;line-height:1.05;max-width:880px}
+  .idx{font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .stage{position:relative;height:520px}
+  .ring-svg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:520px;height:520px}
+  .center-card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:240px;padding:18px;background:rgba(0,0,0,0.55);border:1px solid rgba(167,139,250,0.50);border-radius:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.10),0 16px 40px rgba(99,102,241,0.30);text-align:center;font-family:"JetBrains Mono",monospace}
+  .center-card .lab{font-size:10px;letter-spacing:0.24em;color:#a1a1aa;font-weight:700;text-transform:uppercase}
+  .center-card .v{font-size:22px;color:#34d399;font-weight:700;margin:6px 0;letter-spacing:-0.01em}
+  .center-card .sub{font-size:11px;color:rgba(255,255,255,0.62);font-family:Inter,sans-serif;line-height:1.45}
+  .step{position:absolute;width:170px;text-align:center}
+  .step .badge{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;font-size:14px;font-weight:900;color:#0a0a0f;letter-spacing:-0.02em;margin-bottom:8px;box-shadow:0 0 0 4px #0a0a14}
+  .step h3{font-size:15px;font-weight:800;margin:0 0 4px 0;letter-spacing:-0.01em;color:#f5f5f7}
+  .step p{font-size:11px;color:#a1a1aa;margin:0;line-height:1.45}
+  .step.s1{top:-8px;left:50%;transform:translateX(-50%)}.step.s1 .badge{background:#a78bfa}
+  .step.s2{top:50%;right:8px;transform:translateY(-50%)}.step.s2 .badge{background:#c084fc}
+  .step.s3{bottom:-8px;left:50%;transform:translateX(-50%)}.step.s3 .badge{background:#f472b6}
+  .step.s4{top:50%;left:8px;transform:translateY(-50%)}.step.s4 .badge{background:#fb923c}
+  .meta{position:absolute;bottom:18px;left:64px;right:64px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700;text-transform:uppercase}
+</style></head><body>
+<!-- atoms used: bg.mesh, motion.kinetic, surf.recessed (center card), motion.particles (ring connectors) -->
+<div class="slide" data-atom-uses="bg.mesh,motion.kinetic,surf.recessed,motion.particles">
+  <div class="head"><div><div class="kicker">PIPELINE · LIVE</div><h1 class="h1" data-pptx-role="title">Render. Cluster. Classify. Emit. — looped.</h1></div><div class="idx">08 / 16 · PROCESS RING</div></div>
+  <div class="stage">
+    <svg class="ring-svg" viewBox="0 0 520 520" data-atom="motion.particles">
+      <circle cx="260" cy="260" r="200" fill="none" stroke="rgba(167,139,250,0.30)" stroke-width="2" stroke-dasharray="6,8"/>
+      <circle cx="260" cy="60" r="6" fill="#a78bfa"/>
+      <circle cx="460" cy="260" r="6" fill="#c084fc"/>
+      <circle cx="260" cy="460" r="6" fill="#f472b6"/>
+      <circle cx="60" cy="260" r="6" fill="#fb923c"/>
+      <path d="M 260 80 A 180 180 0 0 1 440 260" fill="none" stroke="#a78bfa" stroke-width="2"/>
+      <path d="M 440 260 A 180 180 0 0 1 260 440" fill="none" stroke="#c084fc" stroke-width="2"/>
+      <path d="M 260 440 A 180 180 0 0 1 80 260" fill="none" stroke="#f472b6" stroke-width="2"/>
+      <path d="M 80 260 A 180 180 0 0 1 260 80" fill="none" stroke="#fb923c" stroke-width="2"/>
+    </svg>
+    <div class="center-card" data-atom="surf.recessed" data-slidify-decorate="recessed">
+      <div class="lab">$ slidify convert</div>
+      <div class="v">native_area_ratio</div>
+      <div class="v" style="color:#34d399;font-size:32px;margin:10px 0">0.97</div>
+      <div class="sub">23 s · 12 slides · 0 raster fallbacks</div>
+    </div>
+    <div class="step s1"><div class="badge">01</div><h3>Render</h3><p>Headless Chromium captures resolved pixel layout.</p></div>
+    <div class="step s2"><div class="badge">02</div><h3>Cluster</h3><p>DOM elements grouped into atomic visual units.</p></div>
+    <div class="step s3"><div class="badge">03</div><h3>Classify</h3><p>Tier-0 atom registry → tier-1 rules → tier-2 heuristics.</p></div>
+    <div class="step s4"><div class="badge">04</div><h3>Emit</h3><p>python-pptx writes native shapes with EMU precision.</p></div>
+  </div>
+  <div class="meta"><div>SLIDIFY · ATOMIC SEED</div><div>08 / 16 · PROCESS RING</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>recipes — 09 ticker terminal</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#020208;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:48px 64px 36px 64px;position:relative;overflow:hidden;background:radial-gradient(ellipse 1100px 720px at 50% 0%,#0c1023 0%,#020208 60%,#020208 100%)}
+  .scan{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(167,139,250,0.06) 0,rgba(167,139,250,0.06) 1px,transparent 1px,transparent 4px);pointer-events:none}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:14px;border-bottom:1px solid rgba(167,139,250,0.30);padding-bottom:12px;position:relative}
+  .kicker{font-size:11px;letter-spacing:0.42em;text-transform:uppercase;color:#a78bfa;font-weight:800;font-family:"JetBrains Mono",monospace}
+  .h1{font-size:30px;font-weight:800;letter-spacing:-0.025em;margin:6px 0 0 0;line-height:1.05}
+  .idx{font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700;font-family:"JetBrains Mono",monospace}
+  .tape{display:flex;align-items:center;gap:0;font-family:"JetBrains Mono","IBM Plex Mono",monospace;font-size:18px;font-weight:700;letter-spacing:0.06em;color:#94a3b8;height:54px;padding:0 18px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.10);white-space:nowrap;overflow:hidden;font-variant-numeric:tabular-nums}
+  .tape .sep{color:#3f3f46;margin:0 16px;font-weight:400}
+  .tape .sym{color:#f5f5f7;margin-right:8px}
+  .tape .up{color:#34d399}.tape .dn{color:#f472b6}
+  .tape.t-headline{font-size:13px;color:#a1a1aa;letter-spacing:0.16em;text-transform:uppercase}
+  .tape.t-headline .lab{color:#a78bfa;font-weight:800;margin-right:14px}
+  .stack{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+  .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:14px;height:226px}
+  .panel{padding:16px 18px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.10);display:flex;flex-direction:column;justify-content:space-between;font-family:"JetBrains Mono",monospace;position:relative;overflow:hidden}
+  .panel .lab{font-size:10px;letter-spacing:0.24em;color:#71717a;text-transform:uppercase;font-weight:800}
+  .panel .v{font-size:36px;font-weight:900;letter-spacing:-0.03em;line-height:1;color:#f5f5f7;font-variant-numeric:tabular-nums}
+  .panel .sub{font-size:11px;color:#a1a1aa;line-height:1.5}
+  .panel.up{border-color:rgba(52,211,153,0.55)}
+  .panel.up .v{color:#34d399}
+  .panel.dn{border-color:rgba(244,114,182,0.55)}
+  .panel.dn .v{color:#f472b6}
+  .meta{position:absolute;bottom:16px;left:64px;right:64px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700;text-transform:uppercase;font-family:"JetBrains Mono",monospace}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:5px 11px;border-radius:9999px;background:rgba(52,211,153,0.10);border:1px solid rgba(52,211,153,0.45);font-size:10px;font-weight:800;letter-spacing:0.18em;color:#34d399;text-transform:uppercase;font-family:"JetBrains Mono",monospace}
+  .pill .dot{width:6px;height:6px;border-radius:50%;background:#34d399}
+</style></head><body>
+<!-- atoms used: bg.scanline, comp.centered (stacked tapes), data.ticker (×2), surf.recessed, dec.index-stamp -->
+<div class="slide" data-atom-uses="bg.scanline,comp.centered,data.ticker,surf.recessed,dec.index-stamp">
+  <div class="scan" data-atom="bg.scanline"></div>
+  <div class="head">
+    <div>
+      <div class="kicker">$ slidify ticker --live</div>
+      <h1 class="h1" data-pptx-role="title">Live deployment tape — every commit, every region.</h1>
+    </div>
+    <div class="idx" data-atom="dec.index-stamp">09 / 16 · TICKER</div>
+  </div>
+  <div class="stack">
+    <div class="tape" data-atom="data.ticker">
+      <span class="sym">SHIP</span><span class="up">▲ 2,184</span>
+      <span class="sep">·</span>
+      <span class="sym">STAR</span><span class="up">▲ 14k</span>
+      <span class="sep">·</span>
+      <span class="sym">BUG</span><span class="dn">▼ 3</span>
+      <span class="sep">·</span>
+      <span class="sym">NET</span><span class="up">▲ 99.98%</span>
+      <span class="sep">·</span>
+      <span class="sym">P95</span><span class="up">▲ 248ms</span>
+      <span class="sep">·</span>
+      <span class="sym">ARR</span><span class="up">▲ $14.2M</span>
+    </div>
+    <div class="tape t-headline" data-atom="data.ticker">
+      <span class="lab">CHANGELOG</span>
+      v0.4.2 atoms.yaml · v0.4.1 longshadow recipe · v0.4.0 atomic seed · v0.3.9 anim capture · v0.3.8 native tables
+    </div>
+  </div>
+  <div class="grid">
+    <div class="panel up" data-atom="surf.recessed" data-slidify-decorate="recessed">
+      <div class="lab">▲ DEPLOYS · 24H</div>
+      <div class="v">312</div>
+      <div class="sub">across us-east, eu-west, apac<br>0 rollbacks · 0 SSIM regressions</div>
+    </div>
+    <div class="panel" data-atom="surf.recessed" data-slidify-decorate="recessed">
+      <div class="lab">⌁ ACTIVE COMPILES</div>
+      <div class="v">14</div>
+      <div class="sub"><span class="pill"><span class="dot"></span>HEALTHY</span></div>
+    </div>
+    <div class="panel dn" data-atom="surf.recessed" data-slidify-decorate="recessed">
+      <div class="lab">▼ ERROR BUDGET</div>
+      <div class="v">0.02%</div>
+      <div class="sub">3 retries · all auto-recovered<br>SLA · 99.95% met</div>
+    </div>
+  </div>
+  <div class="meta"><div>SLIDIFY · ATOMIC SEED</div><div>09 / 16 · TICKER · LIVE</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>recipes — 10 longshadow billboard</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#fef3c7;background:#0c0a09;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:64px 96px;position:relative;overflow:hidden;background:linear-gradient(165deg,#7c2d12 0%,#dc2626 35%,#fb923c 65%,#fbbf24 100%)}
+  .grain{position:absolute;inset:0;background-image:radial-gradient(circle at 25% 25%,rgba(0,0,0,0.10) 1px,transparent 1px);background-size:24px 24px;pointer-events:none}
+  .top{display:flex;justify-content:space-between;align-items:flex-start;position:relative}
+  .kicker{font-size:11px;letter-spacing:0.42em;text-transform:uppercase;color:#fef3c7;font-weight:800}
+  .idx{font-size:11px;letter-spacing:0.32em;color:rgba(254,243,199,0.65);font-weight:700;text-transform:uppercase}
+  .billboard{position:absolute;left:96px;right:96px;top:170px;bottom:140px;display:flex;align-items:center;justify-content:flex-start}
+  .ls{position:relative;line-height:0.88;font-weight:900;letter-spacing:-0.05em;font-size:200px;font-family:"Bebas Neue","Anton",Impact,sans-serif;text-transform:uppercase}
+  .ls span{position:absolute;left:0;top:0;display:block}
+  .ls .l8{color:rgba(124,45,18,0.10);transform:translate(96px,96px)}
+  .ls .l7{color:rgba(124,45,18,0.18);transform:translate(84px,84px)}
+  .ls .l6{color:rgba(124,45,18,0.26);transform:translate(72px,72px)}
+  .ls .l5{color:rgba(124,45,18,0.36);transform:translate(60px,60px)}
+  .ls .l4{color:rgba(124,45,18,0.46);transform:translate(48px,48px)}
+  .ls .l3{color:rgba(124,45,18,0.58);transform:translate(36px,36px)}
+  .ls .l2{color:rgba(124,45,18,0.74);transform:translate(24px,24px)}
+  .ls .l1{color:rgba(124,45,18,0.92);transform:translate(12px,12px)}
+  .ls .l0{color:#fef3c7}
+  .lede{position:absolute;left:96px;right:96px;bottom:88px;font-size:18px;font-weight:600;color:rgba(254,243,199,0.92);max-width:680px;line-height:1.45;letter-spacing:-0.005em}
+  .meta{position:absolute;bottom:36px;left:96px;right:96px;display:flex;justify-content:space-between;font-size:11px;color:rgba(254,243,199,0.65);letter-spacing:0.18em;font-weight:700;text-transform:uppercase}
+</style></head><body>
+<!-- atoms used: bg.duotone (warm field), type.longshadow (8-deep stack), comp.centered, dec.index-stamp -->
+<div class="slide" data-atom-uses="bg.duotone,type.longshadow,comp.centered,dec.index-stamp">
+  <div class="grain"></div>
+  <div class="top">
+    <div class="kicker">DISPLAY · CHAPTER 03</div>
+    <div class="idx" data-atom="dec.index-stamp">10 / 16 · LONGSHADOW</div>
+  </div>
+  <div class="billboard">
+    <div class="ls" data-atom="type.longshadow" data-pptx-allow-overflow="true">
+      <span class="l8">SOLAR.</span>
+      <span class="l7">SOLAR.</span>
+      <span class="l6">SOLAR.</span>
+      <span class="l5">SOLAR.</span>
+      <span class="l4">SOLAR.</span>
+      <span class="l3">SOLAR.</span>
+      <span class="l2">SOLAR.</span>
+      <span class="l1">SOLAR.</span>
+      <h1 class="l0" style="margin:0;font:inherit" data-pptx-role="title">SOLAR.</h1>
+    </div>
+  </div>
+  <div class="lede">A type treatment that survives the round-trip. Eight stacked spans, each translated 12 px on both axes — emitted as nine native text frames, fully editable, zero rasterization.</div>
+  <div class="meta"><div>SLIDIFY · ATOMIC SEED</div><div>10 / 16 · LONGSHADOW · BILLBOARD</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>recipes — 11 dashboard</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:48px 56px 36px 56px;position:relative;overflow:hidden;background:radial-gradient(ellipse 1100px 700px at 30% 0%,#0c1023 0%,#06060c 70%,#020208 100%)}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.10);padding-bottom:10px}
+  .kicker{font-size:11px;letter-spacing:0.42em;text-transform:uppercase;color:#a78bfa;font-weight:800}
+  .h1{font-size:28px;font-weight:800;letter-spacing:-0.025em;margin:6px 0 0 0;line-height:1.05}
+  .idx{font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:14px;height:518px}
+  .card{padding:18px 20px;border-radius:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.10);position:relative;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+  .card .lab{font-size:10px;letter-spacing:0.24em;color:#a1a1aa;text-transform:uppercase;font-weight:800}
+  .card .v{font-size:30px;font-weight:900;letter-spacing:-0.03em;line-height:1;font-variant-numeric:tabular-nums;color:#f5f5f7}
+  .card .sub{font-size:11px;color:#a1a1aa;line-height:1.5}
+  .c-hero{grid-row:span 2;background:linear-gradient(160deg,rgba(99,102,241,0.20),rgba(244,114,182,0.10));border-color:rgba(167,139,250,0.50)}
+  .delta{display:flex;align-items:baseline;gap:8px}
+  .delta .arr{font-size:22px;color:#34d399;font-weight:900}
+  .delta .pct{font-size:14px;color:#34d399;font-weight:700;letter-spacing:0.06em}
+  .legend{display:flex;gap:16px;font-size:10px;color:#71717a;letter-spacing:0.18em;font-weight:700;text-transform:uppercase;margin-top:8px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+  .hm{display:grid;grid-template-columns:repeat(12,1fr);gap:3px}
+  .hm i{display:block;height:12px;border-radius:2px;background:#1e1b4b}
+  .hm i.l1{background:#312e81}.hm i.l2{background:#4338ca}.hm i.l3{background:#6366f1}.hm i.l4{background:#a78bfa}.hm i.l5{background:#f472b6}
+  .axis-x{display:flex;justify-content:space-between;font-size:9px;color:#52525b;letter-spacing:0.16em;font-family:"JetBrains Mono",monospace;margin-top:6px}
+  .meta{position:absolute;bottom:16px;left:56px;right:56px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700;text-transform:uppercase}
+</style></head><body>
+<!-- atoms used: bg.mesh, comp.bento (3×2 dashboard grid), data.gauge, data.sparkline, data.sparkbars, data.heatmap, data.kpi-delta, surf.glass -->
+<div class="slide" data-atom-uses="bg.mesh,comp.bento,data.gauge,data.sparkline,data.sparkbars,data.heatmap,data.kpi-delta,surf.glass">
+  <div class="head">
+    <div><div class="kicker">PIPELINE · OBSERVABILITY</div><h1 class="h1" data-pptx-role="title">Editability dashboard — last 90 days, every cluster.</h1></div>
+    <div class="idx">11 / 16 · DASHBOARD</div>
+  </div>
+  <div class="grid" data-atom="comp.bento">
+    <div class="card c-hero" data-atom="data.gauge" data-slidify-decorate="hero">
+      <div>
+        <div class="lab">FEATURED · NATIVE-AREA RATIO</div>
+        <div class="sub">Gauge across 5,184 deploys · 90d</div>
+      </div>
+      <svg viewBox="0 0 320 180" width="100%" height="190">
+        <path d="M 30 160 A 130 130 0 0 1 290 160" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="20" stroke-linecap="round"/>
+        <path d="M 30 160 A 130 130 0 0 1 268 70" fill="none" stroke="url(#g1)" stroke-width="20" stroke-linecap="round"/>
+        <defs><linearGradient id="g1" x1="0%" x2="100%"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#34d399"/></linearGradient></defs>
+        <circle cx="268" cy="70" r="9" fill="#fff"/>
+        <text x="160" y="140" font-size="56" font-weight="900" fill="#f5f5f7" font-family="Inter" text-anchor="middle" letter-spacing="-0.03em">0.97</text>
+        <text x="160" y="170" font-size="11" fill="#a78bfa" font-family="Inter" font-weight="800" text-anchor="middle" letter-spacing="0.24em">NATIVE_AREA_RATIO</text>
+      </svg>
+      <div>
+        <div class="legend"><span><i style="background:#a78bfa"></i>NATIVE</span><span><i style="background:#27272a"></i>RASTER</span><span style="color:#34d399"><i style="background:#34d399"></i>SLA · ≥ 0.95</span></div>
+      </div>
+    </div>
+    <div class="card" data-atom="data.kpi-delta" data-slidify-decorate="glass">
+      <div class="lab">▲ ARR · MAY</div>
+      <div>
+        <div class="delta"><span class="v">$14.2M</span><span class="arr">▲</span><span class="pct">+18.2%</span></div>
+        <div class="sub" style="color:#34d399;margin-top:6px">vs Apr · best month on record</div>
+      </div>
+    </div>
+    <div class="card" data-atom="data.sparkline">
+      <div class="lab">SPARKLINE · COMPILE TIME (s)</div>
+      <svg viewBox="0 0 260 100" width="100%" height="110">
+        <path d="M 0 80 L 28 70 L 56 76 L 84 50 L 112 58 L 140 32 L 168 38 L 196 22 L 224 18 L 260 8" fill="none" stroke="#34d399" stroke-width="2.5"/>
+        <path d="M 0 80 L 28 70 L 56 76 L 84 50 L 112 58 L 140 32 L 168 38 L 196 22 L 224 18 L 260 8 L 260 100 L 0 100 Z" fill="rgba(52,211,153,0.12)"/>
+        <circle cx="260" cy="8" r="4" fill="#34d399"/>
+      </svg>
+      <div class="sub" style="color:#34d399">23.1 s → 6.4 s · -72%</div>
+    </div>
+    <div class="card" data-atom="data.sparkbars">
+      <div class="lab">SPARKBARS · DECKS / WEEK</div>
+      <svg viewBox="0 0 260 110" width="100%" height="120">
+        <rect x="0"   y="80" width="14" height="20" fill="#a78bfa"/>
+        <rect x="20"  y="68" width="14" height="32" fill="#a78bfa"/>
+        <rect x="40"  y="74" width="14" height="26" fill="#a78bfa"/>
+        <rect x="60"  y="56" width="14" height="44" fill="#a78bfa"/>
+        <rect x="80"  y="48" width="14" height="52" fill="#a78bfa"/>
+        <rect x="100" y="38" width="14" height="62" fill="#a78bfa"/>
+        <rect x="120" y="42" width="14" height="58" fill="#a78bfa"/>
+        <rect x="140" y="28" width="14" height="72" fill="#f472b6"/>
+        <rect x="160" y="22" width="14" height="78" fill="#f472b6"/>
+        <rect x="180" y="16" width="14" height="84" fill="#f472b6"/>
+        <rect x="200" y="12" width="14" height="88" fill="#f472b6"/>
+        <rect x="220" y="6"  width="14" height="94" fill="#f472b6"/>
+        <rect x="240" y="2"  width="14" height="98" fill="#f472b6"/>
+      </svg>
+      <div class="sub">1,184 / wk · +318% YoY</div>
+    </div>
+    <div class="card" data-atom="data.heatmap" style="grid-column:span 2">
+      <div class="lab">HEATMAP · ATOM HIT-RATE BY AXIS · 12 WEEKS</div>
+      <div class="hm" style="margin-top:10px">
+        <i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i><i class="l4"></i><i class="l5"></i><i class="l5"></i><i class="l4"></i><i class="l3"></i><i class="l4"></i><i class="l5"></i><i class="l5"></i>
+        <i></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i><i class="l5"></i><i class="l5"></i><i class="l5"></i><i class="l4"></i><i class="l5"></i><i class="l5"></i><i class="l5"></i>
+        <i></i><i></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i><i class="l5"></i><i class="l5"></i><i class="l5"></i><i class="l5"></i><i class="l5"></i><i class="l5"></i>
+        <i class="l1"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l3"></i><i class="l4"></i><i class="l4"></i><i class="l5"></i><i class="l5"></i><i class="l5"></i><i class="l5"></i><i class="l5"></i>
+      </div>
+      <div class="axis-x"><span>W01</span><span>W03</span><span>W05</span><span>W07</span><span>W09</span><span>W11</span><span>W12</span></div>
+      <div class="sub" style="margin-top:6px">comp · bg · type · surf · — coverage 76% → 96%</div>
+    </div>
+  </div>
+  <div class="meta"><div>SLIDIFY · ATOMIC SEED</div><div>11 / 16 · DASHBOARD</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>recipes — 12 testimonials</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#06060c;background:#fafaf7;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:48px 64px 36px 64px;position:relative;overflow:hidden;background:linear-gradient(180deg,#fafaf7 0%,#f5f0e6 100%)}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px;position:relative}
+  .kicker{font-size:11px;letter-spacing:0.42em;text-transform:uppercase;color:#7c3aed;font-weight:800}
+  .h1{font-size:30px;font-weight:800;letter-spacing:-0.025em;margin:6px 0 0 0;line-height:1.05;max-width:880px;color:#06060c}
+  .h1 em{font-style:italic;font-family:"Playfair Display",Georgia,serif;font-weight:600;color:#7c3aed}
+  .idx{font-size:11px;letter-spacing:0.32em;color:#71717a;font-weight:700}
+  .row{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:6px}
+  .pol{background:#fff;border-radius:8px;padding:18px 18px 22px 18px;box-shadow:0 18px 36px rgba(0,0,0,0.08),0 2px 4px rgba(0,0,0,0.05);position:relative;display:flex;flex-direction:column;gap:14px}
+  .pol.r1{transform:rotate(-1.6deg)}
+  .pol.r2{transform:rotate(0.8deg)}
+  .pol.r3{transform:rotate(-0.4deg)}
+  .pol .frame{height:120px;border-radius:6px;position:relative;overflow:hidden}
+  .pol.r1 .frame{background:linear-gradient(160deg,#a78bfa 0%,#f472b6 100%)}
+  .pol.r2 .frame{background:linear-gradient(160deg,#fb923c 0%,#dc2626 100%)}
+  .pol.r3 .frame{background:linear-gradient(160deg,#0ea5e9 0%,#34d399 100%)}
+  .pol .frame .ini{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:42px;font-weight:900;letter-spacing:-0.02em;color:rgba(255,255,255,0.92);font-family:"Playfair Display",Georgia,serif;font-style:italic}
+  .pol .quote{font-family:"Source Serif Pro",Georgia,serif;font-size:14px;line-height:1.5;color:#27272a;font-style:italic;margin:0;flex:1}
+  .pol .who{font-size:12px;font-weight:700;color:#06060c;display:flex;flex-direction:column;gap:2px}
+  .pol .who .ttl{font-size:10px;color:#71717a;font-weight:600;letter-spacing:0.06em;text-transform:uppercase}
+  .ast{position:absolute;font-size:48px;color:#fde68a;font-weight:900;line-height:1;-webkit-text-stroke:1px #f59e0b}
+  .ast.a1{top:130px;left:24px;transform:rotate(-12deg)}
+  .ast.a2{bottom:130px;right:32px;transform:rotate(8deg)}
+  .footer-row{display:flex;align-items:center;justify-content:space-between;margin-top:28px}
+  .av-cluster{display:flex;align-items:center;gap:6px}
+  .av{width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;border:2px solid #fafaf7;margin-left:-8px;letter-spacing:-0.02em}
+  .av:first-child{margin-left:0}
+  .a-1{background:#a78bfa}.a-2{background:#f472b6}.a-3{background:#fb923c}.a-4{background:#34d399}.a-5{background:#0ea5e9}.a-6{background:#06060c;color:#fde68a}
+  .av-meta{margin-left:14px;font-size:12px;color:#52525b;font-weight:600}
+  .av-meta b{color:#06060c;font-weight:800}
+  .meta{position:absolute;bottom:18px;left:64px;right:64px;display:flex;justify-content:space-between;font-size:11px;color:#71717a;letter-spacing:0.18em;font-weight:700;text-transform:uppercase}
+</style></head><body>
+<!-- atoms used: comp.thirds, surf.polaroid (×3), dec.asterisk (×2), ui.avatar-cluster, type.gfill-2 (italic accent) -->
+<div class="slide" data-atom-uses="comp.thirds,surf.polaroid,dec.asterisk,ui.avatar-cluster,type.gfill-2">
+  <div class="ast a1" data-atom="dec.asterisk">✱</div>
+  <div class="ast a2">✱</div>
+  <div class="head">
+    <div><div class="kicker">VOICES · LOVED BY DESIGNERS</div><h1 class="h1" data-pptx-role="title">"It's the first deck tool that <em>respects</em> typography."</h1></div>
+    <div class="idx">12 / 16 · TESTIMONIALS</div>
+  </div>
+  <div class="row">
+    <div class="pol r1" data-atom="surf.polaroid" data-slidify-decorate="hero">
+      <div class="frame"><span class="ini">M</span></div>
+      <p class="quote">"We replaced screenshots with slidify and our investor decks now ship in PowerPoint as if a designer touched every gradient. Nothing about the deck rasterizes."</p>
+      <div class="who">Mira Okafor<span class="ttl">Head of Brand · Vector Labs</span></div>
+    </div>
+    <div class="pol r2" data-atom="surf.polaroid" data-slidify-decorate="hero">
+      <div class="frame"><span class="ini">J</span></div>
+      <p class="quote">"The atom catalog is the missing UI grammar. Once you start composing in atoms, you stop fighting PowerPoint forever — every slide stays editable."</p>
+      <div class="who">Jordan Liu<span class="ttl">Design Engineer · Modular</span></div>
+    </div>
+    <div class="pol r3" data-atom="surf.polaroid" data-slidify-decorate="hero">
+      <div class="frame"><span class="ini">T</span></div>
+      <p class="quote">"95% native_area_ratio across 1,184 decks a week. The pipeline is the only thing standing between our team and another animated GIF career."</p>
+      <div class="who">Thiago Sousa<span class="ttl">DesignOps · Atelier 04</span></div>
+    </div>
+  </div>
+  <div class="footer-row">
+    <div class="av-cluster" data-atom="ui.avatar-cluster">
+      <span class="av a-1">VR</span><span class="av a-2">JL</span><span class="av a-3">MK</span><span class="av a-4">TS</span><span class="av a-5">PA</span><span class="av a-6">+318</span>
+      <span class="av-meta"><b>318 teams</b> · 1,184 decks / week · NPS 76</span>
+    </div>
+    <div style="font-size:10px;color:#71717a;letter-spacing:0.24em;font-weight:800;text-transform:uppercase">★ ★ ★ ★ ★ &nbsp;·&nbsp; G2 · 4.9 / 5</div>
+  </div>
+  <div class="meta"><div>SLIDIFY · ATOMIC SEED</div><div>12 / 16 · TESTIMONIALS</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>recipes — 13 echo motion</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#020208;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:64px 96px;position:relative;overflow:hidden;background:radial-gradient(ellipse 1100px 720px at 70% 50%,#1e1b4b 0%,#06060c 60%,#020208 100%)}
+  .speed{position:absolute;inset:0;pointer-events:none}
+  .top{display:flex;justify-content:space-between;align-items:flex-start;position:relative}
+  .kicker{font-size:11px;letter-spacing:0.42em;text-transform:uppercase;color:#a78bfa;font-weight:800}
+  .idx{font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .stage{position:absolute;left:96px;right:96px;top:0;bottom:0;display:flex;align-items:center;justify-content:flex-start}
+  .echo{position:relative;font-size:188px;font-weight:900;line-height:0.95;letter-spacing:-0.05em;font-family:Inter,sans-serif;text-transform:uppercase}
+  .echo span{position:absolute;left:0;top:0;display:block}
+  .echo .e1{color:rgba(96,165,250,0.10);transform:translateX(-84px)}
+  .echo .e2{color:rgba(167,139,250,0.20);transform:translateX(-64px)}
+  .echo .e3{color:rgba(167,139,250,0.32);transform:translateX(-44px)}
+  .echo .e4{color:rgba(244,114,182,0.46);transform:translateX(-24px)}
+  .echo .e5{color:rgba(244,114,182,0.66);transform:translateX(-10px)}
+  .echo .e6{background:linear-gradient(135deg,#60a5fa 0%,#a78bfa 35%,#f472b6 70%,#fb923c 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lede{position:absolute;left:96px;bottom:108px;font-size:18px;font-weight:500;color:rgba(255,255,255,0.78);max-width:560px;line-height:1.5}
+  .lede b{color:#f5f5f7;font-weight:800}
+  .meta{position:absolute;bottom:36px;left:96px;right:96px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700;text-transform:uppercase}
+</style></head><body>
+<!-- atoms used: bg.mesh, type.echo (6 stamps), motion.echo, motion.speed-lines, comp.edge-rotated -->
+<div class="slide" data-atom-uses="bg.mesh,type.echo,motion.echo,motion.speed-lines,comp.edge-rotated">
+  <svg class="speed" viewBox="0 0 1280 720" data-atom="motion.speed-lines">
+    <g stroke="rgba(167,139,250,0.20)" stroke-width="1">
+      <line x1="40" y1="120" x2="180" y2="120"/>
+      <line x1="40" y1="200" x2="220" y2="200"/>
+      <line x1="40" y1="280" x2="160" y2="280"/>
+      <line x1="40" y1="360" x2="240" y2="360"/>
+      <line x1="40" y1="440" x2="200" y2="440"/>
+      <line x1="40" y1="520" x2="180" y2="520"/>
+      <line x1="40" y1="600" x2="220" y2="600"/>
+    </g>
+    <g stroke="rgba(244,114,182,0.30)" stroke-width="1.5">
+      <line x1="60" y1="160" x2="200" y2="160"/>
+      <line x1="60" y1="320" x2="220" y2="320"/>
+      <line x1="60" y1="480" x2="200" y2="480"/>
+    </g>
+  </svg>
+  <div class="top">
+    <div class="kicker">MOTION · IMPLIED</div>
+    <div class="idx">13 / 16 · ECHO</div>
+  </div>
+  <div class="stage">
+    <div class="echo" data-atom="type.echo" data-pptx-allow-overflow="true">
+      <span class="e1">RUSH</span>
+      <span class="e2">RUSH</span>
+      <span class="e3">RUSH</span>
+      <span class="e4">RUSH</span>
+      <span class="e5">RUSH</span>
+      <h1 class="e6" style="margin:0;font:inherit" data-pptx-role="title">RUSH</h1>
+    </div>
+  </div>
+  <div class="lede">Same word, six native text frames, decreasing opacity, increasing offset. <b>Editable in PowerPoint as six independent runs.</b> No `filter: blur` — no raster.</div>
+  <div class="meta"><div>SLIDIFY · ATOMIC SEED</div><div>13 / 16 · ECHO · MOTION</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>recipes — 14 marquee</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#06060c;background:#fafaf7;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:48px 0 36px 0;position:relative;overflow:hidden;background:#fafaf7}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin:0 64px 30px 64px;border-bottom:1px solid #06060c;padding-bottom:14px}
+  .kicker{font-size:11px;letter-spacing:0.42em;text-transform:uppercase;color:#7c3aed;font-weight:800}
+  .h1{font-size:28px;font-weight:800;letter-spacing:-0.025em;margin:6px 0 0 0;line-height:1.05;color:#06060c;max-width:760px}
+  .idx{font-size:11px;letter-spacing:0.32em;color:#71717a;font-weight:700}
+  .band{height:104px;display:flex;align-items:center;white-space:nowrap;overflow:hidden;border-top:1px solid #06060c;border-bottom:1px solid #06060c;font-family:"Bebas Neue","Anton",Impact,sans-serif;font-size:88px;font-weight:400;letter-spacing:0.005em;line-height:1;text-transform:uppercase;padding:0 24px}
+  .band.b1{background:#06060c;color:#fef3c7}
+  .band.b1 em{color:#fb923c;font-style:normal}
+  .band.b2{background:#fafaf7;color:#06060c;font-size:84px;border-top:none}
+  .band.b2 em{color:#7c3aed;font-style:normal}
+  .band.b3{background:#7c3aed;color:#fff;font-size:80px;border-top:none}
+  .band.b3 em{color:#fde68a;font-style:normal}
+  .band.b4{background:#fde68a;color:#06060c;font-size:80px;border-top:none}
+  .band.b4 em{color:#dc2626;font-style:normal}
+  .band span{margin-right:32px}
+  .band .dot{font-size:48px;color:currentColor;opacity:0.45;margin-right:32px;vertical-align:middle}
+  .marqueeset{display:flex;flex-direction:column;gap:0;margin:0}
+  .footer-bar{margin:24px 64px 0 64px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#52525b;letter-spacing:0.18em;font-weight:700;text-transform:uppercase}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:9999px;background:#06060c;color:#fef3c7;font-size:11px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase}
+  .meta{position:absolute;bottom:14px;left:64px;right:64px;display:flex;justify-content:space-between;font-size:11px;color:#71717a;letter-spacing:0.18em;font-weight:700;text-transform:uppercase}
+</style></head><body>
+<!-- atoms used: comp.centered, type.marquee (×4 bands), motion.marquee, dec.dot-leader -->
+<div class="slide" data-atom-uses="comp.centered,type.marquee,motion.marquee,dec.dot-leader">
+  <div class="head">
+    <div><div class="kicker">FULL-BLEED · MARQUEE WALL</div><h1 class="h1" data-pptx-role="title">Edge-to-edge type bands. Each band is one editable native run.</h1></div>
+    <div class="idx">14 / 16 · MARQUEE</div>
+  </div>
+  <div class="marqueeset" data-atom="type.marquee">
+    <div class="band b1"><span>SHIP</span><span class="dot">·</span><span><em>ITERATE</em></span><span class="dot">·</span><span>SHIP</span></div>
+    <div class="band b2"><span>NATIVE</span><span class="dot">·</span><span><em>EDITABLE</em></span><span class="dot">·</span><span>NATIVE</span></div>
+    <div class="band b3"><span>RENDER</span><span class="dot">·</span><span><em>CLUSTER</em></span><span class="dot">·</span><span>EMIT</span></div>
+    <div class="band b4"><span>SLIDIFY</span><span class="dot">·</span><span><em>0.4</em></span><span class="dot">·</span><span>2026</span></div>
+  </div>
+  <div class="footer-bar">
+    <span class="pill">⏵ MOTION · IMPLIED</span>
+    <span data-atom="dec.dot-leader">4 BANDS &nbsp;·&nbsp; 4 NATIVE TEXT FRAMES &nbsp;·&nbsp; 0 RASTER PASSES</span>
+  </div>
+  <div class="meta"><div>SLIDIFY · ATOMIC SEED</div><div>14 / 16 · MARQUEE WALL</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>recipes — 15 team grid</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:48px 64px 36px 64px;position:relative;overflow:hidden;background:linear-gradient(180deg,#0a0a14 0%,#06060c 50%,#020208 100%)}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.10);padding-bottom:14px}
+  .kicker{font-size:11px;letter-spacing:0.42em;text-transform:uppercase;color:#a78bfa;font-weight:800}
+  .h1{font-size:28px;font-weight:800;letter-spacing:-0.025em;margin:6px 0 0 0;line-height:1.05;max-width:880px}
+  .idx{font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .who{display:grid;grid-template-columns:repeat(6,1fr);gap:18px 14px;margin-top:8px}
+  .person{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:14px 8px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07)}
+  .person .av{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fff;letter-spacing:-0.02em;font-family:"Playfair Display",Georgia,serif;font-style:italic;border:2px solid rgba(255,255,255,0.18)}
+  .p1{background:linear-gradient(160deg,#a78bfa,#f472b6)}
+  .p2{background:linear-gradient(160deg,#fb923c,#dc2626)}
+  .p3{background:linear-gradient(160deg,#0ea5e9,#34d399)}
+  .p4{background:linear-gradient(160deg,#fde68a,#fb923c);color:#06060c}
+  .p5{background:linear-gradient(160deg,#67e8f9,#7c3aed)}
+  .p6{background:linear-gradient(160deg,#06060c,#7c3aed);border-color:#a78bfa}
+  .person .nm{font-size:13px;font-weight:800;color:#f5f5f7;letter-spacing:-0.01em;line-height:1.1}
+  .person .rl{font-size:10px;color:#a1a1aa;letter-spacing:0.16em;font-weight:700;text-transform:uppercase}
+  .strip{margin-top:24px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:18px 22px}
+  .strip .lab{font-size:10px;letter-spacing:0.32em;color:#a78bfa;font-weight:800;text-transform:uppercase;margin-bottom:10px}
+  .logo-cloud{display:grid;grid-template-columns:repeat(8,1fr);align-items:center;gap:18px}
+  .logo-cloud .lg{font-size:18px;font-weight:900;letter-spacing:-0.02em;color:#a1a1aa;text-align:center;line-height:1}
+  .logo-cloud .lg.it{font-style:italic;font-family:"Playfair Display",Georgia,serif;font-weight:700}
+  .logo-cloud .lg.up{letter-spacing:0.18em;text-transform:uppercase;font-size:13px;font-weight:800}
+  .logo-cloud .lg.mn{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:14px;letter-spacing:0.04em}
+  .meta{position:absolute;bottom:16px;left:64px;right:64px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700;text-transform:uppercase}
+</style></head><body>
+<!-- atoms used: bg.duotone, comp.bento (6×2 grid), ui.avatar-cluster, data.logo-cloud, dec.index-stamp -->
+<div class="slide" data-atom-uses="bg.duotone,comp.bento,ui.avatar-cluster,data.logo-cloud,dec.index-stamp">
+  <div class="head">
+    <div><div class="kicker">CREDITS · TEAM 04</div><h1 class="h1" data-pptx-role="title">The atomic seed was authored by a small Brooklyn studio.</h1></div>
+    <div class="idx" data-atom="dec.index-stamp">15 / 16 · TEAM</div>
+  </div>
+  <div class="who" data-atom="ui.avatar-cluster">
+    <div class="person"><span class="av p1">VR</span><span class="nm">Vamsi Ramakrishnan</span><span class="rl">FOUNDER · COMPILER</span></div>
+    <div class="person"><span class="av p2">JL</span><span class="nm">Jordan Liu</span><span class="rl">DESIGN ENGINEER</span></div>
+    <div class="person"><span class="av p3">MK</span><span class="nm">Mira Kovač</span><span class="rl">TYPOGRAPHY</span></div>
+    <div class="person"><span class="av p4">TS</span><span class="nm">Thiago Sousa</span><span class="rl">DESIGNOPS</span></div>
+    <div class="person"><span class="av p5">PA</span><span class="nm">Priya Ananth</span><span class="rl">RENDERER</span></div>
+    <div class="person"><span class="av p6">+12</span><span class="nm">17 contributors</span><span class="rl">SHIPPING SINCE 2024</span></div>
+  </div>
+  <div class="strip">
+    <div class="lab">BACKED BY · TRUSTED BY</div>
+    <div class="logo-cloud" data-atom="data.logo-cloud">
+      <div class="lg up">VECTOR</div>
+      <div class="lg it">Modular</div>
+      <div class="lg mn">atelier/04</div>
+      <div class="lg up">PIXELPITCH</div>
+      <div class="lg it">Drafting Co.</div>
+      <div class="lg mn">render.sh</div>
+      <div class="lg up">NORTHFIELD</div>
+      <div class="lg it">Studio Eight</div>
+    </div>
+  </div>
+  <div class="meta"><div>SLIDIFY · ATOMIC SEED</div><div>15 / 16 · TEAM</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>recipes — 16 closing CTA</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;
+         background:radial-gradient(ellipse 1100px 760px at 50% 50%,#1e1b4b 0%,#0a0a14 60%,#020208 100%);padding:64px 96px}
+  .aurora-a{position:absolute;top:-180px;left:-120px;width:720px;height:720px;border-radius:50%;
+            background:radial-gradient(circle,rgba(167,139,250,0.34) 0%,transparent 70%)}
+  .aurora-b{position:absolute;bottom:-220px;right:-160px;width:880px;height:880px;border-radius:50%;
+            background:radial-gradient(circle,rgba(244,114,182,0.32) 0%,transparent 72%)}
+  .corners-tl,.corners-tr,.corners-bl,.corners-br{position:absolute;width:24px;height:24px;border:2px solid #f472b6}
+  .corners-tl{top:48px;left:48px;border-right:none;border-bottom:none}
+  .corners-tr{top:48px;right:48px;border-left:none;border-bottom:none}
+  .corners-bl{bottom:48px;left:48px;border-right:none;border-top:none}
+  .corners-br{bottom:48px;right:48px;border-left:none;border-top:none}
+  .stamp-top{position:absolute;top:84px;left:0;right:0;text-align:center;font-size:11px;letter-spacing:0.42em;color:#a78bfa;font-weight:800;text-transform:uppercase}
+  .seal{position:absolute;top:64px;right:84px}
+  .stack{position:absolute;left:96px;right:96px;top:50%;transform:translateY(-50%);text-align:center;display:flex;flex-direction:column;align-items:center;gap:24px}
+  .h1{font-size:124px;font-weight:900;letter-spacing:-0.05em;line-height:0.92;margin:0;
+      background:linear-gradient(135deg,#60a5fa 0%,#a78bfa 30%,#f472b6 65%,#fb923c 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lede{font-size:20px;color:rgba(255,255,255,0.84);font-weight:500;line-height:1.5;max-width:780px;margin:0}
+  .lede b{color:#f5f5f7;font-weight:800}
+  .cta-row{display:flex;align-items:center;gap:16px;margin-top:6px}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:16px 28px;border-radius:14px;font-size:16px;font-weight:800;letter-spacing:0.04em;text-decoration:none;text-transform:uppercase;font-family:Inter,sans-serif}
+  .btn.tactile{background:linear-gradient(160deg,#f472b6,#fb923c);color:#1e1b4b;border:1px solid rgba(255,255,255,0.30);
+               box-shadow:inset 0 1px 0 rgba(255,255,255,0.45),0 12px 28px rgba(244,114,182,0.40)}
+  .btn.ghost{background:rgba(255,255,255,0.05);color:#f5f5f7;border:1px solid rgba(255,255,255,0.20)}
+  .btn .arrow{font-size:18px;font-weight:900}
+  .stamp-bot{position:absolute;bottom:88px;left:0;right:0;text-align:center;font-size:11px;letter-spacing:0.42em;color:#71717a;font-weight:700;text-transform:uppercase}
+  .ed{position:absolute;top:50%;left:54px;transform:translateY(-50%) rotate(-90deg);transform-origin:left center;
+      font-size:11px;letter-spacing:0.42em;color:#a78bfa;font-weight:800;text-transform:uppercase}
+  .meta{position:absolute;bottom:36px;left:96px;right:96px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700;text-transform:uppercase}
+</style></head><body>
+<!-- atoms used: bg.mesh, comp.centered, type.gfill-4, surf.tactile (CTA button), dec.corner-brackets, dec.seal, comp.edge-rotated -->
+<div class="slide" data-atom-uses="bg.mesh,comp.centered,type.gfill-4,surf.tactile,dec.corner-brackets,dec.seal,comp.edge-rotated">
+  <div class="aurora-a" data-atom="bg.mesh" data-pptx-allow-overflow="true"></div>
+  <div class="aurora-b" data-pptx-allow-overflow="true"></div>
+  <div class="corners-tl" data-atom="dec.corner-brackets"></div>
+  <div class="corners-tr"></div><div class="corners-bl"></div><div class="corners-br"></div>
+  <div class="stamp-top">FINAL · CHAPTER FOUR · GO BUILD</div>
+  <svg class="seal" width="96" height="96" viewBox="0 0 120 120" data-atom="dec.seal">
+    <circle cx="60" cy="60" r="56" fill="none" stroke="#f472b6" stroke-width="2"/>
+    <circle cx="60" cy="60" r="44" fill="none" stroke="#f472b6" stroke-width="1"/>
+    <text x="60" y="56" font-size="13" fill="#f472b6" font-family="Inter" font-weight="900" text-anchor="middle" letter-spacing="0.18em">SHIPPED</text>
+    <text x="60" y="74" font-size="11" fill="#f472b6" font-family="Inter" font-weight="700" text-anchor="middle" letter-spacing="0.16em">2026 · Q2</text>
+  </svg>
+  <div class="ed" data-atom="comp.edge-rotated">RECIPE 16 OF 16 · CLOSING</div>
+  <div class="stack">
+    <h1 class="h1" data-pptx-role="title" data-atom="type.gfill-4">Go build a deck<br>that stays alive.</h1>
+    <p class="lede"><b>slidify@0.4 ships today.</b> Sixteen recipes, seventy atoms, eight typographic registers — every pixel native, every word editable.</p>
+    <div class="cta-row">
+      <a class="btn tactile" data-atom="surf.tactile" data-slidify-decorate="tactile">Install now <span class="arrow">→</span></a>
+      <a class="btn ghost">Read the docs</a>
+    </div>
+  </div>
+  <div class="stamp-bot">$ uv add slidify · $ slidify deck.html out.pptx</div>
+  <div class="meta"><div>SLIDIFY · ATOMIC SEED</div><div>16 / 16 · CLOSING CTA</div></div>
+</div>
+</body></html>
