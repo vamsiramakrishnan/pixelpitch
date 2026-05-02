@@ -28,7 +28,8 @@
     "ir-emit": "tsx scripts/ir-emit.ts",
     "test:composites": "tsx scripts/test-composites.ts",
     "codegen-atoms": "tsx scripts/codegen-atoms.ts",
-    "codegen-atoms-check": "tsx scripts/codegen-atoms.ts --check"
+    "codegen-atoms-check": "tsx scripts/codegen-atoms.ts --check",
+    "atelier-build": "tsx ../examples/atelier/build.ts"
   },
   "keywords": [
     "slidify",
