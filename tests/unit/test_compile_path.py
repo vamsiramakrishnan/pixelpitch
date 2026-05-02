@@ -323,3 +323,87 @@ def test_path_bbox_omitted_is_inferred(tmp_path):
     out = compile_ir(deck, tmp_path / "inferred.pptx")
     prs = Presentation(str(out))
     assert len(prs.slides) == 1
+
+
+def test_path_linecap_round(tmp_path):
+    """strokeLinecap='round' → <a:ln cap="rnd">."""
+    node = IRPathShapeNode(
+        kind="path",
+        recipeId="path.cap-round",
+        bbox=IRBbox(x=0, y=0, w=100, h=100),
+        commands=[
+            IRPathCommand(op="M", x=10, y=50),
+            IRPathCommand(op="L", x=90, y=50),
+        ],
+        strokeWidthPx=4,
+        strokeColor="#888888",
+        strokeLinecap="round",
+    )
+    prs = _compile_one(node, tmp_path)
+    _, sp_pr = _shape_sp_pr(prs)
+    ln = sp_pr.find(f"{{{NS_A}}}ln")
+    assert ln is not None
+    assert ln.get("cap") == "rnd"
+
+
+def test_path_linecap_square(tmp_path):
+    node = IRPathShapeNode(
+        kind="path",
+        recipeId="path.cap-square",
+        bbox=IRBbox(x=0, y=0, w=100, h=100),
+        commands=[
+            IRPathCommand(op="M", x=10, y=50),
+            IRPathCommand(op="L", x=90, y=50),
+        ],
+        strokeWidthPx=4,
+        strokeColor="#888888",
+        strokeLinecap="square",
+    )
+    prs = _compile_one(node, tmp_path)
+    _, sp_pr = _shape_sp_pr(prs)
+    ln = sp_pr.find(f"{{{NS_A}}}ln")
+    assert ln is not None
+    assert ln.get("cap") == "sq"
+
+
+def test_path_linejoin_round(tmp_path):
+    """strokeLinejoin='round' → <a:ln><a:round/>."""
+    node = IRPathShapeNode(
+        kind="path",
+        recipeId="path.join-round",
+        bbox=IRBbox(x=0, y=0, w=100, h=100),
+        commands=[
+            IRPathCommand(op="M", x=10, y=10),
+            IRPathCommand(op="L", x=90, y=10),
+            IRPathCommand(op="L", x=90, y=90),
+        ],
+        strokeWidthPx=4,
+        strokeColor="#888888",
+        strokeLinejoin="round",
+    )
+    prs = _compile_one(node, tmp_path)
+    _, sp_pr = _shape_sp_pr(prs)
+    ln = sp_pr.find(f"{{{NS_A}}}ln")
+    assert ln is not None
+    assert ln.find(f"{{{NS_A}}}round") is not None
+
+
+def test_path_linejoin_bevel(tmp_path):
+    node = IRPathShapeNode(
+        kind="path",
+        recipeId="path.join-bevel",
+        bbox=IRBbox(x=0, y=0, w=100, h=100),
+        commands=[
+            IRPathCommand(op="M", x=10, y=10),
+            IRPathCommand(op="L", x=90, y=10),
+            IRPathCommand(op="L", x=90, y=90),
+        ],
+        strokeWidthPx=4,
+        strokeColor="#888888",
+        strokeLinejoin="bevel",
+    )
+    prs = _compile_one(node, tmp_path)
+    _, sp_pr = _shape_sp_pr(prs)
+    ln = sp_pr.find(f"{{{NS_A}}}ln")
+    assert ln is not None
+    assert ln.find(f"{{{NS_A}}}bevel") is not None

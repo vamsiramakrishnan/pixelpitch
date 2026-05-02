@@ -688,7 +688,7 @@ class _IRCompiler:
             except Exception:
                 pass
 
-        # 4. Stroke (width, color, dash) — stroke-only paths skip fill.
+        # 4. Stroke (width, color, dash, cap, join) — stroke-only paths skip fill.
         if node.strokeWidthPx > 0:
             try:
                 shape.line.width = Emu(px_to_emu(node.strokeWidthPx))
@@ -701,6 +701,9 @@ class _IRCompiler:
                 pass
             if node.strokeDasharray:
                 _apply_dash(shape, node.strokeDasharray)
+            # Cap/join were defined in IR but never written until now;
+            # skipping them silently rounded square corners on connectors.
+            _apply_line_cap_join(shape, node.strokeLinecap, node.strokeLinejoin)
 
         # 5. Arrowheads — markerStart → headEnd, markerEnd → tailEnd.
         if node.markerStart is not None or node.markerEnd is not None:
@@ -1155,6 +1158,36 @@ def _apply_dash(shape, pattern: list[float]) -> None:
                 )
     except Exception as e:
         log.debug("compile_ir.dash_apply_failed", error=str(e))
+
+
+_LINECAP_MAP = {"butt": "flat", "round": "rnd", "square": "sq"}
+_LINEJOIN_TAGS = {"miter": "miter", "round": "round", "bevel": "bevel"}
+
+
+def _apply_line_cap_join(shape, cap: str | None, join: str | None) -> None:
+    """Write <a:ln cap="…"> attribute and <a:miter|round|bevel/> child.
+
+    PathShapeNode declared strokeLinecap/strokeLinejoin from day one, but
+    `_emit_path` only wrote width/color/dash — so authored 'round' or
+    'square' caps and 'round'/'bevel' joins were silently lost.
+    """
+    if cap is None and join is None:
+        return
+    try:
+        sp_pr = shape._element.spPr
+        ln = sp_pr.find(f"{{{NS_A}}}ln")
+        if ln is None:
+            ln = etree.SubElement(sp_pr, f"{{{NS_A}}}ln")
+        if cap is not None and cap in _LINECAP_MAP:
+            ln.set("cap", _LINECAP_MAP[cap])
+        if join is not None and join in _LINEJOIN_TAGS:
+            # Drop any existing join element so we own this slot.
+            for tag in _LINEJOIN_TAGS.values():
+                for existing in ln.findall(f"{{{NS_A}}}{tag}"):
+                    ln.remove(existing)
+            etree.SubElement(ln, f"{{{NS_A}}}{_LINEJOIN_TAGS[join]}")
+    except Exception as e:
+        log.debug("compile_ir.line_cap_join_failed", error=str(e))
 
 
 def _apply_arrowheads(shape, marker_start, marker_end) -> None:
