@@ -19,9 +19,12 @@ export default function AnnoTooltip(props: AnnoTooltipProps): ReactNode {
   // Codegen renders Tier-B recipes as a stable, recipe-id-stamped wrapper
   // around the underlying primitive. Visual fidelity comes from the
   // primitive; this wrapper exists so the IR carries the atom id.
+  // Bind a local `tokens` so default-expr lookups (tokens.gradient(...))
+  // resolve in this scope; the IR helper below uses its parameter.
+  const tokens = defaultTokens;
   return (
     <div data-recipe-id="anno.tooltip" data-recipe-version="1.0.0">
-      <AnnotationLeaderLine {...({ bbox: props.bbox, leaderTo: props.leaderTo, color: props.bgColor } as unknown as ComponentProps<typeof AnnotationLeaderLine>)} />
+      <AnnotationLeaderLine {...({ bbox: props.bbox, leaderTo: props.leaderTo, color: props.bgColor ?? tokens.palette("surface-3") } as unknown as ComponentProps<typeof AnnotationLeaderLine>)} />
     </div>
   );
 }
@@ -35,7 +38,7 @@ export function annoTooltipToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox, leaderTo: props.leaderTo, color: props.bgColor } as unknown as Parameters<typeof annotationLeaderLineToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, leaderTo: props.leaderTo, color: props.bgColor ?? tokens.palette("surface-3") } as unknown as Parameters<typeof annotationLeaderLineToIR>[0];
   const inner = annotationLeaderLineToIR(primitiveArgs, tokens);
   return {
     kind: 'group',

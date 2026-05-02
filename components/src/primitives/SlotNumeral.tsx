@@ -125,18 +125,24 @@ export function slotNumeralToIR(
   //   - a `GradientKey` string ('accent-grad'), the legitimate use, or
   //   - a token-reference string ('tokens.gradient.accent-grad') — atoms.yaml
   //     stamps these for composes-overrides; we strip the prefix.
-  //   - a `LinearGradient` object (matcher-resolved upstream).
+  //   - a fully-resolved `LinearGradient` object — what codegen emits
+  //     when atom-row defaults route via `tokens.gradient(<key>)`.
   let gradientKey: import('../tokens').GradientKey | undefined;
+  let gradientFill: import('../tokens').LinearGradient | undefined;
   if (typeof props.gradient === 'string') {
     const k = props.gradient.startsWith('tokens.gradient.')
       ? props.gradient.slice('tokens.gradient.'.length)
       : props.gradient;
-    // Only honor known keys; unknown strings fall through to no-gradient.
     gradientKey = k as import('../tokens').GradientKey;
+  } else if (
+    props.gradient
+    && typeof props.gradient === 'object'
+    && (props.gradient as { kind?: string }).kind === 'linear-gradient'
+  ) {
+    gradientFill = props.gradient as import('../tokens').LinearGradient;
   }
-  // Test the key actually resolves; if not, treat as no gradient.
-  let gradientFill: import('../tokens').LinearGradient | undefined;
-  if (gradientKey) {
+  // If we only have a key, resolve to a LinearGradient via tokens.
+  if (gradientKey && !gradientFill) {
     try {
       gradientFill = tokens.gradient(gradientKey);
     } catch {
@@ -163,9 +169,9 @@ export function slotNumeralToIR(
     axis: 'slot',
     scale,
   };
-  if (gradientKey) {
-    metadata.gradientKey = gradientKey;
+  if (gradientFill) {
     metadata.gradientFill = gradientFill;
+    if (gradientKey) metadata.gradientKey = gradientKey;
   }
 
   return {

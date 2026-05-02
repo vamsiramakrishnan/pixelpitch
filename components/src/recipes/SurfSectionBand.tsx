@@ -17,9 +17,12 @@ export default function SurfSectionBand(props: SurfSectionBandProps): ReactNode 
   // Codegen renders Tier-B recipes as a stable, recipe-id-stamped wrapper
   // around the underlying primitive. Visual fidelity comes from the
   // primitive; this wrapper exists so the IR carries the atom id.
+  // Bind a local `tokens` so default-expr lookups (tokens.gradient(...))
+  // resolve in this scope; the IR helper below uses its parameter.
+  const tokens = defaultTokens;
   return (
     <div data-recipe-id="surf.section-band" data-recipe-version="1.0.0">
-      <SurfaceShapeFill {...({ bbox: props.bbox, fill: props.fill } as unknown as ComponentProps<typeof SurfaceShapeFill>)} />
+      <SurfaceShapeFill {...({ bbox: props.bbox, fill: props.fill ?? tokens.gradient("accent-grad") } as unknown as ComponentProps<typeof SurfaceShapeFill>)} />
     </div>
   );
 }
@@ -33,7 +36,7 @@ export function surfSectionBandToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox, fill: props.fill } as unknown as Parameters<typeof surfaceShapeFillToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, fill: props.fill ?? tokens.gradient("accent-grad") } as unknown as Parameters<typeof surfaceShapeFillToIR>[0];
   const inner = surfaceShapeFillToIR(primitiveArgs, tokens);
   return {
     kind: 'group',

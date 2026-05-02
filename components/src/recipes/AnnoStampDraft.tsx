@@ -17,9 +17,12 @@ export default function AnnoStampDraft(props: AnnoStampDraftProps): ReactNode {
   // Codegen renders Tier-B recipes as a stable, recipe-id-stamped wrapper
   // around the underlying primitive. Visual fidelity comes from the
   // primitive; this wrapper exists so the IR carries the atom id.
+  // Bind a local `tokens` so default-expr lookups (tokens.gradient(...))
+  // resolve in this scope; the IR helper below uses its parameter.
+  const tokens = defaultTokens;
   return (
     <div data-recipe-id="anno.stamp-draft" data-recipe-version="1.0.0">
-      <AnnotationBadge {...({ bbox: props.bbox, rotateDeg: props.rotateDeg, kind: 'stamp', tone: 'danger', label: 'DRAFT' } as unknown as ComponentProps<typeof AnnotationBadge>)} />
+      <AnnotationBadge {...({ bbox: props.bbox, rotateDeg: props.rotateDeg ?? -12, kind: 'stamp', tone: 'danger', label: 'DRAFT' } as unknown as ComponentProps<typeof AnnotationBadge>)} />
     </div>
   );
 }
@@ -33,7 +36,7 @@ export function annoStampDraftToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox, rotateDeg: props.rotateDeg, kind: 'stamp', tone: 'danger', label: 'DRAFT' } as unknown as Parameters<typeof annotationBadgeToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, rotateDeg: props.rotateDeg ?? -12, kind: 'stamp', tone: 'danger', label: 'DRAFT' } as unknown as Parameters<typeof annotationBadgeToIR>[0];
   const inner = annotationBadgeToIR(primitiveArgs, tokens);
   return {
     kind: 'group',

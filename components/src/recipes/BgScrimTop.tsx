@@ -18,9 +18,12 @@ export default function BgScrimTop(props: BgScrimTopProps): ReactNode {
   // Codegen renders Tier-B recipes as a stable, recipe-id-stamped wrapper
   // around the underlying primitive. Visual fidelity comes from the
   // primitive; this wrapper exists so the IR carries the atom id.
+  // Bind a local `tokens` so default-expr lookups (tokens.gradient(...))
+  // resolve in this scope; the IR helper below uses its parameter.
+  const tokens = defaultTokens;
   return (
     <div data-recipe-id="bg.scrim-top" data-recipe-version="1.0.0">
-      <SurfaceLinearFade {...({ bbox: props.bbox, color: props.color, opacity: props.opacity, direction: 'top' } as unknown as ComponentProps<typeof SurfaceLinearFade>)} />
+      <SurfaceLinearFade {...({ bbox: props.bbox, color: props.color ?? tokens.palette("surface-1"), opacity: props.opacity ?? 0.7, direction: 'top' } as unknown as ComponentProps<typeof SurfaceLinearFade>)} />
     </div>
   );
 }
@@ -34,7 +37,7 @@ export function bgScrimTopToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox, color: props.color, opacity: props.opacity, direction: 'top' } as unknown as Parameters<typeof surfaceLinearFadeToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, color: props.color ?? tokens.palette("surface-1"), opacity: props.opacity ?? 0.7, direction: 'top' } as unknown as Parameters<typeof surfaceLinearFadeToIR>[0];
   const inner = surfaceLinearFadeToIR(primitiveArgs, tokens);
   return {
     kind: 'group',

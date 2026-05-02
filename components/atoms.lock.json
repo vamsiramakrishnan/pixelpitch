@@ -1,6 +1,6 @@
 {
   "lockVersion": 1,
-  "atomsYamlSha256": "109b8486436e1c1f037b2ad33bc08746b6c2747c49d3ef4e420385a2f5e942f1",
+  "atomsYamlSha256": "d18f1b716e2ebdd8138014d178fccc25972a785d501d0949c4ce3d43925835a7",
   "totalAtoms": 96,
   "generatedRecipes": 95,
   "primitivesVerified": 1,
@@ -35,7 +35,7 @@
       "component": "AnnoNumberedHotspot",
       "tier": "B",
       "version": "1.0.0",
-      "composite": false
+      "composite": true
     },
     {
       "rowId": "atom-anno-redaction-bar",

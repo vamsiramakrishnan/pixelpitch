@@ -29,9 +29,9 @@
                 "x": 430,
                 "y": 140
               },
-              "borderRadiusPx": 0,
+              "borderRadiusPx": 18,
               "fill": {
-                "color": "#0e0e1a",
+                "color": "#16162a",
                 "kind": "solid"
               },
               "kind": "shape",
@@ -48,7 +48,7 @@
           "kind": "group",
           "metadata": {
             "axis": "surface",
-            "radiusPx": 0,
+            "radiusPx": 18,
             "role": "surface.shape-fill",
             "shape": "rounded-rect"
           },
@@ -98,7 +98,7 @@
                   "align": "left",
                   "runs": [
                     {
-                      "color": "#a1a1aa",
+                      "color": "#a78bfa",
                       "fontFamily": "Inter, sans-serif",
                       "fontSizePx": 13,
                       "fontWeight": 600,

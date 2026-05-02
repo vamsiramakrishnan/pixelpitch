@@ -1118,11 +1118,17 @@ patterns:
     renderer:
       component: SurfBentoCell
       tier: B
-      primitive: frame.bento
+      # Route to surface.shape-fill (renders a real filled rounded shape)
+      # not frame.bento (which is the grid-layout primitive — it lays
+      # children out but doesn't paint a card surface).
+      primitive: surface.shape-fill
       version: 1.0.0
       props:
-        bbox:    { type: bbox,  required: true }
-        bgColor: { type: color, default: 'tokens.palette.surface-2' }
+        bbox:    { type: bbox,   required: true }
+        # surface-3 (#16162a) has visible contrast against the
+        # surface-1 (#070710) slide background; surface-2 was too close
+        # to the slide bg and the cards disappeared in the rendered PNG.
+        bgColor: { type: color,  default: 'tokens.palette.surface-3' }
         radius:  { type: number, default: 24 }
         padding: { type: number, default: 32 }
     fixture:
@@ -2107,11 +2113,30 @@ patterns:
     renderer:
       component: AnnoNumberedHotspot
       tier: B
-      primitive: annotation.leader-line
+      # Composite (no single primitive): a filled circle behind a centered
+      # numeral. The leader-line is intentionally NOT included here —
+      # callers compose it separately via `data.connector` when they
+      # need the leader (e.g., comp.annotated-screenshot stacks the
+      # connector + the hotspot atom). Decoupling avoids the previous
+      # mis-routing where the atom mapped to annotation.leader-line and
+      # rendered only the line, no circle.
+      composes:
+        - atom: surface.shape-fill
+          props:
+            bbox:    { x: 0.0, y: 0.0, w: 1.0, h: 1.0 }
+            shape:   oval
+            bgColor: '@parent.bgColor'
+        - atom: slot.numeral
+          props:
+            bbox:   { x: 0.0, y: 0.05, w: 1.0, h: 0.95 }
+            digits: '@parent.n'
+            scale:  numeral-md
       version: 1.0.0
       props:
         bbox:    { type: bbox,   required: true }
-        n:       { type: number, required: true }
+        # Hotspot label (typically '1','2','3'). Stored as a string so it
+        # threads cleanly into slot.numeral.digits (which is always a string).
+        n:       { type: string, required: true }
         anchor:  { type: object, required: true }
         bgColor: { type: color,  default: 'tokens.palette.accent' }
     fixture:
@@ -2696,6 +2721,27 @@ patterns:
         - atom: dec.hairline-rule
           props:
             bbox: { x: 0.075, y: 0.42, w: 0.85, h: 0.005 }
+        # foreach: one row per item, vertically stacked below the rule.
+        - foreach: '@parent.items'
+          as: item
+          atom: type.numerals-tabular
+          props:
+            bbox:
+              x: 0.075
+              y: '0.46 + i * 0.075'
+              w: 0.10
+              h: 0.06
+            digits: '@item.num'
+        - foreach: '@parent.items'
+          as: item
+          atom: type.eyebrow-ruled
+          props:
+            bbox:
+              x: 0.18
+              y: '0.46 + i * 0.075'
+              w: 0.75
+              h: 0.06
+            label: '@item.title'
       version: 1.0.0
       props:
         bbox:  { type: bbox,  required: true }
@@ -2768,26 +2814,32 @@ patterns:
           props:
             bbox:  { x: 0.075, y: 0.18, w: 0.85, h: 0.10 }
             value: '@parent.headline'
-        # Three side-by-side cards.
-        - atom: surf.card-raised
+        # foreach: one card per kpi, fan out across the row.
+        # The card itself is just a surface; the value/eyebrow/delta land
+        # on top via subsequent foreach entries that share the same array.
+        - foreach: '@parent.kpis'
+          as: kpi
+          atom: surf.card-raised
           props:
-            bbox: { x: 0.075, y: 0.40, w: 0.265, h: 0.45 }
-        - atom: surf.card-raised
+            bbox: { x: '0.075 + i * 0.295', y: 0.40, w: 0.265, h: 0.45 }
+        - foreach: '@parent.kpis'
+          as: kpi
+          atom: type.eyebrow-ruled
           props:
-            bbox: { x: 0.367, y: 0.40, w: 0.265, h: 0.45 }
-        - atom: surf.card-raised
+            bbox:  { x: '0.10 + i * 0.295', y: 0.44, w: 0.215, h: 0.04 }
+            label: '@kpi.label'
+        - foreach: '@parent.kpis'
+          as: kpi
+          atom: type.big-number
           props:
-            bbox: { x: 0.660, y: 0.40, w: 0.265, h: 0.45 }
-        # Delta badges anchored bottom-left of each card.
-        - atom: data.delta-badge
+            bbox:  { x: '0.10 + i * 0.295', y: 0.50, w: 0.215, h: 0.20 }
+            value: '@kpi.value'
+        - foreach: '@parent.kpis'
+          as: kpi
+          atom: data.delta-badge
           props:
-            bbox: { x: 0.10, y: 0.74, w: 0.20, h: 0.06 }
-        - atom: data.delta-badge
-          props:
-            bbox: { x: 0.392, y: 0.74, w: 0.20, h: 0.06 }
-        - atom: data.delta-badge
-          props:
-            bbox: { x: 0.685, y: 0.74, w: 0.20, h: 0.06 }
+            bbox:  { x: '0.10 + i * 0.295', y: 0.74, w: 0.215, h: 0.06 }
+            value: '@kpi.delta'
       version: 1.0.0
       props:
         bbox:     { type: bbox,   required: true }
@@ -2910,19 +2962,38 @@ patterns:
           props:
             bbox:  { x: 0.075, y: 0.18, w: 0.85, h: 0.12 }
             value: '@parent.headline'
-        # 2x3 grid of cards (standard team grid layout).
-        - atom: surf.card-raised
-          props: { bbox: { x: 0.075, y: 0.40, w: 0.265, h: 0.20 } }
-        - atom: surf.card-raised
-          props: { bbox: { x: 0.367, y: 0.40, w: 0.265, h: 0.20 } }
-        - atom: surf.card-raised
-          props: { bbox: { x: 0.660, y: 0.40, w: 0.265, h: 0.20 } }
-        - atom: surf.card-raised
-          props: { bbox: { x: 0.075, y: 0.65, w: 0.265, h: 0.20 } }
-        - atom: surf.card-raised
-          props: { bbox: { x: 0.367, y: 0.65, w: 0.265, h: 0.20 } }
-        - atom: surf.card-raised
-          props: { bbox: { x: 0.660, y: 0.65, w: 0.265, h: 0.20 } }
+        # foreach: lay each member into a 3-column row. After 3 members
+        # the row wraps. `Math.floor(i/3)` and `i%3` are written via
+        # bbox string expressions evaluated at runtime.
+        - foreach: '@parent.members'
+          as: member
+          atom: surf.card-raised
+          props:
+            bbox:
+              x: '0.075 + (i % 3) * 0.295'
+              y: '0.40 + Math.floor(i / 3) * 0.245'
+              w: 0.265
+              h: 0.20
+        - foreach: '@parent.members'
+          as: member
+          atom: type.eyebrow-ruled
+          props:
+            bbox:
+              x: '0.10 + (i % 3) * 0.295'
+              y: '0.43 + Math.floor(i / 3) * 0.245'
+              w: 0.215
+              h: 0.04
+            label: '@member.role'
+        - foreach: '@parent.members'
+          as: member
+          atom: type.big-number
+          props:
+            bbox:
+              x: '0.10 + (i % 3) * 0.295'
+              y: '0.49 + Math.floor(i / 3) * 0.245'
+              w: 0.215
+              h: 0.10
+            value: '@member.name'
       version: 1.0.0
       props:
         bbox:     { type: bbox,   required: true }

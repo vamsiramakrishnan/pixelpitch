@@ -19,9 +19,12 @@ export default function BgSpotlightSoft(props: BgSpotlightSoftProps): ReactNode 
   // Codegen renders Tier-B recipes as a stable, recipe-id-stamped wrapper
   // around the underlying primitive. Visual fidelity comes from the
   // primitive; this wrapper exists so the IR carries the atom id.
+  // Bind a local `tokens` so default-expr lookups (tokens.gradient(...))
+  // resolve in this scope; the IR helper below uses its parameter.
+  const tokens = defaultTokens;
   return (
     <div data-recipe-id="bg.spotlight-soft" data-recipe-version="1.0.0">
-      <SurfaceRadialBlob {...({ bbox: props.bbox, cx: props.cx, cy: props.cy, color: props.color } as unknown as ComponentProps<typeof SurfaceRadialBlob>)} />
+      <SurfaceRadialBlob {...({ bbox: props.bbox, cx: props.cx ?? 0.5, cy: props.cy ?? 0.4, color: props.color ?? tokens.palette("accent") } as unknown as ComponentProps<typeof SurfaceRadialBlob>)} />
     </div>
   );
 }
@@ -35,7 +38,7 @@ export function bgSpotlightSoftToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox, cx: props.cx, cy: props.cy, color: props.color } as unknown as Parameters<typeof surfaceRadialBlobToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, cx: props.cx ?? 0.5, cy: props.cy ?? 0.4, color: props.color ?? tokens.palette("accent") } as unknown as Parameters<typeof surfaceRadialBlobToIR>[0];
   const inner = surfaceRadialBlobToIR(primitiveArgs, tokens);
   return {
     kind: 'group',

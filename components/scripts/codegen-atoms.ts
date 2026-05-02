@@ -79,6 +79,25 @@ interface PropEntry {
 interface ComposesEntry {
   atom: string;
   props?: Record<string, unknown>;
+  /**
+   * Array-driven iteration. When set, the codegen emits one child per
+   * element of the parent prop named in `foreach`. The element is bound
+   * to the local name `as` (default `'item'`); children of this entry
+   * may reference it via `'@<as>.<field>'` strings just like
+   * `'@parent.<name>'` references the parent prop bag.
+   *
+   * Per-iteration bbox can use the magic identifiers `i` (zero-based
+   * index) and `n` (total count) inside numeric expressions. Example:
+   *
+   *   - foreach: '@parent.kpis'
+   *     as: kpi
+   *     atom: surf.card-raised
+   *     props:
+   *       bbox: { x: 'i / n', y: 0.4, w: '1 / n', h: 0.45 }
+   *       label: '@kpi.label'
+   */
+  foreach?: string;
+  as?: string;
 }
 
 interface RendererBlock {
@@ -563,73 +582,72 @@ function renderRecipeFile(
     // synonyms). Undefined parent props are dropped at runtime (JS-spread).
     const parentPropNames = Object.keys(props);
     const childrenLines: string[] = [];
-    resolved.forEach((r0, i) => {
-      const inlineProps = r0.entry.props ?? {};
-      const hasBboxOverride = inlineProps.bbox !== undefined;
-      // Composite layout: a bbox override may be:
-      //   - absolute: { x, y, w, h } in slide-pixel space (any value > 1)
-      //   - relative: { x, y, w, h } where ALL four are 0..1 fractions
-      //               of the parent bbox (treated as a fractional rect).
-      // The relative form is what most comp.* atoms want — tile children
-      // inside the parent rather than overlaying them all at full bbox.
-      let bboxExpr: string;
-      if (hasBboxOverride) {
-        const ov = inlineProps.bbox as Record<string, number>;
-        const allFrac =
-          typeof ov.x === 'number' && typeof ov.y === 'number' &&
-          typeof ov.w === 'number' && typeof ov.h === 'number' &&
-          ov.x >= 0 && ov.x <= 1 && ov.y >= 0 && ov.y <= 1 &&
-          ov.w > 0 && ov.w <= 1 && ov.h > 0 && ov.h <= 1;
-        if (allFrac) {
-          // Inline a runtime sub-bbox computation.
-          bboxExpr =
-            `{ x: props.bbox.x + ${ov.x} * props.bbox.w, ` +
-            `y: props.bbox.y + ${ov.y} * props.bbox.h, ` +
-            `w: ${ov.w} * props.bbox.w, ` +
-            `h: ${ov.h} * props.bbox.h }`;
-        } else {
-          bboxExpr = jsonStringify(ov);
+
+    /** Build a runtime bbox expression for one composes child.
+     *  `iterCtx` is non-null inside foreach blocks; `i` and `n` are then
+     *  in scope and may appear inside x/y/w/h string expressions. */
+    function buildBboxExpr(
+      ov: unknown,
+      iterCtx: { itemAlias: string } | null,
+    ): string {
+      if (ov === undefined) return 'props.bbox';
+      if (typeof ov !== 'object' || ov === null) return jsonStringify(ov);
+      const o = ov as Record<string, unknown>;
+      const part = (key: 'x' | 'y' | 'w' | 'h'): string => {
+        const v = o[key];
+        if (typeof v === 'number') return String(v);
+        if (typeof v === 'string') return `(${v})`;
+        return '0';
+      };
+      const allFrac =
+        ['x', 'y', 'w', 'h'].every(k => {
+          const v = o[k];
+          return (typeof v === 'number' && v >= 0 && v <= 1)
+              || typeof v === 'string';
+        });
+      if (!allFrac) return jsonStringify(ov);
+      const dim = (k: 'w' | 'h') => k === 'w' ? 'props.bbox.w' : 'props.bbox.h';
+      return (
+        `{ x: props.bbox.x + ${part('x')} * ${dim('w')}, ` +
+        `y: props.bbox.y + ${part('y')} * ${dim('h')}, ` +
+        `w: ${part('w')} * ${dim('w')}, ` +
+        `h: ${part('h')} * ${dim('h')} }`
+      );
+    }
+
+    /** Emit a JS expression for one prop-value, honoring `@parent.<name>`
+     *  and (inside a foreach) `@<itemAlias>.<field>` references. */
+    function valueExpr(
+      v: unknown,
+      iterCtx: { itemAlias: string } | null,
+    ): string {
+      if (typeof v === 'string') {
+        if (v.startsWith('@parent.')) return `props.${v.slice('@parent.'.length)}`;
+        if (iterCtx && v.startsWith(`@${iterCtx.itemAlias}.`)) {
+          const field = v.slice(`@${iterCtx.itemAlias}.`.length);
+          // `__item` is typed `unknown` (map callback over `unknown[]`);
+          // cast to a loose record for field access. The runtime value
+          // is whatever the deck author put in the array.
+          return `(__item as Record<string, unknown> | undefined)?.${field}`;
         }
-      } else {
-        bboxExpr = 'props.bbox';
+        if (iterCtx && v === `@${iterCtx.itemAlias}`) return '__item';
       }
+      return jsonStringify(v);
+    }
 
-      // Determine which prop names the child accepts.
-      let childAccepts: Set<string> = new Set();
-      if (r0.kind === 'primitive') {
-        childAccepts = new Set(PRIMITIVE_INTERFACE[r0.atomId] ?? []);
-      } else if (r0.kind === 'recipe') {
-        // Look up the child recipe's prop set; we stashed it on the entry.
-        // For recipes wrapping a primitive, also include the primitive's
-        // accepted prop names — the recipe will forward them through.
-        const childRow = recipesByAtomId.get(r0.entry.atom) as
-          | (GeneratedRecipe & {
-              __rendererProps?: Record<string, PropEntry>;
-              __primitive?: string;
-            })
-          | undefined;
-        const childProps = childRow?.__rendererProps;
-        const fromRecipe = childProps ? Object.keys(childProps) : [];
-        const fromPrimitive = childRow?.__primitive
-          ? PRIMITIVE_INTERFACE[childRow.__primitive] ?? []
-          : [];
-        childAccepts = new Set<string>([...fromRecipe, ...fromPrimitive]);
-      }
-
-      const propsObj: string[] = [];
-      const usedNames = new Set<string>();
-      propsObj.push(`bbox: ${bboxExpr}`);
-      usedNames.add('bbox');
-
-      // Forward parent props to the child only by EXACT name match.
-      // Synonym-routing here would be ambiguous (e.g., a hero recipe with
-      // both `headline` and `eyebrow` would have both compete for `text`
-      // on every text-shaped child). Composite child layouts that need
-      // semantic threading of parent props should be hand-emitted as
-      // primitive nodes (per the M3.6 spec). Inline `composes:` overrides
-      // and per-child YAML stamps still flow through below.
+    function emitChildExpr(
+      r0: Resolved,
+      i: number,
+      bboxExpr: string,
+      childAccepts: Set<string>,
+      iterCtx: { itemAlias: string } | null,
+    ): string {
+      const inlineProps = r0.entry.props ?? {};
       const overrideNames = new Set(Object.keys(inlineProps));
+      const propsObj: string[] = [`bbox: ${bboxExpr}`];
+      const usedNames = new Set<string>(['bbox']);
 
+      // Forward parent props by exact name match.
       for (const pp of parentPropNames) {
         if (pp === 'bbox') continue;
         if (childAccepts.has(pp) && !usedNames.has(pp) && !overrideNames.has(pp)) {
@@ -638,35 +656,68 @@ function renderRecipeFile(
         }
       }
 
-      // Inline override props from the composes block. Two flavors:
-      //   - Constants: `intensity: low` — emitted as JS literals.
-      //   - Parent-prop refs: `'@parent.eyebrow'` — emitted as
-      //     `props.eyebrow`, so the parent recipe's runtime value
-      //     reaches the child even when names diverge (eyebrow → label).
-      // These come AFTER exact-name parent forwards so the YAML
-      // override always wins.
+      // Inline override props from the composes block.
       for (const [k, v] of Object.entries(inlineProps)) {
         if (k === 'bbox') continue;
         if (usedNames.has(k)) continue;
-        if (typeof v === 'string' && v.startsWith('@parent.')) {
-          const parentName = v.slice('@parent.'.length);
-          propsObj.push(`${jsKeyOf(k)}: props.${parentName}`);
-        } else {
-          propsObj.push(`${jsKeyOf(k)}: ${jsonStringify(v)}`);
-        }
+        propsObj.push(`${jsKeyOf(k)}: ${valueExpr(v, iterCtx)}`);
         usedNames.add(k);
       }
       const propsLit = `{ ${propsObj.join(', ')} }`;
+      const zExpr = iterCtx ? `${i * 10} + i` : `${i * 10}`;
 
       if (r0.kind === 'recipe') {
-        childrenLines.push(`    { ...${r0.recipe.irHelper}(${propsLit} as never, tokens), zOrder: ${i * 10} },`);
+        return `{ ...${r0.recipe.irHelper}(${propsLit} as never, tokens), zOrder: ${zExpr} }`;
       } else if (r0.kind === 'primitive') {
-        childrenLines.push(`    { ...${r0.primitive.irHelper}(${propsLit} as Parameters<typeof ${r0.primitive.irHelper}>[0], tokens), recipeId: '${r0.atomId}', zOrder: ${i * 10} },`);
-      } else {
-        // Placeholder: legacy atom row without a renderer. Emit a
-        // structurally-valid GroupNode whose recipeId matches the legacy id.
-        childrenLines.push(`    { kind: 'group' as const, recipeId: '${r0.atomId}', bbox: ${bboxExpr}, zOrder: ${i * 10}, metadata: { role: '${r0.atomId}', placeholder: true }, children: [] },`);
+        return `{ ...${r0.primitive.irHelper}(${propsLit} as Parameters<typeof ${r0.primitive.irHelper}>[0], tokens), recipeId: '${r0.atomId}', zOrder: ${zExpr} }`;
       }
+      return `{ kind: 'group' as const, recipeId: '${r0.atomId}', bbox: ${bboxExpr}, zOrder: ${zExpr}, metadata: { role: '${r0.atomId}', placeholder: true }, children: [] }`;
+    }
+
+    function childAcceptsFor(r0: Resolved): Set<string> {
+      if (r0.kind === 'primitive') return new Set(PRIMITIVE_INTERFACE[r0.atomId] ?? []);
+      if (r0.kind === 'recipe') {
+        const childRow = recipesByAtomId.get(r0.entry.atom) as
+          | (GeneratedRecipe & {
+              __rendererProps?: Record<string, PropEntry>;
+              __primitive?: string;
+            })
+          | undefined;
+        const fromRecipe = childRow?.__rendererProps ? Object.keys(childRow.__rendererProps) : [];
+        const fromPrimitive = childRow?.__primitive
+          ? PRIMITIVE_INTERFACE[childRow.__primitive] ?? []
+          : [];
+        return new Set<string>([...fromRecipe, ...fromPrimitive]);
+      }
+      return new Set();
+    }
+
+    resolved.forEach((r0, i) => {
+      const inlineProps = r0.entry.props ?? {};
+      const childAccepts = childAcceptsFor(r0);
+
+      // foreach mechanism: array-driven child composition. The composes
+      // entry iterates a parent array prop and emits one child per
+      // element. Inside the loop, `@<as>.<field>` refs resolve against
+      // the current element; bbox numeric expressions may reference `i`
+      // (zero-based index) and `n` (total count) so the layout fans out.
+      const fe = r0.entry.foreach;
+      if (typeof fe === 'string' && fe.startsWith('@parent.')) {
+        const arrName = fe.slice('@parent.'.length);
+        const itemAlias = r0.entry.as ?? 'item';
+        const iterCtx = { itemAlias };
+        const bboxExpr = buildBboxExpr(inlineProps.bbox, iterCtx);
+        const childExpr = emitChildExpr(r0, i, bboxExpr, childAccepts, iterCtx);
+        // `__item` and `i` are in scope inside the map callback.
+        // `n` is captured from `__arr.length` at the start.
+        childrenLines.push(
+          `    ...((props.${arrName} ?? []) as readonly unknown[]).map((__item, i, __arr) => { const n = __arr.length || 1; return ${childExpr}; }),`,
+        );
+        return;
+      }
+
+      const bboxExpr = buildBboxExpr(inlineProps.bbox, null);
+      childrenLines.push(`    ${emitChildExpr(r0, i, bboxExpr, childAccepts, null)},`);
     });
 
     const importLines = new Set<string>([...recipeImports, ...primitiveImports]);
@@ -786,16 +837,60 @@ function renderRecipeFile(
     // (caller-supplied) value wins; otherwise the constant fills the gap.
     const constantEntries = Object.entries(constantProps).filter(([k]) => !forwardedNames.has(k));
 
+    // Recipe-row defaults: `renderer.props` entries with a `default:`
+    // value should reach the primitive when the caller doesn't pass an
+    // override. Without this, atom-row defaults (declared in atoms.yaml)
+    // were documentation-only — type.big-number-gradient declared
+    // `gradient: { default: 'tokens.gradient.accent-grad' }` but every
+    // call without an explicit gradient saw `undefined`, so the
+    // primitive's gradient code path was unreachable.
+    //
+    // We emit `props.<name> ?? <default>` for forwarded props that have
+    // a default. Constant primitive props are unaffected (they were
+    // already always-applied).
+    const defaultsByRecipeProp: Record<string, unknown> = {};
+    for (const [pname, pentry] of Object.entries(props)) {
+      if (pentry.default !== undefined) defaultsByRecipeProp[pname] = pentry.default;
+    }
+
+    /** Render a default value as a JS expression. Token-reference
+     *  strings (`'tokens.palette.X'`, `'tokens.gradient.X'`,
+     *  `'tokens.elevation.X'`, `'tokens.radius.X'`) are emitted as
+     *  runtime calls that return resolved values; all other values
+     *  emit as JSON literals.
+     *
+     *  Without this, every default that points at a token would reach
+     *  the primitive as a literal string and either crash (`fill`
+     *  expected an object) or silently fall through. The token-resolve
+     *  step is the right place to do this once for all primitives. */
+    function defaultExpr(v: unknown): string {
+      if (typeof v === 'string' && v.startsWith('tokens.')) {
+        const path = v.slice('tokens.'.length);
+        const dot = path.indexOf('.');
+        if (dot > 0) {
+          const ns = path.slice(0, dot);
+          const key = path.slice(dot + 1);
+          if (ns === 'palette') return `tokens.palette(${jsonStringify(key)})`;
+          if (ns === 'gradient') return `tokens.gradient(${jsonStringify(key)})`;
+          if (ns === 'elevation') return `tokens.elevation(${jsonStringify(key)})`;
+          if (ns === 'radius') return `tokens.radius(${jsonStringify(key)})`;
+        }
+      }
+      return jsonStringify(v);
+    }
+
+    function forwardExpr(primProp: string, recipeProp: string): string {
+      const def = defaultsByRecipeProp[recipeProp];
+      if (def === undefined) return `${primProp}: props.${recipeProp}`;
+      return `${primProp}: props.${recipeProp} ?? ${defaultExpr(def)}`;
+    }
+
     // Render the primitive args object literal: bbox + every forwarded prop +
     // any atom-id-derived constants. JS spread drops undefineds at runtime,
     // so a flat shape is the cleanest surface.
     const primArgsParts = [
       'bbox: props.bbox',
-      ...forwarded.map(f =>
-        f.primProp === f.recipeProp
-          ? `${f.primProp}: props.${f.recipeProp}`
-          : `${f.primProp}: props.${f.recipeProp}`,
-      ),
+      ...forwarded.map(f => forwardExpr(f.primProp, f.recipeProp)),
       ...constantEntries.map(([k, v]) => `${k}: ${v}`),
     ];
     const primArgsLiteral = `{ ${primArgsParts.join(', ')} }`;
@@ -827,6 +922,9 @@ function renderRecipeFile(
       `  // Codegen renders Tier-B recipes as a stable, recipe-id-stamped wrapper`,
       `  // around the underlying primitive. Visual fidelity comes from the`,
       `  // primitive; this wrapper exists so the IR carries the atom id.`,
+      `  // Bind a local \`tokens\` so default-expr lookups (tokens.gradient(...))`,
+      `  // resolve in this scope; the IR helper below uses its parameter.`,
+      `  const tokens = defaultTokens;`,
       `  return (`,
       `    <div data-recipe-id="${atomId}" data-recipe-version="${r.version}">`,
       `      <${primAlias} {...(${primArgsLiteral} as unknown as ComponentProps<typeof ${primAlias}>)} />`,

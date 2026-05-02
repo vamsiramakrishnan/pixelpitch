@@ -19,9 +19,12 @@ export default function MaskGradientFadeEdge(props: MaskGradientFadeEdgeProps): 
   // Codegen renders Tier-B recipes as a stable, recipe-id-stamped wrapper
   // around the underlying primitive. Visual fidelity comes from the
   // primitive; this wrapper exists so the IR carries the atom id.
+  // Bind a local `tokens` so default-expr lookups (tokens.gradient(...))
+  // resolve in this scope; the IR helper below uses its parameter.
+  const tokens = defaultTokens;
   return (
     <div data-recipe-id="mask.gradient-fade-edge" data-recipe-version="1.0.0">
-      <SurfaceLinearFade {...({ bbox: props.bbox, fadePct: props.fadePct } as unknown as ComponentProps<typeof SurfaceLinearFade>)} />
+      <SurfaceLinearFade {...({ bbox: props.bbox, fadePct: props.fadePct ?? 30 } as unknown as ComponentProps<typeof SurfaceLinearFade>)} />
     </div>
   );
 }
@@ -35,7 +38,7 @@ export function maskGradientFadeEdgeToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox, fadePct: props.fadePct } as unknown as Parameters<typeof surfaceLinearFadeToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, fadePct: props.fadePct ?? 30 } as unknown as Parameters<typeof surfaceLinearFadeToIR>[0];
   const inner = surfaceLinearFadeToIR(primitiveArgs, tokens);
   return {
     kind: 'group',

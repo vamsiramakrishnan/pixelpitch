@@ -13,27 +13,46 @@
         "x": 100,
         "y": 100
       },
-      "children": [],
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "borderRadiusPx": 24,
+          "fill": {
+            "color": "tokens.palette.surface-3",
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "axis": "surface",
+            "role": "surface.shape-fill",
+            "shape": "rounded-rect"
+          },
+          "recipeId": "surface.shape-fill",
+          "shape": "rounded-rect",
+          "zOrder": 0
+        }
+      ],
       "kind": "group",
       "metadata": {
-        "axis": "frame",
-        "cellCount": 0,
-        "columns": 1,
-        "gap": 24,
-        "role": "frame.bento",
-        "rows": 1
+        "axis": "surface",
+        "radiusPx": 24,
+        "role": "surface.shape-fill",
+        "shape": "rounded-rect"
       },
-      "recipeId": "frame.bento",
+      "recipeId": "surface.shape-fill",
       "zOrder": 0
     }
   ],
   "kind": "group",
   "metadata": {
     "axis": "surf",
-    "bgColor": "tokens.palette.surface-2",
     "padding": 32,
-    "primitive": "frame.bento",
-    "radius": 24,
+    "primitive": "surface.shape-fill",
     "role": "surf.bento-cell",
     "version": "1.0.0"
   },

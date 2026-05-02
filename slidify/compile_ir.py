@@ -371,13 +371,29 @@ class _IRCompiler:
         if node.onPath is not None:
             _apply_text_warp(tb, node.onPath)
 
+        # Gradient-clipped text: when the IR carries `metadata.gradientFill`
+        # (a LinearGradient), every run in every paragraph gets a
+        # `<a:gradFill>` rPr instead of the per-run solid color. The
+        # convention is shared with the components-side `SlotNumeral`
+        # primitive which stamps the gradient there. Without this hook,
+        # every gradient headline ("Slidify", "87", "Ready to compile…")
+        # rendered as flat first-stop color.
+        gradient_fill = _extract_text_gradient(node)
+
         first = True
         for para in node.paragraphs:
-            self._emit_paragraph(tf, para, first)
+            self._emit_paragraph(tf, para, first, gradient_fill=gradient_fill)
             first = False
         _stamp_recipe_id(tb, node.recipeId)
 
-    def _emit_paragraph(self, tf, para: IRParagraph, first: bool) -> None:
+    def _emit_paragraph(
+        self,
+        tf,
+        para: IRParagraph,
+        first: bool,
+        *,
+        gradient_fill: dict | None = None,
+    ) -> None:
         p = tf.paragraphs[0] if first else tf.add_paragraph()
         p.alignment = _TEXT_ALIGN_MAP.get(para.align, PP_ALIGN.LEFT)
         for run_spec in para.runs:
@@ -394,7 +410,11 @@ class _IRCompiler:
                 font.bold = run_spec.fontWeight >= 600
             font.italic = run_spec.italic
             font.underline = run_spec.underline
-            if run_spec.color is not None:
+            if gradient_fill is not None:
+                # Gradient wins over per-run solid color; the gradient is
+                # the explicit visual intent.
+                _apply_text_run_gradient(run, gradient_fill)
+            elif run_spec.color is not None:
                 hex_, _alpha = _color_to_hex_alpha(run_spec.color)
                 col = parse_color(hex_)
                 if col is not None:
@@ -1385,6 +1405,103 @@ def _apply_arrowheads(shape, marker_start, marker_end) -> None:
         _emit("tailEnd", marker_end)
     except Exception as e:
         log.debug("compile_ir.arrowhead_apply_failed", error=str(e))
+
+
+def _extract_text_gradient(node) -> dict | None:
+    """Return the gradient stops/angle to paint a TextNode's runs with.
+
+    Two sources are recognized, in order of precedence:
+
+    1. ``node.metadata.gradientFill`` — the convention used by the
+       components-side `SlotNumeral` primitive. Either a fully-resolved
+       LinearGradient (``{kind, angleDeg, stops}``) or just the stops
+       array.
+    2. ``node.fill`` — a TextNode fill of kind ``linear-gradient`` or
+       ``radial-gradient`` (PPTX text supports both via gradFill).
+
+    Returns ``None`` if no gradient applies; the caller falls back to
+    per-run solid colors.
+    """
+    md = getattr(node, "metadata", None) or {}
+    gf = md.get("gradientFill") if isinstance(md, dict) else None
+    if gf is None:
+        # Fallback: TextNode.fill if it's a gradient kind.
+        f = getattr(node, "fill", None)
+        if f is not None and getattr(f, "kind", None) in (
+            "linear-gradient", "radial-gradient",
+        ):
+            gf = {
+                "kind": f.kind,
+                "angleDeg": getattr(f, "angleDeg", 0.0),
+                "stops": [
+                    {"color": s.color, "position": s.position}
+                    for s in getattr(f, "stops", [])
+                ],
+            }
+    if gf is None:
+        return None
+    if isinstance(gf, list):
+        # Just a stops array — assume linear at default angle.
+        return {"kind": "linear-gradient", "angleDeg": 90.0, "stops": gf}
+    if isinstance(gf, dict) and "stops" in gf:
+        return gf
+    return None
+
+
+def _apply_text_run_gradient(run, gradient: dict) -> None:
+    """Replace `<a:rPr>`'s solidFill with `<a:gradFill>` carrying the IR
+    gradient stops. PPTX renders the run's glyphs with the gradient.
+
+    The gradient dict is the dict produced by `_extract_text_gradient`.
+    """
+    try:
+        rPr = run.font._rPr  # python-pptx exposes the lxml node here
+    except AttributeError:
+        return
+    if rPr is None:
+        return
+    try:
+        # Strip any prior fill on the rPr — solidFill (set by python-pptx
+        # when font.color was assigned), or a gradFill from a prior pass.
+        for tag in ("solidFill", "gradFill", "noFill", "blipFill", "pattFill"):
+            for existing in rPr.findall(f"{{{NS_A}}}{tag}"):
+                rPr.remove(existing)
+        grad = etree.SubElement(rPr, f"{{{NS_A}}}gradFill", attrib={"flip": "none", "rotWithShape": "1"})
+        gs_lst = etree.SubElement(grad, f"{{{NS_A}}}gsLst")
+        for s in gradient.get("stops") or []:
+            color = s.get("color") if isinstance(s, dict) else getattr(s, "color", None)
+            position = s.get("position") if isinstance(s, dict) else getattr(s, "position", 0.0)
+            if color is None:
+                continue
+            hex_, alpha = _color_to_hex_alpha(color)
+            bare = hex_.lstrip("#").upper()[:6]
+            gs = etree.SubElement(
+                gs_lst,
+                f"{{{NS_A}}}gs",
+                attrib={"pos": str(int(round(max(0.0, min(1.0, float(position))) * 100_000)))},
+            )
+            srgb = etree.SubElement(gs, f"{{{NS_A}}}srgbClr", attrib={"val": bare})
+            if alpha < 0.999:
+                etree.SubElement(
+                    srgb,
+                    f"{{{NS_A}}}alpha",
+                    attrib={"val": str(int(round(alpha * 100_000)))},
+                )
+        if gradient.get("kind") == "radial-gradient":
+            etree.SubElement(grad, f"{{{NS_A}}}path", attrib={"path": "circle"})
+        else:
+            angle_deg = float(gradient.get("angleDeg", 90.0))
+            # OOXML lin angle is in 1/60000 degree, measured CW from 3 o'clock.
+            # CSS / IR convention: 0deg points UP (12 o'clock), 90deg right.
+            # Convert: lin_ang = (ir_angle - 90) % 360.
+            lin_ang = int(round(((angle_deg - 90.0) % 360.0) * 60000))
+            etree.SubElement(
+                grad,
+                f"{{{NS_A}}}lin",
+                attrib={"ang": str(lin_ang), "scaled": "0"},
+            )
+    except Exception as e:
+        log.debug("compile_ir.text_gradient_apply_failed", error=str(e))
 
 
 def _apply_text_warp(shape, on_path) -> None:

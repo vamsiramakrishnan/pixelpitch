@@ -19,6 +19,9 @@ export default function SurfTapeBand(props: SurfTapeBandProps): ReactNode {
   // Codegen renders Tier-B recipes as a stable, recipe-id-stamped wrapper
   // around the underlying primitive. Visual fidelity comes from the
   // primitive; this wrapper exists so the IR carries the atom id.
+  // Bind a local `tokens` so default-expr lookups (tokens.gradient(...))
+  // resolve in this scope; the IR helper below uses its parameter.
+  const tokens = defaultTokens;
   return (
     <div data-recipe-id="surf.tape-band" data-recipe-version="1.0.0">
       <AnnotationBadge {...({ bbox: props.bbox, label: props.label, kind: 'sticker' } as unknown as ComponentProps<typeof AnnotationBadge>)} />

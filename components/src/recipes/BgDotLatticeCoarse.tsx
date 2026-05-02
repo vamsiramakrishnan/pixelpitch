@@ -19,9 +19,12 @@ export default function BgDotLatticeCoarse(props: BgDotLatticeCoarseProps): Reac
   // Codegen renders Tier-B recipes as a stable, recipe-id-stamped wrapper
   // around the underlying primitive. Visual fidelity comes from the
   // primitive; this wrapper exists so the IR carries the atom id.
+  // Bind a local `tokens` so default-expr lookups (tokens.gradient(...))
+  // resolve in this scope; the IR helper below uses its parameter.
+  const tokens = defaultTokens;
   return (
     <div data-recipe-id="bg.dot-lattice-coarse" data-recipe-version="1.0.0">
-      <SurfacePatternTile {...({ bbox: props.bbox, tilePx: props.tilePx, pattern: 'dots', featurePx: 1.5 } as unknown as ComponentProps<typeof SurfacePatternTile>)} />
+      <SurfacePatternTile {...({ bbox: props.bbox, tilePx: props.tilePx ?? 24, pattern: 'dots', featurePx: 1.5 } as unknown as ComponentProps<typeof SurfacePatternTile>)} />
     </div>
   );
 }
@@ -35,7 +38,7 @@ export function bgDotLatticeCoarseToIR(
   // the intersection of recipe props and the primitive's known prop set;
   // unrecognized recipe props ride along inside metadata so reverse-mapping
   // can still recover them.
-  const primitiveArgs = { bbox: props.bbox, tilePx: props.tilePx, pattern: 'dots', featurePx: 1.5 } as unknown as Parameters<typeof surfacePatternTileToIR>[0];
+  const primitiveArgs = { bbox: props.bbox, tilePx: props.tilePx ?? 24, pattern: 'dots', featurePx: 1.5 } as unknown as Parameters<typeof surfacePatternTileToIR>[0];
   const inner = surfacePatternTileToIR(primitiveArgs, tokens);
   return {
     kind: 'group',

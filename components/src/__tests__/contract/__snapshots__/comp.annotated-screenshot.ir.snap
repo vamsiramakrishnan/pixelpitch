@@ -175,68 +175,69 @@
                 "x": 220,
                 "y": 160
               },
-              "commands": [
-                {
-                  "op": "M",
-                  "x": 220,
-                  "y": 167
-                },
-                {
-                  "op": "L",
-                  "x": 250,
-                  "y": 167
-                }
-              ],
-              "fillRule": "nonzero",
-              "kind": "path",
-              "markerEnd": {
-                "kind": "arrow",
-                "size": "md"
+              "borderRadiusPx": 0,
+              "fill": {
+                "color": "#0e0e1a",
+                "kind": "solid"
               },
+              "kind": "shape",
               "metadata": {
-                "axis": "annotation",
-                "dashed": false,
-                "from": {
-                  "x": 220,
-                  "y": 167
-                },
-                "role": "annotation.leader-line",
-                "to": {
-                  "x": 250,
-                  "y": 167
-                }
+                "axis": "surface",
+                "role": "surface.shape-fill",
+                "shape": "oval"
               },
-              "recipeId": "annotation.leader-line",
-              "strokeColor": "#d4d4d8",
-              "strokeLinecap": "round",
-              "strokeLinejoin": "miter",
-              "strokeWidthPx": 1.5,
+              "recipeId": "surface.shape-fill",
+              "shape": "oval",
               "zOrder": 0
             }
           ],
           "kind": "group",
           "metadata": {
-            "axis": "annotation",
-            "dashed": false,
-            "from": {
-              "x": 220,
-              "y": 167
-            },
-            "role": "annotation.leader-line",
-            "thicknessPx": 1.5,
-            "to": {
-              "x": 250,
-              "y": 167
-            }
+            "axis": "surface",
+            "radiusPx": 0,
+            "role": "surface.shape-fill",
+            "shape": "oval"
           },
-          "recipeId": "annotation.leader-line",
+          "recipeId": "surface.shape-fill",
           "zOrder": 0
+        },
+        {
+          "bbox": {
+            "h": 13.3,
+            "w": 30,
+            "x": 220,
+            "y": 160.7
+          },
+          "kind": "text",
+          "metadata": {
+            "axis": "slot",
+            "role": "slot.numeral",
+            "scale": "numeral-md"
+          },
+          "paragraphs": [
+            {
+              "align": "left",
+              "runs": [
+                {
+                  "color": "#f5f5f7",
+                  "fontFamily": "Inter, sans-serif",
+                  "fontSizePx": 88,
+                  "fontWeight": 800,
+                  "italic": false,
+                  "text": "",
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "slot.numeral",
+          "zOrder": 10
         }
       ],
       "kind": "group",
       "metadata": {
         "axis": "anno",
-        "primitive": "annotation.leader-line",
+        "composite": true,
         "role": "anno.numbered-hotspot",
         "version": "1.0.0"
       },
@@ -266,68 +267,69 @@
                 "x": 430,
                 "y": 200
               },
-              "commands": [
-                {
-                  "op": "M",
-                  "x": 430,
-                  "y": 207
-                },
-                {
-                  "op": "L",
-                  "x": 460,
-                  "y": 207
-                }
-              ],
-              "fillRule": "nonzero",
-              "kind": "path",
-              "markerEnd": {
-                "kind": "arrow",
-                "size": "md"
+              "borderRadiusPx": 0,
+              "fill": {
+                "color": "#0e0e1a",
+                "kind": "solid"
               },
+              "kind": "shape",
               "metadata": {
-                "axis": "annotation",
-                "dashed": false,
-                "from": {
-                  "x": 430,
-                  "y": 207
-                },
-                "role": "annotation.leader-line",
-                "to": {
-                  "x": 460,
-                  "y": 207
-                }
+                "axis": "surface",
+                "role": "surface.shape-fill",
+                "shape": "oval"
               },
-              "recipeId": "annotation.leader-line",
-              "strokeColor": "#d4d4d8",
-              "strokeLinecap": "round",
-              "strokeLinejoin": "miter",
-              "strokeWidthPx": 1.5,
+              "recipeId": "surface.shape-fill",
+              "shape": "oval",
               "zOrder": 0
             }
           ],
           "kind": "group",
           "metadata": {
-            "axis": "annotation",
-            "dashed": false,
-            "from": {
-              "x": 430,
-              "y": 207
-            },
-            "role": "annotation.leader-line",
-            "thicknessPx": 1.5,
-            "to": {
-              "x": 460,
-              "y": 207
-            }
+            "axis": "surface",
+            "radiusPx": 0,
+            "role": "surface.shape-fill",
+            "shape": "oval"
           },
-          "recipeId": "annotation.leader-line",
+          "recipeId": "surface.shape-fill",
           "zOrder": 0
+        },
+        {
+          "bbox": {
+            "h": 13.3,
+            "w": 30,
+            "x": 430,
+            "y": 200.7
+          },
+          "kind": "text",
+          "metadata": {
+            "axis": "slot",
+            "role": "slot.numeral",
+            "scale": "numeral-md"
+          },
+          "paragraphs": [
+            {
+              "align": "left",
+              "runs": [
+                {
+                  "color": "#f5f5f7",
+                  "fontFamily": "Inter, sans-serif",
+                  "fontSizePx": 88,
+                  "fontWeight": 800,
+                  "italic": false,
+                  "text": "",
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "slot.numeral",
+          "zOrder": 10
         }
       ],
       "kind": "group",
       "metadata": {
         "axis": "anno",
-        "primitive": "annotation.leader-line",
+        "composite": true,
         "role": "anno.numbered-hotspot",
         "version": "1.0.0"
       },
@@ -389,7 +391,7 @@
                 }
               },
               "recipeId": "annotation.leader-line",
-              "strokeColor": "#d4d4d8",
+              "strokeColor": "#16162a",
               "strokeLinecap": "round",
               "strokeLinejoin": "miter",
               "strokeWidthPx": 1.5,

@@ -6,6 +6,7 @@ import type { Bbox, GroupNodeT } from '../ir/schema';
 import { tokens as defaultTokens, type TokensApi } from '../tokens';
 import { surfCardRaisedToIR } from './SurfCardRaised';
 import { typeBigNumberGradientToIR } from './TypeBigNumberGradient';
+import { typeBigNumberToIR } from './TypeBigNumber';
 import { typeEyebrowRuledToIR } from './TypeEyebrowRuled';
 
 export const CompTeamGridVersion = '1.0.0';
@@ -53,12 +54,9 @@ export function compTeamGridToIR(
     children: [
     { ...typeEyebrowRuledToIR({ bbox: { x: props.bbox.x + 0.075 * props.bbox.w, y: props.bbox.y + 0.1 * props.bbox.h, w: 0.85 * props.bbox.w, h: 0.04 * props.bbox.h }, label: "Team" } as never, tokens), zOrder: 0 },
     { ...typeBigNumberGradientToIR({ bbox: { x: props.bbox.x + 0.075 * props.bbox.w, y: props.bbox.y + 0.18 * props.bbox.h, w: 0.85 * props.bbox.w, h: 0.12 * props.bbox.h }, value: props.headline } as never, tokens), zOrder: 10 },
-    { ...surfCardRaisedToIR({ bbox: { x: props.bbox.x + 0.075 * props.bbox.w, y: props.bbox.y + 0.4 * props.bbox.h, w: 0.265 * props.bbox.w, h: 0.2 * props.bbox.h } } as never, tokens), zOrder: 20 },
-    { ...surfCardRaisedToIR({ bbox: { x: props.bbox.x + 0.367 * props.bbox.w, y: props.bbox.y + 0.4 * props.bbox.h, w: 0.265 * props.bbox.w, h: 0.2 * props.bbox.h } } as never, tokens), zOrder: 30 },
-    { ...surfCardRaisedToIR({ bbox: { x: props.bbox.x + 0.66 * props.bbox.w, y: props.bbox.y + 0.4 * props.bbox.h, w: 0.265 * props.bbox.w, h: 0.2 * props.bbox.h } } as never, tokens), zOrder: 40 },
-    { ...surfCardRaisedToIR({ bbox: { x: props.bbox.x + 0.075 * props.bbox.w, y: props.bbox.y + 0.65 * props.bbox.h, w: 0.265 * props.bbox.w, h: 0.2 * props.bbox.h } } as never, tokens), zOrder: 50 },
-    { ...surfCardRaisedToIR({ bbox: { x: props.bbox.x + 0.367 * props.bbox.w, y: props.bbox.y + 0.65 * props.bbox.h, w: 0.265 * props.bbox.w, h: 0.2 * props.bbox.h } } as never, tokens), zOrder: 60 },
-    { ...surfCardRaisedToIR({ bbox: { x: props.bbox.x + 0.66 * props.bbox.w, y: props.bbox.y + 0.65 * props.bbox.h, w: 0.265 * props.bbox.w, h: 0.2 * props.bbox.h } } as never, tokens), zOrder: 70 },
+    ...((props.members ?? []) as readonly unknown[]).map((__item, i, __arr) => { const n = __arr.length || 1; return { ...surfCardRaisedToIR({ bbox: { x: props.bbox.x + (0.075 + (i % 3) * 0.295) * props.bbox.w, y: props.bbox.y + (0.40 + Math.floor(i / 3) * 0.245) * props.bbox.h, w: 0.265 * props.bbox.w, h: 0.2 * props.bbox.h } } as never, tokens), zOrder: 20 + i }; }),
+    ...((props.members ?? []) as readonly unknown[]).map((__item, i, __arr) => { const n = __arr.length || 1; return { ...typeEyebrowRuledToIR({ bbox: { x: props.bbox.x + (0.10 + (i % 3) * 0.295) * props.bbox.w, y: props.bbox.y + (0.43 + Math.floor(i / 3) * 0.245) * props.bbox.h, w: 0.215 * props.bbox.w, h: 0.04 * props.bbox.h }, label: (__item as Record<string, unknown> | undefined)?.role } as never, tokens), zOrder: 30 + i }; }),
+    ...((props.members ?? []) as readonly unknown[]).map((__item, i, __arr) => { const n = __arr.length || 1; return { ...typeBigNumberToIR({ bbox: { x: props.bbox.x + (0.10 + (i % 3) * 0.295) * props.bbox.w, y: props.bbox.y + (0.49 + Math.floor(i / 3) * 0.245) * props.bbox.h, w: 0.215 * props.bbox.w, h: 0.1 * props.bbox.h }, value: (__item as Record<string, unknown> | undefined)?.name } as never, tokens), zOrder: 40 + i }; }),
     ],
   };
 }
