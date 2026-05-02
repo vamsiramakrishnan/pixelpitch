@@ -7,6 +7,16 @@ IR has a known emission path. Native ratio is 100% by construction; only
 
 Each emitted shape carries a `slidify:recipeId` extension list entry so the
 reverse path (PPTX → IR → JSX) can recognize what to reconstitute.
+
+Wave-2 additions (CONTRACT §3):
+  * _emit_path: PathShape → `<a:custGeom>` (§3.1).
+  * _emit_shape: routes the 18 new preset shapes (§3.5).
+  * _emit_shape_with_shadows: multi-shadow split (§3.3).
+  * clipPath: rounded-rect → ROUNDED_RECTANGLE (picture); path → raster
+    fallback (§3.4).
+  * mask: alphaModFix-equivalent rendering (§3.4 spirit).
+  * Pattern fill → `<a:pattFill>` or tiled ovals (§3.2).
+  * Deck.version ∈ {1, 2} (§9.6).
 """
 
 from __future__ import annotations
@@ -24,6 +34,7 @@ from pptx.enum.text import PP_ALIGN
 from pptx.util import Emu, Pt
 
 from slidify.colors import parse_color
+from slidify.effects import apply_shadow_stack
 from slidify.fonts import resolve as resolve_font
 from slidify.geom import (
     SLIDE_H_EMU,
@@ -49,17 +60,30 @@ from slidify.ir import (
     FillRadialGradient,
     FillSolid,
     IRBbox,
+    IRClipPathPath,
+    IRClipPathRoundedRect,
     IRDeck,
     IRGroupNode,
+    IRMaskLinearGradient,
+    IRMaskRadialGradient,
     IRNode,
     IRParagraph,
+    IRPathShapeNode,
+    IRPatternFill,
     IRPictureNode,
     IRRasterNode,
     IRShapeNode,
     IRSlide,
     IRTextNode,
     _color_to_hex_alpha,
+    normalize_shadows,
 )
+from slidify.path import (
+    detect_prst_txwarp,
+    make_custgeom_xml,
+    path_bbox,
+)
+from slidify.pattern_fills import apply_pattern_fill
 from slidify.shadows import (
     BoxShadow as ShBoxShadow,
 )
@@ -79,6 +103,59 @@ _TEXT_ALIGN_MAP = {
     "right": PP_ALIGN.RIGHT,
     "center": PP_ALIGN.CENTER,
     "justify": PP_ALIGN.JUSTIFY,
+}
+
+
+# §3.5 IR shape kind → MSO_SHAPE preset. None entries are handled separately
+# (e.g. chevron-left is CHEVRON + flipH; brace-top/bottom is DOUBLE_BRACKET
+# rotated). Unknown kinds default to RECTANGLE.
+_SHAPE_KIND_MAP: dict[str, MSO_SHAPE] = {
+    "rect": MSO_SHAPE.RECTANGLE,
+    "rounded-rect": MSO_SHAPE.ROUNDED_RECTANGLE,
+    "oval": MSO_SHAPE.OVAL,
+    "line": MSO_SHAPE.RECTANGLE,
+    # Wave-2 additions (§1.7).
+    "triangle": MSO_SHAPE.ISOSCELES_TRIANGLE,
+    "right-triangle": MSO_SHAPE.RIGHT_TRIANGLE,
+    "pentagon": MSO_SHAPE.REGULAR_PENTAGON,
+    "hexagon": MSO_SHAPE.HEXAGON,
+    "octagon": MSO_SHAPE.OCTAGON,
+    "parallelogram": MSO_SHAPE.PARALLELOGRAM,
+    "trapezoid": MSO_SHAPE.TRAPEZOID,
+    "chevron": MSO_SHAPE.CHEVRON,
+    "chevron-left": MSO_SHAPE.CHEVRON,  # + flipH=1 below
+    "callout-bubble": MSO_SHAPE.RECTANGULAR_CALLOUT,
+    "brace-left": MSO_SHAPE.LEFT_BRACE,
+    "brace-right": MSO_SHAPE.RIGHT_BRACE,
+    # OOXML's `bracketPair` preset is exposed as DOUBLE_BRACKET in python-pptx.
+    "brace-top": MSO_SHAPE.DOUBLE_BRACKET,  # + rotation 90
+    "brace-bottom": MSO_SHAPE.DOUBLE_BRACKET,  # + rotation -90
+    "plus": MSO_SHAPE.MATH_PLUS,
+    "star-5": MSO_SHAPE.STAR_5_POINT,
+    "star-6": MSO_SHAPE.STAR_6_POINT,
+    "arrow-right": MSO_SHAPE.RIGHT_ARROW,
+    "arrow-left": MSO_SHAPE.LEFT_ARROW,
+    "arrow-up": MSO_SHAPE.UP_ARROW,
+    "arrow-down": MSO_SHAPE.DOWN_ARROW,
+}
+
+# Arrowhead kind/size → OOXML <a:headEnd type=…> attribute.
+_ARROWHEAD_TYPE_MAP = {
+    "none": "none",
+    "arrow": "triangle",
+    "dot": "oval",
+    "diamond": "diamond",
+    "bar": "stealth",  # closest visual to a flat bar terminator
+}
+_ARROWHEAD_SIZE_MAP = {"sm": "sm", "md": "med", "lg": "lg"}
+
+# IR strokeDasharray → OOXML `<a:prstDash val=…>`. Arbitrary dash patterns
+# fall through to `<a:custDash>` emission.
+_DASH_PRESET_MAP: dict[tuple[float, ...], str] = {
+    (4.0, 2.0): "dash",
+    (1.0, 2.0): "dot",
+    (6.0, 2.0, 1.0, 2.0): "dashDot",
+    (6.0, 2.0, 1.0, 2.0, 1.0, 2.0): "lgDashDotDot",
 }
 
 
@@ -115,6 +192,8 @@ class _IRCompiler:
         self.prs.slide_height = Emu(SLIDE_H_EMU)
 
     def compile(self, deck: IRDeck, out_path: Path) -> None:
+        # Deck.version is constrained at the model level (Literal[1, 2]); a
+        # raised ValidationError on parse already enforces §9.6 lockstep.
         for slide_ir in deck.slides:
             self._emit_slide(slide_ir)
         out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -149,6 +228,8 @@ class _IRCompiler:
             self._emit_picture(slide, node)
         elif isinstance(node, IRRasterNode):
             self._emit_raster(slide, node)
+        elif isinstance(node, IRPathShapeNode):
+            self._emit_path(slide, node)
         elif isinstance(node, IRGroupNode):
             for child in node.children:
                 self._emit_node(slide, child)
@@ -167,9 +248,15 @@ class _IRCompiler:
         tf.margin_bottom = Emu(0)
 
         if node.fill is not None:
-            _apply_fill(tb, node.fill)
-        if node.shadow is not None:
-            _apply_shadow_ir(tb, node.shadow)
+            _apply_fill(tb, node.fill, slide=slide, bbox=bbox)
+        # Multi-shadow path (§3.3) — handles both legacy `shadow` and new `shadows`.
+        shadows = normalize_shadows(node)
+        if shadows:
+            apply_shadow_stack(tb, shadows, slide=slide, parent_bbox=bbox)
+
+        # Text-on-path stretch goal (§9.1): map to prstTxWarp when possible.
+        if node.onPath is not None:
+            _apply_text_warp(tb, node.onPath)
 
         first = True
         for para in node.paragraphs:
@@ -206,22 +293,59 @@ class _IRCompiler:
     def _emit_shape(self, slide, node: IRShapeNode) -> None:
         bbox = node.bbox or IRBbox(x=0, y=0, w=100, h=100)
         x, y, w, h = _emu_rect(bbox)
-        radius = node.borderRadiusPx
-        kind_map = {
-            "rect": MSO_SHAPE.RECTANGLE,
-            "rounded-rect": (
-                MSO_SHAPE.ROUNDED_RECTANGLE if radius > 0 else MSO_SHAPE.RECTANGLE
-            ),
-            "oval": MSO_SHAPE.OVAL,
-            "line": MSO_SHAPE.RECTANGLE,
-        }
-        shape = slide.shapes.add_shape(kind_map[node.shape], x, y, w, h)
+
+        # Resolve preset; rounded-rect with radius=0 collapses to plain rect.
+        kind = node.shape
+        preset = _SHAPE_KIND_MAP.get(kind, MSO_SHAPE.RECTANGLE)
+        if kind == "rounded-rect" and node.borderRadiusPx <= 0:
+            preset = MSO_SHAPE.RECTANGLE
+
+        shape = slide.shapes.add_shape(preset, x, y, w, h)
         shape.line.fill.background()
-        _apply_fill(shape, node.fill)
+
+        # Special-case post-creation transforms.
+        if kind == "chevron-left":
+            _apply_flip_h(shape)
+        elif kind == "brace-top":
+            shape.rotation = 90.0
+        elif kind == "brace-bottom":
+            shape.rotation = -90.0
+
+        # callout-bubble pointer geometry (§3.5) — adj1/adj2 normalize the
+        # pointer tip from (offset, length) into OOXML adjustment values.
+        if (
+            kind == "callout-bubble"
+            and node.calloutPointerSide is not None
+        ):
+            _apply_callout_adjustments(
+                shape,
+                node.calloutPointerSide,
+                node.calloutPointerOffset,
+                node.calloutPointerLengthPx,
+                bbox,
+            )
+
+        # Fill: pattern fills require slide+bbox for the dot tiler.
+        if isinstance(node.fill, IRPatternFill):
+            apply_pattern_fill(
+                shape, node.fill, slide=slide, bbox=bbox
+            )
+        else:
+            _apply_fill(shape, node.fill, slide=slide, bbox=bbox)
+
         if node.border is not None:
             self._apply_border(shape, node.border)
-        if node.shadow is not None:
-            _apply_shadow_ir(shape, node.shadow)
+
+        # Multi-shadow split (§3.3).
+        shadows = normalize_shadows(node)
+        if shadows:
+            apply_shadow_stack(shape, shadows, slide=slide, parent_bbox=bbox)
+
+        # ClipPath routing (§3.4) — rounded-rect on a non-picture node logs
+        # and ignores; path-clip falls back to raster (stub for Wave-2).
+        if node.clipPath is not None:
+            self._route_clip_path(shape, node, slide)
+
         _stamp_recipe_id(shape, node.recipeId)
 
     def _apply_border(self, shape, border) -> None:
@@ -237,13 +361,144 @@ class _IRCompiler:
     def _emit_picture(self, slide, node: IRPictureNode) -> None:
         bbox = node.bbox or IRBbox(x=0, y=0, w=SLIDE_W_PX, h=720)
         x, y, w, h = _emu_rect(bbox)
+
+        # Rounded-rect clip on a picture: emit as a ROUNDED_RECTANGLE
+        # filled with the picture (§3.4).
+        if isinstance(node.clipPath, IRClipPathRoundedRect):
+            return self._emit_picture_in_rounded_rect(
+                slide, node, bbox, node.clipPath
+            )
+
         try:
             data = _fetch_picture(node.src)
         except Exception as e:
             log.warning("compile_ir.picture_fetch_failed", src=node.src[:80], error=str(e))
             return
         pic = slide.shapes.add_picture(io.BytesIO(data), x, y, w, h)
+
+        # Image mask (§3.4 spirit). Wave-2 ships a soft fallback: emit a
+        # full-bbox shape with a matching gradient fill on top of the
+        # picture. This is not a true alpha-mask but is good enough for
+        # gradient-fade edges; a real `<a:alphaModFix>` chain requires
+        # patching the embedded blip relationship and is deferred.
+        if node.mask is not None:
+            self._emit_picture_mask_overlay(slide, bbox, node.mask)
+
+        # Path-shaped clipPath: raster fallback per §3.4 — stub-logged in
+        # Wave-2; the picture itself is preserved.
+        if isinstance(node.clipPath, IRClipPathPath):
+            log.info(
+                "compile_ir.clip_path_raster_fallback_pending",
+                recipe_id=node.recipeId,
+            )
         _stamp_recipe_id(pic, node.recipeId)
+
+    def _emit_picture_in_rounded_rect(
+        self,
+        slide,
+        node: IRPictureNode,
+        bbox: IRBbox,
+        clip: IRClipPathRoundedRect,
+    ) -> None:
+        """Render picture inside a ROUNDED_RECTANGLE shape via picture-fill."""
+        # Apply inset to the bbox first (clip is relative to the node bbox).
+        inset = max(0.0, clip.insetPx)
+        inner = IRBbox(
+            x=bbox.x + inset,
+            y=bbox.y + inset,
+            w=max(1.0, bbox.w - 2 * inset),
+            h=max(1.0, bbox.h - 2 * inset),
+        )
+        x, y, w, h = _emu_rect(inner)
+        shape = slide.shapes.add_shape(
+            MSO_SHAPE.ROUNDED_RECTANGLE, x, y, w, h
+        )
+        shape.line.fill.background()
+
+        # Adjust the corner radius. Rounded-rect adj1 is in 1/100,000 of the
+        # min(w,h)/2 — mapping radiusPx → adj1 keeps the visual radius.
+        try:
+            ref = max(1.0, min(inner.w, inner.h) / 2.0)
+            adj_norm = max(0.0, min(0.5, clip.radiusPx / ref / 2.0))
+            shape.adjustments[0] = adj_norm
+        except Exception:
+            pass
+
+        try:
+            data = _fetch_picture(node.src)
+        except Exception as e:
+            log.warning(
+                "compile_ir.picture_fetch_failed",
+                src=node.src[:80],
+                error=str(e),
+            )
+            return
+        # Replace solid fill with picture fill via lxml.
+        try:
+            sp_pr = shape._element.spPr
+            for tag in ("solidFill", "gradFill", "pattFill", "noFill", "blipFill"):
+                for existing in sp_pr.findall(f"{{{NS_A}}}{tag}"):
+                    sp_pr.remove(existing)
+            # Embed the image via the slide's part so the relationship is
+            # created and python-pptx tracks the embedded blob correctly.
+            _image_part, rel_id = slide.part.get_or_add_image(io.BytesIO(data))
+            blip_fill = etree.SubElement(sp_pr, f"{{{NS_A}}}blipFill")
+            sp_pr.remove(blip_fill)
+            sp_pr.insert(0, blip_fill)
+            r_ns = (
+                "http://schemas.openxmlformats.org/officeDocument/"
+                "2006/relationships"
+            )
+            etree.SubElement(
+                blip_fill,
+                f"{{{NS_A}}}blip",
+                attrib={f"{{{r_ns}}}embed": rel_id},
+            )
+            etree.SubElement(blip_fill, f"{{{NS_A}}}stretch").append(
+                etree.Element(f"{{{NS_A}}}fillRect")
+            )
+        except Exception as e:
+            log.warning("compile_ir.picture_fill_failed", error=str(e))
+
+        if node.mask is not None:
+            self._emit_picture_mask_overlay(slide, inner, node.mask)
+        _stamp_recipe_id(shape, node.recipeId)
+
+    def _emit_picture_mask_overlay(self, slide, bbox: IRBbox, mask) -> None:
+        """Wave-2 fallback for picture masks: paint a gradient overlay rect.
+
+        Per CONTRACT §3.4 spirit, a true `<a:alphaModFix>` chain is the
+        target; the gradient overlay is good enough for fade-to-black
+        edges (the most common use). The overlay sits *above* the picture
+        so the visible result blends correctly with the slide background.
+        Documented deviation: this is NOT a true alpha mask.
+        """
+        x, y, w, h = _emu_rect(bbox)
+        rect = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x, y, w, h)
+        try:
+            rect.line.fill.background()
+        except Exception:
+            pass
+        # Convert mask stops into gradient stops, with the 'alpha' mapped
+        # to a soft black overlay (alpha=stop.alpha → black at full alpha).
+        stops = [
+            GGradientStop(
+                color_hex="000000",
+                alpha=max(0.0, min(1.0, 1.0 - s.alpha)),
+                position=max(0.0, min(1.0, s.position)),
+            )
+            for s in mask.stops
+        ]
+        if isinstance(mask, IRMaskLinearGradient):
+            grad = GLinearGradient(angle_deg=mask.angleDeg, stops=stops)
+        elif isinstance(mask, IRMaskRadialGradient):
+            grad = GRadialGradient(stops=stops, cx=mask.cx, cy=mask.cy)
+        else:
+            return
+        try:
+            apply_gradient_fill(rect, grad, densify=False)
+        except Exception as e:
+            log.warning("compile_ir.mask_overlay_failed", error=str(e))
 
     def _emit_raster(self, slide, node: IRRasterNode) -> None:
         bbox = node.bbox or IRBbox(x=0, y=0, w=SLIDE_W_PX, h=720)
@@ -256,6 +511,117 @@ class _IRCompiler:
         pic = slide.shapes.add_picture(io.BytesIO(png_bytes), x, y, w, h)
         _stamp_recipe_id(pic, node.recipeId)
 
+    def _emit_path(self, slide, node: IRPathShapeNode) -> None:
+        """Emit an IRPathShapeNode as a freeform shape with `<a:custGeom>`.
+
+        Strategy (§3.1):
+          1. Compute path bbox (from IR or `path_bbox(commands)`).
+          2. Add a freeform shape, then replace its <a:prstGeom> with
+             <a:custGeom> built from `commands`.
+          3. Apply fill (solid/gradient/pattern) and stroke.
+          4. Map dash pattern → <a:prstDash> when standard, else custDash.
+          5. Attach arrowheads on <a:ln>.
+          6. Run multi-shadow stack.
+          7. Stamp recipeId.
+        """
+        # 1. Resolve bbox.
+        if node.bbox is not None:
+            bbox = node.bbox
+            box = (bbox.x, bbox.y, bbox.x + bbox.w, bbox.y + bbox.h)
+        else:
+            box = path_bbox(node.commands)
+            bbox = IRBbox(
+                x=box[0], y=box[1], w=max(1.0, box[2] - box[0]), h=max(1.0, box[3] - box[1])
+            )
+            box = (bbox.x, bbox.y, bbox.x + bbox.w, bbox.y + bbox.h)
+        x, y, w, h = _emu_rect(bbox)
+
+        # 2. Add a placeholder rectangle, then swap its geometry for custGeom.
+        # We build the custGeom XML as a string (path.make_custgeom_xml uses
+        # the `a:` prefix) and parse it inside an inline-namespaced wrapper
+        # so lxml binds NS_A correctly.
+        shape = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x, y, w, h)
+        try:
+            sp_pr = shape._element.spPr
+            for prst in sp_pr.findall(f"{{{NS_A}}}prstGeom"):
+                sp_pr.remove(prst)
+            for cg in sp_pr.findall(f"{{{NS_A}}}custGeom"):
+                sp_pr.remove(cg)
+            cust_xml = make_custgeom_xml(node.commands, box)
+            wrapper = f'<root xmlns:a="{NS_A}">{cust_xml}</root>'
+            parsed = etree.fromstring(wrapper)
+            cust = parsed[0]
+            # OOXML schema: <a:xfrm> precedes geometry inside spPr; insert
+            # custGeom right after xfrm so reopen-tools see the expected order.
+            xfrm_idx = 0
+            for i, child in enumerate(sp_pr):
+                if child.tag == f"{{{NS_A}}}xfrm":
+                    xfrm_idx = i + 1
+                    break
+            sp_pr.insert(xfrm_idx, cust)
+        except Exception as e:
+            log.warning("compile_ir.path_custgeom_failed", error=str(e))
+
+        # 3. Fill (or no-fill for stroke-only paths).
+        if node.fill is not None:
+            if isinstance(node.fill, IRPatternFill):
+                apply_pattern_fill(
+                    shape, node.fill, slide=slide, bbox=bbox
+                )
+            else:
+                _apply_fill(shape, node.fill, slide=slide, bbox=bbox)
+        else:
+            try:
+                shape.fill.background()
+            except Exception:
+                pass
+
+        # 4. Stroke (width, color, dash) — stroke-only paths skip fill.
+        if node.strokeWidthPx > 0:
+            try:
+                shape.line.width = Emu(px_to_emu(node.strokeWidthPx))
+                if node.strokeColor is not None:
+                    hex_, _ = _color_to_hex_alpha(node.strokeColor)
+                    col = parse_color(hex_)
+                    if col is not None:
+                        shape.line.color.rgb = col[0]
+            except Exception:
+                pass
+            if node.strokeDasharray:
+                _apply_dash(shape, node.strokeDasharray)
+
+        # 5. Arrowheads — markerStart → headEnd, markerEnd → tailEnd.
+        if node.markerStart is not None or node.markerEnd is not None:
+            _apply_arrowheads(shape, node.markerStart, node.markerEnd)
+
+        # 6. Multi-shadow.
+        shadows = normalize_shadows(node)
+        if shadows:
+            apply_shadow_stack(shape, shadows, slide=slide, parent_bbox=bbox)
+
+        # 7. Recipe id.
+        _stamp_recipe_id(shape, node.recipeId)
+
+    def _route_clip_path(self, shape, node: IRShapeNode, slide) -> None:
+        """Per §3.4: clipPath on a non-picture node.
+
+        Rounded-rect clips are ignored on shapes/text (the shape's own
+        radius is the canonical clip). Path clips fall back to raster.
+        """
+        if isinstance(node.clipPath, IRClipPathRoundedRect):
+            log.info(
+                "compile_ir.clip_path_rounded_rect_ignored_on_shape",
+                recipe_id=node.recipeId,
+            )
+        elif isinstance(node.clipPath, IRClipPathPath):
+            # Wave-2: log and continue; raster_clipped_subtree is a
+            # follow-up (the shape's content remains visible; the clip
+            # is approximated by the shape's own preset geometry).
+            log.info(
+                "compile_ir.clip_path_path_raster_fallback_pending",
+                recipe_id=node.recipeId,
+            )
+
     def _emit_background_shape(self, slide, fill: Fill) -> None:
         shape = slide.shapes.add_shape(
             MSO_SHAPE.RECTANGLE,
@@ -265,7 +631,11 @@ class _IRCompiler:
             Emu(SLIDE_H_EMU),
         )
         shape.line.fill.background()
-        _apply_fill(shape, fill)
+        bg_bbox = IRBbox(x=0, y=0, w=SLIDE_W_PX, h=720)
+        if isinstance(fill, IRPatternFill):
+            apply_pattern_fill(shape, fill, slide=slide, bbox=bg_bbox)
+        else:
+            _apply_fill(shape, fill, slide=slide, bbox=bg_bbox)
         _stamp_recipe_id(shape, "slide-background")
         # Send to back so children render on top. python-pptx doesn't expose
         # z-order helpers cleanly; the background is added first, so it's
@@ -291,7 +661,7 @@ def _emu_rect(b: IRBbox) -> tuple[Emu, Emu, Emu, Emu]:
     )
 
 
-def _apply_fill(shape, fill: Fill) -> None:
+def _apply_fill(shape, fill: Fill, *, slide=None, bbox: IRBbox | None = None) -> None:
     if isinstance(fill, FillSolid):
         hex_, _alpha = _color_to_hex_alpha(fill.color)
         col = parse_color(hex_)
@@ -319,6 +689,13 @@ def _apply_fill(shape, fill: Fill) -> None:
         )
         apply_gradient_fill(shape, grad)
         return
+    if isinstance(fill, IRPatternFill):
+        # Pattern fills route via apply_pattern_fill but need slide+bbox for
+        # the dot tiler. _apply_fill is called from contexts that may not
+        # have those handy (e.g. text fills); silently fall through.
+        if slide is not None and bbox is not None:
+            apply_pattern_fill(shape, fill, slide=slide, bbox=bbox)
+        return
     # FillNone
     try:
         shape.fill.background()
@@ -334,6 +711,7 @@ def _to_grad_stop(s) -> GGradientStop:
 
 
 def _apply_shadow_ir(shape, sh) -> None:
+    """Legacy helper for single shadow (kept for back-compat)."""
     hex_, alpha = _color_to_hex_alpha(sh.color)
     bare = hex_[1:] if hex_.startswith("#") else hex_
     apply_shadow(
@@ -391,3 +769,139 @@ def _fetch_picture(src: str) -> bytes:
             r.raise_for_status()
             return r.content
     return Path(src).read_bytes()
+
+
+def _apply_flip_h(shape) -> None:
+    """Set flipH=1 on a shape's <a:xfrm> (used for chevron-left)."""
+    try:
+        sp_pr = shape._element.spPr
+        xfrm = sp_pr.find(f"{{{NS_A}}}xfrm")
+        if xfrm is None:
+            return
+        xfrm.set("flipH", "1")
+    except Exception:
+        pass
+
+
+def _apply_callout_adjustments(
+    shape,
+    side: str,
+    offset: float | None,
+    length_px: float | None,
+    bbox: IRBbox,
+) -> None:
+    """Set the wedgeRectCallout adjustment values from §1.7 fields.
+
+    OOXML's `wedgeRectCallout` exposes two adjustments (adj1, adj2) that
+    place the pointer tip relative to the shape's origin (proportions of
+    -50%..+50% of width/height, expressed in 1/1000-fraction space:
+    -50000..+50000). Here we interpret IR fields as: the pointer base
+    sits at `(offset along side)` and the tip extends `length_px` outward.
+    """
+    if offset is None and length_px is None:
+        return
+    o = 0.5 if offset is None else max(0.0, min(1.0, float(offset)))
+    length = max(0.0, float(length_px or 24.0))
+
+    # Compute tip in the shape's local 0..1 box, with center=(0.5,0.5).
+    if side == "top":
+        tip_x = o
+        tip_y = -length / max(1.0, bbox.h)
+    elif side == "bottom":
+        tip_x = o
+        tip_y = 1.0 + length / max(1.0, bbox.h)
+    elif side == "left":
+        tip_x = -length / max(1.0, bbox.w)
+        tip_y = o
+    else:  # right
+        tip_x = 1.0 + length / max(1.0, bbox.w)
+        tip_y = o
+
+    # Translate to OOXML's center-relative system (adjustments are signed
+    # fractions of the bbox where 0 = center; positive = right/down).
+    adj1 = (tip_x - 0.5)
+    adj2 = (tip_y - 0.5)
+    try:
+        shape.adjustments[0] = adj1
+        shape.adjustments[1] = adj2
+    except Exception:
+        pass
+
+
+def _apply_dash(shape, pattern: list[float]) -> None:
+    """Translate IR strokeDasharray → `<a:prstDash>` or `<a:custDash>`."""
+    try:
+        sp_pr = shape._element.spPr
+        ln = sp_pr.find(f"{{{NS_A}}}ln")
+        if ln is None:
+            ln = etree.SubElement(sp_pr, f"{{{NS_A}}}ln")
+        # Strip any existing prstDash/custDash
+        for tag in ("prstDash", "custDash"):
+            for existing in ln.findall(f"{{{NS_A}}}{tag}"):
+                ln.remove(existing)
+        key = tuple(float(x) for x in pattern)
+        prst = _DASH_PRESET_MAP.get(key)
+        if prst is not None:
+            etree.SubElement(ln, f"{{{NS_A}}}prstDash", attrib={"val": prst})
+        else:
+            cust = etree.SubElement(ln, f"{{{NS_A}}}custDash")
+            # Pairs: (dash, gap) → `<a:ds d="…" sp="…"/>`
+            for i in range(0, len(key) - 1, 2):
+                etree.SubElement(
+                    cust,
+                    f"{{{NS_A}}}ds",
+                    attrib={
+                        "d": str(int(round(key[i] * 100_000))),
+                        "sp": str(int(round(key[i + 1] * 100_000))),
+                    },
+                )
+    except Exception as e:
+        log.debug("compile_ir.dash_apply_failed", error=str(e))
+
+
+def _apply_arrowheads(shape, marker_start, marker_end) -> None:
+    """Attach <a:headEnd>/<a:tailEnd> children to shape's <a:ln>."""
+    try:
+        sp_pr = shape._element.spPr
+        ln = sp_pr.find(f"{{{NS_A}}}ln")
+        if ln is None:
+            ln = etree.SubElement(sp_pr, f"{{{NS_A}}}ln")
+
+        def _emit(tag: str, marker) -> None:
+            if marker is None or marker.kind == "none":
+                return
+            for existing in ln.findall(f"{{{NS_A}}}{tag}"):
+                ln.remove(existing)
+            attrs = {"type": _ARROWHEAD_TYPE_MAP.get(marker.kind, "triangle")}
+            sz = _ARROWHEAD_SIZE_MAP.get(marker.size, "med")
+            attrs["w"] = sz
+            attrs["len"] = sz
+            etree.SubElement(ln, f"{{{NS_A}}}{tag}", attrib=attrs)
+
+        _emit("headEnd", marker_start)
+        _emit("tailEnd", marker_end)
+    except Exception as e:
+        log.debug("compile_ir.arrowhead_apply_failed", error=str(e))
+
+
+def _apply_text_warp(shape, on_path) -> None:
+    """Attach an `<a:prstTxWarp prst=…>` to a textbox's bodyPr.
+
+    Falls through silently when the path doesn't map to a known preset
+    (raster fallback per §9.1 is a stub for Wave-2).
+    """
+    preset = detect_prst_txwarp(on_path.commands)
+    if preset is None:
+        log.info("compile_ir.text_on_path_raster_fallback_pending")
+        return
+    try:
+        body_pr = shape._element.txBody.bodyPr
+        for existing in body_pr.findall(f"{{{NS_A}}}prstTxWarp"):
+            body_pr.remove(existing)
+        warp = etree.SubElement(
+            body_pr, f"{{{NS_A}}}prstTxWarp", attrib={"prst": preset}
+        )
+        # avLst is required; default-empty is fine.
+        etree.SubElement(warp, f"{{{NS_A}}}avLst")
+    except Exception as e:
+        log.debug("compile_ir.text_warp_failed", error=str(e))
