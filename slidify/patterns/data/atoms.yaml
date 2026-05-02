@@ -624,7 +624,7 @@ patterns:
     renderer:
       component: BgDotLatticeFine
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.pattern-tile
       version: 1.0.0
       props:
         bbox:        { type: bbox,   required: true }
@@ -648,7 +648,7 @@ patterns:
     renderer:
       component: BgDotLatticeCoarse
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.pattern-tile
       version: 1.0.0
       props:
         bbox:        { type: bbox,   required: true }
@@ -671,7 +671,7 @@ patterns:
     renderer:
       component: BgLineGrid
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.pattern-tile
       version: 1.0.0
       props:
         bbox:         { type: bbox,   required: true }
@@ -694,7 +694,7 @@ patterns:
     renderer:
       component: BgCrosshatch
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.pattern-tile
       version: 1.0.0
       props:
         bbox:      { type: bbox,   required: true }
@@ -716,7 +716,7 @@ patterns:
     renderer:
       component: BgDiagonal
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.pattern-tile
       version: 1.0.0
       props:
         bbox:        { type: bbox,   required: true }
@@ -739,7 +739,7 @@ patterns:
     renderer:
       component: BgSpotlightTight
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.radial-blob
       version: 1.0.0
       props:
         bbox:  { type: bbox,   required: true }
@@ -762,7 +762,7 @@ patterns:
     renderer:
       component: BgSpotlightSoft
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.radial-blob
       version: 1.0.0
       props:
         bbox:  { type: bbox,   required: true }
@@ -785,7 +785,7 @@ patterns:
     renderer:
       component: BgScrimBottom
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.linear-fade
       version: 1.0.0
       props:
         bbox:    { type: bbox,   required: true }
@@ -807,7 +807,7 @@ patterns:
     renderer:
       component: BgScrimTop
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.linear-fade
       version: 1.0.0
       props:
         bbox:    { type: bbox,   required: true }
@@ -829,7 +829,7 @@ patterns:
     renderer:
       component: BgAuroraCorners
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.radial-blob
       version: 1.0.0
       props:
         bbox:    { type: bbox,  required: true }
@@ -855,7 +855,7 @@ patterns:
     renderer:
       component: SurfCardFlat
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.shape-fill
       version: 1.0.0
       props:
         bbox:    { type: bbox,  required: true }
@@ -877,7 +877,7 @@ patterns:
     renderer:
       component: SurfCardRaised
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.shape-fill
       version: 1.0.0
       props:
         bbox:    { type: bbox,  required: true }
@@ -899,7 +899,7 @@ patterns:
     renderer:
       component: SurfCardFloating
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.shape-fill
       version: 1.0.0
       props:
         bbox:    { type: bbox,  required: true }
@@ -921,7 +921,7 @@ patterns:
     renderer:
       component: SurfCardDepth
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.shape-fill
       version: 1.0.0
       props:
         bbox:        { type: bbox,  required: true }
@@ -944,7 +944,7 @@ patterns:
     renderer:
       component: SurfCardBordered
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.shape-fill
       version: 1.0.0
       props:
         bbox:        { type: bbox,  required: true }
@@ -968,7 +968,7 @@ patterns:
     renderer:
       component: SurfCardPaper
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.shape-fill
       version: 1.0.0
       props:
         bbox:    { type: bbox,  required: true }
@@ -1013,7 +1013,7 @@ patterns:
     renderer:
       component: SurfSectionBand
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.shape-fill
       version: 1.0.0
       props:
         bbox: { type: bbox,  required: true }
@@ -1056,7 +1056,7 @@ patterns:
     renderer:
       component: SurfTapeBand
       tier: B
-      primitive: frame.safe-area
+      primitive: annotation.badge
       version: 1.0.0
       props:
         bbox:    { type: bbox,   required: true }
@@ -1263,7 +1263,7 @@ patterns:
     renderer:
       component: MaskOctagon
       tier: B
-      primitive: frame.safe-area
+      primitive: decoration.shape-preset
       version: 1.0.0
       props:
         bbox: { type: bbox, required: true }
@@ -1306,7 +1306,7 @@ patterns:
     renderer:
       component: MaskGradientFadeEdge
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.linear-fade
       version: 1.0.0
       props:
         bbox:    { type: bbox,   required: true }
@@ -1353,7 +1353,7 @@ patterns:
     renderer:
       component: DecBraceLeft
       tier: B
-      primitive: frame.safe-area
+      primitive: decoration.shape-preset
       version: 1.0.0
       props:
         bbox:  { type: bbox,  required: true }
@@ -1374,7 +1374,7 @@ patterns:
     renderer:
       component: DecBraceRight
       tier: B
-      primitive: frame.safe-area
+      primitive: decoration.shape-preset
       version: 1.0.0
       props:
         bbox:  { type: bbox,  required: true }
@@ -1395,7 +1395,7 @@ patterns:
     renderer:
       component: DecBraceTop
       tier: B
-      primitive: frame.safe-area
+      primitive: decoration.shape-preset
       version: 1.0.0
       props:
         bbox:  { type: bbox,  required: true }
@@ -1416,7 +1416,7 @@ patterns:
     renderer:
       component: DecBraceBottom
       tier: B
-      primitive: frame.safe-area
+      primitive: decoration.shape-preset
       version: 1.0.0
       props:
         bbox:  { type: bbox,  required: true }
@@ -1437,7 +1437,7 @@ patterns:
     renderer:
       component: DecPlus
       tier: B
-      primitive: frame.safe-area
+      primitive: decoration.shape-preset
       version: 1.0.0
       props:
         bbox:  { type: bbox,  required: true }
@@ -1458,7 +1458,7 @@ patterns:
     renderer:
       component: DecStar5
       tier: B
-      primitive: frame.safe-area
+      primitive: decoration.shape-preset
       version: 1.0.0
       props:
         bbox:  { type: bbox,  required: true }
@@ -1479,7 +1479,7 @@ patterns:
     renderer:
       component: DecStar6
       tier: B
-      primitive: frame.safe-area
+      primitive: decoration.shape-preset
       version: 1.0.0
       props:
         bbox:  { type: bbox,  required: true }
@@ -1500,7 +1500,7 @@ patterns:
     renderer:
       component: DecArrowRight
       tier: B
-      primitive: frame.safe-area
+      primitive: decoration.shape-preset
       version: 1.0.0
       props:
         bbox:  { type: bbox,  required: true }
@@ -1521,7 +1521,7 @@ patterns:
     renderer:
       component: DecArrowLeft
       tier: B
-      primitive: frame.safe-area
+      primitive: decoration.shape-preset
       version: 1.0.0
       props:
         bbox:  { type: bbox,  required: true }
@@ -1542,7 +1542,7 @@ patterns:
     renderer:
       component: DecArrowUp
       tier: B
-      primitive: frame.safe-area
+      primitive: decoration.shape-preset
       version: 1.0.0
       props:
         bbox:  { type: bbox,  required: true }
@@ -1563,7 +1563,7 @@ patterns:
     renderer:
       component: DecArrowDown
       tier: B
-      primitive: frame.safe-area
+      primitive: decoration.shape-preset
       version: 1.0.0
       props:
         bbox:  { type: bbox,  required: true }
@@ -1584,7 +1584,7 @@ patterns:
     renderer:
       component: DecHairlineRule
       tier: B
-      primitive: frame.safe-area
+      primitive: decoration.line-stroke
       version: 1.0.0
       props:
         bbox:        { type: bbox,   required: true }
@@ -1607,7 +1607,7 @@ patterns:
     renderer:
       component: DecDottedRule
       tier: B
-      primitive: frame.safe-area
+      primitive: decoration.line-stroke
       version: 1.0.0
       props:
         bbox:        { type: bbox,  required: true }
@@ -1652,7 +1652,7 @@ patterns:
     renderer:
       component: DecSectionDivider
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.shape-fill
       version: 1.0.0
       props:
         bbox: { type: bbox, required: true }
@@ -1694,7 +1694,7 @@ patterns:
     renderer:
       component: DecBulletDot
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.shape-fill
       version: 1.0.0
       props:
         bbox:  { type: bbox,  required: true }
@@ -1880,7 +1880,7 @@ patterns:
     renderer:
       component: DataMiniHeatmap
       tier: B
-      primitive: frame.safe-area
+      primitive: data.heatmap
       version: 1.0.0
       props:
         bbox:       { type: bbox,  required: true }
@@ -1930,7 +1930,7 @@ patterns:
     renderer:
       component: DataDeltaBadge
       tier: B
-      primitive: frame.safe-area
+      primitive: data.delta-badge
       version: 1.0.0
       props:
         bbox:      { type: bbox,   required: true }
@@ -1955,7 +1955,7 @@ patterns:
     renderer:
       component: AnnoCalloutBubble
       tier: B
-      primitive: frame.safe-area
+      primitive: annotation.badge
       version: 1.0.0
       props:
         bbox:          { type: bbox,   required: true }
@@ -1979,7 +1979,7 @@ patterns:
     renderer:
       component: AnnoNumberedHotspot
       tier: B
-      primitive: frame.safe-area
+      primitive: annotation.leader-line
       version: 1.0.0
       props:
         bbox:    { type: bbox,   required: true }
@@ -2002,7 +2002,7 @@ patterns:
     renderer:
       component: AnnoTooltip
       tier: B
-      primitive: frame.safe-area
+      primitive: annotation.leader-line
       version: 1.0.0
       props:
         bbox:        { type: bbox,   required: true }
@@ -2025,7 +2025,7 @@ patterns:
     renderer:
       component: AnnoStampDraft
       tier: B
-      primitive: frame.safe-area
+      primitive: annotation.badge
       version: 1.0.0
       props:
         bbox:     { type: bbox,   required: true }
@@ -2046,7 +2046,7 @@ patterns:
     renderer:
       component: AnnoStampNew
       tier: B
-      primitive: frame.safe-area
+      primitive: annotation.badge
       version: 1.0.0
       props:
         bbox:     { type: bbox,   required: true }
@@ -2067,7 +2067,7 @@ patterns:
     renderer:
       component: AnnoStampInternal
       tier: B
-      primitive: frame.safe-area
+      primitive: annotation.badge
       version: 1.0.0
       props:
         bbox:     { type: bbox,   required: true }
@@ -2088,7 +2088,7 @@ patterns:
     renderer:
       component: AnnoHighlighterMark
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.shape-fill
       version: 1.0.0
       props:
         bbox:    { type: bbox,  required: true }
@@ -2110,7 +2110,7 @@ patterns:
     renderer:
       component: AnnoRedactionBar
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.shape-fill
       version: 1.0.0
       props:
         bbox:  { type: bbox,  required: true }
@@ -2154,7 +2154,7 @@ patterns:
     renderer:
       component: AnnoSticker
       tier: B
-      primitive: frame.safe-area
+      primitive: annotation.badge
       version: 1.0.0
       props:
         bbox:    { type: bbox,   required: true }
@@ -2226,7 +2226,7 @@ patterns:
     renderer:
       component: UiTerminalWindow
       tier: B
-      primitive: frame.safe-area
+      primitive: chrome.window-frame
       version: 1.0.0
       props:
         bbox: { type: bbox,   required: true }
@@ -2248,7 +2248,7 @@ patterns:
     renderer:
       component: UiDevicePhone
       tier: B
-      primitive: frame.safe-area
+      primitive: chrome.device-frame
       version: 1.0.0
       props:
         bbox:           { type: bbox,    required: true }
@@ -2270,7 +2270,7 @@ patterns:
     renderer:
       component: UiDeviceLaptop
       tier: B
-      primitive: frame.safe-area
+      primitive: chrome.device-frame
       version: 1.0.0
       props:
         bbox:          { type: bbox,   required: true }
@@ -2291,7 +2291,7 @@ patterns:
     renderer:
       component: UiBrowserMac
       tier: B
-      primitive: frame.safe-area
+      primitive: chrome.window-frame
       version: 1.0.0
       props:
         bbox: { type: bbox,   required: true }
@@ -2312,7 +2312,7 @@ patterns:
     renderer:
       component: UiBrowserWin
       tier: B
-      primitive: frame.safe-area
+      primitive: chrome.window-frame
       version: 1.0.0
       props:
         bbox: { type: bbox,   required: true }
@@ -2333,7 +2333,7 @@ patterns:
     renderer:
       component: UiBrowserMinimal
       tier: B
-      primitive: frame.safe-area
+      primitive: chrome.window-frame
       version: 1.0.0
       props:
         bbox: { type: bbox,   required: true }
@@ -2354,7 +2354,7 @@ patterns:
     renderer:
       component: UiStatusDot
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.shape-fill
       version: 1.0.0
       props:
         bbox:   { type: bbox,  required: true }
@@ -2398,7 +2398,7 @@ patterns:
     renderer:
       component: UiProgressBar
       tier: B
-      primitive: frame.safe-area
+      primitive: surface.shape-fill
       version: 1.0.0
       props:
         bbox:  { type: bbox,   required: true }
