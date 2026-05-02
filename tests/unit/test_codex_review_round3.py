@@ -317,3 +317,137 @@ def test_classifier_no_data_atom_returns_null():
     """Sanity: HTML without any data-atom returns atom_id=None."""
     res = _run_classifier("<div class='card'>x</div>")
     assert res.get("atom_id") is None
+
+
+# ---- Round-4 codex feedback ------------------------------------------------
+
+
+def test_path_clip_picture_anchored_to_node_bbox(tmp_path):
+    """The freeform shape must be sized to `node.bbox`, not to the clip
+    path's tight bbox. Otherwise an inset / off-center / extends-beyond
+    clip path squashes or shifts the picture into the clip's bounds.
+
+    Regression for codex-r3176316127. Builds a picture at bbox (200,200,
+    400,400) with a clip path that lives at (300,300,300,300) — entirely
+    inside the picture's bbox. The freeform shape's xfrm must read off
+    of the picture bbox, not the clip's tight bounds.
+    """
+    diamond = [
+        IRPathCommand(op="M", x=350, y=300),
+        IRPathCommand(op="L", x=600, y=450),
+        IRPathCommand(op="L", x=350, y=600),
+        IRPathCommand(op="L", x=300, y=450),
+        IRPathCommand(op="Z"),
+    ]
+    node = IRPictureNode(
+        kind="picture",
+        recipeId="picture.inset-clip",
+        bbox=IRBbox(x=200, y=200, w=400, h=400),
+        src=_DATA_URI,
+        clipPath=IRClipPathPath(kind="path", commands=diamond),
+    )
+    deck = IRDeck(version=2, slides=[IRSlide(index=0, nodes=[node])])
+    out = compile_ir(deck, tmp_path / "p.pptx")
+
+    prs = Presentation(str(out))
+    P_NS = "http://schemas.openxmlformats.org/presentationml/2006/main"
+    for sp in prs.slides[0].shapes._spTree.findall(f"{{{P_NS}}}sp"):
+        sp_pr = sp.find(f"{{{P_NS}}}spPr")
+        if sp_pr is None or sp_pr.find(f"{{{NS_A}}}custGeom") is None:
+            continue
+        if sp_pr.find(f"{{{NS_A}}}blipFill") is None:
+            continue
+        xfrm = sp_pr.find(f"{{{NS_A}}}xfrm")
+        assert xfrm is not None, "freeform shape must carry an xfrm"
+        off = xfrm.find(f"{{{NS_A}}}off")
+        ext = xfrm.find(f"{{{NS_A}}}ext")
+        assert off is not None and ext is not None
+        # 1 px = 9525 EMU. Picture bbox is (200,200,400,400) px.
+        # Expect off.x = 200 * 9525 = 1_905_000, off.y same, ext.cx = 400*9525.
+        EMU = 9525
+        x_emu = int(off.get("x"))
+        y_emu = int(off.get("y"))
+        cx_emu = int(ext.get("cx"))
+        cy_emu = int(ext.get("cy"))
+        # Allow ±1 EMU jitter from rounding.
+        assert abs(x_emu - 200 * EMU) <= EMU, (
+            f"shape origin x={x_emu} EMU; expected node.bbox.x ({200*EMU})"
+        )
+        assert abs(y_emu - 200 * EMU) <= EMU
+        assert abs(cx_emu - 400 * EMU) <= EMU, (
+            f"shape width={cx_emu}; expected node.bbox.w ({400*EMU})"
+        )
+        assert abs(cy_emu - 400 * EMU) <= EMU
+        return  # found the right shape; success
+    raise AssertionError("never found a custGeom+blipFill shape on the slide")
+
+
+def test_harvest_json_produces_pure_stdout(tmp_path, monkeypatch):
+    """`slidify harvest <corpus> --json` must emit JSON-only on stdout
+    so `... --json | jq ...` works. Status / progress text is routed
+    to stderr.
+
+    Regression for codex-r3176316129.
+    """
+    from slidify import harvester
+    from slidify.cli import cli
+    from slidify.harvester import (
+        AtomCandidate,
+        Cluster,
+        ClusterExemplar,
+        HarvestReport,
+    )
+
+    corpus = tmp_path / "corpus"
+    corpus.mkdir()
+    (corpus / "a.html").write_text("<html><body><div class='tile'>x</div></body></html>",
+                                   encoding="utf-8")
+
+    def _fake(corpus_dir, **kw):
+        return HarvestReport(
+            timestamp="2026-05-02T00:00:00+00:00",
+            corpus_dir=str(corpus_dir),
+            decks_processed=1,
+            total_unmatched=1,
+            unique_signatures=1,
+            clusters=[Cluster(
+                id="auto-001",
+                sig_hash="cafebabe",
+                signature="div(bg)[][100x100]",
+                instances=1,
+                exemplars=[ClusterExemplar(
+                    slide_ref="a.html#node-0",
+                    bbox_w=100, bbox_h=100,
+                    sample_text="x", sample_classes="tile",
+                )],
+                sample_classes=["tile"],
+                sample_text=["x"],
+                bbox_typical={"w_avg": 100, "h_avg": 100,
+                              "w_min": 100, "w_max": 100,
+                              "h_min": 100, "h_max": 100},
+            )],
+            candidates={"auto-001": AtomCandidate(
+                candidate_atom_id="surf.tile",
+                candidate_axis="surf",
+                candidate_props={},
+                confidence=0.5,
+                reason="",
+            )},
+        )
+
+    monkeypatch.setattr(harvester, "aggregate_corpus", _fake)
+
+    runner = CliRunner()
+    # Recent Click versions split stdout/stderr by default; result exposes
+    # them on `.stdout` and `.stderr`.
+    res = runner.invoke(cli, ["harvest", str(corpus), "--json"])
+    assert res.exit_code == 0, res.output
+    # stdout MUST be parseable JSON, with no human chatter mixed in.
+    payload = json.loads(res.stdout)
+    assert "harvest_run" in payload
+    assert payload["clusters"][0]["id"] == "auto-001"
+    # Status text should be visible on stderr (best-effort: at least the
+    # "Harvesting …" header).
+    assert "Harvesting" in res.stderr, (
+        f"expected status text on stderr; got: {res.stderr!r}"
+    )

@@ -612,30 +612,33 @@ class _IRCompiler:
             )
             return
 
-        # Compute the path's tight bbox so the freeform shape sizes correctly.
-        # The clip path coordinates are slide-pixel space (same as ShapeNode.bbox).
-        path_box = path_bbox(clip.commands)
-        # If the path is degenerate (zero-area), fall back to the picture bbox.
-        if path_box[2] - path_box[0] <= 0 or path_box[3] - path_box[1] <= 0:
-            path_box = (bbox.x, bbox.y, bbox.x + bbox.w, bbox.y + bbox.h)
-        path_bbox_obj = IRBbox(
-            x=path_box[0],
-            y=path_box[1],
-            w=max(1.0, path_box[2] - path_box[0]),
-            h=max(1.0, path_box[3] - path_box[1]),
-        )
-        x, y, w, h = _emu_rect(path_bbox_obj)
+        # Anchor the freeform shape at the picture's bbox (`node.bbox`) so
+        # the picture is placed/scaled exactly as it would be without any
+        # clip. Project the path's slide-pixel commands into that same
+        # local-space reference — coordinates outside `node.bbox` simply
+        # extend past the shape and get clipped by PowerPoint.
+        #
+        # The earlier draft sized the shape from `path_bbox(clip.commands)`,
+        # which reprojected the picture into the clip's tight bounds. That
+        # squashed the image whenever the clip path didn't fill `node.bbox`
+        # (e.g. inset clips, off-center keyholes, paths that extend beyond
+        # the picture). Anchoring to node.bbox keeps placement stable
+        # regardless of clip geometry.
+        node_box = (bbox.x, bbox.y, bbox.x + bbox.w, bbox.y + bbox.h)
+        x, y, w, h = _emu_rect(bbox)
         shape = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x, y, w, h)
         shape.line.fill.background()
 
-        # Replace prstGeom with custGeom built from the clip path.
+        # Replace prstGeom with custGeom built from the clip path,
+        # projected against node.bbox so the path renders inside the
+        # picture's natural placement.
         try:
             sp_pr = shape._element.spPr
             for prst in sp_pr.findall(f"{{{NS_A}}}prstGeom"):
                 sp_pr.remove(prst)
             for cg in sp_pr.findall(f"{{{NS_A}}}custGeom"):
                 sp_pr.remove(cg)
-            cust_xml = make_custgeom_xml(clip.commands, path_box)
+            cust_xml = make_custgeom_xml(clip.commands, node_box)
             wrapper = f'<root xmlns:a="{NS_A}">{cust_xml}</root>'
             parsed = etree.fromstring(wrapper)
             cust = parsed[0]
@@ -676,7 +679,7 @@ class _IRCompiler:
             log.warning("compile_ir.path_clip_blipfill_failed", error=str(e))
 
         if node.mask is not None:
-            self._emit_picture_mask_overlay(slide, path_bbox_obj, node.mask)
+            self._emit_picture_mask_overlay(slide, bbox, node.mask)
         _stamp_recipe_id(shape, node.recipeId)
 
     def _emit_picture_mask_overlay(self, slide, bbox: IRBbox, mask) -> None:

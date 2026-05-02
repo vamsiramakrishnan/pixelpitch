@@ -603,6 +603,14 @@ def harvest(
     """
     from slidify.harvester import aggregate_corpus, report_to_dict, write_report
 
+    # `--json` mode means stdout must be parseable JSON for piping
+    # (`slidify harvest <corpus> --json | jq ...`). Route every human-
+    # readable status line to stderr so the JSON object stands alone
+    # on stdout. Errors and deprecation warnings already go to err=True
+    # below; the additions here cover the progress/summary path.
+    def _info(msg: str = "") -> None:
+        click.echo(msg, err=json_out)
+
     # Resolve back-compat aliases.
     if out_json is not None and output_path is None:
         output_path = out_json
@@ -627,10 +635,10 @@ def harvest(
         click.echo(f"slidify harvest: input path does not exist: {input_path}", err=True)
         sys.exit(2)
 
-    click.echo(f"Harvesting {input_path}…")
+    _info(f"Harvesting {input_path}…")
 
     def _on_progress(path: Path, n_sigs: int) -> None:
-        click.echo(f"  {path.name:<48} {n_sigs:>4d} unmatched")
+        _info(f"  {path.name:<48} {n_sigs:>4d} unmatched")
 
     report = aggregate_corpus(
         input_path,
@@ -642,47 +650,44 @@ def harvest(
         click.echo(f"slidify harvest: no decks processed under {input_path}", err=True)
         sys.exit(1)
 
-    click.echo("")
-    click.echo(f"Decks processed       : {report.decks_processed}")
-    click.echo(f"Total unmatched units : {report.total_unmatched}")
-    click.echo(f"Unique signatures     : {report.unique_signatures}")
+    _info("")
+    _info(f"Decks processed       : {report.decks_processed}")
+    _info(f"Total unmatched units : {report.total_unmatched}")
+    _info(f"Unique signatures     : {report.unique_signatures}")
     if report.errors:
-        click.echo(
+        _info(
             click.style(f"Per-deck errors       : {len(report.errors)}", fg="yellow")
         )
 
     n_show = min(top_n, len(report.clusters))
     if n_show:
-        click.echo("")
-        click.echo(f"Top {n_show} clusters:")
-        click.echo("─" * 80)
+        _info("")
+        _info(f"Top {n_show} clusters:")
+        _info("─" * 80)
         for c in report.clusters[:n_show]:
             cand = report.candidates.get(c.id)
             atom = cand.candidate_atom_id if cand else "?"
             axis = cand.candidate_axis if cand else "?"
-            click.echo(
+            _info(
                 f"  {c.id}  ×{c.instances:<4d}  "
                 f"{int(c.bbox_typical.get('w_avg', 0)):>4d}×"
                 f"{int(c.bbox_typical.get('h_avg', 0)):<3d}  "
                 f"→ {axis}  {atom}"
             )
             if c.sample_classes:
-                click.echo(f"      classes : {', '.join(c.sample_classes[:3])}")
+                _info(f"      classes : {', '.join(c.sample_classes[:3])}")
 
     if output_path is not None:
         write_report(report, output_path, top_n=top_n)
-        click.echo("")
-        click.echo(f"Wrote clusters.json   : {output_path}")
+        _info("")
+        _info(f"Wrote clusters.json   : {output_path}")
     if json_out:
-        # Machine-readable payload for piping. The previous guard
-        # (`context.obj == {"emit_json": True}`) was never reachable
-        # because click's `obj` defaults to None and no caller set it
-        # to that exact dict. The explicit `--json` flag is the
-        # documented seam for scripted consumers.
+        # The ONLY thing on stdout in --json mode: the parseable payload.
+        # All status lines above were routed to stderr via `_info()`.
         click.echo(json.dumps(report_to_dict(report, top_n=top_n), indent=2))
     elif output_path is None:
-        click.echo("")
-        click.echo(
+        _info("")
+        _info(
             "(no --output / --json supplied — pass --output PATH or --json "
             "to persist clusters.json)"
         )
