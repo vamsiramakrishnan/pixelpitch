@@ -51,6 +51,22 @@ def _has_visible_border(border: str) -> bool:
     return True
 
 
+def _has_any_visible_border(el: DomElement) -> bool:
+    """True iff the element has a visible border on the shorthand OR any
+    individual side. The CSS shorthand ``border`` is empty when the four
+    sides differ, so an element with only ``border-bottom: 1px solid``
+    fails ``_has_visible_border(el.border)`` despite carrying real
+    decoration. This helper consults the per-side fields from Phase 1
+    so accent-stripe / magazine-rule / spec-row patterns anchor properly.
+    """
+    if _has_visible_border(el.border):
+        return True
+    for side in (el.border_top, el.border_right, el.border_bottom, el.border_left):
+        if _has_visible_border(side):
+            return True
+    return False
+
+
 def _has_shadow(box_shadow: str) -> bool:
     return bool(box_shadow) and box_shadow.lower() != "none"
 
@@ -126,7 +142,15 @@ def _is_anchor(el: DomElement, parent_bg: str | None) -> bool:
         return True
     if el.is_table:
         return True
-    is_inline = tag_u in _INLINE_FORMATTING_TAGS
+    # Inline by tag name AND by computed display. A `<span>` with
+    # `display:block` (the `.sub` pattern in editorial layouts) anchors
+    # like a div on the text-leaf branch; a `<span>` with default
+    # `display:inline` is a styled run and folds.
+    display = (el.display or "inline").lower()
+    is_inline = (
+        tag_u in _INLINE_FORMATTING_TAGS
+        and display in ("inline", "contents", "ruby", "")
+    )
     # Inline formatting tags only anchor when they carry real visual
     # presence (bg, border, shadow, radius, filter, clip-path, pseudo,
     # role, image-bg). A transform alone is treated as a typographic
@@ -140,7 +164,7 @@ def _is_anchor(el: DomElement, parent_bg: str | None) -> bool:
         return True
     if _has_radius(el.border_radius):
         return True
-    if _has_visible_border(el.border):
+    if _has_any_visible_border(el):
         return True
     if not _is_transparent(el.background_color):
         if parent_bg is None or parent_bg != el.background_color:
@@ -156,11 +180,16 @@ def _is_anchor(el: DomElement, parent_bg: str | None) -> bool:
     # Leaf text elements with their own meaningful area become anchors so
     # that two different text blocks don't merge into one NativeText frame.
     # Text containers (text + inline formatting children) count too.
-    # Inline formatting tags are excluded — they're styled runs, not
-    # paragraphs, and folding them keeps the parent text frame whole.
-    if not is_inline and ((el.text and el.text.strip()) or el.is_text_container):
-        if el.bbox.area >= 200:
-            return True
+    # Mixed-content elements (direct text + block children) also anchor —
+    # they emit as Hybrid units so neither the parent's text leaf nor the
+    # child stack gets dropped. Inline formatting tags are excluded —
+    # they're styled runs, not paragraphs, and folding them keeps the
+    # parent text frame whole.
+    if not is_inline:
+        has_text = bool(el.text and el.text.strip())
+        if has_text or el.is_text_container or el.mixed_content_text:
+            if el.bbox.area >= 200:
+                return True
     return False
 
 
@@ -187,6 +216,32 @@ def cluster(elements: list[DomElement]) -> list[VisualUnit]:
     Returns the children of an implicit root (the page body). Top-level units
     are the anchor-rooted regions of the slide.
     """
+    if not elements:
+        return []
+
+    # Drop elements the walker flagged as off-canvas (sr-only spans pinned
+    # at left:-9999px, width:1px height:1px tricks, or anything else
+    # entirely outside the slide frame plus slack). Authors who want such
+    # elements in the slide can opt back in via `data-pptx-allow-overflow`.
+    # Rewrite each survivor's parent_id to the nearest non-dropped
+    # ancestor so the parent_id graph stays intact.
+    _all_by_id = {e.id: e for e in elements}
+    _dropped_ids = {
+        e.id for e in elements
+        if getattr(e, "is_offcanvas", False) and not e.allow_overflow
+    }
+    if _dropped_ids:
+        survivors: list[DomElement] = []
+        for e in elements:
+            if e.id in _dropped_ids:
+                continue
+            pid = e.parent_id
+            while pid is not None and pid in _dropped_ids:
+                pid = _all_by_id[pid].parent_id
+            if pid != e.parent_id:
+                e = e.model_copy(update={"parent_id": pid})
+            survivors.append(e)
+        elements = survivors
     if not elements:
         return []
 

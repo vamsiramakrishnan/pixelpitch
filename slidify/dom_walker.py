@@ -64,20 +64,95 @@ _WALKER_JS_TEMPLATE = r"""
         };
     }
 
+    function isVisuallyInline(el) {
+        // Decide whether an inline-tag child should fold into the parent's
+        // text frame or break out as its own visual unit. Tag-name alone
+        // is too permissive: a `<span class="btn"
+        // style="display:inline-block; background:#fff; border-radius:8px">`
+        // is a button, not a kerning helper, and folding it loses the
+        // visual block. Conversely, a plain `<span style="color:red">` is
+        // a styled run and should fold.
+        const cs = getComputedStyle(el);
+        const d = cs.display || 'inline';
+        if (d === 'block' || d === 'flex' || d === 'grid' ||
+            d === 'inline-flex' || d === 'inline-grid' || d === 'list-item' ||
+            d === 'table' || d === 'inline-table') return false;
+        if (d === 'inline-block') {
+            const bg = cs.backgroundColor || '';
+            if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') return false;
+            const bgi = cs.backgroundImage || 'none';
+            if (bgi !== 'none') return false;
+            if (parseFloat(cs.borderTopWidth || '0') > 0 ||
+                parseFloat(cs.borderBottomWidth || '0') > 0 ||
+                parseFloat(cs.borderLeftWidth || '0') > 0 ||
+                parseFloat(cs.borderRightWidth || '0') > 0) return false;
+            const sh = cs.boxShadow || '';
+            if (sh && sh !== 'none') return false;
+            if (parseFloat(cs.borderRadius || '0') > 0) return false;
+            return true;
+        }
+        return true;  // 'inline', 'contents', 'ruby'
+    }
+
     function isTextContainer(el) {
-        // Element has at least one non-empty text node AND every element
-        // child is an inline formatting tag (or BR). Text containers emit as
-        // one text frame with multiple styled runs.
+        // Functionally a text container when (a) every element child is
+        // an inline-formatting tag (or BR), (b) every such child is
+        // visually inline (computed display is `inline`/`contents`, or
+        // `inline-block` with no decoration of its own), AND (c) the
+        // rendered content carries some textual payload. The looser
+        // hasText probe catches `<div><span>k</span><span>v</span></div>`
+        // (no whitespace text node between siblings); the visual-inline
+        // probe rejects `<div class="ctas"><span class="btn">…</span>
+        // <span class="btn">…</span></div>` so each button keeps its
+        // own unit instead of all collapsing into one text frame.
         let hasText = false;
         for (const node of el.childNodes) {
             if (node.nodeType === 3) {
                 if ((node.textContent || '').trim()) hasText = true;
             } else if (node.nodeType === 1) {
                 const t = node.tagName;
-                if (t !== 'BR' && !INLINE_FORMATTING_TAGS.has(t)) return false;
+                if (t === 'BR') continue;
+                if (!INLINE_FORMATTING_TAGS.has(t)) return false;
+                if (!isVisuallyInline(node)) return false;
+                if (!hasText && (node.textContent || '').trim()) hasText = true;
             }
         }
         return hasText;
+    }
+
+    // Slack around the slide frame. Anything whose bbox lies entirely
+    // outside this expanded rect — e.g. screen-reader-only spans pinned
+    // at left:-9999px, sr-only width:1px height:1px tricks — is captured
+    // by the walker but flagged so the clusterer can drop it. The slack
+    // accounts for legitimate decorative bleed (aurora blobs that hang
+    // a few hundred px past the edge by design).
+    const OFFCANVAS_SLACK = 800;
+    const VIEWPORT_W = 1280;
+    const VIEWPORT_H = 720;
+    function isOffcanvasBbox(r) {
+        if (r.width <= 1 && r.height <= 1) return true;
+        if (r.x + r.width <= -OFFCANVAS_SLACK) return true;
+        if (r.y + r.height <= -OFFCANVAS_SLACK) return true;
+        if (r.x >= VIEWPORT_W + OFFCANVAS_SLACK) return true;
+        if (r.y >= VIEWPORT_H + OFFCANVAS_SLACK) return true;
+        return false;
+    }
+
+    function collectMixedContentText(el) {
+        // Direct text-node children only, joined. Used when an element has
+        // BOTH a direct text leaf AND block-level descendants — neither the
+        // text-container path nor the leaf-text path covers this case, so
+        // the parent unit needs to know its own text fragment to emit
+        // alongside the descendants. Returns null when there's no
+        // non-whitespace direct text.
+        const parts = [];
+        for (const node of el.childNodes) {
+            if (node.nodeType === 3) {
+                const t = (node.textContent || '').trim();
+                if (t) parts.push(t);
+            }
+        }
+        return parts.length > 0 ? parts.join(' ') : null;
     }
 
     function collectRuns(el) {
@@ -259,6 +334,22 @@ _WALKER_JS_TEMPLATE = r"""
         // renders as a single text frame with multiple styled runs.
         const textContainer = !isLeafText && el.children.length > 0 && isTextContainer(el);
         const runs = textContainer ? collectRuns(el) : null;
+        // Mixed content: direct text + block children. The
+        // `<div>Helmsworth Industries...<div class="meta-sub">Steering committee</div></div>`
+        // pattern. Capture the parent's own text so the unit clusterer can
+        // emit a Hybrid unit (parent's text leaf + child unit stack)
+        // instead of dropping one path or the other.
+        const mixedContentText = (!isLeafText && !textContainer)
+            ? collectMixedContentText(el)
+            : null;
+        // Off-canvas: bbox sitting fully outside the slide frame plus a
+        // generous slack zone. Catches sr-only spans, screen-reader hidden
+        // duplicates positioned at left:-9999px, and the
+        // `width:1px height:1px overflow:hidden` a11y dance. The walker
+        // still records them so the unit clusterer can decide what to do
+        // (today: drop), but downstream consumers can re-include via
+        // `data-pptx-allow-overflow`.
+        const offCanvas = isOffcanvasBbox(r);
 
         // SVG path count (for tier 1 complexity rule)
         let svgPathCount = 0;
@@ -426,6 +517,9 @@ _WALKER_JS_TEMPLATE = r"""
             background_blend_mode: cs.backgroundBlendMode || 'normal',
             text: isLeafText ? el.textContent : (textContainer ? el.textContent : null),
             is_text_container: textContainer,
+            mixed_content_text: mixedContentText,
+            is_offcanvas: offCanvas,
+            display: cs.display || 'inline',
             runs: runs,
             font_family: cs.fontFamily || '',
             font_size: cs.fontSize || '16px',
@@ -525,6 +619,9 @@ async def walk(page: Page) -> list[DomElement]:
                 background_blend_mode=entry.get("background_blend_mode", "normal"),
                 text=entry["text"],
                 is_text_container=entry.get("is_text_container", False),
+                mixed_content_text=entry.get("mixed_content_text"),
+                is_offcanvas=entry.get("is_offcanvas", False),
+                display=entry.get("display", "inline"),
                 runs=[
                     TextRun(
                         text=r.get("text", ""),

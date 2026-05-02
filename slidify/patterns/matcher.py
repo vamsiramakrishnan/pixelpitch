@@ -469,6 +469,20 @@ def _h_is_table(unit, anchor, catalog, value):
     return bool(getattr(anchor, "is_table", False)) == bool(value)
 
 
+@_handler("anchor.has_mixed_content")
+def _h_has_mixed_content(unit, anchor, catalog, value):
+    """Anchor has a non-empty ``mixed_content_text`` — direct text alongside
+    block descendants. The walker captures this on the parent so the unit
+    clusterer can emit the parent's text leaf above the child unit stack
+    (the editorial ``<div class="meta-value">Helmsworth Industries...<span
+    class="sub">Steering committee...</span></div>`` pattern). Without a
+    recipe gating on this flag, tier-0 typography rules (which require
+    ``own_text: true``) wouldn't fire because ``el.text`` is null on
+    mixed-content elements."""
+    has = bool((getattr(anchor, "mixed_content_text", None) or "").strip())
+    return has if value else not has
+
+
 @_handler("anchor.opacity_max")
 def _h_anchor_opacity_max(unit, anchor, catalog, value):
     """Anchor's `opacity` is at most `value`. Use `0.95` as the typical

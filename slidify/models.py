@@ -114,6 +114,26 @@ class DomElement(BaseModel):
     background_blend_mode: str = "normal"
     text: str | None = None
     is_text_container: bool = False
+    # Direct text node children when an element ALSO has block-level
+    # descendants — e.g. ``<div>Helmsworth Industries<div class="meta-sub">
+    # Steering committee</div></div>``. Neither the leaf-text path nor the
+    # text-container path covers this; the unit clusterer treats it as a
+    # Hybrid unit so the parent's own text emits alongside the child stack.
+    # ``None`` when no mixed content present.
+    mixed_content_text: str | None = None
+    # Bbox lies entirely outside the slide frame plus a generous slack
+    # zone (currently ±800 px). Catches sr-only spans pinned at
+    # ``left:-9999px``, ``width:1px height:1px overflow:hidden`` a11y
+    # tricks, and other off-canvas content the browser still reports a
+    # bbox for. The unit clusterer drops these by default unless the
+    # author opts back in via ``data-pptx-allow-overflow="true"``.
+    is_offcanvas: bool = False
+    # Computed CSS ``display`` value. Used by the unit clusterer to
+    # override the tag-based inline classification: a ``<span>`` with
+    # ``display:block`` is functionally a paragraph and should anchor as
+    # one, while a ``<span>`` with default ``display:inline`` folds into
+    # the parent text frame.
+    display: str = "inline"
     runs: list[TextRun] | None = None
     font_family: str = ""
     font_size: str = "16px"

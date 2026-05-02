@@ -288,6 +288,17 @@ def promote(
     return out
 
 
+def _has_mixed_content_anchor(unit: VisualUnit) -> bool:
+    """True iff the unit's anchor element carries a non-empty
+    ``mixed_content_text``. Used by ``to_emit_ops`` to keep child units
+    visible when the parent emits as a Hybrid text-leaf alongside blocks.
+    """
+    if not unit.elements:
+        return False
+    anchor = unit.elements[0]
+    return bool((getattr(anchor, "mixed_content_text", None) or "").strip())
+
+
 def to_emit_ops(
     roots: list[VisualUnit], decisions: dict[str, Decision]
 ) -> list[EmitOp]:
@@ -340,7 +351,14 @@ def to_emit_ops(
             return
 
         # Native parent: emit self, then children. NativeText / NativeBullet /
-        # NativePicture absorb their region — children should not also emit.
+        # NativePicture / NativeSvg normally absorb their region — children
+        # would just stack a duplicate on top. Exception: when the parent's
+        # own text comes from a `mixed_content_text` capture (parent has
+        # direct text alongside block descendants — the editorial
+        # `<div class="meta-value">parent text<span class="sub">child</span></div>`
+        # pattern), the children are *separate units* with their own text
+        # at distinct bboxes, so the absorb-children rule would silently
+        # drop them. Visit children in that case.
         ops.append(
             EmitOp(
                 unit_id=unit.id,
@@ -351,12 +369,13 @@ def to_emit_ops(
             )
         )
         counter[0] += 1
-        if decision.kind in (
+        absorbing = decision.kind in (
             DecisionKind.NativeText,
             DecisionKind.NativeBullet,
             DecisionKind.NativePicture,
             DecisionKind.NativeSvg,
-        ):
+        )
+        if absorbing and not _has_mixed_content_anchor(unit):
             return
         for c in unit.children:
             visit(c)

@@ -1052,6 +1052,23 @@ patterns:
       confidence: 0.95
       metadata: { recipe: native_table, role: table }
 
+  # ── Mixed-content elements: a parent <div> with direct text AND block
+  # descendants (e.g. editorial ``<div class="meta-value">Helmsworth
+  # Industries...<span class="sub" style="display:block">Steering
+  # committee...</span></div>``). The walker captures the parent's own
+  # text fragment as ``mixed_content_text``; this recipe routes the unit
+  # to NativeText so the parent's text leaf emits above the child stack
+  # instead of silently disappearing. Children classify themselves and
+  # render below per the existing promotion DAG.
+  - id: mixed-content-text-leaf
+    priority: 28
+    match:
+      anchor.has_mixed_content: true
+    emit:
+      kind: NativeText
+      confidence: 0.88
+      metadata: { recipe: mixed_content_text, role: body }
+
   # ── 3× monospace text containers (terminal/code blocks). The existing
   # `code-block-tailwind` recipe requires a dark bg; this catches mono-typeset
   # bodies on any background.
