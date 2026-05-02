@@ -111,28 +111,71 @@ To make atoms.yaml consumable by the codegen, M1 adds two optional sections per 
 
 **Total: 61 atoms today + ~9 M1-added (see §A.4) = ~70 going into codegen.**
 
-### A.4 Gap-fill atoms (M1 adds)
+### A.4 Vocabulary expansion (M1 adds)
 
-F1's IR ships shape presets with no atom analog. M1 adds rows for:
+The existing 61 atoms cover 10 axes but are thin in several: `comp.*` and `dec.*` are namespace-only stubs; `anno.*` is just 4 entries; `ui.*` lacks code/device/terminal chrome; `data.*` lacks tables and KPI strips; `surf.*` lacks bento cells, paper, brutalist; `bg.*` lacks the F1 pattern fills. Per the directive: **not one-trick wonders.** M1 adds ~80 new rows for comprehensive coverage. Final atoms.yaml ships at **~140 entries**.
 
-| Atom id | Axis | F1 primitive | Notes |
-| --- | --- | --- | --- |
-| `dec.brace-left` | dec | `shape: 'brace-left'` | |
-| `dec.brace-right` | dec | `shape: 'brace-right'` | |
-| `dec.brace-top` | dec | `shape: 'brace-top'` | |
-| `dec.brace-bottom` | dec | `shape: 'brace-bottom'` | |
-| `dec.plus` | dec | `shape: 'plus'` | |
-| `dec.star-5` | dec | `shape: 'star-5'` | |
-| `dec.star-6` | dec | `shape: 'star-6'` | |
-| `dec.arrow` | dec | `shape: 'arrow-right' + flip` | One row, variants for direction |
-| `bg.dot-lattice-fine` | bg | `PatternFill { pattern: 'dots' }` | Existing `bg.dot-lattice` plus PatternFill backing |
-| `bg.line-grid` | bg | `PatternFill { pattern: 'lines-grid' }` | NEW |
-| `bg.crosshatch` | bg | `PatternFill { pattern: 'crosshatch' }` | NEW |
-| `bg.diagonal` | bg | `PatternFill { pattern: 'diagonal' }` | NEW |
-| `anno.callout-bubble` | anno | `shape: 'callout-bubble'` | |
-| `data.connector` | data | `path` + arrowhead | Connector primitive |
+**A.4.1 — `bg.*` additions (currently 8 → target 18)**
 
-**Total adds: ~13.** Final atoms.yaml ships at ~74 entries.
+`bg.dot-lattice-fine`, `bg.dot-lattice-coarse`, `bg.line-grid`, `bg.crosshatch`, `bg.diagonal`, `bg.spotlight-tight`, `bg.spotlight-soft`, `bg.scrim-bottom`, `bg.scrim-top`, `bg.aurora-corners` (4-corner mesh).
+
+**A.4.2 — `surf.*` additions (currently 8 → target 18)**
+
+`surf.card-flat`, `surf.card-raised`, `surf.card-floating`, `surf.card-depth` (StatCardWithDepth's signature stack), `surf.card-bordered` (brutalist), `surf.card-paper` (editorial), `surf.bento-cell`, `surf.section-band`, `surf.frame-letterbox`, `surf.tape-band` (skewed parallelogram).
+
+**A.4.3 — `type.*` additions (currently 10 → target 18)**
+
+`type.big-number` (numeral-md), `type.big-number-xl` (numeral-xl), `type.big-number-gradient` (gradient-clipped), `type.eyebrow-ruled` (kicker + hairline), `type.eyebrow-tape` (kicker + tape band), `type.pullquote-serif`, `type.pullquote-brutalist`, `type.numerals-tabular`.
+
+**A.4.4 — `mask.*` additions (currently 8 → target 12)**
+
+`mask.octagon`, `mask.callout`, `mask.gradient-fade-edge` (alpha mask on PictureNode), `mask.rounded-rect-clip`.
+
+**A.4.5 — `dec.*` additions (currently 1 namespace-only → target 18)**
+
+`dec.brace-left`, `dec.brace-right`, `dec.brace-top`, `dec.brace-bottom`, `dec.plus`, `dec.star-5`, `dec.star-6`, `dec.arrow-right`, `dec.arrow-left`, `dec.arrow-up`, `dec.arrow-down`, `dec.hairline-rule`, `dec.dotted-rule`, `dec.corner-crop`, `dec.section-divider`, `dec.numeral-chapter`, `dec.bullet-dot`.
+
+**A.4.6 — `data.*` additions (currently 8 → target 18)**
+
+`data.connector` (path + arrowhead), `data.bar-set-h`, `data.bar-set-v`, `data.donut`, `data.donut-multi-segment`, `data.kpi-row`, `data.data-table`, `data.mini-heatmap`, `data.bullet-bar`, `data.delta-badge`.
+
+**A.4.7 — `anno.*` additions (currently 4 → target 14)**
+
+`anno.callout-bubble`, `anno.numbered-hotspot` (numbered dot + leader), `anno.tooltip` (callout with leader), `anno.stamp-draft`, `anno.stamp-new`, `anno.stamp-internal`, `anno.highlighter-mark` (yellow underlay), `anno.redaction-bar`, `anno.brace-labeled` (brace + caption), `anno.sticker`.
+
+**A.4.8 — `ui.*` additions (currently 6 → target 18)**
+
+`ui.code-block`, `ui.code-block-syntax` (token-colored spans), `ui.terminal-window`, `ui.device-phone`, `ui.device-laptop`, `ui.browser-mac`, `ui.browser-win`, `ui.browser-minimal`, `ui.status-dot`, `ui.stepper`, `ui.progress-bar`, `ui.checklist`.
+
+**A.4.9 — `comp.*` composite atoms (currently 1 namespace-only → target 14)**
+
+These replace the v1 "templates" crew (B1) with manifest-driven composites, per §A.6:
+
+`comp.hero-investor`, `comp.hero-product`, `comp.agenda-2col`, `comp.agenda-toc`, `comp.big-stat-hero`, `comp.three-up-stats`, `comp.quote-editorial`, `comp.section-divider-mesh`, `comp.roadmap-quarterly`, `comp.team-grid`, `comp.closing-cta`, `comp.bento-mixed`, `comp.annotated-screenshot`, `comp.data-overview`.
+
+**A.4.10 — `motion.*`, `mask.*` (selected only)**
+
+`motion.*` is **observe-only** for now (PPTX is static). M1 adds no rows; existing 6 stay as observed-but-not-emitted.
+
+### A.4-summary
+
+| Axis | Today | Adds | Target |
+| --- | ---: | ---: | ---: |
+| `comp` | 1 | 14 | 15 |
+| `bg` | 8 | 10 | 18 |
+| `surf` | 8 | 10 | 18 |
+| `type` | 10 | 8 | 18 |
+| `mask` | 8 | 4 | 12 |
+| `dec` | 1 | 17 | 18 |
+| `data` | 8 | 10 | 18 |
+| `anno` | 4 | 10 | 14 |
+| `ui` | 6 | 12 | 18 |
+| `motion` | 6 | 0 | 6 |
+| **Total** | **60** | **95** | **155** |
+
+(comp axis was 1 namespace-only stub; counted as 1 today.)
+
+**Total adds: ~95. Final atoms.yaml ships at ~155 entries.** Comprehensive coverage across structural roles, visual treatments, and authored compositions. LLMs reach for atoms by default; raw CSS only when a genuinely novel composition is needed.
 
 ### A.5 The two namespace problem (recipeId vs atom id)
 
@@ -272,7 +315,8 @@ components/scripts/codegen-atoms.ts          ← runs at build time (M2 ships)
 
 ### C.1 Codegen rules
 
-- **One TSX per Tier-B atom** with a `renderer:` block. ~70 generated files (composite atoms generate too). Each ≤40 LOC, mostly prop-passing + delegation to a Tier-A primitive.
+- **One TSX per atom** with a `renderer:` block. ~155 generated files (composite atoms generate too). Each ≤40 LOC, mostly prop-passing + delegation to a Tier-A primitive (or to other atoms via `composes:`).
+- **Output directory:** `components/src/recipes/` for codegen output. Distinct from `components/src/components/` (the existing 7 hand-written components, which migrate to atom-mapped `recipeId`s in M2's optional follow-up) and `components/src/primitives/` (Tier-A hand-written primitives, M3).
 - **JSON Schema enumerates every atom id** + props. LLMs validate output before submitting; matcher uses it for prop-typed metadata.
 - **`atoms.lock.json`** is committed alongside; CI compares against `npm run codegen` output and fails if drifted (`atoms.yaml` was edited without re-running codegen).
 - **Tier-A primitive files are NOT generated** — they live in `components/src/primitives/` and are hand-written. Codegen verifies that every atom row referencing a primitive has a matching primitive file (and vice versa).
