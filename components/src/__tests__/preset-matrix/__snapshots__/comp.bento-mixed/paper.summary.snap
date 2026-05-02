@@ -1,0 +1,7 @@
+{
+  "error": "TypeError: Cannot read properties of undefined (reading 'map')",
+  "preset": "paper",
+  "recipe": "comp.bento-mixed",
+  "status": "override:emit-throws",
+  "still_throws": true
+}

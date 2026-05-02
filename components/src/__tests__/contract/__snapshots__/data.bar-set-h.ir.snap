@@ -1,0 +1,4 @@
+{
+  "atomId": "data.bar-set-h",
+  "error": "TypeError: Cannot read properties of undefined (reading 'length')"
+}

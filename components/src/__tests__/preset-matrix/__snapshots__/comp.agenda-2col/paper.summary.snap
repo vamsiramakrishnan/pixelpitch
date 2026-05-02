@@ -1,0 +1,7 @@
+{
+  "error": "TypeError: Cannot read properties of undefined (reading 'toUpperCase')",
+  "preset": "paper",
+  "recipe": "comp.agenda-2col",
+  "status": "override:emit-throws",
+  "still_throws": true
+}

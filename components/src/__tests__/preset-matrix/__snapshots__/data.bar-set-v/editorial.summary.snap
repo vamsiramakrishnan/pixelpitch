@@ -1,0 +1,7 @@
+{
+  "error": "TypeError: Cannot read properties of undefined (reading 'length')",
+  "preset": "editorial",
+  "recipe": "data.bar-set-v",
+  "status": "override:emit-throws",
+  "still_throws": true
+}

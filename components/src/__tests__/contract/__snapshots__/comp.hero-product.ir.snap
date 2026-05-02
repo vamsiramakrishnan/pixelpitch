@@ -1,0 +1,4 @@
+{
+  "atomId": "comp.hero-product",
+  "error": "TypeError: Cannot read properties of undefined (reading 'toUpperCase')"
+}

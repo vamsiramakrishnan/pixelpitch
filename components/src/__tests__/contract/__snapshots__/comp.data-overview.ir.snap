@@ -1,0 +1,4 @@
+{
+  "atomId": "comp.data-overview",
+  "error": "TypeError: Cannot read properties of undefined (reading 'toUpperCase')"
+}

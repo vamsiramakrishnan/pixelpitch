@@ -1,0 +1,4 @@
+{
+  "atomId": "comp.bento-mixed",
+  "error": "TypeError: Cannot read properties of undefined (reading 'map')"
+}

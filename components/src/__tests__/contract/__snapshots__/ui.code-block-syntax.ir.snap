@@ -1,0 +1,87 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "borderRadiusPx": 16,
+          "fill": {
+            "color": "#0e0e1a",
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "role": "code-bg"
+          },
+          "recipeId": "slot.code.bg",
+          "shape": "rounded-rect",
+          "zOrder": 0
+        },
+        {
+          "bbox": {
+            "h": 152,
+            "w": 552,
+            "x": 124,
+            "y": 124
+          },
+          "kind": "text",
+          "metadata": {
+            "preserveWhitespace": true,
+            "role": "code-body"
+          },
+          "paragraphs": [
+            {
+              "align": "left",
+              "runs": [
+                {
+                  "color": "#d4d4d8",
+                  "fontFamily": "JetBrains Mono, \"SF Mono\", monospace",
+                  "fontSizePx": 14,
+                  "fontWeight": 500,
+                  "italic": false,
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "slot.code.body",
+          "zOrder": 10
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "slot",
+        "language": null,
+        "role": "slot.code"
+      },
+      "recipeId": "slot.code",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "ui",
+    "primitive": "slot.code",
+    "role": "ui.code-block-syntax",
+    "version": "1.0.0"
+  },
+  "recipeId": "ui.code-block-syntax",
+  "zOrder": 0
+}
