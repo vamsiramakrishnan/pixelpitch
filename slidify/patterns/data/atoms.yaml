@@ -1941,3 +1941,227 @@ patterns:
       sample_html: |
         <span data-atom="data.delta-badge" style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:9999px;background:rgba(16,185,129,0.18);color:#86efac;font-size:12px;font-weight:600;">▲ +29.4%</span>
       expected_recipe_id: data.delta-badge
+
+  # ── anno.* additions (4 → 14) — callouts, hotspots, stamps, highlights ─
+
+  - id: atom-anno-callout-bubble
+    priority: 80
+    match:
+      anchor.data_atom_id: anno.callout-bubble
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_anno_callout_bubble, axis: anno, shape: callout-bubble }
+    renderer:
+      component: AnnoCalloutBubble
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:          { type: bbox,   required: true }
+        body:          { type: string, required: true }
+        pointerSide:   { type: enum,   values: [top, right, bottom, left], default: bottom }
+        pointerOffset: { type: number, min: 0, max: 1, default: 0.5 }
+        bgColor:       { type: color,  default: 'tokens.palette.surface-3' }
+    fixture:
+      sample_html: |
+        <div data-atom="anno.callout-bubble" style="position:relative;background:#16162a;border-radius:12px;padding:12px 16px;color:#f5f5f7;"><span>tip</span><div style="position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);width:0;height:0;border-style:solid;border-width:8px 8px 0 8px;border-color:#16162a transparent transparent transparent;"></div></div>
+      expected_recipe_id: anno.callout-bubble
+
+  - id: atom-anno-numbered-hotspot
+    priority: 80
+    match:
+      anchor.data_atom_id: anno.numbered-hotspot
+    emit:
+      kind: Composite
+      confidence: 0.99
+      metadata: { recipe: atom_anno_numbered_hotspot, axis: anno, kind: hotspot }
+    renderer:
+      component: AnnoNumberedHotspot
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,   required: true }
+        n:       { type: number, required: true }
+        anchor:  { type: object, required: true }
+        bgColor: { type: color,  default: 'tokens.palette.accent' }
+    fixture:
+      sample_html: |
+        <span data-atom="anno.numbered-hotspot" style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#a78bfa;color:#0a0a0f;font-weight:700;font-size:14px;">3</span>
+      expected_recipe_id: anno.numbered-hotspot
+
+  - id: atom-anno-tooltip
+    priority: 80
+    match:
+      anchor.data_atom_id: anno.tooltip
+    emit:
+      kind: Composite
+      confidence: 0.99
+      metadata: { recipe: atom_anno_tooltip, axis: anno, kind: tooltip-with-leader }
+    renderer:
+      component: AnnoTooltip
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:        { type: bbox,   required: true }
+        body:        { type: string, required: true }
+        leaderTo:    { type: object, required: true }
+        bgColor:     { type: color,  default: 'tokens.palette.surface-3' }
+    fixture:
+      sample_html: |
+        <div data-atom="anno.tooltip" style="position:relative;background:#16162a;border:1px solid rgba(255,255,255,0.10);border-radius:10px;padding:10px 14px;color:#f5f5f7;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,0.35);">87% native ratio</div>
+      expected_recipe_id: anno.tooltip
+
+  - id: atom-anno-stamp-draft
+    priority: 80
+    match:
+      anchor.data_atom_id: anno.stamp-draft
+    emit:
+      kind: NativeText
+      confidence: 0.99
+      metadata: { recipe: atom_anno_stamp_draft, axis: anno, stamp: draft }
+    renderer:
+      component: AnnoStampDraft
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:     { type: bbox,   required: true }
+        rotateDeg: { type: number, default: -12 }
+    fixture:
+      sample_html: |
+        <span data-atom="anno.stamp-draft" style="display:inline-block;border:3px solid #ef4444;color:#ef4444;font-weight:900;font-size:32px;letter-spacing:0.2em;padding:6px 16px;transform:rotate(-12deg);font-family:Inter,sans-serif;">DRAFT</span>
+      expected_recipe_id: anno.stamp-draft
+
+  - id: atom-anno-stamp-new
+    priority: 80
+    match:
+      anchor.data_atom_id: anno.stamp-new
+    emit:
+      kind: NativeText
+      confidence: 0.99
+      metadata: { recipe: atom_anno_stamp_new, axis: anno, stamp: new }
+    renderer:
+      component: AnnoStampNew
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:     { type: bbox,   required: true }
+        rotateDeg: { type: number, default: -8 }
+    fixture:
+      sample_html: |
+        <span data-atom="anno.stamp-new" style="display:inline-block;border:3px solid #10b981;color:#10b981;font-weight:900;font-size:28px;letter-spacing:0.2em;padding:6px 14px;transform:rotate(-8deg);">NEW</span>
+      expected_recipe_id: anno.stamp-new
+
+  - id: atom-anno-stamp-internal
+    priority: 80
+    match:
+      anchor.data_atom_id: anno.stamp-internal
+    emit:
+      kind: NativeText
+      confidence: 0.99
+      metadata: { recipe: atom_anno_stamp_internal, axis: anno, stamp: internal }
+    renderer:
+      component: AnnoStampInternal
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:     { type: bbox,   required: true }
+        rotateDeg: { type: number, default: -10 }
+    fixture:
+      sample_html: |
+        <span data-atom="anno.stamp-internal" style="display:inline-block;border:2px solid #71717a;color:#71717a;font-weight:700;font-size:22px;letter-spacing:0.18em;padding:4px 12px;transform:rotate(-10deg);">INTERNAL</span>
+      expected_recipe_id: anno.stamp-internal
+
+  - id: atom-anno-highlighter-mark
+    priority: 80
+    match:
+      anchor.data_atom_id: anno.highlighter-mark
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_anno_highlighter_mark, axis: anno, blend: multiply }
+    renderer:
+      component: AnnoHighlighterMark
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,  required: true }
+        color:   { type: color, default: 'tokens.palette.warn' }
+        opacity: { type: number, default: 0.4 }
+    fixture:
+      sample_html: |
+        <span data-atom="anno.highlighter-mark" style="background:rgba(245,158,11,0.4);padding:0 4px;mix-blend-mode:multiply;">87% native</span>
+      expected_recipe_id: anno.highlighter-mark
+
+  - id: atom-anno-redaction-bar
+    priority: 80
+    match:
+      anchor.data_atom_id: anno.redaction-bar
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_anno_redaction_bar, axis: anno, kind: redact }
+    renderer:
+      component: AnnoRedactionBar
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:  { type: bbox,  required: true }
+        color: { type: color, default: 'tokens.palette.ink-1' }
+    fixture:
+      sample_html: |
+        <span data-atom="anno.redaction-bar" style="display:inline-block;background:#000;color:#000;">CONFIDENTIAL</span>
+      expected_recipe_id: anno.redaction-bar
+
+  - id: atom-anno-brace-labeled
+    priority: 80
+    match:
+      anchor.data_atom_id: anno.brace-labeled
+    emit:
+      kind: Composite
+      confidence: 0.99
+      metadata: { recipe: atom_anno_brace_labeled, axis: anno, kind: brace-with-label }
+    renderer:
+      component: AnnoBraceLabeled
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:  { type: bbox,   required: true }
+        side:  { type: enum,   values: [left, right, top, bottom], default: right }
+        label: { type: string, required: true }
+        color: { type: color,  default: 'tokens.palette.ink-3' }
+    fixture:
+      sample_html: |
+        <div data-atom="anno.brace-labeled" style="display:flex;align-items:center;gap:8px;color:#a1a1aa;"><svg viewBox="0 0 24 240" width="12" height="120"><path d="M16 0 C 4 60 4 60 4 120 C 4 180 4 180 16 240" fill="none" stroke="#a1a1aa" stroke-width="2"/></svg><span style="font-size:13px;">six pillars</span></div>
+      expected_recipe_id: anno.brace-labeled
+
+  - id: atom-anno-sticker
+    priority: 80
+    match:
+      anchor.data_atom_id: anno.sticker
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_anno_sticker, axis: anno, kind: sticker }
+    renderer:
+      component: AnnoSticker
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,   required: true }
+        body:    { type: string, required: true }
+        rotateDeg: { type: number, default: -4 }
+        bgColor: { type: color,  default: 'tokens.palette.warn' }
+    fixture:
+      sample_html: |
+        <span data-atom="anno.sticker" style="display:inline-block;background:#f59e0b;color:#0a0a0f;padding:8px 14px;border-radius:6px;transform:rotate(-4deg);box-shadow:0 4px 8px rgba(0,0,0,0.25);font-weight:700;">v1.0 ✓</span>
+      expected_recipe_id: anno.sticker
