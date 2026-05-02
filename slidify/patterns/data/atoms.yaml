@@ -841,3 +841,229 @@ patterns:
       sample_html: |
         <div data-atom="bg.aurora-corners" style="position:absolute;inset:0;background:radial-gradient(circle at 0% 0%,rgba(99,102,241,0.30),transparent 50%),radial-gradient(circle at 100% 0%,rgba(236,72,153,0.30),transparent 50%),radial-gradient(circle at 0% 100%,rgba(59,130,246,0.25),transparent 50%),radial-gradient(circle at 100% 100%,rgba(168,85,247,0.30),transparent 50%);"></div>
       expected_recipe_id: bg.aurora-corners
+
+  # ── surf.* additions (8 → 18) — card variants, bento, paper, frames ────
+
+  - id: atom-surf-card-flat
+    priority: 60
+    match:
+      anchor.data_atom_id: surf.card-flat
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_surf_card_flat, axis: surf, elevation: flat }
+    renderer:
+      component: SurfCardFlat
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,  required: true }
+        bgColor: { type: color, default: 'tokens.palette.surface-2' }
+        radius:  { type: number, default: 16 }
+    fixture:
+      sample_html: |
+        <div data-atom="surf.card-flat" style="position:absolute;background:#0e0e1a;border-radius:16px;"></div>
+      expected_recipe_id: surf.card-flat
+
+  - id: atom-surf-card-raised
+    priority: 60
+    match:
+      anchor.data_atom_id: surf.card-raised
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_surf_card_raised, axis: surf, elevation: raised }
+    renderer:
+      component: SurfCardRaised
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,  required: true }
+        bgColor: { type: color, default: 'tokens.palette.surface-2' }
+        radius:  { type: number, default: 16 }
+    fixture:
+      sample_html: |
+        <div data-atom="surf.card-raised" style="position:absolute;background:#0e0e1a;border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,0.04),0 4px 12px rgba(0,0,0,0.08);"></div>
+      expected_recipe_id: surf.card-raised
+
+  - id: atom-surf-card-floating
+    priority: 60
+    match:
+      anchor.data_atom_id: surf.card-floating
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_surf_card_floating, axis: surf, elevation: floating }
+    renderer:
+      component: SurfCardFloating
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,  required: true }
+        bgColor: { type: color, default: 'tokens.palette.surface-2' }
+        radius:  { type: number, default: 16 }
+    fixture:
+      sample_html: |
+        <div data-atom="surf.card-floating" style="position:absolute;background:#0e0e1a;border-radius:16px;box-shadow:0 2px 4px rgba(0,0,0,0.06),0 12px 32px rgba(0,0,0,0.18);"></div>
+      expected_recipe_id: surf.card-floating
+
+  - id: atom-surf-card-depth
+    priority: 60
+    match:
+      anchor.data_atom_id: surf.card-depth
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_surf_card_depth, axis: surf, elevation: overlay, layered: true }
+    renderer:
+      component: SurfCardDepth
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:        { type: bbox,  required: true }
+        bgColor:     { type: color, default: 'tokens.palette.surface-3' }
+        accentColor: { type: color, default: 'tokens.palette.accent' }
+        radius:      { type: number, default: 18 }
+    fixture:
+      sample_html: |
+        <div data-atom="surf.card-depth" style="position:absolute;background:#16162a;border-radius:18px;border:1px solid rgba(255,255,255,0.10);box-shadow:0 8px 16px rgba(0,0,0,0.35),0 24px 48px rgba(0,0,0,0.55),inset 0 1px 0 rgba(167,139,250,0.45);"></div>
+      expected_recipe_id: surf.card-depth
+
+  - id: atom-surf-card-bordered
+    priority: 60
+    match:
+      anchor.data_atom_id: surf.card-bordered
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_surf_card_bordered, axis: surf, elevation: flat, border: 2 }
+    renderer:
+      component: SurfCardBordered
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:        { type: bbox,  required: true }
+        bgColor:     { type: color, default: 'tokens.palette.surface-1' }
+        borderColor: { type: color, default: 'tokens.palette.ink-1' }
+        borderPx:    { type: number, default: 2 }
+        radius:      { type: number, default: 0 }
+    fixture:
+      sample_html: |
+        <div data-atom="surf.card-bordered" style="position:absolute;background:#070710;border:2px solid #f5f5f7;"></div>
+      expected_recipe_id: surf.card-bordered
+
+  - id: atom-surf-card-paper
+    priority: 60
+    match:
+      anchor.data_atom_id: surf.card-paper
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_surf_card_paper, axis: surf, elevation: raised, palette: paper }
+    renderer:
+      component: SurfCardPaper
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,  required: true }
+        bgColor: { type: color, default: 'tokens.palette.surface-1' }
+        radius:  { type: number, default: 12 }
+    fixture:
+      sample_html: |
+        <div data-atom="surf.card-paper" style="position:absolute;background:#f5f1e8;border-radius:12px;box-shadow:0 1px 2px rgba(26,20,16,0.06),0 6px 16px rgba(26,20,16,0.10);"></div>
+      expected_recipe_id: surf.card-paper
+
+  - id: atom-surf-bento-cell
+    priority: 60
+    match:
+      anchor.data_atom_id: surf.bento-cell
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_surf_bento_cell, axis: surf, role: bento-cell }
+    renderer:
+      component: SurfBentoCell
+      tier: B
+      primitive: frame.bento
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,  required: true }
+        bgColor: { type: color, default: 'tokens.palette.surface-2' }
+        radius:  { type: number, default: 24 }
+        padding: { type: number, default: 32 }
+    fixture:
+      sample_html: |
+        <div data-atom="surf.bento-cell" style="position:absolute;background:#0e0e1a;border-radius:24px;padding:32px;border:1px solid rgba(255,255,255,0.06);"></div>
+      expected_recipe_id: surf.bento-cell
+
+  - id: atom-surf-section-band
+    priority: 60
+    match:
+      anchor.data_atom_id: surf.section-band
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_surf_section_band, axis: surf, role: section-divider }
+    renderer:
+      component: SurfSectionBand
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox: { type: bbox,  required: true }
+        fill: { type: fill,  default: 'tokens.gradient.accent-grad' }
+    fixture:
+      sample_html: |
+        <div data-atom="surf.section-band" style="position:absolute;left:0;right:0;background:linear-gradient(135deg,#818cf8,#c084fc 50%,#f472b6);"></div>
+      expected_recipe_id: surf.section-band
+
+  - id: atom-surf-frame-letterbox
+    priority: 60
+    match:
+      anchor.data_atom_id: surf.frame-letterbox
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_surf_frame_letterbox, axis: surf, role: letterbox }
+    renderer:
+      component: SurfFrameLetterbox
+      tier: B
+      primitive: frame.letterbox
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,   required: true }
+        bandPx:  { type: number, default: 96 }
+        bgColor: { type: color,  default: 'tokens.palette.surface-1' }
+    fixture:
+      sample_html: |
+        <div data-atom="surf.frame-letterbox" style="position:absolute;inset:0;"><div style="position:absolute;left:0;right:0;top:0;height:96px;background:#000"></div><div style="position:absolute;left:0;right:0;bottom:0;height:96px;background:#000"></div></div>
+      expected_recipe_id: surf.frame-letterbox
+
+  - id: atom-surf-tape-band
+    priority: 60
+    match:
+      anchor.data_atom_id: surf.tape-band
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_surf_tape_band, axis: surf, shape: parallelogram }
+    renderer:
+      component: SurfTapeBand
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,   required: true }
+        skewDeg: { type: number, default: -12 }
+        fill:    { type: fill,   default: 'tokens.gradient.accent-grad' }
+        label:   { type: string, required: false }
+    fixture:
+      sample_html: |
+        <div data-atom="surf.tape-band" style="position:absolute;background:linear-gradient(135deg,#818cf8,#f472b6);transform:skewX(-12deg);padding:14px 28px;color:#fff;font-weight:700;">NEW</div>
+      expected_recipe_id: surf.tape-band
