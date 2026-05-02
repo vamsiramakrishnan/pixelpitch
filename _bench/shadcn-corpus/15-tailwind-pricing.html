@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tailwind — Pricing 3-tier</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; width: 1280px; height: 720px;
+               font-family: Inter, -apple-system, BlinkMacSystemFont,
+                            "Segoe UI", Helvetica, Arial, sans-serif;
+               -webkit-font-smoothing: antialiased; color: #f5f5f7;
+               background: #070710; }
+  .slide { position: relative; width: 1280px; height: 720px;
+           padding: 80px; overflow: hidden;
+           background: #070710; }
+  .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: 0.42em;
+             text-transform: uppercase; color: #a78bfa; }
+  h1 { margin: 0; font-weight: 800; letter-spacing: -0.045em; }
+  h2 { margin: 0; font-weight: 700; letter-spacing: -0.02em; }
+  p, li { margin: 0; line-height: 1.55; }
+  ul { padding: 0; margin: 0; list-style: none; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="eyebrow" style="margin-bottom:18px; text-align:center;">Pricing</div>
+  <h1 style="font-size:48px; text-align:center; margin-bottom:40px;">One PPTX per pitch.</h1>
+  <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+    <div data-atom="surf.card-flat" style="padding:32px; background:#0e0e1a; border:1px solid rgba(255,255,255,0.08); border-radius:16px;">
+      <p style="color:#a1a1aa; font-size:13px; font-weight:600;">Hobby</p>
+      <p style="font-size:48px; font-weight:800; margin:16px 0 8px;">$0</p>
+      <p style="color:#71717a; font-size:13px;">forever</p>
+      <ul style="margin-top:24px; display:flex; flex-direction:column; gap:8px; font-size:13px; color:#d4d4d8;">
+        <li>✓ 50 slides / month</li>
+        <li>✓ 4 templates</li>
+        <li>✓ Watermark on export</li>
+      </ul>
+    </div>
+    <div data-atom="surf.card-raised"
+         style="padding:32px; background:#16162a;
+                border:2px solid #a78bfa; border-radius:16px;
+                position:relative;
+                box-shadow: 0 24px 60px rgba(167,139,250,0.20);">
+      <span style="position:absolute; top:-12px; left:32px; padding:4px 10px; border-radius:9999px; background:#a78bfa; color:#0a0a0f; font-size:12px; font-weight:700;">POPULAR</span>
+      <p style="color:#a78bfa; font-size:13px; font-weight:600;">Pro</p>
+      <p style="font-size:48px; font-weight:800; margin:16px 0 8px;">$29<span style="font-size:18px; color:#a1a1aa;">/mo</span></p>
+      <p style="color:#71717a; font-size:13px;">per editor</p>
+      <ul style="margin-top:24px; display:flex; flex-direction:column; gap:8px; font-size:13px; color:#d4d4d8;">
+        <li>✓ Unlimited slides</li>
+        <li>✓ All templates &amp; atoms</li>
+        <li>✓ No watermark</li>
+        <li>✓ PPTX round-trip</li>
+      </ul>
+    </div>
+    <div data-atom="surf.card-flat" style="padding:32px; background:#0e0e1a; border:1px solid rgba(255,255,255,0.08); border-radius:16px;">
+      <p style="color:#a1a1aa; font-size:13px; font-weight:600;">Team</p>
+      <p style="font-size:48px; font-weight:800; margin:16px 0 8px;">$79<span style="font-size:18px; color:#a1a1aa;">/mo</span></p>
+      <p style="color:#71717a; font-size:13px;">per seat</p>
+      <ul style="margin-top:24px; display:flex; flex-direction:column; gap:8px; font-size:13px; color:#d4d4d8;">
+        <li>✓ Everything in Pro</li>
+        <li>✓ Brand atoms.yaml lock</li>
+        <li>✓ Slack &amp; Figma plugins</li>
+        <li>✓ SSO</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</body>
+</html>
