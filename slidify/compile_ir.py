@@ -500,6 +500,20 @@ class _IRCompiler:
         clip: IRClipPathRoundedRect,
     ) -> None:
         """Render picture inside a ROUNDED_RECTANGLE shape via picture-fill."""
+        # Fetch BEFORE adding the auto-shape: if the source is missing or
+        # unreachable we want the slide to skip the picture entirely (matching
+        # `_emit_picture`'s non-clipped path), not be left with an orphan
+        # rounded rectangle that has no fill.
+        try:
+            data = _fetch_picture(node.src)
+        except Exception as e:
+            log.warning(
+                "compile_ir.picture_fetch_failed",
+                src=node.src[:80],
+                error=str(e),
+            )
+            return
+
         # Apply inset to the bbox first (clip is relative to the node bbox).
         inset = max(0.0, clip.insetPx)
         inner = IRBbox(
@@ -522,16 +536,6 @@ class _IRCompiler:
             shape.adjustments[0] = adj_norm
         except Exception:
             pass
-
-        try:
-            data = _fetch_picture(node.src)
-        except Exception as e:
-            log.warning(
-                "compile_ir.picture_fetch_failed",
-                src=node.src[:80],
-                error=str(e),
-            )
-            return
         # Replace solid fill with picture fill via lxml.
         try:
             sp_pr = shape._element.spPr
