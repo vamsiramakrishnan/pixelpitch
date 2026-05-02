@@ -139,6 +139,16 @@ export interface TypeSpec {
 export interface TokenBundle {
   /** Stable identifier for this preset (e.g. `'vercel-dark'`). */
   name: string;
+  /**
+   * Semver string for this preset bundle (e.g. `'1.0.0'`). Decks pin to a
+   * specific `name@version` so design-trend rotation is opt-in: editing the
+   * accent gradient on `vercel-dark@1.0.0` is forbidden — publish
+   * `vercel-dark@1.1.0` (or `2.0.0`) instead. The build system enforces
+   * frozenness; a CI gate fails any PR that mutates a published bundle.
+   *
+   * See CONTRACT §9.8 (semver presets) and CONTRACT-v2 §B4.
+   */
+  version: string;
   /** Solid palette colors keyed by {@link PaletteKey}. */
   palette: Record<PaletteKey, Color>;
   /** Gradient stops keyed by {@link GradientKey}. */
@@ -309,6 +319,7 @@ export function defaultFonts(): Record<FontFamilyKey, string> {
  */
 export const DEFAULT_TOKENS: TokenBundle = {
   name: 'vercel-dark',
+  version: '1.0.0',
   palette: {
     'surface-1':       '#070710',
     'surface-2':       '#0e0e1a',

@@ -126,6 +126,10 @@ function makePreset(
 
   return {
     name,
+    // All Wave-2 presets ship at v1.0.0. Once a deck pins on a preset
+    // version, edits to that bundle are forbidden — bump to 1.1.0 / 2.0.0
+    // and let the deck opt in. Per CONTRACT-v2 §B4 (semver presets).
+    version: '1.0.0',
     palette,
     gradients,
     type,
