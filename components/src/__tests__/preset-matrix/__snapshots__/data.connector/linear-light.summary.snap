@@ -1,0 +1,7 @@
+{
+  "error": "TypeError: Cannot read properties of undefined (reading 'x')",
+  "preset": "linear-light",
+  "recipe": "data.connector",
+  "status": "override:emit-throws",
+  "still_throws": true
+}

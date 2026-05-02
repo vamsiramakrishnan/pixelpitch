@@ -1,0 +1,4 @@
+{
+  "atomId": "comp.agenda-2col",
+  "error": "TypeError: Cannot read properties of undefined (reading 'toUpperCase')"
+}

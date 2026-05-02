@@ -1,0 +1,7 @@
+{
+  "error": "TypeError: Cannot read properties of undefined (reading 'toUpperCase')",
+  "preset": "brutalist",
+  "recipe": "comp.big-stat-hero",
+  "status": "override:emit-throws",
+  "still_throws": true
+}

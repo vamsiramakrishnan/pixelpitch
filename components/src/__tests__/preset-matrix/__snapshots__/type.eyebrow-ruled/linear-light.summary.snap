@@ -1,0 +1,7 @@
+{
+  "error": "TypeError: Cannot read properties of undefined (reading 'toUpperCase')",
+  "preset": "linear-light",
+  "recipe": "type.eyebrow-ruled",
+  "status": "override:emit-throws",
+  "still_throws": true
+}

@@ -1,0 +1,7 @@
+{
+  "error": "TypeError: Cannot read properties of undefined (reading 'toUpperCase')",
+  "preset": "glass-noir",
+  "recipe": "comp.agenda-toc",
+  "status": "override:emit-throws",
+  "still_throws": true
+}

@@ -1,0 +1,7 @@
+{
+  "error": "TypeError: Cannot read properties of undefined (reading 'length')",
+  "preset": "stripe",
+  "recipe": "ui.checklist",
+  "status": "override:emit-throws",
+  "still_throws": true
+}

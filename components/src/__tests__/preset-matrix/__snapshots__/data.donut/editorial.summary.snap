@@ -1,0 +1,7 @@
+{
+  "error": "TypeError: Cannot read properties of undefined (reading 'reduce')",
+  "preset": "editorial",
+  "recipe": "data.donut",
+  "status": "override:emit-throws",
+  "still_throws": true
+}

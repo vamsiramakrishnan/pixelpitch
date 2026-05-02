@@ -1,0 +1,43 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [],
+      "kind": "group",
+      "metadata": {
+        "axis": "frame",
+        "innerBbox": {
+          "h": 8,
+          "w": 408,
+          "x": 196,
+          "y": 196
+        },
+        "insetPx": 96,
+        "padding": "cozy",
+        "role": "frame.safe-area"
+      },
+      "recipeId": "frame.safe-area",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "surf",
+    "primitive": "frame.safe-area",
+    "role": "surf.tape-band",
+    "version": "1.0.0"
+  },
+  "recipeId": "surf.tape-band",
+  "zOrder": 0
+}

@@ -1,0 +1,7 @@
+{
+  "error": "TypeError: Cannot read properties of undefined (reading 'reduce')",
+  "preset": "brutalist",
+  "recipe": "data.donut-multi-segment",
+  "status": "override:emit-throws",
+  "still_throws": true
+}

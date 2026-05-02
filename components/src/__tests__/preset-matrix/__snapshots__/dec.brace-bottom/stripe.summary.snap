@@ -1,0 +1,10 @@
+{
+  "native_area_px2": 0,
+  "native_ratio": 0,
+  "preset": "stripe",
+  "raster_nodes": 0,
+  "recipe": "dec.brace-bottom",
+  "root_area_px2": 921600,
+  "status": "observe",
+  "total_nodes": 1
+}

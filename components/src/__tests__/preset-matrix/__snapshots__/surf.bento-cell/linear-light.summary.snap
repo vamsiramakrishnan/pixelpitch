@@ -1,0 +1,7 @@
+{
+  "error": "TypeError: Cannot read properties of undefined (reading 'map')",
+  "preset": "linear-light",
+  "recipe": "surf.bento-cell",
+  "status": "override:emit-throws",
+  "still_throws": true
+}
