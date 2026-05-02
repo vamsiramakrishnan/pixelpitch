@@ -1704,3 +1704,240 @@ patterns:
       sample_html: |
         <span data-atom="dec.bullet-dot" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#a78bfa;"></span>
       expected_recipe_id: dec.bullet-dot
+
+  # ── data.* additions (8 → 18) — connectors, bars, donuts, KPIs, table ──
+
+  - id: atom-data-connector
+    priority: 76
+    match:
+      anchor.data_atom_id: data.connector
+    emit:
+      kind: NativeSvg
+      confidence: 0.99
+      metadata: { recipe: atom_data_connector, axis: data, shape: path }
+    renderer:
+      component: DataConnector
+      tier: B
+      primitive: diagram.connector
+      version: 1.0.0
+      props:
+        bbox:   { type: bbox,   required: true }
+        from:   { type: object, required: true }
+        to:     { type: object, required: true }
+        kind:   { type: enum,   values: [straight, orthogonal, curved], default: straight }
+        head:   { type: enum,   values: [none, arrow, dot, diamond, bar], default: arrow }
+        dashed: { type: boolean, default: false }
+        color:  { type: color,  default: 'tokens.palette.ink-3' }
+    fixture:
+      sample_html: |
+        <svg data-atom="data.connector" viewBox="0 0 240 80"><line x1="10" y1="40" x2="220" y2="40" stroke="#a1a1aa" stroke-width="2"/><polygon points="220,40 210,34 210,46" fill="#a1a1aa"/></svg>
+      expected_recipe_id: data.connector
+
+  - id: atom-data-bar-set-h
+    priority: 76
+    match:
+      anchor.data_atom_id: data.bar-set-h
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_data_bar_set_h, axis: data, chart: bar }
+    renderer:
+      component: DataBarSetH
+      tier: B
+      primitive: data.bar
+      version: 1.0.0
+      props:
+        bbox: { type: bbox, required: true }
+        bars: { type: array, required: true }
+        max:  { type: number, required: false }
+    fixture:
+      sample_html: |
+        <div data-atom="data.bar-set-h" style="display:flex;flex-direction:column;gap:8px;"><div style="height:24px;background:#a78bfa;width:80%;"></div><div style="height:24px;background:#a78bfa;width:55%;"></div></div>
+      expected_recipe_id: data.bar-set-h
+
+  - id: atom-data-bar-set-v
+    priority: 76
+    match:
+      anchor.data_atom_id: data.bar-set-v
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_data_bar_set_v, axis: data, chart: bar }
+    renderer:
+      component: DataBarSetV
+      tier: B
+      primitive: data.bar
+      version: 1.0.0
+      props:
+        bbox: { type: bbox, required: true }
+        bars: { type: array, required: true }
+        max:  { type: number, required: false }
+    fixture:
+      sample_html: |
+        <div data-atom="data.bar-set-v" style="display:flex;align-items:flex-end;gap:8px;height:200px;"><div style="width:24px;background:#a78bfa;height:80%;"></div><div style="width:24px;background:#a78bfa;height:55%;"></div></div>
+      expected_recipe_id: data.bar-set-v
+
+  - id: atom-data-donut
+    priority: 76
+    match:
+      anchor.data_atom_id: data.donut
+    emit:
+      kind: NativeSvg
+      confidence: 0.99
+      metadata: { recipe: atom_data_donut, axis: data, chart: donut }
+    renderer:
+      component: DataDonut
+      tier: B
+      primitive: data.donut
+      version: 1.0.0
+      props:
+        bbox:        { type: bbox,   required: true }
+        segments:    { type: array,  required: true }
+        thicknessPx: { type: number, default: 24 }
+        startDeg:    { type: number, default: 0 }
+    fixture:
+      sample_html: |
+        <svg data-atom="data.donut" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="#a78bfa" stroke-width="20" stroke-dasharray="180 251"/></svg>
+      expected_recipe_id: data.donut
+
+  - id: atom-data-donut-multi-segment
+    priority: 76
+    match:
+      anchor.data_atom_id: data.donut-multi-segment
+    emit:
+      kind: NativeSvg
+      confidence: 0.99
+      metadata: { recipe: atom_data_donut_multi, axis: data, chart: donut, segments: many }
+    renderer:
+      component: DataDonutMultiSegment
+      tier: B
+      primitive: data.donut
+      version: 1.0.0
+      props:
+        bbox:        { type: bbox,   required: true }
+        segments:    { type: array,  required: true }
+        thicknessPx: { type: number, default: 24 }
+        startDeg:    { type: number, default: -90 }
+        gapDeg:      { type: number, default: 2 }
+    fixture:
+      sample_html: |
+        <svg data-atom="data.donut-multi-segment" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="#a78bfa" stroke-width="20" stroke-dasharray="100 251"/><circle cx="50" cy="50" r="40" fill="none" stroke="#f472b6" stroke-width="20" stroke-dasharray="80 251" stroke-dashoffset="-100"/></svg>
+      expected_recipe_id: data.donut-multi-segment
+
+  - id: atom-data-kpi-row
+    priority: 76
+    match:
+      anchor.data_atom_id: data.kpi-row
+    emit:
+      kind: Composite
+      confidence: 0.99
+      metadata: { recipe: atom_data_kpi_row, axis: data, layout: row }
+    renderer:
+      component: DataKpiRow
+      tier: B
+      primitive: data.kpi-row
+      version: 1.0.0
+      props:
+        bbox: { type: bbox,  required: true }
+        kpis: { type: array, required: true }
+    fixture:
+      sample_html: |
+        <div data-atom="data.kpi-row" style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;"><div><div style="color:#a1a1aa;font-size:12px;text-transform:uppercase;letter-spacing:0.18em;">MAU</div><div style="font-size:48px;font-weight:800;color:#f5f5f7;">2.1M</div></div></div>
+      expected_recipe_id: data.kpi-row
+
+  - id: atom-data-data-table
+    priority: 76
+    match:
+      anchor.data_atom_id: data.data-table
+    emit:
+      kind: Composite
+      confidence: 0.99
+      metadata: { recipe: atom_data_data_table, axis: data, layout: table }
+    renderer:
+      component: DataDataTable
+      tier: B
+      primitive: data.table
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,    required: true }
+        headers: { type: array,   required: true }
+        rows:    { type: array,   required: true }
+        zebra:   { type: boolean, default: true }
+        align:   { type: array,   required: false }
+    fixture:
+      sample_html: |
+        <table data-atom="data.data-table" style="width:100%;border-collapse:collapse;color:#e4e4e7;font-size:14px;"><thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid rgba(255,255,255,0.10);">Region</th><th style="text-align:right;padding:8px;border-bottom:1px solid rgba(255,255,255,0.10);">MAU</th></tr></thead><tbody><tr><td style="padding:8px;">NA</td><td style="text-align:right;padding:8px;">820k</td></tr></tbody></table>
+      expected_recipe_id: data.data-table
+
+  - id: atom-data-mini-heatmap
+    priority: 76
+    match:
+      anchor.data_atom_id: data.mini-heatmap
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_data_mini_heatmap, axis: data, chart: heatmap }
+    renderer:
+      component: DataMiniHeatmap
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:       { type: bbox,  required: true }
+        cells:      { type: array, required: true }
+        colorScale: { type: array, required: false }
+    fixture:
+      sample_html: |
+        <div data-atom="data.mini-heatmap" style="display:grid;grid-template-columns:repeat(7,16px);gap:2px;">
+          <div style="width:16px;height:16px;background:rgba(167,139,250,0.2)"></div>
+          <div style="width:16px;height:16px;background:rgba(167,139,250,0.5)"></div>
+          <div style="width:16px;height:16px;background:rgba(167,139,250,0.9)"></div>
+        </div>
+      expected_recipe_id: data.mini-heatmap
+
+  - id: atom-data-bullet-bar
+    priority: 76
+    match:
+      anchor.data_atom_id: data.bullet-bar
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_data_bullet_bar, axis: data, chart: bullet }
+    renderer:
+      component: DataBulletBar
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,   required: true }
+        value:   { type: number, required: true }
+        target:  { type: number, required: true }
+        max:     { type: number, required: true }
+        ranges:  { type: array,  required: false }
+    fixture:
+      sample_html: |
+        <div data-atom="data.bullet-bar" style="position:relative;height:20px;background:rgba(255,255,255,0.06);border-radius:4px;"><div style="position:absolute;left:0;top:0;bottom:0;width:64%;background:#a78bfa;border-radius:4px;"></div><div style="position:absolute;left:80%;top:-4px;bottom:-4px;width:2px;background:#f5f5f7;"></div></div>
+      expected_recipe_id: data.bullet-bar
+
+  - id: atom-data-delta-badge
+    priority: 76
+    match:
+      anchor.data_atom_id: data.delta-badge
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_data_delta_badge, axis: data, badge: delta }
+    renderer:
+      component: DataDeltaBadge
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:      { type: bbox,   required: true }
+        value:     { type: string, required: true }
+        direction: { type: enum,   values: [up, down, flat], default: up }
+        size:      { type: enum,   values: [sm, md], default: md }
+    fixture:
+      sample_html: |
+        <span data-atom="data.delta-badge" style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:9999px;background:rgba(16,185,129,0.18);color:#86efac;font-size:12px;font-weight:600;">▲ +29.4%</span>
+      expected_recipe_id: data.delta-badge
