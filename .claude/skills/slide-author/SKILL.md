@@ -29,14 +29,20 @@ the runtime JS.
 |---|---|---|
 | **Tailwind v3 / v4 utilities** | All utilities — color, spacing, type scale, gradient, shadow, ring, transform: translate/scale/rotate. `@apply` an inline class chain into a `<style>` block, or write the resolved CSS directly. | `backdrop-blur-*`, `mix-blend-*`, `filter blur-*`, `clip-path-*` (raster). |
 | **shadcn/ui (static subset)** | Card, Button, Badge, Alert, Avatar (+ AvatarStack), Separator, Progress (static), Tabs body, Accordion body, Skeleton, Toast (static), HoverCard body, Tooltip body. | Dialog, Dropdown, Command, Sheet, Popover, anything that requires a portal or real interactivity (no JS runs at convert time). |
-| **lucide-react / lucide icons** | Inline `<svg>` icons. Walks like any other SVG — ≤200 primitives per icon. | None. |
+| **lucide-react / lucide icons** | Inline `<svg>` icons. Always 24×24 viewBox, stroke-2, `stroke-linecap:round`, `stroke-linejoin:round`, `fill:none`. Each icon is ≤6 path elements — well under the 200-primitive native budget. Copy the SVG straight from `lucide.dev/icons/<name>` (ISC). The reference set in `_bench/llm-corpus/generate.py::LUCIDE_ICONS` covers 22 of the most-used ones. | None — every lucide icon converts. |
 | **Framer Motion** | `motion.div` annotated `data-slidify-capture-gif="true"` becomes an animated GIF embedded in the slide via `slidify capture-gif`. | Animations triggered by user interaction (hover, scroll, click) — they never fire because there's no user. |
 | **shadcn-style class names** | Inline-emitted via Tailwind's compile output. The matcher can ignore class names entirely; data-atom hints take precedence. | — |
 | **Custom inline `<svg>`** | Always native (≤200 primitives). | `filter="url(#blur)"` defs. |
 
-The **shadcn / Tailwind / Framer-Motion** trio is the assumed default
-vocabulary. You don't need to invent components — pick from those, and
-the slide is on the fast path.
+The **shadcn / Tailwind / lucide / Framer-Motion** quartet is the assumed
+default vocabulary. You don't need to invent components — pick from those,
+and the slide is on the fast path.
+
+For a working pattern catalog spanning six theme registers (vercel-dark,
+paper, magazine, brutalist, mono-spec, duotone) plus icon-driven dashboard
+and feature-grid slides, see `_bench/llm-corpus/`. Every slide there is
+self-contained HTML, passes `slidify check`, and converts natively. Use it
+as a reference when you're not sure which patterns land cleanly.
 
 ## Pre-flight: `slidify check` is your inner loop
 

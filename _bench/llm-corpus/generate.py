@@ -334,6 +334,88 @@ def stat(*, label: str, value: str, unit: str = "", delta: str = "", delta_tone:
     )
 
 
+# ---------------------------------------------------------------------------
+# §LUCIDE — inline-SVG icons (subset)
+# ---------------------------------------------------------------------------
+#
+# Lucide-react ships icons as inline 24×24 SVG with stroke=2,
+# stroke-linecap=round, stroke-linejoin=round, fill=none. Slidify
+# converts every `<svg>` natively as long as the icon stays under
+# ~200 primitive children — every icon below qualifies.
+#
+# Path data is from lucide.dev (ISC license). When you need an icon
+# that isn't here, copy it straight from `lucide.dev/icons/<name>` —
+# it'll convert just like the ones below.
+
+LUCIDE_ICONS: dict[str, str] = {
+    "check":         '<path d="M20 6 9 17l-5-5"/>',
+    "x":             '<path d="M18 6 6 18"/><path d="M6 6l12 12"/>',
+    "plus":          '<path d="M5 12h14"/><path d="M12 5v14"/>',
+    "minus":         '<path d="M5 12h14"/>',
+    "chevron-right": '<path d="m9 18 6-6-6-6"/>',
+    "arrow-right":   '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+    "arrow-up-right":'<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
+    "circle":        '<circle cx="12" cy="12" r="10"/>',
+    "square":        '<rect width="18" height="18" x="3" y="3" rx="2"/>',
+    "play":          '<polygon points="6 3 20 12 6 21 6 3"/>',
+    "star":          ('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14'
+                      ' 18.18 21.02 12 17.77 5.82 21.02 7 14.14'
+                      ' 2 9.27 8.91 8.26 12 2"/>'),
+    "zap": ('<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46'
+            'l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2'
+            'a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>'),
+    "globe": ('<circle cx="12" cy="12" r="10"/>'
+              '<line x1="2" y1="12" x2="22" y2="12"/>'
+              '<path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10'
+              ' 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>'),
+    "user":  ('<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>'
+              '<circle cx="12" cy="7" r="4"/>'),
+    "bar-chart": ('<line x1="12" y1="20" x2="12" y2="10"/>'
+                  '<line x1="18" y1="20" x2="18" y2="4"/>'
+                  '<line x1="6" y1="20" x2="6" y2="16"/>'),
+    "lock":  ('<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>'
+              '<path d="M7 11V7a5 5 0 0 1 10 0v4"/>'),
+    "shield": ('<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01'
+               'C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72'
+               'a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>'),
+    "eye":   ('<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>'
+              '<circle cx="12" cy="12" r="3"/>'),
+    "github": ('<path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5'
+               '.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5'
+               ' 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2'
+               'c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9'
+               'c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85'
+               'v4"/><path d="M9 18c-4.51 2-5-2-7-2"/>'),
+    "rocket": ('<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2'
+               'c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>'
+               '<path d="M12 15c4-1.4 7.6-5.6 8-12-6.4.4-10.6 4-12 8z"/>'
+               '<path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>'
+               '<path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>'),
+    "sparkles": ('<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582'
+                 'a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135'
+                 'a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937'
+                 'l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063'
+                 'a2 2 0 0 0-1.437 1.437l-1.582 6.135'
+                 'a.5.5 0 0 1-.963 0z"/>'
+                 '<path d="M20 3v4"/><path d="M22 5h-4"/>'
+                 '<path d="M4 17v2"/><path d="M5 18H3"/>'),
+    "trending-up": ('<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>'
+                    '<polyline points="16 7 22 7 22 13"/>'),
+}
+
+
+def lucide(name: str, *, size: int = 24, stroke: float = 2.0,
+           color: str = "currentColor") -> str:
+    """Return inline SVG for a lucide icon. Always 24×24 viewBox."""
+    body = LUCIDE_ICONS[name]
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{size}" '
+        f'height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" '
+        f'stroke-width="{stroke}" stroke-linecap="round" '
+        f'stroke-linejoin="round" data-icon="lucide.{name}">{body}</svg>'
+    )
+
+
 def aurora_bg() -> str:
     return (
         '<div data-atom="bg.aurora-band" style="position:absolute; inset:0; '
@@ -1498,6 +1580,215 @@ def slide_20_ranking_leaderboard() -> tuple[str, str]:
     return "20-ranking-leaderboard", body
 
 
+def slide_21_lucide_feature_grid() -> tuple[str, str]:
+    """Vercel-dark feature grid driven by lucide icons.
+
+    Six feature tiles, each with a lucide icon at 32px, a tagline, and
+    a one-line copy. Plus a top nav strip with five icons exercising
+    the lucide subset end-to-end. This slide is the integration test
+    for the icon converter path.
+    """
+    t = THEMES["vercel-dark"]
+    features = [
+        ("zap",         "Sub-second compile",  "Median 280 ms / slide on a 12-deck batch."),
+        ("shield",      "PPTX-safe by default","Every shape carries a recipe id; no rasters."),
+        ("trending-up", "Native_ratio 87%",    "Up from 58% in the v0.1 baseline."),
+        ("sparkles",    "LLM-friendly",        "`slidify check` blocks bad HTML pre-convert."),
+        ("globe",       "Six theme registers", "Vercel-dark, paper, magazine, brutalist…"),
+        ("rocket",      "Round-trippable",     "Edits in PPT trace back to recipe ids."),
+    ]
+    def tile(icon, title, copy):
+        icon_svg = lucide(icon, size=28, stroke=1.8, color=t.accent)
+        return (
+            f'<div data-atom="surf.card-flat" '
+            f'style="padding:24px; background:{t.surface}; '
+            f'border:1px solid {t.border}; border-radius:14px;">'
+            f'<div style="width:56px; height:56px; border-radius:12px; '
+            f'background:rgba(167,139,250,0.12); display:flex; '
+            f'align-items:center; justify-content:center; margin-bottom:18px;">'
+            f'{icon_svg}</div>'
+            f'<h3 style="margin:0 0 6px; font-size:18px; font-weight:700; '
+            f'color:{t.fg};">{title}</h3>'
+            f'<p style="margin:0; color:{t.muted}; font-size:13.5px; '
+            f'line-height:1.5;">{copy}</p></div>'
+        )
+    nav_icons = ["github", "globe", "sparkles", "user", "arrow-up-right"]
+    nav_html = "".join(
+        f'<div style="width:36px; height:36px; border-radius:9px; '
+        f'border:1px solid {t.border}; display:flex; align-items:center; '
+        f'justify-content:center; color:{t.fg};">{lucide(n, size=18)}</div>'
+        for n in nav_icons
+    )
+    body = f"""<div class="slide">
+      <!-- top nav -->
+      <div style="display:flex; justify-content:space-between; align-items:center;
+                  margin-bottom:48px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:36px; height:36px; border-radius:10px;
+                      background:{t.accent_grad};"></div>
+          <div style="font-size:18px; font-weight:700;">slidify</div>
+          <span style="margin-left:8px; padding:3px 8px; border-radius:6px;
+                       background:rgba(255,255,255,0.06); font-size:11px;
+                       color:{t.muted}; letter-spacing:0.08em;">
+            v1.0 · ICONS</span>
+        </div>
+        <div style="display:flex; gap:10px;">{nav_html}</div>
+      </div>
+
+      {kicker('Feature grid · powered by lucide')}
+      <h1 style="margin:14px 0 36px; font-size:48px; font-weight:800;
+                 letter-spacing:-0.025em;">
+        Six reasons icons matter.
+      </h1>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:18px;">
+        {''.join(tile(i, t_, c) for i, t_, c in features)}
+      </div>
+      <div style="margin-top:32px; display:flex; align-items:center; gap:10px;
+                  color:{t.muted}; font-size:13px;">
+        {lucide('check', size=16, stroke=2.4, color=t.success)}
+        <span>All icons inline-SVG · stroke-2 · 24×24 viewBox · ISC-licensed.</span>
+      </div>
+    </div>"""
+    return "21-lucide-feature-grid", body
+
+
+def slide_22_lucide_dashboard_paper() -> tuple[str, str]:
+    """Paper-theme dashboard with lucide icons in tile chrome + sidebar nav."""
+    t = THEMES["paper"]
+    sidebar_items = [
+        ("bar-chart", "Overview",     True),
+        ("trending-up", "Trends",     False),
+        ("user",      "Audience",     False),
+        ("globe",     "Geography",    False),
+        ("shield",    "Permissions",  False),
+        ("settings",  "Settings",     False),
+    ]
+    # 'settings' is heavy — use 'lock' instead for confidence
+    sidebar_items[5] = ("lock", "Permissions", False)
+    sidebar_html = "".join(
+        f'<div style="display:flex; align-items:center; gap:12px;'
+        f' padding:10px 14px; border-radius:8px;'
+        f' {"background:" + t.bg + "; color:" + t.accent + ";" if active else "color:" + t.muted + ";"}'
+        f' font-size:14px; font-weight:{600 if active else 500};">'
+        f'{lucide(icon, size=18, color=t.accent if active else t.muted)}'
+        f'<span>{label}</span></div>'
+        for icon, label, active in sidebar_items
+    )
+    def stat_tile(icon, label, value, delta_icon, delta_text, delta_pos):
+        delta_color = "#15803d" if delta_pos else "#b91c1c"
+        return (
+            f'<div style="padding:20px; background:{t.surface};'
+            f' border:1px solid {t.border}; border-radius:8px;">'
+            f'<div style="display:flex; justify-content:space-between;'
+            f' align-items:flex-start;">'
+            f'<div style="width:40px; height:40px; border-radius:8px;'
+            f' background:rgba(185,28,28,0.06); display:flex;'
+            f' align-items:center; justify-content:center;'
+            f' color:{t.accent};">'
+            f'{lucide(icon, size=20, color=t.accent)}</div>'
+            f'<div style="display:flex; align-items:center; gap:4px;'
+            f' color:{delta_color}; font-size:12px; font-weight:600;">'
+            f'{lucide(delta_icon, size=14, color=delta_color)}'
+            f'<span>{delta_text}</span></div>'
+            f'</div>'
+            f'<p style="margin:18px 0 4px; font-family:{t.fonts["display"]};'
+            f' font-size:36px; font-weight:700;'
+            f' letter-spacing:-0.01em; color:{t.fg};">{value}</p>'
+            f'<p style="margin:0; font-size:12px; color:{t.muted};'
+            f' letter-spacing:0.06em;">{label}</p></div>'
+        )
+    body = f"""<div class="slide" style="padding:0; display:grid;
+                                          grid-template-columns:240px 1fr;">
+      <!-- sidebar -->
+      <aside style="background:{t.surface_alt};
+                    border-right:1px solid {t.border};
+                    padding:24px 18px;">
+        <div style="display:flex; align-items:center; gap:10px;
+                    padding:0 6px 18px; border-bottom:1px solid {t.border};
+                    margin-bottom:14px;">
+          <div style="width:30px; height:30px; border-radius:8px;
+                      background:{t.accent}; display:flex;
+                      align-items:center; justify-content:center;
+                      color:{t.surface};">
+            {lucide('zap', size=16, color=t.surface)}</div>
+          <div style="font-family:{t.fonts['display']}; font-size:16px;
+                      font-weight:700;">Pitch · Console</div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          {sidebar_html}
+        </div>
+        <div style="margin-top:34px; padding:14px;
+                    background:{t.bg}; border:1px solid {t.border};
+                    border-radius:8px;">
+          <div style="display:flex; align-items:center; gap:8px;
+                      font-size:11px; letter-spacing:0.18em;
+                      text-transform:uppercase; color:{t.muted};">
+            {lucide('sparkles', size=14, color=t.accent)}
+            <span>Pro tip</span></div>
+          <p style="margin:8px 0 0; font-size:12px; line-height:1.45;
+                    color:{t.fg};">Press <kbd style="font-family:{t.fonts['mono']};
+            background:{t.surface}; border:1px solid {t.border};
+            padding:1px 5px; border-radius:3px;">⌘K</kbd> to open the
+            command palette.</p>
+        </div>
+      </aside>
+
+      <!-- main -->
+      <main style="padding:32px 40px;">
+        <div style="display:flex; justify-content:space-between;
+                    align-items:flex-start;">
+          <div>
+            <h1 style="margin:0 0 4px; font-family:{t.fonts['display']};
+                       font-size:28px; font-weight:700;
+                       letter-spacing:-0.012em;">Conversion overview</h1>
+            <p style="margin:0; font-size:13px; color:{t.muted};">
+              Last 28 days · all decks · production environment.</p>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <div style="display:flex; align-items:center; gap:6px;
+                        padding:8px 12px; border:1px solid {t.border};
+                        border-radius:6px; font-size:13px; color:{t.fg};">
+              {lucide('eye', size=14, color=t.muted)}
+              <span>Preview</span></div>
+            <div style="display:flex; align-items:center; gap:6px;
+                        padding:8px 12px; background:{t.accent};
+                        color:{t.surface}; border-radius:6px; font-size:13px;
+                        font-weight:600;">
+              {lucide('arrow-up-right', size=14, color=t.surface)}
+              <span>Export</span></div>
+          </div>
+        </div>
+
+        <div style="margin-top:24px; display:grid;
+                    grid-template-columns:repeat(3,1fr); gap:14px;">
+          {stat_tile('bar-chart', 'Decks rendered',  '1,284', 'trending-up', '+18.2%', True)}
+          {stat_tile('trending-up','Native ratio',    '87%',  'trending-up', '+4.1pp', True)}
+          {stat_tile('shield',    'Drift incidents', '0.12%','arrow-right', '−2.1pp', True)}
+        </div>
+
+        <div style="margin-top:18px; padding:18px;
+                    background:{t.surface}; border:1px solid {t.border};
+                    border-radius:8px;">
+          <div style="display:flex; align-items:center; gap:8px;
+                      margin-bottom:14px;">
+            {lucide('check', size=16, color='#15803d')}
+            <span style="font-size:13px; font-weight:700; color:{t.fg};">
+              All checks green</span>
+            <span style="margin-left:auto; font-family:{t.fonts['mono']};
+                         font-size:11px; color:{t.muted};">12s ago</span>
+          </div>
+          <div style="display:flex; gap:18px; font-size:12px; color:{t.muted};">
+            <span>{lucide('check', size=12, color='#15803d')} self-contained</span>
+            <span>{lucide('check', size=12, color='#15803d')} no risky CSS</span>
+            <span>{lucide('check', size=12, color='#15803d')} 0 warnings</span>
+            <span>{lucide('check', size=12, color='#15803d')} 21 / 21 atoms hint</span>
+          </div>
+        </div>
+      </main>
+    </div>"""
+    return "22-lucide-dashboard-paper", body
+
+
 SLIDES: list[tuple] = [
     # (fn, theme_name) — the existing nine all run vercel-dark.
     (slide_01_hero,            "vercel-dark"),
@@ -1520,6 +1811,8 @@ SLIDES: list[tuple] = [
     (slide_18_timeline_history,     "mono-spec"),
     (slide_19_brutalist_stat_wall,  "brutalist"),
     (slide_20_ranking_leaderboard,  "paper"),
+    (slide_21_lucide_feature_grid,  "vercel-dark"),
+    (slide_22_lucide_dashboard_paper,"paper"),
 ]
 
 
