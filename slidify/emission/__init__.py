@@ -1,0 +1,2 @@
+"""Shared PPTX emission primitives."""
+

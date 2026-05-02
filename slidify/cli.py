@@ -25,6 +25,11 @@ import click
 
 from slidify import __version__
 from slidify.api import ConversionConfig, convert
+from slidify.cli.commands import run_convert
+from slidify.cli.errors import remediation_for
+from slidify.cli.presenters import to_json
+from slidify.cli_schema import fail as schema_fail
+from slidify.cli_schema import ok as schema_ok
 from slidify.models import UnmatchedSignature
 
 # ---------------------------------------------------------------------------
@@ -139,16 +144,21 @@ def _run_convert(
         source = input_path
 
     try:
-        result = asyncio.run(convert(source, output_pptx, cfg))
+        result = run_convert(source, output_pptx, cfg)
     except Exception as e:
         remediation = _error_remediation(e)
         if json_out:
-            click.echo(json.dumps({
-                "error": str(e),
-                "type": type(e).__name__,
-                "stage": "convert",
-                "_remediation": remediation,
-            }, indent=2))
+            click.echo(
+                to_json(
+                    schema_fail(
+                        command="convert",
+                        err_type=type(e).__name__,
+                        message=str(e),
+                        stage="convert",
+                        next_steps=remediation,
+                    )
+                )
+            )
         else:
             click.echo(click.style(f"slidify: conversion failed: {e}", fg="red"), err=True)
             for r in remediation:
@@ -158,9 +168,15 @@ def _run_convert(
     if json_out:
         # Augment with `_next` hints so an LLM agent gets concrete
         # follow-up commands without re-reading the manifest.
-        payload = result.model_dump()
-        payload["_next"] = _next_steps(result)
-        click.echo(json.dumps(payload, indent=2, default=str))
+        click.echo(
+            to_json(
+                schema_ok(
+                    command="convert",
+                    metrics=result.model_dump(),
+                    next_steps=_next_steps(result),
+                )
+            )
+        )
     elif quiet:
         click.echo(str(result.pptx_path))
     else:
@@ -179,25 +195,7 @@ def _run_convert(
 
 def _error_remediation(exc: BaseException) -> list[str]:
     """Map exception kinds to actionable next-step commands."""
-    name = type(exc).__name__
-    msg = str(exc)
-    out: list[str] = []
-    if name == "FileNotFoundError" or "no such file" in msg.lower():
-        out.append("Verify the input path: `ls -la <path>`")
-        out.append("Or pipe HTML via stdin: `cat slide.html | slidify convert - out.pptx`")
-    if "playwright" in msg.lower() or "chromium" in msg.lower():
-        out.append("Run `slidify doctor` to verify Chromium is installed.")
-        out.append("Install with: `playwright install chromium --with-deps`")
-    if "soffice" in msg.lower() or "libreoffice" in msg.lower():
-        out.append("Install LibreOffice: `apt-get install -y libreoffice-impress`")
-        out.append("Or skip the oracle: `--no-oracle`")
-    if "no slides produced" in msg.lower():
-        out.append("Add `<!DOCTYPE html>` between slides, or pass a directory of per-slide files.")
-        out.append("Read: `slidify guide authoring --section 'Hard contract'`")
-    if not out:
-        out.append("Run `slidify doctor` to check the environment.")
-        out.append("Read `slidify guide troubleshooting`.")
-    return out
+    return remediation_for(exc)
 
 
 def _next_steps(result) -> list[str]:

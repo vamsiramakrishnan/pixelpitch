@@ -24,6 +24,7 @@ from pptx.enum.text import PP_ALIGN
 from pptx.util import Emu, Pt
 
 from slidify.colors import parse_color
+from slidify.emission.primitives import set_text_frame_margins_zero
 from slidify.fonts import resolve as resolve_font
 from slidify.geom import (
     SLIDE_H_EMU,
@@ -161,10 +162,7 @@ class _IRCompiler:
         tb = slide.shapes.add_textbox(x, y, w, h)
         tf = tb.text_frame
         tf.word_wrap = True
-        tf.margin_left = Emu(0)
-        tf.margin_right = Emu(0)
-        tf.margin_top = Emu(0)
-        tf.margin_bottom = Emu(0)
+        set_text_frame_margins_zero(tf)
 
         if node.fill is not None:
             _apply_fill(tb, node.fill)
