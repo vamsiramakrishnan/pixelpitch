@@ -206,6 +206,8 @@ class _SlideSummary:
     ops: list[EmitOp]
     decisions_by_tier: dict[str, int]
     overflow: list = field(default_factory=list)
+    coverage_gaps: list = field(default_factory=list)
+    exclusivity_violations: list = field(default_factory=list)
 
 
 # -----------------------------------------------------------------------------
@@ -566,6 +568,7 @@ async def convert(
                         unmatched,
                     )
                     from slidify._overflow import detect_overflow
+                    from slidify.unit_coverage import find_coverage_gaps
 
                     overflow = detect_overflow(
                         slide_index=plan.index,
@@ -581,12 +584,66 @@ async def convert(
                             axes=sorted({o.axis for o in overflow}),
                             worst_px=max(o.overflow_px for o in overflow),
                         )
+                    # Coverage oracle: report DOM elements with text whose
+                    # region isn't owned by any produced VisualUnit. The
+                    # auditing pass is defensive — wrapped in try/except
+                    # so a bug in it can never break a real conversion.
+                    try:
+                        coverage_gaps = find_coverage_gaps(
+                            plan.rendered.elements,
+                            plan.units,
+                            slide_index=plan.index,
+                        )
+                    except Exception as e:
+                        log.warning(
+                            "api.coverage_oracle_failed",
+                            slide=plan.index,
+                            error=str(e),
+                        )
+                        coverage_gaps = []
+                    if coverage_gaps:
+                        log.warning(
+                            "api.slide_coverage_gaps",
+                            slide=plan.index,
+                            n=len(coverage_gaps),
+                        )
+                    # Emit-pathway exclusivity audit: structural assertion
+                    # that an absorbing parent (NativeText/Bullet/Picture/
+                    # Svg/Table) doesn't overlap a descendant unit that also
+                    # emits — that pattern is the fingerprint of visual
+                    # duplication in the produced PPTX. Defensive: any
+                    # exception is logged and treated as zero violations,
+                    # never propagates to the conversion pipeline.
+                    try:
+                        from slidify.promotion import audit_emit_exclusivity
+
+                        excl_violations = audit_emit_exclusivity(
+                            plan.units,
+                            plan.decisions,
+                            plan.ops,
+                            slide_index=plan.index,
+                        )
+                    except Exception as e:
+                        log.warning(
+                            "api.exclusivity_audit_failed",
+                            slide=plan.index,
+                            error=str(e),
+                        )
+                        excl_violations = []
+                    if excl_violations:
+                        log.warning(
+                            "api.slide_emit_duplicates",
+                            slide=plan.index,
+                            n=len(excl_violations),
+                        )
                     summaries.append(
                         _SlideSummary(
                             index=plan.index,
                             ops=plan.ops,
                             decisions_by_tier=_per_slide_decisions_count(plan),
                             overflow=overflow,
+                            coverage_gaps=coverage_gaps,
+                            exclusivity_violations=excl_violations,
                         )
                     )
                     color_elements.extend(plan.rendered.elements)
@@ -749,6 +806,26 @@ async def convert(
             log.warning("api.editability_check_failed", error=str(e))
 
     overflow_elements = [o for s in summaries for o in s.overflow]
+    coverage_gaps = [g for s in summaries for g in s.coverage_gaps]
+    exclusivity_violations = [
+        v for s in summaries for v in s.exclusivity_violations
+    ]
+    # Soft cross-check: if the editability round-trip reported drift
+    # (more shapes than intended) and the exclusivity audit flagged
+    # absorbing-parent + descendant emits, link the two so users see
+    # the connection. Doesn't change exit codes; pure observability.
+    if (
+        cfg.run_editability_check
+        and not edit_passed
+        and edit_actual_total > edit_intended_total
+        and exclusivity_violations
+    ):
+        log.warning(
+            "roundtrip.exclusivity_explains_drift",
+            n_violations=len(exclusivity_violations),
+            actual_total=edit_actual_total,
+            intended_total=edit_intended_total,
+        )
 
     return ConversionResult(
         pptx_path=str(pptx_path),
@@ -770,6 +847,8 @@ async def convert(
         editability_actual_total=edit_actual_total,
         editability_failing_slides=edit_failing,
         overflow_elements=overflow_elements,
+        coverage_gaps=coverage_gaps,
+        exclusivity_violations=exclusivity_violations,
     )
 
 

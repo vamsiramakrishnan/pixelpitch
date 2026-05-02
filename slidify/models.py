@@ -361,6 +361,65 @@ class ConversionResult(BaseModel):
     # here lets authors and agents catch the failure mode at compile time
     # instead of eyeballing PNGs. Empty = nothing overflowed.
     overflow_elements: list["OverflowElement"] = Field(default_factory=list)
+    # Coverage oracle telemetry: DOM elements with text content whose bbox
+    # isn't represented in any produced VisualUnit. The dual of
+    # `unmatched_signatures` — surfaces dropped CONTENT (clusterer silently
+    # skipped a subtree) rather than dropped SHAPES (clusterer produced a
+    # unit but no tier-0 pattern matched). Empty = every text-bearing
+    # element has at least one unit covering its region.
+    coverage_gaps: list["CoverageGap"] = Field(default_factory=list)
+    # Emit-pathway exclusivity audit telemetry: cases where an absorbing
+    # parent emit op (NativeText / NativeBullet / NativePicture / NativeSvg
+    # / NativeTable) overlaps a descendant unit that ALSO emits — the
+    # structural fingerprint of visual duplication in the produced PPTX.
+    # Empty = emit pathways are clean. Surfaced via
+    # ConversionResult.exclusivity_violations and the convert summary.
+    exclusivity_violations: list["ExclusivityViolation"] = Field(default_factory=list)
+
+
+class CoverageGap(BaseModel):
+    """A DOM element whose text content was rendered by Chromium but is
+    not covered by any produced VisualUnit.
+
+    Surfaced via `ConversionResult.coverage_gaps` so authors / agents can
+    see what the clusterer dropped without staring at PNG diffs.
+    """
+
+    slide_index: int
+    element_id: int
+    tag: str
+    cls: str = ""
+    bbox_x: float
+    bbox_y: float
+    bbox_w: float
+    bbox_h: float
+    sample_text: str  # truncated at 80 chars
+    overlap_ratio: float  # max(intersection_area / element_area) over all units
+    reason: str  # human-readable: "no unit anchored this subtree", etc.
+    stable_selector: str = ""
+
+
+class ExclusivityViolation(BaseModel):
+    """One emit-pathway exclusivity audit row.
+
+    Flags an absorbing-parent emit op (NativeText / NativeBullet /
+    NativePicture / NativeSvg / NativeTable) whose region overlaps a
+    descendant unit that ALSO produces an emit op — the structural
+    fingerprint of visual duplication. The legitimate Phase-A
+    ``mixed_content_text`` hybrid case is excluded by the auditor.
+    """
+
+    parent_unit_id: str
+    parent_kind: str         # decision.kind value (e.g. "native_text")
+    parent_bbox_w: float
+    parent_bbox_h: float
+    descendant_unit_id: str
+    descendant_kind: str
+    descendant_bbox_w: float
+    descendant_bbox_h: float
+    overlap_ratio: float     # descendant.bbox.overlap_ratio(parent.bbox)
+    reason: str
+    slide_index: int = 0
 
 
 class OverflowElement(BaseModel):

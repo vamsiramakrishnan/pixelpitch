@@ -330,6 +330,16 @@ def _print_summary(result) -> None:
             D(f"Unmatched signatures  {len(result.unmatched_signatures)} "
               "(run `slidify harvest` to surface candidates)")
         )
+    if result.coverage_gaps:
+        click.echo(
+            D(f"Coverage gaps         {len(result.coverage_gaps)} "
+              "(DOM text not in any unit)")
+        )
+    if result.exclusivity_violations:
+        click.echo(
+            D(f"Emit duplicates       {len(result.exclusivity_violations)} "
+              "(parent+descendant overlap)")
+        )
     click.echo(D("─" * 64))
 
 

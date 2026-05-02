@@ -5,29 +5,29 @@
     "pptx": "/tmp/pptx_artifacts/recipes.cold.pptx",
     "n_slides": 16,
     "native_area_ratio": 1.0,
-    "cache_hit_rate": 0.521,
-    "pattern_coverage": 0.9313,
+    "cache_hit_rate": 0.5335,
+    "pattern_coverage": 0.875,
     "decisions_by_tier": {
-      "tier0": 135,
-      "cache:tier0": 165,
-      "promotion": 14,
-      "tier1": 7,
-      "tier2": 4,
-      "cache:tier1": 5,
-      "cache:tier2": 4
+      "tier0": 172,
+      "cache:tier0": 227,
+      "tier2": 7,
+      "promotion": 17,
+      "tier1": 20,
+      "cache:tier1": 13,
+      "cache:tier2": 7
     },
     "top_pattern_hits": {
-      "kicker-from-css": 32,
+      "kicker-from-css": 41,
       "title-h1": 14,
       "slide-solid-bg": 13,
+      "slide-gradient-wrapper": 12,
+      "mixed-content-text-leaf": 12,
+      "editorial-bottom-rule": 11,
       "native-svg-simple": 10,
-      "slide-gradient-wrapper": 8,
-      "short-label": 7,
-      "background-blend-mode-raster": 6,
-      "body-paragraph": 5
+      "decoration-card": 6
     },
-    "n_unmatched_sigs": 11,
-    "elapsed_s": 10.67
+    "n_unmatched_sigs": 25,
+    "elapsed_s": 10.71
   },
   {
     "deck": "recipes",
@@ -38,14 +38,14 @@
     "cache_hit_rate": 1.0,
     "pattern_coverage": 0.0,
     "decisions_by_tier": {
-      "cache:tier0": 300,
-      "promotion": 14,
-      "cache:tier1": 12,
-      "cache:tier2": 8
+      "cache:tier0": 399,
+      "cache:tier2": 14,
+      "promotion": 17,
+      "cache:tier1": 33
     },
     "top_pattern_hits": {},
     "n_unmatched_sigs": 0,
-    "elapsed_s": 10.27
+    "elapsed_s": 10.32
   },
   {
     "deck": "atoms",
@@ -53,28 +53,28 @@
     "pptx": "/tmp/pptx_artifacts/atoms.cold.pptx",
     "n_slides": 10,
     "native_area_ratio": 1.0,
-    "cache_hit_rate": 0.5694,
-    "pattern_coverage": 0.9866,
+    "cache_hit_rate": 0.6229,
+    "pattern_coverage": 0.9607,
     "decisions_by_tier": {
-      "tier0": 139,
-      "cache:tier0": 186,
+      "tier0": 163,
+      "cache:tier0": 280,
       "promotion": 8,
-      "tier1": 1,
-      "cache:tier1": 11,
-      "tier2": 1
+      "tier1": 2,
+      "cache:tier1": 14,
+      "tier2": 5
     },
     "top_pattern_hits": {
-      "short-sans-container": 38,
-      "kicker-from-css": 14,
+      "kicker-from-css": 23,
       "native-svg-simple": 11,
       "gradient-card-no-text": 10,
       "decorated-card-mixed-content": 8,
       "slide-solid-bg": 8,
+      "atom-dec-any": 8,
       "background-blend-mode-raster": 6,
-      "tight-sans-eyebrow": 6
+      "decoration-card": 5
     },
-    "n_unmatched_sigs": 2,
-    "elapsed_s": 5.28
+    "n_unmatched_sigs": 7,
+    "elapsed_s": 5.12
   },
   {
     "deck": "atoms",
@@ -85,14 +85,14 @@
     "cache_hit_rate": 1.0,
     "pattern_coverage": 0.0,
     "decisions_by_tier": {
-      "cache:tier0": 325,
+      "cache:tier0": 443,
       "promotion": 8,
-      "cache:tier1": 12,
-      "cache:tier2": 1
+      "cache:tier1": 16,
+      "cache:tier2": 5
     },
     "top_pattern_hits": {},
     "n_unmatched_sigs": 0,
-    "elapsed_s": 5.16
+    "elapsed_s": 5.15
   },
   {
     "deck": "sample_deck",
@@ -118,7 +118,7 @@
       "stat-card-composite": 1
     },
     "n_unmatched_sigs": 3,
-    "elapsed_s": 1.61
+    "elapsed_s": 1.59
   },
   {
     "deck": "sample_deck",
@@ -134,7 +134,7 @@
     },
     "top_pattern_hits": {},
     "n_unmatched_sigs": 0,
-    "elapsed_s": 1.6
+    "elapsed_s": 1.52
   },
   {
     "deck": "svg_stress",
@@ -172,6 +172,6 @@
     },
     "top_pattern_hits": {},
     "n_unmatched_sigs": 0,
-    "elapsed_s": 1.22
+    "elapsed_s": 1.19
   }
 ]

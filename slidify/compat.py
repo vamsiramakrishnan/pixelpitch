@@ -26,7 +26,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 # Bump this when rows change so consumers can pin / detect drift.
-MATRIX_VERSION = "3"
+MATRIX_VERSION = "4"
 
 
 class Support(str, Enum):
@@ -639,6 +639,26 @@ MATRIX: tuple[CompatRow, ...] = (
         "A11y", "Reading order via DOM order", Support.Native,
         "slidify.promotion.to_emit_ops",
         "Emit op z-order respects DOM source order.",
+    ),
+
+    # --- Diagnostics -----------------------------------------------------
+    CompatRow(
+        "Diagnostics", "Unit coverage oracle (DOM text → unit map)",
+        Support.Native, "slidify.unit_coverage.find_coverage_gaps",
+        "Reports DOM elements with text content whose region isn't covered by "
+        "any produced VisualUnit. The dual of the harvester: harvester finds "
+        "unrecognised shapes, this finds dropped content. Surface via "
+        "ConversionResult.coverage_gaps and the convert summary.",
+    ),
+    CompatRow(
+        "Diagnostics", "Emit-pathway exclusivity audit",
+        Support.Native, "slidify.promotion.audit_emit_exclusivity",
+        "Flags emit ops where an absorbing parent (NativeText / NativeBullet "
+        "/ NativePicture / NativeSvg / NativeTable) overlaps a descendant unit "
+        "that ALSO emits — the structural fingerprint of visual duplication. "
+        "Allows the legitimate Phase-A hybrid case (parent has "
+        "mixed_content_text). Surface via "
+        "ConversionResult.exclusivity_violations.",
     ),
 )
 
