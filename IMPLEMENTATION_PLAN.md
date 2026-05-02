@@ -237,3 +237,181 @@ Build a lightweight "architecture copilot" pipeline that continuously inspects t
 - Docs/skills updated and validated in CI.
 - Architecture drift checks active.
 - Baseline corpus quality metrics maintained or improved.
+
+
+---
+
+## File-by-file implementation map (what to change, exactly)
+
+This section maps each phase to concrete files and the intended code-level changes.
+
+### A) CLI hardening (LLM/bash-first)
+
+#### Files to modify
+- `slidify/cli.py`
+- `slidify/models.py` (if response payload models are centralized there)
+- `slidify/guides/agent-quickstart.md`
+- `README.md`
+
+#### Files to add
+- `slidify/cli_schema.py`
+- `slidify/cli/commands.py`
+- `slidify/cli/presenters.py`
+- `slidify/cli/errors.py`
+- `tests/test_cli_json_contract.py`
+- `tests/test_cli_exit_codes.py`
+
+#### Exact changes
+1. Move command execution from `slidify/cli.py` into `slidify/cli/commands.py`.
+2. Move human/JSON rendering into `slidify/cli/presenters.py` with stable key ordering.
+3. Centralize exception mapping and remediation text in `slidify/cli/errors.py`.
+4. Add schema version constant and response builders in `slidify/cli_schema.py`.
+5. Ensure every `--json` path returns required keys: `schema_version`, `command`, `status`, `error`, `metrics`, `_next`.
+6. Enforce deterministic exit-code table and assert via tests.
+
+---
+
+### B) Pipeline extraction from `api.py`
+
+#### Files to modify
+- `slidify/api.py`
+- `slidify/models.py` (or stage DTO location)
+
+#### Files to add
+- `slidify/pipeline/__init__.py`
+- `slidify/pipeline/source.py`
+- `slidify/pipeline/planning.py`
+- `slidify/pipeline/execution.py`
+- `slidify/pipeline/verification.py`
+- `tests/test_pipeline_equivalence.py`
+
+#### Exact changes
+1. Move source normalization helpers into `pipeline/source.py`.
+2. Move unit clustering + decision planning into `pipeline/planning.py`.
+3. Move emission orchestration/state application into `pipeline/execution.py`.
+4. Move oracle/editability loops into `pipeline/verification.py`.
+5. Keep `convert(...)` in `api.py` as façade that composes the above stages.
+6. Add stage I/O dataclasses so each stage has typed inputs/outputs.
+
+---
+
+### C) Classifier registry and explainability contract
+
+#### Files to modify
+- `slidify/classifier/tier1.py`
+- `slidify/classifier/tier2.py`
+- `slidify/classifier/tier3.py`
+- `slidify/patterns/__init__.py` (for tier0 integration path)
+- `slidify/models.py`
+
+#### Files to add
+- `slidify/classifier/registry.py`
+- `slidify/classifier/interfaces.py`
+- `tests/test_classifier_registry.py`
+
+#### Exact changes
+1. Define `ClassifierStage` protocol in `interfaces.py`.
+2. Register existing tier stages in `registry.py` with explicit execution order.
+3. Normalize all tier decisions into a shared envelope (`reason_code`, `confidence`, `features`, `fallback_path`).
+4. Update orchestration to consume registry output rather than direct tier calls.
+
+---
+
+### D) Shared PPTX emission primitives
+
+#### Files to modify
+- `slidify/compile_ir.py`
+- `slidify/emitter.py`
+
+#### Files to add
+- `slidify/emission/__init__.py`
+- `slidify/emission/primitives.py`
+- `tests/test_emission_primitives.py`
+
+#### Exact changes
+1. Extract shared text/shape/fill/border/shadow helpers into `emission/primitives.py`.
+2. Replace duplicate logic in `compile_ir.py` and runtime emitter with primitive calls.
+3. Add parity tests for text formatting, gradients, borders, and shadow mappings.
+
+---
+
+### E) Typed errors + lifecycle events
+
+#### Files to modify
+- `slidify/api.py`
+- `slidify/compile_ir.py`
+- `slidify/cli.py` or new `slidify/cli/commands.py`
+- `slidify/_logging.py`
+
+#### Files to add
+- `slidify/errors.py`
+- `slidify/events.py`
+- `tests/test_error_policies.py`
+
+#### Exact changes
+1. Add stage-scoped exception classes in `errors.py`.
+2. Replace broad exception handlers with typed handling and explicit fallback policy.
+3. Add typed lifecycle event payloads and emit hooks (`events.py`).
+4. Expose optional JSONL event sink via CLI flag.
+
+---
+
+### F) Architecture fitness and repo analysis automation
+
+#### Files to add
+- `tools/arch/scan_imports.py`
+- `tools/arch/report.py`
+- `tools/arch/recommend.py`
+- `reports/architecture/.gitkeep`
+- `tests/test_arch_boundaries.py`
+
+#### CI files to modify/add
+- `.github/workflows/ci.yml` (or equivalent CI config in repo)
+
+#### Exact changes
+1. Build import/cycle scanner and budget checks.
+2. Add recommendation generator producing:
+   - `reports/architecture/recommendations.json`
+   - `reports/architecture/recommendations.md`
+3. Add CI step that fails when architecture constraints regress.
+
+---
+
+### G) Documentation + skills synchronization
+
+#### Files to modify
+- `README.md`
+- `slidify/guides/agent-quickstart.md`
+- `slidify/guides/api.md`
+- `slidify/guides/troubleshooting.md`
+
+#### Files to add
+- `docs/cli-json-schema.md`
+- `docs/architecture/stage-diagram.md`
+- `docs/architecture/fitness-rules.md`
+
+#### Optional skills location (if adopted in-repo)
+- `.agents/skills/slidify-cli/SKILL.md`
+- `.agents/skills/slidify-triage/SKILL.md`
+
+#### Exact changes
+1. Document the machine contract and exit codes in README + docs.
+2. Add copy/paste-safe LLM command recipes (convert, retry, debug, harvest).
+3. Keep troubleshooting mapped to typed error classes and `_next` actions.
+4. Add docs-lint job to validate examples and internal links.
+
+---
+
+## Suggested pull-request slicing (to minimize risk)
+1. **PR-1:** CLI schema + exit code tests.
+2. **PR-2:** Pipeline extraction scaffold + no-op façade integration.
+3. **PR-3:** Classifier registry wrapping existing tiers.
+4. **PR-4:** Emission primitive extraction + parity tests.
+5. **PR-5:** Typed errors + lifecycle events + CLI event sink.
+6. **PR-6:** Architecture scanners + fitness CI.
+7. **PR-7:** README/guides/skills + docs lint.
+
+Each PR must include:
+- backward compatibility notes,
+- updated docs for touched user paths,
+- at least one regression test for changed contract surface.
