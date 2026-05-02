@@ -850,7 +850,7 @@ def _emu_rect(b: IRBbox) -> tuple[Emu, Emu, Emu, Emu]:
 
 def _apply_fill(shape, fill: Fill, *, slide=None, bbox: IRBbox | None = None) -> None:
     if isinstance(fill, FillSolid):
-        hex_, _alpha = _color_to_hex_alpha(fill.color)
+        hex_, alpha = _color_to_hex_alpha(fill.color)
         col = parse_color(hex_)
         if col is None:
             return
@@ -859,6 +859,26 @@ def _apply_fill(shape, fill: Fill, *, slide=None, bbox: IRBbox | None = None) ->
             shape.fill.fore_color.rgb = col[0]
         except Exception:
             pass
+        # python-pptx's RGBColor doesn't carry alpha. If the IR specified a
+        # translucent solid (e.g. `{hex: "#ffffff", alpha: 0.5}`), the
+        # opacity was previously discarded silently. Patch the solidFill
+        # XML directly so the rendered shape matches the IR.
+        if alpha < 0.999:
+            try:
+                sp_pr = shape._element.spPr
+                solid = sp_pr.find(f"{{{NS_A}}}solidFill")
+                if solid is not None:
+                    srgb = solid.find(f"{{{NS_A}}}srgbClr")
+                    if srgb is not None:
+                        for existing in srgb.findall(f"{{{NS_A}}}alpha"):
+                            srgb.remove(existing)
+                        etree.SubElement(
+                            srgb,
+                            f"{{{NS_A}}}alpha",
+                            attrib={"val": str(int(round(alpha * 100_000)))},
+                        )
+            except Exception as e:
+                log.debug("compile_ir.solid_alpha_failed", error=str(e))
         return
     if isinstance(fill, FillLinearGradient):
         grad = GLinearGradient(
@@ -1062,10 +1082,16 @@ def _stamp_recipe_id(shape, recipe_id: str) -> None:
 def _fetch_picture(src: str) -> bytes:
     """Fetch picture bytes from data: URI or http(s) URL."""
     if src.startswith("data:"):
-        head, _, b64 = src.partition(",")
+        head, _, payload = src.partition(",")
         if ";base64" in head:
-            return base64.b64decode(b64)
-        return b64.encode("utf-8")
+            return base64.b64decode(payload)
+        # RFC 2397: a data URI without ";base64" is URL-encoded ASCII.
+        # Encoding the literal string would keep `%20` etc. as bytes and
+        # produce broken image payloads. Decode percent-escapes to the
+        # original bytes before returning.
+        from urllib.parse import unquote_to_bytes
+
+        return unquote_to_bytes(payload)
     if src.startswith(("http://", "https://")):
         import httpx
 

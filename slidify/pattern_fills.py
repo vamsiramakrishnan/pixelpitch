@@ -266,12 +266,20 @@ def apply_pattern_fill(
     else:
         bg_hex, bg_alpha = ("FFFFFF", 0.0)
     _set_pattfill(shape, prst, fg_hex, fg_alpha, bg_hex, bg_alpha)
-    # angleDeg → shape rotation. PPTX has no per-pattern rotation.
+    # `IRPatternFill.angleDeg` (CONTRACT §1.3) means "rotation applied to
+    # the entire pattern". PPTX has no per-pattern rotation knob, and
+    # rotating the host shape also rotates its bbox + contents — a
+    # different semantic that produced silent visual drift on shapes
+    # carrying real content. Drop on the floor with a structured log so
+    # callers can see when the IR is asking for something we can't deliver.
     if pattern_fill.angleDeg:
-        try:
-            shape.rotation = float(pattern_fill.angleDeg)
-        except Exception:
-            pass
+        import structlog as _structlog
+
+        _structlog.get_logger(__name__).info(
+            "pattern_fill.angle_deg_unsupported",
+            angle_deg=pattern_fill.angleDeg,
+            pattern=pattern_fill.pattern,
+        )
     return []
 
 

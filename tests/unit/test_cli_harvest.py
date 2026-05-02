@@ -183,3 +183,37 @@ def test_cli_harvest_back_compat_out_json_alias(tmp_path, monkeypatch):
     assert result.exit_code == 0, result.output
     assert out.exists()
     assert "deprecated" in result.output.lower() or "deprecated" in result.stderr.lower()
+
+
+def test_cli_harvest_promote_yaml_flag_does_not_NameError(tmp_path, monkeypatch):
+    """Regression: post-merge, the harvest body called
+    `promote_unmatched_to_yaml(ranked, ...)` where `ranked` had been
+    renamed in the cluster-aggregated refactor. Every invocation of
+    `slidify harvest --promote-yaml ...` raised NameError before the
+    fix. Test asserts the flag now runs through and produces a YAML
+    file (whether or not it has stubs is independent — min_count=1
+    forces at least one).
+    """
+    corpus = _make_corpus(tmp_path)
+    out_yaml = tmp_path / "promoted.yaml"
+    monkeypatch.setattr(harvester, "aggregate_corpus", lambda *a, **kw: _fake_report(corpus))
+
+    runner = CliRunner()
+    result = runner.invoke(
+        cli,
+        [
+            "harvest",
+            str(corpus),
+            "--promote-yaml", str(out_yaml),
+            "--min-count", "1",
+        ],
+    )
+    assert result.exit_code == 0, result.output
+    assert "Promoted" in result.output
+    assert out_yaml.exists(), "expected the promoted YAML file to be written"
+    body = out_yaml.read_text(encoding="utf-8")
+    # The fake cluster has 12 instances >= min_count=1 so it should be promoted.
+    assert "harvested-cafebabe" in body, (
+        "expected the synthesized stub id derived from the cluster's "
+        "sig_hash to appear in the promoted YAML"
+    )

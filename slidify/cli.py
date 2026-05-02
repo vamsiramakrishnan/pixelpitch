@@ -670,7 +670,30 @@ def harvest(
             click.echo(json.dumps(report_to_dict(report, top_n=top_n), indent=2))
 
     if promote_yaml:
-        n_new = promote_unmatched_to_yaml(ranked, promote_yaml, min_count=min_count)
+        # Bridge the new aggregated `report.clusters` flow back to
+        # `promote_unmatched_to_yaml`, which still expects a list of
+        # `UnmatchedSignature` objects. The merge that combined our
+        # cluster-aggregated harvest with main's signature-driven
+        # promote step had left this calling an undefined `ranked`
+        # local — every `slidify harvest --promote-yaml ...` invocation
+        # raised NameError before this fix.
+        from slidify.models import UnmatchedSignature
+
+        promote_sigs = [
+            UnmatchedSignature(
+                sig=c.signature,
+                sig_hash=c.sig_hash,
+                bbox_w=int(c.bbox_typical.get("w_avg", 0)),
+                bbox_h=int(c.bbox_typical.get("h_avg", 0)),
+                sample_classes=", ".join(c.sample_classes[:3]),
+                sample_text=(c.sample_text[0] if c.sample_text else ""),
+                n_occurrences=c.instances,
+            )
+            for c in report.clusters
+        ]
+        n_new = promote_unmatched_to_yaml(
+            promote_sigs, promote_yaml, min_count=min_count
+        )
         click.echo(
             f"\nPromoted {n_new} stub(s) (min_count={min_count}) → {promote_yaml}"
         )
