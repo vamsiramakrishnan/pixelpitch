@@ -18,6 +18,75 @@ hit two failure modes:
 Both are author-side. Both are preventable with a small grammar — the **atomic
 seed**. Below is that grammar.
 
+## Libraries you can reach for (LLMs are good at HTML+CSS — use real libraries)
+
+LLMs already know how to compose with these. Slidify converts them
+**natively** when the slide is otherwise self-contained. Inline the CSS
+they generate (or write the equivalent vanilla CSS yourself); don't pull
+the runtime JS.
+
+| Library | What's safe | What to skip |
+|---|---|---|
+| **Tailwind v3 / v4 utilities** | All utilities — color, spacing, type scale, gradient, shadow, ring, transform: translate/scale/rotate. `@apply` an inline class chain into a `<style>` block, or write the resolved CSS directly. | `backdrop-blur-*`, `mix-blend-*`, `filter blur-*`, `clip-path-*` (raster). |
+| **shadcn/ui (static subset)** | Card, Button, Badge, Alert, Avatar (+ AvatarStack), Separator, Progress (static), Tabs body, Accordion body, Skeleton, Toast (static), HoverCard body, Tooltip body. | Dialog, Dropdown, Command, Sheet, Popover, anything that requires a portal or real interactivity (no JS runs at convert time). |
+| **lucide-react / lucide icons** | Inline `<svg>` icons. Walks like any other SVG — ≤200 primitives per icon. | None. |
+| **Framer Motion** | `motion.div` annotated `data-slidify-capture-gif="true"` becomes an animated GIF embedded in the slide via `slidify capture-gif`. | Animations triggered by user interaction (hover, scroll, click) — they never fire because there's no user. |
+| **shadcn-style class names** | Inline-emitted via Tailwind's compile output. The matcher can ignore class names entirely; data-atom hints take precedence. | — |
+| **Custom inline `<svg>`** | Always native (≤200 primitives). | `filter="url(#blur)"` defs. |
+
+The **shadcn / Tailwind / Framer-Motion** trio is the assumed default
+vocabulary. You don't need to invent components — pick from those, and
+the slide is on the fast path.
+
+## Pre-flight: `slidify check` is your inner loop
+
+Before you finalize a slide, run:
+
+```bash
+slidify check slide.html --json
+```
+
+What it tells you (≤100 ms, no Chromium):
+
+```json
+{
+  "self_contained": true,
+  "external_assets": [],
+  "risky_css": [
+    { "property": "backdrop-filter", "value": "blur(20px)",
+      "selector": ".glass",
+      "reason": "PPTX has no native backdrop-filter; routes to raster fallback." }
+  ],
+  "atom_hints": ["comp.hero-investor", "type.big-number-gradient"],
+  "warnings": []
+}
+```
+
+**Treat as regeneration triggers**:
+
+- `self_contained: false` → pull the external asset inline (data: URI for
+  images, inline `<style>` for CSS, drop the script).
+- `risky_css` non-empty → swap to a native equivalent (see "What forces a
+  raster" below) OR explicitly opt the cluster into raster via
+  `data-atom='mask.*'` if you want the visual.
+- `warnings` (iframe, missing `<!doctype html>`, …) → fix.
+
+Add `--deep` for the full matcher pass (Chromium round-trip; ~1–3 s):
+
+```bash
+slidify check slide.html --deep --json
+```
+
+`--deep` adds `native_area_ratio`, top unmatched signatures, and the
+escape-rate prediction. Use this in CI / corpus runs, not the inner loop.
+
+CLI exit codes: **0** if clean, **2** if non-self-contained or risky CSS
+present. Pipelines can gate:
+
+```bash
+slidify check slide.html --json && slidify convert slide.html out.pptx
+```
+
 ## The hard contract (non-negotiable)
 
 1. **Viewport is exactly 1280 × 720 px.** Pin it on every slide:
