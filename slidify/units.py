@@ -82,14 +82,58 @@ def _has_pseudo(el: DomElement) -> bool:
     return False
 
 
+# Inline-formatting tags whose styling is captured as TextRun on the parent
+# text container, never as a separate visual unit. The DOM walker already
+# folds these into their parent's `runs` when the parent qualifies as a
+# text container; the cases that survive here are inline elements whose
+# parent is NOT a text container (mixed inline + block siblings, or a flex
+# row of independent <span>s). For those, the inline tag still shouldn't
+# anchor a unit by virtue of carrying text alone — a bare `<span>some
+# text</span>` is a styled run, not a paragraph. It DOES still anchor when
+# it carries real visual decoration of its own (badge bg, pill border-
+# radius, button shadow), since at that point it's effectively a block.
+_INLINE_FORMATTING_TAGS: frozenset[str] = frozenset({
+    "SPAN", "EM", "STRONG", "B", "I", "U", "A", "CODE", "SMALL",
+    "MARK", "SUP", "SUB", "INS", "DEL", "KBD", "ABBR", "CITE",
+})
+
+# SVG drawing primitives. These are emitted by `slidify.svg_shapes` as
+# native shapes within the parent <svg>'s native-svg op; promoting one to
+# its own visual unit causes (a) the SVG renderer to lose track of it and
+# (b) tier-0 to log a "circle(xform)..." unmatched signature for every
+# rotated SVG path. Always fold into the SVG anchor.
+_SVG_PRIMITIVE_TAGS: frozenset[str] = frozenset({
+    "PATH", "CIRCLE", "ELLIPSE", "RECT", "LINE", "POLYGON", "POLYLINE",
+    "TEXT", "TSPAN", "G", "USE", "DEFS", "MARKER", "MASK", "PATTERN",
+    "LINEARGRADIENT", "RADIALGRADIENT", "STOP", "CLIPPATH", "FILTER",
+    "SYMBOL", "TITLE", "DESC", "FOREIGNOBJECT",
+})
+
+
 def _is_anchor(el: DomElement, parent_bg: str | None) -> bool:
     """An element is anchor-worthy if it has a visual presence of its own."""
+    # Browsers return HTML tag names uppercase but SVG (XML-namespaced)
+    # tag names lowercase. Normalize once so the inline / SVG-primitive
+    # guards below match either spelling.
+    tag_u = (el.tag or "").upper()
+    # SVG drawing primitives never anchor — they belong to their parent
+    # <svg>'s NativeSvg emit op (see slidify.svg_shapes). Their fills,
+    # strokes, and transforms survive via the SVG renderer, not via a
+    # standalone visual unit.
+    if tag_u in _SVG_PRIMITIVE_TAGS:
+        return False
     if el.is_canvas or el.is_svg or el.is_img or el.is_video:
         return True
     if el.is_table:
         return True
-    if el.transform and el.transform != "none":
-        return True
+    is_inline = tag_u in _INLINE_FORMATTING_TAGS
+    # Inline formatting tags only anchor when they carry real visual
+    # presence (bg, border, shadow, radius, filter, clip-path, pseudo,
+    # role, image-bg). A transform alone is treated as a typographic
+    # detail rather than a block boundary; same for plain text.
+    if not is_inline:
+        if el.transform and el.transform != "none":
+            return True
     if _has_pseudo(el):
         return True
     if _has_shadow(el.box_shadow):
@@ -112,7 +156,9 @@ def _is_anchor(el: DomElement, parent_bg: str | None) -> bool:
     # Leaf text elements with their own meaningful area become anchors so
     # that two different text blocks don't merge into one NativeText frame.
     # Text containers (text + inline formatting children) count too.
-    if (el.text and el.text.strip()) or el.is_text_container:
+    # Inline formatting tags are excluded — they're styled runs, not
+    # paragraphs, and folding them keeps the parent text frame whole.
+    if not is_inline and ((el.text and el.text.strip()) or el.is_text_container):
         if el.bbox.area >= 200:
             return True
     return False
