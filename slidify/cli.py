@@ -1878,6 +1878,7 @@ def main() -> None:
     args = sys.argv[1:]
     known_subs = {
         "convert", "harvest", "compat", "capture-gif",
+        "check",
         "doctor", "version", "manifest", "guide", "field",
         "report-escape-clusters",
         "prime-atom-cache",

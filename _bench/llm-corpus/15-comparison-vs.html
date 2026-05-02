@@ -1,0 +1,39 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <title>15 Comparison Vs</title>
+    <style>*, *::before, *::after { box-sizing: border-box; }
+html, body { margin:0; padding:0; width:1280px; height:720px;
+             font-family: Inter, -apple-system, 'Segoe UI', Helvetica, sans-serif;
+             -webkit-font-smoothing:antialiased;
+             color:#111111; background:#f7f5ef; }
+.slide { position:relative; width:1280px; height:720px; padding:80px;
+         overflow:hidden; background:#f7f5ef; }</style>
+    </head>
+    <body>
+    <div class="slide" style="padding:64px 88px;">
+      <div data-atom="type.eyebrow-ruled"
+           style="font-family:Inter, -apple-system, 'Segoe UI', Helvetica, sans-serif; font-size:11px; letter-spacing:0.32em;
+                  text-transform:uppercase; font-weight:700; color:#b91c1c;">
+        How we differ</div>
+      <h1 style="margin:14px 0 6px; font-family:Georgia, 'Iowan Old Style', 'Tiempos', serif;
+                 font-size:54px; line-height:1.05; letter-spacing:-0.012em;
+                 font-weight:700;">
+        Editable, not photographable.
+      </h1>
+      <p style="margin:0 0 36px; max-width:700px; color:#52525b;
+                font-size:16px; line-height:1.5;">
+        The standard HTML→slide tool flattens design intent. Slidify preserves it.
+      </p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+        <div style="border:1px solid rgba(17,17,17,0.10); padding:32px 28px; background:#ffffff; border-radius:4px;"><div style="display:inline-block; padding:4px 10px; font-size:11px; letter-spacing:0.22em; text-transform:uppercase; font-weight:700; background:#6b7280; color:#ffffff;">Them</div><h3 style="margin:14px 0 4px; font-family:Georgia, 'Iowan Old Style', 'Tiempos', serif; font-size:32px; font-weight:700; letter-spacing:-0.012em;">The screenshot tools</h3><p style="margin:0 0 16px; font-size:13px; color:#52525b;">The status quo since 2014.</p><ul style="margin:0; padding:0; list-style:none;"><li style="display:flex; gap:14px; padding:12px 0; border-bottom:1px solid rgba(17,17,17,0.10); font-size:15px; line-height:1.45;"><span style="flex:0 0 20px; font-weight:800; color:#6b7280;">✕</span><span>Slides ship as screenshots</span></li><li style="display:flex; gap:14px; padding:12px 0; border-bottom:1px solid rgba(17,17,17,0.10); font-size:15px; line-height:1.45;"><span style="flex:0 0 20px; font-weight:800; color:#6b7280;">✕</span><span>Gradients flatten on export</span></li><li style="display:flex; gap:14px; padding:12px 0; border-bottom:1px solid rgba(17,17,17,0.10); font-size:15px; line-height:1.45;"><span style="flex:0 0 20px; font-weight:800; color:#6b7280;">✕</span><span>Type loses tracking + leading</span></li><li style="display:flex; gap:14px; padding:12px 0; border-bottom:1px solid rgba(17,17,17,0.10); font-size:15px; line-height:1.45;"><span style="flex:0 0 20px; font-weight:800; color:#6b7280;">✕</span><span>No round-trip back to source</span></li><li style="display:flex; gap:14px; padding:12px 0; border-bottom:1px solid rgba(17,17,17,0.10); font-size:15px; line-height:1.45;"><span style="flex:0 0 20px; font-weight:800; color:#6b7280;">✕</span><span>LLM has to guess what works</span></li></ul></div>
+        <div style="border:1px solid rgba(17,17,17,0.10); padding:32px 28px; background:#ffffff; border-radius:4px;"><div style="display:inline-block; padding:4px 10px; font-size:11px; letter-spacing:0.22em; text-transform:uppercase; font-weight:700; background:#b91c1c; color:#ffffff;">Us</div><h3 style="margin:14px 0 4px; font-family:Georgia, 'Iowan Old Style', 'Tiempos', serif; font-size:32px; font-weight:700; letter-spacing:-0.012em;">Slidify</h3><p style="margin:0 0 16px; font-size:13px; color:#52525b;">What you get when shapes are first-class.</p><ul style="margin:0; padding:0; list-style:none;"><li style="display:flex; gap:14px; padding:12px 0; border-bottom:1px solid rgba(17,17,17,0.10); font-size:15px; line-height:1.45;"><span style="flex:0 0 20px; font-weight:800; color:#b91c1c;">✓</span><span>Every shape is editable PPTX</span></li><li style="display:flex; gap:14px; padding:12px 0; border-bottom:1px solid rgba(17,17,17,0.10); font-size:15px; line-height:1.45;"><span style="flex:0 0 20px; font-weight:800; color:#b91c1c;">✓</span><span>Native <a:gradFill> on export</span></li><li style="display:flex; gap:14px; padding:12px 0; border-bottom:1px solid rgba(17,17,17,0.10); font-size:15px; line-height:1.45;"><span style="flex:0 0 20px; font-weight:800; color:#b91c1c;">✓</span><span>Glyph metrics survive end-to-end</span></li><li style="display:flex; gap:14px; padding:12px 0; border-bottom:1px solid rgba(17,17,17,0.10); font-size:15px; line-height:1.45;"><span style="flex:0 0 20px; font-weight:800; color:#b91c1c;">✓</span><span>Edits in PPTX trace to recipes</span></li><li style="display:flex; gap:14px; padding:12px 0; border-bottom:1px solid rgba(17,17,17,0.10); font-size:15px; line-height:1.45;"><span style="flex:0 0 20px; font-weight:800; color:#b91c1c;">✓</span><span>`slidify check` blocks bad HTML</span></li></ul></div>
+      </div>
+      <div style="margin-top:24px; font-size:11px; color:#52525b;
+                  font-family:'IBM Plex Mono', 'JetBrains Mono', 'Menlo', monospace; letter-spacing:0.06em;">
+        Comparison table compiled Apr 2026 — verified against 12 production decks.
+      </div>
+    </div>
+    </body>
+    </html>

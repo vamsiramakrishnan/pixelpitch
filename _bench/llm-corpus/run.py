@@ -1,16 +1,19 @@
-"""Run every slide in the shadcn corpus through `slidify check` and
+"""Run every slide in the LLM corpus through `slidify check` and
 report pass/fail per slide.
 
 This is the corpus benchmark: each slide should be self-contained,
 declare at least one atom hint, and (in --deep mode) exceed a
-predicted native_area_ratio threshold.
+predicted native_area_ratio threshold. The corpus spans six theme
+registers (vercel-dark, paper, magazine, brutalist, mono-spec,
+duotone) so an LLM that emits any of them lands inside what
+slidify converts well.
 
 Usage:
-    uv run python _bench/shadcn-corpus/run.py            # static checks only
-    uv run python _bench/shadcn-corpus/run.py --deep     # also run matcher
-    uv run python _bench/shadcn-corpus/run.py --json     # machine-readable
+    uv run python _bench/llm-corpus/run.py            # static checks only
+    uv run python _bench/llm-corpus/run.py --deep     # also run matcher
+    uv run python _bench/llm-corpus/run.py --json     # machine-readable
 
-The runner is idempotent and fast in static mode (~1 s for 15 slides).
+The runner is idempotent and fast in static mode (~1 s for 20 slides).
 """
 from __future__ import annotations
 
