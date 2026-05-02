@@ -1085,6 +1085,81 @@ def version_cmd(json_out: bool) -> None:
         click.echo(f"  {k:<16}{info[k]}")
 
 
+@cli.command(name="check")
+@click.argument(
+    "html_path",
+    type=click.Path(exists=True, dir_okay=False, file_okay=True, path_type=Path),
+)
+@click.option(
+    "--json", "json_out", is_flag=True,
+    help="Emit JSON to stdout. Pipes cleanly into jq / scripts.",
+)
+@click.option(
+    "--deep", "deep", is_flag=True,
+    help="Run the full convert pipeline (Chromium + matcher) with write=False "
+         "so the report includes native_area_ratio + matcher decisions. "
+         "Slower (1-3s/slide); intended for CI / corpus runs.",
+)
+def check_cmd(html_path: Path, json_out: bool, deep: bool) -> None:
+    """Pre-flight static checker for slide HTML.
+
+    Tells the caller whether the HTML will convert cleanly to PPTX
+    BEFORE running the full pipeline. Designed for two consumers:
+
+      * LLMs in an authoring loop — `slidify check slide.html --json`
+        in <100ms, reject + regenerate on any external_assets or
+        risky_css that lacks a `data-slidify-allow-raster` opt-in.
+      * CI corpus runs — `slidify check slide.html --deep --json`
+        gives the matcher's actual decisions and predicted
+        native_area_ratio.
+    """
+    from slidify.checker import check_html, check_html_deep
+
+    html = html_path.read_text(encoding="utf-8")
+    rep = check_html_deep(html) if deep else check_html(html)
+    payload = rep.to_dict()
+
+    if json_out:
+        click.echo(json.dumps(payload, indent=2))
+        # Exit nonzero if anything is broken — lets `&&` chains gate.
+        if not rep.self_contained or rep.risky_css:
+            sys.exit(2)
+        return
+
+    # Human-readable output.
+    if rep.self_contained and not rep.risky_css and not rep.warnings:
+        click.echo(click.style("✓ self-contained, no risky CSS, no warnings.", fg="green"))
+    else:
+        if not rep.self_contained:
+            click.echo(click.style("⚠ NOT self-contained:", fg="red"))
+            for a in rep.external_assets:
+                click.echo(f"  - {a.kind:<14} {a.url}")
+        if rep.risky_css:
+            click.echo(click.style("⚠ risky CSS:", fg="yellow"))
+            for r in rep.risky_css:
+                click.echo(f"  - {r.property:<22} = {r.value[:40]:<40}  ({r.selector})")
+                click.echo(f"      {r.reason}")
+        if rep.warnings:
+            click.echo(click.style("ℹ warnings:", fg="cyan"))
+            for w in rep.warnings:
+                click.echo(f"  - {w}")
+    if rep.atom_hints:
+        click.echo("")
+        click.echo(f"atom hints declared: {', '.join(rep.atom_hints[:10])}")
+    if rep.deep is not None:
+        click.echo("")
+        d = rep.deep
+        click.echo(f"native_area_ratio: {d['native_area_ratio']:.4f}")
+        click.echo(f"slides           : {d['n_slides']}")
+        if d.get("unmatched_signatures"):
+            click.echo(f"unmatched sigs   : {len(d['unmatched_signatures'])}")
+        er = d.get("escape_rate") or {}
+        if er.get("value", 0) > 0:
+            click.echo(f"escape_rate      : {er['value']:.4f}")
+    if not rep.self_contained or rep.risky_css:
+        sys.exit(2)
+
+
 @cli.command(name="doctor")
 @click.option("--json", "json_out", is_flag=True, help="Print machine-readable JSON.")
 def doctor_cmd(json_out: bool) -> None:
