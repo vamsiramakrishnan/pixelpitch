@@ -407,3 +407,36 @@ def test_path_linejoin_bevel(tmp_path):
     ln = sp_pr.find(f"{{{NS_A}}}ln")
     assert ln is not None
     assert ln.find(f"{{{NS_A}}}bevel") is not None
+
+
+def test_path_odd_length_dasharray_doubles_per_svg_spec(tmp_path):
+    """`[3, 2, 1]` should expand to `[3, 2, 1, 3, 2, 1]` (3 ds children).
+
+    Per SVG/CSS spec, odd-length dash arrays repeat once to become even.
+    The previous loop dropped the trailing element silently.
+    """
+    node = IRPathShapeNode(
+        kind="path",
+        recipeId="path.dash-odd",
+        bbox=IRBbox(x=0, y=0, w=100, h=100),
+        commands=[
+            IRPathCommand(op="M", x=10, y=50),
+            IRPathCommand(op="L", x=90, y=50),
+        ],
+        strokeWidthPx=2,
+        strokeColor="#888888",
+        strokeDasharray=[3.0, 2.0, 1.0],  # odd length
+    )
+    prs = _compile_one(node, tmp_path)
+    _, sp_pr = _shape_sp_pr(prs)
+    ln = sp_pr.find(f"{{{NS_A}}}ln")
+    assert ln is not None
+    cust = ln.find(f"{{{NS_A}}}custDash")
+    assert cust is not None
+    # [3,2,1] → doubled to [3,2,1,3,2,1] → 3 (dash, gap) pairs
+    ds_children = cust.findall(f"{{{NS_A}}}ds")
+    assert len(ds_children) == 3, f"expected 3 <a:ds> children, got {len(ds_children)}"
+    # Verify the values: pair 1 = (3, 2), pair 2 = (1, 3), pair 3 = (2, 1)
+    expected = [(300_000, 200_000), (100_000, 300_000), (200_000, 100_000)]
+    actual = [(int(c.get("d")), int(c.get("sp"))) for c in ds_children]
+    assert actual == expected, f"dash sequence wrong: {actual}"

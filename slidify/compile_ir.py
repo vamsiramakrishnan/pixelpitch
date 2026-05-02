@@ -1141,13 +1141,19 @@ def _apply_dash(shape, pattern: list[float]) -> None:
             for existing in ln.findall(f"{{{NS_A}}}{tag}"):
                 ln.remove(existing)
         key = tuple(float(x) for x in pattern)
+        # Per SVG/CSS spec: an odd-length dash array repeats once to
+        # become even, so `[3, 2, 1]` is equivalent to `[3, 2, 1, 3, 2, 1]`.
+        # The previous loop used `range(0, len(key) - 1, 2)` and silently
+        # dropped the trailing value, changing the stroke rhythm.
+        if len(key) % 2 == 1:
+            key = key + key
         prst = _DASH_PRESET_MAP.get(key)
         if prst is not None:
             etree.SubElement(ln, f"{{{NS_A}}}prstDash", attrib={"val": prst})
         else:
             cust = etree.SubElement(ln, f"{{{NS_A}}}custDash")
             # Pairs: (dash, gap) → `<a:ds d="…" sp="…"/>`
-            for i in range(0, len(key) - 1, 2):
+            for i in range(0, len(key), 2):
                 etree.SubElement(
                     cust,
                     f"{{{NS_A}}}ds",
