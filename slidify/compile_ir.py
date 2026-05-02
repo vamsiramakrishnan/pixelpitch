@@ -11,9 +11,12 @@ reverse path (PPTX → IR → JSX) can recognize what to reconstitute.
 
 from __future__ import annotations
 
+import asyncio
 import base64
 import io
 import json
+from collections import defaultdict
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import structlog
@@ -73,6 +76,23 @@ log = structlog.get_logger(__name__)
 # OOXML namespace + slidify recipe-id extension URI.
 NS_A = "http://schemas.openxmlformats.org/drawingml/2006/main"
 SLIDIFY_RECIPE_NS = "https://slidify.dev/2026/recipe"
+# Distinct extension URI for escape-hatch metering payload — keeps the
+# harvester's parsing job trivial: scan for this URI, decode the JSON.
+SLIDIFY_ESCAPE_NS = "https://slidify.dev/2026/escape-hatch"
+
+# Default slide canvas (px) — kept in sync with IRSlide.bbox default
+# in slidify/ir.py. Used as the denominator for escapeRate when the slide
+# itself omits a bbox.
+_DEFAULT_SLIDE_W_PX = 1280
+_DEFAULT_SLIDE_H_PX = 720
+
+# 1×1 transparent PNG — fallback for environments where Playwright
+# isn't available (CI without Chromium, unit tests). The .pptx still
+# embeds a picture so the slide stays editable; the harvester reads the
+# CSS payload from the metadata extension and re-renders if needed.
+_TRANSPARENT_1PX_PNG_B64 = (
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+)
 
 _TEXT_ALIGN_MAP = {
     "left": PP_ALIGN.LEFT,
@@ -82,11 +102,70 @@ _TEXT_ALIGN_MAP = {
 }
 
 
+# ---- Escape-hatch metering --------------------------------------------------
+
+
+@dataclass
+class EscapeMetering:
+    """Per-deck running totals for `report.escapeRate`.
+
+    Tracks the area share each `chrome.escape-hatch` raster consumed,
+    bucketed by its free-text `intent` label. Read by `compile_ir(...)`
+    as part of the public return value so callers can write the metering
+    block straight into `report.json`.
+
+    Per CONTRACT-v2 §F.4. Fields:
+
+    * `total_slide_area`  — sum of slide.bbox area across the deck.
+    * `escape_area`       — sum of escape-hatch raster bbox areas.
+    * `area_by_intent`    — escape area summed per intent label.
+    * `count_by_intent`   — escape-hatch instance count per intent label.
+    """
+
+    total_slide_area: float = 0.0
+    escape_area: float = 0.0
+    area_by_intent: dict[str, float] = field(default_factory=lambda: defaultdict(float))
+    count_by_intent: dict[str, int] = field(default_factory=lambda: defaultdict(int))
+
+    def add_slide(self, slide_w: float, slide_h: float) -> None:
+        self.total_slide_area += max(0.0, slide_w) * max(0.0, slide_h)
+
+    def add_escape(self, intent: str, area: float) -> None:
+        if area <= 0:
+            return
+        self.escape_area += area
+        self.area_by_intent[intent] += area
+        self.count_by_intent[intent] += 1
+
+    def to_report_dict(self) -> dict:
+        """Serialize to the `report.escapeRate` shape per CONTRACT-v2 §F.4."""
+        denom = self.total_slide_area
+        if denom <= 0:
+            return {"value": 0.0, "byIntent": {}, "atomCandidates": []}
+        return {
+            "value": self.escape_area / denom,
+            "byIntent": {k: v / denom for k, v in sorted(self.area_by_intent.items())},
+            # M4 harvester populates atomCandidates when run later — see
+            # CONTRACT-v2 §F.5. Empty during single-deck compile.
+            "atomCandidates": [],
+        }
+
+
 # ---- Public entry points -----------------------------------------------------
 
 
-def compile_ir(deck_json: str | dict | IRDeck, output_path: str | Path) -> Path:
-    """Compile an IR deck (JSON string, dict, or IRDeck) to PPTX. Returns path."""
+def compile_ir(
+    deck_json: str | dict | IRDeck,
+    output_path: str | Path,
+    *,
+    return_metering: bool = False,
+) -> Path | tuple[Path, EscapeMetering]:
+    """Compile an IR deck (JSON string, dict, or IRDeck) to PPTX. Returns path.
+
+    When ``return_metering=True`` returns ``(path, EscapeMetering)`` so the
+    caller can attach `report.escapeRate` to its conversion report. Default
+    return shape is unchanged for backward compatibility.
+    """
     if isinstance(deck_json, IRDeck):
         deck = deck_json
     elif isinstance(deck_json, dict):
@@ -96,6 +175,8 @@ def compile_ir(deck_json: str | dict | IRDeck, output_path: str | Path) -> Path:
     out = Path(output_path)
     compiler = _IRCompiler()
     compiler.compile(deck, out)
+    if return_metering:
+        return out, compiler.metering
     return out
 
 
@@ -113,13 +194,24 @@ class _IRCompiler:
         self.prs = Presentation()
         self.prs.slide_width = Emu(SLIDE_W_EMU)
         self.prs.slide_height = Emu(SLIDE_H_EMU)
+        # Per-deck escape-hatch metering, surfaced via `report.escapeRate`.
+        self.metering = EscapeMetering()
 
     def compile(self, deck: IRDeck, out_path: Path) -> None:
         for slide_ir in deck.slides:
             self._emit_slide(slide_ir)
         out_path.parent.mkdir(parents=True, exist_ok=True)
         self.prs.save(str(out_path))
-        log.info("compile_ir.done", path=str(out_path), n_slides=len(deck.slides))
+        log.info(
+            "compile_ir.done",
+            path=str(out_path),
+            n_slides=len(deck.slides),
+            escape_rate=(
+                self.metering.escape_area / self.metering.total_slide_area
+                if self.metering.total_slide_area
+                else 0.0
+            ),
+        )
 
     def _emit_slide(self, slide_ir: IRSlide) -> None:
         layout = self.prs.slide_layouts[6]
@@ -128,6 +220,13 @@ class _IRCompiler:
         # Slide background: emit as a full-bleed shape behind everything.
         if not _is_white_solid(slide_ir.background):
             self._emit_background_shape(slide, slide_ir.background)
+
+        # Track slide area for the escape-rate denominator BEFORE any node
+        # emission — gives accurate accounting even on slides with zero
+        # escape-hatch usage (the denominator still grows).
+        slide_w = slide_ir.bbox.w if slide_ir.bbox else _DEFAULT_SLIDE_W_PX
+        slide_h = slide_ir.bbox.h if slide_ir.bbox else _DEFAULT_SLIDE_H_PX
+        self.metering.add_slide(slide_w, slide_h)
 
         for node in slide_ir.nodes:
             self._emit_node(slide, node)
@@ -247,6 +346,19 @@ class _IRCompiler:
 
     def _emit_raster(self, slide, node: IRRasterNode) -> None:
         bbox = node.bbox or IRBbox(x=0, y=0, w=SLIDE_W_PX, h=720)
+        # Escape-hatch detour: detect, render-if-empty, embed, stamp metadata,
+        # and bookkeep for `report.escapeRate`. The detection key is
+        # `metadata.role == 'escape-hatch'` (set by EscapeHatch's TSX
+        # emitter); we also accept the recipeId as a fallback so handcrafted
+        # IR fixtures don't have to remember the metadata convention.
+        is_escape = (
+            node.metadata.get("role") == "escape-hatch"
+            or node.recipeId == "chrome.escape-hatch"
+        )
+        if is_escape:
+            self._emit_escape_hatch(slide, node, bbox)
+            return
+
         x, y, w, h = _emu_rect(bbox)
         try:
             png_bytes = base64.b64decode(node.pngBase64)
@@ -255,6 +367,74 @@ class _IRCompiler:
             return
         pic = slide.shapes.add_picture(io.BytesIO(png_bytes), x, y, w, h)
         _stamp_recipe_id(pic, node.recipeId)
+
+    def _emit_escape_hatch(
+        self, slide, node: IRRasterNode, bbox: IRBbox
+    ) -> None:
+        """Embed an escape-hatch raster and stamp its metering payload.
+
+        Pipeline:
+          1. Decode the PNG (or render via Chromium if `pngBase64` is empty).
+          2. Embed as a picture at the requested bbox.
+          3. Stamp the recipe-id extension (so PPTX→IR round-trip recognizes it).
+          4. Stamp a separate `escape-hatch` extension carrying the cssPayload,
+             intent, attempted, etc., so the harvester can find clusters.
+          5. Update `self.metering` for `report.escapeRate`.
+        """
+        x, y, w, h = _emu_rect(bbox)
+        css_payload = str(node.metadata.get("cssPayload", ""))
+        body = str(node.metadata.get("body", ""))
+        intent = str(node.metadata.get("intent", "unspecified"))
+        attempted = node.metadata.get("attempted")
+
+        # 1. Source the PNG. Prefer the IR-supplied pngBase64; fall back to a
+        # Chromium screenshot of the cssPayload; final fallback is a 1x1
+        # transparent placeholder so the slide still embeds an editable
+        # picture frame for the harvester to find later.
+        png_bytes: bytes
+        if node.pngBase64:
+            try:
+                png_bytes = base64.b64decode(node.pngBase64)
+            except Exception as e:
+                log.warning(
+                    "compile_ir.escape_hatch_decode_failed", error=str(e)
+                )
+                png_bytes = base64.b64decode(_TRANSPARENT_1PX_PNG_B64)
+        else:
+            png_bytes = _render_escape_payload(
+                css_payload=css_payload,
+                body=body,
+                width_px=int(max(1, bbox.w)),
+                height_px=int(max(1, bbox.h)),
+            )
+
+        try:
+            pic = slide.shapes.add_picture(io.BytesIO(png_bytes), x, y, w, h)
+        except Exception as e:
+            log.warning("compile_ir.escape_hatch_picture_failed", error=str(e))
+            return
+
+        # 2. Stamps for round-trip + harvester discovery.
+        _stamp_recipe_id(pic, node.recipeId)
+        _stamp_escape_metadata(
+            pic,
+            css_payload=css_payload,
+            body=body,
+            intent=intent,
+            attempted=attempted if isinstance(attempted, str) else None,
+        )
+
+        # 3. Metering. Area is in slide-coordinate pixels (matches the
+        # denominator added in `_emit_slide`).
+        area = max(0.0, bbox.w) * max(0.0, bbox.h)
+        self.metering.add_escape(intent, area)
+        log.info(
+            "compile_ir.escape_hatch_emitted",
+            intent=intent,
+            attempted=attempted,
+            bbox_area=area,
+            had_payload=bool(css_payload),
+        )
 
     def _emit_background_shape(self, slide, fill: Fill) -> None:
         shape = slide.shapes.add_shape(
@@ -348,6 +528,124 @@ def _apply_shadow_ir(shape, sh) -> None:
             alpha=alpha,
         ),
     )
+
+
+def _stamp_escape_metadata(
+    shape,
+    *,
+    css_payload: str,
+    body: str,
+    intent: str,
+    attempted: str | None,
+) -> None:
+    """Embed the escape-hatch payload as an OOXML extension entry.
+
+    Distinct URI (`SLIDIFY_ESCAPE_NS`) so the harvester's grep can be a
+    single substring match; the body is JSON so it stays compact and
+    schema-stable across compiler versions.
+    """
+    try:
+        sp_pr = shape._element.spPr
+    except AttributeError:
+        return
+    if sp_pr is None:
+        return
+    ext_lst = sp_pr.find(f"{{{NS_A}}}extLst")
+    if ext_lst is None:
+        ext_lst = etree.SubElement(sp_pr, f"{{{NS_A}}}extLst")
+    # Replace any prior escape-hatch ext for idempotent re-emission.
+    for existing in ext_lst.findall(
+        f"{{{NS_A}}}ext[@uri='{SLIDIFY_ESCAPE_NS}']"
+    ):
+        ext_lst.remove(existing)
+    ext = etree.SubElement(
+        ext_lst, f"{{{NS_A}}}ext", attrib={"uri": SLIDIFY_ESCAPE_NS}
+    )
+    payload = etree.SubElement(
+        ext, f"{{{SLIDIFY_ESCAPE_NS}}}escapePayload"
+    )
+    payload.text = json.dumps(
+        {
+            "intent": intent,
+            "attempted": attempted,
+            "cssPayload": css_payload,
+            "body": body,
+        },
+        sort_keys=True,
+    )
+
+
+def _render_escape_payload(
+    *, css_payload: str, body: str, width_px: int, height_px: int
+) -> bytes:
+    """Render the escape-hatch CSS payload to PNG via Chromium.
+
+    Best-effort: if Playwright isn't available (CI without browser deps,
+    unit tests), returns a 1×1 transparent PNG placeholder so the picture
+    frame still embeds and the harvester can later re-render from the
+    metadata extension. The metering is unaffected — area accounting uses
+    the bbox, not the PNG dimensions.
+    """
+    html = (
+        "<!DOCTYPE html><html><head><meta charset='utf-8'>"
+        "<style>html,body{margin:0;padding:0;background:transparent;}"
+        f".__esc{{width:{width_px}px;height:{height_px}px;{css_payload}}}"
+        "</style></head><body>"
+        f"<div class='__esc'>{body}</div>"
+        "</body></html>"
+    )
+    try:
+        return asyncio.run(
+            _screenshot_html(html, width_px=width_px, height_px=height_px)
+        )
+    except RuntimeError:
+        # We're already inside an event loop (e.g. compile_ir called from an
+        # async context). Fall through to placeholder; an async-aware caller
+        # should pre-render the PNG and ship it in pngBase64.
+        log.info("compile_ir.escape_payload_in_loop_fallback")
+        return base64.b64decode(_TRANSPARENT_1PX_PNG_B64)
+    except Exception as e:
+        log.warning("compile_ir.escape_payload_render_failed", error=str(e))
+        return base64.b64decode(_TRANSPARENT_1PX_PNG_B64)
+
+
+async def _screenshot_html(html: str, *, width_px: int, height_px: int) -> bytes:
+    """One-shot Chromium screenshot of an HTML string. Used for escape-hatch
+    rasterization. Imported lazily so unit tests without Playwright don't
+    fail at import time."""
+    try:
+        from playwright.async_api import async_playwright
+    except ImportError:
+        log.info("compile_ir.playwright_unavailable")
+        return base64.b64decode(_TRANSPARENT_1PX_PNG_B64)
+
+    async with async_playwright() as pw:
+        browser = await pw.chromium.launch()
+        try:
+            ctx = await browser.new_context(
+                viewport={"width": max(1, width_px), "height": max(1, height_px)},
+                device_scale_factor=1,
+            )
+            page = await ctx.new_page()
+            await page.set_content(html, wait_until="load", timeout=10_000)
+            try:
+                await page.evaluate("document.fonts && document.fonts.ready")
+            except Exception:
+                pass
+            png = await page.screenshot(
+                clip={
+                    "x": 0,
+                    "y": 0,
+                    "width": max(1, width_px),
+                    "height": max(1, height_px),
+                },
+                full_page=False,
+                type="png",
+                omit_background=True,
+            )
+            return png
+        finally:
+            await browser.close()
 
 
 def _stamp_recipe_id(shape, recipe_id: str) -> None:

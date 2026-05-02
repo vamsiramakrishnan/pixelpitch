@@ -604,3 +604,75 @@ patterns:
     emit:
       kind: observe
       metadata: { recipe: atom_unrecognised }
+
+  # ==========================================================================
+  # Crew M6 — chrome.escape-hatch (Wave-2B-v2, CONTRACT-v2 §F)
+  # --------------------------------------------------------------------------
+  # The first-class metered escape valve. When an LLM (or designer) needs a
+  # treatment that no Tier-A primitive or Tier-B recipe expresses, they reach
+  # for this atom — instead of silently rasterizing further upstream. The CSS
+  # payload + intent label travel through the IR (see
+  # components/src/primitives/EscapeHatch.tsx) and land in the slide via
+  # slidify/compile_ir.py, which screenshots the payload and stamps the
+  # metadata onto the shape's extLst for the harvester to find.
+  #
+  # AXIS NOTE — `chrome.*` pseudo-axis:
+  #   The 10 axes (`comp`, `bg`, `surf`, `type`, `mask`, `dec`, `data`,
+  #   `motion`, `ui`, `anno`) are frozen per CONTRACT-v2 §A.3. `chrome.*`
+  #   is an explicit exception: it isn't visual content, it's pipeline
+  #   infrastructure. Per CONTRACT-v2 §B.1 Tier-A roster, the atom id is
+  #   `chrome.escape-hatch`. If review feedback prefers a different axis
+  #   (e.g., `comp.escape-hatch` or `ui.escape-hatch`), the rename is
+  #   one line — change the `id:` and the `anchor.data_atom_id:` below.
+  #
+  # KIND NOTE — `Raster` (not `NativeRaster`):
+  #   CONTRACT-v2 §F.2 sketched `kind: NativeRaster`, but the matcher's
+  #   actual emit-kind enum (slidify/models.py::DecisionKind) only knows
+  #   the values produced by `_camel_to_snake` lookup. `Raster` is the
+  #   canonical raster-fallback kind. The escape-hatch is deliberately a
+  #   raster: it ships an opaque PNG screenshot of the CSS payload.
+  #
+  # METERING NOTE — `excludeFromNativeRatio`:
+  #   Per CONTRACT-v1 §9.5, escape-hatch rasters are excluded from the
+  #   `native_area_ratio` denominator (they are deliberate native skips,
+  #   not failures). The flag is stamped into the IR metadata, not into
+  #   this row, because the matcher writes Decision.metadata at runtime
+  #   from the renderer-emitted IR.
+  #
+  # Single addition placed at the end of the file to minimize merge
+  # conflicts with Crew M1's parallel work on the rest of atoms.yaml.
+  # ==========================================================================
+  - id: chrome.escape-hatch
+    priority: 90
+    match:
+      anchor.data_atom_id: chrome.escape-hatch
+    emit:
+      kind: Raster
+      confidence: 1.00
+      metadata:
+        recipe: chrome_escape_hatch
+        axis: chrome
+        structural: true
+        tier: A
+        excludeFromNativeRatio: true
+    renderer:
+      component: EscapeHatch
+      tier: A
+      primitive: chrome.escape-hatch     # self-references; Tier-A only
+      version: 1.0.0
+      props:
+        bbox: { type: bbox, required: true }
+        cssPayload: { type: string, required: true }
+        body: { type: string, required: false, default: '' }
+        intent: { type: string, required: true }
+        attempted: { type: string, required: false }
+      metering:
+        enabled: true
+        capture_payload: true
+        classify_intent: true
+    fixture:
+      sample_html: |
+        <div data-atom="chrome.escape-hatch"
+             data-intent="non-rect-clip"
+             data-attempted="surf.glass">...</div>
+      expected_recipe_id: chrome.escape-hatch

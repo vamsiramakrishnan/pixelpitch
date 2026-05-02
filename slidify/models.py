@@ -305,6 +305,26 @@ class ConversionResult(BaseModel):
     # here lets authors and agents catch the failure mode at compile time
     # instead of eyeballing PNGs. Empty = nothing overflowed.
     overflow_elements: list["OverflowElement"] = Field(default_factory=list)
+    # Escape-hatch metering — `report.escapeRate` per CONTRACT-v2 §F.4.
+    # Populated when the IR→PPTX path (compile_ir) embeds any
+    # `chrome.escape-hatch` raster. The HTML→PPTX path leaves it at zero
+    # (the matcher doesn't currently surface escape-hatch usage upstream;
+    # the harvester picks that up later via `unmatched_signatures`).
+    #
+    # Shape (per CONTRACT-v2 §F.4):
+    #   {
+    #     "value": 0.084,                          # area share, 0..1
+    #     "byIntent": { "non-rect-clip": 0.041 },  # area share per intent
+    #     "atomCandidates": []                     # M4 harvester fills this
+    #   }
+    # Field is `escape_rate` (snake) so it sits next to the existing
+    # snake-case fields (`native_area_ratio`, `decisions_by_tier`, …) in
+    # `report.json`. CONTRACT-v2 §F.4 sketched the camelCase key
+    # `escapeRate`; the inner shape (`value`, `byIntent`, `atomCandidates`)
+    # IS camelCase to keep that part stable.
+    escape_rate: dict[str, Any] = Field(
+        default_factory=lambda: {"value": 0.0, "byIntent": {}, "atomCandidates": []},
+    )
 
 
 class OverflowElement(BaseModel):

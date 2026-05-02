@@ -32,6 +32,11 @@ export type { GlassPanelProps } from './components/GlassPanel';
 export { default as AnnotatedCallout, annotatedCalloutToIR } from './components/AnnotatedCallout';
 export type { AnnotatedCalloutProps, PointerSide } from './components/AnnotatedCallout';
 
+// Tier-A primitives (hand-written, structural, survive trend rotation).
+// M3 owns the rest of Tier-A; M6 owns EscapeHatch specifically per CONTRACT-v2 §B.1.
+export { default as EscapeHatch, escapeHatchToIR } from './primitives/EscapeHatch';
+export type { EscapeHatchProps } from './primitives/EscapeHatch';
+
 // IR types (re-exported under './ir' subpath too)
 export type {
   Color,
