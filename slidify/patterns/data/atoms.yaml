@@ -604,3 +604,240 @@ patterns:
     emit:
       kind: observe
       metadata: { recipe: atom_unrecognised }
+
+  # ============================================================
+  # Wave-2B-v2 vocabulary expansion (CONTRACT-v2 §A.4)
+  # 95 new atoms added across 10 axes for comprehensive coverage.
+  # Per-batch grouped by axis for easy review.
+  # ============================================================
+
+  # ── bg.* additions (8 → 18) — pattern fills, spotlights, scrims, mesh ──
+
+  - id: atom-bg-dot-lattice-fine
+    priority: 52
+    match:
+      anchor.data_atom_id: bg.dot-lattice-fine
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_bg_dot_lattice_fine, axis: bg, fill: pattern-dots, tile: 8 }
+    renderer:
+      component: BgDotLatticeFine
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:        { type: bbox,   required: true }
+        color:       { type: color,  default: 'tokens.palette.ruler' }
+        bgColor:     { type: color,  required: false }
+        tilePx:      { type: number, default: 8 }
+        dotRadiusPx: { type: number, default: 0.75 }
+    fixture:
+      sample_html: |
+        <div data-atom="bg.dot-lattice-fine" style="position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.10) 0.75px,transparent 0.75px);background-size:8px 8px;"></div>
+      expected_recipe_id: bg.dot-lattice-fine
+
+  - id: atom-bg-dot-lattice-coarse
+    priority: 52
+    match:
+      anchor.data_atom_id: bg.dot-lattice-coarse
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_bg_dot_lattice_coarse, axis: bg, fill: pattern-dots, tile: 24 }
+    renderer:
+      component: BgDotLatticeCoarse
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:        { type: bbox,   required: true }
+        color:       { type: color,  default: 'tokens.palette.ruler' }
+        tilePx:      { type: number, default: 24 }
+        dotRadiusPx: { type: number, default: 1.5 }
+    fixture:
+      sample_html: |
+        <div data-atom="bg.dot-lattice-coarse" style="position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.14) 1.5px,transparent 1.5px);background-size:24px 24px;"></div>
+      expected_recipe_id: bg.dot-lattice-coarse
+
+  - id: atom-bg-line-grid
+    priority: 52
+    match:
+      anchor.data_atom_id: bg.line-grid
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_bg_line_grid, axis: bg, fill: pattern-lines-grid }
+    renderer:
+      component: BgLineGrid
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:         { type: bbox,   required: true }
+        color:        { type: color,  default: 'tokens.palette.ruler' }
+        spacingPx:    { type: number, default: 32 }
+        strokeWidthPx: { type: number, default: 1 }
+    fixture:
+      sample_html: |
+        <div data-atom="bg.line-grid" style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.08) 1px,transparent 1px);background-size:32px 32px;"></div>
+      expected_recipe_id: bg.line-grid
+
+  - id: atom-bg-crosshatch
+    priority: 52
+    match:
+      anchor.data_atom_id: bg.crosshatch
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_bg_crosshatch, axis: bg, fill: pattern-crosshatch }
+    renderer:
+      component: BgCrosshatch
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:      { type: bbox,   required: true }
+        color:     { type: color,  default: 'tokens.palette.ruler' }
+        spacingPx: { type: number, default: 12 }
+    fixture:
+      sample_html: |
+        <div data-atom="bg.crosshatch" style="position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,0.07) 0 1px,transparent 1px 12px),repeating-linear-gradient(135deg,rgba(255,255,255,0.07) 0 1px,transparent 1px 12px);"></div>
+      expected_recipe_id: bg.crosshatch
+
+  - id: atom-bg-diagonal
+    priority: 52
+    match:
+      anchor.data_atom_id: bg.diagonal
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_bg_diagonal, axis: bg, fill: pattern-diagonal }
+    renderer:
+      component: BgDiagonal
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:        { type: bbox,   required: true }
+        color:       { type: color,  default: 'tokens.palette.ruler' }
+        spacingPx:   { type: number, default: 16 }
+        angleDeg:    { type: number, default: 45 }
+    fixture:
+      sample_html: |
+        <div data-atom="bg.diagonal" style="position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,0.10) 0 1px,transparent 1px 16px);"></div>
+      expected_recipe_id: bg.diagonal
+
+  - id: atom-bg-spotlight-tight
+    priority: 52
+    match:
+      anchor.data_atom_id: bg.spotlight-tight
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_bg_spotlight_tight, axis: bg, fill: radial }
+    renderer:
+      component: BgSpotlightTight
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:  { type: bbox,   required: true }
+        cx:    { type: number, min: 0, max: 1, default: 0.5 }
+        cy:    { type: number, min: 0, max: 1, default: 0.4 }
+        color: { type: color,  default: 'tokens.palette.accent' }
+    fixture:
+      sample_html: |
+        <div data-atom="bg.spotlight-tight" style="position:absolute;inset:0;background:radial-gradient(circle 320px at 50% 40%,rgba(167,139,250,0.45),transparent 70%);"></div>
+      expected_recipe_id: bg.spotlight-tight
+
+  - id: atom-bg-spotlight-soft
+    priority: 52
+    match:
+      anchor.data_atom_id: bg.spotlight-soft
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_bg_spotlight_soft, axis: bg, fill: radial }
+    renderer:
+      component: BgSpotlightSoft
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:  { type: bbox,   required: true }
+        cx:    { type: number, min: 0, max: 1, default: 0.5 }
+        cy:    { type: number, min: 0, max: 1, default: 0.4 }
+        color: { type: color,  default: 'tokens.palette.accent' }
+    fixture:
+      sample_html: |
+        <div data-atom="bg.spotlight-soft" style="position:absolute;inset:0;background:radial-gradient(circle 720px at 50% 40%,rgba(167,139,250,0.22),transparent 70%);"></div>
+      expected_recipe_id: bg.spotlight-soft
+
+  - id: atom-bg-scrim-bottom
+    priority: 52
+    match:
+      anchor.data_atom_id: bg.scrim-bottom
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_bg_scrim_bottom, axis: bg, fill: linear-grad }
+    renderer:
+      component: BgScrimBottom
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,   required: true }
+        color:   { type: color,  default: 'tokens.palette.surface-1' }
+        opacity: { type: number, default: 0.7 }
+    fixture:
+      sample_html: |
+        <div data-atom="bg.scrim-bottom" style="position:absolute;left:0;right:0;bottom:0;height:50%;background:linear-gradient(180deg,transparent,rgba(7,7,16,0.7));"></div>
+      expected_recipe_id: bg.scrim-bottom
+
+  - id: atom-bg-scrim-top
+    priority: 52
+    match:
+      anchor.data_atom_id: bg.scrim-top
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_bg_scrim_top, axis: bg, fill: linear-grad }
+    renderer:
+      component: BgScrimTop
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,   required: true }
+        color:   { type: color,  default: 'tokens.palette.surface-1' }
+        opacity: { type: number, default: 0.7 }
+    fixture:
+      sample_html: |
+        <div data-atom="bg.scrim-top" style="position:absolute;left:0;right:0;top:0;height:50%;background:linear-gradient(0deg,transparent,rgba(7,7,16,0.7));"></div>
+      expected_recipe_id: bg.scrim-top
+
+  - id: atom-bg-aurora-corners
+    priority: 52
+    match:
+      anchor.data_atom_id: bg.aurora-corners
+    emit:
+      kind: NativeShape
+      confidence: 0.99
+      metadata: { recipe: atom_bg_aurora_corners, axis: bg, fill: radial-mesh, layers: 4 }
+    renderer:
+      component: BgAuroraCorners
+      tier: B
+      primitive: frame.safe-area
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,  required: true }
+        colorTL: { type: color, default: 'tokens.palette.accent' }
+        colorTR: { type: color, required: false }
+        colorBL: { type: color, required: false }
+        colorBR: { type: color, required: false }
+    fixture:
+      sample_html: |
+        <div data-atom="bg.aurora-corners" style="position:absolute;inset:0;background:radial-gradient(circle at 0% 0%,rgba(99,102,241,0.30),transparent 50%),radial-gradient(circle at 100% 0%,rgba(236,72,153,0.30),transparent 50%),radial-gradient(circle at 0% 100%,rgba(59,130,246,0.25),transparent 50%),radial-gradient(circle at 100% 100%,rgba(168,85,247,0.30),transparent 50%);"></div>
+      expected_recipe_id: bg.aurora-corners
