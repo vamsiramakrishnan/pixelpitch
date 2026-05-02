@@ -1250,6 +1250,106 @@ def guide_cmd(
 # ---------------------------------------------------------------------------
 
 
+# ---------------------------------------------------------------------------
+# report-escape-clusters — CONTRACT-v2 §F.5 promotion-loop scaffold
+# ---------------------------------------------------------------------------
+#
+# When the harvester clusters escape-hatch usage by intent and a cluster
+# crosses a threshold (default ≥15 instances), it auto-files a GitHub issue
+# tagged `atom-proposal` for the designer to review. v1 of this command
+# only PRINTS what it would file — actual GitHub integration is M4 follow-up.
+#
+# TODO(M4): wire to gh CLI / GitHub REST. Cluster signature, sample CSS
+# payloads, draft manifest row → `atom-proposal` issue per cluster.
+
+@cli.command(name="report-escape-clusters")
+@click.argument(
+    "report_path",
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    required=False,
+)
+@click.option(
+    "--threshold",
+    type=int,
+    default=15,
+    show_default=True,
+    help="Minimum cluster size before a promotion would be proposed.",
+)
+@click.option(
+    "--auto-file-issues",
+    is_flag=True,
+    help="(stub) Would file `atom-proposal` issues to GitHub. v1 only logs "
+    "'would file'; actual gh integration is M4 follow-up.",
+)
+def report_escape_clusters_cmd(
+    report_path: Path | None, threshold: int, auto_file_issues: bool
+) -> None:
+    """Inspect `escape_rate.byIntent` clusters; surface promotion candidates.
+
+    Per CONTRACT-v2 §F.5. The harvester clusters escape-hatch usage across a
+    corpus and promotes intents that cross a threshold to atom proposals.
+
+    \b
+    v1 (this command): prints what would be filed.
+    v2 (M4 follow-up): actually files `atom-proposal` GitHub issues.
+
+    \b
+    Examples:
+        slidify report-escape-clusters report.json
+        slidify report-escape-clusters report.json --threshold 25
+        slidify report-escape-clusters report.json --auto-file-issues  # stub
+    """
+    if report_path is None:
+        click.echo(
+            "slidify: pass a report.json path "
+            "(produced by `slidify convert ... --report-json report.json`).",
+            err=True,
+        )
+        sys.exit(2)
+
+    try:
+        data = json.loads(report_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        click.echo(f"slidify: invalid JSON: {e}", err=True)
+        sys.exit(2)
+
+    escape = data.get("escape_rate", {}) or data.get("escapeRate", {})
+    by_intent: dict[str, float] = escape.get("byIntent", {}) or {}
+    total_value: float = float(escape.get("value", 0.0))
+
+    if not by_intent:
+        click.echo(
+            "No escape-hatch usage recorded in this report. "
+            "Either the deck used no `chrome.escape-hatch` atoms or "
+            "the escape-rate metering wasn't populated."
+        )
+        return
+
+    click.echo(f"Escape rate: {total_value:.4f} (deck-wide area share)")
+    click.echo(f"Threshold  : {threshold} (intent count)")
+    click.echo("─" * 64)
+
+    # In v1 we only have area share, not raw counts. Treat any intent with
+    # area share ≥ 1% as a "would-file" candidate when --auto-file-issues
+    # is set; a real implementation would read counts from the harvester
+    # output, not from a single report.json.
+    candidates = sorted(
+        by_intent.items(), key=lambda kv: -kv[1]
+    )
+    for intent, share in candidates:
+        would_promote = share >= 0.01  # 1% of slide area is the v1 floor
+        marker = click.style("→ would-promote", fg="yellow") if would_promote else "  observe"
+        click.echo(f"  {intent:<32}{share:>8.4f}    {marker}")
+        if would_promote and auto_file_issues:
+            # TODO(M4): replace with `gh issue create --label atom-proposal ...`
+            click.echo(
+                click.style(
+                    f"    [would file] atom-proposal issue for intent={intent}",
+                    dim=True,
+                )
+            )
+
+
 @cli.command(name="field")
 @click.argument("json_path", type=click.Path(exists=True, dir_okay=False, path_type=Path))
 @click.argument("dotted_path")
@@ -1304,6 +1404,7 @@ def main() -> None:
     known_subs = {
         "convert", "harvest", "compat", "capture-gif",
         "doctor", "version", "manifest", "guide", "field",
+        "report-escape-clusters",
         "--help", "-h", "--version", "-V",
     }
     if args and not args[0].startswith("-") and args[0] not in known_subs:

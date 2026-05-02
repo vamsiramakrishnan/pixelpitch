@@ -305,14 +305,16 @@ class ConversionResult(BaseModel):
     # here lets authors and agents catch the failure mode at compile time
     # instead of eyeballing PNGs. Empty = nothing overflowed.
     overflow_elements: list["OverflowElement"] = Field(default_factory=list)
-    # EscapeHatch metering — surface area for raster fallbacks emitted via
-    # the chrome.escape-hatch atom (CONTRACT-v2 §F). M4 stubs the field so
-    # downstream callers / dashboards / contracts see a stable shape; M6
-    # fills `value` (overall escape rate, 0..1), `byIntent` (per-intent
-    # escape ratio), and `atomCandidates` (harvester-flagged shapes that
-    # repeatedly fall through to the escape hatch and should be promoted to
-    # first-class atoms). Until then the stub is always zero / empty.
-    # TODO(M6): wire to chrome.escape-hatch RasterNode metadata
+    # Escape-hatch metering — `report.escapeRate` per CONTRACT-v2 §F.4.
+    # Wired by M6's compile_ir.py when the IR→PPTX path embeds any
+    # `chrome.escape-hatch` raster. The HTML→PPTX path leaves it at zero
+    # (the matcher doesn't currently surface escape-hatch usage upstream;
+    # the harvester picks that up later via `unmatched_signatures`).
+    #
+    # Field is `escape_rate` (snake) so it sits next to the existing
+    # snake-case fields (`native_area_ratio`, `decisions_by_tier`, …);
+    # the typed `EscapeRate` model below uses pydantic aliases to emit
+    # camelCase keys (`value`, `byIntent`, `atomCandidates`) per spec.
     escape_rate: "EscapeRate" = Field(default_factory=lambda: EscapeRate())
 
 
