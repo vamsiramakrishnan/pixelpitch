@@ -212,7 +212,7 @@ slidify field report.json pattern_hits               # confirm atom-* recipes fi
 ```
 
 When `overflow_elements` is non-empty, each entry tells you exactly what
-overflowed:
+overflowed and — when an atom is implicated — what to do about it:
 
 ```json
 {
@@ -221,20 +221,53 @@ overflowed:
   "overflow_px": 135.0,
   "data_atom": "type.dropcap",
   "stable_selector": "body > div:nth-child(1) > div:nth-child(2) > div:nth-child(10)",
-  "sample_text": "There is a moment in every render…"
+  "sample_text": "There is a moment in every render…",
+  "hint": "atom `type.dropcap`: lower the ::first-letter font-size or widen the body's container."
 }
 ```
 
-Use the `data_atom` and `stable_selector` to find the offending element.
-Then either:
+Read the `hint` first. The pipeline ships an atom-keyed hint table for the
+common authoring bugs (each row in `data-atom`); when no atom is matched,
+the hint falls back to a per-axis viewport-math reminder ("right edge
+crossed by N px — trim the line, lower font-size, or wrap; viewport width
+is 1280 px"). Use the `data_atom` and `stable_selector` to find the
+offending element, then either:
+
 * shrink the type (per the size table above),
 * shrink the row,
-* or split the slide.
+* split the slide,
+* or — only when the bleed is genuinely intentional — tag the element
+  with `data-pptx-allow-overflow="true"`.
 
 **Do not** ignore overflow even if the slide visually "looks ok" in the
 PNG — slidify also emits `<a:normAutofit/>` as a runtime safety net, but
 the rendered PNG layout is what authors rely on, and PowerPoint's autofit
 is heuristic.
+
+## Pipeline-side rules the compiler enforces for you
+
+The atomic seed is a two-sided contract: authors stay inside this grammar,
+and the pipeline plays by the same rules so well-formed atoms never trip
+spurious warnings. Three rules are enforced automatically — you don't
+have to remember them, but knowing they exist explains the report:
+
+1. **Allow-overflow inheritance for overflow-by-design atoms.** Tagging a
+   cluster anchor with `data-atom="type.echo"`, `type.longshadow`,
+   `type.marquee`, `motion.echo`, `motion.marquee`, or
+   `motion.speed-lines` automatically grants every descendant the
+   equivalent of `data-pptx-allow-overflow="true"`. Echo trails, ghost
+   spans, and marquee tapes are *defined* by their bleed; you don't need
+   to mark each leaf span individually. The detector ignores them and the
+   shapes still emit natively.
+2. **Native lines count as editable.** SVG `<line>`, `<path>`, and
+   `<polyline>` primitives emit as PowerPoint LINE / FREEFORM connectors
+   and are individually selectable in PowerPoint. The post-emit
+   editability round-trip credits them, so anatomy-style decks dense in
+   blueprint annotations no longer flag false drift.
+3. **Atom-keyed authoring hints.** When the detector *does* report an
+   overflow, it walks up the ancestor chain to find the nearest
+   `data-atom` and attaches a one-line, fix-it hint to the report row
+   and the CLI summary. You see the action, not just the location.
 
 ## Reference corpus
 
