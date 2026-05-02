@@ -2430,3 +2430,367 @@ patterns:
       sample_html: |
         <ul data-atom="ui.checklist" style="list-style:none;padding:0;margin:0;color:#d4d4d8;font-size:15px;"><li style="display:flex;align-items:center;gap:12px;padding:6px 0;"><span style="color:#10b981;">✓</span><span>F1 IR primitives</span></li><li style="display:flex;align-items:center;gap:12px;padding:6px 0;"><span style="color:#10b981;">✓</span><span>F2 token system</span></li><li style="display:flex;align-items:center;gap:12px;padding:6px 0;color:#71717a;"><span>○</span><span>M2 codegen</span></li></ul>
       expected_recipe_id: ui.checklist
+
+  # ── comp.* additions (1 → 15) — composite slide templates ──────────────
+  # These compose other atoms via `renderer.composes:` (CONTRACT-v2 §A.6).
+  # They REPLACE the v1 "templates" crew with manifest-driven slide blocks.
+
+  - id: atom-comp-hero-investor
+    priority: 80
+    match:
+      anchor.data_atom_id: comp.hero-investor
+    emit:
+      kind: Composite
+      confidence: 0.99
+      metadata: { recipe: atom_comp_hero_investor, axis: comp, role: hero }
+    renderer:
+      component: CompHeroInvestor
+      tier: B
+      composes:
+        - { atom: bg.aurora-band }
+        - { atom: bg.aurora-corners, props: { intensity: low } }
+        - { atom: type.eyebrow-ruled }
+        - { atom: type.big-number-gradient }
+        - { atom: type.pullquote-serif }
+      version: 1.0.0
+      props:
+        bbox:     { type: bbox,   required: true }
+        eyebrow:  { type: string, required: true }
+        headline: { type: string, required: true }
+        lede:     { type: string, required: false }
+    fixture:
+      sample_html: |
+        <div data-atom="comp.hero-investor" data-pptx-role="slide" style="position:absolute;inset:0;background:radial-gradient(ellipse 1100px 760px at 80% 12%,#1e1b4b,#0a0a14 55%,#050510);"></div>
+      expected_recipe_id: comp.hero-investor
+
+  - id: atom-comp-hero-product
+    priority: 80
+    match:
+      anchor.data_atom_id: comp.hero-product
+    emit:
+      kind: Composite
+      confidence: 0.99
+      metadata: { recipe: atom_comp_hero_product, axis: comp, role: hero }
+    renderer:
+      component: CompHeroProduct
+      tier: B
+      composes:
+        - { atom: bg.aurora-corners, props: { intensity: med } }
+        - { atom: type.eyebrow-ruled }
+        - { atom: type.big-number-gradient }
+      version: 1.0.0
+      props:
+        bbox:     { type: bbox,   required: true }
+        eyebrow:  { type: string, required: true }
+        headline: { type: string, required: true }
+        cta:      { type: string, required: false }
+    fixture:
+      sample_html: |
+        <div data-atom="comp.hero-product" data-pptx-role="slide" style="position:absolute;inset:0;background:#070710;"></div>
+      expected_recipe_id: comp.hero-product
+
+  - id: atom-comp-agenda-2col
+    priority: 80
+    match:
+      anchor.data_atom_id: comp.agenda-2col
+    emit:
+      kind: Composite
+      confidence: 0.99
+      metadata: { recipe: atom_comp_agenda_2col, axis: comp, role: agenda }
+    renderer:
+      component: CompAgenda2col
+      tier: B
+      composes:
+        - { atom: type.eyebrow-ruled }
+        - { atom: dec.hairline-rule }
+        - { atom: type.numerals-tabular }
+      version: 1.0.0
+      props:
+        bbox:     { type: bbox,   required: true }
+        headline: { type: string, required: true }
+        items:    { type: array,  required: true }
+    fixture:
+      sample_html: |
+        <div data-atom="comp.agenda-2col" data-pptx-role="slide" style="position:absolute;inset:0;background:#070710;padding:96px;"></div>
+      expected_recipe_id: comp.agenda-2col
+
+  - id: atom-comp-agenda-toc
+    priority: 80
+    match:
+      anchor.data_atom_id: comp.agenda-toc
+    emit:
+      kind: Composite
+      confidence: 0.99
+      metadata: { recipe: atom_comp_agenda_toc, axis: comp, role: agenda }
+    renderer:
+      component: CompAgendaToc
+      tier: B
+      composes:
+        - { atom: type.eyebrow-ruled }
+        - { atom: dec.hairline-rule }
+      version: 1.0.0
+      props:
+        bbox:  { type: bbox,  required: true }
+        items: { type: array, required: true }
+    fixture:
+      sample_html: |
+        <div data-atom="comp.agenda-toc" data-pptx-role="slide" style="position:absolute;inset:0;background:#070710;"></div>
+      expected_recipe_id: comp.agenda-toc
+
+  - id: atom-comp-big-stat-hero
+    priority: 80
+    match:
+      anchor.data_atom_id: comp.big-stat-hero
+    emit:
+      kind: Composite
+      confidence: 0.99
+      metadata: { recipe: atom_comp_big_stat_hero, axis: comp, role: stat-hero }
+    renderer:
+      component: CompBigStatHero
+      tier: B
+      composes:
+        - { atom: type.eyebrow-ruled }
+        - { atom: type.big-number-gradient, props: { gradient: 'tokens.gradient.accent-grad' } }
+        - { atom: surf.card-depth }
+        - { atom: data.delta-badge }
+      version: 1.0.0
+      props:
+        bbox:     { type: bbox,   required: true }
+        eyebrow:  { type: string, required: true }
+        value:    { type: string, required: true }
+        unit:     { type: string, required: false }
+        headline: { type: string, required: true }
+        delta:    { type: string, required: false }
+    fixture:
+      sample_html: |
+        <div data-atom="comp.big-stat-hero" data-pptx-role="slide" style="position:absolute;inset:0;background:#070710;"></div>
+      expected_recipe_id: comp.big-stat-hero
+
+  - id: atom-comp-three-up-stats
+    priority: 80
+    match:
+      anchor.data_atom_id: comp.three-up-stats
+    emit:
+      kind: Composite
+      confidence: 0.99
+      metadata: { recipe: atom_comp_three_up_stats, axis: comp, role: stats-grid }
+    renderer:
+      component: CompThreeUpStats
+      tier: B
+      composes:
+        - { atom: type.eyebrow-ruled }
+        - { atom: surf.card-raised }
+        - { atom: data.bullet-bar }
+        - { atom: data.delta-badge }
+      version: 1.0.0
+      props:
+        bbox:     { type: bbox,   required: true }
+        eyebrow:  { type: string, required: true }
+        headline: { type: string, required: true }
+        kpis:     { type: array,  required: true }
+    fixture:
+      sample_html: |
+        <div data-atom="comp.three-up-stats" data-pptx-role="slide" style="position:absolute;inset:0;background:#070710;"></div>
+      expected_recipe_id: comp.three-up-stats
+
+  - id: atom-comp-quote-editorial
+    priority: 80
+    match:
+      anchor.data_atom_id: comp.quote-editorial
+    emit:
+      kind: Composite
+      confidence: 0.99
+      metadata: { recipe: atom_comp_quote_editorial, axis: comp, role: quote }
+    renderer:
+      component: CompQuoteEditorial
+      tier: B
+      composes:
+        - { atom: type.pullquote-serif }
+        - { atom: ui.avatar-cluster }
+      version: 1.0.0
+      props:
+        bbox:        { type: bbox,   required: true }
+        quote:       { type: string, required: true }
+        attribution: { type: string, required: false }
+    fixture:
+      sample_html: |
+        <div data-atom="comp.quote-editorial" data-pptx-role="slide" style="position:absolute;inset:0;background:#070710;"></div>
+      expected_recipe_id: comp.quote-editorial
+
+  - id: atom-comp-section-divider-mesh
+    priority: 80
+    match:
+      anchor.data_atom_id: comp.section-divider-mesh
+    emit:
+      kind: Composite
+      confidence: 0.99
+      metadata: { recipe: atom_comp_section_divider_mesh, axis: comp, role: section-divider }
+    renderer:
+      component: CompSectionDividerMesh
+      tier: B
+      composes:
+        - { atom: bg.aurora-corners, props: { intensity: high } }
+        - { atom: dec.numeral-chapter }
+        - { atom: type.eyebrow-ruled }
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,   required: true }
+        chapter: { type: string, required: true }
+        title:   { type: string, required: true }
+    fixture:
+      sample_html: |
+        <div data-atom="comp.section-divider-mesh" data-pptx-role="slide" style="position:absolute;inset:0;background:#070710;"></div>
+      expected_recipe_id: comp.section-divider-mesh
+
+  - id: atom-comp-roadmap-quarterly
+    priority: 80
+    match:
+      anchor.data_atom_id: comp.roadmap-quarterly
+    emit:
+      kind: Composite
+      confidence: 0.99
+      metadata: { recipe: atom_comp_roadmap_quarterly, axis: comp, role: roadmap }
+    renderer:
+      component: CompRoadmapQuarterly
+      tier: B
+      composes:
+        - { atom: type.eyebrow-ruled }
+        - { atom: data.connector }
+        - { atom: ui.stepper }
+      version: 1.0.0
+      props:
+        bbox:     { type: bbox,   required: true }
+        eyebrow:  { type: string, required: true }
+        quarters: { type: array,  required: true }
+    fixture:
+      sample_html: |
+        <div data-atom="comp.roadmap-quarterly" data-pptx-role="slide" style="position:absolute;inset:0;background:#070710;"></div>
+      expected_recipe_id: comp.roadmap-quarterly
+
+  - id: atom-comp-team-grid
+    priority: 80
+    match:
+      anchor.data_atom_id: comp.team-grid
+    emit:
+      kind: Composite
+      confidence: 0.99
+      metadata: { recipe: atom_comp_team_grid, axis: comp, role: team }
+    renderer:
+      component: CompTeamGrid
+      tier: B
+      composes:
+        - { atom: type.eyebrow-ruled }
+        - { atom: surf.card-raised }
+        - { atom: ui.avatar-cluster }
+      version: 1.0.0
+      props:
+        bbox:     { type: bbox,   required: true }
+        headline: { type: string, required: true }
+        members:  { type: array,  required: true }
+    fixture:
+      sample_html: |
+        <div data-atom="comp.team-grid" data-pptx-role="slide" style="position:absolute;inset:0;background:#070710;"></div>
+      expected_recipe_id: comp.team-grid
+
+  - id: atom-comp-closing-cta
+    priority: 80
+    match:
+      anchor.data_atom_id: comp.closing-cta
+    emit:
+      kind: Composite
+      confidence: 0.99
+      metadata: { recipe: atom_comp_closing_cta, axis: comp, role: closing }
+    renderer:
+      component: CompClosingCta
+      tier: B
+      composes:
+        - { atom: bg.aurora-corners, props: { intensity: high } }
+        - { atom: type.big-number-gradient }
+      version: 1.0.0
+      props:
+        bbox:     { type: bbox,   required: true }
+        headline: { type: string, required: true }
+        cta:      { type: string, required: false }
+    fixture:
+      sample_html: |
+        <div data-atom="comp.closing-cta" data-pptx-role="slide" style="position:absolute;inset:0;background:#070710;"></div>
+      expected_recipe_id: comp.closing-cta
+
+  - id: atom-comp-bento-mixed
+    priority: 80
+    match:
+      anchor.data_atom_id: comp.bento-mixed
+    emit:
+      kind: Composite
+      confidence: 0.99
+      metadata: { recipe: atom_comp_bento_mixed, axis: comp, role: bento }
+    renderer:
+      component: CompBentoMixed
+      tier: B
+      composes:
+        - { atom: surf.bento-cell }
+        - { atom: surf.glass }
+        - { atom: ui.code-block-syntax }
+        - { atom: ui.avatar-cluster }
+      version: 1.0.0
+      props:
+        bbox:  { type: bbox,  required: true }
+        cells: { type: array, required: true }
+    fixture:
+      sample_html: |
+        <div data-atom="comp.bento-mixed" data-pptx-role="slide" style="position:absolute;inset:0;background:#070710;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:24px;padding:48px;"></div>
+      expected_recipe_id: comp.bento-mixed
+
+  - id: atom-comp-annotated-screenshot
+    priority: 80
+    match:
+      anchor.data_atom_id: comp.annotated-screenshot
+    emit:
+      kind: Composite
+      confidence: 0.99
+      metadata: { recipe: atom_comp_annotated_screenshot, axis: comp, role: annotated-figure }
+    renderer:
+      component: CompAnnotatedScreenshot
+      tier: B
+      composes:
+        - { atom: ui.browser-mac }
+        - { atom: anno.numbered-hotspot }
+        - { atom: anno.tooltip }
+      version: 1.0.0
+      props:
+        bbox:        { type: bbox,   required: true }
+        url:         { type: string, required: false }
+        screenshot:  { type: string, required: true }
+        annotations: { type: array,  required: true }
+    fixture:
+      sample_html: |
+        <div data-atom="comp.annotated-screenshot" data-pptx-role="slide" style="position:absolute;inset:0;background:#070710;"></div>
+      expected_recipe_id: comp.annotated-screenshot
+
+  - id: atom-comp-data-overview
+    priority: 80
+    match:
+      anchor.data_atom_id: comp.data-overview
+    emit:
+      kind: Composite
+      confidence: 0.99
+      metadata: { recipe: atom_comp_data_overview, axis: comp, role: data-dashboard }
+    renderer:
+      component: CompDataOverview
+      tier: B
+      composes:
+        - { atom: type.eyebrow-ruled }
+        - { atom: data.donut }
+        - { atom: data.bar-set-h }
+        - { atom: data.sparkline }
+        - { atom: data.kpi-row }
+      version: 1.0.0
+      props:
+        bbox:     { type: bbox,   required: true }
+        headline: { type: string, required: true }
+        kpis:     { type: array,  required: true }
+        chart:    { type: object, required: false }
+    fixture:
+      sample_html: |
+        <div data-atom="comp.data-overview" data-pptx-role="slide" style="position:absolute;inset:0;background:#070710;"></div>
+      expected_recipe_id: comp.data-overview
