@@ -58,10 +58,13 @@ class TextRun(BaseModel):
     font_size: str = "16px"
     font_weight: str = "400"
     color: str = "rgb(0, 0, 0)"
+    background_color: str = "rgba(0, 0, 0, 0)"
     # Run's parent computed background-image. When color is transparent and
     # bg-image is a gradient, the emitter reads this to pick a solid color
     # fallback (gradient-clipped text → solid color).
     background_image: str = "none"
+    letter_spacing: str = "normal"
+    text_transform: str = "none"
     italic: bool = False
     underline: bool = False
     is_break: bool = False
@@ -69,6 +72,9 @@ class TextRun(BaseModel):
     # One entry per visual line the text rendered as. Empty when the run
     # is `is_break=True` or the walker couldn't get rects.
     line_boxes: list[BoundingBox] = Field(default_factory=list)
+    # Element boxes for inline run backgrounds (e.g. highlighted spans with
+    # padding). These include CSS padding, unlike text-node line boxes.
+    background_boxes: list[BoundingBox] = Field(default_factory=list)
 
 
 class DomElement(BaseModel):
@@ -152,6 +158,7 @@ class DomElement(BaseModel):
     # Designer-grade tracking is one of the most reliable register cues —
     # widely-tracked uppercase = kicker, tight negative = display headline.
     letter_spacing: str = "normal"
+    text_transform: str = "none"
     # CSS text-shadow; PPTX text frames support outerShdw on text runs but
     # the recipe layer needs the raw value to decide.
     text_shadow: str = "none"

@@ -11,6 +11,7 @@ import httpx
 import structlog
 from lxml import etree
 from pptx import Presentation
+from pptx.enum.shapes import MSO_SHAPE
 from pptx.enum.text import MSO_AUTO_SIZE, PP_ALIGN
 from pptx.util import Emu, Pt
 
@@ -142,6 +143,29 @@ def _apply_textframe_margins(tf, el: DomElement) -> None:
 def _content_budget_px(el: DomElement, bbox: BoundingBox) -> tuple[float, float]:
     left, right, top, bottom = _element_padding_px(el)
     return max(1.0, bbox.w - left - right), max(1.0, bbox.h - top - bottom)
+
+
+def _transform_text(text: str, text_transform: str | None) -> str:
+    mode = (text_transform or "none").strip().lower()
+    if mode == "uppercase":
+        return text.upper()
+    if mode == "lowercase":
+        return text.lower()
+    if mode == "capitalize":
+        return re.sub(r"\b(\w)", lambda m: m.group(1).upper(), text.lower())
+    return text
+
+
+def _character_spacing_val(letter_spacing: str | None, font_size: str | None) -> int | None:
+    px = parse_px(letter_spacing)
+    if abs(px) < 0.01:
+        return None
+    pt = parse_pt(font_size) or 12.0
+    if pt <= 0:
+        return None
+    # DrawingML ``spc`` is thousandths of an em. CSS letter-spacing is an
+    # absolute px offset, so normalize it against this run's font size.
+    return int(round((px * 72.0 / 96.0) / pt * 1000.0))
 
 
 def _mixed_content_text_bbox(unit: VisualUnit, anchor: DomElement) -> BoundingBox:
@@ -603,6 +627,13 @@ class Emitter:
             and not _is_bg_clip_text(unit_anchor_el)
         ):
             self._emit_text_backplate(slide, unit_anchor_el, emit_bbox)
+        self._emit_run_backplates(slide, [anchor])
+        if self._try_emit_exact_run_text(slide, anchor):
+            if not deco_stack.is_empty():
+                deco_stack.emit_above(slide, emit_bbox)
+            if unit_anchor_el is not None and unit_anchor_el.id == anchor.id:
+                self._emit_side_border_lines(slide, unit_anchor_el, op.bbox)
+            return
         tb = slide.shapes.add_textbox(x, y, w, h)
         _apply_rotation(tb, anchor)
         tf = tb.text_frame
@@ -729,6 +760,7 @@ class Emitter:
         (e.g. absolutely-positioned process-step labels)."""
         if not _is_bg_clip_text(e):
             self._emit_text_backplate(slide, e, e.bbox)
+        self._emit_run_backplates(slide, [e])
         x, y, w, h = _emu_rect(e.bbox)
         tb = slide.shapes.add_textbox(x, y, w, h)
         _apply_rotation(tb, e)
@@ -762,6 +794,53 @@ class Emitter:
                     p, run_spec, fallback_el=e, font_scale=font_scale
                 )
         self._emit_side_border_lines(slide, e, e.bbox)
+
+    def _try_emit_exact_run_text(self, slide, e: DomElement) -> bool:
+        runs = [r for r in (e.runs or []) if not r.is_break and r.text.strip()]
+        if len(runs) < 2:
+            return False
+        if not any(parse_px(r.font_size) >= 32.0 for r in runs):
+            return False
+        if any(len(r.line_boxes) != 1 for r in runs):
+            return False
+        for r in runs:
+            box = r.line_boxes[0]
+            text = _transform_text(r.text, r.text_transform).strip()
+            if not text:
+                continue
+            x, y, w, h = _emu_rect(
+                BoundingBox(x=box.x, y=box.y, w=box.w + 12.0, h=box.h)
+            )
+            tb = slide.shapes.add_textbox(x, y, w, h)
+            _apply_rotation(tb, e)
+            tf = tb.text_frame
+            tf.word_wrap = False
+            tf.margin_left = Emu(0)
+            tf.margin_right = Emu(0)
+            tf.margin_top = Emu(0)
+            tf.margin_bottom = Emu(0)
+            try:
+                tf._txBody.bodyPr.set("wrap", "none")
+            except Exception:
+                pass
+            p = tf.paragraphs[0]
+            p.alignment = _TEXT_ALIGN_MAP.get(e.text_align, PP_ALIGN.LEFT)
+            self._add_styled_run(
+                p,
+                {
+                    "text": text,
+                    "font_family": r.font_family,
+                    "font_size": r.font_size,
+                    "font_weight": r.font_weight,
+                    "color": r.color,
+                    "background_image": r.background_image,
+                    "letter_spacing": r.letter_spacing,
+                    "italic": r.italic,
+                    "underline": r.underline,
+                },
+                fallback_el=e,
+            )
+        return True
 
     def _apply_textframe_wrap_and_scale(
         self,
@@ -841,17 +920,20 @@ class Emitter:
                     paragraphs.append([])
                     continue
                 spec = {
-                    "text": r.text,
+                    "text": _transform_text(r.text, r.text_transform),
                     "font_family": r.font_family,
                     "font_size": r.font_size,
                     "font_weight": r.font_weight,
                     "color": r.color,
+                    "background_color": r.background_color,
                     # Forward the run's parent background-image so the emitter
                     # can substitute a solid color when the run is gradient-
                     # clipped (color: transparent + background-clip: text).
                     "background_image": r.background_image,
+                    "letter_spacing": r.letter_spacing,
                     "italic": r.italic,
                     "underline": r.underline,
+                    "background_boxes": r.background_boxes,
                 }
                 if not r.text.strip():
                     # Preserve inter-run whitespace; skip empties.
@@ -869,24 +951,64 @@ class Emitter:
         # parent and the children classify themselves; without this fallback
         # the parent's text would silently disappear because `text` is only
         # set on leaf-text and text-container elements.
-        text = (
-            e.pptx_text or e.text or getattr(e, "mixed_content_text", None) or ""
+        text = _transform_text(
+            e.pptx_text or e.text or getattr(e, "mixed_content_text", None) or "",
+            e.text_transform,
         ).strip()
         if not text:
             return []
-        return [
-            [
-                {
-                    "text": text,
-                    "font_family": e.font_family,
-                    "font_size": e.font_size,
-                    "font_weight": e.font_weight,
-                    "color": e.color,
-                    "italic": False,
-                    "underline": False,
-                }
-            ]
-        ]
+        paragraphs: list[list[dict]] = []
+        for line in text.splitlines() or [text]:
+            line = line.strip()
+            if not line:
+                continue
+            paragraphs.append(
+                [
+                    {
+                        "text": line,
+                        "font_family": e.font_family,
+                        "font_size": e.font_size,
+                        "font_weight": e.font_weight,
+                        "color": e.color,
+                        "letter_spacing": e.letter_spacing,
+                        "italic": False,
+                        "underline": False,
+                    }
+                ]
+            )
+        return paragraphs
+
+    def _emit_run_backplates(self, slide, elems: list[DomElement]) -> None:
+        seen: set[tuple[int, int, int, int, str]] = set()
+        for e in elems:
+            for r in e.runs or []:
+                if r.is_break:
+                    continue
+                parsed = parse_color(r.background_color)
+                if parsed is None:
+                    continue
+                boxes = r.background_boxes or r.line_boxes
+                if not boxes:
+                    continue
+                rgb_color, alpha = parsed
+                for box in boxes:
+                    key = (
+                        round(px_to_emu(box.x)),
+                        round(px_to_emu(box.y)),
+                        round(px_to_emu(box.w)),
+                        round(px_to_emu(box.h)),
+                        str(rgb_color),
+                    )
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    x, y, w, h = _emu_rect_offcanvas(box)
+                    shape = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x, y, w, h)
+                    shape.line.fill.background()
+                    shape.fill.solid()
+                    shape.fill.fore_color.rgb = rgb_color
+                    if alpha < 0.999:
+                        self._set_solid_fill_alpha(shape, alpha)
 
     def _add_styled_run(
         self,
@@ -908,6 +1030,15 @@ class Emitter:
         # canvas-edge clipping under the wider fallback font.
         pt = parse_pt(size_px) * max(0.1, font_scale)
         font.size = Pt(max(8.0, pt))
+        spc = _character_spacing_val(
+            spec.get("letter_spacing") or fallback_el.letter_spacing,
+            size_px,
+        )
+        if spc is not None:
+            try:
+                font._rPr.set("spc", str(spc))
+            except Exception:
+                pass
         font.bold = is_bold(spec.get("font_weight") or fallback_el.font_weight)
         font.italic = bool(spec.get("italic"))
         font.underline = bool(spec.get("underline"))

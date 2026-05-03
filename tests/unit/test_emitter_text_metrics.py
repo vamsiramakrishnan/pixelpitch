@@ -346,6 +346,107 @@ def test_mixed_flex_text_frame_starts_after_leading_icon(tmp_path):
     assert target.left == Emu((95 + 28 + 10) * 9525)
 
 
+def test_text_transform_and_tracking_emit_to_ooxml(tmp_path):
+    bbox = BoundingBox(x=64, y=48, w=240, h=40)
+    el = DomElement(
+        id=1,
+        parent_id=None,
+        depth=0,
+        tag="DIV",
+        bbox=bbox,
+        text="Photo essay",
+        is_text_container=True,
+        runs=[
+            TextRun(
+                text="Photo essay",
+                font_size="11px",
+                font_family="Inter, sans-serif",
+                color="rgb(255, 236, 196)",
+                letter_spacing="3.52px",
+                text_transform="uppercase",
+                line_boxes=[BoundingBox(x=64, y=48, w=110, h=14)],
+            )
+        ],
+        stable_selector=".caption",
+    )
+    unit = VisualUnit(id="u1", kind=UnitKind.Generic, bbox=bbox, elements=[el])
+    op = EmitOp(
+        unit_id="u1",
+        decision=Decision(kind=DecisionKind.NativeText),
+        z_order=0,
+        bbox=bbox,
+    )
+
+    em = Emitter()
+    slide = em.prs.slides.add_slide(em.prs.slide_layouts[6])
+    em._emit_native_text(slide, unit, op)
+    out = tmp_path / "out.pptx"
+    em.save(out)
+    em.close()
+
+    prs = Presentation(str(out))
+    target = next(
+        sh for sh in prs.slides[0].shapes
+        if sh.has_text_frame and "PHOTO ESSAY" in sh.text_frame.text
+    )
+    rprs = target.text_frame._txBody.findall(
+        f".//{{{A_NS}}}r/{{{A_NS}}}rPr"
+    )
+    assert rprs
+    assert any(int(r.get("spc") or "0") > 0 for r in rprs)
+
+
+def test_inline_run_background_emits_native_backplate(tmp_path):
+    bbox = BoundingBox(x=520, y=140, w=360, h=70)
+    bg_box = BoundingBox(x=520, y=197, w=389, h=60)
+    el = DomElement(
+        id=1,
+        parent_id=None,
+        depth=0,
+        tag="DIV",
+        bbox=bbox,
+        text="an act of editing,",
+        is_text_container=True,
+        runs=[
+            TextRun(
+                text="an act of editing,",
+                font_size="54px",
+                font_family="'Playfair Display', Georgia, serif",
+                color="rgb(255, 236, 196)",
+                background_color="rgb(13, 31, 60)",
+                background_boxes=[bg_box],
+                line_boxes=[BoundingBox(x=534, y=207, w=350, h=48)],
+            )
+        ],
+        stable_selector=".quote",
+    )
+    unit = VisualUnit(id="u1", kind=UnitKind.Generic, bbox=bbox, elements=[el])
+    op = EmitOp(
+        unit_id="u1",
+        decision=Decision(kind=DecisionKind.NativeText),
+        z_order=0,
+        bbox=bbox,
+    )
+
+    em = Emitter()
+    slide = em.prs.slides.add_slide(em.prs.slide_layouts[6])
+    em._emit_native_text(slide, unit, op)
+    out = tmp_path / "out.pptx"
+    em.save(out)
+    em.close()
+
+    prs = Presentation(str(out))
+    shapes = list(prs.slides[0].shapes)
+    text_idx = next(
+        i for i, sh in enumerate(shapes)
+        if sh.has_text_frame and "an act of editing" in sh.text_frame.text
+    )
+    backplate = shapes[text_idx - 1]
+    assert backplate.left == Emu(520 * 9525)
+    assert backplate.top == Emu(197 * 9525)
+    assert backplate.width == Emu(389 * 9525)
+
+
 def test_apply_explicit_autofit_replaces_existing():
     # Build a textbox, then call _apply_explicit_autofit twice — confirm only
     # one normAutofit remains and it has the latest values.

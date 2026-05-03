@@ -162,6 +162,23 @@ _WALKER_JS_TEMPLATE = r"""
         // a solid color when the run uses gradient-clipped text
         // (background-clip: text + color: transparent).
         const bgImage = cs.backgroundImage || 'none';
+        const bgColor = cs.backgroundColor || 'rgba(0, 0, 0, 0)';
+        const textTransform = cs.textTransform || 'none';
+        const letterSpacing = cs.letterSpacing || 'normal';
+        function elementLineBoxes(node) {
+            const boxes = [];
+            try {
+                for (const rect of node.getClientRects()) {
+                    if (rect.width > 0 && rect.height > 0) {
+                        boxes.push({
+                            x: rect.x, y: rect.y,
+                            w: rect.width, h: rect.height,
+                        });
+                    }
+                }
+            } catch (_) {}
+            return boxes;
+        }
         for (const node of el.childNodes) {
             if (node.nodeType === 3) {
                 const txt = node.textContent || '';
@@ -192,11 +209,15 @@ _WALKER_JS_TEMPLATE = r"""
                     font_size: cs.fontSize,
                     font_weight: cs.fontWeight,
                     color: cs.color,
+                    background_color: bgColor,
                     background_image: bgImage,
+                    letter_spacing: letterSpacing,
+                    text_transform: textTransform,
                     italic: cs.fontStyle === 'italic',
                     underline: cs.textDecorationLine && cs.textDecorationLine.includes('underline'),
                     is_break: false,
                     line_boxes: lineBoxes,
+                    background_boxes: [],
                 });
             } else if (node.nodeType === 1) {
                 if (node.tagName === 'BR') {
@@ -216,6 +237,20 @@ _WALKER_JS_TEMPLATE = r"""
                     const mrPx = parseFloat(ccs.marginRight || '0') || 0;
                     if (mlPx >= 3) sub[0].text = ' ' + sub[0].text;
                     if (mrPx >= 3) sub[sub.length - 1].text = sub[sub.length - 1].text + ' ';
+                    const cBg = ccs.backgroundColor || '';
+                    const cBgImage = ccs.backgroundImage || 'none';
+                    const hasBg = (
+                        (cBg && cBg !== 'rgba(0, 0, 0, 0)' && cBg !== 'transparent')
+                        || (cBgImage && cBgImage !== 'none')
+                    );
+                    if (hasBg) {
+                        const bgBoxes = elementLineBoxes(node);
+                        for (const r of sub) {
+                            if (!r.is_break && (!r.background_boxes || r.background_boxes.length === 0)) {
+                                r.background_boxes = bgBoxes;
+                            }
+                        }
+                    }
                 }
                 for (const r of sub) out.push(r);
             }
@@ -640,6 +675,7 @@ _WALKER_JS_TEMPLATE = r"""
             text_align: cs.textAlign || 'start',
             line_height: cs.lineHeight || 'normal',
             letter_spacing: cs.letterSpacing || 'normal',
+            text_transform: cs.textTransform || 'none',
             text_shadow: cs.textShadow || 'none',
             writing_mode: cs.writingMode || 'horizontal-tb',
             aspect_ratio: cs.aspectRatio || 'auto',
@@ -745,7 +781,10 @@ async def walk(page: Page) -> list[DomElement]:
                         font_size=r.get("font_size", "16px"),
                         font_weight=r.get("font_weight", "400"),
                         color=r.get("color", "rgb(0, 0, 0)"),
+                        background_color=r.get("background_color", "rgba(0, 0, 0, 0)"),
                         background_image=r.get("background_image", "none"),
+                        letter_spacing=r.get("letter_spacing", "normal"),
+                        text_transform=r.get("text_transform", "none"),
                         italic=r.get("italic", False),
                         underline=r.get("underline", False),
                         is_break=r.get("is_break", False),
@@ -754,6 +793,12 @@ async def walk(page: Page) -> list[DomElement]:
                                 x=lb["x"], y=lb["y"], w=lb["w"], h=lb["h"]
                             )
                             for lb in (r.get("line_boxes") or [])
+                        ],
+                        background_boxes=[
+                            BoundingBox(
+                                x=lb["x"], y=lb["y"], w=lb["w"], h=lb["h"]
+                            )
+                            for lb in (r.get("background_boxes") or [])
                         ],
                     )
                     for r in (entry.get("runs") or [])
@@ -765,6 +810,7 @@ async def walk(page: Page) -> list[DomElement]:
                 text_align=entry["text_align"],
                 line_height=entry["line_height"],
                 letter_spacing=entry.get("letter_spacing", "normal"),
+                text_transform=entry.get("text_transform", "none"),
                 text_shadow=entry.get("text_shadow", "none"),
                 writing_mode=entry.get("writing_mode", "horizontal-tb"),
                 aspect_ratio=entry.get("aspect_ratio", "auto"),
