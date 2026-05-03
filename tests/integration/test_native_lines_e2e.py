@@ -125,4 +125,4 @@ async def test_dotmatrix_ladder_corpus_slide_preserves_table_rules(tmp_path):
         for shape in prs.slides[0].shapes
         if shape.shape_type == MSO_SHAPE_TYPE.LINE
     ]
-    assert len(lines) >= 40
+    assert len(lines) >= 49

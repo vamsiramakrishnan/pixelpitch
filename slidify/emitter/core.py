@@ -80,6 +80,47 @@ def _border_color(border: str):
     return parse_color(m.group(1)) if m else None
 
 
+def _all_visible_side_borders(el: DomElement) -> list[tuple[str, float, object | None]]:
+    sides = [
+        ("top", el.border_top),
+        ("right", el.border_right),
+        ("bottom", el.border_bottom),
+        ("left", el.border_left),
+    ]
+    return [
+        (side, _visible_border_width(border), _border_color(border))
+        for side, border in sides
+        if _visible_border_width(border) > 0
+    ]
+
+
+def _has_visible_border(el: DomElement) -> bool:
+    return bool(_all_visible_side_borders(el)) or _visible_border_width(el.border) > 0
+
+
+def _unit_has_text(unit: VisualUnit) -> bool:
+    for el in unit.all_elements():
+        if (el.text and el.text.strip()) or (
+            getattr(el, "mixed_content_text", None) or ""
+        ).strip():
+            return True
+        if el.runs and any(r.text.strip() for r in el.runs if not r.is_break):
+            return True
+    return False
+
+
+def _paints_backplate(el: DomElement) -> bool:
+    return (
+        bool(
+            el.background_color
+            and el.background_color not in ("rgba(0, 0, 0, 0)", "transparent", "")
+        )
+        or bool(el.background_image and el.background_image != "none")
+        or bool(el.box_shadow and el.box_shadow != "none")
+        or _has_visible_border(el)
+    )
+
+
 def _dominant_line_border(el: DomElement) -> tuple[str, float, object | None] | None:
     sides = [
         ("top", el.border_top),
@@ -98,17 +139,7 @@ def _dominant_line_border(el: DomElement) -> tuple[str, float, object | None] | 
 
 
 def _visible_side_borders(el: DomElement) -> list[tuple[str, float, object | None]]:
-    sides = [
-        ("top", el.border_top),
-        ("right", el.border_right),
-        ("bottom", el.border_bottom),
-        ("left", el.border_left),
-    ]
-    visible = [
-        (side, _visible_border_width(border), _border_color(border))
-        for side, border in sides
-        if _visible_border_width(border) > 0
-    ]
+    visible = _all_visible_side_borders(el)
     if len(visible) == 4 and _visible_border_width(el.border) > 0:
         return []
     return visible
@@ -241,6 +272,8 @@ class Emitter:
                 except Exception as e2:
                     log.error("emitter.fallback_failed", error=str(e2))
 
+        self._emit_unanchored_border_rules(slide, rendered, units_by_id, ops_sorted)
+
         if notes:
             self._set_notes(slide, notes)
 
@@ -370,6 +403,40 @@ class Emitter:
             await self._emit_raster(slide, unit, op, rendered, renderer)
             return
 
+    def _emit_unanchored_border_rules(
+        self,
+        slide,
+        rendered: RenderedSlide,
+        units_by_id: dict[str, VisualUnit],
+        ops: list[EmitOp],
+    ) -> None:
+        """Preserve CSS rules on structural containers that are not emit anchors.
+
+        Clustering intentionally avoids emitting every DOM node as a PPTX object.
+        Border-only layout nodes such as table wrappers, top bars, and grid frames
+        can therefore be visually important but have no corresponding EmitOp. Emit
+        their borders as native connectors after normal content so these hairlines
+        stay visible without forcing whole regions to raster.
+        """
+        anchor_ids: set[int] = set()
+        for op in ops:
+            unit = units_by_id.get(op.unit_id)
+            if unit and unit.elements:
+                anchor_ids.add(unit.elements[0].id)
+
+        for el in rendered.elements:
+            if el.id in anchor_ids or not _has_visible_border(el):
+                continue
+            b = el.bbox
+            if (
+                b.y >= SLIDE_H_PX
+                or b.x >= SLIDE_W_PX
+                or b.y + b.h <= 0
+                or b.x + b.w <= 0
+            ):
+                continue
+            self._emit_border_lines(slide, el, b, include_full_box=True)
+
     # ----- native text ---------------------------------------------------
 
     def _pick_text_anchor(self, unit: VisualUnit) -> DomElement | None:
@@ -405,7 +472,9 @@ class Emitter:
         # children's positions and would render the parent's text frame
         # ON TOP of the child unit. Use the anchor's own bbox so the
         # parent's text sits in its intended slot above the children.
-        if (getattr(anchor, "mixed_content_text", None) or "").strip():
+        if _has_visible_border(anchor):
+            emit_bbox = anchor.bbox
+        elif (getattr(anchor, "mixed_content_text", None) or "").strip():
             emit_bbox = anchor.bbox
         else:
             emit_bbox = _union_line_box(unit) or op.bbox
@@ -469,6 +538,8 @@ class Emitter:
         deco_stack = derive_decorations(anchor, palette=self._brand_palette)
         if not deco_stack.is_empty():
             deco_stack.emit_below(slide, emit_bbox)
+        if unit_anchor_el is not None and not _is_bg_clip_text(unit_anchor_el):
+            self._emit_text_backplate(slide, unit_anchor_el, emit_bbox)
         tb = slide.shapes.add_textbox(x, y, w, h)
         _apply_rotation(tb, anchor)
         tf = tb.text_frame
@@ -500,10 +571,6 @@ class Emitter:
         # text rendered as a transparent silhouette inside it. Instead,
         # leave the textbox transparent; the run-color resolver will
         # substitute the gradient's first stop as a solid text color.
-        if unit_anchor_el is not None and not _is_bg_clip_text(unit_anchor_el):
-            self._apply_fill(tb, unit_anchor_el)
-            self._apply_shadow(tb, unit_anchor_el)
-
         text_elems = [
             e
             for e in unit.all_elements()
@@ -599,6 +666,8 @@ class Emitter:
         """Emit a single text element as a self-contained textbox at its
         own bbox. Used for spatially-distinct siblings inside one unit
         (e.g. absolutely-positioned process-step labels)."""
+        if not _is_bg_clip_text(e):
+            self._emit_text_backplate(slide, e, e.bbox)
         x, y, w, h = _emu_rect(e.bbox)
         tb = slide.shapes.add_textbox(x, y, w, h)
         _apply_rotation(tb, e)
@@ -946,7 +1015,37 @@ class Emitter:
         return True
 
     def _emit_side_border_lines(self, slide, el: DomElement, bbox: BoundingBox) -> None:
-        for side, width, color in _visible_side_borders(el):
+        self._emit_border_lines(slide, el, bbox, include_full_box=False)
+
+    def _emit_text_backplate(self, slide, el: DomElement, bbox: BoundingBox) -> None:
+        if not _paints_backplate(el):
+            return
+        radius = parse_px(el.border_radius)
+        shape_kind, bbox_override = _shape_kind_for_anchor(el, radius)
+        shape_bbox = bbox_override if bbox_override is not None else bbox
+        x, y, w, h = _emu_rect_offcanvas(shape_bbox)
+        shape = slide.shapes.add_shape(shape_kind, x, y, w, h)
+        _apply_rotation(shape, el)
+        shape.line.fill.background()
+        self._apply_fill(shape, el)
+        self._apply_border(shape, el)
+        self._apply_shadow(shape, el)
+        self._emit_side_border_lines(slide, el, shape_bbox)
+
+    def _emit_border_lines(
+        self,
+        slide,
+        el: DomElement,
+        bbox: BoundingBox,
+        *,
+        include_full_box: bool,
+    ) -> None:
+        borders = (
+            _all_visible_side_borders(el)
+            if include_full_box
+            else _visible_side_borders(el)
+        )
+        for side, width, color in borders:
             if side == "top":
                 x1, y1, x2, y2 = bbox.x, bbox.y, bbox.x + bbox.w, bbox.y
             elif side == "right":
@@ -1359,6 +1458,10 @@ class Emitter:
         rendered: RenderedSlide,
         renderer,
     ) -> None:
+        if rendered.no_text_png and not _unit_has_text(unit):
+            self._emit_region_raster(slide, rendered.no_text_png, op.bbox)
+            return
+
         # Try a region screenshot from the live page; fall back to ground-truth crop.
         png: bytes | None = None
         try:
