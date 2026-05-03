@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import structlog
 
+from slidify.colors import parse_color
 from slidify.geom import parse_px
 from slidify.gradients import parse_gradient
 from slidify.models import (
@@ -127,6 +128,53 @@ def _has_low_opacity(unit: VisualUnit) -> bool:
     return unit.elements[0].opacity < 0.99
 
 
+def _has_translucent_background(unit: VisualUnit) -> bool:
+    if not unit.elements:
+        return False
+    bg = parse_color(unit.elements[0].background_color)
+    return bg is not None and bg[1] < 0.98
+
+
+def _unit_has_text(unit: VisualUnit) -> bool:
+    for el in unit.all_elements():
+        if (el.text and el.text.strip()) or (
+            getattr(el, "mixed_content_text", None) or ""
+        ).strip():
+            return True
+        if el.runs and any(r.text.strip() for r in el.runs if not r.is_break):
+            return True
+    return False
+
+
+def _should_raster_backplate(unit: VisualUnit) -> bool:
+    """True for decorated containers whose CSS surface is higher fidelity as
+    a textless raster layer than as approximate PPTX primitives.
+
+    These units keep descendants native via Hybrid emission; only the visual
+    backplate comes from the browser's no-text render.
+    """
+    if not unit.elements or not unit.children:
+        return False
+    a = unit.elements[0]
+    if a.is_svg or a.is_img or a.is_canvas or a.is_video:
+        return False
+    if not _has_visual_presence(unit):
+        return False
+
+    has_gradient = bool(a.background_image and a.background_image != "none")
+    has_shadow = bool(a.box_shadow and a.box_shadow != "none")
+    has_radius = parse_px(a.border_radius) >= 8
+    has_decorate_hint = bool((a.decorate_hint or "").strip())
+    has_translucency = _has_translucent_background(unit)
+    has_border = bool(a.border and a.border != "none")
+
+    return (
+        has_decorate_hint
+        or (has_gradient and (has_shadow or has_radius or has_translucency))
+        or (has_shadow and has_radius and (has_translucency or has_border))
+    )
+
+
 def _has_full_cover_native_child(unit: VisualUnit, decisions: dict[str, Decision]) -> bool:
     """True iff at least one direct child unit has a native-shape decision and
     its bbox covers ≥98% of this unit's bbox area. Such a child fully occludes
@@ -215,6 +263,39 @@ def promote(
                         kind=DecisionKind.Skip,
                         confidence=1.0,
                         reason="absorbed by raster parent (opacity)",
+                        source_tier="promotion",
+                    )
+                stack.extend(c.children)
+            return
+
+        # Complex decorated containers: rasterize only the textless backplate
+        # and keep child text/icons editable. Native PPTX gradients/shadows do
+        # not match CSS glassmorphism well enough for these surfaces.
+        if (
+            my_decision is not None
+            and my_decision.kind in (DecisionKind.NativeShape, DecisionKind.Hybrid)
+            and _should_raster_backplate(unit)
+        ):
+            out[unit.id] = Decision(
+                kind=DecisionKind.Hybrid,
+                confidence=max(my_decision.confidence, 0.9),
+                reason="raster_backplate",
+                metadata={**my_decision.metadata, "raster_backplate": True},
+                source_tier="promotion",
+            )
+            stack = list(unit.children)
+            while stack:
+                c = stack.pop()
+                d = out.get(c.id)
+                if (
+                    d is not None
+                    and d.kind in (DecisionKind.NativeShape, DecisionKind.NativeSvg)
+                    and not _unit_has_text(c)
+                ):
+                    out[c.id] = Decision(
+                        kind=DecisionKind.Skip,
+                        confidence=1.0,
+                        reason="absorbed by raster backplate",
                         source_tier="promotion",
                     )
                 stack.extend(c.children)

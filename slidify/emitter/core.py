@@ -395,6 +395,9 @@ class Emitter:
             #      crop from THAT (pixel-exact decoration with no text bleed).
             #   3) Else fall back to live region screenshot or ground-truth crop.
             # Children emit independently on top in all three branches.
+            if op.decision.metadata.get("raster_backplate") and rendered.no_text_png:
+                self._emit_region_raster(slide, rendered.no_text_png, op.bbox)
+                return
             if self._try_emit_native_decoration(slide, unit, op):
                 return
             if rendered.no_text_png:
