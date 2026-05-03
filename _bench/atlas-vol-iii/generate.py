@@ -91,12 +91,12 @@ def _colophon(page_n: int, total: int = 12, *, title: str = "On editing") -> str
 
 
 def _gif_data_uri(name: str) -> str | None:
-    """Return data:image/gif;base64,... for out/<name>.gif if it exists.
+    """Return data:image/gif;base64,... for assets/<name>.gif if it exists.
 
     None means the GIF hasn't been captured yet — slide falls back to the
     static "resolved frame" composition.
     """
-    p = OUT_DIR / "out" / f"{name}.gif"
+    p = OUT_DIR / "assets" / f"{name}.gif"
     if not p.exists():
         return None
     import base64

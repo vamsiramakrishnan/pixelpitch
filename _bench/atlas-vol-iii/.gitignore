@@ -1,5 +1,0 @@
-# Build outputs — regenerated from generate.py + anim/ + capture-gif
-# The .gif inputs in out/ are committed (they're inputs to generate.py
-# which base64-embeds them). The .pptx and preview PNGs are not.
-out/atlas-iii.pptx
-out/preview/

@@ -8,6 +8,7 @@ __pycache__/
 *.egg-info/
 build/
 dist/
+!_bench/dist/
 .coverage
 
 # uv
@@ -18,6 +19,7 @@ dist/
 !tests/fixtures/**/*.pptx
 !examples/**/*.pptx
 !_bench/corpus/divergent-deck.pptx
+!_bench/dist/**/*.pptx
 *.pdf
 out/
 slide-*.png
