@@ -1,0 +1,30 @@
+{
+  "name": "@pixelpitch/hyperframes-types",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "HyperFrames slide-runtime type contracts (HfProtocol, frame data model, registry schema). Vendored verbatim from heygen-com/hyperframes (Apache 2.0).",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/core.types.ts",
+    "./engine": "./src/engine-types.ts",
+    "./runtime": "./src/runtime-types.ts",
+    "./adapter": "./src/adapter-types.ts",
+    "./html-parser": "./src/html-parser.ts",
+    "./gsap-parser": "./src/gsapParser.ts",
+    "./registry-item.json": "./schemas/registry-item.json"
+  },
+  "files": [
+    "src",
+    "schemas",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  }
+}

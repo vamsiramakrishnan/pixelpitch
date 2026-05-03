@@ -269,3 +269,18 @@ NAR=$(slidify field /tmp/r.json native_area_ratio)
 That loop is the entire skill. Everything else is detail surfaced through
 `slidify guide`, `slidify manifest`, and the `_next` / `_remediation`
 fields in JSON output.
+
+## Inside the pixelpitch web app
+
+When this skill runs inside `apps/web/`, the PPTX export tool exposed by
+`apps/web/src/runtime/exports.ts` shells out to this same `slidify`
+binary. Author the deck HTML through the sibling `slide-author` skill
+(or one of the deck-mode skills like `simple-deck`, `replit-deck`,
+`weekly-update`, `guizang-ppt`, or any of the `html-ppt-*` variants),
+then trigger the export — pixelpitch's daemon (`apps/daemon/`) runs
+`slidify convert` on the artifact saved under
+`.pixelpitch/projects/<id>/`.
+
+For fidelity audits against an existing PPTX, use the
+`pptx-html-fidelity-audit` skill — it calls `slidify check` and parses
+`oracle.fidelity_report` from the JSON.

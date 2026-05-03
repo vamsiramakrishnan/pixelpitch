@@ -283,6 +283,92 @@ tests/
   fixtures/         # sample decks
 ```
 
+## Architecture (v0.2)
+
+Pixelpitch is now an integrated end-to-end deck-design system:
+
+```
+apps/web/             Next.js 16 web app — chat, sandboxed-iframe preview,
+                      live agent panel, design-system browser, exports.
+apps/daemon/          Express daemon on 127.0.0.1:17456 — PATH-scans 13
+                      agent CLIs (claude, codex, gemini, cursor-agent,
+                      copilot, devin, opencode, qwen, hermes, kimi, pi,
+                      kiro, mistral), streams via NDJSON / ACP / pi-rpc,
+                      persists to ~/.pixelpitch/app.sqlite.
+packages/contracts/   web ↔ daemon TS types.
+packages/platform/    cross-platform process spawn.
+packages/sidecar/     vendored React 18 + Babel for sandboxed previews.
+packages/sidecar-proto/ IPC protocol types.
+packages/hyperframes-types/  HfProtocol slide-runtime contracts.
+
+skills/               60+ bundled skills (web-prototype, dashboard, mobile-app,
+                      email-marketing, social-carousel, motion-frames,
+                      sprite-animation, finance-report, eng-runbook,
+                      pptx-html-fidelity-audit, guizang-ppt, hyperframes,
+                      and 18 html-ppt presentation variants).
+prompt-templates/     93 image / video / audio generation prompts.
+design-systems/       138 curated design system references.
+
+slidify/              The HTML→PPTX converter (Python, unchanged).
+                      The PPTX export path delegates here.
+components/           @slidify/components — multi-target React components
+                      that emit IR consumed by slidify.
+_bench/               corpus, decks, prompts, scripts, harvest reports.
+```
+
+The 6-step pipeline:
+
+1. **Design language** — `apps/daemon/src/prompts/discovery.ts` runs the
+   discovery form + 5-school direction picker.
+2. **Components** — `skills/` provides parameterized templates; the
+   `tweaks` skill mutates tokens in-place.
+3. **Narrative** — deck-mode skills (`simple-deck`, `replit-deck`,
+   `weekly-update`, `guizang-ppt`, `html-ppt-*`) propose the slide arc.
+4. **Slide design** — `slide-author` skill enforces the slidify atomic-seed
+   grammar; `hyperframes` skill adds animated/timeline support via
+   `@pixelpitch/hyperframes-types`.
+5. **Deck composition** — `apps/web/src/runtime/srcdoc.ts` previews each
+   slide in a sandboxed iframe; the agent emits `<artifact>` blocks
+   parsed by `apps/web/src/artifacts/parser.ts`.
+6. **PPTX** — `slidify convert deck.html deck.pptx --json` (or via the
+   `pptx-html-fidelity-audit` skill).
+
+Run it:
+
+```bash
+make bun-install         # install workspace deps
+make daemon              # localhost:17456
+make web                 # localhost:3000
+```
+
+## Built on
+
+Pixelpitch is built on the shoulders of:
+
+- **[nexu-io/open-design](https://github.com/nexu-io/open-design)**
+  (Apache 2.0) — agent system, web UI, daemon, skill catalog, design-
+  system resolver, discovery prompts, exporters. The bulk of `apps/`,
+  `packages/`, `skills/`, `prompt-templates/`, `design-systems/`, `e2e/`,
+  `tools/dev`, `tools/pack`, `scripts/` was lifted from OD and renamed
+  to pixelpitch conventions.
+- **[heygen-com/hyperframes](https://github.com/heygen-com/hyperframes)**
+  (Apache 2.0) — `HfProtocol` slide-runtime contract, frame data model.
+- **[op7418/guizang-ppt-skill](https://github.com/op7418/guizang-ppt-skill)**
+  (MIT) — `skills/guizang-ppt/`: magazine layouts + WebGL hero +
+  P0/P1/P2 quality gate.
+- **[OpenCoworkAI/open-codesign](https://github.com/OpenCoworkAI/open-codesign)**
+  (MIT) — streaming-artifact / sandboxed-iframe / exporter patterns,
+  synthesized into OD.
+- **[multica-ai/multica](https://github.com/multica-ai/multica)**
+  (Modified Apache 2.0) — daemon and 13-CLI PATH-scan patterns,
+  synthesized into OD.
+- **[alchaincyf/huashu-design](https://github.com/alchaincyf/huashu-design)**
+  (personal-use) — design-philosophy patterns absorbed via OD's
+  discovery prompts.
+
+See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for full
+attribution and upstream commit SHAs.
+
 ## License
 
-MIT — see `LICENSE`.
+Apache 2.0 — see [`LICENSE`](LICENSE).

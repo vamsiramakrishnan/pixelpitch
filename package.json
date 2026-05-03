@@ -1,0 +1,40 @@
+{
+  "name": "pixelpitch",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "End-to-end deck-design system: design language → components → narrative → slide design → deck composition → PPTX. Slidify is the HTML→PPTX converter.",
+  "license": "Apache-2.0",
+  "bin": {
+    "pixelpitch": "./apps/daemon/dist/cli.js"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "components",
+    "tools/dev",
+    "tools/pack",
+    "tools/pattern-gen",
+    "e2e"
+  ],
+  "scripts": {
+    "build": "bun run --filter '@pixelpitch/web' build",
+    "typecheck": "bun run --filter '*' --if-present typecheck",
+    "test": "bun run --filter '*' --if-present test",
+    "lint": "bun run --filter '*' --if-present lint",
+    "web": "bun run --filter @pixelpitch/web dev",
+    "daemon": "bun run --filter @pixelpitch/daemon dev",
+    "daemon:build": "bun run --filter @pixelpitch/daemon build",
+    "skills:sync": "bun tools/skills-sync.ts",
+    "skills:verify": "bun tools/skills-verify.ts",
+    "smoke": "bash tools/smoke.sh"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/bun": "latest"
+  },
+  "engines": {
+    "bun": ">=1.1.0",
+    "node": ">=22"
+  }
+}
