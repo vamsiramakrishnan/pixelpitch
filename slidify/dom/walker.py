@@ -299,12 +299,44 @@ _WALKER_JS_TEMPLATE = r"""
         const tag = el.tagName;
         if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'META' || tag === 'LINK' || tag === 'NOSCRIPT') return null;
 
-        const r = el.getBoundingClientRect();
+        let r = el.getBoundingClientRect();
         const cs = getComputedStyle(el);
 
         const isHidden = cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity) === 0;
-        // Allow zero-size elements only if they may still render via pseudos/decoration; otherwise skip.
+        const visibleBorderWidth = (style, width, color) => {
+            if (!style || style === 'none' || style === 'hidden') return 0;
+            const w = parseFloat(width || '0') || 0;
+            if (w <= 0) return 0;
+            const c = String(color || '').replace(/\s+/g, '').toLowerCase();
+            if (c === 'transparent' || c === 'rgba(0,0,0,0)') return 0;
+            return w;
+        };
+        const topBorderWidth = visibleBorderWidth(cs.borderTopStyle, cs.borderTopWidth, cs.borderTopColor);
+        const rightBorderWidth = visibleBorderWidth(cs.borderRightStyle, cs.borderRightWidth, cs.borderRightColor);
+        const bottomBorderWidth = visibleBorderWidth(cs.borderBottomStyle, cs.borderBottomWidth, cs.borderBottomColor);
+        const leftBorderWidth = visibleBorderWidth(cs.borderLeftStyle, cs.borderLeftWidth, cs.borderLeftColor);
+        const hasLineDecoration = topBorderWidth > 0 || rightBorderWidth > 0 || bottomBorderWidth > 0 || leftBorderWidth > 0;
+
+        // Preserve zero-thickness line elements such as <hr>,
+        // height:0;border-top, and width:0;border-left. Browser geometry may
+        // report them as 0px tall/wide even though the border visibly paints.
+        // Give downstream matching/emission a concrete bbox sized to the
+        // border stroke and available parent span.
         if (isHidden) return null;
+        if ((r.width < 1 || r.height < 1) && hasLineDecoration) {
+            const parentRect = el.parentElement ? el.parentElement.getBoundingClientRect() : null;
+            const cssWidth = parseFloat(cs.width || '0') || 0;
+            const cssHeight = parseFloat(cs.height || '0') || 0;
+            const horizontalStroke = Math.max(topBorderWidth, bottomBorderWidth);
+            const verticalStroke = Math.max(leftBorderWidth, rightBorderWidth);
+            const fallbackW = horizontalStroke > 0
+                ? Math.max(r.width, cssWidth, parentRect ? parentRect.width : 0, 1)
+                : Math.max(r.width, cssWidth, verticalStroke, 1);
+            const fallbackH = verticalStroke > 0 && horizontalStroke <= 0
+                ? Math.max(r.height, cssHeight, parentRect ? parentRect.height : 0, 1)
+                : Math.max(r.height, cssHeight, horizontalStroke, 1);
+            r = { x: r.x, y: r.y, width: fallbackW, height: fallbackH };
+        }
         if ((r.width < 1 || r.height < 1)) {
             // Some parents have 0 size but children render; recurse without recording.
             for (const child of el.children) snapshot(child, parentId, depth + 1);

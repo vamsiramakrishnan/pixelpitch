@@ -86,6 +86,16 @@ def _has_visible_decoration(anchor: DomElement) -> bool:
         leading = anchor.border.split(None, 1)[0]
         if parse_px(leading) > 0:
             return True
+    for border in (
+        anchor.border_top,
+        anchor.border_right,
+        anchor.border_bottom,
+        anchor.border_left,
+    ):
+        if border and border != "none":
+            leading = border.split(None, 1)[0]
+            if parse_px(leading) > 0 and "none" not in border.split():
+                return True
     return False
 
 

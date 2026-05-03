@@ -66,6 +66,37 @@ from slidify.text_metrics import (
 _A_NS = "http://schemas.openxmlformats.org/drawingml/2006/main"
 
 
+def _visible_border_width(border: str) -> float:
+    if not border or border == "none":
+        return 0.0
+    parts = border.split()
+    if not parts or "none" in parts or "hidden" in parts:
+        return 0.0
+    return max(0.0, parse_px(parts[0]))
+
+
+def _border_color(border: str):
+    m = re.search(r"(rgba?\([^)]+\)|#[0-9a-fA-F]{3,8})", border or "")
+    return parse_color(m.group(1)) if m else None
+
+
+def _dominant_line_border(el: DomElement) -> tuple[str, float, object | None] | None:
+    sides = [
+        ("top", el.border_top),
+        ("right", el.border_right),
+        ("bottom", el.border_bottom),
+        ("left", el.border_left),
+    ]
+    visible = [(side, border, _visible_border_width(border)) for side, border in sides]
+    visible = [(side, border, width) for side, border, width in visible if width > 0]
+    if not visible and _visible_border_width(el.border) > 0:
+        visible = [("all", el.border, _visible_border_width(el.border))]
+    if not visible:
+        return None
+    side, border, width = max(visible, key=lambda row: row[2])
+    return side, width, _border_color(border)
+
+
 def _apply_explicit_autofit(
     text_frame, font_scale_pct: int, line_space_reduction_pct: int
 ) -> None:
@@ -803,6 +834,8 @@ class Emitter:
         anchor = unit.elements[0] if unit.elements else None
         if anchor is None:
             return False
+        if self._try_emit_native_line(slide, anchor, op.bbox):
+            return True
         # Gradients we can translate — go native.
         bg_img = anchor.background_image
         if bg_img and bg_img != "none":
@@ -834,6 +867,8 @@ class Emitter:
         anchor_el = unit.elements[0] if unit.elements else None
         if anchor_el is None:
             return
+        if self._try_emit_native_line(slide, anchor_el, op.bbox):
+            return
         # Decorative overlays may sit off-canvas — see _emit_native_decoration.
         radius = parse_px(anchor_el.border_radius)
         shape_kind, bbox_override = _shape_kind_for_anchor(anchor_el, radius)
@@ -850,6 +885,41 @@ class Emitter:
         self._apply_shadow(shape, anchor_el)
         if not deco_stack.is_empty():
             deco_stack.emit_above(slide, op.bbox)
+
+    def _try_emit_native_line(self, slide, el: DomElement, bbox: BoundingBox) -> bool:
+        line = _dominant_line_border(el)
+        if line is None:
+            return False
+        side, width, color = line
+        tag = (el.tag or "").upper()
+        is_thin = bbox.h <= max(2.0, width + 0.5) or bbox.w <= max(2.0, width + 0.5)
+        single_side = side in {"top", "right", "bottom", "left"}
+        if tag != "HR" and not (is_thin and single_side):
+            return False
+
+        if side in {"left", "right"} and bbox.h > bbox.w:
+            x = bbox.x + (bbox.w if side == "right" else 0.0)
+            y1, y2 = bbox.y, bbox.y + bbox.h
+            x1 = x2 = x
+        else:
+            y = bbox.y + (bbox.h if side == "bottom" else bbox.h / 2.0)
+            x1, x2 = bbox.x, bbox.x + bbox.w
+            y1 = y2 = y
+
+        connector = slide.shapes.add_connector(
+            1,
+            Emu(px_to_emu(x1)),
+            Emu(px_to_emu(y1)),
+            Emu(px_to_emu(x2)),
+            Emu(px_to_emu(y2)),
+        )
+        try:
+            connector.line.width = Emu(px_to_emu(width))
+            if color is not None:
+                connector.line.color.rgb = color[0]
+        except Exception:
+            pass
+        return True
 
     def _apply_fill(self, shape, el: DomElement) -> None:
         # Try native gradient first (background-image: linear-gradient(...) / radial-gradient(...)).
