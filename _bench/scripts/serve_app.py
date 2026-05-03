@@ -3,8 +3,11 @@ from __future__ import annotations
 
 import argparse
 import asyncio
-import html
 import json
+import shutil
+import subprocess
+import sys
+import threading
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -16,6 +19,7 @@ DIST = ROOT / "generated" / "dist"
 CACHE = ROOT / "generated" / "app-cache"
 INDEX_JSON = ROOT / "index.json"
 CORPUS_INDEX_JSON = CORPUS / "index.json"
+RENDER_LOCK = threading.Lock()
 
 
 def _load_json(path: Path) -> dict:
@@ -42,6 +46,7 @@ def _folder_decks() -> list[dict]:
                 "id": deck_id,
                 "title": deck_id,
                 "kind": "folder",
+                "source": str((ROOT / deck["path"]).relative_to(ROOT)),
                 "pptx": str((DIST / f"{deck_id}.pptx").relative_to(ROOT)),
                 "slides": slides,
             })
@@ -107,6 +112,71 @@ def _pptx_path(deck: dict) -> Path:
     return path
 
 
+def _deck_source_path(deck: dict) -> Path:
+    if deck["kind"] == "corpus-mix":
+        source = ROOT / "generated" / "composed" / deck["id"]
+        if source.exists():
+            shutil.rmtree(source)
+        source.mkdir(parents=True, exist_ok=True)
+        for idx, slide in enumerate(deck["slides"], 1):
+            src = (ROOT / slide["file"]).resolve()
+            if ROOT.resolve() not in src.parents:
+                raise ValueError("slide path escapes _bench")
+            dst = source / f"{idx:03d}-{src.stem}.html"
+            shutil.copy2(src, dst)
+        return source
+
+    source = (ROOT / deck.get("source", "")).resolve()
+    if ROOT.resolve() not in source.parents or not source.is_dir():
+        raise ValueError("deck source escapes _bench or is not a folder")
+    return source
+
+
+def _refresh_pptx(deck: dict) -> dict:
+    acquired = RENDER_LOCK.acquire(blocking=False)
+    if not acquired:
+        raise RuntimeError("another PPTX render is already running")
+
+    try:
+        source = _deck_source_path(deck)
+        pptx = _pptx_path(deck)
+        pptx.parent.mkdir(parents=True, exist_ok=True)
+        cmd = [
+            sys.executable,
+            "-m",
+            "slidify",
+            "convert",
+            str(source),
+            str(pptx),
+            "--no-tier3",
+            "--no-oracle",
+            "--quiet",
+        ]
+        proc = subprocess.run(
+            cmd,
+            cwd=ROOT.parent,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        if proc.returncode not in {0, 3}:
+            detail = (proc.stderr or proc.stdout or "slidify convert failed").strip()
+            raise RuntimeError(detail[-2000:])
+
+        shutil.rmtree(CACHE / pptx.stem, ignore_errors=True)
+        return {
+            "ok": True,
+            "deck": deck["id"],
+            "kind": deck["kind"],
+            "source": str(source.relative_to(ROOT)),
+            "pptx": str(pptx.relative_to(ROOT)),
+            "mtime": pptx.stat().st_mtime if pptx.exists() else None,
+            "returncode": proc.returncode,
+        }
+    finally:
+        RENDER_LOCK.release()
+
+
 async def _render_pptx(pptx: Path, out_dir: Path) -> None:
     from slidify.oracle import render_pptx_to_pngs
 
@@ -148,6 +218,7 @@ header{{display:flex;gap:16px;align-items:center;padding:14px 18px;border-bottom
 h1{{font-size:16px;margin:0;text-transform:uppercase;letter-spacing:.16em;color:#e5bb68}}
 select,button{{background:#24262d;color:#f4efe6;border:1px solid #3b3e48;border-radius:6px;padding:8px 10px;font:inherit}}
 button{{cursor:pointer}}
+button:disabled{{cursor:progress;opacity:.58}}
 .meta{{margin-left:auto;color:#9da0aa;font-size:12px}}
 main{{display:grid;grid-template-columns:280px 1fr;min-height:0}}
 aside{{border-right:1px solid #2a2c33;background:#15161b;overflow:auto;padding:14px}}
@@ -180,6 +251,7 @@ iframe,.pptx{{width:100%;height:100%;border:0;background:white}}
 <div class="toolbar">
 <a id="htmlLink" target="_blank" rel="noreferrer">open html</a>
 <a id="pptxLink" target="_blank" rel="noreferrer">download pptx</a>
+<button id="refreshPptx" type="button">Refresh PPTX</button>
 <span class="meta" id="status"></span>
 </div>
 <div class="panes">
@@ -200,6 +272,7 @@ const htmlLink = document.getElementById('htmlLink');
 const pptxLink = document.getElementById('pptxLink');
 const meta = document.getElementById('meta');
 const statusEl = document.getElementById('status');
+const refreshPptxBtn = document.getElementById('refreshPptx');
 
 for (const deck of decks) {{
   const opt = document.createElement('option');
@@ -236,7 +309,15 @@ function update() {{
   pptxLink.href = `/pptx?deck=${{encodeURIComponent(deck.id)}}`;
   meta.textContent = `${{deck.id}} · slide ${{slide + 1}} / ${{deck.slides.length}}`;
   statusEl.textContent = 'PPTX preview renders lazily from _bench/generated/dist';
-  pptxPane.innerHTML = `<img alt="PPTX slide preview" src="/pptx.png?${{q}}" onerror="this.replaceWith(missingPptx())">`;
+  setPptxPreview(`/pptx.png?${{q}}`);
+}}
+
+function setPptxPreview(src) {{
+  const img = document.createElement('img');
+  img.alt = 'PPTX slide preview';
+  img.src = src;
+  img.onerror = () => img.replaceWith(missingPptx());
+  pptxPane.replaceChildren(img);
 }}
 
 function missingPptx() {{
@@ -246,9 +327,45 @@ function missingPptx() {{
   return div;
 }}
 
+function renderMessage(message) {{
+  const div = document.createElement('div');
+  div.className = 'empty';
+  div.textContent = message;
+  pptxPane.replaceChildren(div);
+}}
+
+async function refreshPptx() {{
+  const deck = currentDeck();
+  if (!deck) return;
+  refreshPptxBtn.disabled = true;
+  statusEl.textContent = 'Rendering PPTX...';
+  renderMessage('Rendering PPTX for ' + deck.id + '.');
+
+  try {{
+    const res = await fetch('/api/render', {{
+      method: 'POST',
+      headers: {{'Content-Type': 'application/json'}},
+      body: JSON.stringify({{deck: deck.id}}),
+    }});
+    const payload = await res.json().catch(() => ({{ok: false, error: 'invalid render response'}}));
+    if (!res.ok || !payload.ok) {{
+      throw new Error(payload.error || `HTTP ${{res.status}}`);
+    }}
+    const q = `deck=${{encodeURIComponent(deck.id)}}&slide=${{slide}}&v=${{encodeURIComponent(payload.mtime || Date.now())}}`;
+    statusEl.textContent = `Rendered ${{payload.pptx}}`;
+    setPptxPreview(`/pptx.png?${{q}}`);
+  }} catch (err) {{
+    statusEl.textContent = 'Render failed';
+    renderMessage('Render failed: ' + err.message);
+  }} finally {{
+    refreshPptxBtn.disabled = false;
+  }}
+}}
+
 deckSelect.onchange = () => {{ deckId = deckSelect.value; slide = 0; update(); }};
 document.getElementById('prev').onclick = () => {{ slide -= 1; update(); }};
 document.getElementById('next').onclick = () => {{ slide += 1; update(); }};
+refreshPptxBtn.onclick = refreshPptx;
 update();
 </script>
 </body>
@@ -266,7 +383,27 @@ class Handler(BaseHTTPRequestHandler):
     def _error(self, status: HTTPStatus, message: str) -> None:
         self._send(message.encode("utf-8"), "text/plain; charset=utf-8", status.value)
 
-    def do_GET(self) -> None:  # noqa: N802
+    def _json(self, payload: dict, status: int = 200) -> None:
+        self._send(json.dumps(payload, indent=2).encode("utf-8"), "application/json", status)
+
+    def do_POST(self) -> None:
+        parsed = urlparse(self.path)
+        try:
+            if parsed.path != "/api/render":
+                self._json({"ok": False, "error": "not found"}, HTTPStatus.NOT_FOUND.value)
+                return
+
+            length = int(self.headers.get("Content-Length", "0"))
+            body = self.rfile.read(length) if length else b"{}"
+            payload = json.loads(body.decode("utf-8"))
+            deck = _find_deck(str(payload.get("deck", "")))
+            if deck is None:
+                raise ValueError("unknown deck")
+            self._json(_refresh_pptx(deck))
+        except Exception as e:
+            self._json({"ok": False, "error": f"{type(e).__name__}: {e}"}, HTTPStatus.BAD_REQUEST.value)
+
+    def do_GET(self) -> None:
         parsed = urlparse(self.path)
         qs = parse_qs(parsed.query)
         try:
@@ -304,7 +441,7 @@ class Handler(BaseHTTPRequestHandler):
                 self._error(HTTPStatus.NOT_FOUND, "not found")
         except FileNotFoundError as e:
             self._error(HTTPStatus.NOT_FOUND, str(e))
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             self._error(HTTPStatus.BAD_REQUEST, f"{type(e).__name__}: {e}")
 
     def log_message(self, fmt: str, *args: object) -> None:
