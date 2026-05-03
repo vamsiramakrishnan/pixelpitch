@@ -4,13 +4,17 @@ UV ?= uv
 PYTHON ?= python
 DECK ?= image-led-magazine
 TAG ?= raster-rich
-HARVEST_OUT ?= _bench/reports/harvest/bench-signals.json
-HARVEST_REPORT ?= _bench/reports/harvest/bench-report.md
-HARVEST_INPUT ?= _bench/corpus
-HARVEST_PROGRESS ?= _bench/reports/harvest/bench-progress.jsonl
+SLIDIFY_ENGINE ?= engines/slidify
+BENCH_ROOT ?= $(SLIDIFY_ENGINE)/_bench
+SLIDIFY_PKG ?= $(SLIDIFY_ENGINE)/slidify
+SLIDIFY_COMPONENTS ?= $(SLIDIFY_ENGINE)/components
+HARVEST_OUT ?= $(BENCH_ROOT)/reports/harvest/bench-signals.json
+HARVEST_REPORT ?= $(BENCH_ROOT)/reports/harvest/bench-report.md
+HARVEST_INPUT ?= $(BENCH_ROOT)/corpus
+HARVEST_PROGRESS ?= $(BENCH_ROOT)/reports/harvest/bench-progress.jsonl
 HARVEST_PROGRESS_MODE ?= plain
-MECHANISMS_OUT ?= _bench/reports/harvest/mechanisms.json
-MECHANISMS_REPORT ?= _bench/reports/harvest/mechanisms.md
+MECHANISMS_OUT ?= $(BENCH_ROOT)/reports/harvest/mechanisms.json
+MECHANISMS_REPORT ?= $(BENCH_ROOT)/reports/harvest/mechanisms.md
 PORT ?= 15999
 
 UV_CACHE_DIR ?= $(CURDIR)/.uv-cache
@@ -29,7 +33,7 @@ UV_RUN := $(UV_ENV) $(UV) run
 
 help:
 	@echo "Pixelpitch (web + daemon + skills) — start here"
-	@echo "  bun run bootstrap         One-shot install: bun install + workspace build chain + skill mirror"
+	@echo "  ./setup.sh                One-command setup: install Bun if needed, install deps, build, mirror skills"
 	@echo "  bun run dev               Start daemon + web (http://localhost:3000)  (alias: make up)"
 	@echo "  bun run stop              Stop daemon + web"
 	@echo "  bun run doctor            Environment health check  (alias: make doctor-web)"
@@ -48,8 +52,8 @@ help:
 	@echo "  make check                lint + test"
 	@echo ""
 	@echo "Bench"
-	@echo "  make bench-index          Rebuild _bench/corpus/index.{json,html}"
-	@echo "  make bench-index-all      Rebuild _bench/index.{json,html}"
+	@echo "  make bench-index          Rebuild $(BENCH_ROOT)/corpus/index.{json,html}"
+	@echo "  make bench-index-all      Rebuild $(BENCH_ROOT)/index.{json,html}"
 	@echo "  make bench-compose        Compose DECK=$(DECK)"
 	@echo "  make bench-compose-tag    Compose TAG=$(TAG)"
 	@echo "  make bench-render         Render composed DECK=$(DECK) to PPTX"
@@ -78,68 +82,68 @@ doctor:
 	$(UV_RUN) slidify doctor
 
 # Regenerate the Tailwind catalog from the latest tailwindcss npm package.
-# Run this after `npm install --prefix tools/pattern-gen tailwindcss@latest`
+# Run this after `bun add --cwd tools/pattern-gen tailwindcss@latest`
 # bumps to a new major.
 patterns:
-	cd tools/pattern-gen && node extract-tailwind.js > ../../slidify/patterns/data/tailwind.json
-	@echo "Wrote slidify/patterns/data/tailwind.json"
-	@python3 -c "import json; d = json.load(open('slidify/patterns/data/tailwind.json')); print(f\"  version={d['version']}  colors={len(d['colors'])}  radii={len(d['border_radius'])}  shadows={len(d['shadow'])}  sizes={len(d['font_size'])}  spacing={len(d['spacing_px'])}\")"
+	cd tools/pattern-gen && node extract-tailwind.js > ../../$(SLIDIFY_PKG)/patterns/data/tailwind.json
+	@echo "Wrote $(SLIDIFY_PKG)/patterns/data/tailwind.json"
+	@python3 -c "import json; d = json.load(open('$(SLIDIFY_PKG)/patterns/data/tailwind.json')); print(f\"  version={d['version']}  colors={len(d['colors'])}  radii={len(d['border_radius'])}  shadows={len(d['shadow'])}  sizes={len(d['font_size'])}  spacing={len(d['spacing_px'])}\")"
 
 test:
 	$(UV_RUN) pytest -q
 
 lint:
-	$(UV_RUN) ruff check slidify tests
+	$(UV_RUN) ruff check $(SLIDIFY_PKG) $(SLIDIFY_ENGINE)/tests
 
 check: lint test
 
 bench-index:
-	$(PYTHON) _bench/scripts/build_corpus_index.py
+	$(PYTHON) $(BENCH_ROOT)/scripts/build_corpus_index.py
 
 bench-index-all: bench-index
-	$(PYTHON) _bench/scripts/build_bench_index.py
+	$(PYTHON) $(BENCH_ROOT)/scripts/build_bench_index.py
 
 bench-compose: bench-index-all
-	$(PYTHON) _bench/scripts/compose_corpus.py --deck $(DECK) --force
+	$(PYTHON) $(BENCH_ROOT)/scripts/compose_corpus.py --deck $(DECK) --force
 
 bench-compose-tag: bench-index-all
-	$(PYTHON) _bench/scripts/compose_corpus.py --tag $(TAG) --name $(TAG) --force
+	$(PYTHON) $(BENCH_ROOT)/scripts/compose_corpus.py --tag $(TAG) --name $(TAG) --force
 
 bench-render: bench-compose
-	$(UV_RUN) slidify convert _bench/generated/composed/$(DECK) _bench/generated/dist/$(DECK).pptx \
+	$(UV_RUN) slidify convert $(BENCH_ROOT)/generated/composed/$(DECK) $(BENCH_ROOT)/generated/dist/$(DECK).pptx \
 		--no-tier3 --no-oracle --quiet
 
 bench-render-tag: bench-compose-tag
-	$(UV_RUN) slidify convert _bench/generated/composed/$(TAG) _bench/generated/dist/$(TAG).pptx \
+	$(UV_RUN) slidify convert $(BENCH_ROOT)/generated/composed/$(TAG) $(BENCH_ROOT)/generated/dist/$(TAG).pptx \
 		--no-tier3 --no-oracle --quiet
 
 bench-render-all: bench-index-all
-	$(UV_RUN) python _bench/build.py --skip-generate
+	$(UV_RUN) python $(BENCH_ROOT)/build.py --skip-generate
 
 bench-harvest: bench-index-all
 	SLIDIFY_LOG_LEVEL=warning $(UV_RUN) slidify harvest $(HARVEST_INPUT) --output $(HARVEST_OUT) --top-n 80 --min-occurrences 2 \
 		--progress $(HARVEST_PROGRESS_MODE) --progress-file $(HARVEST_PROGRESS)
-	$(PYTHON) _bench/scripts/summarize_harvest.py $(HARVEST_OUT) --output $(HARVEST_REPORT) --top-n 20
+	$(PYTHON) $(BENCH_ROOT)/scripts/summarize_harvest.py $(HARVEST_OUT) --output $(HARVEST_REPORT) --top-n 20
 
 bench-harvest-all:
-	$(MAKE) bench-harvest HARVEST_INPUT=_bench/corpus HARVEST_OUT=_bench/reports/harvest/corpus-signals.json HARVEST_REPORT=_bench/reports/harvest/corpus-report.md HARVEST_PROGRESS=_bench/reports/harvest/corpus-progress.jsonl
-	$(MAKE) bench-harvest HARVEST_INPUT=_bench/decks HARVEST_OUT=_bench/reports/harvest/decks-signals.json HARVEST_REPORT=_bench/reports/harvest/decks-report.md HARVEST_PROGRESS=_bench/reports/harvest/decks-progress.jsonl
+	$(MAKE) bench-harvest HARVEST_INPUT=$(BENCH_ROOT)/corpus HARVEST_OUT=$(BENCH_ROOT)/reports/harvest/corpus-signals.json HARVEST_REPORT=$(BENCH_ROOT)/reports/harvest/corpus-report.md HARVEST_PROGRESS=$(BENCH_ROOT)/reports/harvest/corpus-progress.jsonl
+	$(MAKE) bench-harvest HARVEST_INPUT=$(BENCH_ROOT)/decks HARVEST_OUT=$(BENCH_ROOT)/reports/harvest/decks-signals.json HARVEST_REPORT=$(BENCH_ROOT)/reports/harvest/decks-report.md HARVEST_PROGRESS=$(BENCH_ROOT)/reports/harvest/decks-progress.jsonl
 	$(MAKE) bench-mechanisms
 
 bench-mechanisms:
-	$(UV_RUN) python _bench/scripts/plan_mechanisms.py \
-		_bench/reports/harvest/corpus-signals.json \
-		_bench/reports/harvest/decks-signals.json \
+	$(UV_RUN) python $(BENCH_ROOT)/scripts/plan_mechanisms.py \
+		$(BENCH_ROOT)/reports/harvest/corpus-signals.json \
+		$(BENCH_ROOT)/reports/harvest/decks-signals.json \
 		--output $(MECHANISMS_OUT) --report $(MECHANISMS_REPORT) --top-n 10
 
 bench-app: bench-index-all
-	$(UV_RUN) python _bench/scripts/serve_app.py --port $(PORT)
+	$(UV_RUN) python $(BENCH_ROOT)/scripts/serve_app.py --port $(PORT)
 
 bench-run:
-	$(UV_RUN) python _bench/run.py
+	$(UV_RUN) python $(BENCH_ROOT)/run.py
 
 bench-run-strict:
-	$(UV_RUN) python _bench/run.py --strict
+	$(UV_RUN) python $(BENCH_ROOT)/run.py --strict
 
 bench-build: bench-render-all
 
@@ -203,16 +207,15 @@ pixelpitch-bootstrap:
 # ----------------------------------------------------------------------
 
 build-skills-corpus:
-	$(UV_RUN) python _bench/scripts/build_skills_corpus.py
+	$(UV_RUN) python $(BENCH_ROOT)/scripts/build_skills_corpus.py
 
 harvest-deck-skills: build-skills-corpus
-	SLIDIFY_LOG_LEVEL=warning $(UV_RUN) slidify harvest _bench/decks-from-skills \
-		--output _bench/reports/harvest/skills-signals.json --top-n 80 --min-occurrences 1 \
-		--progress plain --progress-file _bench/reports/harvest/skills-progress.jsonl
-	$(PYTHON) _bench/scripts/summarize_harvest.py _bench/reports/harvest/skills-signals.json \
-		--output _bench/reports/harvest/skills-report.md --top-n 30
+	SLIDIFY_LOG_LEVEL=warning $(UV_RUN) slidify harvest $(BENCH_ROOT)/decks-from-skills \
+		--output $(BENCH_ROOT)/reports/harvest/skills-signals.json --top-n 80 --min-occurrences 1 \
+		--progress plain --progress-file $(BENCH_ROOT)/reports/harvest/skills-progress.jsonl
+	$(PYTHON) $(BENCH_ROOT)/scripts/summarize_harvest.py $(BENCH_ROOT)/reports/harvest/skills-signals.json \
+		--output $(BENCH_ROOT)/reports/harvest/skills-report.md --top-n 30
 	@echo ""
 	@echo "Harvest done. Inspect:"
-	@echo "  cat _bench/reports/harvest/skills-report.md"
-	@echo "  slidify field _bench/reports/harvest/skills-signals.json promotions"
-
+	@echo "  cat $(BENCH_ROOT)/reports/harvest/skills-report.md"
+	@echo "  slidify field $(BENCH_ROOT)/reports/harvest/skills-signals.json promotions"

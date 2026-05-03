@@ -18,8 +18,8 @@ describe("tools-dev diagnostics", () => {
 
     assert.equal(diagnostics.length, 1);
     assert.match(diagnostics[0].message, /native Node addon ABI mismatch/);
-    assert.match(diagnostics[0].recommendation, /rebuild better-sqlite3 --pending/);
-    assert.match(diagnostics[0].recommendation, /pnpm install/);
+    assert.match(diagnostics[0].recommendation, /bun install --force/);
+    assert.match(diagnostics[0].recommendation, /bun install/);
   });
 
   it("does not report diagnostics for unrelated logs", () => {
@@ -39,6 +39,6 @@ describe("tools-dev diagnostics", () => {
     assert.match(error.message, /daemon did not expose status in time/);
     assert.match(error.message, /daemon log tail \(\/tmp\/daemon\.log\)/);
     assert.match(error.message, /better_sqlite3\.node/);
-    assert.match(error.message, /pnpm --filter @pixelpitch\/daemon rebuild better-sqlite3 --pending/);
+    assert.match(error.message, /bun install --force/);
   });
 });

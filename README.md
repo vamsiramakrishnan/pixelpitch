@@ -3,13 +3,16 @@
 > End-to-end designer-grade slide system. Agent-driven HTML authoring →
 > sandboxed live preview → PPTX export.
 
-## Three commands to first deck
+## Quickstart
 
 ```bash
-git clone https://github.com/vamsiramakrishnan/pixelpitch && cd pixelpitch
-bun run bootstrap     # one-shot install + build chain (~2 min first run)
-bun run dev           # daemon + web on http://localhost:3000
+./setup.sh
+bun run dev
 ```
+
+`setup.sh` installs Bun into `~/.bun` if it is missing, runs the root Bun
+workspace install, builds the package chain, and mirrors bundled skills.
+`bun run dev` starts the daemon and web app; open the URL it prints.
 
 Need anything else? See [`QUICKSTART.md`](QUICKSTART.md). Stuck?
 `bun run doctor`.
@@ -88,26 +91,23 @@ Those signals drive the roadmap:
 
 ## Install
 
-Three options, ranked by friction:
+Pixelpitch development is Bun-first:
 
 ```bash
-# 1. Single-binary install (recommended for users) — first run auto-provisions
-#    a private Python 3.11 + Playwright Chromium under ~/.local/share/slidify/.
-curl -fsSL https://slidify.sh/install | sh
-slidify doctor
+./setup.sh
+bun run dev
+```
 
-# 2. Docker (most self-contained — bundles LibreOffice / Tesseract / fonts).
-docker build -f packaging/Dockerfile -t slidify:latest .
-docker run --rm -v "$PWD":/work slidify:latest convert /work/deck.html /work/deck.pptx
+Verify the JavaScript app/tooling layer with `bun run doctor`. For PPTX export
+backend checks, install the optional system tools and run `make doctor`:
 
-# 3. From source (development).
+```bash
 sudo apt-get install -y libreoffice-impress poppler-utils tesseract-ocr fonts-inter
-make bootstrap
 make doctor
 ```
 
-Verify with `slidify doctor`. See [`packaging/`](packaging/) for the full
-matrix (Rust bootstrap, Docker, PyInstaller bundle, pip).
+See [`packaging/`](packaging/) for the Bun packaging contract and desktop
+artifact commands.
 
 If `make doctor` reports `Chromium launch` as failing, run:
 

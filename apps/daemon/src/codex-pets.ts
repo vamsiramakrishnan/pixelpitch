@@ -94,7 +94,7 @@ const SPRITESHEET_NAMES = [
 // `bundledIds` lets us tag a pet as part of the curated set even when
 // the sprite content was read from the user's local `~/.codex/pets/`
 // copy. Without this, a user who synced every community pet via
-// `pnpm sync:community-pets` would always preempt the bundled scan
+    // the community-pets sync command would always preempt the bundled scan
 // and the "Built-in" tab would render empty.
 async function scanRoot(
   root: string,

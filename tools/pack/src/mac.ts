@@ -17,7 +17,7 @@ import {
 import { createSidecarLaunchEnv, requestJsonIpc, resolveAppIpcPath } from "@pixelpitch/sidecar";
 import {
   collectProcessTreePids,
-  createPackageManagerInvocation,
+  createCommandInvocation,
   createProcessStampArgs,
   listProcessSnapshots,
   matchesStampedProcess,
@@ -207,23 +207,26 @@ async function pathExists(path: string): Promise<boolean> {
   }
 }
 
-async function runPnpm(
+function bunCommand(): string {
+  return process.platform === "win32" ? "bun.exe" : "bun";
+}
+
+async function runBun(
   config: ToolPackConfig,
   args: string[],
   extraEnv: NodeJS.ProcessEnv = {},
+  cwd = config.workspaceRoot,
 ): Promise<void> {
-  const invocation = createPackageManagerInvocation(args, process.env);
+  const invocation = createCommandInvocation({ args, command: bunCommand(), env: process.env });
   await execFileAsync(invocation.command, invocation.args, {
-    cwd: config.workspaceRoot,
+    cwd,
     env: { ...process.env, ...extraEnv },
+    windowsVerbatimArguments: invocation.windowsVerbatimArguments,
   });
 }
 
-async function runNpmInstall(appRoot: string): Promise<void> {
-  await execFileAsync("npm", ["install", "--omit=dev", "--no-package-lock"], {
-    cwd: appRoot,
-    env: process.env,
-  });
+async function runBunProductionInstall(config: ToolPackConfig, appRoot: string): Promise<void> {
+  await runBun(config, ["install", "--production", "--no-save", "--backend=copyfile"], {}, appRoot);
 }
 
 async function readPackagedVersion(config: ToolPackConfig): Promise<string> {
@@ -239,15 +242,15 @@ async function buildWorkspaceArtifacts(config: ToolPackConfig): Promise<void> {
   const webNextEnvPath = join(config.workspaceRoot, "apps", "web", "next-env.d.ts");
   const previousWebNextEnv = await readFile(webNextEnvPath, "utf8").catch(() => null);
 
-  await runPnpm(config, ["--filter", "@pixelpitch/sidecar-proto", "build"]);
-  await runPnpm(config, ["--filter", "@pixelpitch/sidecar", "build"]);
-  await runPnpm(config, ["--filter", "@pixelpitch/platform", "build"]);
-  await runPnpm(config, ["--filter", "@pixelpitch/daemon", "build"]);
+  await runBun(config, ["run", "--filter", "@pixelpitch/sidecar-proto", "build"]);
+  await runBun(config, ["run", "--filter", "@pixelpitch/sidecar", "build"]);
+  await runBun(config, ["run", "--filter", "@pixelpitch/platform", "build"]);
+  await runBun(config, ["run", "--filter", "@pixelpitch/daemon", "build"]);
   try {
-    await runPnpm(config, ["--filter", "@pixelpitch/web", "build"], {
+    await runBun(config, ["run", "--filter", "@pixelpitch/web", "build"], {
       PIXELPITCH_WEB_OUTPUT_MODE: "server",
     });
-    await runPnpm(config, ["--filter", "@pixelpitch/web", "build:sidecar"]);
+    await runBun(config, ["run", "--filter", "@pixelpitch/web", "build:sidecar"]);
   } finally {
     if (previousWebNextEnv == null) {
       await rm(webNextEnvPath, { force: true });
@@ -255,24 +258,24 @@ async function buildWorkspaceArtifacts(config: ToolPackConfig): Promise<void> {
       await writeFile(webNextEnvPath, previousWebNextEnv, "utf8");
     }
   }
-  await runPnpm(config, ["--filter", "@pixelpitch/desktop", "build"]);
-  await runPnpm(config, ["--filter", "@pixelpitch/packaged", "build"]);
+  await runBun(config, ["run", "--filter", "@pixelpitch/desktop", "build"]);
+  await runBun(config, ["run", "--filter", "@pixelpitch/packaged", "build"]);
 }
 
 async function copyResourceTree(config: ToolPackConfig, paths: MacPaths): Promise<void> {
   await rm(paths.resourceRoot, { force: true, recursive: true });
   await mkdir(paths.resourceRoot, { recursive: true });
 
-  await cp(join(config.workspaceRoot, "skills"), join(paths.resourceRoot, "skills"), {
+  await cp(join(config.workspaceRoot, "content", "skills"), join(paths.resourceRoot, "skills"), {
     recursive: true,
   });
-  await cp(join(config.workspaceRoot, "design-systems"), join(paths.resourceRoot, "design-systems"), {
+  await cp(join(config.workspaceRoot, "content", "design-systems"), join(paths.resourceRoot, "design-systems"), {
     recursive: true,
   });
-  await cp(join(config.workspaceRoot, "craft"), join(paths.resourceRoot, "craft"), {
+  await cp(join(config.workspaceRoot, "content", "craft"), join(paths.resourceRoot, "craft"), {
     recursive: true,
   });
-  await cp(join(config.workspaceRoot, "assets", "frames"), join(paths.resourceRoot, "frames"), {
+  await cp(join(config.workspaceRoot, "content", "assets", "frames"), join(paths.resourceRoot, "frames"), {
     recursive: true,
   });
   await mkdir(join(paths.resourceRoot, "bin"), { recursive: true });
@@ -290,13 +293,7 @@ async function collectWorkspaceTarballs(
 
   for (const packageInfo of INTERNAL_PACKAGES) {
     const beforeEntries = new Set(await readdir(paths.tarballsRoot));
-    await runPnpm(config, [
-      "-C",
-      packageInfo.directory,
-      "pack",
-      "--pack-destination",
-      paths.tarballsRoot,
-    ]);
+    await runBun(config, ["pm", "pack", "--destination", paths.tarballsRoot], {}, join(config.workspaceRoot, packageInfo.directory));
     const afterEntries = await readdir(paths.tarballsRoot);
     const newEntries = afterEntries.filter((entry) => !beforeEntries.has(entry));
     if (newEntries.length !== 1 || newEntries[0] == null) {
@@ -362,7 +359,7 @@ async function writeAssembledApp(
     )}\n`,
     "utf8",
   );
-  await runNpmInstall(paths.assembledAppRoot);
+  await runBunProductionInstall(config, paths.assembledAppRoot);
 }
 
 type MacBuildOutput = Extract<ToolPackBuildOutput, "all" | "app" | "dmg" | "zip">;

@@ -2,12 +2,12 @@
 /**
  * skills-sync.ts
  *
- * Mirrors the canonical `skills/` directory into `.claude/skills/` and
+ * Mirrors the canonical `content/skills/` directory into `.claude/skills/` and
  * `.gemini/skills/` so AI agents that look in those locations discover
  * the bundled skill catalog.
  *
  * Behavior:
- *   - Files that originate from `skills/<skill>/` overwrite their copies
+ *   - Files that originate from `content/skills/<skill>/` overwrite their copies
  *     in `.claude/skills/<skill>/` and `.gemini/skills/<skill>/`.
  *   - Skills that exist ONLY in `.claude/skills/` (e.g. pixelpitch's own
  *     `slide-author` and `html-to-slides`) are left untouched.
@@ -20,7 +20,7 @@ import { mkdirSync, readdirSync, statSync, copyFileSync, existsSync } from "node
 import { join, relative } from "node:path";
 
 const ROOT = process.cwd();
-const SOURCE = join(ROOT, "skills");
+const SOURCE = join(ROOT, "content", "skills");
 const TARGETS = [join(ROOT, ".claude", "skills"), join(ROOT, ".gemini", "skills")];
 
 function copyDir(src: string, dst: string): number {

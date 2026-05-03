@@ -32,13 +32,13 @@ Follow the root `AGENTS.md` first. This file only records module-level boundarie
 ## Common app commands
 
 ```bash
-pnpm --filter @pixelpitch/web typecheck
-pnpm --filter @pixelpitch/web test
-pnpm --filter @pixelpitch/daemon typecheck
-pnpm --filter @pixelpitch/daemon test
-pnpm --filter @pixelpitch/daemon build
-pnpm --filter @pixelpitch/desktop typecheck
-pnpm --filter @pixelpitch/desktop build
-pnpm --filter @pixelpitch/packaged typecheck
-pnpm --filter @pixelpitch/packaged build
+bun run --filter @pixelpitch/web typecheck
+bun run --filter @pixelpitch/web test
+bun run --filter @pixelpitch/daemon typecheck
+bun run --filter @pixelpitch/daemon test
+bun run --filter @pixelpitch/daemon build
+bun run --filter @pixelpitch/desktop typecheck
+bun run --filter @pixelpitch/desktop build
+bun run --filter @pixelpitch/packaged typecheck
+bun run --filter @pixelpitch/packaged build
 ```

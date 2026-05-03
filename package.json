@@ -11,7 +11,7 @@
   "workspaces": [
     "apps/*",
     "packages/*",
-    "components",
+    "engines/slidify/components",
     "tools/dev",
     "tools/pack",
     "tools/pattern-gen",
@@ -33,6 +33,8 @@
     "lint": "bun run --filter '*' --if-present lint",
     "web": "bun run --filter @pixelpitch/web dev",
     "daemon": "node tools/dev/bin/tools-dev.mjs run daemon",
+    "pack:mac": "bun run --filter @pixelpitch/tools-pack build && node tools/pack/bin/tools-pack.mjs mac build --to all",
+    "pack:win": "bun run --filter @pixelpitch/tools-pack build && node tools/pack/bin/tools-pack.mjs win build --to nsis",
     "skills:sync": "bun tools/skills-sync.ts",
     "skills:verify": "bun tools/skills-verify.ts",
     "smoke": "bash tools/smoke.sh"

@@ -1,0 +1,777 @@
+{
+  "lockVersion": 1,
+  "atomsYamlSha256": "0c7027586660df0bb0dd9b84a4f0a56abdb78e567aa3e443fa08b060382e9934",
+  "totalAtoms": 96,
+  "generatedRecipes": 95,
+  "primitivesVerified": 1,
+  "atoms": [
+    {
+      "rowId": "atom-anno-brace-labeled",
+      "atomId": "anno.brace-labeled",
+      "component": "AnnoBraceLabeled",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-anno-callout-bubble",
+      "atomId": "anno.callout-bubble",
+      "component": "AnnoCalloutBubble",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-anno-highlighter-mark",
+      "atomId": "anno.highlighter-mark",
+      "component": "AnnoHighlighterMark",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-anno-numbered-hotspot",
+      "atomId": "anno.numbered-hotspot",
+      "component": "AnnoNumberedHotspot",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": true
+    },
+    {
+      "rowId": "atom-anno-redaction-bar",
+      "atomId": "anno.redaction-bar",
+      "component": "AnnoRedactionBar",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-anno-stamp-draft",
+      "atomId": "anno.stamp-draft",
+      "component": "AnnoStampDraft",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-anno-stamp-internal",
+      "atomId": "anno.stamp-internal",
+      "component": "AnnoStampInternal",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-anno-stamp-new",
+      "atomId": "anno.stamp-new",
+      "component": "AnnoStampNew",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-anno-sticker",
+      "atomId": "anno.sticker",
+      "component": "AnnoSticker",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-anno-tooltip",
+      "atomId": "anno.tooltip",
+      "component": "AnnoTooltip",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-bg-aurora-corners",
+      "atomId": "bg.aurora-corners",
+      "component": "BgAuroraCorners",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-bg-crosshatch",
+      "atomId": "bg.crosshatch",
+      "component": "BgCrosshatch",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-bg-diagonal",
+      "atomId": "bg.diagonal",
+      "component": "BgDiagonal",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-bg-dot-lattice-coarse",
+      "atomId": "bg.dot-lattice-coarse",
+      "component": "BgDotLatticeCoarse",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-bg-dot-lattice-fine",
+      "atomId": "bg.dot-lattice-fine",
+      "component": "BgDotLatticeFine",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-bg-line-grid",
+      "atomId": "bg.line-grid",
+      "component": "BgLineGrid",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-bg-scrim-bottom",
+      "atomId": "bg.scrim-bottom",
+      "component": "BgScrimBottom",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-bg-scrim-top",
+      "atomId": "bg.scrim-top",
+      "component": "BgScrimTop",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-bg-spotlight-soft",
+      "atomId": "bg.spotlight-soft",
+      "component": "BgSpotlightSoft",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-bg-spotlight-tight",
+      "atomId": "bg.spotlight-tight",
+      "component": "BgSpotlightTight",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "chrome.escape-hatch",
+      "atomId": "chrome.escape-hatch",
+      "component": "EscapeHatch",
+      "tier": "A",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-comp-agenda-2col",
+      "atomId": "comp.agenda-2col",
+      "component": "CompAgenda2col",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": true
+    },
+    {
+      "rowId": "atom-comp-agenda-toc",
+      "atomId": "comp.agenda-toc",
+      "component": "CompAgendaToc",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": true
+    },
+    {
+      "rowId": "atom-comp-annotated-screenshot",
+      "atomId": "comp.annotated-screenshot",
+      "component": "CompAnnotatedScreenshot",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": true
+    },
+    {
+      "rowId": "atom-comp-bento-mixed",
+      "atomId": "comp.bento-mixed",
+      "component": "CompBentoMixed",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": true
+    },
+    {
+      "rowId": "atom-comp-big-stat-hero",
+      "atomId": "comp.big-stat-hero",
+      "component": "CompBigStatHero",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": true
+    },
+    {
+      "rowId": "atom-comp-closing-cta",
+      "atomId": "comp.closing-cta",
+      "component": "CompClosingCta",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": true
+    },
+    {
+      "rowId": "atom-comp-data-overview",
+      "atomId": "comp.data-overview",
+      "component": "CompDataOverview",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": true
+    },
+    {
+      "rowId": "atom-comp-hero-investor",
+      "atomId": "comp.hero-investor",
+      "component": "CompHeroInvestor",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": true
+    },
+    {
+      "rowId": "atom-comp-hero-product",
+      "atomId": "comp.hero-product",
+      "component": "CompHeroProduct",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": true
+    },
+    {
+      "rowId": "atom-comp-quote-editorial",
+      "atomId": "comp.quote-editorial",
+      "component": "CompQuoteEditorial",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": true
+    },
+    {
+      "rowId": "atom-comp-roadmap-quarterly",
+      "atomId": "comp.roadmap-quarterly",
+      "component": "CompRoadmapQuarterly",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": true
+    },
+    {
+      "rowId": "atom-comp-section-divider-mesh",
+      "atomId": "comp.section-divider-mesh",
+      "component": "CompSectionDividerMesh",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": true
+    },
+    {
+      "rowId": "atom-comp-team-grid",
+      "atomId": "comp.team-grid",
+      "component": "CompTeamGrid",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": true
+    },
+    {
+      "rowId": "atom-comp-three-up-stats",
+      "atomId": "comp.three-up-stats",
+      "component": "CompThreeUpStats",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": true
+    },
+    {
+      "rowId": "atom-data-bar-set-h",
+      "atomId": "data.bar-set-h",
+      "component": "DataBarSetH",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-data-bar-set-v",
+      "atomId": "data.bar-set-v",
+      "component": "DataBarSetV",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-data-bullet-bar",
+      "atomId": "data.bullet-bar",
+      "component": "DataBulletBar",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-data-connector",
+      "atomId": "data.connector",
+      "component": "DataConnector",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-data-data-table",
+      "atomId": "data.data-table",
+      "component": "DataDataTable",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-data-delta-badge",
+      "atomId": "data.delta-badge",
+      "component": "DataDeltaBadge",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-data-donut",
+      "atomId": "data.donut",
+      "component": "DataDonut",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-data-donut-multi-segment",
+      "atomId": "data.donut-multi-segment",
+      "component": "DataDonutMultiSegment",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-data-kpi-row",
+      "atomId": "data.kpi-row",
+      "component": "DataKpiRow",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-data-mini-heatmap",
+      "atomId": "data.mini-heatmap",
+      "component": "DataMiniHeatmap",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-dec-arrow-down",
+      "atomId": "dec.arrow-down",
+      "component": "DecArrowDown",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-dec-arrow-left",
+      "atomId": "dec.arrow-left",
+      "component": "DecArrowLeft",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-dec-arrow-right",
+      "atomId": "dec.arrow-right",
+      "component": "DecArrowRight",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-dec-arrow-up",
+      "atomId": "dec.arrow-up",
+      "component": "DecArrowUp",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-dec-brace-bottom",
+      "atomId": "dec.brace-bottom",
+      "component": "DecBraceBottom",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-dec-brace-left",
+      "atomId": "dec.brace-left",
+      "component": "DecBraceLeft",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-dec-brace-right",
+      "atomId": "dec.brace-right",
+      "component": "DecBraceRight",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-dec-brace-top",
+      "atomId": "dec.brace-top",
+      "component": "DecBraceTop",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-dec-bullet-dot",
+      "atomId": "dec.bullet-dot",
+      "component": "DecBulletDot",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-dec-corner-crop",
+      "atomId": "dec.corner-crop",
+      "component": "DecCornerCrop",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-dec-dotted-rule",
+      "atomId": "dec.dotted-rule",
+      "component": "DecDottedRule",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-dec-hairline-rule",
+      "atomId": "dec.hairline-rule",
+      "component": "DecHairlineRule",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-dec-numeral-chapter",
+      "atomId": "dec.numeral-chapter",
+      "component": "DecNumeralChapter",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-dec-plus",
+      "atomId": "dec.plus",
+      "component": "DecPlus",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-dec-section-divider",
+      "atomId": "dec.section-divider",
+      "component": "DecSectionDivider",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-dec-star-5",
+      "atomId": "dec.star-5",
+      "component": "DecStar5",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-dec-star-6",
+      "atomId": "dec.star-6",
+      "component": "DecStar6",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-mask-callout",
+      "atomId": "mask.callout",
+      "component": "MaskCallout",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-mask-gradient-fade-edge",
+      "atomId": "mask.gradient-fade-edge",
+      "component": "MaskGradientFadeEdge",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-mask-octagon",
+      "atomId": "mask.octagon",
+      "component": "MaskOctagon",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-mask-rounded-rect-clip",
+      "atomId": "mask.rounded-rect-clip",
+      "component": "MaskRoundedRectClip",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-surf-bento-cell",
+      "atomId": "surf.bento-cell",
+      "component": "SurfBentoCell",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-surf-card-bordered",
+      "atomId": "surf.card-bordered",
+      "component": "SurfCardBordered",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-surf-card-depth",
+      "atomId": "surf.card-depth",
+      "component": "SurfCardDepth",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-surf-card-flat",
+      "atomId": "surf.card-flat",
+      "component": "SurfCardFlat",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-surf-card-floating",
+      "atomId": "surf.card-floating",
+      "component": "SurfCardFloating",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-surf-card-paper",
+      "atomId": "surf.card-paper",
+      "component": "SurfCardPaper",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-surf-card-raised",
+      "atomId": "surf.card-raised",
+      "component": "SurfCardRaised",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-surf-frame-letterbox",
+      "atomId": "surf.frame-letterbox",
+      "component": "SurfFrameLetterbox",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-surf-section-band",
+      "atomId": "surf.section-band",
+      "component": "SurfSectionBand",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-surf-tape-band",
+      "atomId": "surf.tape-band",
+      "component": "SurfTapeBand",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-type-big-number",
+      "atomId": "type.big-number",
+      "component": "TypeBigNumber",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-type-big-number-gradient",
+      "atomId": "type.big-number-gradient",
+      "component": "TypeBigNumberGradient",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-type-big-number-xl",
+      "atomId": "type.big-number-xl",
+      "component": "TypeBigNumberXl",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-type-eyebrow-ruled",
+      "atomId": "type.eyebrow-ruled",
+      "component": "TypeEyebrowRuled",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-type-eyebrow-tape",
+      "atomId": "type.eyebrow-tape",
+      "component": "TypeEyebrowTape",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-type-numerals-tabular",
+      "atomId": "type.numerals-tabular",
+      "component": "TypeNumeralsTabular",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-type-pullquote-brutalist",
+      "atomId": "type.pullquote-brutalist",
+      "component": "TypePullquoteBrutalist",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-type-pullquote-serif",
+      "atomId": "type.pullquote-serif",
+      "component": "TypePullquoteSerif",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-ui-browser-mac",
+      "atomId": "ui.browser-mac",
+      "component": "UiBrowserMac",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-ui-browser-minimal",
+      "atomId": "ui.browser-minimal",
+      "component": "UiBrowserMinimal",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-ui-browser-win",
+      "atomId": "ui.browser-win",
+      "component": "UiBrowserWin",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-ui-checklist",
+      "atomId": "ui.checklist",
+      "component": "UiChecklist",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-ui-code-block",
+      "atomId": "ui.code-block",
+      "component": "UiCodeBlock",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-ui-code-block-syntax",
+      "atomId": "ui.code-block-syntax",
+      "component": "UiCodeBlockSyntax",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-ui-device-laptop",
+      "atomId": "ui.device-laptop",
+      "component": "UiDeviceLaptop",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-ui-device-phone",
+      "atomId": "ui.device-phone",
+      "component": "UiDevicePhone",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-ui-progress-bar",
+      "atomId": "ui.progress-bar",
+      "component": "UiProgressBar",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-ui-status-dot",
+      "atomId": "ui.status-dot",
+      "component": "UiStatusDot",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-ui-stepper",
+      "atomId": "ui.stepper",
+      "component": "UiStepper",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    },
+    {
+      "rowId": "atom-ui-terminal-window",
+      "atomId": "ui.terminal-window",
+      "component": "UiTerminalWindow",
+      "tier": "B",
+      "version": "1.0.0",
+      "composite": false
+    }
+  ]
+}

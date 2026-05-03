@@ -9,7 +9,7 @@ const distEntry = resolve(entryDir, "../dist/index.mjs");
 
 if (!existsSync(distEntry)) {
   throw new Error(
-    `tools-pack dist entry not found at ${distEntry}. Run "pnpm --filter @pixelpitch/tools-pack build" first.`,
+    `tools-pack dist entry not found at ${distEntry}. Run "bun run --filter @pixelpitch/tools-pack build" first.`,
   );
 }
 

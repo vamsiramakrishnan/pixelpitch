@@ -52,7 +52,7 @@ test -d apps/web/.next \
 section "Slidify (Python HTML→PPTX)"
 test -x .venv/bin/python \
   && printf "  %b %-32s\n" "$OK" ".venv/bin/python" \
-  || printf "  %b %-32s — run: bun run bootstrap (needs uv)\n" "$WARN" ".venv/bin/python"
+  || printf "  %b %-32s — run: ./setup.sh (needs uv)\n" "$WARN" ".venv/bin/python"
 check "libreoffice" 0 libreoffice --version
 check "tesseract"   0 tesseract --version
 check "pdftoppm"    0 pdftoppm -v
@@ -67,10 +67,10 @@ for cli in claude codex gemini cursor-agent copilot devin opencode qwen hermes k
 done
 
 section "Skills"
-n_canonical=$(find skills -mindepth 1 -maxdepth 1 -type d | wc -l)
+n_canonical=$(find content/skills -mindepth 1 -maxdepth 1 -type d | wc -l)
 n_claude=$(find .claude/skills -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l)
 n_gemini=$(find .gemini/skills -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l)
-printf "  %b skills/             %s skills\n" "$OK" "$n_canonical"
+printf "  %b content/skills/     %s skills\n" "$OK" "$n_canonical"
 printf "  %b .claude/skills/     %s skills\n" "$OK" "$n_claude"
 printf "  %b .gemini/skills/     %s skills\n" "$OK" "$n_gemini"
 

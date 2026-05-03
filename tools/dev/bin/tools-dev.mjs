@@ -11,7 +11,7 @@ const missingDistEntries = requiredDistEntries.filter((entry) => !existsSync(ent
 
 if (missingDistEntries.length > 0) {
   throw new Error(
-    `tools-dev dist entries not found: ${missingDistEntries.join(', ')}. Run "pnpm --filter @pixelpitch/tools-dev build" first.`,
+    `tools-dev dist entries not found: ${missingDistEntries.join(', ')}. Run "bun run --filter @pixelpitch/tools-dev build" first.`,
   );
 }
 

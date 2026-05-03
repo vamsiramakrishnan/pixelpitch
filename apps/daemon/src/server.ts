@@ -278,25 +278,26 @@ const DAEMON_RESOURCE_ROOT = resolveDaemonResourceRoot();
 // frontend toolchain emits, no further config needed.
 const STATIC_DIR = path.join(PROJECT_ROOT, 'apps', 'web', 'out');
 const PIXELPITCH_BIN = path.join(PROJECT_ROOT, 'apps', 'daemon', 'dist', 'cli.js');
+const CONTENT_DIR = path.join(PROJECT_ROOT, 'content');
 const SKILLS_DIR = resolveDaemonResourceDir(
   DAEMON_RESOURCE_ROOT,
   'skills',
-  path.join(PROJECT_ROOT, 'skills'),
+  path.join(CONTENT_DIR, 'skills'),
 );
 const DESIGN_SYSTEMS_DIR = resolveDaemonResourceDir(
   DAEMON_RESOURCE_ROOT,
   'design-systems',
-  path.join(PROJECT_ROOT, 'design-systems'),
+  path.join(CONTENT_DIR, 'design-systems'),
 );
 const CRAFT_DIR = resolveDaemonResourceDir(
   DAEMON_RESOURCE_ROOT,
   'craft',
-  path.join(PROJECT_ROOT, 'craft'),
+  path.join(CONTENT_DIR, 'craft'),
 );
 const FRAMES_DIR = resolveDaemonResourceDir(
   DAEMON_RESOURCE_ROOT,
   'frames',
-  path.join(PROJECT_ROOT, 'assets', 'frames'),
+  path.join(CONTENT_DIR, 'assets', 'frames'),
 );
 // Curated pets baked into the repo via `scripts/bake-community-pets.ts`.
 // `listCodexPets` scans this in addition to `~/.codex/pets/` so the
@@ -305,12 +306,12 @@ const FRAMES_DIR = resolveDaemonResourceDir(
 const BUNDLED_PETS_DIR = resolveDaemonResourceDir(
   DAEMON_RESOURCE_ROOT,
   'community-pets',
-  path.join(PROJECT_ROOT, 'assets', 'community-pets'),
+  path.join(CONTENT_DIR, 'assets', 'community-pets'),
 );
 const PROMPT_TEMPLATES_DIR = resolveDaemonResourceDir(
   DAEMON_RESOURCE_ROOT,
   'prompt-templates',
-  path.join(PROJECT_ROOT, 'prompt-templates'),
+  path.join(CONTENT_DIR, 'prompt-templates'),
 );
 const RUNTIME_DATA_DIR = process.env.PIXELPITCH_DATA_DIR
   ? path.resolve(PROJECT_ROOT, process.env.PIXELPITCH_DATA_DIR)

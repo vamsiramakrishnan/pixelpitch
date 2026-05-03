@@ -3,13 +3,16 @@
 Five minutes from `git clone` to a designer-grade slide deck rendered in
 your browser, exported to PPTX.
 
-## TL;DR — three commands
+## TL;DR
 
 ```bash
-git clone https://github.com/vamsiramakrishnan/pixelpitch && cd pixelpitch
-bun run bootstrap     # one-shot install + build chain (~2 min first run)
-bun run dev           # starts daemon + web; opens http://localhost:3000
+./setup.sh
+bun run dev
 ```
+
+`setup.sh` installs Bun into `~/.bun` when needed, runs the root Bun workspace
+install, builds the dependency chain, and mirrors bundled skills. Then
+`bun run dev` starts the daemon + web app and prints the URL.
 
 That's it. Pick a skill in the UI, type a brief, watch the deck stream
 into the sandboxed iframe preview. When you're happy, hit "Export" → PPTX
@@ -19,7 +22,7 @@ into the sandboxed iframe preview. When you're happy, hit "Export" → PPTX
 
 | Tool | Version | Why |
 |---|---|---|
-| **Bun** | `>=1.1` | Workspace + JS runtime. Install: `curl -fsSL https://bun.sh/install \| bash` |
+| **Bun** | `>=1.1` | Workspace + JS runtime. Installed automatically by `./setup.sh` when missing. |
 | **Node** | `>=22` | Some build steps shell to Node. Comes from your package manager (or `nvm install 22`). |
 | **git** | any | obvious |
 | **uv** *(optional)* | any | Bootstraps slidify (the Python HTML→PPTX converter). Install: `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
@@ -123,7 +126,7 @@ If you already have slide HTML and just want a PPTX:
 
 ```bash
 # install slidify into a venv (one-time)
-bun run bootstrap   # if you have uv
+./setup.sh   # if you have uv
 # or:
 make sync && make playwright
 
@@ -137,7 +140,9 @@ make sync && make playwright
 
 | Command | Does |
 |---|---|
-| `bun run bootstrap` | Install + build chain (one-shot first run) |
+| `./setup.sh` | Install Bun if needed, install deps, build chain, mirror skills |
+| `bash tools/bootstrap.sh` | Same setup entrypoint without the root wrapper |
+| `bun run bootstrap` | Re-run setup after Bun is already installed |
 | `bun run dev` / `make up` | Start daemon + web, watch for changes |
 | `bun run stop` | Stop daemon + web |
 | `bun run status` / `bun run logs` | Inspect the running processes |
@@ -153,11 +158,11 @@ make sync && make playwright
 
 | Symptom | Fix |
 |---|---|
-| `bun: command not found` | `curl -fsSL https://bun.sh/install \| bash` |
+| `bun: command not found` | `./setup.sh` |
 | `Port 17456 already in use` | Another pixelpitch (or OD) is running. `bun run stop` or `lsof -iTCP:17456 -sTCP:LISTEN`. |
 | Web UI is blank | Run `bun run dev` (it builds + starts both). If you only ran `bun install`, the workspace dep chain isn't built yet. |
 | Daemon refuses to start: "no agents detected" | Install at least one of: `claude` / `codex` / `gemini` / etc. Or use BYOK API mode in Settings. |
-| `slidify: command not found` | `bun run bootstrap` (needs `uv`), or `make sync` directly. |
+| `slidify: command not found` | `./setup.sh` (needs `uv`), or `make sync` directly. |
 | PPTX export fails with `editability_drift` | Slidify exit code 3 — open `out.pptx.report.json` and check `oracle.fidelity_report` for the failing region. Use `slidify check deck.html` to debug. |
 | `bun install` complains about workspaces | Ensure you're on Bun `>=1.1`: `bun --version`. |
 | Skills mismatch between `.claude/` and `.gemini/` | `bun run skills:sync` |

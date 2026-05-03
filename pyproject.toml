@@ -44,16 +44,16 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["slidify"]
+packages = ["engines/slidify/slidify"]
 
 [tool.hatch.build.targets.wheel.force-include]
-"slidify/patterns/data/tailwind.json" = "slidify/patterns/data/tailwind.json"
-"slidify/patterns/data/patterns.yaml" = "slidify/patterns/data/patterns.yaml"
-"slidify/guides/authoring.md" = "slidify/guides/authoring.md"
-"slidify/guides/agent-quickstart.md" = "slidify/guides/agent-quickstart.md"
-"slidify/guides/troubleshooting.md" = "slidify/guides/troubleshooting.md"
-"slidify/guides/binary.md" = "slidify/guides/binary.md"
-"slidify/guides/api.md" = "slidify/guides/api.md"
+"engines/slidify/slidify/patterns/data/tailwind.json" = "slidify/patterns/data/tailwind.json"
+"engines/slidify/slidify/patterns/data/patterns.yaml" = "slidify/patterns/data/patterns.yaml"
+"engines/slidify/slidify/guides/authoring.md" = "slidify/guides/authoring.md"
+"engines/slidify/slidify/guides/agent-quickstart.md" = "slidify/guides/agent-quickstart.md"
+"engines/slidify/slidify/guides/troubleshooting.md" = "slidify/guides/troubleshooting.md"
+"engines/slidify/slidify/guides/binary.md" = "slidify/guides/binary.md"
+"engines/slidify/slidify/guides/api.md" = "slidify/guides/api.md"
 
 [tool.ruff]
 line-length = 100
@@ -78,7 +78,7 @@ warn_redundant_casts = true
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
-testpaths = ["tests", "tests/patterns"]
+testpaths = ["engines/slidify/tests", "engines/slidify/tests/patterns"]
 markers = [
     "slow: tests that launch a full Chromium per-test (run with `-m slow` to include)",
 ]

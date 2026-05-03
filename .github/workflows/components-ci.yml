@@ -2,7 +2,7 @@ name: components-ci
 
 # Wave-2B-v2 / M5: renderer ↔ matcher consistency gate.
 #
-# Three layers (per components/CI.md):
+# Three layers (per engines/slidify/components/CI.md):
 #   1. codegen-atoms-check  — atoms.yaml ↔ generated TSX drift gate (M2).
 #   2. contract tests       — atom-recognition (M5.1) + atom-emit (M5.2) +
 #                             helpers unit tests.
@@ -12,10 +12,10 @@ name: components-ci
 on:
   pull_request:
     paths:
-      - 'components/**'
-      - 'slidify/patterns/data/atoms.yaml'
-      - 'slidify/patterns/matcher.py'
-      - 'slidify/patterns/__main__.py'
+      - 'engines/slidify/components/**'
+      - 'engines/slidify/slidify/patterns/data/atoms.yaml'
+      - 'engines/slidify/slidify/patterns/matcher.py'
+      - 'engines/slidify/slidify/patterns/__main__.py'
   push:
     branches: [main]
 
@@ -28,9 +28,9 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: components/package-lock.json
+          node-version: '24'
+
+      - uses: oven-sh/setup-bun@v2
 
       - name: Install uv
         uses: astral-sh/setup-uv@v3
@@ -39,13 +39,13 @@ jobs:
         run: uv sync
 
       - name: Install JS deps (components)
-        run: cd components && npm ci
+        run: bun ci
 
       - name: Codegen drift gate (M2)
-        run: cd components && npm run codegen-atoms-check
+        run: bun run --filter @slidify/components codegen-atoms-check
 
       - name: Contract tests — recognition + emit + helpers (M5.1, M5.2, M5.5)
-        run: cd components && npx vitest run src/__tests__/contract/
+        run: cd engines/slidify/components && bunx vitest run src/__tests__/contract/
 
       - name: Preset matrix gate (M5.3)
-        run: cd components && npx vitest run src/__tests__/preset-matrix/
+        run: cd engines/slidify/components && bunx vitest run src/__tests__/preset-matrix/

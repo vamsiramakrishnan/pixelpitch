@@ -215,23 +215,23 @@ describe("createPackageManagerInvocation", () => {
   it("uses npm_execpath via process.execPath when set, regardless of platform", () => {
     setPlatform("win32");
     const invocation = createPackageManagerInvocation(["install"], {
-      npm_execpath: "C:\\Users\\u\\.nvm\\pnpm.cjs",
+      npm_execpath: "C:\\Users\\u\\.bun\\bin\\bun.exe",
     } as NodeJS.ProcessEnv);
     expect(invocation.command).toBe(process.execPath);
-    expect(invocation.args[0]).toBe("C:\\Users\\u\\.nvm\\pnpm.cjs");
+    expect(invocation.args[0]).toBe("C:\\Users\\u\\.bun\\bin\\bun.exe");
     expect(invocation.args.slice(1)).toEqual(["install"]);
     expect(invocation.windowsVerbatimArguments).toBeUndefined();
   });
 
-  it("returns plain pnpm invocation on POSIX without npm_execpath", () => {
+  it("returns plain bun invocation on POSIX without npm_execpath", () => {
     setPlatform("linux");
     const invocation = createPackageManagerInvocation(["install"], {} as NodeJS.ProcessEnv);
-    expect(invocation).toEqual({ args: ["install"], command: "pnpm" });
+    expect(invocation).toEqual({ args: ["install"], command: "bun" });
   });
 
-  it("wraps pnpm through cmd.exe with verbatim arguments on Windows", () => {
+  it("wraps bun through cmd.exe with verbatim arguments on Windows", () => {
     setPlatform("win32");
-    const invocation = createPackageManagerInvocation(["--filter", "@pixelpitch/desktop", "build"], {
+    const invocation = createPackageManagerInvocation(["run", "--filter", "@pixelpitch/desktop", "build"], {
       ComSpec: "cmd.exe",
     } as NodeJS.ProcessEnv);
     expect(invocation.command).toBe("cmd.exe");
@@ -240,7 +240,7 @@ describe("createPackageManagerInvocation", () => {
       "/d",
       "/s",
       "/c",
-      '"pnpm --filter @pixelpitch/desktop build"',
+      '"bun run --filter @pixelpitch/desktop build"',
     ]);
   });
 });

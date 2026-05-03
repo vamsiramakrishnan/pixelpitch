@@ -88,7 +88,21 @@
         "vitest": "^2.1.8",
       },
     },
-    "components": {
+    "e2e": {
+      "name": "@pixelpitch/e2e",
+      "version": "0.2.0",
+      "devDependencies": {
+        "@playwright/test": "^1.59.1",
+        "@testing-library/react": "^16.3.2",
+        "@types/node": "^20.17.10",
+        "jsdom": "^29.1.0",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "typescript": "^5.6.3",
+        "vitest": "^2.1.8",
+      },
+    },
+    "engines/slidify/components": {
       "name": "@slidify/components",
       "version": "0.1.0",
       "dependencies": {
@@ -107,20 +121,6 @@
       },
       "peerDependencies": {
         "react": ">=18",
-      },
-    },
-    "e2e": {
-      "name": "@pixelpitch/e2e",
-      "version": "0.2.0",
-      "devDependencies": {
-        "@playwright/test": "^1.59.1",
-        "@testing-library/react": "^16.3.2",
-        "@types/node": "^20.17.10",
-        "jsdom": "^29.1.0",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1",
-        "typescript": "^5.6.3",
-        "vitest": "^2.1.8",
       },
     },
     "packages/contracts": {
@@ -483,7 +483,7 @@
 
     "@sindresorhus/is": ["@sindresorhus/is@4.6.0", "", {}, "sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw=="],
 
-    "@slidify/components": ["@slidify/components@workspace:components"],
+    "@slidify/components": ["@slidify/components@workspace:engines/slidify/components"],
 
     "@swc/helpers": ["@swc/helpers@0.5.15", "", { "dependencies": { "tslib": "^2.8.0" } }, "sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g=="],
 

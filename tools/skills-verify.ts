@@ -2,12 +2,12 @@
 /**
  * skills-verify.ts
  *
- * Hashes each skill under `skills/` and verifies the same content exists
+ * Hashes each skill under `content/skills/` and verifies the same content exists
  * under `.claude/skills/` and `.gemini/skills/`. Skills that only exist
  * in the mirror dirs (e.g. `slide-author`, `html-to-slides`) are noted
  * but not flagged as errors.
  *
- * Exits 0 if mirrors are consistent with `skills/`, 1 otherwise.
+ * Exits 0 if mirrors are consistent with `content/skills/`, 1 otherwise.
  *
  * Usage: bun tools/skills-verify.ts
  */
@@ -16,7 +16,7 @@ import { readdirSync, readFileSync, statSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const ROOT = process.cwd();
-const SOURCE = join(ROOT, "skills");
+const SOURCE = join(ROOT, "content", "skills");
 const TARGETS = [join(ROOT, ".claude", "skills"), join(ROOT, ".gemini", "skills")];
 
 function hashDir(dir: string): string {

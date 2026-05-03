@@ -6,7 +6,7 @@
 # order, optionally bootstraps slidify (the Python HTML→PPTX converter),
 # and prints next-step hints. Idempotent: safe to re-run.
 #
-# Usage: bun run bootstrap          (or: bash tools/bootstrap.sh)
+# Usage: bash tools/bootstrap.sh    (or, once Bun is installed: bun run bootstrap)
 #
 set -euo pipefail
 
@@ -21,6 +21,18 @@ red()   { printf '\033[31m%s\033[0m\n' "$*" >&2; }
 step() { printf '\n'; bold "▶ $*"; }
 
 step "1/5  Checking required runtimes"
+if ! command -v bun >/dev/null 2>&1; then
+  dim "    Bun not found — installing Bun into ~/.bun"
+  if ! command -v curl >/dev/null 2>&1; then
+    red "    missing: curl"
+    red "Install curl or install Bun manually: https://bun.com/docs/installation"
+    exit 1
+  fi
+  curl -fsSL https://bun.com/install | bash
+  export BUN_INSTALL="${BUN_INSTALL:-$HOME/.bun}"
+  export PATH="$BUN_INSTALL/bin:$PATH"
+fi
+
 need() {
   if ! command -v "$1" >/dev/null 2>&1; then
     red "    missing: $1"
@@ -34,7 +46,7 @@ need node 'node --version'   || ok=false
 if ! $ok; then
   red ""
   red "Install missing tools:"
-  red "  Bun:  curl -fsSL https://bun.sh/install | bash"
+  red "  Bun:  curl -fsSL https://bun.com/install | bash"
   red "  Node: https://nodejs.org   (>=22 recommended)"
   exit 1
 fi

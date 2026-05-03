@@ -17,7 +17,7 @@ import { readFileSync, readdirSync, writeFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 const ROOT = process.cwd();
-const SKILLS = join(ROOT, "skills");
+const SKILLS = join(ROOT, "content", "skills");
 const MARKER = "<!-- pixelpitch:slidify-aware -->";
 
 const FOOTER = `
@@ -52,7 +52,7 @@ For irreducible effects (custom WebGL, complex masks), \`data-pptx-rasterize="tr
 on the wrapper tells slidify to use a clean raster tile straight away
 rather than discovering it.
 
-Full guide: [\`craft/slidify-compat.md\`](../../craft/slidify-compat.md).
+Full guide: [\`content/craft/slidify-compat.md\`](../../craft/slidify-compat.md).
 Atomic-seed grammar: [\`slide-author\`](../../.claude/skills/slide-author/SKILL.md)
 sibling skill. Evolution loop (how slidify catches up to whatever this
 skill emits): [\`docs/slidify-evolution.md\`](../../docs/slidify-evolution.md).

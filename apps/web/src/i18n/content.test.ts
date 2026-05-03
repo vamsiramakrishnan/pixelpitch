@@ -29,7 +29,7 @@ async function entriesWithFile(root: string, fileName: string): Promise<string[]
 }
 
 async function readSkillIds(): Promise<string[]> {
-  const skillsRoot = path.join(repoRoot, 'skills');
+  const skillsRoot = path.join(repoRoot, 'content', 'skills');
   const dirs = await entriesWithFile(skillsRoot, 'SKILL.md');
   const ids = await Promise.all(
     dirs.map(async (dir) => {
@@ -43,11 +43,11 @@ async function readSkillIds(): Promise<string[]> {
 }
 
 async function readDesignSystemIds(): Promise<string[]> {
-  return entriesWithFile(path.join(repoRoot, 'design-systems'), 'DESIGN.md');
+  return entriesWithFile(path.join(repoRoot, 'content', 'design-systems'), 'DESIGN.md');
 }
 
 async function readDesignSystemCategories(): Promise<string[]> {
-  const systemsRoot = path.join(repoRoot, 'design-systems');
+  const systemsRoot = path.join(repoRoot, 'content', 'design-systems');
   const ids = await readDesignSystemIds();
   const categories = await Promise.all(
     ids.map(async (id) => {
@@ -61,7 +61,7 @@ async function readDesignSystemCategories(): Promise<string[]> {
 async function readPromptTemplateSummaries(): Promise<
   Array<{ id: string; category: string; tags: string[] }>
 > {
-  const templatesRoot = path.join(repoRoot, 'prompt-templates');
+  const templatesRoot = path.join(repoRoot, 'content', 'prompt-templates');
   const summaries: Array<{ id: string; category: string; tags: string[] }> = [];
   for (const surface of ['image', 'video']) {
     const dir = path.join(templatesRoot, surface);

@@ -9,7 +9,7 @@
  * `text-4xl`, …).
  *
  * Usage:
- *   node extract-tailwind.js > ../../slidify/patterns/data/tailwind.json
+ *   node extract-tailwind.js > ../../engines/slidify/slidify/patterns/data/tailwind.json
  */
 
 const fs = require('fs');

@@ -24,11 +24,11 @@ Follow the root `AGENTS.md` first. This file only records module-level boundarie
 ## Common package commands
 
 ```bash
-pnpm --filter @pixelpitch/contracts typecheck
-pnpm --filter @pixelpitch/sidecar-proto typecheck
-pnpm --filter @pixelpitch/sidecar-proto test
-pnpm --filter @pixelpitch/sidecar typecheck
-pnpm --filter @pixelpitch/sidecar test
-pnpm --filter @pixelpitch/platform typecheck
-pnpm --filter @pixelpitch/platform test
+bun run --filter @pixelpitch/contracts typecheck
+bun run --filter @pixelpitch/sidecar-proto typecheck
+bun run --filter @pixelpitch/sidecar-proto test
+bun run --filter @pixelpitch/sidecar typecheck
+bun run --filter @pixelpitch/sidecar test
+bun run --filter @pixelpitch/platform typecheck
+bun run --filter @pixelpitch/platform test
 ```

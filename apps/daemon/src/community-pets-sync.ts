@@ -276,7 +276,7 @@ export async function syncCommunityPets(options: SyncOptions = {}): Promise<Sync
 
   // Earlier sources win when two catalogs publish the same folder name
   // — matches the CLI script's de-duplication so a sync from the UI
-  // produces the same on-disk layout as `pnpm sync:community-pets`.
+  // produces the same on-disk layout as the community-pets sync command.
   const dedup = new Map<string, PetTask>();
   for (const task of tasks) {
     if (!dedup.has(task.folder)) dedup.set(task.folder, task);

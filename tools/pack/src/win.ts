@@ -20,7 +20,6 @@ import { createSidecarLaunchEnv, requestJsonIpc, resolveAppIpcPath } from "@pixe
 import {
   collectProcessTreePids,
   createCommandInvocation,
-  createPackageManagerInvocation,
   createProcessStampArgs,
   listProcessSnapshots,
   matchesStampedProcess,
@@ -575,25 +574,26 @@ async function cleanupWinRegistryResidues(paths: WinPaths): Promise<string[]> {
   return removed;
 }
 
-async function runPnpm(config: ToolPackConfig, args: string[], extraEnv: NodeJS.ProcessEnv = {}): Promise<void> {
-  const invocation = createPackageManagerInvocation(args, process.env);
+function bunCommand(): string {
+  return process.platform === "win32" ? "bun.exe" : "bun";
+}
+
+async function runBun(
+  config: ToolPackConfig,
+  args: string[],
+  extraEnv: NodeJS.ProcessEnv = {},
+  cwd = config.workspaceRoot,
+): Promise<void> {
+  const invocation = createCommandInvocation({ args, command: bunCommand(), env: process.env });
   await execFileAsync(invocation.command, invocation.args, {
-    cwd: config.workspaceRoot,
+    cwd,
     env: { ...process.env, ...extraEnv },
     windowsVerbatimArguments: invocation.windowsVerbatimArguments,
   });
 }
 
-async function runNpmInstall(appRoot: string): Promise<void> {
-  const invocation = createCommandInvocation({
-    args: ["install", "--omit=dev", "--no-package-lock"],
-    command: process.platform === "win32" ? "npm.cmd" : "npm",
-  });
-  await execFileAsync(invocation.command, invocation.args, {
-    cwd: appRoot,
-    env: process.env,
-    windowsVerbatimArguments: invocation.windowsVerbatimArguments,
-  });
+async function runBunProductionInstall(config: ToolPackConfig, appRoot: string): Promise<void> {
+  await runBun(config, ["install", "--production", "--no-save", "--backend=copyfile"], {}, appRoot);
 }
 
 async function readPackagedVersion(config: ToolPackConfig): Promise<string> {
@@ -609,27 +609,27 @@ async function buildWorkspaceArtifacts(config: ToolPackConfig): Promise<void> {
   const webNextEnvPath = join(config.workspaceRoot, "apps", "web", "next-env.d.ts");
   const previousWebNextEnv = await readFile(webNextEnvPath, "utf8").catch(() => null);
 
-  await runPnpm(config, ["--filter", "@pixelpitch/sidecar-proto", "build"]);
-  await runPnpm(config, ["--filter", "@pixelpitch/sidecar", "build"]);
-  await runPnpm(config, ["--filter", "@pixelpitch/platform", "build"]);
-  await runPnpm(config, ["--filter", "@pixelpitch/daemon", "build"]);
+  await runBun(config, ["run", "--filter", "@pixelpitch/sidecar-proto", "build"]);
+  await runBun(config, ["run", "--filter", "@pixelpitch/sidecar", "build"]);
+  await runBun(config, ["run", "--filter", "@pixelpitch/platform", "build"]);
+  await runBun(config, ["run", "--filter", "@pixelpitch/daemon", "build"]);
   try {
-    await runPnpm(config, ["--filter", "@pixelpitch/web", "build"], { PIXELPITCH_WEB_OUTPUT_MODE: "server" });
-    await runPnpm(config, ["--filter", "@pixelpitch/web", "build:sidecar"]);
+    await runBun(config, ["run", "--filter", "@pixelpitch/web", "build"], { PIXELPITCH_WEB_OUTPUT_MODE: "server" });
+    await runBun(config, ["run", "--filter", "@pixelpitch/web", "build:sidecar"]);
   } finally {
     if (previousWebNextEnv == null) await rm(webNextEnvPath, { force: true });
     else await writeFile(webNextEnvPath, previousWebNextEnv, "utf8");
   }
-  await runPnpm(config, ["--filter", "@pixelpitch/desktop", "build"]);
-  await runPnpm(config, ["--filter", "@pixelpitch/packaged", "build"]);
+  await runBun(config, ["run", "--filter", "@pixelpitch/desktop", "build"]);
+  await runBun(config, ["run", "--filter", "@pixelpitch/packaged", "build"]);
 }
 
 async function copyResourceTree(config: ToolPackConfig, paths: WinPaths): Promise<void> {
   await removeTree(paths.resourceRoot);
   await mkdir(paths.resourceRoot, { recursive: true });
-  await cp(join(config.workspaceRoot, "skills"), join(paths.resourceRoot, "skills"), { recursive: true });
-  await cp(join(config.workspaceRoot, "design-systems"), join(paths.resourceRoot, "design-systems"), { recursive: true });
-  await cp(join(config.workspaceRoot, "assets", "frames"), join(paths.resourceRoot, "frames"), { recursive: true });
+  await cp(join(config.workspaceRoot, "content", "skills"), join(paths.resourceRoot, "skills"), { recursive: true });
+  await cp(join(config.workspaceRoot, "content", "design-systems"), join(paths.resourceRoot, "design-systems"), { recursive: true });
+  await cp(join(config.workspaceRoot, "content", "assets", "frames"), join(paths.resourceRoot, "frames"), { recursive: true });
   await mkdir(join(paths.resourceRoot, "bin"), { recursive: true });
   await cp(process.execPath, join(paths.resourceRoot, "bin", "node.exe"));
   await chmod(join(paths.resourceRoot, "bin", "node.exe"), 0o755).catch(() => undefined);
@@ -646,7 +646,7 @@ async function collectWorkspaceTarballs(config: ToolPackConfig, paths: WinPaths)
   const packedTarballs: PackedTarballInfo[] = [];
   for (const packageInfo of INTERNAL_PACKAGES) {
     const beforeEntries = new Set(await readdir(paths.tarballsRoot));
-    await runPnpm(config, ["-C", packageInfo.directory, "pack", "--pack-destination", paths.tarballsRoot]);
+    await runBun(config, ["pm", "pack", "--destination", paths.tarballsRoot], {}, join(config.workspaceRoot, packageInfo.directory));
     const newEntries = (await readdir(paths.tarballsRoot)).filter((entry) => !beforeEntries.has(entry));
     if (newEntries.length !== 1 || newEntries[0] == null) {
       throw new Error(`expected one tarball for ${packageInfo.name}, got ${newEntries.length}`);
@@ -704,7 +704,7 @@ async function writeAssembledApp(config: ToolPackConfig, paths: WinPaths, packed
     )}\n`,
     "utf8",
   );
-  await runNpmInstall(paths.assembledAppRoot);
+  await runBunProductionInstall(config, paths.assembledAppRoot);
 }
 
 function resolveWinTargets(to: ToolPackConfig["to"]): Array<"dir" | "nsis"> {

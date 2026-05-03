@@ -21,9 +21,9 @@ export function detectLogDiagnostics(lines: readonly string[]): LogDiagnostic[] 
       message: "Detected a native Node addon ABI mismatch in the daemon log.",
       recommendation: [
         "Rebuild native daemon dependencies for the active Node version:",
-        "  pnpm --filter @pixelpitch/daemon rebuild better-sqlite3 --pending",
+        "  bun install --force",
         "or refresh the workspace install:",
-        "  pnpm install",
+        "  bun install",
       ].join("\n"),
     },
   ];

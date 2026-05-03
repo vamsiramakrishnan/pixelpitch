@@ -25,9 +25,9 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json && tsc -p tsconfig.sidecar.json",
-    "daemon": "pnpm run build && node dist/cli.js --no-open",
-    "dev": "pnpm run build && node dist/cli.js --no-open",
-    "start": "pnpm run build && node dist/cli.js",
+    "daemon": "bun run build && node dist/cli.js --no-open",
+    "dev": "bun run build && node dist/cli.js --no-open",
+    "start": "bun run build && node dist/cli.js",
     "test": "vitest run -c vitest.config.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.sidecar.json --noEmit && tsc -p tsconfig.tests.json --noEmit"
   },
