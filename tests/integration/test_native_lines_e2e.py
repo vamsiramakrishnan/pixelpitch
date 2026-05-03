@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 from pptx import Presentation
 from pptx.enum.shapes import MSO_SHAPE_TYPE
@@ -108,3 +110,19 @@ async def test_faux_table_side_borders_emit_as_native_lines(tmp_path):
         if shape.shape_type == MSO_SHAPE_TYPE.LINE
     ]
     assert len(lines) >= 6
+
+
+@pytest.mark.asyncio
+async def test_dotmatrix_ladder_corpus_slide_preserves_table_rules(tmp_path):
+    source = Path("_bench/corpus/slide-21-dotmatrix-ladder.html")
+    pptx = tmp_path / "dotmatrix-ladder.pptx"
+    cfg = ConversionConfig(run_oracle=False, run_tier3=False)
+    await convert(source, pptx, cfg)
+
+    prs = Presentation(str(pptx))
+    lines = [
+        shape
+        for shape in prs.slides[0].shapes
+        if shape.shape_type == MSO_SHAPE_TYPE.LINE
+    ]
+    assert len(lines) >= 40
