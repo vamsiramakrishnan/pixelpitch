@@ -6,7 +6,7 @@ import { cac } from "cac";
 
 import {
   APP_KEYS,
-  OPEN_DESIGN_SIDECAR_CONTRACT,
+  PIXELPITCH_SIDECAR_CONTRACT,
   SIDECAR_ENV,
   SIDECAR_MESSAGES,
   SIDECAR_SOURCES,
@@ -335,10 +335,10 @@ function createAppStamp(config: ToolDevConfig, appName: ToolDevAppName) {
   };
 
   return {
-    args: createProcessStampArgs(stamp, OPEN_DESIGN_SIDECAR_CONTRACT),
+    args: createProcessStampArgs(stamp, PIXELPITCH_SIDECAR_CONTRACT),
     env: createSidecarLaunchEnv({
       base: config.toolsDevRoot,
-      contract: OPEN_DESIGN_SIDECAR_CONTRACT,
+      contract: PIXELPITCH_SIDECAR_CONTRACT,
       stamp,
     }),
     stamp,
@@ -354,7 +354,7 @@ async function findAppProcessTree(config: ToolDevConfig, appName: ToolDevAppName
         mode: "dev",
         namespace: config.namespace,
         source: SIDECAR_SOURCES.TOOLS_DEV,
-      }, OPEN_DESIGN_SIDECAR_CONTRACT),
+      }, PIXELPITCH_SIDECAR_CONTRACT),
     )
     .map((processInfo) => processInfo.pid);
   const pids = collectProcessTreePids(processes, rootPids);

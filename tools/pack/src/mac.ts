@@ -7,7 +7,7 @@ import { promisify } from "node:util";
 
 import {
   APP_KEYS,
-  OPEN_DESIGN_SIDECAR_CONTRACT,
+  PIXELPITCH_SIDECAR_CONTRACT,
   SIDECAR_MESSAGES,
   SIDECAR_MODES,
   SIDECAR_SOURCES,
@@ -579,7 +579,7 @@ function desktopStamp(config: ToolPackConfig): SidecarStamp {
     app: APP_KEYS.DESKTOP,
     ipc: resolveAppIpcPath({
       app: APP_KEYS.DESKTOP,
-      contract: OPEN_DESIGN_SIDECAR_CONTRACT,
+      contract: PIXELPITCH_SIDECAR_CONTRACT,
       namespace: config.namespace,
     }),
     mode: SIDECAR_MODES.RUNTIME,
@@ -692,7 +692,7 @@ async function resolveDesktopRootIdentityFallback(config: ToolPackConfig): Promi
 
   let stamp: SidecarStamp;
   try {
-    stamp = OPEN_DESIGN_SIDECAR_CONTRACT.normalizeStamp(marker.stamp);
+    stamp = PIXELPITCH_SIDECAR_CONTRACT.normalizeStamp(marker.stamp);
   } catch {
     return {
       fallback: { ...fallback, reason: "marker-invalid-stamp" },
@@ -702,7 +702,7 @@ async function resolveDesktopRootIdentityFallback(config: ToolPackConfig): Promi
 
   const expectedIpc = resolveAppIpcPath({
     app: APP_KEYS.DESKTOP,
-    contract: OPEN_DESIGN_SIDECAR_CONTRACT,
+    contract: PIXELPITCH_SIDECAR_CONTRACT,
     namespace: config.namespace,
   });
   if (
@@ -859,12 +859,12 @@ export async function startPackedMacApp(config: ToolPackConfig): Promise<MacStar
   await writeFile(logPath, "", "utf8");
 
   const spawned = await spawnBackgroundProcess({
-    args: createProcessStampArgs(stamp, OPEN_DESIGN_SIDECAR_CONTRACT),
+    args: createProcessStampArgs(stamp, PIXELPITCH_SIDECAR_CONTRACT),
     command: target.executablePath,
     cwd: target.appPath,
     env: createSidecarLaunchEnv({
       base: join(config.roots.runtime.namespaceRoot, "runtime"),
-      contract: OPEN_DESIGN_SIDECAR_CONTRACT,
+      contract: PIXELPITCH_SIDECAR_CONTRACT,
       extraEnv: {
         ...process.env,
         [DESKTOP_LOG_ECHO_ENV]: "0",
@@ -896,7 +896,7 @@ async function findManagedDesktopProcessTree(config: ToolPackConfig): Promise<{
         mode: SIDECAR_MODES.RUNTIME,
         namespace: config.namespace,
         source: SIDECAR_SOURCES.TOOLS_PACK,
-      }, OPEN_DESIGN_SIDECAR_CONTRACT),
+      }, PIXELPITCH_SIDECAR_CONTRACT),
     )
     .map((processInfo) => processInfo.pid);
   const identity = await resolveDesktopRootIdentityFallback(config);

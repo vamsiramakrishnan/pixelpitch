@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 import {
-  OPEN_DESIGN_SIDECAR_CONTRACT,
+  PIXELPITCH_SIDECAR_CONTRACT,
   SIDECAR_DEFAULTS,
 } from "@pixelpitch/sidecar-proto";
 import { resolveNamespace } from "@pixelpitch/sidecar";
@@ -100,7 +100,7 @@ export function resolveToolPackConfig(
   options: ToolPackCliOptions = {},
 ): ToolPackConfig {
   const namespace = resolveNamespace({
-    contract: OPEN_DESIGN_SIDECAR_CONTRACT,
+    contract: PIXELPITCH_SIDECAR_CONTRACT,
     env: process.env,
     namespace: options.namespace ?? SIDECAR_DEFAULTS.namespace,
   });

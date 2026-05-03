@@ -23,14 +23,22 @@ UV_RUN := $(UV_ENV) $(UV) run
 	playwright-deps bench-index bench-compose bench-compose-tag bench-render bench-render-tag \
 	bench-index-all bench-render-all bench-harvest bench-harvest-all bench-mechanisms \
 	bench-app bench-run bench-run-strict bench-build clean-env \
-	web daemon web-build daemon-build skills-sync skills-verify smoke bun-install
+	web daemon web-build daemon-build skills-sync skills-verify smoke bun-install \
+	up dev stop status logs doctor-web pixelpitch-bootstrap
 
 help:
-	@echo "Environment"
-	@echo "  make sync                 Install locked dependencies into .venv using .uv-cache"
+	@echo "Pixelpitch (web + daemon + skills) — start here"
+	@echo "  bun run bootstrap         One-shot install: bun install + workspace build chain + skill mirror"
+	@echo "  bun run dev               Start daemon + web (http://localhost:3000)  (alias: make up)"
+	@echo "  bun run stop              Stop daemon + web"
+	@echo "  bun run doctor            Environment health check  (alias: make doctor-web)"
+	@echo "  bun run skills:sync       Re-mirror skills/ into .claude/ and .gemini/"
+	@echo ""
+	@echo "Slidify (Python HTML → PPTX) — the converter used as the PPTX export backend"
+	@echo "  make sync                 Install locked Python deps into .venv using .uv-cache"
 	@echo "  make bootstrap            sync + install Chromium for Playwright"
 	@echo "  make playwright-deps      Install Chromium plus OS libraries via Playwright"
-	@echo "  make doctor               Check external runtime dependencies"
+	@echo "  make doctor               Check slidify external runtime dependencies"
 	@echo "  make clean-env            Remove .venv, .uv-cache, and .ms-playwright"
 	@echo ""
 	@echo "Checks"
@@ -165,4 +173,25 @@ skills-verify:
 
 smoke:
 	bun run smoke
+
+# Friendly aliases — shorter than `bun run X`.
+up: dev
+
+dev:
+	bun run dev
+
+stop:
+	bun run stop
+
+status:
+	bun run status
+
+logs:
+	bun run logs
+
+doctor-web:
+	bun run doctor
+
+pixelpitch-bootstrap:
+	bun run bootstrap
 

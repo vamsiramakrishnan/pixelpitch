@@ -1,4 +1,47 @@
-# slidify
+# pixelpitch
+
+> End-to-end designer-grade slide system. Agent-driven HTML authoring →
+> sandboxed live preview → PPTX export.
+
+## Three commands to first deck
+
+```bash
+git clone https://github.com/vamsiramakrishnan/pixelpitch && cd pixelpitch
+bun run bootstrap     # one-shot install + build chain (~2 min first run)
+bun run dev           # daemon + web on http://localhost:3000
+```
+
+Need anything else? See [`QUICKSTART.md`](QUICKSTART.md). Stuck?
+`bun run doctor`.
+
+## What you get
+
+- **Web app** with chat, sandboxed-iframe preview, live tweaks, deck
+  navigation, project persistence, exports.
+- **Local daemon** that PATH-scans 13 code-agent CLIs (`claude`, `codex`,
+  `gemini`, `cursor-agent`, `copilot`, `devin`, `opencode`, `qwen`,
+  `hermes`, `kimi`, `pi`, `kiro`, `mistral`) and proxies streaming
+  artifacts.
+- **59 bundled skills** spanning deck modes (`simple-deck`, `replit-deck`,
+  `guizang-ppt`, 18 `html-ppt-*` variants, `weekly-update`,
+  `pptx-html-fidelity-audit`), prototypes (`web-prototype`, `dashboard`,
+  `mobile-app`, `dating-web`), media (`motion-frames`, `sprite-animation`,
+  `hyperframes`, `image-poster`, `video-shortform`, `audio-jingle`),
+  and operations (`critique`, `tweaks`, `design-brief`).
+- **138 design systems** (awesome-claude-design schema) and **93 prompt
+  templates** for image / video / audio generation.
+- **HyperFrames-aware** slide runtime contracts — the same HTML can
+  render to PPTX (slidify) or to MP4 (HyperFrames engine).
+- **Slidify** (the existing Python HTML→PPTX converter) wired in as the
+  PPTX export backend.
+
+The 6-step pipeline: design language → components → narrative → slide
+design → deck composition → PPTX. See
+[`docs/architecture.md`](docs/architecture.md) for the deep dive.
+
+---
+
+## slidify (the converter, used as the PPTX backend)
 
 > Convert HTML decks into PPTX with maximal editability and high-fidelity rendering.
 

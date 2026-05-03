@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import {
   APP_KEYS,
-  OPEN_DESIGN_SIDECAR_CONTRACT,
+  PIXELPITCH_SIDECAR_CONTRACT,
   SIDECAR_ENV,
   SIDECAR_SOURCES,
 } from "@pixelpitch/sidecar-proto";
@@ -92,11 +92,11 @@ function resolveAppConfig(options: {
     app: options.app,
     ipcPath: resolveAppIpcPath({
       app: options.app,
-      contract: OPEN_DESIGN_SIDECAR_CONTRACT,
+      contract: PIXELPITCH_SIDECAR_CONTRACT,
       namespace: options.namespace,
     }),
-    latestLogPath: resolveLogFilePath({ runtimeRoot: options.namespaceRoot, app: options.app, contract: OPEN_DESIGN_SIDECAR_CONTRACT }),
-    logDir: path.dirname(resolveLogFilePath({ runtimeRoot: options.namespaceRoot, app: options.app, contract: OPEN_DESIGN_SIDECAR_CONTRACT })),
+    latestLogPath: resolveLogFilePath({ runtimeRoot: options.namespaceRoot, app: options.app, contract: PIXELPITCH_SIDECAR_CONTRACT }),
+    logDir: path.dirname(resolveLogFilePath({ runtimeRoot: options.namespaceRoot, app: options.app, contract: PIXELPITCH_SIDECAR_CONTRACT })),
   };
 }
 
@@ -145,19 +145,19 @@ export function parsePortOption(value: number | string | null | undefined, optio
 }
 
 export function resolveToolDevConfig(options: ToolDevOptions = {}): ToolDevConfig {
-  const namespace = resolveNamespace({ namespace: options.namespace, env: process.env, contract: OPEN_DESIGN_SIDECAR_CONTRACT });
+  const namespace = resolveNamespace({ namespace: options.namespace, env: process.env, contract: PIXELPITCH_SIDECAR_CONTRACT });
   const toolsDevRoot = resolveSidecarBase({
     base: options.toolsDevRoot ?? process.env[SIDECAR_ENV.BASE] ?? resolveSourceRuntimeRoot({
-      contract: OPEN_DESIGN_SIDECAR_CONTRACT,
+      contract: PIXELPITCH_SIDECAR_CONTRACT,
       projectRoot: WORKSPACE_ROOT,
       source: SIDECAR_SOURCES.TOOLS_DEV,
     }),
-    contract: OPEN_DESIGN_SIDECAR_CONTRACT,
+    contract: PIXELPITCH_SIDECAR_CONTRACT,
     env: process.env,
     projectRoot: WORKSPACE_ROOT,
     source: SIDECAR_SOURCES.TOOLS_DEV,
   });
-  const namespaceRoot = resolveNamespaceRoot({ base: toolsDevRoot, namespace, contract: OPEN_DESIGN_SIDECAR_CONTRACT });
+  const namespaceRoot = resolveNamespaceRoot({ base: toolsDevRoot, namespace, contract: PIXELPITCH_SIDECAR_CONTRACT });
   const daemon = resolveAppConfig({ app: APP_KEYS.DAEMON, namespace, namespaceRoot, toolsDevRoot });
   const desktop = resolveAppConfig({ app: APP_KEYS.DESKTOP, namespace, namespaceRoot, toolsDevRoot });
   const web = resolveAppConfig({ app: APP_KEYS.WEB, namespace, namespaceRoot, toolsDevRoot });
@@ -181,8 +181,8 @@ export function resolveToolDevConfig(options: ToolDevOptions = {}): ToolDevConfi
       },
       web: {
         ...web,
-        nextDistDir: resolveAppRuntimePath({ app: APP_KEYS.WEB, namespaceRoot, fileName: "next", contract: OPEN_DESIGN_SIDECAR_CONTRACT }),
-        nextTsconfigPath: resolveAppRuntimePath({ app: APP_KEYS.WEB, namespaceRoot, fileName: "tsconfig.json", contract: OPEN_DESIGN_SIDECAR_CONTRACT }),
+        nextDistDir: resolveAppRuntimePath({ app: APP_KEYS.WEB, namespaceRoot, fileName: "next", contract: PIXELPITCH_SIDECAR_CONTRACT }),
+        nextTsconfigPath: resolveAppRuntimePath({ app: APP_KEYS.WEB, namespaceRoot, fileName: "tsconfig.json", contract: PIXELPITCH_SIDECAR_CONTRACT }),
         sidecarEntryPath: path.join(WORKSPACE_ROOT, "apps/web/sidecar/index.ts"),
       },
     },

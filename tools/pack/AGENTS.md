@@ -20,7 +20,7 @@ Follow the root `AGENTS.md` and `tools/AGENTS.md` first. This tool owns the repo
 
 ## Rules
 
-- Do not hand-build `--od-stamp-*` args; use `createProcessStampArgs` with `OPEN_DESIGN_SIDECAR_CONTRACT`.
+- Do not hand-build `--od-stamp-*` args; use `createProcessStampArgs` with `PIXELPITCH_SIDECAR_CONTRACT`.
 - Do not use port numbers in data/log/runtime/cache path decisions. Namespace decides paths; ports are only transient transports.
 - Release artifacts keep canonical app identity (`Pixelpitch.app` on mac, `Pixelpitch.exe` inside the Windows installer); local tools-pack installs may use namespace-scoped install paths only as a developer multi-instance validation convention.
 - Do not let namespace-named `.app` installs change data/log/runtime/cache path conventions.

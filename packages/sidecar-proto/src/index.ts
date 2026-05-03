@@ -385,7 +385,7 @@ export function normalizeDesktopSidecarMessage(input: unknown): DesktopSidecarMe
   }
 }
 
-export const OPEN_DESIGN_SIDECAR_CONTRACT = Object.freeze({
+export const PIXELPITCH_SIDECAR_CONTRACT = Object.freeze({
   appKeys: APP_KEYS,
   defaults: SIDECAR_DEFAULTS,
   env: SIDECAR_RUNTIME_ENV,

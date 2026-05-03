@@ -1,6 +1,6 @@
 import {
   APP_KEYS,
-  OPEN_DESIGN_SIDECAR_CONTRACT,
+  PIXELPITCH_SIDECAR_CONTRACT,
   SIDECAR_MODES,
   SIDECAR_SOURCES,
   type SidecarStamp,
@@ -35,7 +35,7 @@ function createPackagedDesktopStamp(namespace: string): SidecarStamp {
     app: APP_KEYS.DESKTOP,
     ipc: resolveAppIpcPath({
       app: APP_KEYS.DESKTOP,
-      contract: OPEN_DESIGN_SIDECAR_CONTRACT,
+      contract: PIXELPITCH_SIDECAR_CONTRACT,
       namespace,
     }),
     mode: SIDECAR_MODES.RUNTIME,
@@ -47,7 +47,7 @@ function createPackagedDesktopStamp(namespace: string): SidecarStamp {
 function applyLaunchEnv(base: string, stamp: SidecarStamp): void {
   const env = createSidecarLaunchEnv({
     base,
-    contract: OPEN_DESIGN_SIDECAR_CONTRACT,
+    contract: PIXELPITCH_SIDECAR_CONTRACT,
     stamp,
   });
 
@@ -58,7 +58,7 @@ function applyLaunchEnv(base: string, stamp: SidecarStamp): void {
 
 async function main(): Promise<void> {
   const config = await readPackagedConfig();
-  const argvStamp = readProcessStamp(process.argv.slice(1), OPEN_DESIGN_SIDECAR_CONTRACT);
+  const argvStamp = readProcessStamp(process.argv.slice(1), PIXELPITCH_SIDECAR_CONTRACT);
   const namespace = argvStamp?.namespace ?? config.namespace;
   const paths = resolvePackagedNamespacePaths(config, namespace);
   const stamp = argvStamp ?? createPackagedDesktopStamp(namespace);
@@ -75,7 +75,7 @@ async function main(): Promise<void> {
   const runtime = bootstrapSidecarRuntime(stamp, process.env, {
     app: APP_KEYS.DESKTOP,
     base: paths.runtimeRoot,
-    contract: OPEN_DESIGN_SIDECAR_CONTRACT,
+    contract: PIXELPITCH_SIDECAR_CONTRACT,
   });
 
   const sidecars = await startPackagedSidecars(runtime, paths, {

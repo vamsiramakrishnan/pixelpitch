@@ -7,7 +7,7 @@ import { promisify } from "node:util";
 
 import {
   APP_KEYS,
-  OPEN_DESIGN_SIDECAR_CONTRACT,
+  PIXELPITCH_SIDECAR_CONTRACT,
   SIDECAR_MESSAGES,
   SIDECAR_MODES,
   SIDECAR_SOURCES,
@@ -853,7 +853,7 @@ export async function packWin(config: ToolPackConfig): Promise<WinPackResult> {
 function desktopStamp(config: ToolPackConfig): SidecarStamp {
   return {
     app: APP_KEYS.DESKTOP,
-    ipc: resolveAppIpcPath({ app: APP_KEYS.DESKTOP, contract: OPEN_DESIGN_SIDECAR_CONTRACT, namespace: config.namespace }),
+    ipc: resolveAppIpcPath({ app: APP_KEYS.DESKTOP, contract: PIXELPITCH_SIDECAR_CONTRACT, namespace: config.namespace }),
     mode: SIDECAR_MODES.RUNTIME,
     namespace: config.namespace,
     source: SIDECAR_SOURCES.TOOLS_PACK,
@@ -973,12 +973,12 @@ export async function startPackedWinApp(config: ToolPackConfig): Promise<WinStar
   await mkdir(dirname(logPath), { recursive: true });
   await writeFile(logPath, "", "utf8");
   const spawned = await spawnBackgroundProcess({
-    args: createProcessStampArgs(stamp, OPEN_DESIGN_SIDECAR_CONTRACT),
+    args: createProcessStampArgs(stamp, PIXELPITCH_SIDECAR_CONTRACT),
     command: target.executablePath,
     cwd: dirname(target.executablePath),
     env: createSidecarLaunchEnv({
       base: join(config.roots.runtime.namespaceRoot, "runtime"),
-      contract: OPEN_DESIGN_SIDECAR_CONTRACT,
+      contract: PIXELPITCH_SIDECAR_CONTRACT,
       extraEnv: { ...process.env, [DESKTOP_LOG_ECHO_ENV]: "0" },
       stamp,
     }),
@@ -991,7 +991,7 @@ async function findManagedDesktopProcessTree(config: ToolPackConfig): Promise<nu
   const processes = await listProcessSnapshots();
   const stampedRootPids = processes
     .filter((processInfo) =>
-      matchesStampedProcess(processInfo, { mode: SIDECAR_MODES.RUNTIME, namespace: config.namespace, source: SIDECAR_SOURCES.TOOLS_PACK }, OPEN_DESIGN_SIDECAR_CONTRACT),
+      matchesStampedProcess(processInfo, { mode: SIDECAR_MODES.RUNTIME, namespace: config.namespace, source: SIDECAR_SOURCES.TOOLS_PACK }, PIXELPITCH_SIDECAR_CONTRACT),
     )
     .map((processInfo) => processInfo.pid);
   return collectProcessTreePids(processes, stampedRootPids);

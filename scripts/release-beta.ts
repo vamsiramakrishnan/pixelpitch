@@ -159,7 +159,7 @@ function setOutput(name: string, value: string): void {
 }
 
 const repository = process.env.GITHUB_REPOSITORY ?? fail("GITHUB_REPOSITORY is required");
-const signed = process.env.OPEN_DESIGN_RELEASE_SIGNED !== "false";
+const signed = process.env.PIXELPITCH_RELEASE_SIGNED !== "false";
 const packagedVersion = await readPackagedVersion();
 const packagedParsed = parseStableVersion(packagedVersion) ?? fail(`invalid packaged version: ${packagedVersion}`);
 const releases = await fetchReleases(repository);
