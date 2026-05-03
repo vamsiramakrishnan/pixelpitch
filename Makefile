@@ -24,7 +24,8 @@ UV_RUN := $(UV_ENV) $(UV) run
 	bench-index-all bench-render-all bench-harvest bench-harvest-all bench-mechanisms \
 	bench-app bench-run bench-run-strict bench-build clean-env \
 	web daemon web-build daemon-build skills-sync skills-verify smoke bun-install \
-	up dev stop status logs doctor-web pixelpitch-bootstrap
+	up dev stop status logs doctor-web pixelpitch-bootstrap \
+	build-skills-corpus harvest-deck-skills
 
 help:
 	@echo "Pixelpitch (web + daemon + skills) — start here"
@@ -194,4 +195,24 @@ doctor-web:
 
 pixelpitch-bootstrap:
 	bun run bootstrap
+
+# ----------------------------------------------------------------------
+# Slidify evolution loop — harvest the deck skills as a corpus, rank
+# what slidify currently rasterizes, drive the promotion roadmap.
+# See docs/slidify-evolution.md.
+# ----------------------------------------------------------------------
+
+build-skills-corpus:
+	$(UV_RUN) python _bench/scripts/build_skills_corpus.py
+
+harvest-deck-skills: build-skills-corpus
+	SLIDIFY_LOG_LEVEL=warning $(UV_RUN) slidify harvest _bench/decks-from-skills \
+		--output _bench/reports/harvest/skills-signals.json --top-n 80 --min-occurrences 1 \
+		--progress plain --progress-file _bench/reports/harvest/skills-progress.jsonl
+	$(PYTHON) _bench/scripts/summarize_harvest.py _bench/reports/harvest/skills-signals.json \
+		--output _bench/reports/harvest/skills-report.md --top-n 30
+	@echo ""
+	@echo "Harvest done. Inspect:"
+	@echo "  cat _bench/reports/harvest/skills-report.md"
+	@echo "  slidify field _bench/reports/harvest/skills-signals.json promotions"
 

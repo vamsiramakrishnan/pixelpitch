@@ -159,7 +159,16 @@
     <!-- SLOT: slides — one <section class="slide"> per slide. The first
          slide MUST have class="slide active"; the rest just "slide". The
          framework auto-counts them and toggles .active as the user
-         navigates. -->
+         navigates.
+
+         Slidify-aware authoring (see craft/slidify-compat.md):
+           • Tag the slide title <h1>/<h2> with data-pptx-role="title".
+           • Tag intentional bleed with data-pptx-allow-overflow="true".
+           • Tag canvas/WebGL/complex-mask wrappers with
+             data-pptx-rasterize="true" so slidify uses a clean tile
+             instead of guessing.
+         These hints don't change visuals — they only help slidify
+         produce more editable PPTX. -->
 
     <section class="slide active" data-screen-label="01 Title">
       <!-- SLOT: slide 1 content -->
@@ -174,13 +183,15 @@
 
   </div>
 
-  <!-- Framework chrome — DO NOT EDIT below this line. -->
-  <nav class="deck-counter" role="navigation" aria-label="Deck navigation">
+  <!-- Framework chrome — DO NOT EDIT below this line.
+       data-pptx-skip="true" tells slidify these are browser-only nav
+       widgets and should not appear in the PPTX export. -->
+  <nav class="deck-counter" role="navigation" aria-label="Deck navigation" data-pptx-skip="true">
     <button type="button" id="deck-prev" aria-label="Previous slide">‹</button>
     <span class="deck-count"><span id="deck-cur">01</span> <span class="total">/ <span id="deck-total">01</span></span></span>
     <button type="button" id="deck-next" aria-label="Next slide">›</button>
   </nav>
-  <div class="deck-hint">← / → · space</div>
+  <div class="deck-hint" data-pptx-skip="true">← / → · space</div>
 
   <script>
     (function () {

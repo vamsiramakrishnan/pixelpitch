@@ -231,3 +231,50 @@ $ curl -s localhost:17456/api/skills \
 ```
 
 All four example decks (`examples/example-{helix,holm,atlas,bluehouse}.html`) open directly in a browser. Keyboard nav (← / → / Space / Home / End) and horizontal scroll-snap work in Chrome 129 and Safari 18.
+
+<!-- pixelpitch:slidify-aware -->
+## Slidify-aware authoring (PPTX export)
+
+This deck skill is part of pixelpitch's slide-designing system. The
+HTML you author here is rendered live in the sandboxed iframe preview
+and, when the user exports to PPTX, fed through `slidify` for a
+maximally-editable PowerPoint file.
+
+You don't need to change any of the design above to make slidify happy.
+You can use `backdrop-filter`, `mix-blend-mode`, `<canvas>` heroes,
+gradient text-clipping, and the full Tailwind / shadcn / Lucide stack.
+
+There are **three free hints** that help slidify produce more editable
+PPTX without changing a single pixel:
+
+1. **Tag the slide title.** Add `data-pptx-role="title"` to the `<h1>`
+   (or `<h2>`) you treat as the slide title. Slidify routes it to the
+   master title placeholder and keeps it editable.
+2. **Use atomic-seed atoms when one matches.** When your CSS happens to
+   match a named recipe (`bg.mesh`, `type.gfill-4`, `data.ring`,
+   etc.), tag the cluster anchor with `data-atom="<id>"`. Your CSS
+   still runs in the browser unchanged; the hint just helps slidify
+   pick the curated native recipe instead of guessing.
+3. **Mark intentional bleed.** When a decorative element intentionally
+   extends past the slide boundary (aurora glow, longshadow, marquee),
+   tag the parent with `data-pptx-allow-overflow="true"`.
+
+For irreducible effects (custom WebGL, complex masks), `data-pptx-rasterize="true"`
+on the wrapper tells slidify to use a clean raster tile straight away
+rather than discovering it.
+
+Full guide: [`craft/slidify-compat.md`](../../craft/slidify-compat.md).
+Atomic-seed grammar: [`slide-author`](../../.claude/skills/slide-author/SKILL.md)
+sibling skill. Evolution loop (how slidify catches up to whatever this
+skill emits): [`docs/slidify-evolution.md`](../../docs/slidify-evolution.md).
+
+### Export
+
+```bash
+slidify convert deck.html out.pptx --json --report-json /tmp/r.json
+slidify field /tmp/r.json native_area_ratio        # how editable the result is
+slidify check deck.html                             # exit 0 ok / 3 = drift
+```
+
+Inside the pixelpitch web app, the daemon shells out to this same
+`slidify` binary when the user clicks Export → PPTX.
