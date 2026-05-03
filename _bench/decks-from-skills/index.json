@@ -1,0 +1,119 @@
+{
+  "skills": [
+    {
+      "skill": "guizang-ppt",
+      "source": "skills/guizang-ppt/assets/example-slides.html",
+      "html": "guizang-ppt.html",
+      "bytes": 11931
+    },
+    {
+      "skill": "html-ppt-course-module",
+      "source": "skills/html-ppt-course-module/example.html",
+      "html": "html-ppt-course-module.html",
+      "bytes": 31788
+    },
+    {
+      "skill": "html-ppt-dir-key-nav-minimal",
+      "source": "skills/html-ppt-dir-key-nav-minimal/example.html",
+      "html": "html-ppt-dir-key-nav-minimal.html",
+      "bytes": 20321
+    },
+    {
+      "skill": "html-ppt-graphify-dark-graph",
+      "source": "skills/html-ppt-graphify-dark-graph/example.html",
+      "html": "html-ppt-graphify-dark-graph.html",
+      "bytes": 25588
+    },
+    {
+      "skill": "html-ppt-hermes-cyber-terminal",
+      "source": "skills/html-ppt-hermes-cyber-terminal/example.html",
+      "html": "html-ppt-hermes-cyber-terminal.html",
+      "bytes": 26898
+    },
+    {
+      "skill": "html-ppt-knowledge-arch-blueprint",
+      "source": "skills/html-ppt-knowledge-arch-blueprint/example.html",
+      "html": "html-ppt-knowledge-arch-blueprint.html",
+      "bytes": 26146
+    },
+    {
+      "skill": "html-ppt-obsidian-claude-gradient",
+      "source": "skills/html-ppt-obsidian-claude-gradient/example.html",
+      "html": "html-ppt-obsidian-claude-gradient.html",
+      "bytes": 23224
+    },
+    {
+      "skill": "html-ppt-pitch-deck",
+      "source": "skills/html-ppt-pitch-deck/example.html",
+      "html": "html-ppt-pitch-deck.html",
+      "bytes": 28988
+    },
+    {
+      "skill": "html-ppt-presenter-mode-reveal",
+      "source": "skills/html-ppt-presenter-mode-reveal/example.html",
+      "html": "html-ppt-presenter-mode-reveal.html",
+      "bytes": 37604
+    },
+    {
+      "skill": "html-ppt-product-launch",
+      "source": "skills/html-ppt-product-launch/example.html",
+      "html": "html-ppt-product-launch.html",
+      "bytes": 27910
+    },
+    {
+      "skill": "html-ppt-tech-sharing",
+      "source": "skills/html-ppt-tech-sharing/example.html",
+      "html": "html-ppt-tech-sharing.html",
+      "bytes": 30407
+    },
+    {
+      "skill": "html-ppt-testing-safety-alert",
+      "source": "skills/html-ppt-testing-safety-alert/example.html",
+      "html": "html-ppt-testing-safety-alert.html",
+      "bytes": 27352
+    },
+    {
+      "skill": "html-ppt-weekly-report",
+      "source": "skills/html-ppt-weekly-report/example.html",
+      "html": "html-ppt-weekly-report.html",
+      "bytes": 30942
+    },
+    {
+      "skill": "html-ppt-xhs-pastel-card",
+      "source": "skills/html-ppt-xhs-pastel-card/example.html",
+      "html": "html-ppt-xhs-pastel-card.html",
+      "bytes": 24370
+    },
+    {
+      "skill": "html-ppt-xhs-post",
+      "source": "skills/html-ppt-xhs-post/example.html",
+      "html": "html-ppt-xhs-post.html",
+      "bytes": 29255
+    },
+    {
+      "skill": "html-ppt-xhs-white-editorial",
+      "source": "skills/html-ppt-xhs-white-editorial/example.html",
+      "html": "html-ppt-xhs-white-editorial.html",
+      "bytes": 25980
+    },
+    {
+      "skill": "replit-deck",
+      "source": "skills/replit-deck/assets/template.html",
+      "html": "replit-deck.html",
+      "bytes": 21078
+    },
+    {
+      "skill": "simple-deck",
+      "source": "skills/simple-deck/example.html",
+      "html": "simple-deck.html",
+      "bytes": 7489
+    },
+    {
+      "skill": "weekly-update",
+      "source": "skills/weekly-update/example.html",
+      "html": "weekly-update.html",
+      "bytes": 16514
+    }
+  ],
+  "count": 19
+}

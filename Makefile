@@ -22,14 +22,24 @@ UV_RUN := $(UV_ENV) $(UV) run
 .PHONY: help sync bootstrap playwright doctor patterns test lint check \
 	playwright-deps bench-index bench-compose bench-compose-tag bench-render bench-render-tag \
 	bench-index-all bench-render-all bench-harvest bench-harvest-all bench-mechanisms \
-	bench-app bench-run bench-run-strict bench-build clean-env
+	bench-app bench-run bench-run-strict bench-build clean-env \
+	web daemon web-build daemon-build skills-sync skills-verify smoke bun-install \
+	up dev stop status logs doctor-web pixelpitch-bootstrap \
+	build-skills-corpus harvest-deck-skills
 
 help:
-	@echo "Environment"
-	@echo "  make sync                 Install locked dependencies into .venv using .uv-cache"
+	@echo "Pixelpitch (web + daemon + skills) — start here"
+	@echo "  bun run bootstrap         One-shot install: bun install + workspace build chain + skill mirror"
+	@echo "  bun run dev               Start daemon + web (http://localhost:3000)  (alias: make up)"
+	@echo "  bun run stop              Stop daemon + web"
+	@echo "  bun run doctor            Environment health check  (alias: make doctor-web)"
+	@echo "  bun run skills:sync       Re-mirror skills/ into .claude/ and .gemini/"
+	@echo ""
+	@echo "Slidify (Python HTML → PPTX) — the converter used as the PPTX export backend"
+	@echo "  make sync                 Install locked Python deps into .venv using .uv-cache"
 	@echo "  make bootstrap            sync + install Chromium for Playwright"
 	@echo "  make playwright-deps      Install Chromium plus OS libraries via Playwright"
-	@echo "  make doctor               Check external runtime dependencies"
+	@echo "  make doctor               Check slidify external runtime dependencies"
 	@echo "  make clean-env            Remove .venv, .uv-cache, and .ms-playwright"
 	@echo ""
 	@echo "Checks"
@@ -135,3 +145,74 @@ bench-build: bench-render-all
 
 clean-env:
 	rm -rf .venv .uv-cache .ms-playwright
+
+# ----------------------------------------------------------------------
+# Bun monorepo (apps/web, apps/daemon, packages/*) — derived from OD
+# (nexu-io/open-design, Apache 2.0; see THIRD_PARTY_NOTICES.md).
+# ----------------------------------------------------------------------
+
+bun-install:
+	bun install
+
+web:
+	bun run web
+
+daemon:
+	bun run daemon
+
+web-build:
+	bun run --filter @pixelpitch/web build
+
+daemon-build:
+	bun run --filter @pixelpitch/daemon build
+
+skills-sync:
+	bun run skills:sync
+
+skills-verify:
+	bun run skills:verify
+
+smoke:
+	bun run smoke
+
+# Friendly aliases — shorter than `bun run X`.
+up: dev
+
+dev:
+	bun run dev
+
+stop:
+	bun run stop
+
+status:
+	bun run status
+
+logs:
+	bun run logs
+
+doctor-web:
+	bun run doctor
+
+pixelpitch-bootstrap:
+	bun run bootstrap
+
+# ----------------------------------------------------------------------
+# Slidify evolution loop — harvest the deck skills as a corpus, rank
+# what slidify currently rasterizes, drive the promotion roadmap.
+# See docs/slidify-evolution.md.
+# ----------------------------------------------------------------------
+
+build-skills-corpus:
+	$(UV_RUN) python _bench/scripts/build_skills_corpus.py
+
+harvest-deck-skills: build-skills-corpus
+	SLIDIFY_LOG_LEVEL=warning $(UV_RUN) slidify harvest _bench/decks-from-skills \
+		--output _bench/reports/harvest/skills-signals.json --top-n 80 --min-occurrences 1 \
+		--progress plain --progress-file _bench/reports/harvest/skills-progress.jsonl
+	$(PYTHON) _bench/scripts/summarize_harvest.py _bench/reports/harvest/skills-signals.json \
+		--output _bench/reports/harvest/skills-report.md --top-n 30
+	@echo ""
+	@echo "Harvest done. Inspect:"
+	@echo "  cat _bench/reports/harvest/skills-report.md"
+	@echo "  slidify field _bench/reports/harvest/skills-signals.json promotions"
+

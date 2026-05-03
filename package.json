@@ -1,0 +1,48 @@
+{
+  "name": "pixelpitch",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "End-to-end deck-design system: design language → components → narrative → slide design → deck composition → PPTX. Slidify is the HTML→PPTX converter.",
+  "license": "Apache-2.0",
+  "bin": {
+    "pixelpitch": "./apps/daemon/dist/cli.js"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "components",
+    "tools/dev",
+    "tools/pack",
+    "tools/pattern-gen",
+    "e2e"
+  ],
+  "scripts": {
+    "bootstrap": "bash tools/bootstrap.sh",
+    "build:packages": "bun run --filter @pixelpitch/platform build && bun run --filter @pixelpitch/sidecar-proto build && bun run --filter @pixelpitch/sidecar build && bun run --filter @pixelpitch/tools-dev build && bun run --filter @pixelpitch/daemon build",
+    "build:web": "bun run --filter @pixelpitch/web build",
+    "build": "bun run build:packages && bun run build:web",
+    "dev": "bun run build:packages && node tools/dev/bin/tools-dev.mjs run web",
+    "up": "bun run dev",
+    "stop": "node tools/dev/bin/tools-dev.mjs stop",
+    "status": "node tools/dev/bin/tools-dev.mjs status",
+    "logs": "node tools/dev/bin/tools-dev.mjs logs",
+    "doctor": "bash tools/doctor.sh",
+    "typecheck": "bun run --filter '*' --if-present typecheck",
+    "test": "bun run --filter '*' --if-present test",
+    "lint": "bun run --filter '*' --if-present lint",
+    "web": "bun run --filter @pixelpitch/web dev",
+    "daemon": "node tools/dev/bin/tools-dev.mjs run daemon",
+    "skills:sync": "bun tools/skills-sync.ts",
+    "skills:verify": "bun tools/skills-verify.ts",
+    "smoke": "bash tools/smoke.sh"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/bun": "latest"
+  },
+  "engines": {
+    "bun": ">=1.1.0",
+    "node": ">=22"
+  }
+}

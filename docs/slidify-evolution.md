@@ -1,0 +1,136 @@
+# Slidify Evolution Loop
+
+> How pixelpitch's deck skills and slidify co-evolve so the skills stay
+> sophisticated AND the PPTX output stays maximally editable.
+
+## The principle
+
+Pixelpitch's deck skills (`simple-deck`, `replit-deck`, `guizang-ppt`,
+the 18 `html-ppt-*` variants, `weekly-update`) emit designer-grade
+HTML using whatever modern web tech serves the design — `backdrop-filter`,
+`mix-blend-mode`, `<canvas>` heroes, custom WebGL shaders, gradient
+text-clipping, complex masks, the full Tailwind v4 + shadcn + Lucide
+stack.
+
+Slidify converts that HTML to PPTX with the goal of **maximal
+editability** — text frames, lines, geometric shapes, native gradients
+— rasterizing only the parts PowerPoint genuinely cannot model.
+
+When the skills emit a pattern slidify can't yet render natively,
+**slidify learns**, the gap becomes an issue to fix in slidify, and the
+next harvest cycle promotes that pattern to a native atom or hybrid
+recipe.
+
+The skills never compromise. Slidify always catches up.
+
+## The loop
+
+```
+[1] Deck skill emits sophisticated HTML
+        ↓
+[2] Slidify renders → classifies (tier 1 rules → tier 2 heuristics → tier 3 LLM)
+        ↓                     ↓ (unmatched signature)
+[3] Native PPTX shapes        ↓
+                              ↓
+                  [4] Harvester aggregates signatures across corpus
+                              ↓
+                  [5] Bench-signals.json ranks misses by:
+                        - source spread (how many skills hit this?)
+                        - visual area (how much of the slide?)
+                        - fidelity risk (raster quality concerns)
+                        - editability goal (text? layout? decoration?)
+                              ↓
+                  [6] Roadmap categories:
+                        - native-atom: promote to editable pattern coverage
+                        - hybrid-recipe: native structure + raster effect layer
+                        - preserve-raster: keep pixel layer, improve crop/res
+                              ↓
+                  [7] Slidify ships the promotion → next deck render hits native path → loop
+```
+
+## What's already wired
+
+- **Per-skill harvest input:** `_bench/decks-from-skills/` (created by
+  `make harvest-deck-skills`) pulls each deck skill's `example.html` and
+  any seed assets into a corpus the harvester scans.
+- **Harvest output:** `_bench/reports/harvest/skills-signals.json` and
+  `_bench/reports/harvest/skills-report.md` — what the deck skills emit
+  that slidify currently rasters.
+- **Roadmap composition:** `make bench-mechanisms` ranks the top-N
+  patterns across the corpus + decks + skills harvest, written to
+  `_bench/reports/harvest/mechanisms.{json,md}`.
+
+## What's NOT in this loop
+
+- **The deck skills are never edited to remove capability.** The
+  harvester output is a slidify TODO, not a skills TODO.
+- **Hint additions are non-restrictive.** Adding `data-pptx-role="title"`
+  to an `<h1>` doesn't change the visual. Adding `data-atom="bg.mesh"`
+  to a div whose CSS already produces a mesh background is purely a
+  classifier hint. Adding `data-pptx-rasterize="true"` to a known-
+  irreducible region (canvas hero) is a deterministic shortcut, not a
+  capability cap.
+
+## Running the loop
+
+```bash
+# 1. Harvest the deck skills (one-shot, idempotent)
+make harvest-deck-skills
+
+# 2. Inspect what's currently being rasterized
+$EDITOR _bench/reports/harvest/skills-report.md
+
+# 3. Compose the top-N mechanisms (ranks signals across all corpora)
+make bench-mechanisms
+
+# 4. Review the promotion list
+$EDITOR _bench/reports/harvest/mechanisms.md
+```
+
+The promotion list drives slidify roadmap work. When a pattern lands as
+a new native atom or hybrid recipe in `slidify/`, re-run the harvest
+and watch the corresponding signal disappear.
+
+## Where the work happens in slidify
+
+When a pattern gets promoted from "rasterized" to "native atom":
+
+| Layer | File | What changes |
+|---|---|---|
+| Tier 1 (deterministic rules) | `slidify/classifier/tier1.py` | Add a rule that recognizes the pattern's signature and routes to native emit |
+| Tier 2 (heuristic scoring) | `slidify/classifier/tier2.py` | Tune scoring so the pattern crosses the native-emit threshold |
+| Atom recipe | `slidify/patterns/...` or new module | The actual native-emit recipe (gradient stops, shape geometry, etc.) |
+| Tests | `tests/unit/`, `tests/integration/` | A fixture HTML that exercises the pattern |
+| Bench fixture | `_bench/corpus/<area>/` | A specimen that prevents regression |
+
+For hybrid recipes (native structure + raster effect layer):
+
+| Layer | File | What changes |
+|---|---|---|
+| Promotion DAG | `slidify/promotion.py` | Add a hybrid promotion rule |
+| Emitter | `slidify/emitter.py` | Emit the native shape + the raster overlay as separate PPTX shapes |
+| Oracle | `slidify/oracle.py` | Verify the hybrid still passes SSIM ≥ 0.95 / OCR ≥ 0.98 |
+
+## Currently in flight (top deck-skill patterns)
+
+Generated by the harvester; check `mechanisms.md` for the live ranking.
+
+| Pattern | Skills using it | Today | Goal |
+|---|---|---|---|
+| `backdrop-filter: blur(...)` frosted-glass card | guizang-ppt, html-ppt, html-ppt-product-launch, html-ppt-pitch-deck, replit-deck (some themes) | Raster tile of card + content | **Hybrid recipe**: native rounded-rect + native text + raster overlay just for the blur layer |
+| `bg-clip-text` gradient headline | html-ppt, html-ppt-pitch-deck, weekly-update, simple-deck, html-ppt-xhs-* | Native via `type.gfill-N` atom (when hint provided) | Auto-detect without hint |
+| `<canvas>` WebGL hero | guizang-ppt, html-ppt-graphify-dark-graph | Clean raster tile (auto-rasterize on `<canvas>`) | Promote to a proper hybrid recipe with native border/shadow + raster canvas |
+| `mix-blend-mode: overlay` decorative pass | html-ppt-tech-sharing, html-ppt-knowledge-arch-blueprint | Raster tile | **Hybrid recipe**: native base layer + raster blend layer |
+| `aspect-ratio: 16/10` frame for image | every html-ppt-* | Raster crop | Native picture frame at the named aspect ratio (already supported for 16/10, 4/3, 3/2, 1/1, 16/9; needs auto-detection of common ratios) |
+| `filter: blur(8px)` decorative shadow | guizang-ppt, replit-deck-bevel theme | Raster tile of shadow | Native blurred-shadow recipe |
+
+## The contract, restated
+
+- Skills generate the best HTML they can.
+- Slidify converts as much as it can natively.
+- The harvester names every miss.
+- Each miss becomes a slidify promotion.
+- Skills never get smaller; slidify always gets smarter.
+
+For the authoring contract (the three free hints) see
+[`craft/slidify-compat.md`](../craft/slidify-compat.md).
