@@ -16,7 +16,7 @@ from pptx.util import Emu, Pt
 
 from slidify.colors import parse_color
 from slidify.decorations import derive_decorations
-from slidify.emitter_geometry import (
+from slidify.emitter.geometry import (
     _apply_rotation,
     _clamp_bbox,
     _emu_rect,
@@ -24,9 +24,9 @@ from slidify.emitter_geometry import (
     _grow_bbox_for_fallback_wrap,
     _rotation_degrees,
 )
-from slidify.emitter_metrics import native_area_ratio
-from slidify.emitter_shapes import _shape_kind_for_anchor
-from slidify.emitter_text import (
+from slidify.emitter.metrics import native_area_ratio
+from slidify.emitter.shapes import _shape_kind_for_anchor
+from slidify.emitter.text import (
     _are_spatially_distinct,
     _has_title_sized_text,
     _is_bg_clip_text,

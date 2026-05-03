@@ -25,19 +25,19 @@ from pathlib import Path
 
 import structlog
 
-from slidify.api_config import ConversionConfig
-from slidify.api_oracle import (
+from slidify.api.config import ConversionConfig
+from slidify.api.oracle import (
     force_full_raster as _force_full_raster,
 )
-from slidify.api_oracle import (
+from slidify.api.oracle import (
     force_raster_overlapping as _force_raster_overlapping,
 )
-from slidify.api_oracle import (
+from slidify.api.oracle import (
     oracle_with_correction as _oracle_with_correction,
 )
-from slidify.api_sources import SlideSource, _inline_local_images, _normalize_source
-from slidify.api_state import SlidePlan as _SlidePlan
-from slidify.api_state import SlideSummary as _SlideSummary
+from slidify.api.sources import SlideSource, _inline_local_images, _normalize_source
+from slidify.api.state import SlidePlan as _SlidePlan
+from slidify.api.state import SlideSummary as _SlideSummary
 from slidify.atom_inference import infer_atom_id
 from slidify.cache import MemoryCache, StructuralCache
 from slidify.classifier.llm import LLMProvider, auto_select_backend, build_provider

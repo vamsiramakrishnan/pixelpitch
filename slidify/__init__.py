@@ -22,7 +22,7 @@ from slidify.api import (
 
 # Route logs to stderr before any module gets a chance to log to stdout.
 _ensure_logging_configured()
-from slidify.exceptions import (
+from slidify.exceptions import (  # noqa: E402
     ClassificationError,
     EmitError,
     OracleError,

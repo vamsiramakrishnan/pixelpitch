@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from slidify.emitter_geometry import _clamp_bbox
+from slidify.emitter.geometry import _clamp_bbox
 from slidify.geom import SLIDE_H_PX, SLIDE_W_PX
 from slidify.models import DecisionKind, EmitOp
 
@@ -28,4 +28,3 @@ def native_area_ratio(
             bb = _clamp_bbox(op.bbox)
             native_area += bb.w * bb.h
     return min(1.0, native_area / total)
-

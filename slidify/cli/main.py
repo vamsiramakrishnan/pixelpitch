@@ -25,8 +25,8 @@ import click
 
 from slidify import __version__
 from slidify.api import ConversionConfig, convert
-from slidify.cli_commands.guide import guide_cmd
-from slidify.cli_commands.harvest import (
+from slidify.cli.commands.guide import guide_cmd
+from slidify.cli.commands.harvest import (
     _build_promotion_stubs,
     harvest,
     promote_unmatched_to_yaml,

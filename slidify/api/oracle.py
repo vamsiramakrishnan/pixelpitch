@@ -6,8 +6,8 @@ from pathlib import Path
 
 import structlog
 
-from slidify.api_config import ConversionConfig
-from slidify.api_state import SlidePlan, SlideSummary
+from slidify.api.config import ConversionConfig
+from slidify.api.state import SlidePlan, SlideSummary
 from slidify.emitter import Emitter
 from slidify.models import Decision, DecisionKind, FidelityReport, VisualUnit
 from slidify.oracle import FidelityOracle
