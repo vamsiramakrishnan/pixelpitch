@@ -97,6 +97,23 @@ def _dominant_line_border(el: DomElement) -> tuple[str, float, object | None] | 
     return side, width, _border_color(border)
 
 
+def _visible_side_borders(el: DomElement) -> list[tuple[str, float, object | None]]:
+    sides = [
+        ("top", el.border_top),
+        ("right", el.border_right),
+        ("bottom", el.border_bottom),
+        ("left", el.border_left),
+    ]
+    visible = [
+        (side, _visible_border_width(border), _border_color(border))
+        for side, border in sides
+        if _visible_border_width(border) > 0
+    ]
+    if len(visible) == 4 and _visible_border_width(el.border) > 0:
+        return []
+    return visible
+
+
 def _apply_explicit_autofit(
     text_frame, font_scale_pct: int, line_space_reduction_pct: int
 ) -> None:
@@ -375,6 +392,7 @@ class Emitter:
         anchor = self._pick_text_anchor(unit)
         if anchor is None:
             return
+        unit_anchor_el = unit.elements[0] if unit.elements else None
         # Browser-derived line boxes (`Range.getClientRects()`) give the
         # exact pixel rectangles each text run occupied in the source
         # render. When we have them, prefer the UNION bbox of all line
@@ -482,7 +500,6 @@ class Emitter:
         # text rendered as a transparent silhouette inside it. Instead,
         # leave the textbox transparent; the run-color resolver will
         # substitute the gradient's first stop as a solid text color.
-        unit_anchor_el = unit.elements[0] if unit.elements else None
         if unit_anchor_el is not None and not _is_bg_clip_text(unit_anchor_el):
             self._apply_fill(tb, unit_anchor_el)
             self._apply_shadow(tb, unit_anchor_el)
@@ -533,6 +550,8 @@ class Emitter:
             # Decorations on the unit-level still fire ABOVE.
             if not deco_stack.is_empty():
                 deco_stack.emit_above(slide, emit_bbox)
+            if unit_anchor_el is not None:
+                self._emit_side_border_lines(slide, unit_anchor_el, op.bbox)
             return
 
         # Pre-compute fontScale + wrap policy. Single-line textboxes get
@@ -571,6 +590,8 @@ class Emitter:
         # Decoration layer (ABOVE): rim highlight / hairline / inset glow.
         if not deco_stack.is_empty():
             deco_stack.emit_above(slide, emit_bbox)
+        if unit_anchor_el is not None:
+            self._emit_side_border_lines(slide, unit_anchor_el, op.bbox)
 
     def _emit_text_element_as_own_shape(
         self, slide, e: DomElement, op: EmitOp
@@ -612,6 +633,7 @@ class Emitter:
                 self._add_styled_run(
                     p, run_spec, fallback_el=e, font_scale=font_scale
                 )
+        self._emit_side_border_lines(slide, e, e.bbox)
 
     def _apply_textframe_wrap_and_scale(
         self,
@@ -859,6 +881,7 @@ class Emitter:
         self._apply_fill(shape, anchor)
         self._apply_border(shape, anchor)
         self._apply_shadow(shape, anchor)
+        self._emit_side_border_lines(slide, anchor, shape_bbox)
         if not deco_stack.is_empty():
             deco_stack.emit_above(slide, op.bbox)
         return True
@@ -883,6 +906,7 @@ class Emitter:
         self._apply_fill(shape, anchor_el)
         self._apply_border(shape, anchor_el)
         self._apply_shadow(shape, anchor_el)
+        self._emit_side_border_lines(slide, anchor_el, shape_bbox)
         if not deco_stack.is_empty():
             deco_stack.emit_above(slide, op.bbox)
 
@@ -920,6 +944,33 @@ class Emitter:
         except Exception:
             pass
         return True
+
+    def _emit_side_border_lines(self, slide, el: DomElement, bbox: BoundingBox) -> None:
+        for side, width, color in _visible_side_borders(el):
+            if side == "top":
+                x1, y1, x2, y2 = bbox.x, bbox.y, bbox.x + bbox.w, bbox.y
+            elif side == "right":
+                x1 = x2 = bbox.x + bbox.w
+                y1, y2 = bbox.y, bbox.y + bbox.h
+            elif side == "bottom":
+                x1, y1, x2, y2 = bbox.x, bbox.y + bbox.h, bbox.x + bbox.w, bbox.y + bbox.h
+            else:
+                x1 = x2 = bbox.x
+                y1, y2 = bbox.y, bbox.y + bbox.h
+
+            connector = slide.shapes.add_connector(
+                1,
+                Emu(px_to_emu(x1)),
+                Emu(px_to_emu(y1)),
+                Emu(px_to_emu(x2)),
+                Emu(px_to_emu(y2)),
+            )
+            try:
+                connector.line.width = Emu(px_to_emu(width))
+                if color is not None:
+                    connector.line.color.rgb = color[0]
+            except Exception:
+                pass
 
     def _apply_fill(self, shape, el: DomElement) -> None:
         # Try native gradient first (background-image: linear-gradient(...) / radial-gradient(...)).
