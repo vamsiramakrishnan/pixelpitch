@@ -3,6 +3,22 @@
 from __future__ import annotations
 
 # Map common web font families → safe PPTX/Office equivalents.
+#
+# Entries fall into three groups:
+#   1. core/system fonts (kept verbatim — every renderer has them)
+#   2. mono families that need to land on a mono substitute even if the
+#      named face isn't installed (column alignment is the contract)
+#   3. modern web/display families that ride on `@font-face` and aren't
+#      portable.  Ship a visually-adjacent core substitute so the slide
+#      renders consistently across PowerPoint, LibreOffice, Keynote
+#      etc., even when the embedded face is ignored.
+#
+# Round 2 visual-QA audit (2026-05-03) traced four bench-slide
+# regressions to families that previously fell through to the
+# title-case-and-emit-verbatim branch — Helvetica Neue, Bebas Neue,
+# Playfair Display etc. landed in slideN.xml as `<a:latin typeface=
+# "Helvetica Neue"/>` and depended on the host renderer having the
+# font installed.  Substituting at resolve-time stops the drift.
 _FONT_MAP: dict[str, str] = {
     "inter": "Inter",
     "roboto": "Roboto",
@@ -34,6 +50,35 @@ _FONT_MAP: dict[str, str] = {
     "segoe ui": "Segoe UI",
     "menlo": "Consolas",
     "monaco": "Consolas",
+    # ── modern web/display families → core-font substitutes ──────────
+    # Sans display
+    "helvetica neue":   "Arial",
+    "neue haas grotesk":"Arial",
+    "akzidenz-grotesk": "Arial",
+    "inter tight":      "Calibri",
+    "söhne":            "Calibri",
+    "söhne breit":      "Calibri",
+    "graphik":          "Calibri",
+    # Condensed/display
+    "bebas neue":       "Impact",
+    "anton":            "Impact",
+    "oswald":           "Impact",
+    "league gothic":    "Impact",
+    # Serif display
+    "playfair display": "Cambria",
+    "spectral":         "Cambria",
+    "tiempos":          "Cambria",
+    "tiempos text":     "Cambria",
+    "tiempos headline": "Cambria",
+    "iowan old style":  "Cambria",
+    "reckless":         "Cambria",
+    "fraunces":         "Cambria",
+    # Mono
+    "ibm plex mono":    "Consolas",
+    "jetbrains mono":   "Consolas",
+    "fira code":        "Consolas",
+    "sf mono":          "Consolas",
+    "source code pro":  "Consolas",
 }
 
 DEFAULT_FONT = "Calibri"
@@ -126,11 +171,16 @@ def resolve(css_font_family: str) -> str:
         # font instead.
         if stack_is_mono and _looks_mono(tok):
             continue
-        # Non-mono unknown name — title-case and return; this preserves the
-        # existing path for fonts like "Helvetica Neue" that the renderer
-        # MAY have installed.
+        # Non-mono unknown name.  Previously this branch title-cased the
+        # token and returned it verbatim — landing `<a:latin typeface=
+        # "Helvetica Neue"/>` etc. in slide XML and silently substituting
+        # on every renderer without the named face installed (round-2
+        # visual-QA finding).  Now: walk past it (`continue`) so a later
+        # known token in the stack still wins.  When no token in the
+        # stack is known, the post-loop logic returns the generic family
+        # fallback (or DEFAULT_FONT) — the emit is portable either way.
         if all(part.isalpha() or part.isspace() or part in "-_" for part in tok):
-            return " ".join(p.capitalize() for p in tok.split())
+            continue
 
     if generic_fallback is not None:
         return generic_fallback
