@@ -1,0 +1,146 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "borderRadiusPx": 12,
+          "fill": {
+            "color": "#0e0e1a",
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "chrome": "mac",
+            "role": "window-surface",
+            "theme": "dark"
+          },
+          "recipeId": "chrome.window-frame.surface",
+          "shape": "rounded-rect",
+          "zOrder": 0
+        },
+        {
+          "bbox": {
+            "h": 28,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "borderRadiusPx": 0,
+          "fill": {
+            "color": "#16162a",
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "role": "window-titlebar"
+          },
+          "recipeId": "chrome.window-frame.titlebar",
+          "shape": "rect",
+          "zOrder": 10
+        },
+        {
+          "bbox": {
+            "h": 12,
+            "w": 12,
+            "x": 112,
+            "y": 108
+          },
+          "borderRadiusPx": 0,
+          "fill": {
+            "color": "#ef4444",
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "index": 0,
+            "kind": "mac",
+            "role": "window-control"
+          },
+          "recipeId": "chrome.window-frame.dot-1",
+          "shape": "oval",
+          "zOrder": 20
+        },
+        {
+          "bbox": {
+            "h": 12,
+            "w": 12,
+            "x": 130,
+            "y": 108
+          },
+          "borderRadiusPx": 0,
+          "fill": {
+            "color": "#f59e0b",
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "index": 1,
+            "kind": "mac",
+            "role": "window-control"
+          },
+          "recipeId": "chrome.window-frame.dot-2",
+          "shape": "oval",
+          "zOrder": 21
+        },
+        {
+          "bbox": {
+            "h": 12,
+            "w": 12,
+            "x": 148,
+            "y": 108
+          },
+          "borderRadiusPx": 0,
+          "fill": {
+            "color": "#10b981",
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "index": 2,
+            "kind": "mac",
+            "role": "window-control"
+          },
+          "recipeId": "chrome.window-frame.dot-3",
+          "shape": "oval",
+          "zOrder": 22
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "chrome",
+        "chrome": "mac",
+        "role": "chrome.window-frame",
+        "theme": "dark"
+      },
+      "recipeId": "chrome.window-frame",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "ui",
+    "primitive": "chrome.window-frame",
+    "role": "ui.browser-mac",
+    "version": "1.0.0"
+  },
+  "recipeId": "ui.browser-mac",
+  "zOrder": 0
+}

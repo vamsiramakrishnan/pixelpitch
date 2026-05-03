@@ -1,0 +1,139 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`dataBarToIR > emits a snapshot-stable vertical bar set 1`] = `
+{
+  "bbox": {
+    "h": 200,
+    "w": 400,
+    "x": 0,
+    "y": 0,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 44.44444444444444,
+        "w": 70.4,
+        "x": 0,
+        "y": 155.55555555555554,
+      },
+      "borderRadiusPx": 4,
+      "fill": {
+        "color": "#a78bfa",
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "index": 0,
+        "label": null,
+        "role": "data-bar",
+        "value": 10,
+      },
+      "recipeId": "data.bar.bar-1",
+      "shape": "rounded-rect",
+      "zOrder": 0,
+    },
+    {
+      "bbox": {
+        "h": 133.33333333333331,
+        "w": 70.4,
+        "x": 82.4,
+        "y": 66.66666666666669,
+      },
+      "borderRadiusPx": 4,
+      "fill": {
+        "color": "#a78bfa",
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "index": 1,
+        "label": null,
+        "role": "data-bar",
+        "value": 30,
+      },
+      "recipeId": "data.bar.bar-2",
+      "shape": "rounded-rect",
+      "zOrder": 10,
+    },
+    {
+      "bbox": {
+        "h": 88.88888888888889,
+        "w": 70.4,
+        "x": 164.8,
+        "y": 111.11111111111111,
+      },
+      "borderRadiusPx": 4,
+      "fill": {
+        "color": "#a78bfa",
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "index": 2,
+        "label": null,
+        "role": "data-bar",
+        "value": 20,
+      },
+      "recipeId": "data.bar.bar-3",
+      "shape": "rounded-rect",
+      "zOrder": 20,
+    },
+    {
+      "bbox": {
+        "h": 200,
+        "w": 70.4,
+        "x": 247.20000000000002,
+        "y": 0,
+      },
+      "borderRadiusPx": 4,
+      "fill": {
+        "color": "#a78bfa",
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "index": 3,
+        "label": null,
+        "role": "data-bar",
+        "value": 45,
+      },
+      "recipeId": "data.bar.bar-4",
+      "shape": "rounded-rect",
+      "zOrder": 30,
+    },
+    {
+      "bbox": {
+        "h": 155.55555555555557,
+        "w": 70.4,
+        "x": 329.6,
+        "y": 44.44444444444443,
+      },
+      "borderRadiusPx": 4,
+      "fill": {
+        "color": "#a78bfa",
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "index": 4,
+        "label": null,
+        "role": "data-bar",
+        "value": 35,
+      },
+      "recipeId": "data.bar.bar-5",
+      "shape": "rounded-rect",
+      "zOrder": 40,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "data",
+    "barCount": 5,
+    "max": 45,
+    "orientation": "vertical",
+    "role": "data.bar",
+  },
+  "recipeId": "data.bar",
+  "zOrder": 0,
+}
+`;

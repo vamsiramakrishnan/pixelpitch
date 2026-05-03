@@ -1,0 +1,454 @@
+# AUTO-GENERATED queue of harvested pattern stubs.
+#
+# Each entry was written by `slidify harvest --promote-yaml` from an
+# unmatched DOM signature observed in a real deck. Stubs default to
+# `kind: Raster` so a stub never silently regresses fidelity. A human
+# (or LLM) reviewer should:
+#   1. Tighten the `match` clauses (the auto-inferred `anchor.tag_in`
+#      is the lowest-resolution predicate that fits the signature).
+#   2. Promote `kind` from `Raster` to `NativeShape` / `NativeText` /
+#      `NativeSvg` once the recipe is correct.
+#   3. Move the entry into `slidify/patterns/data/patterns.yaml` (or
+#      `atoms.yaml` for atom-keyed recipes) and delete it from here.
+#
+# Re-running `slidify harvest --promote-yaml` is idempotent: existing
+# `id:` values are preserved.
+patterns:
+
+  # Originating signature: hr(brd-asymT)[][0x0]
+  # Occurrences in corpus: 2
+  # Sample classes: hairline
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-0f816b69
+  priority: 999
+  match:
+    anchor.tag_in:
+    - HR
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_0f816b69
+      source: harvester
+
+  # Originating signature: button(bg+txt+r8+face=sans)[][128x32]
+  # Occurrences in corpus: 2
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-ef939804
+  priority: 999
+  match:
+    anchor.tag_in:
+    - BUTTON
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_ef939804
+      source: harvester
+
+  # Originating signature: textpath(txt+face=mono+tr=widest)[][192x192]
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-20ba38d3
+  priority: 999
+  match:
+    anchor.tag_in:
+    - TEXTPATH
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_20ba38d3
+      source: harvester
+
+  # Originating signature: span(txt+face=serif)[][448x32]
+  # Occurrences in corpus: 1
+  # Sample classes: display
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-4a7a9700
+  priority: 999
+  match:
+    anchor.tag_in:
+    - SPAN
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_4a7a9700
+      source: harvester
+
+  # Originating signature: p(txt+face=sans)[][384x32]
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-1180e537
+  priority: 999
+  match:
+    anchor.tag_in:
+    - P
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_1180e537
+      source: harvester
+
+  # Originating signature: p(txt+face=serif)[][512x64]
+  # Occurrences in corpus: 1
+  # Sample classes: display
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-c96d4e59
+  priority: 999
+  match:
+    anchor.tag_in:
+    - P
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_c96d4e59
+      source: harvester
+
+  # Originating signature: p(txt+face=serif)[][640x0]
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-d4b371db
+  priority: 999
+  match:
+    anchor.tag_in:
+    - P
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_d4b371db
+      source: harvester
+
+  # Originating signature: div(brd-asymT+grid=3)[][1152x96]{span(txt+face=mono+tr=widest)[][128x0],span(txt+face=serif)[][704x64],span(txt+txtc+fac
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-e4603779
+  priority: 999
+  match:
+    anchor.tag_in:
+    - DIV
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_e4603779
+      source: harvester
+
+  # Originating signature: button(brd+txt+r8+face=sans)[][128x32]
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-77616745
+  priority: 999
+  match:
+    anchor.tag_in:
+    - BUTTON
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_77616745
+      source: harvester
+
+  # Originating signature: p(txt+face=sans)[][1024x0]
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-d05edaa4
+  priority: 999
+  match:
+    anchor.tag_in:
+    - P
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_d05edaa4
+      source: harvester
+
+  # Originating signature: button(bg+txt+r8+face=sans)[][256x32]
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-5e941d13
+  priority: 999
+  match:
+    anchor.tag_in:
+    - BUTTON
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_5e941d13
+      source: harvester
+
+  # Originating signature: div(bgi=grad/n3/d180+brd-asymR)[]<3>[640x448]{div(bg+txt+face=mono+tr=widest)[][0x0],div(txt+face=serif+tr=tight)[][192x
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-c26b1d13
+  priority: 999
+  match:
+    anchor.tag_in:
+    - DIV
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_c26b1d13
+      source: harvester
+
+  # Originating signature: div(txt+txtc+face=serif)[][1088x0]
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-27f779de
+  priority: 999
+  match:
+    anchor.tag_in:
+    - DIV
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_27f779de
+      source: harvester
+
+  # Originating signature: td(txt+face=sans)[][256x32]
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-a5c7734f
+  priority: 999
+  match:
+    anchor.tag_in:
+    - TD
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_a5c7734f
+      source: harvester
+
+  # Originating signature: td(txt+face=serif)[][0x32]
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-c558c6bd
+  priority: 999
+  match:
+    anchor.tag_in:
+    - TD
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_c558c6bd
+      source: harvester
+
+  # Originating signature: table(brd-asymT)[]<2>[1088x352]{tr(bg+brd-asymB)[]<1>[1088x32]{div(bg)[][192x0]{div(bg)[][128x0]},td()[][256x32]{span(bg
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-d50e021f
+  priority: 999
+  match:
+    anchor.tag_in:
+    - TABLE
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_d50e021f
+      source: harvester
+
+  # Originating signature: p(txt+face=serif)[][256x32]
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-0f76d1e9
+  priority: 999
+  match:
+    anchor.tag_in:
+    - P
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_0f76d1e9
+      source: harvester
+
+  # Originating signature: aside(bg+brd-asymR)[]<1>[192x704]{div(bg+brd+r8)[]<1>[192x64]{p(txt+txtc+face=sans)[][128x32],span(txt+face=sans+tr=wide
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-a265357f
+  priority: 999
+  match:
+    anchor.tag_in:
+    - ASIDE
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_a265357f
+      source: harvester
+
+  # Originating signature: div(txt+face=display)[][64x64]
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-3eada298
+  priority: 999
+  match:
+    anchor.tag_in:
+    - DIV
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_3eada298
+      source: harvester
+
+  # Originating signature: div(brd-asymT)[][1280x96]{div(txt+brd-asymL+face=serif)[][704x0],div(txt+face=display)[][64x64]}
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-47aadf7d
+  priority: 999
+  match:
+    anchor.tag_in:
+    - DIV
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_47aadf7d
+      source: harvester
+
+  # Originating signature: div(txt+txtc+face=display)[][448x32]
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-8bf2c6d1
+  priority: 999
+  match:
+    anchor.tag_in:
+    - DIV
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_8bf2c6d1
+      source: harvester
+
+  # Originating signature: div(txt+face=display+tr=wide)[][192x32]
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-dc779e1f
+  priority: 999
+  match:
+    anchor.tag_in:
+    - DIV
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_dc779e1f
+      source: harvester
+
+  # Originating signature: div(txt+txtc+face=display)[][512x160]
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-14b03af2
+  priority: 999
+  match:
+    anchor.tag_in:
+    - DIV
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_14b03af2
+      source: harvester
+
+  # Originating signature: div(brd-asymT+grid=3)[][1152x64]{div(txt+face=sans)[][384x0],div(txt+face=sans)[][512x32],div(txt+face=sans)[][64x32]}
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-b35ab842
+  priority: 999
+  match:
+    anchor.tag_in:
+    - DIV
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_b35ab842
+      source: harvester
+
+  # Originating signature: div(brd-asymT+grid=3)[][1152x64]{div(txt+face=sans)[][384x0],div(txt+face=sans)[][512x0],div(txt+face=sans)[][64x32]}
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-5978601d
+  priority: 999
+  match:
+    anchor.tag_in:
+    - DIV
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_5978601d
+      source: harvester
+
+  # Originating signature: div(brd-asymT+tr=widest)[][1152x0]{span(txt+face=mono+tr=widest)[][256x0],span(txt+face=mono+tr=widest)[][64x0]}
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-fdc3d14e
+  priority: 999
+  match:
+    anchor.tag_in:
+    - DIV
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_fdc3d14e
+      source: harvester
+
+  # Originating signature: div(brd-asymT+tr=widest)[][1152x0]{span(txt+face=sans+tr=wide)[][128x0],span(txt+face=sans+tr=widest)[][0x0],span(txt+fa
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-0c336464
+  priority: 999
+  match:
+    anchor.tag_in:
+    - DIV
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_0c336464
+      source: harvester
+
+  # Originating signature: div(txt+brd-asymL+face=sans)[][448x32]
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-d008e8a7
+  priority: 999
+  match:
+    anchor.tag_in:
+    - DIV
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_d008e8a7
+      source: harvester
+
+  # Originating signature: div(txt+txtc+brd-asymL+face=sans+tr=widest)[][192x64]
+  # Occurrences in corpus: 1
+  # AUTO-GENERATED — review before promoting from Raster default.
+- id: harvested-5df6b070
+  priority: 999
+  match:
+    anchor.tag_in:
+    - DIV
+  emit:
+    kind: Raster
+    confidence: 0.5
+    metadata:
+      recipe: harvested_5df6b070
+      source: harvester

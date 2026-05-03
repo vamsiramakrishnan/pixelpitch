@@ -1,0 +1,90 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <title>20 Mono Spec</title>
+    <style>*, *::before, *::after { box-sizing: border-box; }
+html, body { margin:0; padding:0; width:1280px; height:720px;
+             font-family: 'IBM Plex Mono', 'JetBrains Mono', 'Menlo', monospace;
+             -webkit-font-smoothing:antialiased;
+             color:#e5e5e5; background:#0a0a0a; }
+.slide { position:relative; width:1280px; height:720px; padding:80px;
+         overflow:hidden; background:#0a0a0a; }</style>
+    </head>
+    <body>
+    <div class="slide" style="padding:48px 56px;
+                                          font-family:'IBM Plex Mono', 'JetBrains Mono', 'Menlo', monospace;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;
+                  border-bottom:1px solid rgba(255,255,255,0.14); padding-bottom:12px;">
+        <div>
+          <div style="font-size:11px; letter-spacing:0.32em; color:#737373;">
+            DOC · 2026.04.21 · REV-C</div>
+          <div style="margin-top:6px; font-size:24px; font-weight:700;
+                      letter-spacing:-0.005em; color:#e5e5e5;">SLIDIFY-EXEC // SPEC SHEET</div>
+        </div>
+        <div style="font-size:11px; text-align:right; color:#737373;
+                    line-height:1.6;">
+          <div>part : SDX-V2-EXEC</div>
+          <div>maint: pixelpitch.dev/spec</div>
+          <div>cls  : <span style="color:#22d3ee;">production</span></div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1.1fr 1fr; gap:40px; margin-top:28px;">
+        <!-- left: spec table -->
+        <div>
+          <div style="font-size:11px; letter-spacing:0.32em; color:#22d3ee;
+                      margin-bottom:10px;">§ 01 · NOMINAL VALUES</div>
+          <table style="width:100%; border-collapse:collapse; font-size:13px;">
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.14);"><td style="padding:10px 0; color:#737373;">MASS</td><td style="padding:10px 0; font-weight:700; color:#e5e5e5;">1.84 kg</td><td style="padding:10px 0; text-align:right; color:#22d3ee;">± 0.02</td></tr><tr style="border-bottom:1px solid rgba(255,255,255,0.14);"><td style="padding:10px 0; color:#737373;">MAX TORQUE</td><td style="padding:10px 0; font-weight:700; color:#e5e5e5;">240 Nm</td><td style="padding:10px 0; text-align:right; color:#22d3ee;">@ 4200 rpm</td></tr><tr style="border-bottom:1px solid rgba(255,255,255,0.14);"><td style="padding:10px 0; color:#737373;">DRIVETRAIN</td><td style="padding:10px 0; font-weight:700; color:#e5e5e5;">DUAL-AXIS</td><td style="padding:10px 0; text-align:right; color:#22d3ee;">tier-0</td></tr><tr style="border-bottom:1px solid rgba(255,255,255,0.14);"><td style="padding:10px 0; color:#737373;">THERMAL BAND</td><td style="padding:10px 0; font-weight:700; color:#e5e5e5;">−40 → 95°C</td><td style="padding:10px 0; text-align:right; color:#22d3ee;">rated</td></tr><tr style="border-bottom:1px solid rgba(255,255,255,0.14);"><td style="padding:10px 0; color:#737373;">CYCLE LIFE</td><td style="padding:10px 0; font-weight:700; color:#e5e5e5;">12,500 h</td><td style="padding:10px 0; text-align:right; color:#22d3ee;">MTBF</td></tr><tr style="border-bottom:1px solid rgba(255,255,255,0.14);"><td style="padding:10px 0; color:#737373;">ENERGY DRAW</td><td style="padding:10px 0; font-weight:700; color:#e5e5e5;">18.4 W</td><td style="padding:10px 0; text-align:right; color:#22d3ee;">nominal</td></tr><tr style="border-bottom:1px solid rgba(255,255,255,0.14);"><td style="padding:10px 0; color:#737373;">PROTOCOL</td><td style="padding:10px 0; font-weight:700; color:#e5e5e5;">rs-485</td><td style="padding:10px 0; text-align:right; color:#22d3ee;">9600/8N1</td></tr>
+          </table>
+          <div style="margin-top:24px; padding:14px; border:1px dashed rgba(255,255,255,0.14);
+                      font-size:12px; color:#737373; line-height:1.55;">
+            <span style="color:#facc15;">NOTE</span> · Values are derived from a
+            full-load 28-day soak. Re-validate on stack rotation.
+          </div>
+        </div>
+
+        <!-- right: schematic -->
+        <div>
+          <div style="font-size:11px; letter-spacing:0.32em; color:#22d3ee;
+                      margin-bottom:10px;">§ 02 · DIMENSIONED PROFILE</div>
+          <svg viewBox="0 0 360 320" width="100%" height="320"
+               style="border:1px solid rgba(255,255,255,0.14);">
+            <!-- main body -->
+            <rect x="60" y="80" width="240" height="160" fill="none"
+                  stroke="#e5e5e5" stroke-width="1.5"/>
+            <!-- chamber -->
+            <rect x="100" y="120" width="160" height="80" fill="none"
+                  stroke="#22d3ee" stroke-width="1" stroke-dasharray="4 3"/>
+            <!-- ports -->
+            <circle cx="100" cy="160" r="6" fill="#22d3ee"/>
+            <circle cx="260" cy="160" r="6" fill="#22d3ee"/>
+            <!-- horizontal dimension -->
+            <line x1="60" y1="60" x2="300" y2="60" stroke="#737373" stroke-width="0.8"/>
+            <line x1="60" y1="55" x2="60" y2="65" stroke="#737373"/>
+            <line x1="300" y1="55" x2="300" y2="65" stroke="#737373"/>
+            <text x="180" y="52" font-family="'IBM Plex Mono', 'JetBrains Mono', 'Menlo', monospace" font-size="11"
+                  fill="#e5e5e5" text-anchor="middle">240 mm</text>
+            <!-- vertical dimension -->
+            <line x1="320" y1="80" x2="320" y2="240" stroke="#737373" stroke-width="0.8"/>
+            <line x1="315" y1="80" x2="325" y2="80" stroke="#737373"/>
+            <line x1="315" y1="240" x2="325" y2="240" stroke="#737373"/>
+            <text x="335" y="164" font-family="'IBM Plex Mono', 'JetBrains Mono', 'Menlo', monospace" font-size="11"
+                  fill="#e5e5e5">160</text>
+            <!-- label -->
+            <text x="180" y="280" font-family="'IBM Plex Mono', 'JetBrains Mono', 'Menlo', monospace" font-size="10"
+                  fill="#737373" text-anchor="middle">FIG-A · TOP VIEW · 1:2</text>
+          </svg>
+        </div>
+      </div>
+
+      <div style="margin-top:28px; display:flex; justify-content:space-between;
+                  font-size:10px; letter-spacing:0.18em; color:#737373;
+                  border-top:1px solid rgba(255,255,255,0.14); padding-top:10px;">
+        <span>PIXELPITCH ENG · INTERNAL DISTRIBUTION</span>
+        <span>SHEET 13 / 24</span>
+      </div>
+    </div>
+    </body>
+    </html>

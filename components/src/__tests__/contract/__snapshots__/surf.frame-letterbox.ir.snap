@@ -1,0 +1,96 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 20,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "borderRadiusPx": 0,
+          "fill": {
+            "color": "#070710",
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "role": "letterbox-bar",
+            "side": "top"
+          },
+          "recipeId": "frame.letterbox.top-bar",
+          "shape": "rect",
+          "zOrder": 0
+        },
+        {
+          "bbox": {
+            "h": 20,
+            "w": 600,
+            "x": 100,
+            "y": 280
+          },
+          "borderRadiusPx": 0,
+          "fill": {
+            "color": "#070710",
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "role": "letterbox-bar",
+            "side": "bottom"
+          },
+          "recipeId": "frame.letterbox.bottom-bar",
+          "shape": "rect",
+          "zOrder": 10
+        },
+        {
+          "bbox": {
+            "h": 160,
+            "w": 600,
+            "x": 100,
+            "y": 120
+          },
+          "children": [],
+          "kind": "group",
+          "metadata": {
+            "role": "letterbox-content"
+          },
+          "recipeId": "frame.letterbox.content",
+          "zOrder": 20
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "frame",
+        "barHeightPx": 20,
+        "role": "frame.letterbox"
+      },
+      "recipeId": "frame.letterbox",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "surf",
+    "bandPx": 96,
+    "bgColor": "tokens.palette.surface-1",
+    "primitive": "frame.letterbox",
+    "role": "surf.frame-letterbox",
+    "version": "1.0.0"
+  },
+  "recipeId": "surf.frame-letterbox",
+  "zOrder": 0
+}

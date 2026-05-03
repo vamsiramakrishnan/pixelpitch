@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="slidify-capture-duration" content="4000">
+<meta name="slidify-capture-fps" content="12">
+<title>Atlas — cover period breathing</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin:0; padding:0; width:280px; height:280px;
+               font-family: 'Spectral', 'Playfair Display', 'Iowan Old Style',
+                            Georgia, serif;
+               background:#EFE9DC; }
+  .stage { position:relative; width:280px; height:280px;
+           display:flex; align-items:center; justify-content:center; }
+  .period {
+    font-style: italic;
+    font-weight: 400;
+    color: #B05A3C;
+    font-size: 360px;
+    line-height: 0.5;
+    letter-spacing: -0.04em;
+    transform-origin: 50% 60%;
+    animation: breathe 4s cubic-bezier(0.45, 0, 0.2, 1) infinite;
+  }
+  @keyframes breathe {
+    0%,100% {
+      transform: scale(1.00);
+      text-shadow: 0 0 0 #B05A3C;
+      color: #B9655B;
+    }
+    50% {
+      transform: scale(1.08);
+      text-shadow: 0 0 2px #B05A3C, 0 0 5px rgba(176,90,60,0.55);
+      color: #B05A3C;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="stage"><span class="period">.</span></div>
+</body>
+</html>

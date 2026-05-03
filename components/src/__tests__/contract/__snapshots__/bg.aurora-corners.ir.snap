@@ -1,0 +1,83 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "borderRadiusPx": 0,
+          "fill": {
+            "cx": 0.5,
+            "cy": 0.5,
+            "kind": "radial-gradient",
+            "shape": "ellipse",
+            "stops": [
+              {
+                "color": {
+                  "alpha": 0.32,
+                  "hex": "tokens."
+                },
+                "position": 0
+              },
+              {
+                "color": {
+                  "alpha": 0,
+                  "hex": "tokens."
+                },
+                "position": 1
+              }
+            ]
+          },
+          "kind": "shape",
+          "metadata": {
+            "axis": "surface",
+            "cx": 0.5,
+            "cy": 0.5,
+            "intensity": "med",
+            "role": "surface.radial-blob",
+            "shape": "ellipse"
+          },
+          "recipeId": "surface.radial-blob",
+          "shape": "rect",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "surface",
+        "cx": 0.5,
+        "cy": 0.5,
+        "intensity": "med",
+        "role": "surface.radial-blob",
+        "shape": "ellipse"
+      },
+      "recipeId": "surface.radial-blob",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "bg",
+    "primitive": "surface.radial-blob",
+    "role": "bg.aurora-corners",
+    "version": "1.0.0"
+  },
+  "recipeId": "bg.aurora-corners",
+  "zOrder": 0
+}

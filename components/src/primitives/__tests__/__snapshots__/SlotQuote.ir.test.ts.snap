@@ -1,0 +1,116 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`slotQuoteToIR > emits a snapshot-stable quote with attribution + mark 1`] = `
+{
+  "bbox": {
+    "h": 280,
+    "w": 800,
+    "x": 100,
+    "y": 100,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 84,
+        "w": 800,
+        "x": 100,
+        "y": 100,
+      },
+      "kind": "text",
+      "metadata": {
+        "role": "quote-mark",
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": {
+                "alpha": 0.6,
+                "hex": "#a78bfa",
+              },
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 66,
+              "fontWeight": 700,
+              "italic": false,
+              "text": "“",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "slot.quote.mark",
+      "zOrder": 0,
+    },
+    {
+      "bbox": {
+        "h": 164,
+        "w": 800,
+        "x": 100,
+        "y": 184,
+      },
+      "kind": "text",
+      "metadata": {
+        "role": "quote-body",
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#f5f5f7",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 22,
+              "fontWeight": 500,
+              "italic": false,
+              "text": "The best way out is always through.",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "slot.quote.body",
+      "zOrder": 10,
+    },
+    {
+      "bbox": {
+        "h": 32,
+        "w": 800,
+        "x": 100,
+        "y": 348,
+      },
+      "kind": "text",
+      "metadata": {
+        "role": "quote-attribution",
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#a1a1aa",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 13,
+              "fontWeight": 500,
+              "italic": false,
+              "text": "— Robert Frost",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "slot.quote.attribution",
+      "zOrder": 20,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "slot",
+    "hasAttribution": true,
+    "role": "slot.quote",
+    "withMark": true,
+  },
+  "recipeId": "slot.quote",
+  "zOrder": 0,
+}
+`;

@@ -182,12 +182,31 @@ def _set_solid_alpha(srgb_el, alpha: float) -> None:
     _et.SubElement(srgb_el, f"{{{_NS_A}}}alpha", attrib={"val": str(val)})
 
 
-def _apply_svg_fill(shape, fill: str | None, fill_opacity: float) -> None:
-    if fill is None or fill.lower() in ("none", "transparent"):
+def _apply_svg_fill(shape, fill, fill_opacity: float) -> None:
+    """Apply a fill to an emitted PPTX shape.
+
+    `fill` is one of:
+      * ``None`` / ``"none"`` / ``"transparent"`` — clear fill.
+      * ``str`` — a CSS colour (`"#1F2924"`, `"rgba(...)"`, …).  Emits
+        `<a:solidFill>`.
+      * ``dict`` — a structured gradient def the walker resolved from
+        `fill="url(#id)"`.  Emits `<a:gradFill>` with the same stops,
+        positions, and angle/radial geometry.
+
+    Round-2 visual-QA traced the duotone-drift regression to the
+    silent failure of `parse_color("url(#duo-bg)")` — every
+    gradient-filled rect was rendering with no fill.  The walker now
+    resolves url() refs inline, and this dispatch routes them through
+    the native gradFill emit instead.
+    """
+    if fill is None or (isinstance(fill, str) and fill.lower() in ("none", "transparent")):
         try:
             shape.fill.background()
         except Exception:
             pass
+        return
+    if isinstance(fill, dict):
+        _apply_svg_gradient_fill(shape, fill, fill_opacity)
         return
     parsed = parse_color(fill)
     if parsed is None:
@@ -208,6 +227,110 @@ def _apply_svg_fill(shape, fill: str | None, fill_opacity: float) -> None:
                 _set_solid_alpha(srgb, final_alpha)
         except Exception:
             pass
+
+
+def _apply_svg_gradient_fill(shape, gradient: dict, fill_opacity: float) -> None:
+    """Translate a resolved SVG gradient def into a native `<a:gradFill>`.
+
+    The walker captures `<linearGradient>` / `<radialGradient>` defs
+    from the SVG <defs> block, normalises stops to (offset 0..1, color,
+    opacity), and resolves `fill="url(#id)"` references inline.  This
+    function takes the resolved dict and rewrites the shape's spPr
+    fill block.
+
+    Linear gradients map directly: SVG (x1,y1)→(x2,y2) becomes an
+    `<a:lin ang=...>` angle.  Radial gradients map to OOXML's
+    "circle" path with `<a:tileRect>` controlling focal placement.
+    Stops carry through with `<a:alpha>` per stop when the source
+    `stop-opacity` is partial — the OOXML attribute is identical in
+    semantics (1/100000 percent) so the round-trip is lossless.
+    """
+    from lxml import etree as _et
+    import math
+
+    stops = gradient.get("stops") or []
+    if not stops:
+        try:
+            shape.fill.background()
+        except Exception:
+            pass
+        return
+
+    sp_pr = shape._element.spPr  # noqa: SLF001
+    # Strip any existing fill children so we're authoring fresh.
+    for tag in ("solidFill", "gradFill", "blipFill", "pattFill", "noFill"):
+        for existing in sp_pr.findall(f"{{{_NS_A}}}{tag}"):
+            sp_pr.remove(existing)
+
+    # Determine where to insert the fill.  spPr's child ordering rules
+    # (per OOXML schema) put fills after xfrm and prstGeom but before
+    # ln, effectLst, etc.  Insert immediately after the geometry
+    # element if present, else as the first child.
+    insert_after = None
+    for tag in ("custGeom", "prstGeom"):
+        m = sp_pr.find(f"{{{_NS_A}}}{tag}")
+        if m is not None:
+            insert_after = m
+            break
+
+    grad_fill = _et.Element(f"{{{_NS_A}}}gradFill",
+                             attrib={"flip": "none", "rotWithShape": "1"})
+    if insert_after is not None:
+        insert_after.addnext(grad_fill)
+    else:
+        sp_pr.insert(0, grad_fill)
+
+    # <a:gsLst> with one <a:gs pos="..."> per stop
+    gs_lst = _et.SubElement(grad_fill, f"{{{_NS_A}}}gsLst")
+    for st in stops:
+        offset = float(st.get("offset", 0))
+        color  = st.get("color") or "#000000"
+        op     = float(st.get("opacity", 1)) * float(max(0.0, min(1.0, fill_opacity)))
+        parsed = parse_color(color)
+        if parsed is None:
+            continue
+        rgb, color_alpha = parsed
+        final_alpha = op * float(color_alpha)
+        pos = int(round(max(0.0, min(1.0, offset)) * 100_000))
+        gs = _et.SubElement(gs_lst, f"{{{_NS_A}}}gs", attrib={"pos": str(pos)})
+        # `parse_color` returns python-pptx's `RGBColor`, whose `str()`
+        # is the canonical 6-hex representation (`"0F1311"`).  That's
+        # exactly what `<a:srgbClr val="...">` wants.
+        srgb = _et.SubElement(gs, f"{{{_NS_A}}}srgbClr",
+                              attrib={"val": str(rgb).upper()})
+        if final_alpha < 0.999:
+            _et.SubElement(srgb, f"{{{_NS_A}}}alpha",
+                            attrib={"val": str(int(round(final_alpha * 100_000)))})
+
+    # Geometry — linear angle or radial path
+    if gradient.get("kind") == "linear":
+        # SVG (x1,y1) → (x2,y2) defines the gradient direction in
+        # objectBoundingBox units (0..1).  OOXML <a:lin ang=...> is in
+        # 1/60000 of a degree, with 0° pointing right (matching SVG).
+        x1 = float(gradient.get("x1", 0)); y1 = float(gradient.get("y1", 0))
+        x2 = float(gradient.get("x2", 1)); y2 = float(gradient.get("y2", 0))
+        dx, dy = x2 - x1, y2 - y1
+        ang_deg = math.degrees(math.atan2(dy, dx)) if (dx or dy) else 0.0
+        # Normalise into 0..360 and convert to OOXML's 60000ths.
+        while ang_deg < 0:
+            ang_deg += 360
+        ooxml_ang = int(round(ang_deg * 60_000)) % (360 * 60_000)
+        _et.SubElement(grad_fill, f"{{{_NS_A}}}lin",
+                        attrib={"ang": str(ooxml_ang), "scaled": "1"})
+    else:
+        # Radial — emit a circle path with a focal tileRect derived
+        # from `fx`/`fy` (objectBoundingBox 0..1).
+        fx = float(gradient.get("fx", gradient.get("cx", 0.5)))
+        fy = float(gradient.get("fy", gradient.get("cy", 0.5)))
+        path_el = _et.SubElement(grad_fill, f"{{{_NS_A}}}path",
+                                  attrib={"path": "circle"})
+        _et.SubElement(path_el, f"{{{_NS_A}}}fillToRect",
+                        attrib={
+                            "l": str(int(round(fx * 100_000))),
+                            "t": str(int(round(fy * 100_000))),
+                            "r": str(int(round((1 - fx) * 100_000))),
+                            "b": str(int(round((1 - fy) * 100_000))),
+                        })
 
 
 def _apply_svg_stroke(

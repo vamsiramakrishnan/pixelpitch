@@ -1,0 +1,53 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`diagramConnectorToIR > emits a snapshot-stable straight connector with arrow 1`] = `
+{
+  "bbox": {
+    "h": 100,
+    "w": 300,
+    "x": 100,
+    "y": 100,
+  },
+  "commands": [
+    {
+      "op": "M",
+      "x": 100,
+      "y": 100,
+    },
+    {
+      "op": "L",
+      "x": 400,
+      "y": 200,
+    },
+  ],
+  "fillRule": "nonzero",
+  "kind": "path",
+  "markerEnd": {
+    "kind": "arrow",
+    "size": "md",
+  },
+  "markerStart": {
+    "kind": "none",
+    "size": "md",
+  },
+  "metadata": {
+    "axis": "diagram",
+    "from": {
+      "x": 100,
+      "y": 100,
+    },
+    "kind": "straight",
+    "role": "diagram.connector",
+    "to": {
+      "x": 400,
+      "y": 200,
+    },
+  },
+  "recipeId": "diagram.connector",
+  "strokeColor": "#a1a1aa",
+  "strokeLinecap": "round",
+  "strokeLinejoin": "round",
+  "strokeWidthPx": 2,
+  "zOrder": 0,
+}
+`;

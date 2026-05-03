@@ -1,0 +1,60 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "borderRadiusPx": 0,
+          "fill": {
+            "color": "#a78bfa",
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "axis": "decoration",
+            "preset": "octagon",
+            "role": "decoration.shape-preset"
+          },
+          "recipeId": "decoration.shape-preset",
+          "shape": "octagon",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "decoration",
+        "preset": "octagon",
+        "role": "decoration.shape-preset"
+      },
+      "recipeId": "decoration.shape-preset",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "mask",
+    "primitive": "decoration.shape-preset",
+    "role": "mask.octagon",
+    "src": "https://example.invalid/asset",
+    "version": "1.0.0"
+  },
+  "recipeId": "mask.octagon",
+  "zOrder": 0
+}

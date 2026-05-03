@@ -1,0 +1,111 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "borderRadiusPx": 12,
+          "fill": {
+            "color": "#0e0e1a",
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "chrome": "terminal",
+            "role": "window-surface",
+            "theme": "dark"
+          },
+          "recipeId": "chrome.window-frame.surface",
+          "shape": "rounded-rect",
+          "zOrder": 0
+        },
+        {
+          "bbox": {
+            "h": 28,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "borderRadiusPx": 0,
+          "fill": {
+            "color": "#16162a",
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "role": "window-titlebar"
+          },
+          "recipeId": "chrome.window-frame.titlebar",
+          "shape": "rect",
+          "zOrder": 10
+        },
+        {
+          "bbox": {
+            "h": 148,
+            "w": 576,
+            "x": 112,
+            "y": 140
+          },
+          "kind": "text",
+          "metadata": {
+            "role": "window-body"
+          },
+          "paragraphs": [
+            {
+              "align": "left",
+              "runs": [
+                {
+                  "color": "#f5f5f7",
+                  "fontFamily": "JetBrains Mono, \"SF Mono\", monospace",
+                  "fontSizePx": 12,
+                  "fontWeight": 400,
+                  "italic": false,
+                  "text": "Caption text",
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "chrome.window-frame.body",
+          "zOrder": 40
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "chrome",
+        "chrome": "terminal",
+        "role": "chrome.window-frame",
+        "theme": "dark"
+      },
+      "recipeId": "chrome.window-frame",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "ui",
+    "primitive": "chrome.window-frame",
+    "prompt": "$",
+    "role": "ui.terminal-window",
+    "version": "1.0.0"
+  },
+  "recipeId": "ui.terminal-window",
+  "zOrder": 0
+}

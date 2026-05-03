@@ -1,0 +1,44 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`decorationShapePresetToIR > emits a snapshot-stable left-brace 1`] = `
+{
+  "bbox": {
+    "h": 200,
+    "w": 32,
+    "x": 0,
+    "y": 0,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 32,
+        "x": 0,
+        "y": 0,
+      },
+      "borderRadiusPx": 0,
+      "fill": {
+        "color": "#a78bfa",
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "axis": "decoration",
+        "preset": "brace-left",
+        "role": "decoration.shape-preset",
+      },
+      "recipeId": "decoration.shape-preset",
+      "shape": "brace-left",
+      "zOrder": 0,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "decoration",
+    "preset": "brace-left",
+    "role": "decoration.shape-preset",
+  },
+  "recipeId": "decoration.shape-preset",
+  "zOrder": 0,
+}
+`;

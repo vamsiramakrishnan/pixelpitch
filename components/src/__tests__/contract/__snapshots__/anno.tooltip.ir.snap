@@ -1,0 +1,92 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "commands": [
+            {
+              "op": "M",
+              "x": 100,
+              "y": 200
+            },
+            {
+              "op": "L",
+              "x": 200,
+              "y": 200
+            }
+          ],
+          "fillRule": "nonzero",
+          "kind": "path",
+          "markerEnd": {
+            "kind": "arrow",
+            "size": "md"
+          },
+          "metadata": {
+            "axis": "annotation",
+            "dashed": false,
+            "from": {
+              "x": 100,
+              "y": 200
+            },
+            "role": "annotation.leader-line",
+            "to": {
+              "x": 200,
+              "y": 200
+            }
+          },
+          "recipeId": "annotation.leader-line",
+          "strokeColor": "tokens.palette.surface-3",
+          "strokeLinecap": "round",
+          "strokeLinejoin": "miter",
+          "strokeWidthPx": 1.5,
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "annotation",
+        "dashed": false,
+        "from": {
+          "x": 100,
+          "y": 200
+        },
+        "role": "annotation.leader-line",
+        "thicknessPx": 1.5,
+        "to": {
+          "x": 200,
+          "y": 200
+        }
+      },
+      "recipeId": "annotation.leader-line",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "anno",
+    "body": "Caption text",
+    "primitive": "annotation.leader-line",
+    "role": "anno.tooltip",
+    "version": "1.0.0"
+  },
+  "recipeId": "anno.tooltip",
+  "zOrder": 0
+}

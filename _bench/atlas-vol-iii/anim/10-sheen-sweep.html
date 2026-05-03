@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="slidify-capture-duration" content="2400">
+<meta name="slidify-capture-fps" content="14">
+<title>Atlas — sheen sweep over numeral</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin:0; padding:0; width:680px; height:280px;
+               font-family: 'Spectral', 'Playfair Display', Georgia, serif;
+               background:#EFE9DC; color:#1F2924; }
+  .stage { position:relative; width:680px; height:280px;
+           display:flex; align-items:center; justify-content:center; }
+
+  .figure {
+    font-style: italic;
+    font-weight: 300;
+    font-size: 240px;
+    line-height: 0.86;
+    letter-spacing: -0.04em;
+    /* The sheen is the gradient itself. Background-clip: text masks the
+       gradient to glyph outlines. We animate background-position so the
+       clay-tinted bright stripe slides across the figure once. */
+    background: linear-gradient(110deg,
+      #1F2924 30%,
+      #B05A3C 48%,
+      #EFE9DC 50%,
+      #B05A3C 52%,
+      #1F2924 70%);
+    background-size: 220% 100%;
+    background-position: -120% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: sheen 2.4s cubic-bezier(0.6, 0.05, 0.2, 1) forwards;
+  }
+  @keyframes sheen {
+    0%   { background-position: -120% 0; }
+    100% { background-position:  220% 0; }
+  }
+  .pct {
+    font-size: 96px;
+    color: #B05A3C;
+    font-weight: 400;
+    letter-spacing: 0;
+    vertical-align: 0.3em;
+    margin-left: -4px;
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <span class="figure">0.12</span><span class="pct">%</span>
+  </div>
+</body>
+</html>

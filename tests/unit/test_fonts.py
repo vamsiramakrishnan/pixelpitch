@@ -16,17 +16,33 @@ def test_resolve_known_font_first():
 
 
 def test_resolve_unknown_then_known():
-    # Unknown title-cased proper noun wins over a later known name —
-    # PowerPoint may have it locally and we don't want to silently downgrade.
-    assert resolve("CustomSans, Arial") == "Customsans"
-    # ...but a fully-unknown mono lead defers to the generic fallback.
+    # Round-2 visual-QA contract: unknown families no longer pass through
+    # verbatim — that path was emitting `<a:latin typeface="CustomSans"/>`
+    # to slide XML and depending on host substitution.  The resolver
+    # walks past the unknown lead and lands on the next known token.
+    assert resolve("CustomSans, Arial") == "Arial"
+    # Unknown mono lead still defers to the mono generic fallback.
     assert resolve("'JetBrains Mono', monospace") == "Consolas"
 
 
-def test_resolve_unknown_only_titlecased():
-    # Plausibly-installed unknown fonts pass through Title-cased so PowerPoint
-    # can substitute if it has them locally.
-    assert resolve("'Helvetica Neue'") == "Helvetica Neue"
+def test_resolve_unknown_no_generic_falls_back_to_default():
+    # No generic family token in the stack and no known names — drop to
+    # DEFAULT_FONT instead of emitting an unknown verbatim.
+    assert resolve("'NobodysFont'") == DEFAULT_FONT
+
+
+def test_resolve_modern_display_families_substitute():
+    # Bench audit found these families landing as `<a:latin typeface=
+    # "Helvetica Neue"/>` etc. and silently substituting on every renderer
+    # without the named face installed.  Each is now in `_FONT_MAP` mapped
+    # to a visually-adjacent core font.
+    assert resolve("'Helvetica Neue', Arial, sans-serif") == "Arial"
+    assert resolve("'Bebas Neue', Impact, sans-serif") == "Impact"
+    assert resolve("'Playfair Display', serif") == "Cambria"
+    assert resolve("'Spectral', Georgia, serif") == "Cambria"
+    assert resolve("'Inter Tight', sans-serif") == "Calibri"
+    assert resolve("'IBM Plex Mono', monospace") == "Consolas"
+    assert resolve("'JetBrains Mono', 'Menlo', monospace") == "Consolas"
 
 
 def test_resolve_mono_stack_with_unknown_lead():
@@ -49,15 +65,16 @@ def test_resolve_mono_stack_without_generic_keyword():
 
 
 def test_resolve_sans_serif_stack_with_unknown_lead():
-    # Generic-family fallback for sans-serif stacks too.
-    assert resolve("'Custom Sans', sans-serif") == "Custom Sans"
-    # ...but if the lead is unknown AND looks like a system-ish hint, return
-    # the title-cased name so the renderer can substitute. We don't aggressively
-    # rewrite sans-serif stacks the way we do mono stacks.
+    # Round-2 contract: the resolver now substitutes deterministically
+    # rather than emitting an unknown name and trusting the renderer.
+    # An unknown lead in a sans-serif stack lands on the sans-serif
+    # generic fallback (Calibri) — same shape as the mono path.
+    assert resolve("'Custom Sans', sans-serif") == "Calibri"
 
 
 def test_resolve_serif_generic_fallback():
-    assert resolve("'Souvenir', serif") == "Souvenir"  # title-cased proper noun
+    # Same shape as the sans path: unknown serif lead → serif generic.
+    assert resolve("'Souvenir', serif") == "Cambria"
 
 
 def test_resolve_already_known_mono_passes_through():

@@ -1,0 +1,100 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "borderRadiusPx": 9999,
+          "fill": {
+            "color": {
+              "alpha": 0.16,
+              "hex": "#3b82f6"
+            },
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "kind": "pill",
+            "role": "annotation-badge-bg",
+            "rotateDeg": 0,
+            "tone": "info"
+          },
+          "recipeId": "annotation.badge.bg",
+          "shape": "rounded-rect",
+          "zOrder": 0
+        },
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "kind": "text",
+          "metadata": {
+            "label": "Caption text",
+            "role": "annotation-badge-label"
+          },
+          "paragraphs": [
+            {
+              "align": "center",
+              "runs": [
+                {
+                  "color": "#3b82f6",
+                  "fontFamily": "Inter, sans-serif",
+                  "fontSizePx": 12,
+                  "fontWeight": 600,
+                  "italic": false,
+                  "text": "Caption text",
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "annotation.badge.label",
+          "zOrder": 10
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "annotation",
+        "kind": "pill",
+        "label": "Caption text",
+        "role": "annotation.badge",
+        "rotateDeg": 0,
+        "tone": "info"
+      },
+      "recipeId": "annotation.badge",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "anno",
+    "bgColor": "tokens.palette.surface-3",
+    "pointerOffset": 0.5,
+    "pointerSide": "bottom",
+    "primitive": "annotation.badge",
+    "role": "anno.callout-bubble",
+    "version": "1.0.0"
+  },
+  "recipeId": "anno.callout-bubble",
+  "zOrder": 0
+}

@@ -1,0 +1,74 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "borderRadiusPx": 0,
+          "fill": {
+            "angleDeg": 0,
+            "featureSizePx": 1.5,
+            "fgColor": {
+              "alpha": 0.102,
+              "hex": "#ffffff"
+            },
+            "kind": "pattern",
+            "pattern": "dots",
+            "tileHeightPx": 24,
+            "tileWidthPx": 24
+          },
+          "kind": "shape",
+          "metadata": {
+            "axis": "surface",
+            "featurePx": 1.5,
+            "pattern": "dots",
+            "role": "surface.pattern-tile",
+            "tilePx": 24
+          },
+          "recipeId": "surface.pattern-tile",
+          "shape": "rect",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "angleDeg": 0,
+        "axis": "surface",
+        "featurePx": 1.5,
+        "pattern": "dots",
+        "role": "surface.pattern-tile",
+        "tilePx": 24
+      },
+      "recipeId": "surface.pattern-tile",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "bg",
+    "color": "tokens.palette.ruler",
+    "dotRadiusPx": 1.5,
+    "primitive": "surface.pattern-tile",
+    "role": "bg.dot-lattice-coarse",
+    "version": "1.0.0"
+  },
+  "recipeId": "bg.dot-lattice-coarse",
+  "zOrder": 0
+}

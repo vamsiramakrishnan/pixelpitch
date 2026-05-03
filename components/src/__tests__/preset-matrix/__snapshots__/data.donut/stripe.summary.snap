@@ -1,0 +1,10 @@
+{
+  "native_area_px2": 186624,
+  "native_ratio": 0.2025,
+  "preset": "stripe",
+  "raster_nodes": 0,
+  "recipe": "data.donut",
+  "root_area_px2": 921600,
+  "status": "observe",
+  "total_nodes": 2
+}

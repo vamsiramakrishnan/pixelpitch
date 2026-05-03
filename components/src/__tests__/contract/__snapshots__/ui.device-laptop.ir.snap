@@ -1,0 +1,100 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "borderRadiusPx": 12,
+          "fill": {
+            "color": "#f5f5f7",
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "device": "laptop",
+            "role": "device-bezel"
+          },
+          "recipeId": "chrome.device-frame.bezel",
+          "shape": "rounded-rect",
+          "zOrder": 0
+        },
+        {
+          "bbox": {
+            "h": 154,
+            "w": 572,
+            "x": 114,
+            "y": 114
+          },
+          "borderRadiusPx": 6,
+          "fill": {
+            "color": "#16162a",
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "placeholder": true,
+            "role": "device-screen"
+          },
+          "recipeId": "chrome.device-frame.screen",
+          "shape": "rounded-rect",
+          "zOrder": 10
+        },
+        {
+          "bbox": {
+            "h": 18,
+            "w": 600,
+            "x": 100,
+            "y": 282
+          },
+          "borderRadiusPx": 0,
+          "fill": {
+            "color": "#d4d4d8",
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "role": "device-base"
+          },
+          "recipeId": "chrome.device-frame.base",
+          "shape": "rect",
+          "zOrder": 20
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "chrome",
+        "device": "laptop",
+        "hasScreenshot": false,
+        "role": "chrome.device-frame"
+      },
+      "recipeId": "chrome.device-frame",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "ui",
+    "primitive": "chrome.device-frame",
+    "role": "ui.device-laptop",
+    "version": "1.0.0"
+  },
+  "recipeId": "ui.device-laptop",
+  "zOrder": 0
+}

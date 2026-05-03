@@ -1,0 +1,440 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 150,
+        "w": 510,
+        "x": 145,
+        "y": 120
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 150,
+            "w": 510,
+            "x": 145,
+            "y": 120
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 150,
+                "w": 510,
+                "x": 145,
+                "y": 120
+              },
+              "borderRadiusPx": 12,
+              "fill": {
+                "color": "#0e0e1a",
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "chrome": "mac",
+                "role": "window-surface",
+                "theme": "dark"
+              },
+              "recipeId": "chrome.window-frame.surface",
+              "shape": "rounded-rect",
+              "zOrder": 0
+            },
+            {
+              "bbox": {
+                "h": 28,
+                "w": 510,
+                "x": 145,
+                "y": 120
+              },
+              "borderRadiusPx": 0,
+              "fill": {
+                "color": "#16162a",
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "role": "window-titlebar"
+              },
+              "recipeId": "chrome.window-frame.titlebar",
+              "shape": "rect",
+              "zOrder": 10
+            },
+            {
+              "bbox": {
+                "h": 12,
+                "w": 12,
+                "x": 157,
+                "y": 128
+              },
+              "borderRadiusPx": 0,
+              "fill": {
+                "color": "#ef4444",
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "index": 0,
+                "kind": "mac",
+                "role": "window-control"
+              },
+              "recipeId": "chrome.window-frame.dot-1",
+              "shape": "oval",
+              "zOrder": 20
+            },
+            {
+              "bbox": {
+                "h": 12,
+                "w": 12,
+                "x": 175,
+                "y": 128
+              },
+              "borderRadiusPx": 0,
+              "fill": {
+                "color": "#f59e0b",
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "index": 1,
+                "kind": "mac",
+                "role": "window-control"
+              },
+              "recipeId": "chrome.window-frame.dot-2",
+              "shape": "oval",
+              "zOrder": 21
+            },
+            {
+              "bbox": {
+                "h": 12,
+                "w": 12,
+                "x": 193,
+                "y": 128
+              },
+              "borderRadiusPx": 0,
+              "fill": {
+                "color": "#10b981",
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "index": 2,
+                "kind": "mac",
+                "role": "window-control"
+              },
+              "recipeId": "chrome.window-frame.dot-3",
+              "shape": "oval",
+              "zOrder": 22
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "chrome",
+            "chrome": "mac",
+            "role": "chrome.window-frame",
+            "theme": "dark"
+          },
+          "recipeId": "chrome.window-frame",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "ui",
+        "primitive": "chrome.window-frame",
+        "role": "ui.browser-mac",
+        "version": "1.0.0"
+      },
+      "recipeId": "ui.browser-mac",
+      "zOrder": 0
+    },
+    {
+      "bbox": {
+        "h": 14.000000000000002,
+        "w": 30,
+        "x": 220,
+        "y": 160
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 14.000000000000002,
+            "w": 30,
+            "x": 220,
+            "y": 160
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 14.000000000000002,
+                "w": 30,
+                "x": 220,
+                "y": 160
+              },
+              "borderRadiusPx": 0,
+              "fill": {
+                "color": "#0e0e1a",
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "axis": "surface",
+                "role": "surface.shape-fill",
+                "shape": "oval"
+              },
+              "recipeId": "surface.shape-fill",
+              "shape": "oval",
+              "zOrder": 0
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "surface",
+            "radiusPx": 0,
+            "role": "surface.shape-fill",
+            "shape": "oval"
+          },
+          "recipeId": "surface.shape-fill",
+          "zOrder": 0
+        },
+        {
+          "bbox": {
+            "h": 13.3,
+            "w": 30,
+            "x": 220,
+            "y": 160.7
+          },
+          "kind": "text",
+          "metadata": {
+            "axis": "slot",
+            "role": "slot.numeral",
+            "scale": "numeral-md"
+          },
+          "paragraphs": [
+            {
+              "align": "left",
+              "runs": [
+                {
+                  "color": "#f5f5f7",
+                  "fontFamily": "Inter, sans-serif",
+                  "fontSizePx": 88,
+                  "fontWeight": 800,
+                  "italic": false,
+                  "text": "",
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "slot.numeral",
+          "zOrder": 10
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "anno",
+        "composite": true,
+        "role": "anno.numbered-hotspot",
+        "version": "1.0.0"
+      },
+      "recipeId": "anno.numbered-hotspot",
+      "zOrder": 10
+    },
+    {
+      "bbox": {
+        "h": 14.000000000000002,
+        "w": 30,
+        "x": 430,
+        "y": 200
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 14.000000000000002,
+            "w": 30,
+            "x": 430,
+            "y": 200
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 14.000000000000002,
+                "w": 30,
+                "x": 430,
+                "y": 200
+              },
+              "borderRadiusPx": 0,
+              "fill": {
+                "color": "#0e0e1a",
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "axis": "surface",
+                "role": "surface.shape-fill",
+                "shape": "oval"
+              },
+              "recipeId": "surface.shape-fill",
+              "shape": "oval",
+              "zOrder": 0
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "surface",
+            "radiusPx": 0,
+            "role": "surface.shape-fill",
+            "shape": "oval"
+          },
+          "recipeId": "surface.shape-fill",
+          "zOrder": 0
+        },
+        {
+          "bbox": {
+            "h": 13.3,
+            "w": 30,
+            "x": 430,
+            "y": 200.7
+          },
+          "kind": "text",
+          "metadata": {
+            "axis": "slot",
+            "role": "slot.numeral",
+            "scale": "numeral-md"
+          },
+          "paragraphs": [
+            {
+              "align": "left",
+              "runs": [
+                {
+                  "color": "#f5f5f7",
+                  "fontFamily": "Inter, sans-serif",
+                  "fontSizePx": 88,
+                  "fontWeight": 800,
+                  "italic": false,
+                  "text": "",
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "slot.numeral",
+          "zOrder": 10
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "anno",
+        "composite": true,
+        "role": "anno.numbered-hotspot",
+        "version": "1.0.0"
+      },
+      "recipeId": "anno.numbered-hotspot",
+      "zOrder": 20
+    },
+    {
+      "bbox": {
+        "h": 14.000000000000002,
+        "w": 108,
+        "x": 262,
+        "y": 160
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 14.000000000000002,
+            "w": 108,
+            "x": 262,
+            "y": 160
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 14.000000000000002,
+                "w": 108,
+                "x": 262,
+                "y": 160
+              },
+              "commands": [
+                {
+                  "op": "M",
+                  "x": 262,
+                  "y": 167
+                },
+                {
+                  "op": "L",
+                  "x": 370,
+                  "y": 167
+                }
+              ],
+              "fillRule": "nonzero",
+              "kind": "path",
+              "markerEnd": {
+                "kind": "arrow",
+                "size": "md"
+              },
+              "metadata": {
+                "axis": "annotation",
+                "dashed": false,
+                "from": {
+                  "x": 262,
+                  "y": 167
+                },
+                "role": "annotation.leader-line",
+                "to": {
+                  "x": 370,
+                  "y": 167
+                }
+              },
+              "recipeId": "annotation.leader-line",
+              "strokeColor": "#16162a",
+              "strokeLinecap": "round",
+              "strokeLinejoin": "miter",
+              "strokeWidthPx": 1.5,
+              "zOrder": 0
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "annotation",
+            "dashed": false,
+            "from": {
+              "x": 262,
+              "y": 167
+            },
+            "role": "annotation.leader-line",
+            "thicknessPx": 1.5,
+            "to": {
+              "x": 370,
+              "y": 167
+            }
+          },
+          "recipeId": "annotation.leader-line",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "anno",
+        "primitive": "annotation.leader-line",
+        "role": "anno.tooltip",
+        "version": "1.0.0"
+      },
+      "recipeId": "anno.tooltip",
+      "zOrder": 30
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "comp",
+    "composite": true,
+    "role": "comp.annotated-screenshot",
+    "version": "1.0.0"
+  },
+  "recipeId": "comp.annotated-screenshot",
+  "zOrder": 0
+}

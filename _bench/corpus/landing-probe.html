@@ -1,0 +1,331 @@
+<!--
+  slidify · landing-page atomic seed · PROBE
+  ===========================================
+  Each slide tests ONE primitive (or family) against the slidify native/raster
+  envelope. Read report.json after conversion to see what survived.
+
+  Tests:
+    01  type-fill         multi-stop gradient on text vs. degrade-to-first-stop
+    02  type-stroke       -webkit-text-stroke + transparent fill (outline)
+    03  type-echo         offset stacked spans w/ opacity (motion ghost)
+    04  type-longshadow   stacked offsets, decreasing opacity (long-shadow)
+    05  type-mixed        solid + outline + gradient in one headline
+    06  bg-fields         mesh, conic, halftone (svg), dot-lattice (svg), scanlines
+    07  mask-shapes       disc, arch (radius), hex (polygon), parallelogram (polygon)
+    08  data-prim         progress ring, gauge, sparkline, ticker, heatmap
+-->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>probe — 01 type-fill</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:80px;position:relative;overflow:hidden;background:radial-gradient(ellipse 1100px 760px at 80% 12%,#1e1b4b 0%,#0a0a14 55%,#050510 100%)}
+  .kicker{font-size:12px;letter-spacing:0.42em;text-transform:uppercase;color:#a78bfa;font-weight:700;margin:0 0 14px 0}
+  .label{position:absolute;top:36px;right:80px;font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700;font-variant-numeric:tabular-nums}
+  .footer{position:absolute;bottom:36px;left:80px;right:80px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+  .cell{padding:16px 22px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08)}
+  .cell .tag{font-size:10px;letter-spacing:0.28em;color:#71717a;font-weight:700;text-transform:uppercase;margin-bottom:6px}
+
+  .gfill-2 { font-size:48px;font-weight:800;letter-spacing:-0.03em;line-height:1; margin:0;
+             background: linear-gradient(135deg, #818cf8 0%, #f472b6 100%);
+             -webkit-background-clip:text; background-clip:text; color:transparent }
+  .gfill-4 { font-size:48px;font-weight:800;letter-spacing:-0.03em;line-height:1; margin:0;
+             background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 35%, #f472b6 70%, #fb923c 100%);
+             -webkit-background-clip:text; background-clip:text; color:transparent }
+  .gfill-rad { font-size:48px;font-weight:800;letter-spacing:-0.03em;line-height:1; margin:0;
+               background: radial-gradient(circle at 30% 50%, #fde68a 0%, #f472b6 50%, #6366f1 100%);
+               -webkit-background-clip:text; background-clip:text; color:transparent }
+  .gfill-conic { font-size:48px;font-weight:800;letter-spacing:-0.03em;line-height:1; margin:0;
+                 background: conic-gradient(from 215deg at 30% 50%, #818cf8, #f472b6, #fb923c, #facc15, #818cf8);
+                 -webkit-background-clip:text; background-clip:text; color:transparent }
+</style></head><body>
+<div class="slide">
+  <div class="label">PROBE 01 / TYPE-FILL</div>
+  <div class="kicker">test · gradient text envelope</div>
+  <h1 data-pptx-role="title" style="font-size:46px;font-weight:800;letter-spacing:-0.025em;margin:0 0 8px 0;line-height:1.05;max-width:1100px">Multi-stop gradient on text — does the gradient survive natively?</h1>
+  <div class="row">
+    <div class="cell"><div class="tag">linear · 2-stop</div><p class="gfill-2">SHIP THE FUTURE.</p></div>
+    <div class="cell"><div class="tag">linear · 4-stop</div><p class="gfill-4">SHIP THE FUTURE.</p></div>
+    <div class="cell"><div class="tag">radial</div><p class="gfill-rad">SHIP THE FUTURE.</p></div>
+    <div class="cell"><div class="tag">conic</div><p class="gfill-conic">SHIP THE FUTURE.</p></div>
+  </div>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED · PROBE</div><div>01 / 08</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>probe — 02 type-stroke</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:80px;position:relative;overflow:hidden;background:#06060c}
+  .kicker{font-size:12px;letter-spacing:0.42em;text-transform:uppercase;color:#a78bfa;font-weight:700;margin:0 0 14px 0}
+  .label{position:absolute;top:36px;right:80px;font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .footer{position:absolute;bottom:36px;left:80px;right:80px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700}
+  .stroke-1 { font-size:140px;font-weight:900;letter-spacing:-0.04em;line-height:0.95;margin:0;color:transparent;-webkit-text-stroke:2px #f5f5f7 }
+  .stroke-2 { font-size:140px;font-weight:900;letter-spacing:-0.04em;line-height:0.95;margin:0;color:transparent;-webkit-text-stroke:2px #a78bfa }
+  .stroke-thick { font-size:140px;font-weight:900;letter-spacing:-0.04em;line-height:0.95;margin:0;color:transparent;-webkit-text-stroke:5px #f472b6 }
+  .row{display:flex;flex-direction:column;gap:24px;margin-top:24px}
+</style></head><body>
+<div class="slide">
+  <div class="label">PROBE 02 / TYPE-STROKE</div>
+  <div class="kicker">test · -webkit-text-stroke envelope</div>
+  <h1 data-pptx-role="title" style="font-size:38px;font-weight:800;letter-spacing:-0.025em;margin:0 0 14px 0;line-height:1.1">Hairline display type — does outline-only text survive native?</h1>
+  <div class="row">
+    <div class="stroke-1">FUTURE.</div>
+    <div class="stroke-2">FUTURE.</div>
+    <div class="stroke-thick">FUTURE.</div>
+  </div>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED · PROBE</div><div>02 / 08</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>probe — 03 type-echo</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:80px;position:relative;overflow:hidden;background:linear-gradient(180deg,#0a0a14 0%,#1e1b4b 100%)}
+  .kicker{font-size:12px;letter-spacing:0.42em;text-transform:uppercase;color:#a78bfa;font-weight:700;margin:0 0 14px 0}
+  .label{position:absolute;top:36px;right:80px;font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .footer{position:absolute;bottom:36px;left:80px;right:80px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700}
+  .echo{position:relative;height:200px;margin-top:48px}
+  .echo span{position:absolute;left:0;top:0;font-size:180px;font-weight:900;letter-spacing:-0.045em;line-height:1;font-family:Inter,sans-serif}
+  .e1{color:rgba(167,139,250,0.10);transform:translateX(-72px)}
+  .e2{color:rgba(167,139,250,0.20);transform:translateX(-48px)}
+  .e3{color:rgba(167,139,250,0.35);transform:translateX(-24px)}
+  .e4{color:rgba(167,139,250,0.55);transform:translateX(0)}
+  .e5{color:#f5f5f7}
+  .echo2{position:relative;height:160px;margin-top:96px}
+  .echo2 span{position:absolute;font-size:120px;font-weight:900;letter-spacing:-0.04em;line-height:1}
+  .f1{color:rgba(244,114,182,0.20);left:84px;top:0}
+  .f2{color:rgba(244,114,182,0.45);left:42px;top:0}
+  .f3{color:#f472b6;left:0;top:0}
+</style></head><body>
+<div class="slide">
+  <div class="label">PROBE 03 / TYPE-ECHO</div>
+  <div class="kicker">test · ghost stack motion implication</div>
+  <h1 data-pptx-role="title" style="font-size:36px;font-weight:800;letter-spacing:-0.025em;margin:0 0 6px 0;line-height:1.1">Echo type — same word stamped n times, fading offset.</h1>
+  <div class="echo">
+    <span class="e1">VELOCITY.</span><span class="e2">VELOCITY.</span><span class="e3">VELOCITY.</span><span class="e4">VELOCITY.</span><span class="e5">VELOCITY.</span>
+  </div>
+  <div class="echo2">
+    <span class="f1">RUSH</span><span class="f2">RUSH</span><span class="f3">RUSH</span>
+  </div>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED · PROBE</div><div>03 / 08</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>probe — 04 type-longshadow</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#fef3c7;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:80px;position:relative;overflow:hidden;background:linear-gradient(135deg,#fde68a 0%,#fbbf24 100%)}
+  .kicker{font-size:12px;letter-spacing:0.42em;text-transform:uppercase;color:#92400e;font-weight:700;margin:0 0 14px 0}
+  .label{position:absolute;top:36px;right:80px;font-size:11px;letter-spacing:0.32em;color:#92400e;font-weight:700}
+  .footer{position:absolute;bottom:36px;left:80px;right:80px;display:flex;justify-content:space-between;font-size:11px;color:#92400e;letter-spacing:0.18em;font-weight:700}
+  .ls{position:relative;height:280px;margin-top:48px}
+  .ls span{position:absolute;left:0;top:0;font-size:240px;font-weight:900;letter-spacing:-0.05em;line-height:1}
+  /* Long-shadow: chain of offsets at 45deg, fading to transparent */
+  .s10{color:rgba(146,64,14,0.05);transform:translate(60px,60px)}
+  .s9{color:rgba(146,64,14,0.07);transform:translate(54px,54px)}
+  .s8{color:rgba(146,64,14,0.10);transform:translate(48px,48px)}
+  .s7{color:rgba(146,64,14,0.13);transform:translate(42px,42px)}
+  .s6{color:rgba(146,64,14,0.17);transform:translate(36px,36px)}
+  .s5{color:rgba(146,64,14,0.22);transform:translate(28px,28px)}
+  .s4{color:rgba(146,64,14,0.30);transform:translate(20px,20px)}
+  .s3{color:rgba(146,64,14,0.40);transform:translate(12px,12px)}
+  .s2{color:rgba(146,64,14,0.55);transform:translate(6px,6px)}
+  .s0{color:#7c2d12}
+</style></head><body>
+<div class="slide">
+  <div class="label">PROBE 04 / TYPE-LONGSHADOW</div>
+  <div class="kicker">test · stacked offsets emulate text-shadow</div>
+  <h1 data-pptx-role="title" style="font-size:34px;font-weight:800;letter-spacing:-0.025em;margin:0;color:#7c2d12">Long-shadow display via 10-deep span stack (text-shadow is unsupported).</h1>
+  <div class="ls">
+    <span class="s10">SOLAR</span><span class="s9">SOLAR</span><span class="s8">SOLAR</span><span class="s7">SOLAR</span>
+    <span class="s6">SOLAR</span><span class="s5">SOLAR</span><span class="s4">SOLAR</span><span class="s3">SOLAR</span>
+    <span class="s2">SOLAR</span><span class="s0">SOLAR</span>
+  </div>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED · PROBE</div><div>04 / 08</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>probe — 05 type-mixed</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:80px;position:relative;overflow:hidden;background:#06060c}
+  .kicker{font-size:12px;letter-spacing:0.42em;text-transform:uppercase;color:#a78bfa;font-weight:700;margin:0 0 14px 0}
+  .label{position:absolute;top:36px;right:80px;font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .footer{position:absolute;bottom:36px;left:80px;right:80px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700}
+  .display{font-size:128px;font-weight:900;letter-spacing:-0.045em;line-height:1.0;margin:60px 0 0 0;max-width:1120px}
+  .display .solid{color:#f5f5f7}
+  .display .stroke{color:transparent;-webkit-text-stroke:2px #f5f5f7}
+  .display .grad{background:linear-gradient(135deg,#818cf8,#f472b6 60%,#fb923c);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .display em{font-style:italic;font-weight:500;font-family:"Georgia","Times New Roman",serif;letter-spacing:-0.02em}
+</style></head><body>
+<div class="slide">
+  <div class="label">PROBE 05 / TYPE-MIXED</div>
+  <div class="kicker">test · solid + stroke + gradient + serif italic on one line</div>
+  <h1 data-pptx-role="title" class="display"><span class="solid">we don't ship</span> <span class="stroke">slides,</span><br><em>we ship</em> <span class="grad">systems.</span></h1>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED · PROBE</div><div>05 / 08</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>probe — 06 bg-fields</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:80px;position:relative;overflow:hidden;background:#06060c}
+  .kicker{font-size:12px;letter-spacing:0.42em;text-transform:uppercase;color:#a78bfa;font-weight:700;margin:0 0 14px 0}
+  .label{position:absolute;top:36px;right:80px;font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .footer{position:absolute;bottom:36px;left:80px;right:80px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+  .tile{position:relative;height:170px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,0.10)}
+  .tile .name{position:absolute;left:14px;bottom:10px;font-size:11px;letter-spacing:0.24em;font-weight:700;color:#fff;text-transform:uppercase;background:rgba(0,0,0,0.45);padding:5px 9px;border-radius:6px}
+  .mesh{background:
+    radial-gradient(circle at 18% 22%, rgba(99,102,241,0.55) 0%, transparent 38%),
+    radial-gradient(circle at 82% 18%, rgba(244,114,182,0.55) 0%, transparent 42%),
+    radial-gradient(circle at 78% 82%, rgba(251,146,60,0.55) 0%, transparent 40%),
+    radial-gradient(circle at 22% 78%, rgba(45,212,191,0.55) 0%, transparent 36%),
+    #0a0a14}
+  .conic{background:conic-gradient(from 90deg at 50% 50%, #818cf8, #f472b6, #fb923c, #facc15, #2dd4bf, #818cf8)}
+  .stripes{background:repeating-linear-gradient(135deg,#0a0a14 0 6px, #1e1b4b 6px 12px)}
+  .scanline{background:repeating-linear-gradient(0deg, rgba(255,255,255,0) 0 3px, rgba(255,255,255,0.06) 3px 4px), linear-gradient(135deg,#1e1b4b,#312e81)}
+  .duotone{background:linear-gradient(160deg,#312e81 0%, #db2777 100%)}
+  .vignette{background:radial-gradient(ellipse 80% 70% at 50% 50%, #1e1b4b 0%, #0a0a14 70%, #050510 100%)}
+</style></head><body>
+<div class="slide">
+  <div class="label">PROBE 06 / BG-FIELDS</div>
+  <div class="kicker">test · background-field atoms (no svg)</div>
+  <h1 data-pptx-role="title" style="font-size:34px;font-weight:800;letter-spacing:-0.025em;margin:0 0 6px 0">Six background atoms — pure CSS, native gradient emit.</h1>
+  <div class="grid">
+    <div class="tile mesh"><div class="name">mesh · 4-blob</div></div>
+    <div class="tile conic"><div class="name">conic · 360°</div></div>
+    <div class="tile stripes"><div class="name">repeating · stripes</div></div>
+    <div class="tile scanline"><div class="name">scanline · CRT</div></div>
+    <div class="tile duotone"><div class="name">duotone · 2-stop</div></div>
+    <div class="tile vignette"><div class="name">vignette · radial</div></div>
+  </div>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED · PROBE</div><div>06 / 08</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>probe — 07 mask-shapes</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:80px;position:relative;overflow:hidden;background:#06060c}
+  .kicker{font-size:12px;letter-spacing:0.42em;text-transform:uppercase;color:#a78bfa;font-weight:700;margin:0 0 14px 0}
+  .label{position:absolute;top:36px;right:80px;font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .footer{position:absolute;bottom:36px;left:80px;right:80px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:36px}
+  .frame{position:relative;height:240px;display:flex;align-items:flex-end;padding:0;overflow:hidden}
+  .frame .name{position:absolute;left:8px;bottom:-22px;font-size:10px;letter-spacing:0.24em;font-weight:700;color:#a1a1aa;text-transform:uppercase}
+  /* Synthetic "imagery" via gradients so we don't need <img> */
+  .art-a{background:linear-gradient(160deg,#0ea5e9 0%,#a855f7 50%,#ec4899 100%)}
+  .art-b{background:linear-gradient(135deg,#fbbf24 0%,#f97316 50%,#dc2626 100%)}
+  .art-c{background:radial-gradient(circle at 30% 30%,#34d399 0%,#0ea5e9 50%,#1e1b4b 100%)}
+  .art-d{background:linear-gradient(45deg,#312e81 0%,#7c3aed 40%,#f472b6 100%)}
+
+  .disc{width:240px;height:240px;border-radius:50%}
+  .arch{width:240px;height:240px;border-radius:120px 120px 14px 14px}
+  .hex{width:240px;height:240px;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+  .para{width:240px;height:240px;clip-path:polygon(15% 0,100% 0,85% 100%,0 100%)}
+</style></head><body>
+<div class="slide">
+  <div class="label">PROBE 07 / MASK-SHAPES</div>
+  <div class="kicker">test · clip-path polygons + border-radius shape mask</div>
+  <h1 data-pptx-role="title" style="font-size:34px;font-weight:800;letter-spacing:-0.025em;margin:0 0 6px 0">Mask shapes — common polygons emit native preset shapes.</h1>
+  <div class="grid">
+    <div class="frame"><div class="disc art-a"></div><div class="name">disc · radius:50%</div></div>
+    <div class="frame"><div class="arch art-b"></div><div class="name">arch · radius top</div></div>
+    <div class="frame"><div class="hex art-c"></div><div class="name">hex · polygon 6</div></div>
+    <div class="frame"><div class="para art-d"></div><div class="name">parallelogram · poly</div></div>
+  </div>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED · PROBE</div><div>07 / 08</div></div>
+</div>
+</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>probe — 08 data-prim</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;font-family:Inter,sans-serif;color:#f5f5f7;background:#06060c;-webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;box-sizing:border-box;padding:80px;position:relative;overflow:hidden;background:#06060c}
+  .kicker{font-size:12px;letter-spacing:0.42em;text-transform:uppercase;color:#a78bfa;font-weight:700;margin:0 0 14px 0}
+  .label{position:absolute;top:36px;right:80px;font-size:11px;letter-spacing:0.32em;color:#52525b;font-weight:700}
+  .footer{position:absolute;bottom:36px;left:80px;right:80px;display:flex;justify-content:space-between;font-size:11px;color:#52525b;letter-spacing:0.18em;font-weight:700}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:18px;margin-top:24px}
+  .cell{padding:24px;border-radius:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.10);position:relative;display:flex;flex-direction:column;justify-content:space-between}
+  .cell .tag{font-size:10px;letter-spacing:0.28em;color:#71717a;font-weight:700;text-transform:uppercase}
+  .cell .v{font-size:32px;font-weight:800;letter-spacing:-0.025em;font-variant-numeric:tabular-nums}
+  /* Heatmap */
+  .hm{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:8px}
+  .hm i{display:block;height:14px;border-radius:3px;background:#1e1b4b}
+  .hm i.l1{background:#312e81}.hm i.l2{background:#4338ca}.hm i.l3{background:#6366f1}.hm i.l4{background:#a78bfa}.hm i.l5{background:#f472b6}
+  /* Logo cloud */
+  .lc{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;margin-top:8px}
+  .lc span{font-size:18px;font-weight:800;letter-spacing:-0.02em;color:#a1a1aa;font-family:Inter,sans-serif}
+  .lc span:nth-child(2){font-style:italic;font-weight:900}
+  .lc span:nth-child(3){letter-spacing:0.16em;text-transform:uppercase;font-size:14px}
+  .lc span:nth-child(4){font-weight:500;font-family:Georgia,serif;font-size:22px}
+</style></head><body>
+<div class="slide">
+  <div class="label">PROBE 08 / DATA-PRIM</div>
+  <div class="kicker">test · svg data primitives</div>
+  <h1 data-pptx-role="title" style="font-size:32px;font-weight:800;letter-spacing:-0.025em;margin:0 0 6px 0">Data primitives — inline SVG under 200 ops should emit native.</h1>
+  <div class="grid">
+    <!-- Progress ring -->
+    <div class="cell"><div class="tag">progress ring</div>
+      <svg viewBox="0 0 120 120" width="120" height="120" style="margin:6px 0">
+        <circle cx="60" cy="60" r="50" fill="none" stroke="#27272a" stroke-width="10"/>
+        <circle cx="60" cy="60" r="50" fill="none" stroke="#a78bfa" stroke-width="10" stroke-linecap="round"
+                stroke-dasharray="314.159" stroke-dashoffset="78.5" transform="rotate(-90 60 60)"/>
+      </svg>
+      <div class="v">75%</div>
+    </div>
+    <!-- Gauge -->
+    <div class="cell"><div class="tag">gauge</div>
+      <svg viewBox="0 0 200 110" width="200" height="110" style="margin:6px 0">
+        <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#27272a" stroke-width="14" stroke-linecap="round"/>
+        <path d="M 20 100 A 80 80 0 0 1 140 30" fill="none" stroke="#f472b6" stroke-width="14" stroke-linecap="round"/>
+        <circle cx="140" cy="30" r="6" fill="#fff"/>
+      </svg>
+      <div class="v">8.4</div>
+    </div>
+    <!-- Sparkline -->
+    <div class="cell"><div class="tag">sparkline</div>
+      <svg viewBox="0 0 220 80" width="220" height="80" style="margin:6px 0">
+        <path d="M 0 60 L 30 50 L 60 55 L 90 30 L 120 38 L 150 18 L 180 24 L 220 8" fill="none" stroke="#34d399" stroke-width="3"/>
+        <circle cx="220" cy="8" r="4" fill="#34d399"/>
+      </svg>
+      <div class="v">+42.6%</div>
+    </div>
+    <!-- Heatmap -->
+    <div class="cell"><div class="tag">heatmap · 7×4</div>
+      <div class="hm">
+        <i></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l2"></i><i class="l1"></i><i></i>
+        <i class="l1"></i><i class="l2"></i><i class="l4"></i><i class="l5"></i><i class="l3"></i><i class="l2"></i><i class="l1"></i>
+        <i class="l2"></i><i class="l3"></i><i class="l5"></i><i class="l5"></i><i class="l4"></i><i class="l2"></i><i class="l1"></i>
+        <i></i><i class="l1"></i><i class="l3"></i><i class="l4"></i><i class="l2"></i><i class="l1"></i><i></i>
+      </div>
+      <div class="v">28 dau</div>
+    </div>
+    <!-- Sparkbars -->
+    <div class="cell"><div class="tag">sparkbars</div>
+      <svg viewBox="0 0 220 80" width="220" height="80" style="margin:6px 0">
+        <rect x="0" y="50" width="14" height="30" fill="#a78bfa"/>
+        <rect x="20" y="40" width="14" height="40" fill="#a78bfa"/>
+        <rect x="40" y="44" width="14" height="36" fill="#a78bfa"/>
+        <rect x="60" y="22" width="14" height="58" fill="#a78bfa"/>
+        <rect x="80" y="32" width="14" height="48" fill="#a78bfa"/>
+        <rect x="100" y="14" width="14" height="66" fill="#f472b6"/>
+        <rect x="120" y="20" width="14" height="60" fill="#a78bfa"/>
+        <rect x="140" y="6" width="14" height="74" fill="#f472b6"/>
+        <rect x="160" y="18" width="14" height="62" fill="#a78bfa"/>
+        <rect x="180" y="2" width="14" height="78" fill="#f472b6"/>
+        <rect x="200" y="10" width="14" height="70" fill="#f472b6"/>
+      </svg>
+      <div class="v">$12.4M</div>
+    </div>
+    <!-- Logo cloud -->
+    <div class="cell"><div class="tag">logo cloud</div>
+      <div class="lc"><span>vercel</span><span>linear</span><span>STRIPE</span><span>Notion</span><span>cursor</span><span>raycast</span></div>
+      <div class="v" style="font-size:14px;color:#a1a1aa;font-weight:500;letter-spacing:0">trusted by ~1,800 teams</div>
+    </div>
+  </div>
+  <div class="footer"><div>SLIDIFY · ATOMIC SEED · PROBE</div><div>08 / 08</div></div>
+</div>
+</body></html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="slidify-capture-duration" content="3000">
+<meta name="slidify-capture-fps" content="12">
+<title>Atlas — 0→40 number tween</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin:0; padding:0; width:520px; height:380px;
+               font-family: 'Spectral', 'Playfair Display', Georgia, serif;
+               background:#EFE9DC; color:#1F2924; }
+  .stage { position:relative; width:520px; height:380px;
+           padding:24px; text-align:right; }
+
+  /* CSS @property animated counter — modern Chromium supports tweening
+     integer custom properties used inside content: counter(...). */
+  @property --n { syntax: '<integer>'; initial-value: 0; inherits: false; }
+  .num {
+    counter-reset: c var(--n);
+    --n: 0;
+    animation: count 2.4s cubic-bezier(0.22, 0.65, 0.34, 1) forwards;
+    font-style: italic;
+    font-weight: 400;
+    color: #B05A3C;
+    font-size: 280px;
+    line-height: 0.82;
+    letter-spacing: -0.04em;
+    display: inline-block;
+  }
+  .num::after { content: counter(c); }
+  @keyframes count { to { --n: 40; } }
+
+  .pct {
+    font-style: italic;
+    font-weight: 300;
+    color: #8A4530;
+    font-size: 96px;
+    vertical-align: top;
+    margin-left: -4px;
+    line-height: 1;
+    opacity: 0;
+    animation: fade 2.4s cubic-bezier(0.22, 0.65, 0.34, 1) forwards;
+  }
+  @keyframes fade {
+    0%,55% { opacity: 0; }
+    100%   { opacity: 1; }
+  }
+
+  /* SVG path-draw: stroke-dashoffset 1→0 */
+  .chart-path {
+    stroke-dasharray: 600;
+    stroke-dashoffset: 600;
+    animation: draw 2.6s cubic-bezier(0.4, 0.1, 0.2, 1) forwards;
+    animation-delay: 0.2s;
+  }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+
+  .terminal {
+    opacity: 0;
+    animation: pop 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation-delay: 2.6s;
+  }
+  @keyframes pop { 0% { opacity:0; r:1 } 100% { opacity:1; r:4 } }
+
+  .tick {
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    animation: draw 2.0s linear forwards;
+    animation-delay: 0.4s;
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <span class="num"></span><span class="pct">%</span>
+
+    <svg viewBox="0 0 480 80" width="100%" height="80"
+         style="display:block; margin-top:24px;">
+      <line x1="0" y1="60" x2="480" y2="60" stroke="#7A8978"
+            stroke-width="0.5" stroke-dasharray="2 4" class="tick"/>
+      <path class="chart-path"
+            d="M 0 56 L 60 50 L 120 48 L 180 42 L 240 38
+               L 300 30 L 360 26 L 420 18 L 480 10"
+            fill="none" stroke="#B05A3C" stroke-width="2"
+            stroke-linecap="round"/>
+      <circle class="terminal" cx="480" cy="10" r="4" fill="#B05A3C"/>
+    </svg>
+  </div>
+</body>
+</html>

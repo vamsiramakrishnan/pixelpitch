@@ -1,0 +1,360 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 8,
+        "w": 510,
+        "x": 145,
+        "y": 116
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 8,
+            "w": 510,
+            "x": 145,
+            "y": 116
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 8,
+                "w": 510,
+                "x": 145,
+                "y": 116
+              },
+              "kind": "text",
+              "metadata": {
+                "role": "eyebrow-text"
+              },
+              "paragraphs": [
+                {
+                  "align": "left",
+                  "runs": [
+                    {
+                      "color": "#a78bfa",
+                      "fontFamily": "Inter, sans-serif",
+                      "fontSizePx": 13,
+                      "fontWeight": 600,
+                      "italic": false,
+                      "text": "DATA OVERVIEW",
+                      "underline": false
+                    }
+                  ]
+                }
+              ],
+              "recipeId": "slot.eyebrow.text",
+              "zOrder": 10
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "slot",
+            "role": "slot.eyebrow",
+            "withRule": "none"
+          },
+          "recipeId": "slot.eyebrow",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "type",
+        "primitive": "slot.eyebrow",
+        "role": "type.eyebrow-ruled",
+        "version": "1.0.0"
+      },
+      "recipeId": "type.eyebrow-ruled",
+      "zOrder": 0
+    },
+    {
+      "bbox": {
+        "h": 20,
+        "w": 510,
+        "x": 145,
+        "y": 128
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 20,
+            "w": 510,
+            "x": 145,
+            "y": 128
+          },
+          "kind": "text",
+          "metadata": {
+            "axis": "slot",
+            "gradientFill": {
+              "angleDeg": 135,
+              "kind": "linear-gradient",
+              "stops": [
+                {
+                  "color": "#818cf8",
+                  "position": 0
+                },
+                {
+                  "color": "#c084fc",
+                  "position": 0.5
+                },
+                {
+                  "color": "#f472b6",
+                  "position": 1
+                }
+              ]
+            },
+            "role": "slot.numeral",
+            "scale": "numeral-md"
+          },
+          "paragraphs": [
+            {
+              "align": "left",
+              "runs": [
+                {
+                  "color": "#818cf8",
+                  "fontFamily": "Inter, sans-serif",
+                  "fontSizePx": 88,
+                  "fontWeight": 800,
+                  "italic": false,
+                  "text": "Headline",
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "slot.numeral",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "type",
+        "primitive": "slot.numeral",
+        "role": "type.big-number-gradient",
+        "version": "1.0.0"
+      },
+      "recipeId": "type.big-number-gradient",
+      "zOrder": 10
+    },
+    {
+      "bbox": {
+        "h": 60,
+        "w": 120,
+        "x": 145,
+        "y": 160
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 60,
+            "w": 120,
+            "x": 145,
+            "y": 160
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 36,
+                "w": 36,
+                "x": 187,
+                "y": 172
+              },
+              "borderRadiusPx": 0,
+              "fill": {
+                "color": "#070710",
+                "kind": "solid"
+              },
+              "kind": "shape",
+              "metadata": {
+                "role": "donut-hole"
+              },
+              "recipeId": "data.donut.hole",
+              "shape": "oval",
+              "zOrder": 0
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "data",
+            "innerRadiusFrac": 0.6,
+            "role": "data.donut",
+            "segmentCount": 0,
+            "startAngleDeg": -90
+          },
+          "recipeId": "data.donut",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "data",
+        "primitive": "data.donut",
+        "role": "data.donut",
+        "version": "1.0.0"
+      },
+      "recipeId": "data.donut",
+      "zOrder": 20
+    },
+    {
+      "bbox": {
+        "h": 60,
+        "w": 192,
+        "x": 292,
+        "y": 160
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 60,
+            "w": 192,
+            "x": 292,
+            "y": 160
+          },
+          "children": [],
+          "kind": "group",
+          "metadata": {
+            "axis": "data",
+            "barCount": 0,
+            "max": 1,
+            "orientation": "vertical",
+            "role": "data.bar"
+          },
+          "recipeId": "data.bar",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "data",
+        "primitive": "data.bar",
+        "role": "data.bar-set-h",
+        "version": "1.0.0"
+      },
+      "recipeId": "data.bar-set-h",
+      "zOrder": 30
+    },
+    {
+      "bbox": {
+        "h": 60,
+        "w": 162,
+        "x": 496,
+        "y": 160
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 60,
+            "w": 162,
+            "x": 496,
+            "y": 160
+          },
+          "commands": [
+            {
+              "op": "M",
+              "x": 496,
+              "y": 190
+            },
+            {
+              "op": "L",
+              "x": 658,
+              "y": 190
+            }
+          ],
+          "fillRule": "nonzero",
+          "kind": "path",
+          "metadata": {
+            "role": "sparkline-line",
+            "samples": 0
+          },
+          "recipeId": "data.sparkline.line",
+          "strokeColor": "#a78bfa",
+          "strokeLinecap": "round",
+          "strokeLinejoin": "round",
+          "strokeWidthPx": 2,
+          "zOrder": 10
+        },
+        {
+          "bbox": {
+            "h": 8,
+            "w": 8,
+            "x": 654,
+            "y": 186
+          },
+          "borderRadiusPx": 0,
+          "fill": {
+            "color": "#a78bfa",
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "role": "sparkline-last-marker"
+          },
+          "recipeId": "data.sparkline.last-marker",
+          "shape": "oval",
+          "zOrder": 20
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "data",
+        "fillUnder": false,
+        "role": "data.sparkline",
+        "sampleCount": 0
+      },
+      "recipeId": "data.sparkline",
+      "zOrder": 40
+    },
+    {
+      "bbox": {
+        "h": 44,
+        "w": 510,
+        "x": 145,
+        "y": 236
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 44,
+            "w": 510,
+            "x": 145,
+            "y": 236
+          },
+          "children": [],
+          "kind": "group",
+          "metadata": {
+            "axis": "data",
+            "cellCount": 0,
+            "role": "data.kpi-row",
+            "withDividers": false
+          },
+          "recipeId": "data.kpi-row",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "data",
+        "primitive": "data.kpi-row",
+        "role": "data.kpi-row",
+        "version": "1.0.0"
+      },
+      "recipeId": "data.kpi-row",
+      "zOrder": 50
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "comp",
+    "composite": true,
+    "role": "comp.data-overview",
+    "version": "1.0.0"
+  },
+  "recipeId": "comp.data-overview",
+  "zOrder": 0
+}

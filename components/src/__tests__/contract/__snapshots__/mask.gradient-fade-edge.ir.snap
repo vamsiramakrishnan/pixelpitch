@@ -1,0 +1,82 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "borderRadiusPx": 0,
+          "fill": {
+            "angleDeg": 180,
+            "kind": "linear-gradient",
+            "stops": [
+              {
+                "color": {
+                  "alpha": 1,
+                  "hex": "#070710"
+                },
+                "position": 0
+              },
+              {
+                "color": {
+                  "alpha": 0,
+                  "hex": "#070710"
+                },
+                "position": 1
+              }
+            ]
+          },
+          "kind": "shape",
+          "metadata": {
+            "axis": "surface",
+            "direction": "bottom",
+            "fadePct": 1,
+            "opacity": 1,
+            "role": "surface.linear-fade"
+          },
+          "recipeId": "surface.linear-fade",
+          "shape": "rect",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "angleDeg": 180,
+        "axis": "surface",
+        "direction": "bottom",
+        "fadePct": 1,
+        "opacity": 1,
+        "role": "surface.linear-fade"
+      },
+      "recipeId": "surface.linear-fade",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "mask",
+    "edge": "bottom",
+    "primitive": "surface.linear-fade",
+    "role": "mask.gradient-fade-edge",
+    "src": "https://example.invalid/asset",
+    "version": "1.0.0"
+  },
+  "recipeId": "mask.gradient-fade-edge",
+  "zOrder": 0
+}

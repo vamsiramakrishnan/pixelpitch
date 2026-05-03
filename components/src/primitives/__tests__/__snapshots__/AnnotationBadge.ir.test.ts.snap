@@ -1,0 +1,82 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`annotationBadgeToIR > emits a snapshot-stable info pill 1`] = `
+{
+  "bbox": {
+    "h": 24,
+    "w": 64,
+    "x": 0,
+    "y": 0,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 24,
+        "w": 64,
+        "x": 0,
+        "y": 0,
+      },
+      "borderRadiusPx": 9999,
+      "fill": {
+        "color": {
+          "alpha": 0.16,
+          "hex": "#3b82f6",
+        },
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "kind": "pill",
+        "role": "annotation-badge-bg",
+        "rotateDeg": 0,
+        "tone": "info",
+      },
+      "recipeId": "annotation.badge.bg",
+      "shape": "rounded-rect",
+      "zOrder": 0,
+    },
+    {
+      "bbox": {
+        "h": 24,
+        "w": 64,
+        "x": 0,
+        "y": 0,
+      },
+      "kind": "text",
+      "metadata": {
+        "label": "NEW",
+        "role": "annotation-badge-label",
+      },
+      "paragraphs": [
+        {
+          "align": "center",
+          "runs": [
+            {
+              "color": "#3b82f6",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 12,
+              "fontWeight": 600,
+              "italic": false,
+              "text": "NEW",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "annotation.badge.label",
+      "zOrder": 10,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "annotation",
+    "kind": "pill",
+    "label": "NEW",
+    "role": "annotation.badge",
+    "rotateDeg": 0,
+    "tone": "info",
+  },
+  "recipeId": "annotation.badge",
+  "zOrder": 0,
+}
+`;

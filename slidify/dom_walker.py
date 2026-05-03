@@ -379,6 +379,65 @@ _WALKER_JS_TEMPLATE = r"""
                     el.querySelectorAll('text')
                 ).filter(t => !inDefs(t));
                 svgPathCount = allShapes.length;
+
+                // Capture <linearGradient> / <radialGradient> defs so the
+                // emitter can resolve `fill="url(#id)"` references into
+                // native <a:gradFill> stops.  Round-2 visual-QA finding:
+                // without this, the walker stored "url(#duo-bg)" verbatim,
+                // the emitter's parse_color() returned None, and the
+                // gradient layer rendered with no fill — silently dropping
+                // the entire duotone composition (slides 22-duo-photo,
+                // atlas 04-duotone-plate, atlas 08-cinemagraph).
+                //
+                // Output shape (one entry per gradient def):
+                //   { kind: 'linear'|'radial', id, stops: [{offset, color, opacity}],
+                //     x1, y1, x2, y2,             // linear (objectBB units)
+                //     cx, cy, r, fx, fy }         // radial (objectBB units)
+                const svgGradients = {};
+                const gradientNodes = el.querySelectorAll('linearGradient, radialGradient');
+                for (const g of gradientNodes) {
+                    const gid = g.getAttribute('id') || '';
+                    if (!gid) continue;
+                    const isLinear = g.tagName === 'linearGradient';
+                    const stops = [];
+                    for (const st of g.querySelectorAll('stop')) {
+                        const stCs = getComputedStyle(st);
+                        // <stop offset> may be "0", "50%", "0.5"; normalize
+                        // to 0..1.
+                        let off = st.getAttribute('offset') || '0';
+                        if (off.endsWith('%')) {
+                            off = parseFloat(off) / 100;
+                        } else {
+                            off = parseFloat(off);
+                        }
+                        if (!Number.isFinite(off)) off = 0;
+                        // <stop stop-color> as attribute or style.
+                        const color = st.getAttribute('stop-color') || stCs.stopColor || '#000000';
+                        // <stop stop-opacity> may be on attribute or style.
+                        let op = st.getAttribute('stop-opacity');
+                        if (op === null || op === '') op = stCs.stopOpacity || '1';
+                        op = parseFloat(op);
+                        if (!Number.isFinite(op)) op = 1;
+                        stops.push({ offset: Math.max(0, Math.min(1, off)),
+                                      color: color, opacity: Math.max(0, Math.min(1, op)) });
+                    }
+                    // Geometric attributes — default to objectBoundingBox 0..1
+                    // ranges per SVG spec when not specified.
+                    const def = { kind: isLinear ? 'linear' : 'radial', id: gid, stops };
+                    if (isLinear) {
+                        def.x1 = parseFloat(g.getAttribute('x1') || '0') || 0;
+                        def.y1 = parseFloat(g.getAttribute('y1') || '0') || 0;
+                        def.x2 = parseFloat(g.getAttribute('x2') || '1') || 0;
+                        def.y2 = parseFloat(g.getAttribute('y2') || '0') || 0;
+                    } else {
+                        def.cx = parseFloat(g.getAttribute('cx') || '0.5') || 0.5;
+                        def.cy = parseFloat(g.getAttribute('cy') || '0.5') || 0.5;
+                        def.r  = parseFloat(g.getAttribute('r')  || '0.5') || 0.5;
+                        def.fx = parseFloat(g.getAttribute('fx') || def.cx) || def.cx;
+                        def.fy = parseFloat(g.getAttribute('fy') || def.cy) || def.cy;
+                    }
+                    svgGradients[gid] = def;
+                }
                 // Capture geometry for SVGs up to __SVG_NATIVE_PATH_BUDGET__
                 // primitives (kept in sync with classifier.tier1). Real-world
                 // charts (line/bar with 50+ data points + ticks + gridlines)
@@ -390,11 +449,28 @@ _WALKER_JS_TEMPLATE = r"""
                 if (svgPathCount > 0 && svgPathCount <= __SVG_NATIVE_PATH_BUDGET__) {
                     const svgRect = el.getBoundingClientRect();
                     svgShapes = [];
+                    // `resolveFill` turns `url(#id)` references into the
+                    // structured gradient def captured above; bare colour
+                    // strings pass through untouched.  This lets the
+                    // Python emitter make a single dispatch — `dict` →
+                    // <a:gradFill>, `str` → <a:solidFill> — instead of
+                    // re-parsing `url()` per shape.
+                    const resolveFill = (raw) => {
+                        if (!raw) return raw;
+                        const m = String(raw).match(/^\s*url\(\s*#([^)\s]+)\s*\)\s*$/);
+                        if (!m) return raw;
+                        const def = svgGradients[m[1]];
+                        if (!def) return raw;  // unresolved — pass through
+                        // Return a fresh shallow copy so each shape carries
+                        // its own object (the Python side keeps a per-shape
+                        // reference, not a shared singleton).
+                        return Object.assign({}, def);
+                    };
                     for (const s of allShapes) {
                         const sCs = getComputedStyle(s);
                         const ss = { tag: s.tagName.toLowerCase(),
-                                     fill: s.getAttribute('fill') || sCs.fill || 'none',
-                                     stroke: s.getAttribute('stroke') || sCs.stroke || 'none',
+                                     fill: resolveFill(s.getAttribute('fill') || sCs.fill || 'none'),
+                                     stroke: resolveFill(s.getAttribute('stroke') || sCs.stroke || 'none'),
                                      stroke_width: parseFloat(s.getAttribute('stroke-width') || sCs.strokeWidth || '0') || 0,
                                      fill_opacity: parseFloat(s.getAttribute('fill-opacity') || sCs.fillOpacity || '1'),
                                      stroke_opacity: parseFloat(s.getAttribute('stroke-opacity') || sCs.strokeOpacity || '1') };
