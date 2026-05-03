@@ -1,7 +1,9 @@
 """Compatibility shim for ``slidify.assets.font_embed``."""
 
 from slidify.assets.font_embed import (
+    FontBindingAudit,
     FontVariants,
+    audit_font_bindings,
     discover_inter,
     embed_fonts_in_pptx,
 )
@@ -16,7 +18,9 @@ def embed_default_fonts(pptx_path) -> bool:
     return True
 
 __all__ = [
+    "FontBindingAudit",
     "FontVariants",
+    "audit_font_bindings",
     "discover_inter",
     "embed_default_fonts",
     "embed_fonts_in_pptx",

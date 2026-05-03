@@ -10,17 +10,19 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import slidify.assets.font_resolver as font_resolver
 from slidify.font_resolver import (
     RequestedFont,
+    ResolvedFont,
     _families_compatible,
     _genre_for,
     _normalize_family,
     _parse_weight,
     collect_requested_families,
     resolve_to_files,
+    subset_fonts,
 )
 from slidify.models import BoundingBox, DomElement, TextRun
-
 
 # ---------------------------------------------------------------------------
 # helpers
@@ -235,3 +237,43 @@ def test_resolve_passes_through_inter_when_strict_match_succeeds():
         return
     f = resolved[0].files.get((400, False))
     assert f is not None and Path(f).exists()
+
+
+def test_resolve_uses_curated_web_font_before_genre_fallback(
+    tmp_path: Path, monkeypatch
+):
+    web_font = tmp_path / "PlayfairDisplay-Italic.ttf"
+    web_font.write_bytes(b"fake-web-font")
+    monkeypatch.setattr(font_resolver, "_fc_match", lambda *args: None)
+    monkeypatch.setattr(font_resolver, "_cached_web_font", lambda *args: web_font)
+    monkeypatch.setattr(font_resolver, "_fc_match_genre_fallback", lambda *args: None)
+
+    resolved = resolve_to_files(
+        {
+            "playfair display": RequestedFont(
+                family="Playfair Display",
+                weights_styles={(400, True)},
+                glyphs=set("Editorial"),
+            )
+        }
+    )
+    assert resolved
+    assert resolved[0].files[(400, True)] == web_font
+
+
+def test_subset_fonts_keeps_italic_only_editorial_family(tmp_path: Path):
+    font = tmp_path / "italic.ttf"
+    font.write_bytes(b"not-a-real-font")
+    variants = subset_fonts(
+        [
+            ResolvedFont(
+                family="Playfair Display",
+                files={(400, True): font},
+                glyphs=set("Editorial"),
+            )
+        ]
+    )
+    assert len(variants) == 1
+    assert variants[0].typeface == "Playfair Display"
+    assert variants[0].regular == font
+    assert variants[0].italic == font

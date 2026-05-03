@@ -553,6 +553,7 @@ async def convert(
         # family available to the renderer by name.
         if cfg.embed_fonts:
             from slidify.font_embed import (
+                audit_font_bindings,
                 discover_inter,
                 embed_fonts_in_pptx,
             )
@@ -574,6 +575,12 @@ async def convert(
                 fonts_to_embed.extend(deck_fonts)
                 if fonts_to_embed:
                     embed_fonts_in_pptx(pptx_path, fonts_to_embed)
+                    font_audit = audit_font_bindings(pptx_path)
+                    if font_audit.missing_embeds:
+                        log.warning(
+                            "api.font_bindings_missing",
+                            families=sorted(font_audit.missing_embeds),
+                        )
                     log.info(
                         "api.fonts_embedded",
                         n=len(fonts_to_embed),
@@ -585,7 +592,10 @@ async def convert(
                         stage="fonts",
                         message=f"embedded {len(fonts_to_embed)} font subset(s)",
                         elapsed_seconds=round(time.perf_counter() - t_start, 3),
-                        metrics={"families": [f.typeface for f in fonts_to_embed]},
+                        metrics={
+                            "families": [f.typeface for f in fonts_to_embed],
+                            "missing_bindings": sorted(font_audit.missing_embeds),
+                        },
                     )
             except Exception as e:
                 log.warning("api.font_embed_failed", error=str(e))

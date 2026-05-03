@@ -33,10 +33,11 @@ def test_font_unknown_display_families_substitute_to_core_fonts():
     # Condensed display
     assert resolve("'Bebas Neue', Anton, Impact, sans-serif") == "Impact"
 
-    # Serif display
-    assert resolve("'Playfair Display', 'Spectral', Georgia, serif") == "Cambria"
-    assert resolve("'Spectral', Georgia, serif") == "Cambria"
-    assert resolve("'Tiempos', Georgia, serif") == "Cambria"
+    # Serif display families stay named so the font-embedding pass can bind
+    # its genre-matched subset to the requested typeface.
+    assert resolve("'Playfair Display', 'Spectral', Georgia, serif") == "Playfair Display"
+    assert resolve("'Spectral', Georgia, serif") == "Spectral"
+    assert resolve("'Tiempos', Georgia, serif") == "Tiempos"
 
     # Mono
     assert resolve("'JetBrains Mono', 'IBM Plex Mono', monospace") == "Consolas"
@@ -75,6 +76,7 @@ def test_svg_gradient_emit_writes_gradfill_with_stops():
     for linear direction.  Mock just enough of python-pptx's shape
     surface to capture the spPr element."""
     from lxml import etree as et
+
     from slidify.svg_shapes import _NS_A, _apply_svg_gradient_fill
 
     NS = {"a": _NS_A}
@@ -123,6 +125,7 @@ def test_svg_gradient_emit_radial_path():
     """Radial gradient lands as `<a:path path="circle">` with a
     `<a:fillToRect>` derived from focal-point coords."""
     from lxml import etree as et
+
     from slidify.svg_shapes import _NS_A, _apply_svg_gradient_fill
 
     NS = {"a": _NS_A}

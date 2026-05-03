@@ -65,14 +65,16 @@ _FONT_MAP: dict[str, str] = {
     "oswald":           "Impact",
     "league gothic":    "Impact",
     # Serif display
-    "playfair display": "Cambria",
-    "spectral":         "Cambria",
-    "tiempos":          "Cambria",
-    "tiempos text":     "Cambria",
-    "tiempos headline": "Cambria",
-    "iowan old style":  "Cambria",
-    "reckless":         "Cambria",
-    "fraunces":         "Cambria",
+    # These are resolved/subset/embedded by slidify.assets.font_resolver.
+    # Keep the requested face name in OOXML so the embedded subset can bind.
+    "playfair display": "Playfair Display",
+    "spectral":         "Spectral",
+    "tiempos":          "Tiempos",
+    "tiempos text":     "Tiempos Text",
+    "tiempos headline": "Tiempos Headline",
+    "iowan old style":  "Iowan Old Style",
+    "reckless":         "Reckless",
+    "fraunces":         "Fraunces",
     # Mono
     "ibm plex mono":    "Consolas",
     "jetbrains mono":   "Consolas",

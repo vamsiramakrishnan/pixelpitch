@@ -24,9 +24,11 @@ embedded subset and the slide renders with the source's intended type.
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 import tempfile
+import urllib.request
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -49,6 +51,20 @@ _GENERIC_FAMILIES = {
 # Families slidify already bundles or trusts as the runtime fallback —
 # no point re-resolving them. Inter ships with the engine.
 _BUNDLED_FAMILIES = {"inter", "inter display"}
+
+
+_KNOWN_WEB_FONTS: dict[str, dict[str, str]] = {
+    "playfair display": {
+        "regular": (
+            "https://raw.githubusercontent.com/google/fonts/main/"
+            "ofl/playfairdisplay/PlayfairDisplay%5Bwght%5D.ttf"
+        ),
+        "italic": (
+            "https://raw.githubusercontent.com/google/fonts/main/"
+            "ofl/playfairdisplay/PlayfairDisplay-Italic%5Bwght%5D.ttf"
+        ),
+    }
+}
 
 
 @dataclass
@@ -183,6 +199,52 @@ def _fc_match(family: str, weight: int, italic: bool) -> Path | None:
     return path
 
 
+def _font_cache_dir() -> Path:
+    override = os.environ.get("SLIDIFY_FONT_CACHE")
+    if override:
+        return Path(override)
+    return Path.home() / ".cache" / "slidify" / "fonts"
+
+
+def _cached_web_font(family: str, weight: int, italic: bool) -> Path | None:
+    if os.environ.get("SLIDIFY_DISABLE_FONT_DOWNLOADS"):
+        return None
+    entry = _KNOWN_WEB_FONTS.get(family.lower())
+    if entry is None:
+        return None
+    style = "italic" if italic else "regular"
+    url = entry.get(style) or entry.get("regular")
+    if not url:
+        return None
+    cache_dir = _font_cache_dir() / re.sub(r"[^a-z0-9]+", "-", family.lower()).strip("-")
+    filename = f"{family.replace(' ', '')}-{style}.ttf"
+    path = cache_dir / filename
+    if path.exists() and path.stat().st_size > 1024:
+        return path
+    try:
+        cache_dir.mkdir(parents=True, exist_ok=True)
+        with urllib.request.urlopen(url, timeout=8) as resp:
+            data = resp.read()
+        if len(data) <= 1024:
+            return None
+        path.write_bytes(data)
+        log.info(
+            "font_resolver.web_font_cached",
+            family=family,
+            style=style,
+            file=str(path),
+        )
+        return path
+    except Exception as e:
+        log.warning(
+            "font_resolver.web_font_failed",
+            family=family,
+            style=style,
+            error=str(e),
+        )
+        return None
+
+
 _SERIF_HINTS = ("serif", "times", "georgia", "garamond", "cambria", "tiempos",
                 "source serif", "playfair", "merriweather", "lora")
 _MONO_HINTS = ("mono", "courier", "console", "code", "menlo", "consolas",
@@ -262,6 +324,8 @@ def resolve_to_files(
         for weight, italic in req.weights_styles:
             f = _fc_match(req.family, weight, italic)
             if f is None:
+                f = _cached_web_font(req.family, weight, italic)
+            if f is None:
                 f = _fc_match_genre_fallback(genre, weight, italic)
                 if f is not None:
                     log.info(
@@ -332,6 +396,7 @@ def subset_fonts(resolved: list[ResolvedFont]) -> list[FontVariants]:
             or r.files.get((300, False))
             or r.files.get((500, False))
             or next(iter(p for (w, it), p in r.files.items() if not it), None)
+            or next(iter(r.files.values()), None)
         )
         bold_src = (
             r.files.get((700, False))

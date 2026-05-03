@@ -1,6 +1,12 @@
 """Asset helpers for fonts and future media fetching."""
 
-from slidify.assets.font_embed import FontVariants, discover_inter, embed_fonts_in_pptx
+from slidify.assets.font_embed import (
+    FontBindingAudit,
+    FontVariants,
+    audit_font_bindings,
+    discover_inter,
+    embed_fonts_in_pptx,
+)
 from slidify.assets.font_resolver import (
     RequestedFont,
     ResolvedFont,
@@ -11,9 +17,11 @@ from slidify.assets.font_resolver import (
 )
 
 __all__ = [
+    "FontBindingAudit",
     "FontVariants",
     "RequestedFont",
     "ResolvedFont",
+    "audit_font_bindings",
     "collect_requested_families",
     "discover_inter",
     "embed_fonts_in_pptx",
@@ -21,4 +29,3 @@ __all__ = [
     "resolve_to_files",
     "subset_fonts",
 ]
-

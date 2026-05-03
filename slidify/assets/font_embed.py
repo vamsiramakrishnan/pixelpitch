@@ -28,7 +28,7 @@ from __future__ import annotations
 
 import logging
 import zipfile
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from lxml import etree
@@ -49,6 +49,15 @@ class FontVariants:
     italic: Path | None = None
     bold_italic: Path | None = None
     panose: str = "020B0604020202020204"  # generic sans-serif
+
+
+@dataclass(frozen=True)
+class FontBindingAudit:
+    """OOXML font binding check after emission/embedding."""
+
+    referenced: set[str] = field(default_factory=set)
+    embedded: set[str] = field(default_factory=set)
+    missing_embeds: set[str] = field(default_factory=set)
 
 
 DEFAULT_FONT_DIRS: list[Path] = [
@@ -160,6 +169,76 @@ def embed_fonts_in_pptx(
     log.info(
         "fonts.embedded",
         extra={"path": str(p), "n_fonts": len(font_artifacts)},
+    )
+
+
+CORE_PRESENTATION_FONTS = {
+    "",
+    "+mj-lt",
+    "+mn-lt",
+    "+mj-ea",
+    "+mn-ea",
+    "+mj-cs",
+    "+mn-cs",
+    "arial",
+    "calibri",
+    "cambria",
+    "consolas",
+    "courier new",
+    "georgia",
+    "helvetica",
+    "impact",
+    "segoe ui",
+    "times new roman",
+    "verdana",
+}
+
+
+def audit_font_bindings(pptx_path: Path | str) -> FontBindingAudit:
+    """Return referenced vs embedded typefaces and non-core missing embeds.
+
+    This is the durable font invariant: any web/display family written into
+    slide XML must also appear in ``presentation.xml``'s embedded font list.
+    Core Office/system fallbacks are exempt because they are intentionally
+    portable without embedded font parts.
+    """
+    p = Path(pptx_path)
+    ns_a = "http://schemas.openxmlformats.org/drawingml/2006/main"
+    referenced: set[str] = set()
+    embedded: set[str] = set()
+    with zipfile.ZipFile(p, "r") as zf:
+        for name in zf.namelist():
+            if not (
+                name.startswith("ppt/slides/slide")
+                or name.startswith("ppt/slideMasters/slideMaster")
+                or name.startswith("ppt/slideLayouts/slideLayout")
+            ):
+                continue
+            if not name.endswith(".xml"):
+                continue
+            root = etree.fromstring(zf.read(name))
+            for tag in ("latin", "ea", "cs"):
+                for el in root.findall(f".//{{{ns_a}}}{tag}"):
+                    tf = (el.get("typeface") or "").strip()
+                    if tf:
+                        referenced.add(tf)
+        try:
+            pres = etree.fromstring(zf.read("ppt/presentation.xml"))
+        except KeyError:
+            pres = None
+        if pres is not None:
+            for font in pres.findall(f".//{{{NS_P}}}embeddedFont/{{{NS_P}}}font"):
+                tf = (font.get("typeface") or "").strip()
+                if tf:
+                    embedded.add(tf)
+    missing = {
+        f for f in referenced
+        if f.lower() not in CORE_PRESENTATION_FONTS and f not in embedded
+    }
+    return FontBindingAudit(
+        referenced=referenced,
+        embedded=embedded,
+        missing_embeds=missing,
     )
 
 
@@ -338,7 +417,9 @@ def embed_default_fonts(pptx_path: Path | str) -> bool:
 
 
 __all__ = [
+    "FontBindingAudit",
     "FontVariants",
+    "audit_font_bindings",
     "discover_inter",
     "embed_default_fonts",
     "embed_fonts_in_pptx",

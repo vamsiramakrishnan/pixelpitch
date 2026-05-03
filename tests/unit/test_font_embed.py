@@ -13,7 +13,6 @@ and the font part is referenced from the right places.
 
 from __future__ import annotations
 
-import shutil
 import zipfile
 from pathlib import Path
 
@@ -23,6 +22,7 @@ from pptx import Presentation
 
 from slidify.font_embed import (
     FontVariants,
+    audit_font_bindings,
     discover_inter,
     embed_default_fonts,
     embed_fonts_in_pptx,
@@ -42,6 +42,18 @@ def _minimal_pptx(tmp_path: Path) -> Path:
     out = tmp_path / "blank.pptx"
     p = Presentation()
     p.slides.add_slide(p.slide_layouts[6])
+    p.save(str(out))
+    return out
+
+
+def _fonted_pptx(tmp_path: Path, typeface: str) -> Path:
+    out = tmp_path / "fonted.pptx"
+    p = Presentation()
+    slide = p.slides.add_slide(p.slide_layouts[6])
+    tb = slide.shapes.add_textbox(0, 0, 1_000_000, 300_000)
+    run = tb.text_frame.paragraphs[0].add_run()
+    run.text = "Editorial"
+    run.font.name = typeface
     p.save(str(out))
     return out
 
@@ -110,6 +122,26 @@ def test_embed_inter_adds_embedded_font_lst(tmp_path: Path):
         v = fonts[0].find(f"{{{NS_P}}}{tag}")
         if v is not None:
             assert v.get(f"{{{NS_R}}}id"), f"no r:id on {tag}"
+
+
+def test_audit_font_bindings_reports_non_core_missing_embed(tmp_path: Path):
+    pptx = _fonted_pptx(tmp_path, "Playfair Display")
+    audit = audit_font_bindings(pptx)
+    assert "Playfair Display" in audit.referenced
+    assert "Playfair Display" in audit.missing_embeds
+
+
+def test_audit_font_bindings_passes_after_embedding_requested_face(tmp_path: Path):
+    pptx = _fonted_pptx(tmp_path, "Playfair Display")
+    fake_font = tmp_path / "fake.ttf"
+    fake_font.write_bytes(b"not-a-real-font-but-a-font-part")
+    embed_fonts_in_pptx(
+        pptx,
+        [FontVariants(typeface="Playfair Display", regular=fake_font)],
+    )
+    audit = audit_font_bindings(pptx)
+    assert "Playfair Display" in audit.embedded
+    assert "Playfair Display" not in audit.missing_embeds
 
 
 def test_embed_inter_adds_content_type(tmp_path: Path):
