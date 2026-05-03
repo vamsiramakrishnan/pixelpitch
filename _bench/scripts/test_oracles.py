@@ -27,10 +27,10 @@ CORPUS = ROOT / "_bench" / "corpus"
 
 # Pick slides that cover the divergence space:
 TARGETS = [
-    "slide-66-duotone-hero.html",      # heavy raster - SSIM low, subjective should be high
-    "slide-26-manifesto.html",          # brutalist mono - tests font embedding
-    "slide-32-stats-trio.html",         # SaaS - decorations tend to lower SSIM, raise subjective
-    "slide-13-spec-sheet.html",         # keynote spec sheet - native text-heavy, both should agree
+    "slide-48-duotone-hero.html",       # heavy raster - SSIM low, subjective should be high
+    "slide-20-manifesto.html",          # brutalist mono - tests font embedding
+    "slide-23-stats-trio.html",         # SaaS - decorations tend to lower SSIM, raise subjective
+    "slide-10-spec-sheet.html",         # keynote spec sheet - native text-heavy, both should agree
 ]
 
 

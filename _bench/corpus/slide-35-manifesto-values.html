@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slide 35 — What we believe</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               -webkit-font-smoothing:antialiased; background:#e8f0eb; }
+  .slide { width:1280px; height:720px; box-sizing:border-box;
+           position:relative; overflow:hidden; background:#e8f0eb;
+           font-family:'Source Serif Pro', Georgia, serif;
+           color:#2d1f1f; }
+  .kicker { position:absolute; top:72px; left:96px;
+            font-size:12px; font-weight:500; letter-spacing:0.08em;
+            color:#e76f51;
+            font-family:'Inter', system-ui, sans-serif; }
+  .title { position:absolute; top:108px; left:96px;
+           font-family:'Source Serif Pro', Georgia, serif;
+           font-size:46px; font-weight:600; line-height:1.08; max-width:480px; }
+  .title em { font-style:italic; color:#264653; font-weight:500; }
+  .intro { position:absolute; top:248px; left:96px; max-width:380px;
+           font-family:'Inter', system-ui, sans-serif;
+           font-size:14px; font-weight:400; line-height:1.65; color:#3a2a2a; }
+  .values { position:absolute; top:108px; left:560px; width:620px;
+            display:flex; flex-direction:column; gap:24px; }
+  .v { display:flex; gap:20px; align-items:flex-start; }
+  .v .num { font-family:'Source Serif Pro', Georgia, serif;
+            font-size:18px; font-weight:500; font-style:italic;
+            color:#9c89b8; min-width:32px; padding-top:2px; }
+  .v .body h3 { margin:0 0 4px;
+                font-family:'Source Serif Pro', Georgia, serif;
+                font-size:21px; font-weight:600; line-height:1.2; color:#2d1f1f; }
+  .v .body h3 em { font-style:italic; color:#e76f51; font-weight:500; }
+  .v .body p { margin:0;
+               font-family:'Inter', system-ui, sans-serif;
+               font-size:13px; font-weight:400; line-height:1.55; color:#4a3a3a; }
+  .pageno { position:absolute; bottom:48px; right:96px;
+            font-size:12px; font-weight:500; color:#7a6a6a;
+            font-family:'Source Serif Pro', Georgia, serif; }
+  .footer { position:absolute; bottom:48px; left:96px;
+            font-size:12px; font-weight:500; color:#7a6a6a;
+            font-family:'Inter', system-ui, sans-serif; letter-spacing:0.02em; }
+  .canvas { position:absolute; inset:0; }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <svg class="canvas" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- left margin organic blob (5 control points) -->
+      <path d="M -60 380
+               C 30 340, 130 380, 152 460
+               C 174 540, 110 612, 30 624
+               C -50 636, -120 580, -118 504
+               C -116 460, -100 410, -60 380 Z"
+            fill="#a78bfa" fill-opacity="0.22"/>
+      <!-- top-right organic blob (6 control points) -->
+      <path d="M 1080 -40
+               C 1180 -20, 1280 60, 1290 150
+               C 1300 240, 1220 296, 1140 280
+               C 1060 264, 1000 220, 990 156
+               C 980 92, 1010 32, 1040 8
+               C 1056 -4, 1066 -42, 1080 -40 Z"
+            fill="#e9c46a" fill-opacity="0.40"/>
+      <!-- bottom-right small blob (4 control points) -->
+      <path d="M 1100 600
+               C 1180 580, 1260 620, 1260 680
+               C 1260 740, 1180 740, 1100 720
+               C 1020 700, 1020 620, 1100 600 Z"
+            fill="#f7b2a2" fill-opacity="0.50"/>
+      <!-- ambient soft circles per value -->
+      <circle cx="552" cy="146" r="10" fill="#e76f51" fill-opacity="0.60"/>
+      <circle cx="552" cy="244" r="10" fill="#f4a261" fill-opacity="0.65"/>
+      <circle cx="552" cy="342" r="10" fill="#2a9d8f" fill-opacity="0.55"/>
+      <circle cx="552" cy="440" r="10" fill="#a78bfa" fill-opacity="0.55"/>
+      <circle cx="552" cy="538" r="10" fill="#e9c46a" fill-opacity="0.85"/>
+      <!-- curved underline under title -->
+      <path d="M 96 196 C 200 188, 320 202, 420 192"
+            stroke="#e76f51" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- hand-drawn slightly-off circle in left margin -->
+      <path d="M 200 300
+               C 230 290, 256 310, 250 340
+               C 244 370, 200 372, 188 348
+               C 180 332, 184 308, 200 300 Z"
+            fill="none" stroke="#264653" stroke-width="1.5" stroke-opacity="0.45"/>
+      <!-- wavy divider beneath intro -->
+      <path d="M 96 412
+               C 140 404, 184 422, 228 412
+               C 272 402, 312 422, 360 412"
+            stroke="#2a9d8f" stroke-width="1.3" fill="none"/>
+      <!-- small leaf glyph by intro -->
+      <path d="M 96 460
+               C 110 444, 132 444, 142 458
+               C 130 472, 110 478, 96 460 Z"
+            fill="none" stroke="#2a9d8f" stroke-width="1.4"/>
+      <path d="M 100 460 C 114 456, 128 452, 142 458" stroke="#2a9d8f" stroke-width="1.1" fill="none"/>
+      <!-- vertical hand-drawn cubic between values columns -->
+      <path d="M 528 120 C 536 260, 524 420, 532 580"
+            stroke="#2d1f1f" stroke-opacity="0.18" stroke-width="1.2" fill="none"/>
+    </svg>
+
+    <div class="kicker">What we believe</div>
+    <h1 class="title" data-pptx-role="title">Five quiet <em>convictions</em>.</h1>
+    <p class="intro">We wrote them down so we'd remember on the days the noise got loud. They aren't rules. They're the shape of the work, when the work goes well.</p>
+
+    <div class="values">
+      <div class="v">
+        <div class="num">i.</div>
+        <div class="body">
+          <h3>Slow is a <em>feature</em>.</h3>
+          <p>Speed without consideration is just hurry, and hurry leaves a trail.</p>
+        </div>
+      </div>
+      <div class="v">
+        <div class="num">ii.</div>
+        <div class="body">
+          <h3>Whitespace is a kindness.</h3>
+          <p>What we leave out tells the reader we trust them.</p>
+        </div>
+      </div>
+      <div class="v">
+        <div class="num">iii.</div>
+        <div class="body">
+          <h3>Make it by hand, when you can.</h3>
+          <p>The wobble is the warmth. We do not optimize the wobble away.</p>
+        </div>
+      </div>
+      <div class="v">
+        <div class="num">iv.</div>
+        <div class="body">
+          <h3>Soft is not <em>weak</em>.</h3>
+          <p>A round corner has held more weight than a sharp one, in our experience.</p>
+        </div>
+      </div>
+      <div class="v">
+        <div class="num">v.</div>
+        <div class="body">
+          <h3>Begin where the light is.</h3>
+          <p>If a thing won't start, move closer to a window. Then try again.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">Pinned above the studio sink &middot; revised slowly</div>
+    <div class="pageno">35</div>
+  </div>
+</body>
+</html>

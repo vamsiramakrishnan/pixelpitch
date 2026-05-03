@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slide 34 — A gentle invitation</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               -webkit-font-smoothing:antialiased; background:#fef6e8; }
+  .slide { width:1280px; height:720px; box-sizing:border-box;
+           position:relative; overflow:hidden; background:#fef6e8;
+           font-family:'Source Serif Pro', Georgia, serif;
+           color:#2d1f1f; }
+  .kicker { position:absolute; top:108px; left:140px;
+            font-size:12px; font-weight:500; letter-spacing:0.08em;
+            color:#2a9d8f;
+            font-family:'Inter', system-ui, sans-serif; }
+  .cta { position:absolute; top:300px; left:140px;
+         font-family:'Source Serif Pro', Georgia, serif;
+         font-size:64px; font-weight:600; line-height:1.08;
+         letter-spacing:-0.005em; max-width:780px; }
+  .cta em { font-style:italic; color:#e76f51; font-weight:500; }
+  .button { position:absolute; top:452px; left:140px;
+            font-family:'Inter', system-ui, sans-serif;
+            font-size:14px; font-weight:500; color:#2d1f1f;
+            display:inline-flex; align-items:center; gap:14px; }
+  .button .arrow { width:32px; height:1px; background:#2d1f1f; position:relative;
+                   display:inline-block; }
+  .meta { position:absolute; bottom:80px; left:140px;
+          display:flex; gap:48px; align-items:flex-end; }
+  .meta .item { display:flex; flex-direction:column; gap:6px; }
+  .meta .item .lab { font-family:'Inter', system-ui, sans-serif;
+                     font-size:11px; font-weight:500; letter-spacing:0.06em;
+                     color:#a89888; }
+  .meta .item .val { font-family:'Source Serif Pro', Georgia, serif;
+                     font-size:16px; font-weight:500; color:#2d1f1f;
+                     font-style:italic; }
+  .pageno { position:absolute; bottom:80px; right:96px;
+            font-size:12px; font-weight:500; color:#a89888;
+            font-family:'Source Serif Pro', Georgia, serif; }
+  .canvas { position:absolute; inset:0; }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <svg class="canvas" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- single accent circle: large, soft, off-center right -->
+      <circle cx="980" cy="380" r="220" fill="#f7b2a2" fill-opacity="0.60"/>
+      <!-- subtle inner ring (slightly off, hand-drawn cubic) -->
+      <path d="M 980 200
+               C 1110 200, 1190 296, 1180 384
+               C 1170 472, 1080 558, 980 552
+               C 880 546, 800 470, 802 380
+               C 804 290, 868 200, 980 200 Z"
+            fill="none" stroke="#e76f51" stroke-width="1.4" stroke-opacity="0.40"/>
+      <!-- small organic blob whisper, top left (5 control points) -->
+      <path d="M 60 80
+               C 130 60, 200 100, 210 160
+               C 220 220, 160 256, 100 246
+               C 40 236, 0 196, 8 144
+               C 14 110, 30 88, 60 80 Z"
+            fill="#a78bfa" fill-opacity="0.22"/>
+      <!-- small ambient circles -->
+      <circle cx="220" cy="520" r="10" fill="#2a9d8f" fill-opacity="0.55"/>
+      <circle cx="760" cy="624" r="14" fill="#e9c46a" fill-opacity="0.65"/>
+      <circle cx="1180" cy="640" r="20" fill="#9c89b8" fill-opacity="0.30"/>
+      <!-- curved underline under CTA second line -->
+      <path d="M 144 422 C 240 414, 360 430, 460 418"
+            stroke="#e76f51" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- wavy divider above metadata footer -->
+      <path d="M 140 600 C 200 592, 260 612, 340 600 C 420 588, 480 612, 540 600"
+            stroke="#264653" stroke-width="1.2" fill="none" stroke-opacity="0.40"/>
+      <!-- arrow tip on CTA button -->
+      <path d="M 304 466 L 314 462 L 304 458"
+            stroke="#2d1f1f" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      <!-- tiny moon glyph inside the accent circle (3-control hand-drawn arc) -->
+      <path d="M 1010 340
+               C 980 340, 960 372, 980 396
+               C 1000 420, 1040 412, 1044 380
+               C 1018 384, 1004 366, 1010 340 Z"
+            fill="#fef6e8" fill-opacity="0.85"/>
+    </svg>
+
+    <div class="kicker">When you're ready &mdash; and not before</div>
+    <h1 class="cta" data-pptx-role="title">Take the <em>first slow breath</em>, then begin.</h1>
+    <div class="button">Start the season &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+
+    <div class="meta">
+      <div class="item"><span class="lab">Cost</span><span class="val">Free, always</span></div>
+      <div class="item"><span class="lab">Time</span><span class="val">Six unhurried weeks</span></div>
+      <div class="item"><span class="lab">Pace</span><span class="val">Yours, not ours</span></div>
+    </div>
+    <div class="pageno">34</div>
+  </div>
+</body>
+</html>

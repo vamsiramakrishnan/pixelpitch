@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slide 44 — Magazine Spread</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               -webkit-font-smoothing:antialiased; background:#f3efe7; }
+  .slide {
+    width:1280px; height:720px; box-sizing:border-box;
+    position:relative; overflow:hidden;
+    font-family: 'Tiempos Headline', 'Source Serif Pro', Georgia, serif;
+    background:#f3efe7;
+    color:#1a1612;
+  }
+  /* LEFT — photo column */
+  .photo-col {
+    position:absolute; left:0; top:0; bottom:0;
+    width:680px;
+    overflow:hidden;
+  }
+  .photo-col img {
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit:cover;
+  }
+  .photo-tint {
+    position:absolute; inset:0;
+    background: linear-gradient(180deg,
+      rgba(20,15,10,0.10) 0%,
+      transparent 35%,
+      rgba(20,15,10,0.45) 100%);
+  }
+  .photo-caption {
+    position:absolute; left:32px; right:32px; bottom:24px;
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    font-size:11px; font-style:italic; font-weight:400;
+    line-height:1.45;
+    color:rgba(255,255,255,0.92);
+    letter-spacing:0.01em;
+  }
+  .folio-left {
+    position:absolute; left:32px; top:28px;
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    font-size:11px; font-weight:600; letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.88);
+  }
+
+  /* RIGHT — text column */
+  .text-col {
+    position:absolute; left:680px; top:0; right:0; bottom:0;
+    padding:64px 72px 56px 72px;
+    box-sizing:border-box;
+    display:flex; flex-direction:column;
+  }
+  .folio-right {
+    display:flex; align-items:center; justify-content:space-between;
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    font-size:11px; font-weight:600; letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:#7a6a55;
+  }
+  .folio-right .rule {
+    flex:1; height:1px; background:#c8b89c; margin:0 16px;
+  }
+  .kicker {
+    margin-top:42px;
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    font-size:12px; font-weight:600; letter-spacing:0.32em;
+    text-transform:uppercase;
+    color:#a3501e;
+  }
+  .headline {
+    margin:18px 0 0 0;
+    font-family: 'Tiempos Headline', 'Source Serif Pro', Georgia, serif;
+    font-size:74px; line-height:0.95; font-weight:800;
+    letter-spacing:-0.04em;
+    color:#1a1612;
+  }
+  .deck {
+    margin:24px 0 0 0;
+    font-family: 'Tiempos Headline', 'Source Serif Pro', Georgia, serif;
+    font-size:19px; line-height:1.5; font-weight:400;
+    font-style:italic;
+    color:#3a3128;
+    max-width:460px;
+  }
+  .body {
+    margin-top:30px;
+    column-count:2; column-gap:28px; column-rule:1px solid #d8c9ae;
+    font-family: 'Tiempos Headline', 'Source Serif Pro', Georgia, serif;
+    font-size:13.5px; line-height:1.55; font-weight:400;
+    color:#1a1612;
+    text-align:justify;
+    hyphens:auto;
+  }
+  .body p { margin:0 0 9px 0; }
+  .body p:first-child::first-letter {
+    font-family: 'Tiempos Headline', 'Source Serif Pro', Georgia, serif;
+    font-size:54px;
+    float:left;
+    line-height:0.85;
+    padding:6px 8px 0 0;
+    font-weight:800;
+    color:#a3501e;
+  }
+  .footer {
+    margin-top:auto;
+    display:flex; align-items:center; justify-content:space-between;
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    font-size:10px; font-weight:500; letter-spacing:0.24em;
+    text-transform:uppercase;
+    color:#7a6a55;
+    border-top:1px solid #c8b89c;
+    padding-top:14px;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="photo-col">
+    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=1280"
+         alt="Portrait of subject">
+    <div class="photo-tint"></div>
+    <div class="folio-left">Aperture &middot; 062</div>
+    <div class="photo-caption">
+      <em>Portrait of M.&nbsp;Halberstam, photographed in Hudson, New York,
+      on the morning of the third snow. Sigma 50mm, available light.</em>
+    </div>
+  </div>
+
+  <div class="text-col">
+    <div class="folio-right">
+      <span>The Profile</span>
+      <span class="rule"></span>
+      <span>P.&nbsp;42</span>
+    </div>
+
+    <div class="kicker">An interview &mdash; in three rooms</div>
+
+    <h1 class="headline" data-pptx-role="title">
+      What the<br>quiet hours<br>are <em>for</em>.
+    </h1>
+
+    <p class="deck">
+      The novelist on slow mornings, the cost of an
+      honest sentence, and learning to leave a draft
+      alone for a year.
+    </p>
+
+    <div class="body">
+      <p>The kettle is on for the second time. Halberstam
+      writes longhand until eleven, then walks. Then,
+      she has said in earlier interviews, the day
+      becomes a kind of weather one consents to.</p>
+      <p>Her new novel <em>The Inland Sea</em> is shorter
+      than the last by half. &ldquo;I wanted the silence
+      to be load-bearing,&rdquo; she says. &ldquo;Not a pause
+      between things &mdash; the thing itself.&rdquo;</p>
+      <p>We meet in the kitchen, then the study, then
+      a back porch that looks at nothing in particular.
+      In each room she is slightly different, more
+      careful with what she will say.</p>
+      <p>&ldquo;A page should cost something,&rdquo; she offers,
+      stirring nothing in her cup. &ldquo;Otherwise it
+      isn't a page. It's a sound.&rdquo;</p>
+    </div>
+
+    <div class="footer">
+      <span>Photograph &mdash; A. Reinholt</span>
+      <span>Issue 062 / Spring</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

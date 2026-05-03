@@ -6,6 +6,7 @@ to make adding/removing easy.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Callable
 
 from slidify.dom_walker import SVG_NATIVE_PATH_BUDGET
@@ -96,9 +97,25 @@ def _has_3d_transform(unit: VisualUnit) -> bool:
         t = e.transform
         if not t or t == "none":
             continue
-        if "matrix3d" in t or "rotate" in t or "skew" in t or "perspective" in t:
+        if _is_unsupported_transform(t):
             return True
     return False
+
+
+def _is_unsupported_transform(transform: str) -> bool:
+    """Return true for transforms that cannot be represented as native 2D PPTX."""
+    t = (transform or "").strip().lower()
+    if not t or t == "none":
+        return False
+    if "matrix3d" in t or "skew" in t or "perspective" in t:
+        return True
+    if t.startswith("matrix("):
+        return False
+    funcs = re.findall(r"([a-z0-9]+)\(", t)
+    if not funcs:
+        return False
+    allowed = {"translate", "translatex", "translatey", "scale", "scalex", "scaley", "rotate"}
+    return any(fn not in allowed for fn in funcs)
 
 
 def _has_filter(unit: VisualUnit) -> bool:
@@ -213,7 +230,11 @@ def _is_simple_leaf_text(unit: VisualUnit) -> bool:
             return False
         if not parse_gradient(anchor.background_image):
             return False
-    if anchor.transform and anchor.transform != "none":
+    if (
+        anchor.transform
+        and anchor.transform != "none"
+        and _is_unsupported_transform(anchor.transform)
+    ):
         return False
     # Shadow is OK if translatable.
     if (
@@ -238,7 +259,12 @@ def _is_plain_rectangle(unit: VisualUnit) -> bool:
         return False
     if _has_pseudo_content(unit):
         return False
-    if any(e.transform and e.transform != "none" for e in elems):
+    if any(
+        e.transform
+        and e.transform != "none"
+        and _is_unsupported_transform(e.transform)
+        for e in elems
+    ):
         return False
     if any(e.filter and e.filter != "none" for e in elems):
         return False

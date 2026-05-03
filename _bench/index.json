@@ -1,0 +1,1096 @@
+{
+  "version": 2,
+  "root": "_bench",
+  "source_roots": [
+    "corpus",
+    "decks"
+  ],
+  "generated_root": "generated",
+  "reports_root": "reports",
+  "decks": [
+    {
+      "id": "corpus",
+      "path": "corpus",
+      "slide_count": 55,
+      "numbered_count": 49,
+      "numbering": "sequential",
+      "duplicate_numbers": [],
+      "has_generator": false,
+      "slides": [
+        {
+          "number": null,
+          "file": "index.html",
+          "title": "Bench Corpus Index",
+          "path": "corpus/index.html"
+        },
+        {
+          "number": null,
+          "file": "landing-atoms.html",
+          "title": "atoms \u2014 01 composition gestures",
+          "path": "corpus/landing-atoms.html"
+        },
+        {
+          "number": null,
+          "file": "landing-fonts.html",
+          "title": "fonts \u2014 01 / 04 editorial / tech / magazine / brutalist",
+          "path": "corpus/landing-fonts.html"
+        },
+        {
+          "number": null,
+          "file": "landing-probe.html",
+          "title": "probe \u2014 01 type-fill",
+          "path": "corpus/landing-probe.html"
+        },
+        {
+          "number": null,
+          "file": "landing-recipes.html",
+          "title": "recipes \u2014 01 hero image-fill",
+          "path": "corpus/landing-recipes.html"
+        },
+        {
+          "number": 1,
+          "file": "slide-01-state-of-the-union.html",
+          "title": "Wages and prices, 1994\u20132024",
+          "path": "corpus/slide-01-state-of-the-union.html"
+        },
+        {
+          "number": 2,
+          "file": "slide-02-the-deficit-two-ways.html",
+          "title": "The federal deficit, two ways",
+          "path": "corpus/slide-02-the-deficit-two-ways.html"
+        },
+        {
+          "number": 3,
+          "file": "slide-03-housing-six-cities.html",
+          "title": "Housing affordability, six cities",
+          "path": "corpus/slide-03-housing-six-cities.html"
+        },
+        {
+          "number": 4,
+          "file": "slide-04-the-quiet-collapse.html",
+          "title": "The quiet collapse of local newsrooms",
+          "path": "corpus/slide-04-the-quiet-collapse.html"
+        },
+        {
+          "number": 5,
+          "file": "slide-05-broadband-by-state.html",
+          "title": "Where broadband still doesn't reach",
+          "path": "corpus/slide-05-broadband-by-state.html"
+        },
+        {
+          "number": 6,
+          "file": "slide-06-emissions-comparison.html",
+          "title": "Emissions pledges vs. delivery, G20",
+          "path": "corpus/slide-06-emissions-comparison.html"
+        },
+        {
+          "number": 7,
+          "file": "slide-07-cover-the-numbers.html",
+          "title": "The Numbers \u00b7 2026 Edition \u00b7 Cover",
+          "path": "corpus/slide-07-cover-the-numbers.html"
+        },
+        {
+          "number": 8,
+          "file": "slide-08-hero-number.html",
+          "title": "Slide 08 \u2014 38.6M",
+          "path": "corpus/slide-08-hero-number.html"
+        },
+        {
+          "number": 9,
+          "file": "slide-09-title-reveal.html",
+          "title": "Slide 09 \u2014 One more thing",
+          "path": "corpus/slide-09-title-reveal.html"
+        },
+        {
+          "number": 10,
+          "file": "slide-10-spec-sheet.html",
+          "title": "Slide 10 \u2014 Spec sheet",
+          "path": "corpus/slide-10-spec-sheet.html"
+        },
+        {
+          "number": 11,
+          "file": "slide-11-was-now.html",
+          "title": "Slide 11 \u2014 Was / Now",
+          "path": "corpus/slide-11-was-now.html"
+        },
+        {
+          "number": 12,
+          "file": "slide-12-feature-mosaic.html",
+          "title": "Slide 12 \u2014 Feature mosaic",
+          "path": "corpus/slide-12-feature-mosaic.html"
+        },
+        {
+          "number": 13,
+          "file": "slide-13-pull-quote.html",
+          "title": "Slide 13 \u2014 Pull quote",
+          "path": "corpus/slide-13-pull-quote.html"
+        },
+        {
+          "number": 14,
+          "file": "slide-14-thank-you.html",
+          "title": "Slide 14 \u2014 Thank you",
+          "path": "corpus/slide-14-thank-you.html"
+        },
+        {
+          "number": 15,
+          "file": "slide-15-spec-sheet.html",
+          "title": "SPEC SHEET // RUNTIME-04",
+          "path": "corpus/slide-15-spec-sheet.html"
+        },
+        {
+          "number": 16,
+          "file": "slide-16-schematic.html",
+          "title": "SCHEMATIC // INGEST PIPELINE",
+          "path": "corpus/slide-16-schematic.html"
+        },
+        {
+          "number": 17,
+          "file": "slide-17-density-grid.html",
+          "title": "DENSITY GRID // SUBSYSTEMS",
+          "path": "corpus/slide-17-density-grid.html"
+        },
+        {
+          "number": 18,
+          "file": "slide-18-code-hero.html",
+          "title": "CODE HERO // norm-svc.rs",
+          "path": "corpus/slide-18-code-hero.html"
+        },
+        {
+          "number": 19,
+          "file": "slide-19-status-board.html",
+          "title": "STATUS BOARD // FLEET-Z",
+          "path": "corpus/slide-19-status-board.html"
+        },
+        {
+          "number": 20,
+          "file": "slide-20-manifesto.html",
+          "title": "MANIFESTO // 09 LAWS",
+          "path": "corpus/slide-20-manifesto.html"
+        },
+        {
+          "number": 21,
+          "file": "slide-21-dotmatrix-ladder.html",
+          "title": "DOT-MATRIX // LADDER",
+          "path": "corpus/slide-21-dotmatrix-ladder.html"
+        },
+        {
+          "number": 22,
+          "file": "slide-22-hero-gradient.html",
+          "title": "Slide 22 \u2014 Hero",
+          "path": "corpus/slide-22-hero-gradient.html"
+        },
+        {
+          "number": 23,
+          "file": "slide-23-stats-trio.html",
+          "title": "Slide 23 \u2014 Stats trio",
+          "path": "corpus/slide-23-stats-trio.html"
+        },
+        {
+          "number": 24,
+          "file": "slide-24-pricing-tiers.html",
+          "title": "Slide 24 \u2014 Pricing tiers",
+          "path": "corpus/slide-24-pricing-tiers.html"
+        },
+        {
+          "number": 25,
+          "file": "slide-25-feature-bento.html",
+          "title": "Slide 25 \u2014 Feature bento",
+          "path": "corpus/slide-25-feature-bento.html"
+        },
+        {
+          "number": 26,
+          "file": "slide-26-quote-wall.html",
+          "title": "Slide 26 \u2014 Quote wall",
+          "path": "corpus/slide-26-quote-wall.html"
+        },
+        {
+          "number": 27,
+          "file": "slide-27-cta-closing.html",
+          "title": "Slide 27 \u2014 CTA closing",
+          "path": "corpus/slide-27-cta-closing.html"
+        },
+        {
+          "number": 28,
+          "file": "slide-28-logo-mosaic.html",
+          "title": "Slide 28 \u2014 Logo mosaic + divider",
+          "path": "corpus/slide-28-logo-mosaic.html"
+        },
+        {
+          "number": 29,
+          "file": "slide-29-hero-blob-frame.html",
+          "title": "Slide 29 \u2014 A softer cadence",
+          "path": "corpus/slide-29-hero-blob-frame.html"
+        },
+        {
+          "number": 30,
+          "file": "slide-30-story-pullquote.html",
+          "title": "Slide 30 \u2014 The morning we stopped rushing",
+          "path": "corpus/slide-30-story-pullquote.html"
+        },
+        {
+          "number": 31,
+          "file": "slide-31-ritual-steps.html",
+          "title": "Slide 31 \u2014 A small daily ritual",
+          "path": "corpus/slide-31-ritual-steps.html"
+        },
+        {
+          "number": 32,
+          "file": "slide-32-feature-breathing.html",
+          "title": "Slide 32 \u2014 Made for the long breath",
+          "path": "corpus/slide-32-feature-breathing.html"
+        },
+        {
+          "number": 33,
+          "file": "slide-33-quote-testimonial.html",
+          "title": "Slide 33 \u2014 Testimonial",
+          "path": "corpus/slide-33-quote-testimonial.html"
+        },
+        {
+          "number": 34,
+          "file": "slide-34-call-to-rest.html",
+          "title": "Slide 34 \u2014 A gentle invitation",
+          "path": "corpus/slide-34-call-to-rest.html"
+        },
+        {
+          "number": 35,
+          "file": "slide-35-manifesto-values.html",
+          "title": "Slide 35 \u2014 What we believe",
+          "path": "corpus/slide-35-manifesto-values.html"
+        },
+        {
+          "number": 36,
+          "file": "slide-36-strategic-matrix.html",
+          "title": "Vendor positioning matrix",
+          "path": "corpus/slide-36-strategic-matrix.html"
+        },
+        {
+          "number": 37,
+          "file": "slide-37-stacked-bar.html",
+          "title": "Spend mix by buyer segment",
+          "path": "corpus/slide-37-stacked-bar.html"
+        },
+        {
+          "number": 38,
+          "file": "slide-38-comparison-table.html",
+          "title": "Operating model comparison",
+          "path": "corpus/slide-38-comparison-table.html"
+        },
+        {
+          "number": 39,
+          "file": "slide-39-numbered-insights.html",
+          "title": "Five forces reshaping the category",
+          "path": "corpus/slide-39-numbered-insights.html"
+        },
+        {
+          "number": 40,
+          "file": "slide-40-waterfall.html",
+          "title": "EBITDA bridge FY24 to FY27",
+          "path": "corpus/slide-40-waterfall.html"
+        },
+        {
+          "number": 41,
+          "file": "slide-41-cover.html",
+          "title": "Cover \u2014 Enterprise Software Practice 2026 Outlook",
+          "path": "corpus/slide-41-cover.html"
+        },
+        {
+          "number": 42,
+          "file": "slide-42-ranking.html",
+          "title": "Top 10 capability gaps",
+          "path": "corpus/slide-42-ranking.html"
+        },
+        {
+          "number": 43,
+          "file": "slide-43-magazine-cover-mask.html",
+          "title": "Slide 43 \u2014 Magazine Cover, Text-as-Image-Mask",
+          "path": "corpus/slide-43-magazine-cover-mask.html"
+        },
+        {
+          "number": 44,
+          "file": "slide-44-magazine-spread.html",
+          "title": "Slide 44 \u2014 Magazine Spread",
+          "path": "corpus/slide-44-magazine-spread.html"
+        },
+        {
+          "number": 45,
+          "file": "slide-45-photo-essay-caption.html",
+          "title": "Slide 45 \u2014 Photo Essay Caption",
+          "path": "corpus/slide-45-photo-essay-caption.html"
+        },
+        {
+          "number": 46,
+          "file": "slide-46-pull-quote-faded.html",
+          "title": "Slide 46 \u2014 Photo + Giant Pull-Quote",
+          "path": "corpus/slide-46-pull-quote-faded.html"
+        },
+        {
+          "number": 47,
+          "file": "slide-47-mosaic-gallery.html",
+          "title": "Slide 47 \u2014 Mosaic Gallery + Headline Sidebar",
+          "path": "corpus/slide-47-mosaic-gallery.html"
+        },
+        {
+          "number": 48,
+          "file": "slide-48-duotone-hero.html",
+          "title": "Slide 48 \u2014 Duotone Hero",
+          "path": "corpus/slide-48-duotone-hero.html"
+        },
+        {
+          "number": 49,
+          "file": "slide-49-text-wrap-stress.html",
+          "title": "Text Wrap Stress",
+          "path": "corpus/slide-49-text-wrap-stress.html"
+        },
+        {
+          "number": null,
+          "file": "sophisticated.html",
+          "title": "Pixelpitch \u2014 01 Hero",
+          "path": "corpus/sophisticated.html"
+        }
+      ]
+    },
+    {
+      "id": "agora-protocol",
+      "path": "decks/agora-protocol",
+      "slide_count": 19,
+      "numbered_count": 19,
+      "numbering": "sequential",
+      "duplicate_numbers": [],
+      "has_generator": true,
+      "slides": [
+        {
+          "number": 1,
+          "file": "01-cover.html",
+          "title": "01-cover",
+          "path": "decks/agora-protocol/01-cover.html"
+        },
+        {
+          "number": 2,
+          "file": "02-thesis.html",
+          "title": "02-thesis",
+          "path": "decks/agora-protocol/02-thesis.html"
+        },
+        {
+          "number": 3,
+          "file": "03-flow.html",
+          "title": "03-flow",
+          "path": "decks/agora-protocol/03-flow.html"
+        },
+        {
+          "number": 4,
+          "file": "04-premise.html",
+          "title": "04-premise",
+          "path": "decks/agora-protocol/04-premise.html"
+        },
+        {
+          "number": 5,
+          "file": "05-execution.html",
+          "title": "05-execution",
+          "path": "decks/agora-protocol/05-execution.html"
+        },
+        {
+          "number": 6,
+          "file": "06-object.html",
+          "title": "06-object",
+          "path": "decks/agora-protocol/06-object.html"
+        },
+        {
+          "number": 7,
+          "file": "07-liquidity.html",
+          "title": "07-liquidity",
+          "path": "decks/agora-protocol/07-liquidity.html"
+        },
+        {
+          "number": 8,
+          "file": "08-system.html",
+          "title": "08-system",
+          "path": "decks/agora-protocol/08-system.html"
+        },
+        {
+          "number": 9,
+          "file": "09-tension.html",
+          "title": "09-tension",
+          "path": "decks/agora-protocol/09-tension.html"
+        },
+        {
+          "number": 10,
+          "file": "10-trust.html",
+          "title": "10-trust",
+          "path": "decks/agora-protocol/10-trust.html"
+        },
+        {
+          "number": 11,
+          "file": "11-method.html",
+          "title": "11-method",
+          "path": "decks/agora-protocol/11-method.html"
+        },
+        {
+          "number": 12,
+          "file": "12-routing.html",
+          "title": "12-routing",
+          "path": "decks/agora-protocol/12-routing.html"
+        },
+        {
+          "number": 13,
+          "file": "13-latency.html",
+          "title": "13-latency",
+          "path": "decks/agora-protocol/13-latency.html"
+        },
+        {
+          "number": 14,
+          "file": "14-signal.html",
+          "title": "14-signal",
+          "path": "decks/agora-protocol/14-signal.html"
+        },
+        {
+          "number": 15,
+          "file": "15-field-note.html",
+          "title": "15-field-note",
+          "path": "decks/agora-protocol/15-field-note.html"
+        },
+        {
+          "number": 16,
+          "file": "16-security.html",
+          "title": "16-security",
+          "path": "decks/agora-protocol/16-security.html"
+        },
+        {
+          "number": 17,
+          "file": "17-resolution.html",
+          "title": "17-resolution",
+          "path": "decks/agora-protocol/17-resolution.html"
+        },
+        {
+          "number": 18,
+          "file": "18-scale.html",
+          "title": "18-scale",
+          "path": "decks/agora-protocol/18-scale.html"
+        },
+        {
+          "number": 19,
+          "file": "19-close.html",
+          "title": "19-close",
+          "path": "decks/agora-protocol/19-close.html"
+        }
+      ]
+    },
+    {
+      "id": "atlas-vol-iii",
+      "path": "decks/atlas-vol-iii",
+      "slide_count": 12,
+      "numbered_count": 12,
+      "numbering": "sequential",
+      "duplicate_numbers": [],
+      "has_generator": true,
+      "slides": [
+        {
+          "number": 1,
+          "file": "01-cover.html",
+          "title": "Atlas Vol III \u2014 01-cover",
+          "path": "decks/atlas-vol-iii/01-cover.html"
+        },
+        {
+          "number": 2,
+          "file": "02-index.html",
+          "title": "Atlas Vol III \u2014 02-index",
+          "path": "decks/atlas-vol-iii/02-index.html"
+        },
+        {
+          "number": 3,
+          "file": "03-opening.html",
+          "title": "Atlas Vol III \u2014 03-opening",
+          "path": "decks/atlas-vol-iii/03-opening.html"
+        },
+        {
+          "number": 4,
+          "file": "04-duotone-plate.html",
+          "title": "Atlas Vol III \u2014 04-duotone-plate",
+          "path": "decks/atlas-vol-iii/04-duotone-plate.html"
+        },
+        {
+          "number": 5,
+          "file": "05-one-number.html",
+          "title": "Atlas Vol III \u2014 05-one-number",
+          "path": "decks/atlas-vol-iii/05-one-number.html"
+        },
+        {
+          "number": 6,
+          "file": "06-type-specimen.html",
+          "title": "Atlas Vol III \u2014 06-type-specimen",
+          "path": "decks/atlas-vol-iii/06-type-specimen.html"
+        },
+        {
+          "number": 7,
+          "file": "07-pullquote.html",
+          "title": "Atlas Vol III \u2014 07-pullquote",
+          "path": "decks/atlas-vol-iii/07-pullquote.html"
+        },
+        {
+          "number": 8,
+          "file": "08-cinemagraph.html",
+          "title": "Atlas Vol III \u2014 08-cinemagraph",
+          "path": "decks/atlas-vol-iii/08-cinemagraph.html"
+        },
+        {
+          "number": 9,
+          "file": "09-process-matrix.html",
+          "title": "Atlas Vol III \u2014 09-process-matrix",
+          "path": "decks/atlas-vol-iii/09-process-matrix.html"
+        },
+        {
+          "number": 10,
+          "file": "10-highlight-sweep.html",
+          "title": "Atlas Vol III \u2014 10-highlight-sweep",
+          "path": "decks/atlas-vol-iii/10-highlight-sweep.html"
+        },
+        {
+          "number": 11,
+          "file": "11-numerals-ladder.html",
+          "title": "Atlas Vol III \u2014 11-numerals-ladder",
+          "path": "decks/atlas-vol-iii/11-numerals-ladder.html"
+        },
+        {
+          "number": 12,
+          "file": "12-close.html",
+          "title": "Atlas Vol III \u2014 12-close",
+          "path": "decks/atlas-vol-iii/12-close.html"
+        }
+      ]
+    },
+    {
+      "id": "crt-archive",
+      "path": "decks/crt-archive",
+      "slide_count": 20,
+      "numbered_count": 20,
+      "numbering": "sequential",
+      "duplicate_numbers": [],
+      "has_generator": true,
+      "slides": [
+        {
+          "number": 1,
+          "file": "01-boot.html",
+          "title": "01-boot",
+          "path": "decks/crt-archive/01-boot.html"
+        },
+        {
+          "number": 2,
+          "file": "02-cover.html",
+          "title": "02-cover",
+          "path": "decks/crt-archive/02-cover.html"
+        },
+        {
+          "number": 3,
+          "file": "03-index.html",
+          "title": "03-index",
+          "path": "decks/crt-archive/03-index.html"
+        },
+        {
+          "number": 4,
+          "file": "04-premise.html",
+          "title": "04-premise",
+          "path": "decks/crt-archive/04-premise.html"
+        },
+        {
+          "number": 5,
+          "file": "05-daemon.html",
+          "title": "05-daemon",
+          "path": "decks/crt-archive/05-daemon.html"
+        },
+        {
+          "number": 6,
+          "file": "06-object.html",
+          "title": "06-object",
+          "path": "decks/crt-archive/06-object.html"
+        },
+        {
+          "number": 7,
+          "file": "07-patch.html",
+          "title": "07-patch",
+          "path": "decks/crt-archive/07-patch.html"
+        },
+        {
+          "number": 8,
+          "file": "08-system.html",
+          "title": "08-system",
+          "path": "decks/crt-archive/08-system.html"
+        },
+        {
+          "number": 9,
+          "file": "09-tension.html",
+          "title": "09-tension",
+          "path": "decks/crt-archive/09-tension.html"
+        },
+        {
+          "number": 10,
+          "file": "10-trace.html",
+          "title": "10-trace",
+          "path": "decks/crt-archive/10-trace.html"
+        },
+        {
+          "number": 11,
+          "file": "11-method.html",
+          "title": "11-method",
+          "path": "decks/crt-archive/11-method.html"
+        },
+        {
+          "number": 12,
+          "file": "12-module.html",
+          "title": "12-module",
+          "path": "decks/crt-archive/12-module.html"
+        },
+        {
+          "number": 13,
+          "file": "13-cache.html",
+          "title": "13-cache",
+          "path": "decks/crt-archive/13-cache.html"
+        },
+        {
+          "number": 14,
+          "file": "14-signal.html",
+          "title": "14-signal",
+          "path": "decks/crt-archive/14-signal.html"
+        },
+        {
+          "number": 15,
+          "file": "15-field-note.html",
+          "title": "15-field-note",
+          "path": "decks/crt-archive/15-field-note.html"
+        },
+        {
+          "number": 16,
+          "file": "16-watch.html",
+          "title": "16-watch",
+          "path": "decks/crt-archive/16-watch.html"
+        },
+        {
+          "number": 17,
+          "file": "17-export.html",
+          "title": "17-export",
+          "path": "decks/crt-archive/17-export.html"
+        },
+        {
+          "number": 18,
+          "file": "18-resolution.html",
+          "title": "18-resolution",
+          "path": "decks/crt-archive/18-resolution.html"
+        },
+        {
+          "number": 19,
+          "file": "19-close.html",
+          "title": "19-close",
+          "path": "decks/crt-archive/19-close.html"
+        },
+        {
+          "number": 20,
+          "file": "20-end.html",
+          "title": "20-end",
+          "path": "decks/crt-archive/20-end.html"
+        }
+      ]
+    },
+    {
+      "id": "field-notes-quarterly",
+      "path": "decks/field-notes-quarterly",
+      "slide_count": 18,
+      "numbered_count": 18,
+      "numbering": "sequential",
+      "duplicate_numbers": [],
+      "has_generator": true,
+      "slides": [
+        {
+          "number": 1,
+          "file": "01-cover.html",
+          "title": "01-cover",
+          "path": "decks/field-notes-quarterly/01-cover.html"
+        },
+        {
+          "number": 2,
+          "file": "02-atlas.html",
+          "title": "02-atlas",
+          "path": "decks/field-notes-quarterly/02-atlas.html"
+        },
+        {
+          "number": 3,
+          "file": "03-premise.html",
+          "title": "03-premise",
+          "path": "decks/field-notes-quarterly/03-premise.html"
+        },
+        {
+          "number": 4,
+          "file": "04-courtyard.html",
+          "title": "04-courtyard",
+          "path": "decks/field-notes-quarterly/04-courtyard.html"
+        },
+        {
+          "number": 5,
+          "file": "05-object.html",
+          "title": "05-object",
+          "path": "decks/field-notes-quarterly/05-object.html"
+        },
+        {
+          "number": 6,
+          "file": "06-material.html",
+          "title": "06-material",
+          "path": "decks/field-notes-quarterly/06-material.html"
+        },
+        {
+          "number": 7,
+          "file": "07-system.html",
+          "title": "07-system",
+          "path": "decks/field-notes-quarterly/07-system.html"
+        },
+        {
+          "number": 8,
+          "file": "08-studio.html",
+          "title": "08-studio",
+          "path": "decks/field-notes-quarterly/08-studio.html"
+        },
+        {
+          "number": 9,
+          "file": "09-tension.html",
+          "title": "09-tension",
+          "path": "decks/field-notes-quarterly/09-tension.html"
+        },
+        {
+          "number": 10,
+          "file": "10-method.html",
+          "title": "10-method",
+          "path": "decks/field-notes-quarterly/10-method.html"
+        },
+        {
+          "number": 11,
+          "file": "11-plate.html",
+          "title": "11-plate",
+          "path": "decks/field-notes-quarterly/11-plate.html"
+        },
+        {
+          "number": 12,
+          "file": "12-margins.html",
+          "title": "12-margins",
+          "path": "decks/field-notes-quarterly/12-margins.html"
+        },
+        {
+          "number": 13,
+          "file": "13-signal.html",
+          "title": "13-signal",
+          "path": "decks/field-notes-quarterly/13-signal.html"
+        },
+        {
+          "number": 14,
+          "file": "14-essay.html",
+          "title": "14-essay",
+          "path": "decks/field-notes-quarterly/14-essay.html"
+        },
+        {
+          "number": 15,
+          "file": "15-field-note.html",
+          "title": "15-field-note",
+          "path": "decks/field-notes-quarterly/15-field-note.html"
+        },
+        {
+          "number": 16,
+          "file": "16-fieldwork.html",
+          "title": "16-fieldwork",
+          "path": "decks/field-notes-quarterly/16-fieldwork.html"
+        },
+        {
+          "number": 17,
+          "file": "17-resolution.html",
+          "title": "17-resolution",
+          "path": "decks/field-notes-quarterly/17-resolution.html"
+        },
+        {
+          "number": 18,
+          "file": "18-close.html",
+          "title": "18-close",
+          "path": "decks/field-notes-quarterly/18-close.html"
+        }
+      ]
+    },
+    {
+      "id": "llm-corpus",
+      "path": "decks/llm-corpus",
+      "slide_count": 22,
+      "numbered_count": 22,
+      "numbering": "sequential",
+      "duplicate_numbers": [],
+      "has_generator": true,
+      "slides": [
+        {
+          "number": 1,
+          "file": "01-vd-hero.html",
+          "title": "01 Vd Hero",
+          "path": "decks/llm-corpus/01-vd-hero.html"
+        },
+        {
+          "number": 2,
+          "file": "02-vd-kpi-grid.html",
+          "title": "02 Vd Kpi Grid",
+          "path": "decks/llm-corpus/02-vd-kpi-grid.html"
+        },
+        {
+          "number": 3,
+          "file": "03-vd-feature-three.html",
+          "title": "03 Vd Feature Three",
+          "path": "decks/llm-corpus/03-vd-feature-three.html"
+        },
+        {
+          "number": 4,
+          "file": "04-vd-pricing.html",
+          "title": "04 Vd Pricing",
+          "path": "decks/llm-corpus/04-vd-pricing.html"
+        },
+        {
+          "number": 5,
+          "file": "05-vd-dashboard.html",
+          "title": "05 Vd Dashboard",
+          "path": "decks/llm-corpus/05-vd-dashboard.html"
+        },
+        {
+          "number": 6,
+          "file": "06-vd-team.html",
+          "title": "06 Vd Team",
+          "path": "decks/llm-corpus/06-vd-team.html"
+        },
+        {
+          "number": 7,
+          "file": "07-vd-quote.html",
+          "title": "07 Vd Quote",
+          "path": "decks/llm-corpus/07-vd-quote.html"
+        },
+        {
+          "number": 8,
+          "file": "08-vd-roadmap.html",
+          "title": "08 Vd Roadmap",
+          "path": "decks/llm-corpus/08-vd-roadmap.html"
+        },
+        {
+          "number": 9,
+          "file": "09-vd-lucide-features.html",
+          "title": "09 Vd Lucide Features",
+          "path": "decks/llm-corpus/09-vd-lucide-features.html"
+        },
+        {
+          "number": 10,
+          "file": "10-vd-closing.html",
+          "title": "10 Vd Closing",
+          "path": "decks/llm-corpus/10-vd-closing.html"
+        },
+        {
+          "number": 11,
+          "file": "11-paper-news.html",
+          "title": "11 Paper News",
+          "path": "decks/llm-corpus/11-paper-news.html"
+        },
+        {
+          "number": 12,
+          "file": "12-paper-comparison.html",
+          "title": "12 Paper Comparison",
+          "path": "decks/llm-corpus/12-paper-comparison.html"
+        },
+        {
+          "number": 13,
+          "file": "13-paper-research.html",
+          "title": "13 Paper Research",
+          "path": "decks/llm-corpus/13-paper-research.html"
+        },
+        {
+          "number": 14,
+          "file": "14-paper-leaderboard.html",
+          "title": "14 Paper Leaderboard",
+          "path": "decks/llm-corpus/14-paper-leaderboard.html"
+        },
+        {
+          "number": 15,
+          "file": "15-paper-lucide-dash.html",
+          "title": "15 Paper Lucide Dash",
+          "path": "decks/llm-corpus/15-paper-lucide-dash.html"
+        },
+        {
+          "number": 16,
+          "file": "16-mag-cover.html",
+          "title": "16 Mag Cover",
+          "path": "decks/llm-corpus/16-mag-cover.html"
+        },
+        {
+          "number": 17,
+          "file": "17-mag-spread.html",
+          "title": "17 Mag Spread",
+          "path": "decks/llm-corpus/17-mag-spread.html"
+        },
+        {
+          "number": 18,
+          "file": "18-bru-manifesto.html",
+          "title": "18 Bru Manifesto",
+          "path": "decks/llm-corpus/18-bru-manifesto.html"
+        },
+        {
+          "number": 19,
+          "file": "19-bru-stat-wall.html",
+          "title": "19 Bru Stat Wall",
+          "path": "decks/llm-corpus/19-bru-stat-wall.html"
+        },
+        {
+          "number": 20,
+          "file": "20-mono-spec.html",
+          "title": "20 Mono Spec",
+          "path": "decks/llm-corpus/20-mono-spec.html"
+        },
+        {
+          "number": 21,
+          "file": "21-mono-timeline.html",
+          "title": "21 Mono Timeline",
+          "path": "decks/llm-corpus/21-mono-timeline.html"
+        },
+        {
+          "number": 22,
+          "file": "22-duo-photo.html",
+          "title": "22 Duo Photo",
+          "path": "decks/llm-corpus/22-duo-photo.html"
+        }
+      ]
+    },
+    {
+      "id": "seasons-of-pacific",
+      "path": "decks/seasons-of-pacific",
+      "slide_count": 10,
+      "numbered_count": 10,
+      "numbering": "sequential",
+      "duplicate_numbers": [],
+      "has_generator": true,
+      "slides": [
+        {
+          "number": 1,
+          "file": "01-cover.html",
+          "title": "01-cover",
+          "path": "decks/seasons-of-pacific/01-cover.html"
+        },
+        {
+          "number": 2,
+          "file": "02-premise.html",
+          "title": "02-premise",
+          "path": "decks/seasons-of-pacific/02-premise.html"
+        },
+        {
+          "number": 3,
+          "file": "03-object.html",
+          "title": "03-object",
+          "path": "decks/seasons-of-pacific/03-object.html"
+        },
+        {
+          "number": 4,
+          "file": "04-system.html",
+          "title": "04-system",
+          "path": "decks/seasons-of-pacific/04-system.html"
+        },
+        {
+          "number": 5,
+          "file": "05-tension.html",
+          "title": "05-tension",
+          "path": "decks/seasons-of-pacific/05-tension.html"
+        },
+        {
+          "number": 6,
+          "file": "06-method.html",
+          "title": "06-method",
+          "path": "decks/seasons-of-pacific/06-method.html"
+        },
+        {
+          "number": 7,
+          "file": "07-signal.html",
+          "title": "07-signal",
+          "path": "decks/seasons-of-pacific/07-signal.html"
+        },
+        {
+          "number": 8,
+          "file": "08-field-note.html",
+          "title": "08-field-note",
+          "path": "decks/seasons-of-pacific/08-field-note.html"
+        },
+        {
+          "number": 9,
+          "file": "09-resolution.html",
+          "title": "09-resolution",
+          "path": "decks/seasons-of-pacific/09-resolution.html"
+        },
+        {
+          "number": 10,
+          "file": "10-close.html",
+          "title": "10-close",
+          "path": "decks/seasons-of-pacific/10-close.html"
+        }
+      ]
+    },
+    {
+      "id": "studio-noir-vol-i",
+      "path": "decks/studio-noir-vol-i",
+      "slide_count": 10,
+      "numbered_count": 10,
+      "numbering": "sequential",
+      "duplicate_numbers": [],
+      "has_generator": true,
+      "slides": [
+        {
+          "number": 1,
+          "file": "01-cover.html",
+          "title": "01-cover",
+          "path": "decks/studio-noir-vol-i/01-cover.html"
+        },
+        {
+          "number": 2,
+          "file": "02-premise.html",
+          "title": "02-premise",
+          "path": "decks/studio-noir-vol-i/02-premise.html"
+        },
+        {
+          "number": 3,
+          "file": "03-object.html",
+          "title": "03-object",
+          "path": "decks/studio-noir-vol-i/03-object.html"
+        },
+        {
+          "number": 4,
+          "file": "04-system.html",
+          "title": "04-system",
+          "path": "decks/studio-noir-vol-i/04-system.html"
+        },
+        {
+          "number": 5,
+          "file": "05-tension.html",
+          "title": "05-tension",
+          "path": "decks/studio-noir-vol-i/05-tension.html"
+        },
+        {
+          "number": 6,
+          "file": "06-method.html",
+          "title": "06-method",
+          "path": "decks/studio-noir-vol-i/06-method.html"
+        },
+        {
+          "number": 7,
+          "file": "07-signal.html",
+          "title": "07-signal",
+          "path": "decks/studio-noir-vol-i/07-signal.html"
+        },
+        {
+          "number": 8,
+          "file": "08-field-note.html",
+          "title": "08-field-note",
+          "path": "decks/studio-noir-vol-i/08-field-note.html"
+        },
+        {
+          "number": 9,
+          "file": "09-resolution.html",
+          "title": "09-resolution",
+          "path": "decks/studio-noir-vol-i/09-resolution.html"
+        },
+        {
+          "number": 10,
+          "file": "10-close.html",
+          "title": "10-close",
+          "path": "decks/studio-noir-vol-i/10-close.html"
+        }
+      ]
+    }
+  ]
+}

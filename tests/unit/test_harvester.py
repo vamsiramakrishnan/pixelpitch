@@ -9,15 +9,23 @@ conversion path is covered separately via `test_cli_harvest.py`.
 from __future__ import annotations
 
 from slidify.harvester import (
-    AtomCandidate,
     Cluster,
-    cluster_signatures,
-    propose_atom_candidate,
-    report_to_dict,
-    write_report,
+    DeckTelemetry,
     HarvestReport,
+    QualityIssue,
+    cluster_pipeline_signals,
+    cluster_signatures,
+    mechanisms_to_dict,
+    merge_quality_issues,
+    propose_atom_candidate,
+    quality_issues_from_result,
+    report_to_dict,
+    run_pipeline_signals,
+    top_mechanisms,
+    write_report,
 )
-from slidify.models import UnmatchedSignature
+from slidify.harvester.collection import _walk_corpus
+from slidify.models import ConversionResult, OverflowElement, UnmatchedSignature
 
 
 def _sig(
@@ -75,6 +83,8 @@ def test_cluster_signatures_collects_exemplars_and_classes():
     # Classes/text dedupe within the cluster.
     assert set(c.sample_classes) == {"card", "tile"}
     assert set(c.sample_text) == {"Hi", "Yo"}
+    assert c.source_files == ["a.html", "b.html", "c.html"]
+    assert c.source_groups == ["."]
 
 
 def test_cluster_signatures_filters_by_min_occurrences():
@@ -202,6 +212,29 @@ def test_propose_modifiers_sorted_alphabetically():
     assert mods == sorted(mods)
 
 
+def test_cluster_pipeline_signals_surface_actionable_render_guidance():
+    obs = [
+        ("corpus/slide-01.html#node-0",
+         _sig(sig_hash="imgx", sig="div(bgi=url+filter)[][960x540]",
+              bbox_w=960, bbox_h=540, sample_classes="photo-mask")),
+        ("corpus/slide-02.html#node-0",
+         _sig(sig_hash="imgx", sig="div(bgi=url+filter)[][960x540]",
+              bbox_w=960, bbox_h=540, sample_classes="photo-mask")),
+    ]
+    [cluster] = cluster_signatures(obs)
+    cand = propose_atom_candidate(cluster)
+    signals = cluster_pipeline_signals(cluster, cand)
+    assert signals["fidelity_risk"] == "high"
+    assert signals["render_strategy"] == "preserve-raster"
+    assert signals["editability_goal"] == "editable-wrapper-with-fidelity-raster"
+    assert signals["raster_fidelity_goal"] == "pixel-exact-effects"
+    assert "preserve-raster-layer" in signals["pipeline_actions"]
+    assert "optimize-raster-crop-and-resolution" in signals["pipeline_actions"]
+    assert "add-fidelity-regression-case" in signals["pipeline_actions"]
+    assert "compare-source-vs-pptx-pixels" in signals["pipeline_actions"]
+    assert signals["source_group_count"] == 1
+
+
 # ---------------------------------------------------------------------------
 # Serialisation
 # ---------------------------------------------------------------------------
@@ -231,12 +264,120 @@ def test_report_to_dict_matches_contract_shape():
     # Required keys per the contract spec in the M4 brief.
     for key in (
         "id", "sig_hash", "signature", "instances", "exemplars",
-        "sample_classes", "sample_text", "bbox_typical",
+        "source_files", "source_groups", "sample_classes", "sample_text",
+        "bbox_typical", "pipeline_signals",
         "candidate_atom_id", "candidate_axis", "candidate_props",
     ):
         assert key in c, f"missing key: {key}"
     assert c["candidate_axis"] == "surf"
     assert c["candidate_atom_id"].startswith("surf.card")
+    assert c["pipeline_signals"]["render_strategy"] == "native-atom"
+    assert c["pipeline_signals"]["editability_goal"] == "maximize-native-editability"
+    assert "run_signals" in payload
+    assert "quality_issues" in payload
+    assert "deck_summaries" in payload
+
+
+def test_quality_issues_from_result_promotes_overflow_to_action_queue():
+    result = ConversionResult(
+        pptx_path="/tmp/out.pptx",
+        n_slides=1,
+        fidelity_reports=[],
+        native_area_ratio=0.9,
+        pattern_coverage=0.8,
+        unmatched_signatures=[],
+        overflow_elements=[
+            OverflowElement(
+                slide_index=0,
+                axis="bottom",
+                overflow_px=96,
+                bbox_x=10,
+                bbox_y=700,
+                bbox_w=200,
+                bbox_h=120,
+                tag="div",
+                data_atom="text.banner",
+                stable_selector=".banner",
+                sample_text="Too long",
+                hint="text.banner",
+            )
+        ],
+    )
+    issues = quality_issues_from_result("deck/slide.html", result)
+    assert len(issues) == 1
+    assert issues[0].kind == "layout.overflow"
+    assert issues[0].severity == "high"
+    assert "improve-autofit-or-bleed-policy" in issues[0].actions
+    assert issues[0].metrics["worst_overflow_px"] == 96
+
+
+def test_merge_quality_issues_accumulates_sources_and_metrics():
+    issues = [
+        QualityIssue(
+            id="layout.overflow:bottom",
+            kind="layout.overflow",
+            title="bottom overflow",
+            severity="medium",
+            instances=1,
+            source_files={"a.html"},
+            source_groups={"."},
+            examples=["a.html#slide-0"],
+            actions=["add-layout-overflow-regression"],
+            metrics={"worst_overflow_px": 12.0},
+        ),
+        QualityIssue(
+            id="layout.overflow:bottom",
+            kind="layout.overflow",
+            title="bottom overflow",
+            severity="high",
+            instances=2,
+            source_files={"b.html"},
+            source_groups={"."},
+            examples=["b.html#slide-0"],
+            actions=["improve-autofit-or-bleed-policy"],
+            metrics={"worst_overflow_px": 40.0},
+        ),
+    ]
+    [merged] = merge_quality_issues(issues)
+    assert merged.instances == 3
+    assert merged.severity == "high"
+    assert merged.source_files == {"a.html", "b.html"}
+    assert merged.metrics["worst_overflow_px"] == 40.0
+
+
+def test_run_pipeline_signals_adds_recommendations_from_quality_telemetry():
+    report = HarvestReport(
+        timestamp="2026-05-02T00:00:00+00:00",
+        corpus_dir="/tmp",
+        decks_processed=2,
+        total_unmatched=0,
+        unique_signatures=0,
+        deck_summaries=[
+            DeckTelemetry(
+                path="a.html",
+                source_group=".",
+                n_slides=1,
+                unmatched_count=0,
+                native_area_ratio=0.8,
+                pattern_coverage=0.7,
+                overflow_count=2,
+            )
+        ],
+        quality_issues=[
+            QualityIssue(
+                id="layout.overflow:bottom",
+                kind="layout.overflow",
+                title="bottom overflow",
+                severity="high",
+                instances=2,
+                actions=["add-layout-overflow-regression"],
+            )
+        ],
+    )
+    signals = run_pipeline_signals(report)
+    assert signals["telemetry_totals"]["overflow_elements"] == 2
+    assert signals["health"]["avg_pattern_coverage"] == 0.7
+    assert any(r["area"] == "layout-engine" for r in signals["recommendations"])
 
 
 def test_write_report_creates_parent_dirs(tmp_path):
@@ -283,3 +424,65 @@ def test_top_n_caps_clusters_in_payload():
     # Ranking preserved (instances descending).
     insts = [c["instances"] for c in payload["clusters"]]
     assert insts == sorted(insts, reverse=True)
+
+
+def test_walk_corpus_skips_generated_root_index(tmp_path):
+    (tmp_path / "index.html").write_text("<html>catalog</html>")
+    (tmp_path / "index.json").write_text("{}")
+    (tmp_path / "slide-01.html").write_text("<html>slide</html>")
+    nested = tmp_path / "deck"
+    nested.mkdir()
+    (nested / "index.html").write_text("<html>real deck index slide</html>")
+
+    paths = [p.relative_to(tmp_path).as_posix() for p in _walk_corpus(tmp_path)]
+
+    assert paths == ["deck/index.html", "slide-01.html"]
+
+
+def test_top_mechanisms_compose_quality_and_cluster_signals():
+    obs = [
+        ("a/anim-01.html#node-0",
+         _sig(sig_hash="glyph", sig="span(txt+xform)[][60x60]",
+              bbox_w=60, bbox_h=60, sample_classes="dot", n_occurrences=10)),
+    ]
+    clusters = cluster_signatures(obs)
+    candidates = {c.id: propose_atom_candidate(c) for c in clusters}
+    report = HarvestReport(
+        timestamp="2026-05-02T00:00:00+00:00",
+        corpus_dir="/tmp/decks",
+        decks_processed=1,
+        total_unmatched=10,
+        unique_signatures=1,
+        clusters=clusters,
+        candidates=candidates,
+        deck_summaries=[
+            DeckTelemetry(
+                path="a.html",
+                source_group="a",
+                n_slides=1,
+                unmatched_count=10,
+                native_area_ratio=0.95,
+                pattern_coverage=0.9,
+                overflow_count=2,
+                coverage_gap_count=1,
+            )
+        ],
+        quality_issues=[
+            QualityIssue(
+                id="content.coverage_gap:span",
+                kind="content.coverage_gap",
+                title="text coverage gap in SPAN",
+                severity="critical",
+                instances=1,
+                actions=["fix-dom-to-unit-coverage"],
+            )
+        ],
+    )
+
+    mechanisms = top_mechanisms([report_to_dict(report)], limit=4)
+    payload = mechanisms_to_dict(mechanisms)
+    ids = [m["id"] for m in payload["mechanisms"]]
+
+    assert "coverage-text-map" in ids
+    assert "rotated-glyph-native" in ids
+    assert payload["mechanisms"][0]["priority"] == "critical"

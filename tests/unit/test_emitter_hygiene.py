@@ -10,10 +10,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from lxml import etree
 from pptx import Presentation
 
-from slidify.emitter import Emitter
+from slidify.emitter import Emitter, _rotation_degrees
 
 NS_A = "http://schemas.openxmlformats.org/drawingml/2006/main"
 XML_SPACE = "{http://www.w3.org/XML/1998/namespace}space"
@@ -35,7 +34,7 @@ def test_save_inserts_endpararpr_on_empty_paragraphs(tmp_path: Path):
     em.close()
 
     prs = Presentation(str(out))
-    slide_el = prs.slides[0]._element  # noqa: SLF001
+    slide_el = prs.slides[0]._element
     paragraphs = list(slide_el.iter(f"{{{NS_A}}}p"))
     assert any(
         len(p.findall(f"{{{NS_A}}}r")) == 0
@@ -57,7 +56,7 @@ def test_save_preserves_whitespace_in_runs(tmp_path: Path):
     em.close()
 
     prs = Presentation(str(out))
-    slide_el = prs.slides[0]._element  # noqa: SLF001
+    slide_el = prs.slides[0]._element
     ts = list(slide_el.iter(f"{{{NS_A}}}t"))
     relevant = [t for t in ts if t.text and t.text.strip() == "leading and trailing"]
     assert relevant, "test text not found"
@@ -72,11 +71,11 @@ def test_sanitize_is_idempotent(tmp_path: Path):
     tb.text_frame.paragraphs[0].add_run().text = "x"
     tb.text_frame.add_paragraph()
 
-    em._sanitize_for_repair_dialog()  # noqa: SLF001
-    em._sanitize_for_repair_dialog()  # noqa: SLF001
+    em._sanitize_for_repair_dialog()
+    em._sanitize_for_repair_dialog()
 
     # Should not have stacked multiple endParaRPr children.
-    slide_el = slide._element  # noqa: SLF001
+    slide_el = slide._element
     for p in slide_el.iter(f"{{{NS_A}}}p"):
         assert len(p.findall(f"{{{NS_A}}}endParaRPr")) <= 1
     em.close()
@@ -94,6 +93,11 @@ def test_save_roundtrip_still_valid(tmp_path: Path):
 
     prs = Presentation(str(out))
     assert len(prs.slides) == 3
+
+
+def test_rotation_degrees_extracts_css_2d_matrix():
+    assert round(_rotation_degrees("matrix(0, 1, -1, 0, 10, 20)"), 1) == 90.0
+    assert round(_rotation_degrees("rotate(-12deg)"), 1) == -12.0
 
 
 def test_emit_op_skips_off_canvas_shapes(tmp_path: Path):

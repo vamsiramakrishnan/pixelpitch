@@ -779,6 +779,23 @@ patterns:
       confidence: 0.9
       metadata: { recipe: elevated_card, decorate: elevation-stack }
 
+  # Motion decks commonly use a small animated `.dot` as a visual cursor.
+  # The browser reports the animation as a 2D transform matrix; PPTX can keep
+  # this as an editable native oval/shape, so classify it before the generic
+  # unmatched-signature path turns every motion marker into dec.glyph-rotated.
+  - id: dec-glyph-rotated-dot
+    priority: 73
+    match:
+      classes_any: [dot, glyph]
+      transform: any
+      bbox.w_max: 96
+      bbox.h_max: 96
+      children: none
+    emit:
+      kind: NativeShape
+      confidence: 0.95
+      metadata: { recipe: dec_glyph_rotated, axis: dec, rotation: native-2d }
+
   # Pseudo-element gradient halo: ::before/::after carries a CSS gradient.
   # Records the decoration so the host element survives but the LLM tier
   # doesn't get asked to re-derive the halo intent.

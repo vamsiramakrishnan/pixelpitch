@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slide 23 — Stats trio</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               -webkit-font-smoothing:antialiased; background:#050510; }
+  .slide {
+    width:1280px; height:720px; box-sizing:border-box;
+    position:relative; overflow:hidden;
+    font-family: Inter, system-ui, sans-serif;
+    color:#f5f5f7;
+    background:
+      radial-gradient(at 78% 12%, #1e1b4b 0%, #14102e 28%, #0a0820 55%, #050510 80%);
+  }
+  .glow {
+    position:absolute; top:-160px; right:-120px; width:560px; height:560px;
+    border-radius:9999px;
+    background: radial-gradient(circle, rgba(192,132,252,0.30) 0%, rgba(99,102,241,0.18) 38%, rgba(6,182,212,0.08) 60%, transparent 75%);
+  }
+  .glow2 {
+    position:absolute; bottom:-200px; left:-120px; width:520px; height:520px;
+    border-radius:9999px;
+    background: radial-gradient(circle, rgba(163,230,53,0.18) 0%, rgba(16,185,129,0.10) 40%, transparent 70%);
+  }
+  .header {
+    position:absolute; left:80px; top:80px; right:80px;
+    display:flex; align-items:flex-end; justify-content:space-between;
+  }
+  .kicker {
+    display:inline-flex; align-items:center; gap:10px;
+    padding:7px 14px 7px 10px;
+    border-radius:9999px;
+    background: rgba(6,182,212,0.10);
+    border:1px solid rgba(6,182,212,0.25);
+    font-size:13px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase;
+    color:#67e8f9;
+  }
+  .kicker .dot {
+    width:7px; height:7px; border-radius:9999px; background:#06b6d4;
+    box-shadow:0 0 10px rgba(6,182,212,0.7);
+  }
+  h2 {
+    margin:14px 0 0 0;
+    font-size:46px; font-weight:700; letter-spacing:-0.025em; line-height:1.05;
+    max-width:720px;
+  }
+  h2 .grad {
+    background: linear-gradient(105deg, #06b6d4 0%, #818cf8 50%, #c084fc 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .sub { color:#a1a1aa; font-size:15px; max-width:380px; line-height:1.55; text-align:right; }
+  .cards {
+    position:absolute; left:80px; right:80px; top:300px;
+    display:grid; grid-template-columns: repeat(3, 1fr); gap:24px;
+  }
+  .card {
+    position:relative;
+    padding:28px 28px 24px 28px;
+    border-radius:22px;
+    background: linear-gradient(160deg, rgba(30,27,75,0.55) 0%, rgba(20,18,50,0.45) 35%, rgba(15,15,31,0.55) 70%, rgba(10,8,32,0.55) 100%);
+    border:1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.45), 0 4px 12px rgba(0,0,0,0.20), inset 0 1px 0 rgba(255,255,255,0.06);
+    overflow:hidden;
+  }
+  .card .accent {
+    position:absolute; top:0; left:0; right:0; height:1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.20) 50%, transparent 100%);
+  }
+  .card .corner-arc {
+    position:absolute; top:-30px; right:-30px; width:160px; height:160px; opacity:0.55;
+  }
+  .label {
+    display:flex; align-items:center; justify-content:space-between;
+    font-size:13px; font-weight:600; color:#a1a1aa; letter-spacing:0.04em;
+  }
+  .pill {
+    display:inline-flex; align-items:center; gap:6px;
+    padding:4px 10px; border-radius:9999px;
+    font-size:12px; font-weight:700; letter-spacing:0.02em;
+  }
+  .pill.up { background: rgba(163,230,53,0.12); color:#a3e635; border:1px solid rgba(163,230,53,0.22); }
+  .pill.dn { background: rgba(236,72,153,0.12); color:#f472b6; border:1px solid rgba(236,72,153,0.22); }
+  .num {
+    margin-top:18px;
+    font-size:104px; font-weight:800; letter-spacing:-0.045em; line-height:0.94;
+  }
+  .g1 .num { background: linear-gradient(110deg, #818cf8 0%, #c084fc 50%, #ec4899 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .g2 .num { background: linear-gradient(110deg, #06b6d4 0%, #6366f1 60%, #818cf8 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .g3 .num { background: linear-gradient(110deg, #a3e635 0%, #34d399 50%, #10b981 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .num .unit { font-size:42px; font-weight:700; letter-spacing:-0.02em; }
+  .desc { margin-top:14px; color:#a1a1aa; font-size:14px; line-height:1.55; }
+  .desc b { color:#e4e4e7; font-weight:600; }
+  .sparkline { margin-top:18px; height:38px; display:block; }
+  .footer {
+    position:absolute; left:80px; right:80px; bottom:38px;
+    display:flex; align-items:center; justify-content:space-between;
+    font-size:12px; color:#52525b; letter-spacing:0.12em; text-transform:uppercase;
+  }
+  .footer .src b { color:#a1a1aa; font-weight:600; }
+  .footer .stamp { display:flex; align-items:center; gap:10px; }
+  .footer .bar { width:24px; height:1px; background:#3f3f46; }
+</style>
+</head>
+<body>
+<div class="slide" data-slidify-decorate="hero">
+  <div class="glow"></div>
+  <div class="glow2"></div>
+
+  <div class="header">
+    <div>
+      <span class="kicker"><span class="dot"></span>BY THE NUMBERS · FY26</span>
+      <h2>Trusted at <span class="grad">production scale</span><br>across every region.</h2>
+    </div>
+    <div class="sub">Live telemetry from the Lattice control plane — last 30 days, all customer environments included.</div>
+  </div>
+
+  <div class="cards">
+    <div class="card g1" data-slidify-decorate="glass">
+      <div class="accent"></div>
+      <svg class="corner-arc" viewBox="0 0 160 160" fill="none">
+        <defs><linearGradient id="g1a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#818cf8" stop-opacity="0.5"/><stop offset="1" stop-color="#ec4899" stop-opacity="0"/></linearGradient></defs>
+        <path d="M 10 150 C 60 100, 110 60, 150 10" stroke="url(#g1a)" stroke-width="1.4"/>
+        <path d="M 30 158 C 80 110, 130 70, 158 30" stroke="url(#g1a)" stroke-width="1" stroke-opacity="0.6"/>
+        <circle cx="150" cy="10" r="2" fill="#ec4899"/>
+      </svg>
+      <div class="label"><span>Requests served</span><span class="pill up">▲ 38%</span></div>
+      <div class="num">38.6<span class="unit">B</span></div>
+      <div class="desc">Across <b>14,200 deployments</b> in 31 regions. p95 latency steady at 47ms.</div>
+      <svg class="sparkline" viewBox="0 0 280 38" preserveAspectRatio="none">
+        <defs><linearGradient id="s1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#818cf8"/><stop offset="0.5" stop-color="#c084fc"/><stop offset="1" stop-color="#ec4899"/></linearGradient></defs>
+        <polyline points="0,30 24,28 48,24 72,26 96,20 120,18 144,14 168,16 192,10 216,12 240,8 264,6 280,4" fill="none" stroke="url(#s1)" stroke-width="2"/>
+      </svg>
+    </div>
+
+    <div class="card g2" data-slidify-decorate="glass">
+      <div class="accent"></div>
+      <svg class="corner-arc" viewBox="0 0 160 160" fill="none">
+        <defs><linearGradient id="g2a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#06b6d4" stop-opacity="0.5"/><stop offset="1" stop-color="#6366f1" stop-opacity="0"/></linearGradient></defs>
+        <path d="M 10 150 C 60 100, 110 60, 150 10" stroke="url(#g2a)" stroke-width="1.4"/>
+        <path d="M 30 158 C 80 110, 130 70, 158 30" stroke="url(#g2a)" stroke-width="1" stroke-opacity="0.6"/>
+        <circle cx="150" cy="10" r="2" fill="#6366f1"/>
+      </svg>
+      <div class="label"><span>Active customers</span><span class="pill up">▲ 4.2×</span></div>
+      <div class="num">14.2<span class="unit">K</span></div>
+      <div class="desc">Including <b>312 of the Forbes 2000</b>. Net dollar retention of 137% YoY.</div>
+      <svg class="sparkline" viewBox="0 0 280 38" preserveAspectRatio="none">
+        <defs><linearGradient id="s2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#06b6d4"/><stop offset="1" stop-color="#818cf8"/></linearGradient></defs>
+        <polyline points="0,32 24,30 48,28 72,24 96,22 120,20 144,16 168,14 192,12 216,10 240,8 264,6 280,4" fill="none" stroke="url(#s2)" stroke-width="2"/>
+      </svg>
+    </div>
+
+    <div class="card g3" data-slidify-decorate="glass">
+      <div class="accent"></div>
+      <svg class="corner-arc" viewBox="0 0 160 160" fill="none">
+        <defs><linearGradient id="g3a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a3e635" stop-opacity="0.5"/><stop offset="1" stop-color="#10b981" stop-opacity="0"/></linearGradient></defs>
+        <path d="M 10 150 C 60 100, 110 60, 150 10" stroke="url(#g3a)" stroke-width="1.4"/>
+        <path d="M 30 158 C 80 110, 130 70, 158 30" stroke="url(#g3a)" stroke-width="1" stroke-opacity="0.6"/>
+        <circle cx="150" cy="10" r="2" fill="#10b981"/>
+      </svg>
+      <div class="label"><span>Uptime, last 12mo</span><span class="pill up">99.99</span></div>
+      <div class="num">4<span class="unit">×9s</span></div>
+      <div class="desc">Zero customer-impacting incidents on the data plane. <b>RTO &lt; 60s</b> globally.</div>
+      <svg class="sparkline" viewBox="0 0 280 38" preserveAspectRatio="none">
+        <defs><linearGradient id="s3" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a3e635"/><stop offset="1" stop-color="#10b981"/></linearGradient></defs>
+        <polyline points="0,8 24,8 48,9 72,8 96,7 120,8 144,8 168,9 192,8 216,7 240,8 264,8 280,7" fill="none" stroke="url(#s3)" stroke-width="2"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="src">Source · <b>status.lattice.dev</b> · Apr 30, 2026</div>
+    <div class="stamp"><span class="bar"></span><span>02 / Index</span></div>
+  </div>
+
+  <span data-pptx-role="title" style="position:absolute;left:-9999px;">Trusted at production scale</span>
+</div>
+</body>
+</html>

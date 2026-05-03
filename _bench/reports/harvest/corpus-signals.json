@@ -1,0 +1,3207 @@
+{
+  "harvest_run": {
+    "timestamp": "2026-05-03T08:54:01+00:00",
+    "corpus_dir": "/home/user/pixelpitch/_bench/corpus",
+    "decks_processed": 61,
+    "total_unmatched": 166,
+    "unique_signatures": 2
+  },
+  "run_signals": {
+    "health": {
+      "decks_processed": 61,
+      "error_count": 0,
+      "avg_native_area_ratio": 1.0,
+      "avg_pattern_coverage": 0.9161,
+      "unmatched_per_deck": 2.72,
+      "quality_issues_per_deck": 1.79
+    },
+    "telemetry_totals": {
+      "overflow_elements": 109,
+      "coverage_gaps": 0,
+      "exclusivity_violations": 0,
+      "editability_failed_decks": 0
+    },
+    "cluster_strategy_mix": {
+      "native-pattern": 4,
+      "native-atom": 2
+    },
+    "cluster_priority_mix": {
+      "high": 4,
+      "medium": 2
+    },
+    "cluster_action_mix": {
+      "promote-to-native-pattern": 6,
+      "needs-designer-label": 4
+    },
+    "top_quality_issues": [
+      {
+        "id": "layout.overflow:bottom:bottom-edge-crossed-by-71-px-shrink-the-row-the-type-or-split-the-slide.-",
+        "kind": "layout.overflow",
+        "title": "bottom-edge overflow in bottom edge crossed by 71 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+        "severity": "high",
+        "instances": 7,
+        "source_files": [
+          "slide-42-ranking.html"
+        ],
+        "source_groups": [
+          "."
+        ],
+        "examples": [
+          "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3)",
+          "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(1)",
+          "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(2)",
+          "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(3)",
+          "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(4)",
+          "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(5)",
+          "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(6)"
+        ],
+        "actions": [
+          "add-layout-overflow-regression",
+          "improve-autofit-or-bleed-policy",
+          "promote-authoring-hint"
+        ],
+        "metrics": {
+          "worst_overflow_px": 71.16
+        }
+      },
+      {
+        "id": "layout.overflow:bottom:bottom-edge-crossed-by-74-px-shrink-the-row-the-type-or-split-the-slide.-",
+        "kind": "layout.overflow",
+        "title": "bottom-edge overflow in bottom edge crossed by 74 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+        "severity": "high",
+        "instances": 5,
+        "source_files": [
+          "slide-42-ranking.html"
+        ],
+        "source_groups": [
+          "."
+        ],
+        "examples": [
+          "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(3) > span:nth-child(2)",
+          "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(3) > span:nth-child(4)",
+          "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(3) > span:nth-child(6)",
+          "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(3) > span:nth-child(8)",
+          "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(3) > span:nth-child(10)"
+        ],
+        "actions": [
+          "add-layout-overflow-regression",
+          "improve-autofit-or-bleed-policy",
+          "promote-authoring-hint"
+        ],
+        "metrics": {
+          "worst_overflow_px": 74.16
+        }
+      },
+      {
+        "id": "layout.overflow:left:left-edge-crossed-by-120-px-usually-a-transform:-translatex--n-with-n-large",
+        "kind": "layout.overflow",
+        "title": "left-edge overflow in left edge crossed by 120 px \u2014 usually a `transform: translateX(-N)` with N larger than the parent's left padding.",
+        "severity": "high",
+        "instances": 3,
+        "source_files": [
+          "slide-22-hero-gradient.html",
+          "slide-26-quote-wall.html",
+          "sophisticated.html"
+        ],
+        "source_groups": [
+          "."
+        ],
+        "examples": [
+          "slide-22-hero-gradient.html#slide-0:body > div:nth-child(1) > div:nth-child(1)",
+          "slide-26-quote-wall.html#slide-0:body > div:nth-child(1) > div:nth-child(1)",
+          "sophisticated.html#slide-0:body > div:nth-child(1) > div:nth-child(1)"
+        ],
+        "actions": [
+          "add-layout-overflow-regression",
+          "improve-autofit-or-bleed-policy",
+          "promote-authoring-hint"
+        ],
+        "metrics": {
+          "worst_overflow_px": 120.0
+        }
+      },
+      {
+        "id": "layout.overflow:bottom:bottom-edge-crossed-by-200-px-shrink-the-row-the-type-or-split-the-slide.",
+        "kind": "layout.overflow",
+        "title": "bottom-edge overflow in bottom edge crossed by 200 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+        "severity": "high",
+        "instances": 3,
+        "source_files": [
+          "slide-23-stats-trio.html",
+          "slide-27-cta-closing.html",
+          "slide-28-logo-mosaic.html"
+        ],
+        "source_groups": [
+          "."
+        ],
+        "examples": [
+          "slide-23-stats-trio.html#slide-0:body > div:nth-child(1) > div:nth-child(2)",
+          "slide-27-cta-closing.html#slide-0:body > div:nth-child(1) > div:nth-child(2)",
+          "slide-28-logo-mosaic.html#slide-0:body > div:nth-child(1) > div:nth-child(2)"
+        ],
+        "actions": [
+          "add-layout-overflow-regression",
+          "improve-autofit-or-bleed-policy",
+          "promote-authoring-hint"
+        ],
+        "metrics": {
+          "worst_overflow_px": 200.0
+        }
+      },
+      {
+        "id": "layout.overflow:bottom:bottom-edge-crossed-by-97-px-shrink-the-row-the-type-or-split-the-slide.-",
+        "kind": "layout.overflow",
+        "title": "bottom-edge overflow in bottom edge crossed by 97 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+        "severity": "high",
+        "instances": 3,
+        "source_files": [
+          "slide-39-numbered-insights.html"
+        ],
+        "source_groups": [
+          "."
+        ],
+        "examples": [
+          "slide-39-numbered-insights.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(5) > div:nth-child(1)",
+          "slide-39-numbered-insights.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(5) > div:nth-child(2)",
+          "slide-39-numbered-insights.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(5) > div:nth-child(2) > div:nth-child(3)"
+        ],
+        "actions": [
+          "add-layout-overflow-regression",
+          "improve-autofit-or-bleed-policy",
+          "promote-authoring-hint"
+        ],
+        "metrics": {
+          "worst_overflow_px": 97.12
+        }
+      },
+      {
+        "id": "layout.overflow:bottom:bottom-edge-crossed-by-220-px-shrink-the-row-the-type-or-split-the-slide.",
+        "kind": "layout.overflow",
+        "title": "bottom-edge overflow in bottom edge crossed by 220 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+        "severity": "high",
+        "instances": 2,
+        "source_files": [
+          "animated/anim-02-hero-text-fm.html",
+          "slide-22-hero-gradient.html"
+        ],
+        "source_groups": [
+          ".",
+          "animated"
+        ],
+        "examples": [
+          "animated/anim-02-hero-text-fm.html#slide-0:body > div:nth-child(1) > div:nth-child(2)",
+          "slide-22-hero-gradient.html#slide-0:body > div:nth-child(1) > div:nth-child(2)"
+        ],
+        "actions": [
+          "add-layout-overflow-regression",
+          "improve-autofit-or-bleed-policy",
+          "promote-authoring-hint"
+        ],
+        "metrics": {
+          "worst_overflow_px": 220.0
+        }
+      },
+      {
+        "id": "layout.overflow:right:right-edge-crossed-by-160-px-trim-the-line-lower-font-size-or-wrap.-viewpo",
+        "kind": "layout.overflow",
+        "title": "right-edge overflow in right edge crossed by 160 px \u2014 trim the line, lower font-size, or wrap. Viewport width is 1280 px.",
+        "severity": "high",
+        "instances": 2,
+        "source_files": [
+          "slide-25-feature-bento.html",
+          "slide-28-logo-mosaic.html"
+        ],
+        "source_groups": [
+          "."
+        ],
+        "examples": [
+          "slide-25-feature-bento.html#slide-0:body > div:nth-child(1) > div:nth-child(1)",
+          "slide-28-logo-mosaic.html#slide-0:body > div:nth-child(1) > div:nth-child(1)"
+        ],
+        "actions": [
+          "add-layout-overflow-regression",
+          "improve-autofit-or-bleed-policy",
+          "promote-authoring-hint"
+        ],
+        "metrics": {
+          "worst_overflow_px": 160.0
+        }
+      },
+      {
+        "id": "layout.overflow:bottom:under-type.dropcap-:-lower-the-::first-letter-font-size-or-widen-the-body",
+        "kind": "layout.overflow",
+        "title": "bottom-edge overflow in under `type.dropcap`: lower the ::first-letter font-size or widen the body's container.",
+        "severity": "high",
+        "instances": 2,
+        "source_files": [
+          "landing-atoms.html"
+        ],
+        "source_groups": [
+          "."
+        ],
+        "examples": [
+          "landing-atoms.html#slide-3:body > div:nth-child(1) > div:nth-child(2) > div:nth-child(10) > span:nth-child(1)",
+          "landing-atoms.html#slide-3:body > div:nth-child(1) > div:nth-child(2) > div:nth-child(10) > p:nth-child(2)"
+        ],
+        "actions": [
+          "add-layout-overflow-regression",
+          "improve-autofit-or-bleed-policy",
+          "promote-authoring-hint"
+        ],
+        "metrics": {
+          "worst_overflow_px": 103.69
+        }
+      },
+      {
+        "id": "layout.overflow:bottom:bottom-edge-crossed-by-270-px-shrink-the-row-the-type-or-split-the-slide.",
+        "kind": "layout.overflow",
+        "title": "bottom-edge overflow in bottom edge crossed by 270 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+        "severity": "high",
+        "instances": 2,
+        "source_files": [
+          "slide-04-the-quiet-collapse.html"
+        ],
+        "source_groups": [
+          "."
+        ],
+        "examples": [
+          "slide-04-the-quiet-collapse.html#slide-0:body > div:nth-child(1) > div:nth-child(1)",
+          "slide-04-the-quiet-collapse.html#slide-0:body > div:nth-child(1) > div:nth-child(1) > div:nth-child(12)"
+        ],
+        "actions": [
+          "add-layout-overflow-regression",
+          "improve-autofit-or-bleed-policy",
+          "promote-authoring-hint"
+        ],
+        "metrics": {
+          "worst_overflow_px": 269.95
+        }
+      },
+      {
+        "id": "layout.overflow:left:left-edge-crossed-by-180-px-usually-a-transform:-translatex--n-with-n-large",
+        "kind": "layout.overflow",
+        "title": "left-edge overflow in left edge crossed by 180 px \u2014 usually a `transform: translateX(-N)` with N larger than the parent's left padding.",
+        "severity": "high",
+        "instances": 1,
+        "source_files": [
+          "animated/anim-02-hero-text-fm.html"
+        ],
+        "source_groups": [
+          "animated"
+        ],
+        "examples": [
+          "animated/anim-02-hero-text-fm.html#slide-0:body > div:nth-child(1) > div:nth-child(1)"
+        ],
+        "actions": [
+          "add-layout-overflow-regression",
+          "improve-autofit-or-bleed-policy",
+          "promote-authoring-hint"
+        ],
+        "metrics": {
+          "worst_overflow_px": 180.0
+        }
+      }
+    ],
+    "recommendations": [
+      {
+        "priority": "high",
+        "area": "pattern-library",
+        "title": "Promote text.banner from the top unmatched cluster",
+        "why": "4 instances across 1 source groups",
+        "actions": [
+          "promote-to-native-pattern",
+          "needs-designer-label"
+        ]
+      },
+      {
+        "priority": "high",
+        "area": "layout-engine",
+        "title": "Turn overflow telemetry into autofit and intentional-bleed policy",
+        "why": "109 overflow elements were detected after browser layout",
+        "actions": [
+          "improve-autofit-or-bleed-policy",
+          "add-layout-overflow-regression"
+        ]
+      },
+      {
+        "priority": "medium",
+        "area": "tier0-coverage",
+        "title": "Raise pattern coverage before relying on raster fallbacks",
+        "why": "Average pattern coverage is 91.6%",
+        "actions": [
+          "promote-to-native-pattern",
+          "expand-pattern-regression-corpus"
+        ]
+      }
+    ]
+  },
+  "clusters": [
+    {
+      "id": "auto-cluster-001",
+      "sig_hash": "99faa1006377fdaf",
+      "signature": "div(txt+txtc+face=serif)[][896x0]",
+      "instances": 4,
+      "exemplars": [
+        "slide-37-stacked-bar.html#node-0",
+        "slide-39-numbered-insights.html#node-2",
+        "slide-40-waterfall.html#node-0",
+        "slide-42-ranking.html#node-2"
+      ],
+      "source_files": [
+        "slide-37-stacked-bar.html",
+        "slide-39-numbered-insights.html",
+        "slide-40-waterfall.html",
+        "slide-42-ranking.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "sample_classes": [
+        "source"
+      ],
+      "sample_text": [
+        "Source: Beacon & Lowe Buyer Wallet Survey, FY 2025; n=412 en",
+        "Source: Beacon & Lowe Demand Drivers Index, March 2026; n=41",
+        "Source: Beacon & Lowe value-architecture model, March 2026 v",
+        "Source: Beacon & Lowe Capability Gap Index, FY 2026; n=412 e"
+      ],
+      "bbox_typical": {
+        "w_avg": 900.0,
+        "h_avg": 29.0,
+        "w_min": 900,
+        "w_max": 900,
+        "h_min": 29,
+        "h_max": 29
+      },
+      "pipeline_signals": {
+        "source_file_count": 4,
+        "source_group_count": 1,
+        "source_groups": [
+          "."
+        ],
+        "area_share_avg": 0.0283,
+        "aspect": "banner",
+        "size": "small",
+        "visual_features": [],
+        "fidelity_risk": "low",
+        "editability_goal": "maximize-native-editability",
+        "raster_fidelity_goal": "avoid-raster",
+        "render_strategy": "native-pattern",
+        "promotion_priority": "high",
+        "promotion_score": 14.18,
+        "pipeline_actions": [
+          "promote-to-native-pattern",
+          "needs-designer-label"
+        ]
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-002",
+      "sig_hash": "86f548f69db45649",
+      "signature": "div(brd-asymT)[][1152x32]{div(txt+face=sans+tr=wide)[][0x0],div(txt+txtc+face=serif)[][896x0]}",
+      "instances": 2,
+      "exemplars": [
+        "slide-37-stacked-bar.html#node-1",
+        "slide-40-waterfall.html#node-1"
+      ],
+      "source_files": [
+        "slide-37-stacked-bar.html",
+        "slide-40-waterfall.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "sample_classes": [
+        "footer"
+      ],
+      "sample_text": [
+        "Source: Beacon & Lowe Buyer Wallet Survey, FY 2025; n=412 en",
+        "Source: Beacon & Lowe value-architecture model, March 2026 v"
+      ],
+      "bbox_typical": {
+        "w_avg": 1152.0,
+        "h_avg": 40.0,
+        "w_min": 1152,
+        "w_max": 1152,
+        "h_min": 40,
+        "h_max": 40
+      },
+      "pipeline_signals": {
+        "source_file_count": 2,
+        "source_group_count": 1,
+        "source_groups": [
+          "."
+        ],
+        "area_share_avg": 0.05,
+        "aspect": "banner",
+        "size": "medium",
+        "visual_features": [
+          "border",
+          "nested"
+        ],
+        "fidelity_risk": "medium",
+        "editability_goal": "maximize-native-editability",
+        "raster_fidelity_goal": "fallback-raster-quality",
+        "render_strategy": "native-atom",
+        "promotion_priority": "medium",
+        "promotion_score": 13.25,
+        "pipeline_actions": [
+          "promote-to-native-pattern"
+        ]
+      },
+      "candidate_atom_id": "chrome.footer-bordered",
+      "candidate_axis": "chrome",
+      "candidate_props": {
+        "border": true
+      },
+      "candidate_confidence": 0.75,
+      "candidate_reason": "class 'footer' matched /\\bfooter\\b/"
+    }
+  ],
+  "quality_issues": [
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-71-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 71 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "high",
+      "instances": 7,
+      "source_files": [
+        "slide-42-ranking.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3)",
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(1)",
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(2)",
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(3)",
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(4)",
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(5)",
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(6)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 71.16
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-74-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 74 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "high",
+      "instances": 5,
+      "source_files": [
+        "slide-42-ranking.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(3) > span:nth-child(2)",
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(3) > span:nth-child(4)",
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(3) > span:nth-child(6)",
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(3) > span:nth-child(8)",
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(3) > span:nth-child(10)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 74.16
+      }
+    },
+    {
+      "id": "layout.overflow:left:left-edge-crossed-by-120-px-usually-a-transform:-translatex--n-with-n-large",
+      "kind": "layout.overflow",
+      "title": "left-edge overflow in left edge crossed by 120 px \u2014 usually a `transform: translateX(-N)` with N larger than the parent's left padding.",
+      "severity": "high",
+      "instances": 3,
+      "source_files": [
+        "slide-22-hero-gradient.html",
+        "slide-26-quote-wall.html",
+        "sophisticated.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-22-hero-gradient.html#slide-0:body > div:nth-child(1) > div:nth-child(1)",
+        "slide-26-quote-wall.html#slide-0:body > div:nth-child(1) > div:nth-child(1)",
+        "sophisticated.html#slide-0:body > div:nth-child(1) > div:nth-child(1)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 120.0
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-200-px-shrink-the-row-the-type-or-split-the-slide.",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 200 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "high",
+      "instances": 3,
+      "source_files": [
+        "slide-23-stats-trio.html",
+        "slide-27-cta-closing.html",
+        "slide-28-logo-mosaic.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-23-stats-trio.html#slide-0:body > div:nth-child(1) > div:nth-child(2)",
+        "slide-27-cta-closing.html#slide-0:body > div:nth-child(1) > div:nth-child(2)",
+        "slide-28-logo-mosaic.html#slide-0:body > div:nth-child(1) > div:nth-child(2)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 200.0
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-97-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 97 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "high",
+      "instances": 3,
+      "source_files": [
+        "slide-39-numbered-insights.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-39-numbered-insights.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(5) > div:nth-child(1)",
+        "slide-39-numbered-insights.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(5) > div:nth-child(2)",
+        "slide-39-numbered-insights.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(5) > div:nth-child(2) > div:nth-child(3)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 97.12
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-220-px-shrink-the-row-the-type-or-split-the-slide.",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 220 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "high",
+      "instances": 2,
+      "source_files": [
+        "animated/anim-02-hero-text-fm.html",
+        "slide-22-hero-gradient.html"
+      ],
+      "source_groups": [
+        ".",
+        "animated"
+      ],
+      "examples": [
+        "animated/anim-02-hero-text-fm.html#slide-0:body > div:nth-child(1) > div:nth-child(2)",
+        "slide-22-hero-gradient.html#slide-0:body > div:nth-child(1) > div:nth-child(2)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 220.0
+      }
+    },
+    {
+      "id": "layout.overflow:right:right-edge-crossed-by-160-px-trim-the-line-lower-font-size-or-wrap.-viewpo",
+      "kind": "layout.overflow",
+      "title": "right-edge overflow in right edge crossed by 160 px \u2014 trim the line, lower font-size, or wrap. Viewport width is 1280 px.",
+      "severity": "high",
+      "instances": 2,
+      "source_files": [
+        "slide-25-feature-bento.html",
+        "slide-28-logo-mosaic.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-25-feature-bento.html#slide-0:body > div:nth-child(1) > div:nth-child(1)",
+        "slide-28-logo-mosaic.html#slide-0:body > div:nth-child(1) > div:nth-child(1)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 160.0
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:under-type.dropcap-:-lower-the-::first-letter-font-size-or-widen-the-body",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in under `type.dropcap`: lower the ::first-letter font-size or widen the body's container.",
+      "severity": "high",
+      "instances": 2,
+      "source_files": [
+        "landing-atoms.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "landing-atoms.html#slide-3:body > div:nth-child(1) > div:nth-child(2) > div:nth-child(10) > span:nth-child(1)",
+        "landing-atoms.html#slide-3:body > div:nth-child(1) > div:nth-child(2) > div:nth-child(10) > p:nth-child(2)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 103.69
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-270-px-shrink-the-row-the-type-or-split-the-slide.",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 270 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "high",
+      "instances": 2,
+      "source_files": [
+        "slide-04-the-quiet-collapse.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-04-the-quiet-collapse.html#slide-0:body > div:nth-child(1) > div:nth-child(1)",
+        "slide-04-the-quiet-collapse.html#slide-0:body > div:nth-child(1) > div:nth-child(1) > div:nth-child(12)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 269.95
+      }
+    },
+    {
+      "id": "layout.overflow:left:left-edge-crossed-by-180-px-usually-a-transform:-translatex--n-with-n-large",
+      "kind": "layout.overflow",
+      "title": "left-edge overflow in left edge crossed by 180 px \u2014 usually a `transform: translateX(-N)` with N larger than the parent's left padding.",
+      "severity": "high",
+      "instances": 1,
+      "source_files": [
+        "animated/anim-02-hero-text-fm.html"
+      ],
+      "source_groups": [
+        "animated"
+      ],
+      "examples": [
+        "animated/anim-02-hero-text-fm.html#slide-0:body > div:nth-child(1) > div:nth-child(1)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 180.0
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-135-px-shrink-the-row-the-type-or-split-the-slide.",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 135 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "high",
+      "instances": 1,
+      "source_files": [
+        "landing-atoms.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "landing-atoms.html#slide-3:body > div:nth-child(1) > div:nth-child(2)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 135.0
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:atom-type.dropcap-:-lower-the-::first-letter-font-size-or-widen-the-body-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in atom `type.dropcap`: lower the ::first-letter font-size or widen the body's container.",
+      "severity": "high",
+      "instances": 1,
+      "source_files": [
+        "landing-atoms.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "landing-atoms.html#slide-3:body > div:nth-child(1) > div:nth-child(2) > div:nth-child(10)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 135.0
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-147-px-shrink-the-row-the-type-or-split-the-slide.",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 147 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "high",
+      "instances": 1,
+      "source_files": [
+        "slide-04-the-quiet-collapse.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-04-the-quiet-collapse.html#slide-0:body > div:nth-child(1) > div:nth-child(1) > p:nth-child(10)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 146.95
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-233-px-shrink-the-row-the-type-or-split-the-slide.",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 233 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "high",
+      "instances": 1,
+      "source_files": [
+        "slide-04-the-quiet-collapse.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-04-the-quiet-collapse.html#slide-0:body > div:nth-child(1) > div:nth-child(1) > p:nth-child(11)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 232.95
+      }
+    },
+    {
+      "id": "layout.overflow:right:right-edge-crossed-by-120-px-trim-the-line-lower-font-size-or-wrap.-viewpo",
+      "kind": "layout.overflow",
+      "title": "right-edge overflow in right edge crossed by 120 px \u2014 trim the line, lower font-size, or wrap. Viewport width is 1280 px.",
+      "severity": "high",
+      "instances": 1,
+      "source_files": [
+        "slide-23-stats-trio.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-23-stats-trio.html#slide-0:body > div:nth-child(1) > div:nth-child(1)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 120.0
+      }
+    },
+    {
+      "id": "layout.overflow:top:top-edge-crossed-by-220-px-usually-a-negative-top-or-translatey--n-larger-th",
+      "kind": "layout.overflow",
+      "title": "top-edge overflow in top edge crossed by 220 px \u2014 usually a negative `top` or `translateY(-N)` larger than the parent's top padding.",
+      "severity": "high",
+      "instances": 1,
+      "source_files": [
+        "slide-27-cta-closing.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-27-cta-closing.html#slide-0:body > div:nth-child(1) > div:nth-child(1)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 220.0
+      }
+    },
+    {
+      "id": "layout.overflow:left:left-edge-crossed-by-78-px-usually-a-transform:-translatex--n-with-n-larger",
+      "kind": "layout.overflow",
+      "title": "left-edge overflow in left edge crossed by 78 px \u2014 usually a `transform: translateX(-N)` with N larger than the parent's left padding.",
+      "severity": "high",
+      "instances": 1,
+      "source_files": [
+        "slide-30-story-pullquote.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-30-story-pullquote.html#slide-0:body > div:nth-child(1) > svg:nth-child(1) > path:nth-child(1)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 78.37
+      }
+    },
+    {
+      "id": "layout.overflow:left:left-edge-crossed-by-88-px-usually-a-transform:-translatex--n-with-n-larger",
+      "kind": "layout.overflow",
+      "title": "left-edge overflow in left edge crossed by 88 px \u2014 usually a `transform: translateX(-N)` with N larger than the parent's left padding.",
+      "severity": "high",
+      "instances": 1,
+      "source_files": [
+        "slide-32-feature-breathing.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-32-feature-breathing.html#slide-0:body > div:nth-child(1) > svg:nth-child(1) > path:nth-child(1)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 88.06
+      }
+    },
+    {
+      "id": "layout.overflow:left:left-edge-crossed-by-118-px-usually-a-transform:-translatex--n-with-n-large",
+      "kind": "layout.overflow",
+      "title": "left-edge overflow in left edge crossed by 118 px \u2014 usually a `transform: translateX(-N)` with N larger than the parent's left padding.",
+      "severity": "high",
+      "instances": 1,
+      "source_files": [
+        "slide-35-manifesto-values.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-35-manifesto-values.html#slide-0:body > div:nth-child(1) > svg:nth-child(1) > path:nth-child(1)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 118.04
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-114-px-shrink-the-row-the-type-or-split-the-slide.",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 114 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "high",
+      "instances": 1,
+      "source_files": [
+        "slide-39-numbered-insights.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-39-numbered-insights.html#slide-0:body > div:nth-child(1) > div:nth-child(3)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 114.12
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-77-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 77 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "high",
+      "instances": 1,
+      "source_files": [
+        "slide-39-numbered-insights.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-39-numbered-insights.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(5) > div:nth-child(2) > p:nth-child(2)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 77.12
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-73-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 73 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "high",
+      "instances": 1,
+      "source_files": [
+        "slide-39-numbered-insights.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-39-numbered-insights.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(5) > div:nth-child(3) > div:nth-child(2)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 73.41
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-90-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 90 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "high",
+      "instances": 1,
+      "source_files": [
+        "slide-39-numbered-insights.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-39-numbered-insights.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(5) > div:nth-child(3) > div:nth-child(3)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 90.41
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-260-px-shrink-the-row-the-type-or-split-the-slide.",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 260 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "high",
+      "instances": 1,
+      "source_files": [
+        "sophisticated.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "sophisticated.html#slide-0:body > div:nth-child(1) > div:nth-child(2)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 260.0
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-194-px-shrink-the-row-the-type-or-split-the-slide.",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 194 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "high",
+      "instances": 1,
+      "source_files": [
+        "sophisticated.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "sophisticated.html#slide-11:body > div:nth-child(1) > div:nth-child(2)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 193.59
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-23-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 23 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 7,
+      "source_files": [
+        "slide-22-hero-gradient.html",
+        "slide-42-ranking.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-22-hero-gradient.html#slide-0:body > div:nth-child(1) > div:nth-child(6)",
+        "slide-22-hero-gradient.html#slide-0:body > div:nth-child(1) > div:nth-child(6) > div:nth-child(5)",
+        "slide-22-hero-gradient.html#slide-0:body > div:nth-child(1) > div:nth-child(6) > div:nth-child(5) > span:nth-child(1)",
+        "slide-22-hero-gradient.html#slide-0:body > div:nth-child(1) > div:nth-child(6) > div:nth-child(5) > span:nth-child(3)",
+        "slide-22-hero-gradient.html#slide-0:body > div:nth-child(1) > div:nth-child(6) > div:nth-child(5) > span:nth-child(5)",
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(11) > div:nth-child(3) > div:nth-child(2)",
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(11) > div:nth-child(6)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 23.16
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-39-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 39 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 5,
+      "source_files": [
+        "slide-04-the-quiet-collapse.html",
+        "slide-31-ritual-steps.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-04-the-quiet-collapse.html#slide-0:body > div:nth-child(1) > div:nth-child(1) > svg:nth-child(9) > text:nth-child(16)",
+        "slide-04-the-quiet-collapse.html#slide-0:body > div:nth-child(1) > div:nth-child(1) > svg:nth-child(9) > text:nth-child(17)",
+        "slide-04-the-quiet-collapse.html#slide-0:body > div:nth-child(1) > div:nth-child(1) > svg:nth-child(9) > text:nth-child(18)",
+        "slide-04-the-quiet-collapse.html#slide-0:body > div:nth-child(1) > div:nth-child(1) > svg:nth-child(9) > text:nth-child(19)",
+        "slide-31-ritual-steps.html#slide-0:body > div:nth-child(1) > svg:nth-child(1) > path:nth-child(2)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 38.95
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-61-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 61 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 5,
+      "source_files": [
+        "slide-42-ranking.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(3) > div:nth-child(1)",
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(3) > div:nth-child(3)",
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(3) > div:nth-child(5)",
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(3) > div:nth-child(7)",
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(12) > div:nth-child(3) > div:nth-child(9)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 61.16
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-30-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 30 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 4,
+      "source_files": [
+        "slide-06-emissions-comparison.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-06-emissions-comparison.html#slide-0:body > div:nth-child(1) > div:nth-child(4)",
+        "slide-06-emissions-comparison.html#slide-0:body > div:nth-child(1) > div:nth-child(4) > div:nth-child(66)",
+        "slide-06-emissions-comparison.html#slide-0:body > div:nth-child(1) > div:nth-child(4) > div:nth-child(67)",
+        "slide-06-emissions-comparison.html#slide-0:body > div:nth-child(1) > div:nth-child(4) > div:nth-child(68)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 29.91
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-16-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 16 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 3,
+      "source_files": [
+        "landing-atoms.html",
+        "slide-22-hero-gradient.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "landing-atoms.html#slide-8:body > div:nth-child(1) > div:nth-child(2) > div:nth-child(6) > div:nth-child(2)",
+        "slide-22-hero-gradient.html#slide-0:body > div:nth-child(1) > div:nth-child(6) > div:nth-child(5) > span:nth-child(2)",
+        "slide-22-hero-gradient.html#slide-0:body > div:nth-child(1) > div:nth-child(6) > div:nth-child(5) > span:nth-child(4)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 16.22
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-32-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 32 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 3,
+      "source_files": [
+        "slide-39-numbered-insights.html",
+        "slide-42-ranking.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-39-numbered-insights.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(5) > div:nth-child(2) > h3:nth-child(1)",
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(11) > div:nth-child(2)",
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(11) > div:nth-child(2) > div:nth-child(1)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 32.16
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-15-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 15 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 2,
+      "source_files": [
+        "slide-04-the-quiet-collapse.html",
+        "slide-06-emissions-comparison.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-04-the-quiet-collapse.html#slide-0:body > div:nth-child(1) > div:nth-child(1) > svg:nth-child(9) > polyline:nth-child(9)",
+        "slide-06-emissions-comparison.html#slide-0:body > div:nth-child(1) > div:nth-child(4) > div:nth-child(70) > svg:nth-child(1)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 15.31
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-12-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 12 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 2,
+      "source_files": [
+        "slide-06-emissions-comparison.html",
+        "slide-35-manifesto-values.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-06-emissions-comparison.html#slide-0:body > div:nth-child(1) > div:nth-child(4) > div:nth-child(69) > span:nth-child(1)",
+        "slide-35-manifesto-values.html#slide-0:body > div:nth-child(1) > svg:nth-child(1) > path:nth-child(3)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 12.41
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-25-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 25 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 2,
+      "source_files": [
+        "slide-40-waterfall.html",
+        "slide-42-ranking.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-40-waterfall.html#slide-0:body > div:nth-child(1) > div:nth-child(4) > div:nth-child(2) > div:nth-child(19)",
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(11) > div:nth-child(4)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 25.33
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-20-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 20 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 2,
+      "source_files": [
+        "slide-06-emissions-comparison.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-06-emissions-comparison.html#slide-0:body > div:nth-child(1) > div:nth-child(4) > div:nth-child(65) > div:nth-child(1)",
+        "slide-06-emissions-comparison.html#slide-0:body > div:nth-child(1) > div:nth-child(4) > div:nth-child(65) > div:nth-child(1) > small:nth-child(1)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 19.91
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-36-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 36 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 2,
+      "source_files": [
+        "slide-40-waterfall.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-40-waterfall.html#slide-0:body > div:nth-child(1) > div:nth-child(4)",
+        "slide-40-waterfall.html#slide-0:body > div:nth-child(1) > div:nth-child(4) > div:nth-child(2)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 36.33
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-26-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 26 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 2,
+      "source_files": [
+        "slide-42-ranking.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(11) > div:nth-child(3)",
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(11) > div:nth-child(3) > div:nth-child(1)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 25.66
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-9-px-shrink-the-row-the-type-or-split-the-slide.-v",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 9 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 2,
+      "source_files": [
+        "slide-44-magazine-spread.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-44-magazine-spread.html#slide-0:body > div:nth-child(1) > div:nth-child(2) > div:nth-child(6) > span:nth-child(1)",
+        "slide-44-magazine-spread.html#slide-0:body > div:nth-child(1) > div:nth-child(2) > div:nth-child(6) > span:nth-child(2)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 9.11
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-48-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 48 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 2,
+      "source_files": [
+        "slide-49-text-wrap-stress.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-49-text-wrap-stress.html#slide-0:body",
+        "slide-49-text-wrap-stress.html#slide-0:body > section:nth-child(1)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 48.0
+      }
+    },
+    {
+      "id": "layout.overflow:right:right-edge-crossed-by-18-px-trim-the-line-lower-font-size-or-wrap.-viewpor",
+      "kind": "layout.overflow",
+      "title": "right-edge overflow in right edge crossed by 18 px \u2014 trim the line, lower font-size, or wrap. Viewport width is 1280 px.",
+      "severity": "medium",
+      "instances": 2,
+      "source_files": [
+        "slide-49-text-wrap-stress.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-49-text-wrap-stress.html#slide-0:body > section:nth-child(1) > div:nth-child(3)",
+        "slide-49-text-wrap-stress.html#slide-0:body > section:nth-child(1) > div:nth-child(3) > article:nth-child(3)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 18.0
+      }
+    },
+    {
+      "id": "layout.overflow:left:left-edge-crossed-by-11-px-usually-a-transform:-translatex--n-with-n-larger",
+      "kind": "layout.overflow",
+      "title": "left-edge overflow in left edge crossed by 11 px \u2014 usually a `transform: translateX(-N)` with N larger than the parent's left padding.",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "animated/anim-04-timeline-gsap.html"
+      ],
+      "source_groups": [
+        "animated"
+      ],
+      "examples": [
+        "animated/anim-04-timeline-gsap.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(2)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 10.92
+      }
+    },
+    {
+      "id": "layout.overflow:right:under-data.ticker-:-trim-the-tape-so-it-fits-1232-px-the-parent-s-overflow",
+      "kind": "layout.overflow",
+      "title": "right-edge overflow in under `data.ticker`: trim the tape so it fits 1232 px \u2014 the parent's overflow:hidden clips visually but the spans still report full width.",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "landing-atoms.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "landing-atoms.html#slide-6:body > div:nth-child(1) > div:nth-child(2) > div:nth-child(7) > div:nth-child(3) > span:nth-child(6)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 48.2
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-31-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 31 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "landing-atoms.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "landing-atoms.html#slide-8:body > div:nth-child(1) > div:nth-child(2) > div:nth-child(6)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 30.75
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-57-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 57 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "slide-04-the-quiet-collapse.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-04-the-quiet-collapse.html#slide-0:body > div:nth-child(1) > div:nth-child(1) > svg:nth-child(9)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 56.95
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-17-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 17 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "slide-04-the-quiet-collapse.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-04-the-quiet-collapse.html#slide-0:body > div:nth-child(1) > div:nth-child(1) > svg:nth-child(9) > text:nth-child(8)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 16.95
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-18-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 18 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "slide-04-the-quiet-collapse.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-04-the-quiet-collapse.html#slide-0:body > div:nth-child(1) > div:nth-child(1) > svg:nth-child(9) > circle:nth-child(11)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 17.95
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-35-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 35 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "slide-04-the-quiet-collapse.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-04-the-quiet-collapse.html#slide-0:body > div:nth-child(1) > div:nth-child(1) > svg:nth-child(9) > line:nth-child(14)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 34.95
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-49-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 49 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "slide-04-the-quiet-collapse.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-04-the-quiet-collapse.html#slide-0:body > div:nth-child(1) > div:nth-child(1) > svg:nth-child(9) > text:nth-child(15)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 48.95
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-10-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 10 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "slide-06-emissions-comparison.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-06-emissions-comparison.html#slide-0:body > div:nth-child(1) > div:nth-child(4) > div:nth-child(64) > span:nth-child(1)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 10.45
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-5-px-shrink-the-row-the-type-or-split-the-slide.-v",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 5 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "slide-06-emissions-comparison.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-06-emissions-comparison.html#slide-0:body > div:nth-child(1) > div:nth-child(4) > div:nth-child(70) > svg:nth-child(1) > polyline:nth-child(1)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 5.31
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-14-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 14 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "slide-06-emissions-comparison.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-06-emissions-comparison.html#slide-0:body > div:nth-child(1) > div:nth-child(4) > div:nth-child(70) > span:nth-child(2)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 13.81
+      }
+    },
+    {
+      "id": "layout.overflow:right:right-edge-crossed-by-40-px-trim-the-line-lower-font-size-or-wrap.-viewpor",
+      "kind": "layout.overflow",
+      "title": "right-edge overflow in right edge crossed by 40 px \u2014 trim the line, lower font-size, or wrap. Viewport width is 1280 px.",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "slide-22-hero-gradient.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-22-hero-gradient.html#slide-0:body > div:nth-child(1) > svg:nth-child(5)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 40.0
+      }
+    },
+    {
+      "id": "layout.overflow:top:top-edge-crossed-by-41-px-usually-a-negative-top-or-translatey--n-larger-tha",
+      "kind": "layout.overflow",
+      "title": "top-edge overflow in top edge crossed by 41 px \u2014 usually a negative `top` or `translateY(-N)` larger than the parent's top padding.",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "slide-30-story-pullquote.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-30-story-pullquote.html#slide-0:body > div:nth-child(1) > svg:nth-child(1) > path:nth-child(2)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 40.71
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-40-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 40 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "slide-32-feature-breathing.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-32-feature-breathing.html#slide-0:body > div:nth-child(1) > svg:nth-child(1) > path:nth-child(2)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 40.0
+      }
+    },
+    {
+      "id": "layout.overflow:right:right-edge-crossed-by-11-px-trim-the-line-lower-font-size-or-wrap.-viewpor",
+      "kind": "layout.overflow",
+      "title": "right-edge overflow in right edge crossed by 11 px \u2014 trim the line, lower font-size, or wrap. Viewport width is 1280 px.",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "slide-35-manifesto-values.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-35-manifesto-values.html#slide-0:body > div:nth-child(1) > svg:nth-child(1) > path:nth-child(2)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 10.85
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-60-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 60 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "slide-39-numbered-insights.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-39-numbered-insights.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(5) > div:nth-child(1) > span:nth-child(1)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 60.03
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-38-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 38 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "slide-39-numbered-insights.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-39-numbered-insights.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(5) > div:nth-child(3) > div:nth-child(1)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 38.03
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-27-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 27 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "slide-42-ranking.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(11) > div:nth-child(1)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 27.16
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-24-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 24 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "slide-42-ranking.html"
+      ],
+      "source_groups": [
+        "."
+      ],
+      "examples": [
+        "slide-42-ranking.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > div:nth-child(11) > div:nth-child(5)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 23.66
+      }
+    }
+  ],
+  "deck_summaries": [
+    {
+      "path": "animated/anim-01-stat-cards-fm.html",
+      "source_group": "animated",
+      "n_slides": 1,
+      "unmatched_count": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9333,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 13,
+        "tier2": 1,
+        "cache:tier0": 3,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "animated/anim-02-hero-text-fm.html",
+      "source_group": "animated",
+      "n_slides": 1,
+      "unmatched_count": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8571,
+      "overflow_count": 2,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 4,
+        "tier2": 1,
+        "promotion": 2
+      }
+    },
+    {
+      "path": "animated/anim-03-bento-build-fm.html",
+      "source_group": "animated",
+      "n_slides": 1,
+      "unmatched_count": 2,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9167,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 15,
+        "promotion": 7,
+        "cache:tier0": 3,
+        "tier1": 2
+      }
+    },
+    {
+      "path": "animated/anim-04-timeline-gsap.html",
+      "source_group": "animated",
+      "n_slides": 1,
+      "unmatched_count": 2,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8333,
+      "overflow_count": 1,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 6,
+        "promotion": 9,
+        "cache:tier0": 3,
+        "cache:tier2": 1,
+        "tier2": 1
+      }
+    },
+    {
+      "path": "animated/anim-05-pricing-rise-gsap.html",
+      "source_group": "animated",
+      "n_slides": 1,
+      "unmatched_count": 3,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.7857,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "tier2": 2,
+        "cache:tier0": 8,
+        "promotion": 2,
+        "tier1": 1,
+        "cache:tier1": 2
+      }
+    },
+    {
+      "path": "animated/anim-06-quote-stagger-gsap.html",
+      "source_group": "animated",
+      "n_slides": 1,
+      "unmatched_count": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8333,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 3,
+        "tier1": 1,
+        "promotion": 2
+      }
+    },
+    {
+      "path": "animated/embed-demo-deck.html",
+      "source_group": "animated",
+      "n_slides": 3,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "promotion": 3,
+        "cache:tier0": 13
+      }
+    },
+    {
+      "path": "landing-atoms.html",
+      "source_group": ".",
+      "n_slides": 10,
+      "unmatched_count": 7,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9607,
+      "overflow_count": 7,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 163,
+        "cache:tier0": 283,
+        "promotion": 8,
+        "tier1": 2,
+        "cache:tier1": 14,
+        "tier2": 5
+      }
+    },
+    {
+      "path": "landing-fonts.html",
+      "source_group": ".",
+      "n_slides": 4,
+      "unmatched_count": 6,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9062,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 58,
+        "tier1": 6,
+        "cache:tier0": 44,
+        "cache:tier1": 1
+      }
+    },
+    {
+      "path": "landing-probe.html",
+      "source_group": ".",
+      "n_slides": 8,
+      "unmatched_count": 7,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8923,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 52,
+        "tier2": 5,
+        "cache:tier0": 95,
+        "promotion": 7,
+        "tier1": 1
+      }
+    },
+    {
+      "path": "landing-recipes.html",
+      "source_group": ".",
+      "n_slides": 16,
+      "unmatched_count": 25,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8698,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 170,
+        "cache:tier0": 228,
+        "tier2": 7,
+        "promotion": 17,
+        "tier1": 21,
+        "cache:tier1": 13,
+        "cache:tier2": 7
+      }
+    },
+    {
+      "path": "slide-01-state-of-the-union.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9286,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 13,
+        "tier1": 1,
+        "cache:tier1": 4,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "slide-02-the-deficit-two-ways.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 2,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8462,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 11,
+        "promotion": 2,
+        "cache:tier0": 3
+      }
+    },
+    {
+      "path": "slide-03-housing-six-cities.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 3,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8333,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 15,
+        "promotion": 6,
+        "cache:tier0": 14
+      }
+    },
+    {
+      "path": "slide-04-the-quiet-collapse.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 14,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 12,
+        "cache:tier0": 3
+      }
+    },
+    {
+      "path": "slide-05-broadband-by-state.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9565,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 22,
+        "cache:tier0": 55,
+        "promotion": 1,
+        "tier1": 1
+      }
+    },
+    {
+      "path": "slide-06-emissions-comparison.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9706,
+      "overflow_count": 11,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 33,
+        "cache:tier0": 96,
+        "tier1": 1
+      }
+    },
+    {
+      "path": "slide-07-cover-the-numbers.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 8,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.6923,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 18,
+        "tier1": 4,
+        "promotion": 5,
+        "cache:tier0": 10,
+        "cache:tier1": 2
+      }
+    },
+    {
+      "path": "slide-08-hero-number.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 5,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "slide-09-title-reveal.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 4,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "slide-10-spec-sheet.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 2,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8182,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "tier1": 2,
+        "cache:tier0": 5,
+        "cache:tier1": 3
+      }
+    },
+    {
+      "path": "slide-11-was-now.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 3
+      }
+    },
+    {
+      "path": "slide-12-feature-mosaic.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "tier1": 1,
+        "cache:tier0": 3,
+        "cache:tier1": 3
+      }
+    },
+    {
+      "path": "slide-13-pull-quote.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 6,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "slide-14-thank-you.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8333,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 5,
+        "tier1": 1,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "slide-15-spec-sheet.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.963,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 26,
+        "cache:tier0": 38,
+        "tier1": 1,
+        "cache:tier1": 5
+      }
+    },
+    {
+      "path": "slide-16-schematic.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 13,
+        "cache:tier0": 2
+      }
+    },
+    {
+      "path": "slide-17-density-grid.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 3,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8846,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 23,
+        "promotion": 11,
+        "cache:tier0": 61
+      }
+    },
+    {
+      "path": "slide-18-code-hero.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 20,
+        "cache:tier0": 17
+      }
+    },
+    {
+      "path": "slide-19-status-board.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.96,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 24,
+        "cache:tier0": 61,
+        "tier2": 1
+      }
+    },
+    {
+      "path": "slide-20-manifesto.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 18,
+        "cache:tier0": 32
+      }
+    },
+    {
+      "path": "slide-21-dotmatrix-ladder.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 2,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9355,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 29,
+        "cache:tier0": 50,
+        "promotion": 1,
+        "tier2": 1
+      }
+    },
+    {
+      "path": "slide-22-hero-gradient.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 10,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 18,
+        "cache:tier0": 9,
+        "promotion": 2
+      }
+    },
+    {
+      "path": "slide-23-stats-trio.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 2,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9,
+      "overflow_count": 2,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 17,
+        "cache:tier0": 14,
+        "tier2": 2,
+        "cache:tier2": 1,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "slide-24-pricing-tiers.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 3,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9118,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 30,
+        "cache:tier0": 35,
+        "tier2": 2,
+        "promotion": 2
+      }
+    },
+    {
+      "path": "slide-25-feature-bento.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 9,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.7568,
+      "overflow_count": 1,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 27,
+        "cache:tier0": 33,
+        "tier2": 7,
+        "tier1": 1,
+        "promotion": 2,
+        "cache:tier2": 2
+      }
+    },
+    {
+      "path": "slide-26-quote-wall.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 3,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8846,
+      "overflow_count": 1,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 22,
+        "cache:tier0": 15,
+        "tier2": 3,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "slide-27-cta-closing.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 2,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 20,
+        "cache:tier0": 8,
+        "promotion": 2
+      }
+    },
+    {
+      "path": "slide-28-logo-mosaic.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9615,
+      "overflow_count": 2,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 25,
+        "cache:tier0": 41,
+        "tier2": 1
+      }
+    },
+    {
+      "path": "slide-29-hero-blob-frame.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 7
+      }
+    },
+    {
+      "path": "slide-30-story-pullquote.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 2,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8
+      }
+    },
+    {
+      "path": "slide-31-ritual-steps.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 1,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 10,
+        "cache:tier0": 11
+      }
+    },
+    {
+      "path": "slide-32-feature-breathing.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 2,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 11,
+        "cache:tier0": 2
+      }
+    },
+    {
+      "path": "slide-33-quote-testimonial.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 7,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "slide-34-call-to-rest.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "cache:tier0": 2
+      }
+    },
+    {
+      "path": "slide-35-manifesto-values.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 3,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 16,
+        "cache:tier0": 5
+      }
+    },
+    {
+      "path": "slide-36-strategic-matrix.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 7,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.7667,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 23,
+        "tier1": 4,
+        "promotion": 1,
+        "cache:tier0": 31,
+        "tier2": 2,
+        "cache:tier1": 9
+      }
+    },
+    {
+      "path": "slide-37-stacked-bar.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 5,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8864,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 39,
+        "tier1": 2,
+        "promotion": 3,
+        "cache:tier0": 37,
+        "cache:tier1": 2
+      }
+    },
+    {
+      "path": "slide-38-comparison-table.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 5,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8649,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 32,
+        "tier1": 2,
+        "promotion": 5,
+        "cache:tier0": 53
+      }
+    },
+    {
+      "path": "slide-39-numbered-insights.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 6,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.75,
+      "overflow_count": 10,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 18,
+        "tier1": 2,
+        "promotion": 9,
+        "cache:tier0": 27,
+        "cache:tier1": 4
+      }
+    },
+    {
+      "path": "slide-40-waterfall.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 5,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8649,
+      "overflow_count": 3,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 32,
+        "tier1": 2,
+        "promotion": 1,
+        "cache:tier0": 59,
+        "tier2": 2,
+        "cache:tier2": 6,
+        "cache:tier1": 4
+      }
+    },
+    {
+      "path": "slide-41-cover.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 9,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.7188,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 23,
+        "cache:tier0": 14,
+        "promotion": 4,
+        "tier1": 5,
+        "cache:tier1": 12
+      }
+    },
+    {
+      "path": "slide-42-ranking.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 3,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9318,
+      "overflow_count": 26,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier1": 2,
+        "tier0": 41,
+        "cache:tier1": 2,
+        "cache:tier0": 91,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "slide-43-magazine-cover-mask.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9231,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 11,
+        "cache:tier0": 1,
+        "tier1": 1,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "slide-44-magazine-spread.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 2,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8824,
+      "overflow_count": 2,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 15,
+        "promotion": 1,
+        "tier1": 1,
+        "cache:tier1": 1
+      }
+    },
+    {
+      "path": "slide-45-photo-essay-caption.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 13,
+        "cache:tier0": 3
+      }
+    },
+    {
+      "path": "slide-46-pull-quote-faded.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 13,
+        "cache:tier0": 1,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "slide-47-mosaic-gallery.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 2,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.875,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 14,
+        "cache:tier0": 19,
+        "promotion": 2
+      }
+    },
+    {
+      "path": "slide-48-duotone-hero.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 15,
+        "cache:tier0": 3,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "slide-49-text-wrap-stress.html",
+      "source_group": ".",
+      "n_slides": 1,
+      "unmatched_count": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8333,
+      "overflow_count": 4,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier1": 1,
+        "tier0": 5,
+        "cache:tier1": 2,
+        "cache:tier0": 4
+      }
+    },
+    {
+      "path": "sophisticated.html",
+      "source_group": ".",
+      "n_slides": 13,
+      "unmatched_count": 20,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8611,
+      "overflow_count": 3,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 119,
+        "promotion": 47,
+        "cache:tier0": 229,
+        "tier1": 7,
+        "cache:tier1": 7,
+        "tier2": 3
+      }
+    }
+  ],
+  "errors": []
+}

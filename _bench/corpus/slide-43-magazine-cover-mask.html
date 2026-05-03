@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slide 43 — Magazine Cover, Text-as-Image-Mask</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               -webkit-font-smoothing:antialiased; background:#0a0a0a; }
+  .slide {
+    width:1280px; height:720px; box-sizing:border-box;
+    position:relative; overflow:hidden;
+    font-family: 'Tiempos Headline', 'Source Serif Pro', Georgia, serif;
+    color:#fff;
+    background:#0a0a0a;
+  }
+  .photo {
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit:cover;
+    z-index:1;
+  }
+  .vignette {
+    position:absolute; inset:0; z-index:2;
+    background:
+      linear-gradient(180deg,
+        rgba(0,0,0,0.55) 0%,
+        rgba(0,0,0,0.10) 28%,
+        rgba(0,0,0,0.10) 60%,
+        rgba(0,0,0,0.85) 100%);
+  }
+  .nameplate {
+    position:absolute; top:32px; left:64px; right:64px; z-index:5;
+    display:flex; align-items:baseline; justify-content:space-between;
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    color:rgba(255,255,255,0.92);
+  }
+  .logo {
+    font-family: 'Tiempos Headline', 'Source Serif Pro', Georgia, serif;
+    font-size:34px; font-weight:900; letter-spacing:-0.04em;
+    color:#fff;
+  }
+  .issue-meta {
+    display:flex; gap:28px;
+    font-size:12px; font-weight:500; letter-spacing:0.18em;
+    text-transform:uppercase; color:rgba(255,255,255,0.78);
+  }
+  .kicker {
+    position:absolute; left:64px; top:118px; z-index:5;
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    font-size:13px; font-weight:600; letter-spacing:0.32em;
+    text-transform:uppercase;
+    color:#ff3b1f;
+  }
+  /* THE TEXT-AS-IMAGE-MASK headline */
+  .mask-headline {
+    position:absolute; left:48px; right:48px; top:170px; z-index:5;
+    font-family: 'Tiempos Headline', 'Source Serif Pro', Georgia, serif;
+    font-size:184px; line-height:0.88; font-weight:900;
+    letter-spacing:-0.05em;
+    margin:0;
+    background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1280');
+    background-size: cover;
+    background-position: center;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color:transparent;
+    -webkit-text-fill-color:transparent;
+    text-shadow: 0 0 1px rgba(255,255,255,0.04);
+  }
+  .lede {
+    position:absolute; left:64px; bottom:124px; z-index:5;
+    width:560px;
+    font-family: 'Tiempos Headline', 'Source Serif Pro', Georgia, serif;
+    font-size:20px; line-height:1.5; font-weight:400;
+    color:rgba(255,255,255,0.92);
+    font-style:italic;
+  }
+  .byline {
+    position:absolute; left:64px; bottom:64px; z-index:5;
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    font-size:12px; font-weight:500; letter-spacing:0.24em;
+    text-transform:uppercase; color:rgba(255,255,255,0.72);
+  }
+  .barcode {
+    position:absolute; right:64px; bottom:64px; z-index:5;
+    width:120px; height:46px;
+    background:
+      repeating-linear-gradient(90deg,
+        #fff 0 2px, transparent 2px 4px,
+        #fff 4px 5px, transparent 5px 9px,
+        #fff 9px 11px, transparent 11px 13px);
+    opacity:0.85;
+  }
+  .corner-rule {
+    position:absolute; right:64px; top:170px; z-index:5;
+    width:2px; height:420px;
+    background:rgba(255,255,255,0.32);
+  }
+  .price {
+    position:absolute; right:80px; top:200px; z-index:5;
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size:11px; font-weight:600; letter-spacing:0.32em;
+    color:rgba(255,255,255,0.78);
+    text-transform:uppercase;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  <img class="photo"
+       src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1280"
+       alt="Mountain landscape">
+  <div class="vignette"></div>
+
+  <div class="nameplate">
+    <div class="logo">CABINET</div>
+    <div class="issue-meta">
+      <span>Vol. 47</span>
+      <span>Spring 2026</span>
+      <span>$14.00</span>
+    </div>
+  </div>
+
+  <div class="kicker">The Long View &mdash; Issue No. 47</div>
+
+  <h1 class="mask-headline" data-pptx-role="title">EARTH<br>WORKS</h1>
+
+  <p class="lede">
+    Six photographers spent the year tracing the
+    geographies that hold us &mdash; from the saltline
+    of the Aral Sea to the ridge above Glen Coe &mdash;
+    asking what a landscape remembers.
+  </p>
+
+  <div class="byline">Photographs by Maren Asher &nbsp;&middot;&nbsp; Words by Idris Calloway</div>
+
+  <div class="corner-rule"></div>
+  <div class="price">USPS &middot; PRINTED IN MAINE</div>
+  <div class="barcode"></div>
+</div>
+</body>
+</html>

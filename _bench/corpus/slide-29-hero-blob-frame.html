@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slide 29 — A softer cadence</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               -webkit-font-smoothing:antialiased; background:#fef6e8; }
+  .slide { width:1280px; height:720px; box-sizing:border-box;
+           position:relative; overflow:hidden; background:#fef6e8;
+           font-family:'Source Serif Pro', 'Tiempos Headline', Georgia, serif;
+           color:#2d1f1f; }
+  .kicker { position:absolute; top:72px; left:96px;
+            font-size:13px; font-weight:500; letter-spacing:0.04em;
+            color:#e76f51;
+            font-family:'Inter', system-ui, sans-serif; }
+  .kicker .dot { display:inline-block; width:6px; height:6px;
+                 border-radius:50%; background:#f4a261;
+                 vertical-align:middle; margin-right:10px; transform:translateY(-1px); }
+  .headline { position:absolute; top:188px; left:96px;
+              font-size:68px; font-weight:600; line-height:1.08;
+              letter-spacing:-0.01em; max-width:560px;
+              font-family:'Source Serif Pro', 'Tiempos Headline', Georgia, serif; }
+  .headline em { font-style:italic; color:#264653; font-weight:500; }
+  .lede { position:absolute; top:452px; left:96px; max-width:440px;
+          font-size:17px; font-weight:400; line-height:1.65; color:#4a3a3a;
+          font-family:'Inter', system-ui, sans-serif; }
+  .meta { position:absolute; bottom:56px; left:96px;
+          font-size:12px; font-weight:500; color:#7a6a6a;
+          font-family:'Inter', system-ui, sans-serif; letter-spacing:0.02em; }
+  .meta .sep { color:#d8c8b8; margin:0 14px; }
+  .pageno { position:absolute; bottom:56px; right:96px;
+            font-size:12px; font-weight:500; color:#a89888;
+            font-family:'Source Serif Pro', Georgia, serif; }
+  .canvas { position:absolute; inset:0; }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <svg class="canvas" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- ambient soft circles -->
+      <circle cx="120" cy="640" r="44" fill="#f7b2a2" fill-opacity="0.22"/>
+      <circle cx="1180" cy="92" r="28" fill="#a78bfa" fill-opacity="0.18"/>
+      <!-- big organic blob behind frame, 6 control points, irregular -->
+      <path d="M 880 92
+               C 1010 70, 1180 130, 1212 252
+               C 1244 374, 1180 470, 1108 540
+               C 1036 610, 920 644, 824 600
+               C 728 556, 706 432, 740 332
+               C 774 232, 750 114, 880 92 Z"
+            fill="#f7b2a2" fill-opacity="0.55"/>
+      <!-- secondary blob, smaller, offset -->
+      <path d="M 760 280
+               C 820 252, 906 290, 928 364
+               C 950 438, 904 504, 840 522
+               C 776 540, 706 510, 692 444
+               C 678 378, 700 308, 760 280 Z"
+            fill="#e9c46a" fill-opacity="0.42"/>
+      <!-- photo-frame mock: rounded rect with soft shadow -->
+      <rect x="852" y="178" width="318" height="396" rx="14" ry="14"
+            fill="#fef6e8" stroke="#2d1f1f" stroke-opacity="0.08" stroke-width="1"
+            filter="url(#fshadow)"/>
+      <defs>
+        <filter id="fshadow" x="-10%" y="-10%" width="120%" height="120%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="6"/>
+          <feOffset dx="0" dy="8"/>
+          <feComponentTransfer><feFuncA type="linear" slope="0.10"/></feComponentTransfer>
+          <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <!-- inner photo abstraction: horizon -->
+      <rect x="868" y="194" width="286" height="220" rx="6" ry="6" fill="#e8f0eb"/>
+      <circle cx="1090" cy="244" r="22" fill="#e9c46a" fill-opacity="0.85"/>
+      <path d="M 868 360
+               C 940 340, 1004 380, 1080 360
+               C 1120 350, 1140 372, 1154 380
+               L 1154 414 L 868 414 Z"
+            fill="#2a9d8f" fill-opacity="0.55"/>
+      <!-- caption strip in frame -->
+      <line x1="868" y1="446" x2="1010" y2="446" stroke="#2d1f1f" stroke-width="1" stroke-opacity="0.55"/>
+      <text x="868" y="478" font-family="Source Serif Pro, Georgia, serif"
+            font-size="13" fill="#2d1f1f" font-style="italic">Morning, no. 04</text>
+      <text x="868" y="540" font-family="Inter, sans-serif"
+            font-size="11" fill="#7a6a6a">Photographed at low tide</text>
+      <!-- hand-drawn curved underline beneath headline (single cubic) -->
+      <path d="M 96 374 C 220 366, 340 380, 478 370"
+            stroke="#e76f51" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- slightly off circle (3-control hand-drawn) -->
+      <path d="M 612 196
+               C 642 188, 668 214, 658 244
+               C 648 274, 600 268, 596 232
+               C 594 218, 596 202, 612 196 Z"
+            fill="none" stroke="#264653" stroke-width="1.5" stroke-opacity="0.55"/>
+      <!-- tiny leaf glyph -->
+      <path d="M 96 132
+               C 112 110, 138 110, 152 124
+               C 138 142, 116 148, 96 132 Z"
+            fill="none" stroke="#2a9d8f" stroke-width="1.5"/>
+      <path d="M 100 132 C 116 128, 134 124, 150 124" stroke="#2a9d8f" stroke-width="1.2" fill="none"/>
+    </svg>
+
+    <div class="kicker"><span class="dot"></span>A field guide for the unhurried</div>
+    <h1 class="headline" data-pptx-role="title">A softer cadence for the <em>way you work</em>.</h1>
+    <p class="lede">The companion deck for teams that prefer the long breath. Six chapters, one ritual, no urgency. Begin wherever the morning finds you.</p>
+    <div class="meta">Spring edition <span class="sep">/</span> Volume 04 <span class="sep">/</span> Made slowly</div>
+    <div class="pageno">29</div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,193 @@
+{
+  "mechanisms": [
+    {
+      "id": "overflow-policy",
+      "title": "Autofit and intentional-bleed policy",
+      "area": "layout-engine",
+      "priority": "high",
+      "score": 384.0,
+      "why": "Browser layout overflows need a deterministic choice: shrink, wrap, split, clip, or mark as intentional bleed.",
+      "evidence": [
+        "corpus: 109 overflow elements",
+        "corpus: 7x bottom-edge overflow in bottom edge crossed by 71 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+        "corpus: 5x bottom-edge overflow in bottom edge crossed by 74 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+        "corpus: 3x left-edge overflow in left edge crossed by 120 px \u2014 usually a `transform: translateX(-N)` with N larger than the parent's left padding.",
+        "corpus: 3x bottom-edge overflow in bottom edge crossed by 200 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+        "corpus: 3x bottom-edge overflow in bottom edge crossed by 97 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+        "corpus: 2x bottom-edge overflow in bottom edge crossed by 220 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+        "corpus: 2x right-edge overflow in right edge crossed by 160 px \u2014 trim the line, lower font-size, or wrap. Viewport width is 1280 px.",
+        "corpus: 2x bottom-edge overflow in under `type.dropcap`: lower the ::first-letter font-size or widen the body's container.",
+        "corpus: 2x bottom-edge overflow in bottom edge crossed by 270 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+        "corpus: 1x left-edge overflow in left edge crossed by 180 px \u2014 usually a `transform: translateX(-N)` with N larger than the parent's left padding.",
+        "corpus: 1x bottom-edge overflow in bottom edge crossed by 135 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50)."
+      ],
+      "actions": [
+        "improve-autofit-or-bleed-policy",
+        "add-layout-overflow-regression",
+        "promote-authoring-hint"
+      ],
+      "gates": [
+        "warn on medium overflow",
+        "fail on high overflow unless allow-bleed is set"
+      ]
+    },
+    {
+      "id": "banner-footer-patterns",
+      "title": "Banner and footer chrome atoms",
+      "area": "pattern-library",
+      "priority": "high",
+      "score": 27.43,
+      "why": "Repeated low-risk chrome should become native atoms to reduce unmatched noise.",
+      "evidence": [
+        "corpus: 4x text.banner",
+        "corpus: 2x chrome.footer-bordered"
+      ],
+      "actions": [
+        "promote-to-native-pattern",
+        "add-pattern-regression-case"
+      ],
+      "gates": [
+        "no recurring text.banner or chrome.footer-bordered clusters"
+      ]
+    },
+    {
+      "id": "promotion-queue",
+      "title": "Pattern promotion queue with thresholds",
+      "area": "harvester",
+      "priority": "high",
+      "score": 19.2,
+      "why": "High-frequency misses should automatically become reviewable native-pattern work.",
+      "evidence": [
+        "corpus: 4x text.banner",
+        "corpus: 2x chrome.footer-bordered"
+      ],
+      "actions": [
+        "promote-to-native-pattern",
+        "expand-pattern-regression-corpus",
+        "needs-designer-label"
+      ],
+      "gates": [
+        "critical clusters block release until promoted or waived"
+      ]
+    },
+    {
+      "id": "font-fidelity-telemetry",
+      "title": "Structured font fallback telemetry",
+      "area": "font-system",
+      "priority": "high",
+      "score": 18.0,
+      "why": "The run logs show many font substitutions, but the harvest JSON does not yet expose fallback families as ranked data.",
+      "evidence": [],
+      "actions": [
+        "surface-font-fallback-events-in-conversion-result",
+        "add-font-pack-bootstrap-report",
+        "gate-brand-font-substitution"
+      ],
+      "gates": [
+        "report fallback family, resolved file, and source deck"
+      ]
+    },
+    {
+      "id": "bench-input-hygiene",
+      "title": "Harvest only presentation fixtures",
+      "area": "bench",
+      "priority": "high",
+      "score": 12.0,
+      "why": "Generated catalogue pages and long-form indexes should not dilute slide conversion signals.",
+      "evidence": [],
+      "actions": [
+        "skip-generated-index-html",
+        "separate-fixtures-from-generated-artifacts",
+        "keep-harvest-manifest-explicit"
+      ],
+      "gates": [
+        "exclude root index.html when index.json marks a generated catalogue"
+      ]
+    },
+    {
+      "id": "animation-capture-states",
+      "title": "Deterministic animation state harvesting",
+      "area": "renderer",
+      "priority": "medium",
+      "score": 10.0,
+      "why": "Animated fixtures need stable snapshot moments plus editable static overlays.",
+      "evidence": [],
+      "actions": [
+        "capture-keyframe-state-fixtures",
+        "separate-editable-overlay-from-motion-raster",
+        "add-animation-frame-regression"
+      ],
+      "gates": [
+        "animated deck reports include captured frame metadata"
+      ]
+    },
+    {
+      "id": "hybrid-raster-recipes",
+      "title": "Surgical raster plus editable wrappers",
+      "area": "renderer",
+      "priority": "medium",
+      "score": 10.0,
+      "why": "Image-led, filtered, and masked visuals need brilliant raster fidelity while preserving editable text and geometry.",
+      "evidence": [],
+      "actions": [
+        "preserve-raster-layer",
+        "optimize-raster-crop-and-resolution",
+        "compare-source-vs-pptx-pixels"
+      ],
+      "gates": [
+        "raster layers must be cropped, high-DPI, and behind editable text"
+      ]
+    },
+    {
+      "id": "coverage-text-map",
+      "title": "DOM-to-unit text coverage gate",
+      "area": "clusterer",
+      "priority": "medium",
+      "score": 0.0,
+      "why": "Text-bearing DOM that is visible in the browser must map to a visual unit before export.",
+      "evidence": [],
+      "actions": [
+        "fix-dom-to-unit-coverage",
+        "add-content-coverage-regression",
+        "compare-source-vs-pptx-text-map"
+      ],
+      "gates": [
+        "fail on coverage_gaps > 0 for deck suites"
+      ]
+    },
+    {
+      "id": "rotated-glyph-native",
+      "title": "Native rotated glyph primitive",
+      "area": "pattern-library",
+      "priority": "medium",
+      "score": 0.0,
+      "why": "Small transformed decorative glyphs should stay editable instead of becoming raster residue.",
+      "evidence": [],
+      "actions": [
+        "promote-to-native-pattern",
+        "preserve-rotation-transform",
+        "add-rotated-glyph-regression"
+      ],
+      "gates": [
+        "no repeated dec.glyph-rotated cluster above min occurrence threshold"
+      ]
+    },
+    {
+      "id": "editability-roundtrip-gate",
+      "title": "Round-trip editability drift gate",
+      "area": "roundtrip",
+      "priority": "medium",
+      "score": 0.0,
+      "why": "Designer-grade decks need PowerPoint-native edit operations to survive round trip accounting.",
+      "evidence": [],
+      "actions": [
+        "inspect-pptx-roundtrip-diff",
+        "add-editability-regression-case",
+        "tighten-native-emit-accounting"
+      ],
+      "gates": [
+        "fail on editability_failed_decks > 0"
+      ]
+    }
+  ]
+}

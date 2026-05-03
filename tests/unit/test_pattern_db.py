@@ -86,6 +86,7 @@ def _el(
     shadow: str = "none",
     font_size: str = "16px",
     font_weight: str = "400",
+    transform: str = "none",
 ) -> DomElement:
     x, y, w, h = bbox
     return DomElement(
@@ -99,6 +100,7 @@ def _el(
         background_image=bg_image,
         border_radius=radius,
         box_shadow=shadow,
+        transform=transform,
         font_size=font_size,
         font_weight=font_weight,
         text=text,
@@ -145,6 +147,23 @@ def test_recipe_pill_fires_on_rounded_full():
     d = classify_tier0(_unit([el]), cat)
     assert d is not None
     assert d.metadata.get("recipe") == "pill"
+
+
+def test_recipe_rotated_dot_fires_as_native_shape():
+    cat = get_default_catalog()
+    el = _el(
+        1,
+        "DIV",
+        cls="dot",
+        bbox=(0, 0, 60, 60),
+        bg="rgb(45, 91, 255)",
+        radius="9999px",
+        transform="matrix(1, 0, 0, 1, 980, 0)",
+    )
+    d = classify_tier0(_unit([el]), cat)
+    assert d is not None
+    assert d.kind.value == "native_shape"
+    assert d.metadata.get("recipe") == "dec_glyph_rotated"
 
 
 def test_recipe_blur_forces_raster():

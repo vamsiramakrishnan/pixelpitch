@@ -28,6 +28,7 @@ def _el(
     cls: str = "",
     is_svg: bool = False,
     display: str = "inline",
+    is_offcanvas: bool = False,
 ) -> DomElement:
     x, y, w, h = bbox
     return DomElement(
@@ -40,6 +41,7 @@ def _el(
         text=text,
         is_svg=is_svg,
         display=display,
+        is_offcanvas=is_offcanvas,
         stable_selector=f"#e{eid}",
     )
 
@@ -195,3 +197,18 @@ def test_small_bbox_filtered():
     roots: list[VisualUnit] = [_unit("u1", (900, 900, 50, 50))]
     gaps = find_coverage_gaps([body, el], roots)
     assert gaps == []
+
+
+def test_offcanvas_semantic_text_filtered():
+    body = _el(0, None, 0, "BODY", bbox=(0, 0, 1280, 720))
+    el = _el(
+        1,
+        0,
+        1,
+        "SPAN",
+        bbox=(-9999, 700, 600, 24),
+        text="The infrastructure for AI-native product teams",
+        is_offcanvas=True,
+    )
+    roots: list[VisualUnit] = [_unit("u1", (900, 900, 50, 50))]
+    assert find_coverage_gaps([body, el], roots) == []

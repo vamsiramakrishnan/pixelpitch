@@ -11,12 +11,16 @@ hit two failure modes:
 
 1. **Layout overflow** — content spills past 720px or clips at 1280px because
    font sizes and row heights weren't budgeted against the viewport.
-2. **Raster fallback** — author reaches for `mix-blend-mode`, `filter: blur`,
-   `mask-image`, `backdrop-filter`, or `background-image: url(...)` and the
-   whole cluster rasterizes, killing editability.
+2. **Accidental raster fallback** — author reaches for `mix-blend-mode`,
+   `filter: blur`, `mask-image`, `backdrop-filter`, or
+   `background-image: url(...)` without intending a raster/effect fixture,
+   and the whole cluster rasterizes, killing editability.
 
 Both are author-side. Both are preventable with a small grammar — the **atomic
-seed**. Below is that grammar.
+seed**. Intentional raster is different: when the design depends on masks,
+blends, rich photography, or canvas-like pixels, preserve the visual layer and
+make the fixture explicit so the harvester can route it to a hybrid recipe or
+raster-fidelity regression case.
 
 ## Libraries you can reach for (LLMs are good at HTML+CSS — use real libraries)
 
@@ -29,7 +33,7 @@ the runtime JS.
 |---|---|---|
 | **Tailwind v3 / v4 utilities** | All utilities — color, spacing, type scale, gradient, shadow, ring, transform: translate/scale/rotate. `@apply` an inline class chain into a `<style>` block, or write the resolved CSS directly. | `backdrop-blur-*`, `mix-blend-*`, `filter blur-*`, `clip-path-*` (raster). |
 | **shadcn/ui (static subset)** | Card, Button, Badge, Alert, Avatar (+ AvatarStack), Separator, Progress (static), Tabs body, Accordion body, Skeleton, Toast (static), HoverCard body, Tooltip body. | Dialog, Dropdown, Command, Sheet, Popover, anything that requires a portal or real interactivity (no JS runs at convert time). |
-| **lucide-react / lucide icons** | Inline `<svg>` icons. Always 24×24 viewBox, stroke-2, `stroke-linecap:round`, `stroke-linejoin:round`, `fill:none`. Each icon is ≤6 path elements — well under the 200-primitive native budget. Copy the SVG straight from `lucide.dev/icons/<name>` (ISC). The reference set in `_bench/llm-corpus/generate.py::LUCIDE_ICONS` covers 22 of the most-used ones. | None — every lucide icon converts. |
+| **lucide-react / lucide icons** | Inline `<svg>` icons. Always 24×24 viewBox, stroke-2, `stroke-linecap:round`, `stroke-linejoin:round`, `fill:none`. Each icon is ≤6 path elements — well under the 200-primitive native budget. Copy the SVG straight from `lucide.dev/icons/<name>` (ISC). The reference set in `_bench/decks/llm-corpus/generate.py::LUCIDE_ICONS` covers 22 of the most-used ones. | None — every lucide icon converts. |
 | **Framer Motion** | `motion.div` annotated `data-slidify-capture-gif="true"` becomes an animated GIF embedded in the slide via `slidify capture-gif`. | Animations triggered by user interaction (hover, scroll, click) — they never fire because there's no user. |
 | **shadcn-style class names** | Inline-emitted via Tailwind's compile output. The matcher can ignore class names entirely; data-atom hints take precedence. | — |
 | **Custom inline `<svg>`** | Always native (≤200 primitives). | `filter="url(#blur)"` defs. |
@@ -40,7 +44,7 @@ and the slide is on the fast path.
 
 For a working pattern catalog spanning six theme registers (vercel-dark,
 paper, magazine, brutalist, mono-spec, duotone) plus icon-driven dashboard
-and feature-grid slides, see `_bench/llm-corpus/`. Every slide there is
+and feature-grid slides, see `_bench/decks/llm-corpus/`. Every slide there is
 self-contained HTML, passes `slidify check`, and converts natively. Use it
 as a reference when you're not sure which patterns land cleanly.
 
@@ -72,9 +76,9 @@ What it tells you (≤100 ms, no Chromium):
 
 - `self_contained: false` → pull the external asset inline (data: URI for
   images, inline `<style>` for CSS, drop the script).
-- `risky_css` non-empty → swap to a native equivalent (see "What forces a
-  raster" below) OR explicitly opt the cluster into raster via
-  `data-atom='mask.*'` if you want the visual.
+- `risky_css` non-empty → swap accidental risk to a native equivalent (see
+  "What forces a raster" below) OR explicitly keep the visual as a
+  hybrid/raster fixture when the effect is the point.
 - `warnings` (iframe, missing `<!doctype html>`, …) → fix.
 
 Add `--deep` for the full matcher pass (Chromium round-trip; ~1–3 s):

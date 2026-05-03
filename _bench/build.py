@@ -1,13 +1,11 @@
 """Unified bench builder.
 
-Walks every sub-corpus under `_bench/` (currently `llm-corpus/` and
-`atlas-vol-iii/`), regenerates the slide HTMLs from each `generate.py`,
-converts each to its own PPTX, and finally produces a combined PPTX
-that concatenates every slide in the bench in lexicographic-then-
-sub-corpus order.
+Walks every deck-like source directory under `_bench/corpus` and `_bench/decks`,
+regenerates slide HTMLs
+from each `generate.py`, converts each to its own PPTX, and finally produces
+a combined PPTX that concatenates every slide in stable deck/file order.
 
-Outputs land in `_bench/dist/`, which is the gitignore exception so
-the artefacts ship with the repo.
+Outputs land in `_bench/generated/dist/`.
 
 Run:
     uv run python _bench/build.py
@@ -17,21 +15,33 @@ Run:
 from __future__ import annotations
 
 import argparse
-import shutil
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).parent
-DIST = ROOT / "dist"
+DECKS_ROOT = ROOT / "decks"
+DIST = ROOT / "generated" / "dist"
 
-# Sub-corpora to build.  Each entry is (display_name, source_dir,
-# output_pptx_stem).  Order matters for the combined PPTX.
-SUBCORPORA: list[tuple[str, Path, str]] = [
-    ("llm-corpus",     ROOT / "llm-corpus",     "llm-corpus"),
-    ("atlas-vol-iii",  ROOT / "atlas-vol-iii",  "atlas-vol-iii"),
-]
+SKIP_DIRS = {"__pycache__", "animated", "assets", "out", "preview"}
+
+
+def discover_subcorpora() -> list[tuple[str, Path, str]]:
+    """Return deck folders in stable order.
+
+    A deck folder is `_bench/corpus` or any immediate `_bench/decks/*`
+    directory with top-level HTML slides.
+    """
+    decks = []
+    candidates = [ROOT / "corpus"]
+    if DECKS_ROOT.exists():
+        candidates.extend(sorted(p for p in DECKS_ROOT.iterdir() if p.is_dir()))
+    for src in candidates:
+        if src.name in SKIP_DIRS or not any(src.glob("*.html")):
+            continue
+        decks.append((src.name, src, src.name))
+    return decks
 
 
 def _run(cmd: list[str], *, allow_drift: bool = True) -> None:
@@ -77,7 +87,7 @@ def build_combined(output_pptx: Path) -> None:
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         i = 0
-        for slot, (name, src, _) in enumerate(SUBCORPORA, 1):
+        for slot, (name, src, _) in enumerate(discover_subcorpora(), 1):
             for slide in sorted(src.glob("*.html")):
                 # Skip animation source HTMLs — they live under anim/
                 # already excluded by glob, but be defensive.
@@ -114,7 +124,7 @@ def main() -> int:
 
     DIST.mkdir(parents=True, exist_ok=True)
 
-    for name, src, stem in SUBCORPORA:
+    for name, src, stem in discover_subcorpora():
         if not src.exists():
             print(f"  skipping {name}: {src} does not exist", file=sys.stderr)
             continue

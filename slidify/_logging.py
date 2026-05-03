@@ -25,13 +25,19 @@ import sys
 
 import structlog
 
-
 _configured = False
 
 
 def _log_format_from_env() -> str:
     raw = os.environ.get("SLIDIFY_LOG_FORMAT", "").strip().lower()
     return raw if raw in ("ndjson", "console") else "console"
+
+
+def _log_level_from_env(default: int) -> int:
+    raw = os.environ.get("SLIDIFY_LOG_LEVEL", "").strip().upper()
+    if not raw:
+        return default
+    return int(getattr(logging, raw, default))
 
 
 def configure(*, quiet: bool = False, log_format: str | None = None) -> None:
@@ -46,7 +52,7 @@ def configure(*, quiet: bool = False, log_format: str | None = None) -> None:
     global _configured
 
     fmt = (log_format or _log_format_from_env()).lower()
-    level = logging.WARNING if quiet else logging.INFO
+    level = _log_level_from_env(logging.WARNING if quiet else logging.INFO)
 
     # stdlib logging (used by fontTools subset, etc.) → stderr.
     root = logging.getLogger()

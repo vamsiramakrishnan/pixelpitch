@@ -1,15 +1,47 @@
 # slidify
 
-> Render-and-classify pipeline that converts HTML decks to maximally-editable PPTX.
+> Convert HTML decks into PPTX with maximal editability and high-fidelity rendering.
 
-slidify converts HTML slide decks into PPTX files where the maximum possible
-fraction of content is **native, editable PPTX primitives** — text frames,
-shapes, lines, native pictures — and only the irreducibly visual residue
-(gradients, complex SVGs, Chart.js canvases) is rasterized.
+slidify converts HTML slide decks into PPTX files where the maximum useful
+fraction of content is **native, editable PPTX**: text frames, shapes, lines,
+tables, native pictures, and SVG-derived geometry. When native PPTX cannot
+faithfully express the visual result, slidify uses rasterization deliberately:
+surgical crops, image-aware hybrids, and full raster layers for irreducible
+effects such as complex masks, filters, blends, canvas, and cinematic imagery.
 
 The single metric we optimize: `native_area_ratio` — the fraction of slide
 area covered by native shapes — subject to perceptual fidelity floors
 (SSIM ≥ 0.95, OCR recall ≥ 0.98).
+
+The practical goal is not "never rasterize." It is:
+
+1. Keep text, layout, core shapes, and data structures editable.
+2. Preserve designer-grade pixels for effects that PowerPoint cannot model.
+3. Use corpus feedback to turn repeated misses into native atoms or hybrid
+   recipes.
+
+## Feedback Loop
+
+The project improves through a bench-driven loop:
+
+```bash
+make bench-index-all     # organize and inventory _bench
+make bench-harvest       # convert corpus misses into pipeline signals
+make bench-render DECK=product-pitch
+```
+
+`_bench/corpus` contains curated slide specimens. The harvester writes
+`_bench/reports/harvest/bench-signals.json` and `_bench/reports/harvest/bench-report.md`,
+which classify misses by source spread, visual area, fidelity risk,
+editability goal, raster fidelity goal, render strategy, promotion priority,
+and pipeline actions.
+
+Those signals drive the roadmap:
+
+- `native-atom` / `native-pattern`: promote to editable pattern coverage.
+- `hybrid-recipe`: keep editable structure, rasterize only the effect layer.
+- `preserve-raster`: keep the pixel layer, but improve crop, resolution,
+  transparency, and source-vs-PPTX regression coverage.
 
 ## Install
 
@@ -27,12 +59,36 @@ docker run --rm -v "$PWD":/work slidify:latest convert /work/deck.html /work/dec
 
 # 3. From source (development).
 sudo apt-get install -y libreoffice-impress poppler-utils tesseract-ocr fonts-inter
-uv sync --extra dev
-uv run playwright install chromium --with-deps
+make bootstrap
+make doctor
 ```
 
 Verify with `slidify doctor`. See [`packaging/`](packaging/) for the full
 matrix (Rust bootstrap, Docker, PyInstaller bundle, pip).
+
+If `make doctor` reports `Chromium launch` as failing, run:
+
+```bash
+make playwright-deps
+make doctor
+```
+
+That check launches a real headless Chromium page, so it catches missing shared
+libraries and restrictive execution environments before a new contributor hits
+them during render or harvest.
+
+Useful source checkout targets:
+
+| Command | Purpose |
+| --- | --- |
+| `make bootstrap` | Install Python deps into `.venv` and Chromium into `.ms-playwright`. |
+| `make playwright-deps` | Install Chromium plus Playwright OS libraries. |
+| `make doctor` | Verify LibreOffice, Tesseract, poppler, Chromium launch, and Inter. |
+| `make check` | Run lint and tests. |
+| `make bench-index-all` | Rebuild `_bench` and `_bench/corpus` indexes. |
+| `make bench-harvest` | Generate bench signal JSON and markdown report. |
+| `make bench-render DECK=product-pitch` | Compose and render one named corpus mix. |
+| `make bench-app` | Serve the human HTML/PPTX side-by-side viewer on port `15999`. |
 
 ## Use
 
@@ -121,6 +177,10 @@ HTML → split → render (Playwright) → DOM walk → cluster into VisualUnits
   oracle (LibreOffice + SSIM + OCR) → auto-correct → ship
 ```
 
+The corpus harvester sits beside the pipeline. It aggregates
+`unmatched_signatures` across `_bench`, ranks the repeated misses, and labels
+them as native-editability work, hybrid recipe work, or raster-fidelity work.
+
 ## LLM backends (tier 3)
 
 The tier-3 adjudicator picks a vision-capable LLM for the small residue of
@@ -200,6 +260,7 @@ slidify/
   renderer.py       # Playwright wrapper
   dom_walker.py     # in-page JS
   units.py          # visual unit clusterer
+  harvester.py      # corpus miss aggregation + pipeline signals
   classifier/
     tier1.py        # deterministic rules
     tier2.py        # heuristic scoring
@@ -210,6 +271,12 @@ slidify/
   emitter.py        # python-pptx output
   oracle.py         # SSIM + OCR + auto-correct
   cache.py          # structural memoization
+_bench/
+  corpus/           # curated source corpus + mixable slide index
+  harvest/          # harvester JSON + human reports
+  scripts/          # index, compose, and report helpers
+  composed/         # generated mixes, ignored by git
+  dist/             # generated PPTX outputs
 tests/
   unit/             # rule + clustering tests
   integration/      # full pipeline smoke

@@ -116,7 +116,7 @@
       "preview_png": null
     },
     {
-      "slide": "slide-11-hero-number.html",
+      "slide": "slide-08-hero-number.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -127,11 +127,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 1.4339350249999825,
-      "pptx": "_bench/corpus/out/slide-11-hero-number.pptx",
+      "pptx": "_bench/corpus/out/slide-08-hero-number.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-12-title-reveal.html",
+      "slide": "slide-09-title-reveal.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -142,11 +142,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 1.3348198149999462,
-      "pptx": "_bench/corpus/out/slide-12-title-reveal.pptx",
+      "pptx": "_bench/corpus/out/slide-09-title-reveal.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-13-spec-sheet.html",
+      "slide": "slide-10-spec-sheet.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -156,11 +156,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 1.4852705499999956,
-      "pptx": "_bench/corpus/out/slide-13-spec-sheet.pptx",
+      "pptx": "_bench/corpus/out/slide-10-spec-sheet.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-14-was-now.html",
+      "slide": "slide-11-was-now.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -171,11 +171,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 1.4563150609999411,
-      "pptx": "_bench/corpus/out/slide-14-was-now.pptx",
+      "pptx": "_bench/corpus/out/slide-11-was-now.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-15-feature-mosaic.html",
+      "slide": "slide-12-feature-mosaic.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -188,11 +188,11 @@
       },
       "unmatched_signatures": 1,
       "elapsed_s": 1.399652235000076,
-      "pptx": "_bench/corpus/out/slide-15-feature-mosaic.pptx",
+      "pptx": "_bench/corpus/out/slide-12-feature-mosaic.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-16-pull-quote.html",
+      "slide": "slide-13-pull-quote.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -202,11 +202,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 1.6356717619999017,
-      "pptx": "_bench/corpus/out/slide-16-pull-quote.pptx",
+      "pptx": "_bench/corpus/out/slide-13-pull-quote.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-17-thank-you.html",
+      "slide": "slide-14-thank-you.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -218,11 +218,11 @@
       },
       "unmatched_signatures": 1,
       "elapsed_s": 1.3633813310000278,
-      "pptx": "_bench/corpus/out/slide-17-thank-you.pptx",
+      "pptx": "_bench/corpus/out/slide-14-thank-you.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-21-spec-sheet.html",
+      "slide": "slide-15-spec-sheet.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -235,11 +235,11 @@
       },
       "unmatched_signatures": 1,
       "elapsed_s": 1.387540564999881,
-      "pptx": "_bench/corpus/out/slide-21-spec-sheet.pptx",
+      "pptx": "_bench/corpus/out/slide-15-spec-sheet.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-22-schematic.html",
+      "slide": "slide-16-schematic.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -250,11 +250,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 1.382572565999908,
-      "pptx": "_bench/corpus/out/slide-22-schematic.pptx",
+      "pptx": "_bench/corpus/out/slide-16-schematic.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-23-density-grid.html",
+      "slide": "slide-17-density-grid.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -265,11 +265,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 1.3834562010001719,
-      "pptx": "_bench/corpus/out/slide-23-density-grid.pptx",
+      "pptx": "_bench/corpus/out/slide-17-density-grid.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-24-code-hero.html",
+      "slide": "slide-18-code-hero.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -280,11 +280,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 1.4858874880001167,
-      "pptx": "_bench/corpus/out/slide-24-code-hero.pptx",
+      "pptx": "_bench/corpus/out/slide-18-code-hero.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-25-status-board.html",
+      "slide": "slide-19-status-board.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -296,11 +296,11 @@
       },
       "unmatched_signatures": 1,
       "elapsed_s": 1.3417833460000566,
-      "pptx": "_bench/corpus/out/slide-25-status-board.pptx",
+      "pptx": "_bench/corpus/out/slide-19-status-board.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-26-manifesto.html",
+      "slide": "slide-20-manifesto.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -311,11 +311,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 1.4413451489999716,
-      "pptx": "_bench/corpus/out/slide-26-manifesto.pptx",
+      "pptx": "_bench/corpus/out/slide-20-manifesto.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-27-dotmatrix-ladder.html",
+      "slide": "slide-21-dotmatrix-ladder.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -327,11 +327,11 @@
       },
       "unmatched_signatures": 1,
       "elapsed_s": 1.4651755020001929,
-      "pptx": "_bench/corpus/out/slide-27-dotmatrix-ladder.pptx",
+      "pptx": "_bench/corpus/out/slide-21-dotmatrix-ladder.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-31-hero-gradient.html",
+      "slide": "slide-22-hero-gradient.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -343,11 +343,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 2.5025338840000586,
-      "pptx": "_bench/corpus/out/slide-31-hero-gradient.pptx",
+      "pptx": "_bench/corpus/out/slide-22-hero-gradient.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-32-stats-trio.html",
+      "slide": "slide-23-stats-trio.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -358,11 +358,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 1.6328027070001099,
-      "pptx": "_bench/corpus/out/slide-32-stats-trio.pptx",
+      "pptx": "_bench/corpus/out/slide-23-stats-trio.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-33-pricing-tiers.html",
+      "slide": "slide-24-pricing-tiers.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -374,11 +374,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 1.8033932189998723,
-      "pptx": "_bench/corpus/out/slide-33-pricing-tiers.pptx",
+      "pptx": "_bench/corpus/out/slide-24-pricing-tiers.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-34-feature-bento.html",
+      "slide": "slide-25-feature-bento.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -390,11 +390,11 @@
       },
       "unmatched_signatures": 2,
       "elapsed_s": 1.7800927099999626,
-      "pptx": "_bench/corpus/out/slide-34-feature-bento.pptx",
+      "pptx": "_bench/corpus/out/slide-25-feature-bento.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-35-quote-wall.html",
+      "slide": "slide-26-quote-wall.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -405,11 +405,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 1.7990038350001214,
-      "pptx": "_bench/corpus/out/slide-35-quote-wall.pptx",
+      "pptx": "_bench/corpus/out/slide-26-quote-wall.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-36-cta-closing.html",
+      "slide": "slide-27-cta-closing.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -421,11 +421,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 2.5655220159999317,
-      "pptx": "_bench/corpus/out/slide-36-cta-closing.pptx",
+      "pptx": "_bench/corpus/out/slide-27-cta-closing.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-37-logo-mosaic.html",
+      "slide": "slide-28-logo-mosaic.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -436,11 +436,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 1.6673719789998813,
-      "pptx": "_bench/corpus/out/slide-37-logo-mosaic.pptx",
+      "pptx": "_bench/corpus/out/slide-28-logo-mosaic.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-41-hero-blob-frame.html",
+      "slide": "slide-29-hero-blob-frame.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -450,11 +450,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 1.432480969999915,
-      "pptx": "_bench/corpus/out/slide-41-hero-blob-frame.pptx",
+      "pptx": "_bench/corpus/out/slide-29-hero-blob-frame.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-42-story-pullquote.html",
+      "slide": "slide-30-story-pullquote.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -465,11 +465,11 @@
       },
       "unmatched_signatures": 1,
       "elapsed_s": 1.416124383000124,
-      "pptx": "_bench/corpus/out/slide-42-story-pullquote.pptx",
+      "pptx": "_bench/corpus/out/slide-30-story-pullquote.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-43-ritual-steps.html",
+      "slide": "slide-31-ritual-steps.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -480,11 +480,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 1.4168338160000076,
-      "pptx": "_bench/corpus/out/slide-43-ritual-steps.pptx",
+      "pptx": "_bench/corpus/out/slide-31-ritual-steps.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-44-feature-breathing.html",
+      "slide": "slide-32-feature-breathing.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -495,11 +495,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 1.4277547140000024,
-      "pptx": "_bench/corpus/out/slide-44-feature-breathing.pptx",
+      "pptx": "_bench/corpus/out/slide-32-feature-breathing.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-45-quote-testimonial.html",
+      "slide": "slide-33-quote-testimonial.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -510,11 +510,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 1.4793643440000324,
-      "pptx": "_bench/corpus/out/slide-45-quote-testimonial.pptx",
+      "pptx": "_bench/corpus/out/slide-33-quote-testimonial.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-46-call-to-rest.html",
+      "slide": "slide-34-call-to-rest.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -524,11 +524,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 1.4051541039998483,
-      "pptx": "_bench/corpus/out/slide-46-call-to-rest.pptx",
+      "pptx": "_bench/corpus/out/slide-34-call-to-rest.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-47-manifesto-values.html",
+      "slide": "slide-35-manifesto-values.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -539,11 +539,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 1.3713473580000937,
-      "pptx": "_bench/corpus/out/slide-47-manifesto-values.pptx",
+      "pptx": "_bench/corpus/out/slide-35-manifesto-values.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-51-strategic-matrix.html",
+      "slide": "slide-36-strategic-matrix.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -558,11 +558,11 @@
       },
       "unmatched_signatures": 6,
       "elapsed_s": 1.627116861000104,
-      "pptx": "_bench/corpus/out/slide-51-strategic-matrix.pptx",
+      "pptx": "_bench/corpus/out/slide-36-strategic-matrix.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-52-stacked-bar.html",
+      "slide": "slide-37-stacked-bar.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -575,11 +575,11 @@
       },
       "unmatched_signatures": 3,
       "elapsed_s": 1.6210130580000168,
-      "pptx": "_bench/corpus/out/slide-52-stacked-bar.pptx",
+      "pptx": "_bench/corpus/out/slide-37-stacked-bar.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-53-comparison-table.html",
+      "slide": "slide-38-comparison-table.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -591,11 +591,11 @@
       },
       "unmatched_signatures": 4,
       "elapsed_s": 1.4284494589999213,
-      "pptx": "_bench/corpus/out/slide-53-comparison-table.pptx",
+      "pptx": "_bench/corpus/out/slide-38-comparison-table.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-54-numbered-insights.html",
+      "slide": "slide-39-numbered-insights.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -608,11 +608,11 @@
       },
       "unmatched_signatures": 3,
       "elapsed_s": 1.657008327000085,
-      "pptx": "_bench/corpus/out/slide-54-numbered-insights.pptx",
+      "pptx": "_bench/corpus/out/slide-39-numbered-insights.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-55-waterfall.html",
+      "slide": "slide-40-waterfall.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -624,11 +624,11 @@
       },
       "unmatched_signatures": 1,
       "elapsed_s": 1.6326943300000494,
-      "pptx": "_bench/corpus/out/slide-55-waterfall.pptx",
+      "pptx": "_bench/corpus/out/slide-40-waterfall.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-56-cover.html",
+      "slide": "slide-41-cover.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -641,11 +641,11 @@
       },
       "unmatched_signatures": 2,
       "elapsed_s": 1.5258392529999583,
-      "pptx": "_bench/corpus/out/slide-56-cover.pptx",
+      "pptx": "_bench/corpus/out/slide-41-cover.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-57-ranking.html",
+      "slide": "slide-42-ranking.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -658,11 +658,11 @@
       },
       "unmatched_signatures": 2,
       "elapsed_s": 1.694590887000004,
-      "pptx": "_bench/corpus/out/slide-57-ranking.pptx",
+      "pptx": "_bench/corpus/out/slide-42-ranking.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-61-magazine-cover-mask.html",
+      "slide": "slide-43-magazine-cover-mask.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -674,11 +674,11 @@
       },
       "unmatched_signatures": 1,
       "elapsed_s": 3.313153693000004,
-      "pptx": "_bench/corpus/out/slide-61-magazine-cover-mask.pptx",
+      "pptx": "_bench/corpus/out/slide-43-magazine-cover-mask.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-62-magazine-spread.html",
+      "slide": "slide-44-magazine-spread.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -690,11 +690,11 @@
       },
       "unmatched_signatures": 1,
       "elapsed_s": 1.884583967000026,
-      "pptx": "_bench/corpus/out/slide-62-magazine-spread.pptx",
+      "pptx": "_bench/corpus/out/slide-44-magazine-spread.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-63-photo-essay-caption.html",
+      "slide": "slide-45-photo-essay-caption.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -707,11 +707,11 @@
       },
       "unmatched_signatures": 1,
       "elapsed_s": 3.2854523419998714,
-      "pptx": "_bench/corpus/out/slide-63-photo-essay-caption.pptx",
+      "pptx": "_bench/corpus/out/slide-45-photo-essay-caption.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-64-pull-quote-faded.html",
+      "slide": "slide-46-pull-quote-faded.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -722,11 +722,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 2.3371498809999594,
-      "pptx": "_bench/corpus/out/slide-64-pull-quote-faded.pptx",
+      "pptx": "_bench/corpus/out/slide-46-pull-quote-faded.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-65-mosaic-gallery.html",
+      "slide": "slide-47-mosaic-gallery.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -737,11 +737,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 2.0781029390000185,
-      "pptx": "_bench/corpus/out/slide-65-mosaic-gallery.pptx",
+      "pptx": "_bench/corpus/out/slide-47-mosaic-gallery.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-66-duotone-hero.html",
+      "slide": "slide-48-duotone-hero.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -752,11 +752,11 @@
       },
       "unmatched_signatures": 0,
       "elapsed_s": 4.58729294900013,
-      "pptx": "_bench/corpus/out/slide-66-duotone-hero.pptx",
+      "pptx": "_bench/corpus/out/slide-48-duotone-hero.pptx",
       "preview_png": null
     },
     {
-      "slide": "slide-67-text-wrap-stress.html",
+      "slide": "slide-49-text-wrap-stress.html",
       "ok": true,
       "n_slides": 1,
       "native_area_ratio": 1.0,
@@ -769,7 +769,7 @@
       },
       "unmatched_signatures": 2,
       "elapsed_s": 1.4990369160000228,
-      "pptx": "_bench/corpus/out/slide-67-text-wrap-stress.pptx",
+      "pptx": "_bench/corpus/out/slide-49-text-wrap-stress.pptx",
       "preview_png": null
     }
   ]

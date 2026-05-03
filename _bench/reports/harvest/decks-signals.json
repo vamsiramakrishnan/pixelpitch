@@ -1,0 +1,2836 @@
+{
+  "harvest_run": {
+    "timestamp": "2026-05-03T08:58:11+00:00",
+    "corpus_dir": "/home/user/pixelpitch/_bench/decks",
+    "decks_processed": 125,
+    "total_unmatched": 25,
+    "unique_signatures": 0
+  },
+  "run_signals": {
+    "health": {
+      "decks_processed": 125,
+      "error_count": 0,
+      "avg_native_area_ratio": 0.9748,
+      "avg_pattern_coverage": 0.9865,
+      "unmatched_per_deck": 0.2,
+      "quality_issues_per_deck": 0.09
+    },
+    "telemetry_totals": {
+      "overflow_elements": 11,
+      "coverage_gaps": 0,
+      "exclusivity_violations": 0,
+      "editability_failed_decks": 0
+    },
+    "cluster_strategy_mix": {},
+    "cluster_priority_mix": {},
+    "cluster_action_mix": {},
+    "top_quality_issues": [
+      {
+        "id": "layout.overflow:bottom:bottom-edge-crossed-by-71-px-shrink-the-row-the-type-or-split-the-slide.-",
+        "kind": "layout.overflow",
+        "title": "bottom-edge overflow in bottom edge crossed by 71 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+        "severity": "high",
+        "instances": 2,
+        "source_files": [
+          "llm-corpus/19-bru-stat-wall.html"
+        ],
+        "source_groups": [
+          "llm-corpus"
+        ],
+        "examples": [
+          "llm-corpus/19-bru-stat-wall.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > span:nth-child(1)",
+          "llm-corpus/19-bru-stat-wall.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > span:nth-child(2)"
+        ],
+        "actions": [
+          "add-layout-overflow-regression",
+          "improve-autofit-or-bleed-policy",
+          "promote-authoring-hint"
+        ],
+        "metrics": {
+          "worst_overflow_px": 71.12
+        }
+      },
+      {
+        "id": "layout.overflow:bottom:bottom-edge-crossed-by-85-px-shrink-the-row-the-type-or-split-the-slide.-",
+        "kind": "layout.overflow",
+        "title": "bottom-edge overflow in bottom edge crossed by 85 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+        "severity": "high",
+        "instances": 1,
+        "source_files": [
+          "llm-corpus/19-bru-stat-wall.html"
+        ],
+        "source_groups": [
+          "llm-corpus"
+        ],
+        "examples": [
+          "llm-corpus/19-bru-stat-wall.html#slide-0:body > div:nth-child(1) > div:nth-child(3)"
+        ],
+        "actions": [
+          "add-layout-overflow-regression",
+          "improve-autofit-or-bleed-policy",
+          "promote-authoring-hint"
+        ],
+        "metrics": {
+          "worst_overflow_px": 85.12
+        }
+      },
+      {
+        "id": "layout.overflow:left:left-edge-crossed-by-45-px-usually-a-transform:-translatex--n-with-n-larger",
+        "kind": "layout.overflow",
+        "title": "left-edge overflow in left edge crossed by 45 px \u2014 usually a `transform: translateX(-N)` with N larger than the parent's left padding.",
+        "severity": "medium",
+        "instances": 2,
+        "source_files": [
+          "atlas-vol-iii/08-cinemagraph.html"
+        ],
+        "source_groups": [
+          "atlas-vol-iii"
+        ],
+        "examples": [
+          "atlas-vol-iii/08-cinemagraph.html#slide-0:body > div:nth-child(1) > svg:nth-child(1) > g:nth-child(5)",
+          "atlas-vol-iii/08-cinemagraph.html#slide-0:body > div:nth-child(1) > svg:nth-child(1) > g:nth-child(5) > rect:nth-child(1)"
+        ],
+        "actions": [
+          "add-layout-overflow-regression",
+          "improve-autofit-or-bleed-policy",
+          "promote-authoring-hint"
+        ],
+        "metrics": {
+          "worst_overflow_px": 44.52
+        }
+      },
+      {
+        "id": "layout.overflow:right:right-edge-crossed-by-40-px-trim-the-line-lower-font-size-or-wrap.-viewpor",
+        "kind": "layout.overflow",
+        "title": "right-edge overflow in right edge crossed by 40 px \u2014 trim the line, lower font-size, or wrap. Viewport width is 1280 px.",
+        "severity": "medium",
+        "instances": 1,
+        "source_files": [
+          "atlas-vol-iii/01-cover.html"
+        ],
+        "source_groups": [
+          "atlas-vol-iii"
+        ],
+        "examples": [
+          "atlas-vol-iii/01-cover.html#slide-0:body > div:nth-child(1) > div:nth-child(2)"
+        ],
+        "actions": [
+          "add-layout-overflow-regression",
+          "improve-autofit-or-bleed-policy",
+          "promote-authoring-hint"
+        ],
+        "metrics": {
+          "worst_overflow_px": 40.0
+        }
+      },
+      {
+        "id": "layout.overflow:top:top-edge-crossed-by-40-px-usually-a-negative-top-or-translatey--n-larger-tha",
+        "kind": "layout.overflow",
+        "title": "top-edge overflow in top edge crossed by 40 px \u2014 usually a negative `top` or `translateY(-N)` larger than the parent's top padding.",
+        "severity": "medium",
+        "instances": 1,
+        "source_files": [
+          "atlas-vol-iii/04-duotone-plate.html"
+        ],
+        "source_groups": [
+          "atlas-vol-iii"
+        ],
+        "examples": [
+          "atlas-vol-iii/04-duotone-plate.html#slide-0:body > div:nth-child(1) > svg:nth-child(1) > rect:nth-child(34)"
+        ],
+        "actions": [
+          "add-layout-overflow-regression",
+          "improve-autofit-or-bleed-policy",
+          "promote-authoring-hint"
+        ],
+        "metrics": {
+          "worst_overflow_px": 40.0
+        }
+      },
+      {
+        "id": "layout.overflow:right:right-edge-crossed-by-20-px-trim-the-line-lower-font-size-or-wrap.-viewpor",
+        "kind": "layout.overflow",
+        "title": "right-edge overflow in right edge crossed by 20 px \u2014 trim the line, lower font-size, or wrap. Viewport width is 1280 px.",
+        "severity": "medium",
+        "instances": 1,
+        "source_files": [
+          "atlas-vol-iii/04-duotone-plate.html"
+        ],
+        "source_groups": [
+          "atlas-vol-iii"
+        ],
+        "examples": [
+          "atlas-vol-iii/04-duotone-plate.html#slide-0:body > div:nth-child(1) > svg:nth-child(1) > path:nth-child(39)"
+        ],
+        "actions": [
+          "add-layout-overflow-regression",
+          "improve-autofit-or-bleed-policy",
+          "promote-authoring-hint"
+        ],
+        "metrics": {
+          "worst_overflow_px": 19.62
+        }
+      },
+      {
+        "id": "layout.overflow:bottom:bottom-edge-crossed-by-57-px-shrink-the-row-the-type-or-split-the-slide.-",
+        "kind": "layout.overflow",
+        "title": "bottom-edge overflow in bottom edge crossed by 57 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+        "severity": "medium",
+        "instances": 1,
+        "source_files": [
+          "llm-corpus/16-mag-cover.html"
+        ],
+        "source_groups": [
+          "llm-corpus"
+        ],
+        "examples": [
+          "llm-corpus/16-mag-cover.html#slide-0:body > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > svg:nth-child(2) > path:nth-child(3)"
+        ],
+        "actions": [
+          "add-layout-overflow-regression",
+          "improve-autofit-or-bleed-policy",
+          "promote-authoring-hint"
+        ],
+        "metrics": {
+          "worst_overflow_px": 56.59
+        }
+      },
+      {
+        "id": "layout.overflow:bottom:bottom-edge-crossed-by-44-px-shrink-the-row-the-type-or-split-the-slide.-",
+        "kind": "layout.overflow",
+        "title": "bottom-edge overflow in bottom edge crossed by 44 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+        "severity": "medium",
+        "instances": 1,
+        "source_files": [
+          "llm-corpus/19-bru-stat-wall.html"
+        ],
+        "source_groups": [
+          "llm-corpus"
+        ],
+        "examples": [
+          "llm-corpus/19-bru-stat-wall.html#slide-0:body > div:nth-child(1) > div:nth-child(2)"
+        ],
+        "actions": [
+          "add-layout-overflow-regression",
+          "improve-autofit-or-bleed-policy",
+          "promote-authoring-hint"
+        ],
+        "metrics": {
+          "worst_overflow_px": 44.12
+        }
+      },
+      {
+        "id": "layout.overflow:bottom:bottom-edge-crossed-by-8-px-shrink-the-row-the-type-or-split-the-slide.-v",
+        "kind": "layout.overflow",
+        "title": "bottom-edge overflow in bottom edge crossed by 8 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+        "severity": "medium",
+        "instances": 1,
+        "source_files": [
+          "llm-corpus/19-bru-stat-wall.html"
+        ],
+        "source_groups": [
+          "llm-corpus"
+        ],
+        "examples": [
+          "llm-corpus/19-bru-stat-wall.html#slide-0:body > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > p:nth-child(2)"
+        ],
+        "actions": [
+          "add-layout-overflow-regression",
+          "improve-autofit-or-bleed-policy",
+          "promote-authoring-hint"
+        ],
+        "metrics": {
+          "worst_overflow_px": 8.12
+        }
+      }
+    ],
+    "recommendations": [
+      {
+        "priority": "high",
+        "area": "layout-engine",
+        "title": "Turn overflow telemetry into autofit and intentional-bleed policy",
+        "why": "11 overflow elements were detected after browser layout",
+        "actions": [
+          "improve-autofit-or-bleed-policy",
+          "add-layout-overflow-regression"
+        ]
+      }
+    ]
+  },
+  "clusters": [],
+  "quality_issues": [
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-71-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 71 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "high",
+      "instances": 2,
+      "source_files": [
+        "llm-corpus/19-bru-stat-wall.html"
+      ],
+      "source_groups": [
+        "llm-corpus"
+      ],
+      "examples": [
+        "llm-corpus/19-bru-stat-wall.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > span:nth-child(1)",
+        "llm-corpus/19-bru-stat-wall.html#slide-0:body > div:nth-child(1) > div:nth-child(3) > span:nth-child(2)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 71.12
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-85-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 85 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "high",
+      "instances": 1,
+      "source_files": [
+        "llm-corpus/19-bru-stat-wall.html"
+      ],
+      "source_groups": [
+        "llm-corpus"
+      ],
+      "examples": [
+        "llm-corpus/19-bru-stat-wall.html#slide-0:body > div:nth-child(1) > div:nth-child(3)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 85.12
+      }
+    },
+    {
+      "id": "layout.overflow:left:left-edge-crossed-by-45-px-usually-a-transform:-translatex--n-with-n-larger",
+      "kind": "layout.overflow",
+      "title": "left-edge overflow in left edge crossed by 45 px \u2014 usually a `transform: translateX(-N)` with N larger than the parent's left padding.",
+      "severity": "medium",
+      "instances": 2,
+      "source_files": [
+        "atlas-vol-iii/08-cinemagraph.html"
+      ],
+      "source_groups": [
+        "atlas-vol-iii"
+      ],
+      "examples": [
+        "atlas-vol-iii/08-cinemagraph.html#slide-0:body > div:nth-child(1) > svg:nth-child(1) > g:nth-child(5)",
+        "atlas-vol-iii/08-cinemagraph.html#slide-0:body > div:nth-child(1) > svg:nth-child(1) > g:nth-child(5) > rect:nth-child(1)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 44.52
+      }
+    },
+    {
+      "id": "layout.overflow:right:right-edge-crossed-by-40-px-trim-the-line-lower-font-size-or-wrap.-viewpor",
+      "kind": "layout.overflow",
+      "title": "right-edge overflow in right edge crossed by 40 px \u2014 trim the line, lower font-size, or wrap. Viewport width is 1280 px.",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "atlas-vol-iii/01-cover.html"
+      ],
+      "source_groups": [
+        "atlas-vol-iii"
+      ],
+      "examples": [
+        "atlas-vol-iii/01-cover.html#slide-0:body > div:nth-child(1) > div:nth-child(2)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 40.0
+      }
+    },
+    {
+      "id": "layout.overflow:top:top-edge-crossed-by-40-px-usually-a-negative-top-or-translatey--n-larger-tha",
+      "kind": "layout.overflow",
+      "title": "top-edge overflow in top edge crossed by 40 px \u2014 usually a negative `top` or `translateY(-N)` larger than the parent's top padding.",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "atlas-vol-iii/04-duotone-plate.html"
+      ],
+      "source_groups": [
+        "atlas-vol-iii"
+      ],
+      "examples": [
+        "atlas-vol-iii/04-duotone-plate.html#slide-0:body > div:nth-child(1) > svg:nth-child(1) > rect:nth-child(34)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 40.0
+      }
+    },
+    {
+      "id": "layout.overflow:right:right-edge-crossed-by-20-px-trim-the-line-lower-font-size-or-wrap.-viewpor",
+      "kind": "layout.overflow",
+      "title": "right-edge overflow in right edge crossed by 20 px \u2014 trim the line, lower font-size, or wrap. Viewport width is 1280 px.",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "atlas-vol-iii/04-duotone-plate.html"
+      ],
+      "source_groups": [
+        "atlas-vol-iii"
+      ],
+      "examples": [
+        "atlas-vol-iii/04-duotone-plate.html#slide-0:body > div:nth-child(1) > svg:nth-child(1) > path:nth-child(39)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 19.62
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-57-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 57 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "llm-corpus/16-mag-cover.html"
+      ],
+      "source_groups": [
+        "llm-corpus"
+      ],
+      "examples": [
+        "llm-corpus/16-mag-cover.html#slide-0:body > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > svg:nth-child(2) > path:nth-child(3)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 56.59
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-44-px-shrink-the-row-the-type-or-split-the-slide.-",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 44 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "llm-corpus/19-bru-stat-wall.html"
+      ],
+      "source_groups": [
+        "llm-corpus"
+      ],
+      "examples": [
+        "llm-corpus/19-bru-stat-wall.html#slide-0:body > div:nth-child(1) > div:nth-child(2)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 44.12
+      }
+    },
+    {
+      "id": "layout.overflow:bottom:bottom-edge-crossed-by-8-px-shrink-the-row-the-type-or-split-the-slide.-v",
+      "kind": "layout.overflow",
+      "title": "bottom-edge overflow in bottom edge crossed by 8 px \u2014 shrink the row, the type, or split the slide. Viewport budget is 720 px (head ~80, footer ~50).",
+      "severity": "medium",
+      "instances": 1,
+      "source_files": [
+        "llm-corpus/19-bru-stat-wall.html"
+      ],
+      "source_groups": [
+        "llm-corpus"
+      ],
+      "examples": [
+        "llm-corpus/19-bru-stat-wall.html#slide-0:body > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > p:nth-child(2)"
+      ],
+      "actions": [
+        "add-layout-overflow-regression",
+        "improve-autofit-or-bleed-policy",
+        "promote-authoring-hint"
+      ],
+      "metrics": {
+        "worst_overflow_px": 8.12
+      }
+    }
+  ],
+  "deck_summaries": [
+    {
+      "path": "agora-protocol/01-cover.html",
+      "source_group": "agora-protocol",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9
+      }
+    },
+    {
+      "path": "agora-protocol/02-thesis.html",
+      "source_group": "agora-protocol",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 6
+      }
+    },
+    {
+      "path": "agora-protocol/03-flow.html",
+      "source_group": "agora-protocol",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 6
+      }
+    },
+    {
+      "path": "agora-protocol/04-premise.html",
+      "source_group": "agora-protocol",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9
+      }
+    },
+    {
+      "path": "agora-protocol/05-execution.html",
+      "source_group": "agora-protocol",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 6
+      }
+    },
+    {
+      "path": "agora-protocol/06-object.html",
+      "source_group": "agora-protocol",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9
+      }
+    },
+    {
+      "path": "agora-protocol/07-liquidity.html",
+      "source_group": "agora-protocol",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 6
+      }
+    },
+    {
+      "path": "agora-protocol/08-system.html",
+      "source_group": "agora-protocol",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9
+      }
+    },
+    {
+      "path": "agora-protocol/09-tension.html",
+      "source_group": "agora-protocol",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9
+      }
+    },
+    {
+      "path": "agora-protocol/10-trust.html",
+      "source_group": "agora-protocol",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 6
+      }
+    },
+    {
+      "path": "agora-protocol/11-method.html",
+      "source_group": "agora-protocol",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9
+      }
+    },
+    {
+      "path": "agora-protocol/12-routing.html",
+      "source_group": "agora-protocol",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 6
+      }
+    },
+    {
+      "path": "agora-protocol/13-latency.html",
+      "source_group": "agora-protocol",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 6
+      }
+    },
+    {
+      "path": "agora-protocol/14-signal.html",
+      "source_group": "agora-protocol",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9
+      }
+    },
+    {
+      "path": "agora-protocol/15-field-note.html",
+      "source_group": "agora-protocol",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9
+      }
+    },
+    {
+      "path": "agora-protocol/16-security.html",
+      "source_group": "agora-protocol",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 6
+      }
+    },
+    {
+      "path": "agora-protocol/17-resolution.html",
+      "source_group": "agora-protocol",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9
+      }
+    },
+    {
+      "path": "agora-protocol/18-scale.html",
+      "source_group": "agora-protocol",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 6
+      }
+    },
+    {
+      "path": "agora-protocol/19-close.html",
+      "source_group": "agora-protocol",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9
+      }
+    },
+    {
+      "path": "agora-protocol/anim/anim-01.html",
+      "source_group": "agora-protocol",
+      "n_slides": 2,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 2,
+        "cache:tier0": 2
+      }
+    },
+    {
+      "path": "agora-protocol/anim/anim-02.html",
+      "source_group": "agora-protocol",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 2
+      }
+    },
+    {
+      "path": "atlas-vol-iii/01-cover.html",
+      "source_group": "atlas-vol-iii",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 1,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "atlas-vol-iii/02-index.html",
+      "source_group": "atlas-vol-iii",
+      "n_slides": 1,
+      "unmatched_count": 2,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8571,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 12,
+        "tier1": 2,
+        "cache:tier1": 5,
+        "cache:tier0": 10
+      }
+    },
+    {
+      "path": "atlas-vol-iii/03-opening.html",
+      "source_group": "atlas-vol-iii",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "atlas-vol-iii/04-duotone-plate.html",
+      "source_group": "atlas-vol-iii",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 2,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 11
+      }
+    },
+    {
+      "path": "atlas-vol-iii/05-one-number.html",
+      "source_group": "atlas-vol-iii",
+      "n_slides": 1,
+      "unmatched_count": 2,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8182,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "tier1": 2
+      }
+    },
+    {
+      "path": "atlas-vol-iii/06-type-specimen.html",
+      "source_group": "atlas-vol-iii",
+      "n_slides": 1,
+      "unmatched_count": 2,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8182,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "tier1": 1,
+        "cache:tier0": 10,
+        "promotion": 4
+      }
+    },
+    {
+      "path": "atlas-vol-iii/07-pullquote.html",
+      "source_group": "atlas-vol-iii",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9
+      }
+    },
+    {
+      "path": "atlas-vol-iii/08-cinemagraph.html",
+      "source_group": "atlas-vol-iii",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 2,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 12
+      }
+    },
+    {
+      "path": "atlas-vol-iii/09-process-matrix.html",
+      "source_group": "atlas-vol-iii",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 21,
+        "cache:tier0": 16
+      }
+    },
+    {
+      "path": "atlas-vol-iii/10-highlight-sweep.html",
+      "source_group": "atlas-vol-iii",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 10
+      }
+    },
+    {
+      "path": "atlas-vol-iii/11-numerals-ladder.html",
+      "source_group": "atlas-vol-iii",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 12,
+        "cache:tier0": 23
+      }
+    },
+    {
+      "path": "atlas-vol-iii/12-close.html",
+      "source_group": "atlas-vol-iii",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "cache:tier0": 4
+      }
+    },
+    {
+      "path": "atlas-vol-iii/anim/01-cover-period.html",
+      "source_group": "atlas-vol-iii",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 0.1007,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 2
+      }
+    },
+    {
+      "path": "atlas-vol-iii/anim/05-number-tween.html",
+      "source_group": "atlas-vol-iii",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 0.2554,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 2
+      }
+    },
+    {
+      "path": "atlas-vol-iii/anim/08-steam-loop.html",
+      "source_group": "atlas-vol-iii",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 0.1944,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 2
+      }
+    },
+    {
+      "path": "atlas-vol-iii/anim/10-sheen-sweep.html",
+      "source_group": "atlas-vol-iii",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 0.3017,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 3
+      }
+    },
+    {
+      "path": "crt-archive/01-boot.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 7,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "crt-archive/02-cover.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "crt-archive/03-index.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 7,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "crt-archive/04-premise.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "crt-archive/05-daemon.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 7,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "crt-archive/06-object.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "crt-archive/07-patch.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 7,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "crt-archive/08-system.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "crt-archive/09-tension.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "crt-archive/10-trace.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 7,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "crt-archive/11-method.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "crt-archive/12-module.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 7,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "crt-archive/13-cache.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 7,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "crt-archive/14-signal.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "crt-archive/15-field-note.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "crt-archive/16-watch.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 7,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "crt-archive/17-export.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 7,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "crt-archive/18-resolution.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "crt-archive/19-close.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "crt-archive/20-end.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 7,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "crt-archive/anim/anim-01.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 2
+      }
+    },
+    {
+      "path": "crt-archive/anim/anim-02.html",
+      "source_group": "crt-archive",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 2
+      }
+    },
+    {
+      "path": "field-notes-quarterly/01-cover.html",
+      "source_group": "field-notes-quarterly",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "field-notes-quarterly/02-atlas.html",
+      "source_group": "field-notes-quarterly",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 6
+      }
+    },
+    {
+      "path": "field-notes-quarterly/03-premise.html",
+      "source_group": "field-notes-quarterly",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "field-notes-quarterly/04-courtyard.html",
+      "source_group": "field-notes-quarterly",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 6
+      }
+    },
+    {
+      "path": "field-notes-quarterly/05-object.html",
+      "source_group": "field-notes-quarterly",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "field-notes-quarterly/06-material.html",
+      "source_group": "field-notes-quarterly",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 6
+      }
+    },
+    {
+      "path": "field-notes-quarterly/07-system.html",
+      "source_group": "field-notes-quarterly",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "field-notes-quarterly/08-studio.html",
+      "source_group": "field-notes-quarterly",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 6
+      }
+    },
+    {
+      "path": "field-notes-quarterly/09-tension.html",
+      "source_group": "field-notes-quarterly",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "field-notes-quarterly/10-method.html",
+      "source_group": "field-notes-quarterly",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "field-notes-quarterly/11-plate.html",
+      "source_group": "field-notes-quarterly",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 6
+      }
+    },
+    {
+      "path": "field-notes-quarterly/12-margins.html",
+      "source_group": "field-notes-quarterly",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 6
+      }
+    },
+    {
+      "path": "field-notes-quarterly/13-signal.html",
+      "source_group": "field-notes-quarterly",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "field-notes-quarterly/14-essay.html",
+      "source_group": "field-notes-quarterly",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 6
+      }
+    },
+    {
+      "path": "field-notes-quarterly/15-field-note.html",
+      "source_group": "field-notes-quarterly",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "field-notes-quarterly/16-fieldwork.html",
+      "source_group": "field-notes-quarterly",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 6
+      }
+    },
+    {
+      "path": "field-notes-quarterly/17-resolution.html",
+      "source_group": "field-notes-quarterly",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "field-notes-quarterly/18-close.html",
+      "source_group": "field-notes-quarterly",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "field-notes-quarterly/anim/anim-01.html",
+      "source_group": "field-notes-quarterly",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 2
+      }
+    },
+    {
+      "path": "field-notes-quarterly/anim/anim-02.html",
+      "source_group": "field-notes-quarterly",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 2
+      }
+    },
+    {
+      "path": "llm-corpus/01-vd-hero.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 10,
+        "cache:tier0": 1,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "llm-corpus/02-vd-kpi-grid.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 13,
+        "cache:tier0": 8
+      }
+    },
+    {
+      "path": "llm-corpus/03-vd-feature-three.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 12,
+        "cache:tier0": 9
+      }
+    },
+    {
+      "path": "llm-corpus/04-vd-pricing.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 17,
+        "cache:tier0": 14
+      }
+    },
+    {
+      "path": "llm-corpus/05-vd-dashboard.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9565,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier1": 1,
+        "tier0": 22,
+        "cache:tier0": 14
+      }
+    },
+    {
+      "path": "llm-corpus/06-vd-team.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "cache:tier0": 19
+      }
+    },
+    {
+      "path": "llm-corpus/07-vd-quote.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 6,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "llm-corpus/08-vd-roadmap.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 10,
+        "cache:tier0": 31
+      }
+    },
+    {
+      "path": "llm-corpus/09-vd-lucide-features.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 27,
+        "cache:tier0": 21
+      }
+    },
+    {
+      "path": "llm-corpus/10-vd-closing.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "llm-corpus/11-paper-news.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "llm-corpus/12-paper-comparison.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9412,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 15,
+        "cache:tier0": 29,
+        "promotion": 2
+      }
+    },
+    {
+      "path": "llm-corpus/13-paper-research.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9091,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 9,
+        "tier1": 1,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "llm-corpus/14-paper-leaderboard.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 3,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8889,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 24,
+        "tier1": 2,
+        "cache:tier1": 15,
+        "cache:tier0": 14,
+        "promotion": 1
+      }
+    },
+    {
+      "path": "llm-corpus/15-paper-lucide-dash.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 2,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9535,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 41,
+        "cache:tier0": 45,
+        "tier1": 1,
+        "cache:tier1": 2,
+        "tier2": 1
+      }
+    },
+    {
+      "path": "llm-corpus/16-mag-cover.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 4,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.7647,
+      "overflow_count": 1,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 11,
+        "tier1": 3,
+        "promotion": 3
+      }
+    },
+    {
+      "path": "llm-corpus/17-mag-spread.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9286,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 11,
+        "cache:tier0": 1,
+        "tier1": 1,
+        "promotion": 2
+      }
+    },
+    {
+      "path": "llm-corpus/18-bru-manifesto.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 2,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.8462,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 11,
+        "promotion": 4,
+        "cache:tier0": 8
+      }
+    },
+    {
+      "path": "llm-corpus/19-bru-stat-wall.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 5,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 12,
+        "cache:tier0": 6
+      }
+    },
+    {
+      "path": "llm-corpus/20-mono-spec.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 1,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.9286,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 13,
+        "promotion": 1,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "llm-corpus/21-mono-timeline.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 11,
+        "cache:tier0": 20
+      }
+    },
+    {
+      "path": "llm-corpus/22-duo-photo.html",
+      "source_group": "llm-corpus",
+      "n_slides": 1,
+      "unmatched_count": 3,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 0.7,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 7,
+        "promotion": 1,
+        "tier1": 2
+      }
+    },
+    {
+      "path": "seasons-of-pacific/01-cover.html",
+      "source_group": "seasons-of-pacific",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "seasons-of-pacific/02-premise.html",
+      "source_group": "seasons-of-pacific",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "seasons-of-pacific/03-object.html",
+      "source_group": "seasons-of-pacific",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "seasons-of-pacific/04-system.html",
+      "source_group": "seasons-of-pacific",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "seasons-of-pacific/05-tension.html",
+      "source_group": "seasons-of-pacific",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "seasons-of-pacific/06-method.html",
+      "source_group": "seasons-of-pacific",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "seasons-of-pacific/07-signal.html",
+      "source_group": "seasons-of-pacific",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "seasons-of-pacific/08-field-note.html",
+      "source_group": "seasons-of-pacific",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "seasons-of-pacific/09-resolution.html",
+      "source_group": "seasons-of-pacific",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "seasons-of-pacific/10-close.html",
+      "source_group": "seasons-of-pacific",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "seasons-of-pacific/anim/anim-01.html",
+      "source_group": "seasons-of-pacific",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 2
+      }
+    },
+    {
+      "path": "seasons-of-pacific/anim/anim-02.html",
+      "source_group": "seasons-of-pacific",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 2
+      }
+    },
+    {
+      "path": "studio-noir-vol-i/01-cover.html",
+      "source_group": "studio-noir-vol-i",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "studio-noir-vol-i/02-premise.html",
+      "source_group": "studio-noir-vol-i",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "studio-noir-vol-i/03-object.html",
+      "source_group": "studio-noir-vol-i",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "studio-noir-vol-i/04-system.html",
+      "source_group": "studio-noir-vol-i",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "studio-noir-vol-i/05-tension.html",
+      "source_group": "studio-noir-vol-i",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "studio-noir-vol-i/06-method.html",
+      "source_group": "studio-noir-vol-i",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "studio-noir-vol-i/07-signal.html",
+      "source_group": "studio-noir-vol-i",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "studio-noir-vol-i/08-field-note.html",
+      "source_group": "studio-noir-vol-i",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "studio-noir-vol-i/09-resolution.html",
+      "source_group": "studio-noir-vol-i",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "studio-noir-vol-i/10-close.html",
+      "source_group": "studio-noir-vol-i",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 8,
+        "cache:tier0": 1
+      }
+    },
+    {
+      "path": "studio-noir-vol-i/anim/anim-01.html",
+      "source_group": "studio-noir-vol-i",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 2
+      }
+    },
+    {
+      "path": "studio-noir-vol-i/anim/anim-02.html",
+      "source_group": "studio-noir-vol-i",
+      "n_slides": 1,
+      "unmatched_count": 0,
+      "native_area_ratio": 1.0,
+      "pattern_coverage": 1.0,
+      "overflow_count": 0,
+      "coverage_gap_count": 0,
+      "exclusivity_violation_count": 0,
+      "editability_passed": true,
+      "editability_intended_total": 0,
+      "editability_actual_total": 0,
+      "editability_failing_slides": [],
+      "decisions_by_tier": {
+        "tier0": 2
+      }
+    }
+  ],
+  "errors": []
+}

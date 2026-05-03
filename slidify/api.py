@@ -48,6 +48,7 @@ from slidify.models import (
 from slidify.oracle import FidelityOracle
 from slidify.patterns import PatternStats, classify_tier0, get_default_catalog
 from slidify.patterns.signatures import signature, signature_hash
+from slidify.progress import ProgressCallback, emit_progress
 from slidify.promotion import promote, to_emit_ops
 from slidify.renderer import Renderer
 from slidify.splitter import split_slides
@@ -125,6 +126,10 @@ class ConversionConfig:
     # checks pixels, so a missing-but-pixel-similar shape passes).
     # Cheap (~1ms/slide); on by default.
     run_editability_check: bool = True
+    # Optional structured progress callback. Receives JSON-serializable events
+    # at stable pipeline boundaries so CLIs, agents, and CI can track long
+    # conversions without scraping renderer/font logs.
+    progress_callback: ProgressCallback | None = None
 
     # ---- Constructors ------------------------------------------------------
 
@@ -543,9 +548,31 @@ async def convert(
     # per slide) and we drop them after the theme is patched.
     color_elements: list = []
 
+    emit_progress(
+        cfg.progress_callback,
+        event="convert.start",
+        stage="setup",
+        message=f"converting source to {pptx_path}",
+        path=str(pptx_path),
+        metrics={
+            "viewport": list(cfg.viewport),
+            "render_concurrency": cfg.render_concurrency,
+            "oracle": cfg.run_oracle,
+            "tier3": cfg.run_tier3,
+            "embed_fonts": cfg.embed_fonts,
+        },
+    )
+
     async with Renderer(
         viewport=cfg.viewport, differential=cfg.differential_render
     ) as renderer:
+        emit_progress(
+            cfg.progress_callback,
+            event="convert.renderer.ready",
+            stage="render",
+            message="browser renderer is ready",
+            elapsed_seconds=round(time.perf_counter() - t_start, 3),
+        )
         provider = await _build_provider(cfg)
         emitter = Emitter()
 
@@ -554,6 +581,15 @@ async def convert(
         slide_idx = 0
         try:
             async for batch in _drain_in_batches(slide_iter, batch_size):
+                emit_progress(
+                    cfg.progress_callback,
+                    event="convert.batch.start",
+                    stage="render",
+                    message=f"rendering batch of {len(batch)} slide(s)",
+                    current=slide_idx + 1,
+                    elapsed_seconds=round(time.perf_counter() - t_start, 3),
+                    metrics={"batch_size": len(batch)},
+                )
                 rendered_batch = await _render_batch(renderer, batch)
                 for rendered in rendered_batch:
                     plan = await _process_one(
@@ -681,6 +717,22 @@ async def convert(
                             )
                         plans_for_oracle.append(plan)
                     slide_idx += 1
+                    emit_progress(
+                        cfg.progress_callback,
+                        event="convert.slide.done",
+                        stage="emit",
+                        message=f"slide {plan.index + 1} emitted",
+                        current=slide_idx,
+                        elapsed_seconds=round(time.perf_counter() - t_start, 3),
+                        metrics={
+                            "units": len(plan.units_flat),
+                            "ops": len(plan.ops),
+                            "overflow": len(overflow),
+                            "coverage_gaps": len(coverage_gaps),
+                            "emit_duplicates": len(excl_violations),
+                            "decisions_by_tier": _per_slide_decisions_count(plan),
+                        },
+                    )
 
             if slide_idx == 0:
                 raise ValueError("no slides produced from source")
@@ -715,7 +767,23 @@ async def convert(
             # the resolver can scan requested families. Cleared at the
             # end of convert() via the local going out of scope.
 
+            emit_progress(
+                cfg.progress_callback,
+                event="convert.write.start",
+                stage="write",
+                message=f"writing {pptx_path}",
+                path=str(pptx_path),
+                elapsed_seconds=round(time.perf_counter() - t_start, 3),
+            )
             emitter.save(pptx_path)
+            emit_progress(
+                cfg.progress_callback,
+                event="convert.write.done",
+                stage="write",
+                message=f"wrote {pptx_path}",
+                path=str(pptx_path),
+                elapsed_seconds=round(time.perf_counter() - t_start, 3),
+            )
         finally:
             emitter.close()
 
@@ -738,6 +806,13 @@ async def convert(
             from slidify.font_resolver import resolve_and_subset_for_deck
 
             try:
+                emit_progress(
+                    cfg.progress_callback,
+                    event="convert.fonts.start",
+                    stage="fonts",
+                    message="resolving and embedding deck fonts",
+                    elapsed_seconds=round(time.perf_counter() - t_start, 3),
+                )
                 fonts_to_embed: list = []
                 inter = discover_inter()
                 if inter is not None:
@@ -751,13 +826,48 @@ async def convert(
                         n=len(fonts_to_embed),
                         families=[f.typeface for f in fonts_to_embed],
                     )
+                    emit_progress(
+                        cfg.progress_callback,
+                        event="convert.fonts.done",
+                        stage="fonts",
+                        message=f"embedded {len(fonts_to_embed)} font subset(s)",
+                        elapsed_seconds=round(time.perf_counter() - t_start, 3),
+                        metrics={"families": [f.typeface for f in fonts_to_embed]},
+                    )
             except Exception as e:
                 log.warning("api.font_embed_failed", error=str(e))
+                emit_progress(
+                    cfg.progress_callback,
+                    event="convert.fonts.error",
+                    stage="fonts",
+                    status="warning",
+                    message=f"font embedding failed: {type(e).__name__}",
+                    elapsed_seconds=round(time.perf_counter() - t_start, 3),
+                    metrics={"error": str(e)},
+                )
 
         reports: list[FidelityReport] = []
         if cfg.run_oracle:
+            emit_progress(
+                cfg.progress_callback,
+                event="convert.oracle.start",
+                stage="oracle",
+                message="running fidelity oracle",
+                elapsed_seconds=round(time.perf_counter() - t_start, 3),
+            )
             reports = await _oracle_with_correction(
                 pptx_path, plans_for_oracle, summaries, cfg, renderer
+            )
+            emit_progress(
+                cfg.progress_callback,
+                event="convert.oracle.done",
+                stage="oracle",
+                message="fidelity oracle finished",
+                elapsed_seconds=round(time.perf_counter() - t_start, 3),
+                metrics={
+                    "reports": len(reports),
+                    "failed": sum(1 for r in reports if not r.passed),
+                },
             )
 
     n_slides = len(summaries)
@@ -802,6 +912,19 @@ async def convert(
                     intended_total=edit_intended_total,
                     actual_total=edit_actual_total,
                 )
+            emit_progress(
+                cfg.progress_callback,
+                event="convert.editability.done",
+                stage="editability",
+                message="editability round-trip checked",
+                elapsed_seconds=round(time.perf_counter() - t_start, 3),
+                metrics={
+                    "passed": edit_passed,
+                    "intended_total": edit_intended_total,
+                    "actual_total": edit_actual_total,
+                    "failing_slides": edit_failing,
+                },
+            )
         except Exception as e:
             log.warning("api.editability_check_failed", error=str(e))
 
@@ -827,7 +950,8 @@ async def convert(
             intended_total=edit_intended_total,
         )
 
-    return ConversionResult(
+    elapsed = time.perf_counter() - t_start
+    result = ConversionResult(
         pptx_path=str(pptx_path),
         n_slides=n_slides,
         fidelity_reports=reports,
@@ -850,6 +974,25 @@ async def convert(
         coverage_gaps=coverage_gaps,
         exclusivity_violations=exclusivity_violations,
     )
+    emit_progress(
+        cfg.progress_callback,
+        event="convert.done",
+        stage="summary",
+        message=f"converted {n_slides} slide(s) in {elapsed:.2f}s",
+        current=n_slides,
+        total=n_slides,
+        path=str(pptx_path),
+        elapsed_seconds=round(elapsed, 3),
+        metrics={
+            "native_area_ratio": round(avg_native, 4),
+            "pattern_coverage": round(pattern_stats.coverage, 4),
+            "unmatched_signatures": len(unmatched_sorted),
+            "overflow": len(overflow_elements),
+            "coverage_gaps": len(coverage_gaps),
+            "editability_passed": edit_passed,
+        },
+    )
+    return result
 
 
 async def _process_one(

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slide 27 — CTA closing</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               -webkit-font-smoothing:antialiased; background:#050510; }
+  .slide {
+    width:1280px; height:720px; box-sizing:border-box;
+    position:relative; overflow:hidden;
+    font-family: Inter, system-ui, sans-serif;
+    color:#f5f5f7;
+    background:
+      radial-gradient(at 50% 50%, #2a1a5e 0%, #1e1b4b 22%, #14102e 45%, #0a0820 70%, #050510 90%);
+  }
+  .glow-a {
+    position:absolute; top:-220px; left:50%; transform:translateX(-50%);
+    width:900px; height:520px; border-radius:9999px;
+    background: radial-gradient(ellipse, rgba(192,132,252,0.40) 0%, rgba(99,102,241,0.22) 38%, rgba(6,182,212,0.10) 60%, transparent 78%);
+  }
+  .glow-b {
+    position:absolute; bottom:-200px; left:50%; transform:translateX(-50%);
+    width:920px; height:420px; border-radius:9999px;
+    background: radial-gradient(ellipse, rgba(236,72,153,0.28) 0%, rgba(192,132,252,0.16) 40%, transparent 72%);
+  }
+  .grid {
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 56px 56px, 56px 56px;
+    mask-image: radial-gradient(ellipse at 50% 50%, black 28%, transparent 78%);
+  }
+  .arcs { position:absolute; inset:0; pointer-events:none; }
+
+  .kicker {
+    position:absolute; top:96px; left:50%; transform:translateX(-50%);
+    display:inline-flex; align-items:center; gap:10px;
+    padding:7px 14px 7px 10px; border-radius:9999px;
+    background: rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.10);
+    font-size:13px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase;
+    color:#d4d4d8;
+  }
+  .kicker .dot { width:7px; height:7px; border-radius:9999px; background:#a3e635; box-shadow:0 0 12px rgba(163,230,53,0.7); }
+  .kicker em { color:#a1a1aa; font-style:normal; font-weight:600; letter-spacing:0.06em; }
+
+  h1 {
+    position:absolute; top:172px; left:0; right:0; margin:0;
+    text-align:center;
+    font-size:104px; font-weight:800;
+    letter-spacing:-0.04em; line-height:0.95;
+  }
+  h1 .grad {
+    background: linear-gradient(110deg, #818cf8 0%, #a78bfa 22%, #c084fc 48%, #f472b6 72%, #ec4899 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  h1 .em2 {
+    font-style:normal;
+    background: linear-gradient(110deg, #06b6d4 0%, #818cf8 70%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+
+  .lede {
+    position:absolute; top:382px; left:0; right:0; text-align:center;
+    color:#a1a1aa; font-size:19px; font-weight:400; line-height:1.55;
+  }
+  .lede b { color:#e4e4e7; font-weight:600; }
+
+  .ctas {
+    position:absolute; top:466px; left:0; right:0; display:flex; justify-content:center; gap:14px;
+  }
+  .btn {
+    display:inline-flex; align-items:center; gap:10px;
+    padding:16px 26px; border-radius:9999px;
+    font-size:16px; font-weight:600; letter-spacing:-0.005em;
+  }
+  .btn.primary {
+    background: linear-gradient(180deg, #ffffff 0%, #e4e4e7 100%);
+    color:#09090b;
+    box-shadow: 0 16px 44px rgba(255,255,255,0.22), 0 4px 8px rgba(0,0,0,0.30), inset 0 -1px 0 rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.80);
+  }
+  .btn.glow {
+    background: linear-gradient(110deg, #818cf8 0%, #c084fc 50%, #ec4899 100%);
+    color:#0a0820;
+    box-shadow: 0 16px 40px rgba(192,132,252,0.40), 0 4px 10px rgba(236,72,153,0.30), inset 0 -1px 0 rgba(0,0,0,0.20), inset 0 1px 0 rgba(255,255,255,0.40);
+  }
+  .btn .arrow { font-size:14px; opacity:0.7; }
+
+  .meta {
+    position:absolute; top:548px; left:0; right:0; text-align:center;
+    color:#71717a; font-size:13px;
+  }
+  .meta .sep { display:inline-block; width:3px; height:3px; border-radius:9999px; background:#3f3f46; margin: 0 12px; vertical-align:middle; }
+
+  .proof {
+    position:absolute; bottom:64px; left:0; right:0;
+    display:flex; align-items:center; justify-content:center; gap:14px;
+    opacity:0.85;
+  }
+  .proof .label {
+    font-size:11px; font-weight:700; color:#71717a; letter-spacing:0.18em; text-transform:uppercase;
+    margin-right:6px;
+  }
+  .logo {
+    padding:6px 12px; border-radius:9999px;
+    background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+    color:#a1a1aa; font-weight:700; font-size:12px; letter-spacing:0.12em;
+  }
+  .badge {
+    padding:6px 12px 6px 8px; border-radius:9999px;
+    background: rgba(163,230,53,0.10); border:1px solid rgba(163,230,53,0.25);
+    color:#a3e635; font-weight:700; font-size:12px; letter-spacing:0.06em;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .badge .d { width:6px; height:6px; border-radius:9999px; background:#a3e635; box-shadow:0 0 8px rgba(163,230,53,0.7); }
+
+  .stamp {
+    position:absolute; right:64px; bottom:24px;
+    display:flex; align-items:center; gap:10px;
+    font-size:12px; color:#52525b; letter-spacing:0.12em; text-transform:uppercase;
+  }
+  .stamp .bar { width:24px; height:1px; background:#3f3f46; }
+  .brand {
+    position:absolute; left:64px; bottom:24px;
+    display:flex; align-items:center; gap:10px;
+    color:#a1a1aa; font-weight:600; font-size:13px; letter-spacing:-0.01em;
+  }
+  .brand-mark {
+    width:18px; height:18px; border-radius:6px;
+    background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #ec4899 100%);
+    box-shadow: 0 4px 12px rgba(192,132,252,0.45), inset 0 1px 0 rgba(255,255,255,0.4);
+  }
+</style>
+</head>
+<body>
+<div class="slide" data-slidify-decorate="hero">
+  <div class="glow-a"></div>
+  <div class="glow-b"></div>
+  <div class="grid"></div>
+
+  <svg class="arcs" viewBox="0 0 1280 720" fill="none" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="cta-arc" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#06b6d4" stop-opacity="0"/>
+        <stop offset="0.5" stop-color="#c084fc" stop-opacity="0.45"/>
+        <stop offset="1" stop-color="#ec4899" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <path d="M 80 600 C 380 540, 880 540, 1200 600" stroke="url(#cta-arc)" stroke-width="1.4"/>
+    <path d="M 60 640 C 380 580, 900 580, 1220 640" stroke="url(#cta-arc)" stroke-width="1" stroke-opacity="0.6"/>
+    <path d="M 100 560 C 380 500, 880 500, 1180 560" stroke="url(#cta-arc)" stroke-width="0.8" stroke-opacity="0.4"/>
+  </svg>
+
+  <span class="kicker"><span class="dot"></span>READY WHEN YOU ARE<em>  ·  v4.7</em></span>
+
+  <h1>Ship the future,<br><span class="grad">faster than yesterday.</span></h1>
+
+  <div class="lede">Spin up your first deployment in <b>under 90 seconds.</b><br>30-day free trial · no credit card · cancel anytime.</div>
+
+  <div class="ctas">
+    <span class="btn primary">Start free<span class="arrow">→</span></span>
+    <span class="btn glow">Talk to an engineer<span class="arrow">→</span></span>
+  </div>
+
+  <div class="meta">
+    <span>Free for 30 days</span><span class="sep"></span>
+    <span>SOC 2 Type II</span><span class="sep"></span>
+    <span>HIPAA-ready</span><span class="sep"></span>
+    <span>31 regions</span>
+  </div>
+
+  <div class="proof">
+    <span class="label">Trusted by</span>
+    <span class="logo">NOTION</span>
+    <span class="logo">LINEAR</span>
+    <span class="logo">RAMP</span>
+    <span class="logo">VERCEL</span>
+    <span class="logo">CURSOR</span>
+    <span class="badge"><span class="d"></span>14,200 teams</span>
+  </div>
+
+  <div class="brand"><span class="brand-mark"></span><span>Lattice</span></div>
+  <div class="stamp"><span class="bar"></span><span>06 / Index</span></div>
+
+  <span data-pptx-role="title" style="position:absolute;left:-9999px;">Ship the future, faster than yesterday</span>
+</div>
+</body>
+</html>

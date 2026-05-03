@@ -5,10 +5,11 @@ description: Convert HTML decks into editable PPTX with the `slidify` CLI. Trigg
 
 # html-to-slides
 
-Convert HTML slide decks into PPTX where the maximum possible fraction of the
+Convert HTML slide decks into PPTX where the maximum useful fraction of the
 slide area is **editable PPTX primitives** (text frames, shapes, lines, native
-pictures), and only the irreducibly visual residue (gradients, complex SVGs,
-canvases) is rasterized.
+pictures), while irreducible visual residue is rasterized deliberately and at
+high quality. The goal is native-first editability plus designer-grade visual
+fidelity, not blind avoidance of raster.
 
 The work happens through the `slidify` CLI. This skill exists so a harness
 agent picks the right entry points and reads the right output fields, instead
@@ -45,6 +46,14 @@ slidify doctor --json           # confirm the runtime environment
 `slidify manifest` returns a stable JSON document that includes exit codes,
 env vars, examples, and the schema of `--json` payloads. **Read it once at
 session start** rather than guessing.
+
+`doctor` must include a passing `Chromium launch` check. If Chromium is present
+but cannot launch, run the repo target when available:
+
+```bash
+make playwright-deps
+make doctor
+```
 
 ## The standard recipe
 
@@ -112,7 +121,7 @@ The TL;DR:
 4. Use the **Inter** font; slidify embeds it.
 5. Prefer native primitives: gradients, `box-shadow`, `border-radius`, inline SVG with `<rect>/<circle>/<path>`.
 6. Add `data-slidify-decorate="hero|spotlight|aurora|orbit|glass|tactile|recessed"` to ~3–6 elements per slide for layered native effects.
-7. Avoid `background-image: url(...)`, `filter: blur(...)`, `<canvas>`, `@font-face`, arbitrary `transform: rotate()`, and `<table>` (use CSS grid).
+7. Avoid accidental raster triggers: `background-image: url(...)`, `filter: blur(...)`, `<canvas>`, `@font-face`, arbitrary `transform: rotate()`, and `<table>` (use CSS grid). If the user intentionally wants masks, blends, cinematic imagery, or canvas effects, preserve the visual and expect a hybrid/raster path rather than flattening the design.
 
 For deeper authoring guidance, the `slide-generator` agent in this repo is
 tuned for slidify and will produce dense, native-emit-friendly HTML.
@@ -151,15 +160,36 @@ Decision rules for the agent:
    or read `slidify guide troubleshooting --section "editability_passed"`.
 2. `native_area_ratio < 0.6` → the deck is mostly raster. Use
    `slidify guide authoring --section "What forces a raster"` to find
-   common offenders, fix HTML, retry.
+   common offenders. Fix accidental raster triggers, but keep intentional
+   image/effect layers and verify their fidelity.
 3. `overflow_elements` non-empty → each row carries a `hint` field with
    the smallest authoring fix (atom-keyed when an atom is implicated,
    viewport-math reminder otherwise). Apply the hint, re-render, retry.
    The pipeline already auto-allows overflow for `type.echo`,
    `type.longshadow`, `type.marquee`, and the `motion.*` atoms — anything
    still listed is a real authoring bug.
-4. `unmatched_signatures` non-empty AND user owns the corpus → suggest
-   running `slidify harvest <corpus_dir>` to surface new Tier-0 patterns.
+4. `unmatched_signatures` non-empty AND user owns the corpus → run or suggest
+   the bench loop. `make bench-harvest` writes `_bench/reports/harvest/bench-signals.json`
+   and `_bench/reports/harvest/bench-report.md`, with `editability_goal`,
+   `raster_fidelity_goal`, `render_strategy`, `promotion_priority`, and
+   concrete `pipeline_actions`.
+
+## Bench-driven improvement loop
+
+For pipeline work, do not inspect one deck in isolation. Build a corpus, harvest
+it, and use the report as the work queue:
+
+```bash
+make bench-index-all
+make bench-harvest
+make bench-render DECK=product-pitch
+```
+
+Interpret harvest strategies this way:
+
+- `native-atom` / `native-pattern`: promote repeated misses into editable recipes.
+- `hybrid-recipe` / `effect-aware-hybrid`: keep text/layout editable and rasterize only the irreducible effect layer.
+- `preserve-raster`: keep the pixel layer, but improve crop, transparency, resolution, and source-vs-PPTX regression coverage.
 
 ## Errors come with remediation
 
@@ -172,7 +202,7 @@ Failed runs in `--json` mode return:
   "stage": "convert",
   "_remediation": [
     "Run `slidify doctor` to verify Chromium is installed.",
-    "Install with: `playwright install chromium --with-deps`"
+    "Install with: `playwright install --with-deps chromium`"
   ]
 }
 ```

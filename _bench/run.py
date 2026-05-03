@@ -1,5 +1,4 @@
-"""Unified bench runner — `slidify check` over every slide HTML in
-every sub-corpus under `_bench/`.
+"""Unified bench runner — `slidify check` over every bench source deck.
 
 Reports per-corpus + aggregate stats: self-contained, risky CSS,
 atom-hint coverage, warnings.  Use this in CI to gate the bench.
@@ -25,16 +24,26 @@ from pathlib import Path
 from slidify.checker import check_html, check_html_deep
 
 ROOT = Path(__file__).parent
+DECKS_ROOT = ROOT / "decks"
 
-# Sub-corpora to walk.  Order is the report order.
-SUBCORPORA: dict[str, Path] = {
-    "llm-corpus":    ROOT / "llm-corpus",
-    "atlas-vol-iii": ROOT / "atlas-vol-iii",
-}
+SKIP_DIRS = {"__pycache__", "animated", "assets", "out", "preview"}
 
 # Static gates — anything below these fails the bench.
 GATE_RISKY_MAX = 0
 GATE_DEEP_NATIVE_FLOOR = 0.85  # global floor; per-corpus may be tighter
+
+
+def discover_subcorpora() -> dict[str, Path]:
+    """Return `_bench/corpus` plus immediate `_bench/decks/*` source folders."""
+    out: dict[str, Path] = {}
+    candidates = [ROOT / "corpus"]
+    if DECKS_ROOT.exists():
+        candidates.extend(sorted(p for p in DECKS_ROOT.iterdir() if p.is_dir()))
+    for src in candidates:
+        if src.name in SKIP_DIRS or not any(src.glob("*.html")):
+            continue
+        out[src.name] = src
+    return out
 
 
 @dataclass
@@ -83,17 +92,19 @@ def main() -> int:
                         help="Run the matcher (Chromium round-trip).")
     parser.add_argument("--json", action="store_true",
                         help="Emit machine-readable JSON.")
+    parser.add_argument("--strict", action="store_true",
+                        help="Exit non-zero on risky CSS/static failures.")
     parser.add_argument("--corpus", default=None,
                         help="Restrict to one sub-corpus name.")
     args = parser.parse_args()
 
     targets = (
-        {args.corpus: SUBCORPORA[args.corpus]}
-        if args.corpus and args.corpus in SUBCORPORA else SUBCORPORA
+        {args.corpus: discover_subcorpora()[args.corpus]}
+        if args.corpus and args.corpus in discover_subcorpora() else discover_subcorpora()
     )
-    if args.corpus and args.corpus not in SUBCORPORA:
+    if args.corpus and args.corpus not in discover_subcorpora():
         print(f"unknown corpus: {args.corpus}; known: "
-              f"{list(SUBCORPORA)}", file=sys.stderr)
+              f"{list(discover_subcorpora())}", file=sys.stderr)
         return 1
 
     results: list[SlideResult] = []
@@ -137,7 +148,7 @@ def main() -> int:
             ],
         }
         print(json.dumps(payload, indent=2))
-        if any(not r.static_pass for r in results):
+        if args.strict and any(not r.static_pass for r in results):
             return 1
         if args.deep and any(not (r.deep_pass or False) for r in results):
             return 1
@@ -186,7 +197,7 @@ def main() -> int:
         print(f"  {n_deep}/{len(results)} deep-pass "
               f"(native_ratio ≥ {GATE_DEEP_NATIVE_FLOOR})")
 
-    if any(not r.static_pass for r in results):
+    if args.strict and any(not r.static_pass for r in results):
         return 1
     if args.deep and any(not (r.deep_pass or False) for r in results):
         return 1

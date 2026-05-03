@@ -8,11 +8,12 @@ __pycache__/
 *.egg-info/
 build/
 dist/
-!_bench/dist/
 .coverage
 
 # uv
 .venv/
+.uv-cache/
+.ms-playwright/
 
 # Output artifacts
 *.pptx
@@ -50,4 +51,6 @@ _bench/corpus/out/
 _bench/corpus/_tmp_render/
 _bench/corpus_orig/
 _bench/fanout/
+_bench/generated/app-cache/
+_bench/generated/composed/
 _bench/prompts/_*.md

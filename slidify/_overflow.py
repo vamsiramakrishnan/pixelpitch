@@ -26,7 +26,6 @@ from __future__ import annotations
 
 from slidify.models import DomElement, OverflowElement
 
-
 # Tolerance for sub-pixel rounding in getBoundingClientRect(). Layout that
 # overflows by less than this is treated as flush-aligned and not reported.
 _TOLERANCE_PX = 1.0
@@ -86,6 +85,8 @@ def detect_overflow(
     out: list[OverflowElement] = []
     for el in elements:
         if el.pptx_skip or el.allow_overflow or el.id in auto_allowed:
+            continue
+        if el.is_offcanvas and not el.allow_overflow:
             continue
         # Resolve the nearest ancestor data-atom for the hint generator.
         nearest_atom = _nearest_atom(el, by_id)

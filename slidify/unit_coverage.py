@@ -142,6 +142,8 @@ def find_coverage_gaps(
             tag_u = (el.tag or "").upper()
             if tag_u in _NEVER_REPORT_TAGS:
                 continue
+            if el.is_offcanvas and not el.allow_overflow:
+                continue
             # Skip pseudo-element placeholders / non-text elements outright.
             text = (el.text or "").strip()
             if not text:

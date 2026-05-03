@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import math
 import re
 from pathlib import Path
 from urllib.parse import urlparse
@@ -201,6 +202,47 @@ def _emu_rect_offcanvas(b: BoundingBox) -> tuple[Emu, Emu, Emu, Emu]:
         Emu(px_to_emu(w)),
         Emu(px_to_emu(h)),
     )
+
+
+def _rotation_degrees(transform: str) -> float:
+    """Extract native 2D rotation degrees from CSS transform text."""
+    t = (transform or "").strip()
+    if not t or t.lower() == "none":
+        return 0.0
+    m = re.search(r"rotate\(\s*([-+]?\d*\.?\d+)(deg|rad|turn)?\s*\)", t, re.I)
+    if m:
+        value = float(m.group(1))
+        unit = (m.group(2) or "deg").lower()
+        if unit == "rad":
+            return math.degrees(value)
+        if unit == "turn":
+            return value * 360.0
+        return value
+    m = re.search(r"matrix\(\s*([^)]+)\)", t, re.I)
+    if not m:
+        return 0.0
+    parts = [p.strip() for p in m.group(1).split(",")]
+    if len(parts) < 4:
+        return 0.0
+    try:
+        a = float(parts[0])
+        b = float(parts[1])
+    except ValueError:
+        return 0.0
+    angle = math.degrees(math.atan2(b, a))
+    return 0.0 if abs(angle) < 0.01 else angle
+
+
+def _apply_rotation(shape, el: DomElement | None) -> None:
+    if el is None:
+        return
+    angle = _rotation_degrees(el.transform)
+    if not angle:
+        return
+    try:
+        shape.rotation = angle
+    except Exception:
+        pass
 
 
 class Emitter:
@@ -494,6 +536,7 @@ class Emitter:
         if not deco_stack.is_empty():
             deco_stack.emit_below(slide, emit_bbox)
         tb = slide.shapes.add_textbox(x, y, w, h)
+        _apply_rotation(tb, anchor)
         tf = tb.text_frame
         tf.word_wrap = True
         tf.margin_left = Emu(0)
@@ -621,6 +664,7 @@ class Emitter:
         (e.g. absolutely-positioned process-step labels)."""
         x, y, w, h = _emu_rect(e.bbox)
         tb = slide.shapes.add_textbox(x, y, w, h)
+        _apply_rotation(tb, e)
         tf = tb.text_frame
         tf.word_wrap = True
         tf.margin_left = Emu(0)
@@ -892,6 +936,7 @@ class Emitter:
         if not deco_stack.is_empty():
             deco_stack.emit_below(slide, op.bbox)
         shape = slide.shapes.add_shape(shape_kind, x, y, w, h)
+        _apply_rotation(shape, anchor)
         shape.line.fill.background()
         self._apply_fill(shape, anchor)
         self._apply_border(shape, anchor)
@@ -913,6 +958,7 @@ class Emitter:
         if not deco_stack.is_empty():
             deco_stack.emit_below(slide, op.bbox)
         shape = slide.shapes.add_shape(shape_kind, x, y, w, h)
+        _apply_rotation(shape, anchor_el)
         shape.line.fill.background()  # default to no border
         self._apply_fill(shape, anchor_el)
         self._apply_border(shape, anchor_el)
@@ -1541,7 +1587,6 @@ def _try_apply_gradient_text_fill(
         return False
     try:
         font.fill.gradient()
-        gradient_stops = font.fill.gradient_stops
     except Exception:
         return False
     # python-pptx pre-creates 2 stops; we may have more or fewer.

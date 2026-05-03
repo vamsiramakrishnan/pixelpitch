@@ -25,6 +25,7 @@ import click
 
 from slidify import __version__
 from slidify.api import ConversionConfig, convert
+from slidify.models import UnmatchedSignature
 
 # ---------------------------------------------------------------------------
 # convert
@@ -42,6 +43,19 @@ def _convert_options(fn):
         "--quiet", "-q",
         is_flag=True,
         help="Suppress the human summary; print only the output path.",
+    )(fn)
+    fn = click.option(
+        "--progress",
+        type=click.Choice(["plain", "jsonl", "both", "off"], case_sensitive=False),
+        default="plain",
+        show_default=True,
+        help="Emit LLM-readable progress events to stderr.",
+    )(fn)
+    fn = click.option(
+        "--progress-file",
+        type=click.Path(dir_okay=False, path_type=Path),
+        default=None,
+        help="Write progress events as JSONL to this file.",
     )(fn)
     fn = click.option("--report-json", type=click.Path(dir_okay=False, path_type=Path), default=None)(fn)
     fn = click.option(
@@ -109,7 +123,19 @@ def _run_convert(
     report_json: Path | None,
     quiet: bool,
     json_out: bool,
+    progress: str,
+    progress_file: Path | None,
 ) -> None:
+    from slidify.progress import ProgressReporter, progress_callback
+
+    progress_mode = progress.lower()
+    if json_out and progress_mode == "plain":
+        progress_mode = "off"
+    reporter = ProgressReporter(
+        mode=progress_mode,
+        stream=sys.stderr,
+        jsonl_path=progress_file,
+    )
     cfg = ConversionConfig(
         run_tier3=not no_tier3,
         run_oracle=not no_oracle,
@@ -121,6 +147,7 @@ def _run_convert(
         keep_plans_for_oracle=not low_memory,
         differential_render=not no_differential_render,
         embed_fonts=not no_embed_fonts,
+        progress_callback=progress_callback(reporter),
     )
 
     # Stdin input: `slidify convert - out.pptx` reads the deck from stdin.
@@ -152,6 +179,7 @@ def _run_convert(
             click.echo(click.style(f"slidify: conversion failed: {e}", fg="red"), err=True)
             for r in remediation:
                 click.echo(click.style("  → ", dim=True) + r, err=True)
+        reporter.close()
         sys.exit(2)
 
     if json_out:
@@ -173,7 +201,9 @@ def _run_convert(
 
     # Non-zero exit when the deck silently dropped shapes — useful for CI.
     if not result.editability_passed:
+        reporter.close()
         sys.exit(3)
+    reporter.close()
 
 
 def _error_remediation(exc: BaseException) -> list[str]:
@@ -580,6 +610,19 @@ def promote_unmatched_to_yaml(
         "output for piping into other tools."
     ),
 )
+@click.option(
+    "--progress",
+    type=click.Choice(["plain", "jsonl", "both", "off"], case_sensitive=False),
+    default="plain",
+    show_default=True,
+    help="Emit LLM-readable progress events to stderr.",
+)
+@click.option(
+    "--progress-file",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=None,
+    help="Write progress events as JSONL to this file.",
+)
 def harvest(
     input_path: Path,
     output_path: Path | None,
@@ -590,6 +633,8 @@ def harvest(
     promote_yaml: Path | None,
     min_count: int,
     json_out: bool,
+    progress: str,
+    progress_file: Path | None,
 ) -> None:
     """Run slidify across a corpus and emit clustered Tier-0 candidate atoms.
 
@@ -602,6 +647,7 @@ def harvest(
     See CONTRACT-v2 §G.3 for the clusters.json schema.
     """
     from slidify.harvester import aggregate_corpus, report_to_dict, write_report
+    from slidify.progress import ProgressReporter, progress_callback
 
     # `--json` mode means stdout must be parseable JSON for piping
     # (`slidify harvest <corpus> --json | jq ...`). Route every human-
@@ -635,7 +681,24 @@ def harvest(
         click.echo(f"slidify harvest: input path does not exist: {input_path}", err=True)
         sys.exit(2)
 
+    progress_mode = progress.lower()
+    if json_out and progress_mode == "plain":
+        progress_mode = "off"
+    reporter = ProgressReporter(
+        mode=progress_mode,
+        stream=sys.stderr,
+        jsonl_path=progress_file,
+    )
+
     _info(f"Harvesting {input_path}…")
+    reporter.emit(
+        {
+            "event": "harvest.start",
+            "stage": "setup",
+            "message": f"harvesting {input_path}",
+            "path": str(input_path),
+        }
+    )
 
     def _on_progress(path: Path, n_sigs: int) -> None:
         _info(f"  {path.name:<48} {n_sigs:>4d} unmatched")
@@ -644,6 +707,7 @@ def harvest(
         input_path,
         min_occurrences=min_occurrences,
         on_progress=_on_progress,
+        progress=progress_callback(reporter),
     )
 
     if report.decks_processed == 0:
@@ -679,6 +743,14 @@ def harvest(
 
     if output_path is not None:
         write_report(report, output_path, top_n=top_n)
+        reporter.emit(
+            {
+                "event": "harvest.write.done",
+                "stage": "write",
+                "message": f"wrote clusters JSON to {output_path}",
+                "path": str(output_path),
+            }
+        )
         _info("")
         _info(f"Wrote clusters.json   : {output_path}")
     if json_out:
@@ -720,6 +792,8 @@ def harvest(
         click.echo(
             f"\nPromoted {n_new} stub(s) (min_count={min_count}) → {promote_yaml}"
         )
+
+    reporter.close()
 
 
 # ---------------------------------------------------------------------------
@@ -891,6 +965,8 @@ def convert_cmd(
     report_json: Path | None,
     quiet: bool,
     json_out: bool,
+    progress: str,
+    progress_file: Path | None,
 ) -> None:
     """Convert INPUT_PATH (file or directory) to OUTPUT_PPTX.
 
@@ -909,7 +985,7 @@ def convert_cmd(
         input_path, output_pptx, no_tier3, no_oracle, llm_backend, llm_model,
         google_project, google_location, render_concurrency, low_memory,
         no_differential_render, no_embed_fonts, report_json,
-        quiet, json_out,
+        quiet, json_out, progress, progress_file,
     )
 
 
@@ -1198,8 +1274,6 @@ def doctor_cmd(json_out: bool) -> None:
         from playwright._impl._driver import compute_driver_executable  # type: ignore
 
         compute_driver_executable()
-        # We can't easily probe Chromium without launching it, but driver presence
-        # is a strong signal.
         check("Playwright driver", True, "available", optional=False)
     except Exception as e:
         check("Playwright driver", False, f"{type(e).__name__}: {e}", optional=False)
@@ -1212,10 +1286,28 @@ def doctor_cmd(json_out: bool) -> None:
         "Playwright Chromium",
         has_chromium,
         str(chromium_dir) if has_chromium else (
-            f"not found at {chromium_dir} — run `playwright install chromium`"
+            f"not found at {chromium_dir} — run `playwright install --with-deps chromium`"
         ),
         optional=False,
     )
+    if has_chromium:
+        try:
+            from playwright.sync_api import sync_playwright
+
+            with sync_playwright() as pw:
+                browser = pw.chromium.launch(headless=True)
+                page = browser.new_page(viewport={"width": 1280, "height": 720})
+                page.set_content("<!doctype html><title>slidify doctor</title>")
+                page.close()
+                browser.close()
+            check("Chromium launch", True, "smoke render passed", optional=False)
+        except Exception as e:
+            detail = (
+                f"{type(e).__name__}: {str(e).splitlines()[0]} — "
+                "run `make playwright-deps` or `playwright install --with-deps chromium`; "
+                "containerized/sandboxed shells may need the command outside the sandbox"
+            )
+            check("Chromium launch", False, detail, optional=False)
 
     # LLM backends — any one is enough; none is acceptable (raster fallback).
     llm_present = any([

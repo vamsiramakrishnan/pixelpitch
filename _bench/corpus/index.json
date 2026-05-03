@@ -1,0 +1,867 @@
+{
+  "version": 1,
+  "root": "_bench/corpus",
+  "slides": [
+    {
+      "id": "slide-01",
+      "number": 1,
+      "old_number": 1,
+      "file": "slide-01-state-of-the-union.html",
+      "title": "Wages and prices, 1994\u20132024",
+      "section": "editorial-data",
+      "section_title": "Editorial Data",
+      "rendering": "native-mixed",
+      "tags": [
+        "chart",
+        "data",
+        "editorial",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-02",
+      "number": 2,
+      "old_number": 2,
+      "file": "slide-02-the-deficit-two-ways.html",
+      "title": "The federal deficit, two ways",
+      "section": "editorial-data",
+      "section_title": "Editorial Data",
+      "rendering": "native-mixed",
+      "tags": [
+        "chart",
+        "data",
+        "editorial",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-03",
+      "number": 3,
+      "old_number": 3,
+      "file": "slide-03-housing-six-cities.html",
+      "title": "Housing affordability, six cities",
+      "section": "editorial-data",
+      "section_title": "Editorial Data",
+      "rendering": "native-mixed",
+      "tags": [
+        "chart",
+        "data",
+        "editorial",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-04",
+      "number": 4,
+      "old_number": 4,
+      "file": "slide-04-the-quiet-collapse.html",
+      "title": "The quiet collapse of local newsrooms",
+      "section": "editorial-data",
+      "section_title": "Editorial Data",
+      "rendering": "native-mixed",
+      "tags": [
+        "chart",
+        "data",
+        "editorial",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-05",
+      "number": 5,
+      "old_number": 5,
+      "file": "slide-05-broadband-by-state.html",
+      "title": "Where broadband still doesn't reach",
+      "section": "editorial-data",
+      "section_title": "Editorial Data",
+      "rendering": "native-mixed",
+      "tags": [
+        "chart",
+        "data",
+        "editorial",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-06",
+      "number": 6,
+      "old_number": 6,
+      "file": "slide-06-emissions-comparison.html",
+      "title": "Emissions pledges vs. delivery, G20",
+      "section": "editorial-data",
+      "section_title": "Editorial Data",
+      "rendering": "native-mixed",
+      "tags": [
+        "chart",
+        "data",
+        "editorial",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-07",
+      "number": 7,
+      "old_number": 7,
+      "file": "slide-07-cover-the-numbers.html",
+      "title": "The Numbers \u00b7 2026 Edition \u00b7 Cover",
+      "section": "editorial-data",
+      "section_title": "Editorial Data",
+      "rendering": "native-mixed",
+      "tags": [
+        "chart",
+        "cover",
+        "data",
+        "editorial",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-08",
+      "number": 8,
+      "old_number": 11,
+      "file": "slide-08-hero-number.html",
+      "title": "Slide 08 \u2014 38.6M",
+      "section": "keynote-core",
+      "section_title": "Keynote Core",
+      "rendering": "native-mixed",
+      "tags": [
+        "keynote",
+        "minimal"
+      ]
+    },
+    {
+      "id": "slide-09",
+      "number": 9,
+      "old_number": 12,
+      "file": "slide-09-title-reveal.html",
+      "title": "Slide 09 \u2014 One more thing",
+      "section": "keynote-core",
+      "section_title": "Keynote Core",
+      "rendering": "native-mixed",
+      "tags": [
+        "keynote",
+        "minimal"
+      ]
+    },
+    {
+      "id": "slide-10",
+      "number": 10,
+      "old_number": 13,
+      "file": "slide-10-spec-sheet.html",
+      "title": "Slide 10 \u2014 Spec sheet",
+      "section": "keynote-core",
+      "section_title": "Keynote Core",
+      "rendering": "native-mixed",
+      "tags": [
+        "keynote",
+        "minimal",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-11",
+      "number": 11,
+      "old_number": 14,
+      "file": "slide-11-was-now.html",
+      "title": "Slide 11 \u2014 Was / Now",
+      "section": "keynote-core",
+      "section_title": "Keynote Core",
+      "rendering": "native-mixed",
+      "tags": [
+        "keynote",
+        "minimal",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-12",
+      "number": 12,
+      "old_number": 15,
+      "file": "slide-12-feature-mosaic.html",
+      "title": "Slide 12 \u2014 Feature mosaic",
+      "section": "keynote-core",
+      "section_title": "Keynote Core",
+      "rendering": "native-mixed",
+      "tags": [
+        "keynote",
+        "minimal",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-13",
+      "number": 13,
+      "old_number": 16,
+      "file": "slide-13-pull-quote.html",
+      "title": "Slide 13 \u2014 Pull quote",
+      "section": "keynote-core",
+      "section_title": "Keynote Core",
+      "rendering": "native-mixed",
+      "tags": [
+        "keynote",
+        "minimal"
+      ]
+    },
+    {
+      "id": "slide-14",
+      "number": 14,
+      "old_number": 17,
+      "file": "slide-14-thank-you.html",
+      "title": "Slide 14 \u2014 Thank you",
+      "section": "keynote-core",
+      "section_title": "Keynote Core",
+      "rendering": "native-mixed",
+      "tags": [
+        "closing",
+        "keynote",
+        "minimal"
+      ]
+    },
+    {
+      "id": "slide-15",
+      "number": 15,
+      "old_number": 21,
+      "file": "slide-15-spec-sheet.html",
+      "title": "SPEC SHEET // RUNTIME-04",
+      "section": "technical-system",
+      "section_title": "Technical System",
+      "rendering": "native-mixed",
+      "tags": [
+        "brutalist",
+        "svg",
+        "technical"
+      ]
+    },
+    {
+      "id": "slide-16",
+      "number": 16,
+      "old_number": 22,
+      "file": "slide-16-schematic.html",
+      "title": "SCHEMATIC // INGEST PIPELINE",
+      "section": "technical-system",
+      "section_title": "Technical System",
+      "rendering": "native-mixed",
+      "tags": [
+        "brutalist",
+        "svg",
+        "technical"
+      ]
+    },
+    {
+      "id": "slide-17",
+      "number": 17,
+      "old_number": 23,
+      "file": "slide-17-density-grid.html",
+      "title": "DENSITY GRID // SUBSYSTEMS",
+      "section": "technical-system",
+      "section_title": "Technical System",
+      "rendering": "native-mixed",
+      "tags": [
+        "brutalist",
+        "svg",
+        "technical"
+      ]
+    },
+    {
+      "id": "slide-18",
+      "number": 18,
+      "old_number": 24,
+      "file": "slide-18-code-hero.html",
+      "title": "CODE HERO // norm-svc.rs",
+      "section": "technical-system",
+      "section_title": "Technical System",
+      "rendering": "native-mixed",
+      "tags": [
+        "brutalist",
+        "svg",
+        "technical"
+      ]
+    },
+    {
+      "id": "slide-19",
+      "number": 19,
+      "old_number": 25,
+      "file": "slide-19-status-board.html",
+      "title": "STATUS BOARD // FLEET-Z",
+      "section": "technical-system",
+      "section_title": "Technical System",
+      "rendering": "native-mixed",
+      "tags": [
+        "brutalist",
+        "svg",
+        "technical"
+      ]
+    },
+    {
+      "id": "slide-20",
+      "number": 20,
+      "old_number": 26,
+      "file": "slide-20-manifesto.html",
+      "title": "MANIFESTO // 09 LAWS",
+      "section": "technical-system",
+      "section_title": "Technical System",
+      "rendering": "native-mixed",
+      "tags": [
+        "brutalist",
+        "svg",
+        "technical"
+      ]
+    },
+    {
+      "id": "slide-21",
+      "number": 21,
+      "old_number": 27,
+      "file": "slide-21-dotmatrix-ladder.html",
+      "title": "DOT-MATRIX // LADDER",
+      "section": "technical-system",
+      "section_title": "Technical System",
+      "rendering": "native-mixed",
+      "tags": [
+        "brutalist",
+        "svg",
+        "technical"
+      ]
+    },
+    {
+      "id": "slide-22",
+      "number": 22,
+      "old_number": 31,
+      "file": "slide-22-hero-gradient.html",
+      "title": "Slide 22 \u2014 Hero",
+      "section": "saas-product",
+      "section_title": "SaaS Product",
+      "rendering": "native-mixed",
+      "tags": [
+        "effects",
+        "hero",
+        "landing",
+        "product",
+        "saas",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-23",
+      "number": 23,
+      "old_number": 32,
+      "file": "slide-23-stats-trio.html",
+      "title": "Slide 23 \u2014 Stats trio",
+      "section": "saas-product",
+      "section_title": "SaaS Product",
+      "rendering": "native-mixed",
+      "tags": [
+        "effects",
+        "product",
+        "saas",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-24",
+      "number": 24,
+      "old_number": 33,
+      "file": "slide-24-pricing-tiers.html",
+      "title": "Slide 24 \u2014 Pricing tiers",
+      "section": "saas-product",
+      "section_title": "SaaS Product",
+      "rendering": "native-mixed",
+      "tags": [
+        "effects",
+        "product",
+        "saas"
+      ]
+    },
+    {
+      "id": "slide-25",
+      "number": 25,
+      "old_number": 34,
+      "file": "slide-25-feature-bento.html",
+      "title": "Slide 25 \u2014 Feature bento",
+      "section": "saas-product",
+      "section_title": "SaaS Product",
+      "rendering": "native-mixed",
+      "tags": [
+        "effects",
+        "product",
+        "saas",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-26",
+      "number": 26,
+      "old_number": 35,
+      "file": "slide-26-quote-wall.html",
+      "title": "Slide 26 \u2014 Quote wall",
+      "section": "saas-product",
+      "section_title": "SaaS Product",
+      "rendering": "native-mixed",
+      "tags": [
+        "effects",
+        "product",
+        "saas",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-27",
+      "number": 27,
+      "old_number": 36,
+      "file": "slide-27-cta-closing.html",
+      "title": "Slide 27 \u2014 CTA closing",
+      "section": "saas-product",
+      "section_title": "SaaS Product",
+      "rendering": "native-mixed",
+      "tags": [
+        "closing",
+        "effects",
+        "landing",
+        "product",
+        "saas",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-28",
+      "number": 28,
+      "old_number": 37,
+      "file": "slide-28-logo-mosaic.html",
+      "title": "Slide 28 \u2014 Logo mosaic + divider",
+      "section": "saas-product",
+      "section_title": "SaaS Product",
+      "rendering": "native-mixed",
+      "tags": [
+        "effects",
+        "product",
+        "saas"
+      ]
+    },
+    {
+      "id": "slide-29",
+      "number": 29,
+      "old_number": 41,
+      "file": "slide-29-hero-blob-frame.html",
+      "title": "Slide 29 \u2014 A softer cadence",
+      "section": "organic-editorial",
+      "section_title": "Organic Editorial",
+      "rendering": "native-mixed",
+      "tags": [
+        "editorial",
+        "organic",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-30",
+      "number": 30,
+      "old_number": 42,
+      "file": "slide-30-story-pullquote.html",
+      "title": "Slide 30 \u2014 The morning we stopped rushing",
+      "section": "organic-editorial",
+      "section_title": "Organic Editorial",
+      "rendering": "native-mixed",
+      "tags": [
+        "editorial",
+        "organic",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-31",
+      "number": 31,
+      "old_number": 43,
+      "file": "slide-31-ritual-steps.html",
+      "title": "Slide 31 \u2014 A small daily ritual",
+      "section": "organic-editorial",
+      "section_title": "Organic Editorial",
+      "rendering": "native-mixed",
+      "tags": [
+        "editorial",
+        "organic",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-32",
+      "number": 32,
+      "old_number": 44,
+      "file": "slide-32-feature-breathing.html",
+      "title": "Slide 32 \u2014 Made for the long breath",
+      "section": "organic-editorial",
+      "section_title": "Organic Editorial",
+      "rendering": "native-mixed",
+      "tags": [
+        "editorial",
+        "organic",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-33",
+      "number": 33,
+      "old_number": 45,
+      "file": "slide-33-quote-testimonial.html",
+      "title": "Slide 33 \u2014 Testimonial",
+      "section": "organic-editorial",
+      "section_title": "Organic Editorial",
+      "rendering": "native-mixed",
+      "tags": [
+        "editorial",
+        "organic",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-34",
+      "number": 34,
+      "old_number": 46,
+      "file": "slide-34-call-to-rest.html",
+      "title": "Slide 34 \u2014 A gentle invitation",
+      "section": "organic-editorial",
+      "section_title": "Organic Editorial",
+      "rendering": "native-mixed",
+      "tags": [
+        "editorial",
+        "organic",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-35",
+      "number": 35,
+      "old_number": 47,
+      "file": "slide-35-manifesto-values.html",
+      "title": "Slide 35 \u2014 What we believe",
+      "section": "organic-editorial",
+      "section_title": "Organic Editorial",
+      "rendering": "native-mixed",
+      "tags": [
+        "editorial",
+        "organic",
+        "svg"
+      ]
+    },
+    {
+      "id": "slide-36",
+      "number": 36,
+      "old_number": 51,
+      "file": "slide-36-strategic-matrix.html",
+      "title": "Vendor positioning matrix",
+      "section": "consulting-strategy",
+      "section_title": "Consulting Strategy",
+      "rendering": "native-mixed",
+      "tags": [
+        "consulting",
+        "strategy"
+      ]
+    },
+    {
+      "id": "slide-37",
+      "number": 37,
+      "old_number": 52,
+      "file": "slide-37-stacked-bar.html",
+      "title": "Spend mix by buyer segment",
+      "section": "consulting-strategy",
+      "section_title": "Consulting Strategy",
+      "rendering": "native-mixed",
+      "tags": [
+        "consulting",
+        "strategy"
+      ]
+    },
+    {
+      "id": "slide-38",
+      "number": 38,
+      "old_number": 53,
+      "file": "slide-38-comparison-table.html",
+      "title": "Operating model comparison",
+      "section": "consulting-strategy",
+      "section_title": "Consulting Strategy",
+      "rendering": "native-mixed",
+      "tags": [
+        "consulting",
+        "strategy"
+      ]
+    },
+    {
+      "id": "slide-39",
+      "number": 39,
+      "old_number": 54,
+      "file": "slide-39-numbered-insights.html",
+      "title": "Five forces reshaping the category",
+      "section": "consulting-strategy",
+      "section_title": "Consulting Strategy",
+      "rendering": "native-mixed",
+      "tags": [
+        "consulting",
+        "strategy"
+      ]
+    },
+    {
+      "id": "slide-40",
+      "number": 40,
+      "old_number": 55,
+      "file": "slide-40-waterfall.html",
+      "title": "EBITDA bridge FY24 to FY27",
+      "section": "consulting-strategy",
+      "section_title": "Consulting Strategy",
+      "rendering": "native-mixed",
+      "tags": [
+        "consulting",
+        "strategy"
+      ]
+    },
+    {
+      "id": "slide-41",
+      "number": 41,
+      "old_number": 56,
+      "file": "slide-41-cover.html",
+      "title": "Cover \u2014 Enterprise Software Practice 2026 Outlook",
+      "section": "consulting-strategy",
+      "section_title": "Consulting Strategy",
+      "rendering": "native-mixed",
+      "tags": [
+        "consulting",
+        "cover",
+        "strategy"
+      ]
+    },
+    {
+      "id": "slide-42",
+      "number": 42,
+      "old_number": 57,
+      "file": "slide-42-ranking.html",
+      "title": "Top 10 capability gaps",
+      "section": "consulting-strategy",
+      "section_title": "Consulting Strategy",
+      "rendering": "native-mixed",
+      "tags": [
+        "consulting",
+        "strategy"
+      ]
+    },
+    {
+      "id": "slide-43",
+      "number": 43,
+      "old_number": 61,
+      "file": "slide-43-magazine-cover-mask.html",
+      "title": "Slide 43 \u2014 Magazine Cover, Text-as-Image-Mask",
+      "section": "magazine-image",
+      "section_title": "Magazine Image",
+      "rendering": "raster-rich",
+      "tags": [
+        "effects",
+        "image-led",
+        "magazine",
+        "photo"
+      ]
+    },
+    {
+      "id": "slide-44",
+      "number": 44,
+      "old_number": 62,
+      "file": "slide-44-magazine-spread.html",
+      "title": "Slide 44 \u2014 Magazine Spread",
+      "section": "magazine-image",
+      "section_title": "Magazine Image",
+      "rendering": "raster-rich",
+      "tags": [
+        "image-led",
+        "magazine",
+        "photo"
+      ]
+    },
+    {
+      "id": "slide-45",
+      "number": 45,
+      "old_number": 63,
+      "file": "slide-45-photo-essay-caption.html",
+      "title": "Slide 45 \u2014 Photo Essay Caption",
+      "section": "magazine-image",
+      "section_title": "Magazine Image",
+      "rendering": "raster-rich",
+      "tags": [
+        "effects",
+        "image-led",
+        "magazine",
+        "photo"
+      ]
+    },
+    {
+      "id": "slide-46",
+      "number": 46,
+      "old_number": 64,
+      "file": "slide-46-pull-quote-faded.html",
+      "title": "Slide 46 \u2014 Photo + Giant Pull-Quote",
+      "section": "magazine-image",
+      "section_title": "Magazine Image",
+      "rendering": "raster-rich",
+      "tags": [
+        "effects",
+        "image-led",
+        "magazine",
+        "photo"
+      ]
+    },
+    {
+      "id": "slide-47",
+      "number": 47,
+      "old_number": 65,
+      "file": "slide-47-mosaic-gallery.html",
+      "title": "Slide 47 \u2014 Mosaic Gallery + Headline Sidebar",
+      "section": "magazine-image",
+      "section_title": "Magazine Image",
+      "rendering": "raster-rich",
+      "tags": [
+        "image-led",
+        "magazine",
+        "photo"
+      ]
+    },
+    {
+      "id": "slide-48",
+      "number": 48,
+      "old_number": 66,
+      "file": "slide-48-duotone-hero.html",
+      "title": "Slide 48 \u2014 Duotone Hero",
+      "section": "magazine-image",
+      "section_title": "Magazine Image",
+      "rendering": "raster-rich",
+      "tags": [
+        "effects",
+        "image-led",
+        "magazine",
+        "photo"
+      ]
+    },
+    {
+      "id": "slide-49",
+      "number": 49,
+      "old_number": 67,
+      "file": "slide-49-text-wrap-stress.html",
+      "title": "Text Wrap Stress",
+      "section": "magazine-image",
+      "section_title": "Magazine Image",
+      "rendering": "native-mixed",
+      "tags": [
+        "image-led",
+        "magazine",
+        "stress-test",
+        "text"
+      ]
+    }
+  ],
+  "decks": [
+    {
+      "id": "editorial-brief",
+      "title": "Editorial Brief",
+      "description": "A data-journalism sequence with headline charts and a cover.",
+      "slides": [
+        "slide-01",
+        "slide-02",
+        "slide-03",
+        "slide-04",
+        "slide-05",
+        "slide-06",
+        "slide-07"
+      ]
+    },
+    {
+      "id": "product-pitch",
+      "title": "Product Pitch",
+      "description": "Hero, proof, pricing, feature depth, social proof, and CTA.",
+      "slides": [
+        "slide-22",
+        "slide-23",
+        "slide-24",
+        "slide-25",
+        "slide-26",
+        "slide-27",
+        "slide-28"
+      ]
+    },
+    {
+      "id": "quiet-editorial",
+      "title": "Quiet Editorial",
+      "description": "Organic story slides with soft layouts and refined typography.",
+      "slides": [
+        "slide-29",
+        "slide-30",
+        "slide-31",
+        "slide-32",
+        "slide-33",
+        "slide-34",
+        "slide-35"
+      ]
+    },
+    {
+      "id": "strategy-review",
+      "title": "Strategy Review",
+      "description": "Consulting-style matrix, bars, tables, insights, waterfall, cover, and ranking.",
+      "slides": [
+        "slide-36",
+        "slide-37",
+        "slide-38",
+        "slide-39",
+        "slide-40",
+        "slide-41",
+        "slide-42"
+      ]
+    },
+    {
+      "id": "image-led-magazine",
+      "title": "Image-Led Magazine",
+      "description": "Designer-grade image, mask, photo, blend, and editorial spread specimens.",
+      "slides": [
+        "slide-43",
+        "slide-44",
+        "slide-45",
+        "slide-46",
+        "slide-47",
+        "slide-48"
+      ]
+    },
+    {
+      "id": "fidelity-stress",
+      "title": "Fidelity Stress Mix",
+      "description": "A balanced set for exercising native, SVG, raster, typography, and wrapping paths.",
+      "slides": [
+        "slide-06",
+        "slide-13",
+        "slide-19",
+        "slide-25",
+        "slide-34",
+        "slide-43",
+        "slide-48",
+        "slide-49"
+      ]
+    }
+  ],
+  "catalogs": [
+    {
+      "id": "landing-atoms",
+      "file": "landing-atoms.html",
+      "title": "Atomic Visual Catalog"
+    },
+    {
+      "id": "landing-fonts",
+      "file": "landing-fonts.html",
+      "title": "Typographic Register Catalog"
+    },
+    {
+      "id": "landing-probe",
+      "file": "landing-probe.html",
+      "title": "Renderer Probe Catalog"
+    },
+    {
+      "id": "landing-recipes",
+      "file": "landing-recipes.html",
+      "title": "Composable Recipe Catalog"
+    },
+    {
+      "id": "sophisticated",
+      "file": "sophisticated.html",
+      "title": "Sophisticated Product Deck"
+    }
+  ]
+}

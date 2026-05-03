@@ -28,6 +28,7 @@ def _el(
     background_color: str = "rgba(0, 0, 0, 0)",
     data_atom: str = "",
     allow_overflow: bool = False,
+    is_offcanvas: bool = False,
 ) -> DomElement:
     return DomElement(
         id=eid,
@@ -39,6 +40,7 @@ def _el(
         background_color=background_color,
         data_atom=data_atom,
         allow_overflow=allow_overflow,
+        is_offcanvas=is_offcanvas,
     )
 
 
@@ -140,5 +142,17 @@ def test_explicit_allow_overflow_short_circuits_inheritance_check():
         tag="DIV",
         background_color="rgb(0, 0, 255)",
         allow_overflow=True,
+    )
+    assert detect_overflow(0, [el], 1280, 720) == []
+
+
+def test_offcanvas_semantic_text_is_not_overflow():
+    el = _el(
+        1,
+        None,
+        BoundingBox(x=-9999, y=700, w=600, h=20),
+        tag="SPAN",
+        text="semantic title for metadata",
+        is_offcanvas=True,
     )
     assert detect_overflow(0, [el], 1280, 720) == []

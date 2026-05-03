@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slide 48 — Duotone Hero</title>
+<style>
+  html, body { margin:0; padding:0; width:1280px; height:720px;
+               -webkit-font-smoothing:antialiased; background:#0a1422; }
+  .slide {
+    width:1280px; height:720px; box-sizing:border-box;
+    position:relative; overflow:hidden;
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    background:#0a1422;
+    color:#fff;
+  }
+  /* DUOTONE: grayscale photo + multiply colored overlay */
+  .photo {
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit:cover;
+    filter: grayscale(1) contrast(1.25) brightness(1.05);
+  }
+  .duotone-blue {
+    position:absolute; inset:0;
+    background:#1e5f8c; /* deep teal-blue */
+    mix-blend-mode: multiply;
+  }
+  .duotone-highlight {
+    position:absolute; inset:0;
+    background: linear-gradient(135deg, #ff5b1f 0%, transparent 55%);
+    mix-blend-mode: screen;
+    opacity:0.55;
+  }
+  .vignette {
+    position:absolute; inset:0;
+    background: radial-gradient(ellipse at 60% 45%,
+      transparent 30%,
+      rgba(5,12,24,0.55) 100%);
+  }
+  /* Type bleeds across photo, no decoration */
+  .frame {
+    position:absolute; inset:48px;
+    border:1px solid rgba(255,255,255,0.18);
+    pointer-events:none;
+  }
+  .nav {
+    position:absolute; top:64px; left:80px; right:80px;
+    display:flex; align-items:baseline; justify-content:space-between;
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    font-size:11px; font-weight:600; letter-spacing:0.32em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.78);
+  }
+  .nav .mark {
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    font-size:14px; font-weight:800; letter-spacing:0.04em;
+    color:#fff;
+    text-transform:uppercase;
+  }
+  .corner-tag {
+    position:absolute; top:120px; left:80px;
+    width:46px; height:46px;
+    display:flex; align-items:center; justify-content:center;
+    background:#ff5b1f;
+    color:#0a1422;
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    font-size:14px; font-weight:900; letter-spacing:-0.02em;
+  }
+  .kicker {
+    position:absolute; top:130px; left:148px;
+    font-size:12px; font-weight:600; letter-spacing:0.36em;
+    text-transform:uppercase;
+    color:#ff5b1f;
+  }
+  .sub-kicker {
+    position:absolute; top:152px; left:148px;
+    font-size:11px; font-weight:500; letter-spacing:0.18em;
+    color:rgba(255,255,255,0.78);
+    font-style:italic;
+    text-transform:none;
+  }
+  .head {
+    position:absolute; left:80px; right:80px; top:240px;
+    margin:0;
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    font-size:148px; line-height:0.92; font-weight:900;
+    letter-spacing:-0.05em;
+    color:#fff;
+  }
+  .head em {
+    font-family: 'Tiempos Headline', 'Source Serif Pro', Georgia, serif;
+    font-style:italic;
+    font-weight:400;
+    color:#ff5b1f;
+  }
+  .lede {
+    position:absolute; left:80px; bottom:128px;
+    width:540px;
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    font-size:15px; line-height:1.55; font-weight:400;
+    color:rgba(255,255,255,0.92);
+  }
+  .footer {
+    position:absolute; left:80px; right:80px; bottom:64px;
+    display:flex; align-items:center; justify-content:space-between;
+    font-size:10px; font-weight:600; letter-spacing:0.32em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.6);
+  }
+  .stamp {
+    position:absolute; right:80px; bottom:128px;
+    text-align:right;
+    font-family: 'Inter Display', 'Inter', sans-serif;
+  }
+  .stamp .num {
+    font-size:84px; font-weight:900; letter-spacing:-0.04em;
+    line-height:0.9; color:#fff;
+  }
+  .stamp .lbl {
+    font-size:10px; font-weight:600; letter-spacing:0.32em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.6);
+    margin-top:6px;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  <img class="photo"
+       src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=1280"
+       alt="Hero photograph, duotoned">
+  <div class="duotone-blue"></div>
+  <div class="duotone-highlight"></div>
+  <div class="vignette"></div>
+
+  <div class="frame"></div>
+
+  <div class="nav">
+    <span class="mark">A24 / FILMS</span>
+    <span>Dossier &middot; 026</span>
+    <span>In selected cinemas &middot; 04.30.26</span>
+  </div>
+
+  <div class="corner-tag">06</div>
+  <div class="kicker">A film by R. Sayre</div>
+  <div class="sub-kicker">a study in three nights</div>
+
+  <h1 class="head" data-pptx-role="title">
+    THE&nbsp;<em>Quiet</em><br>HOURS.
+  </h1>
+
+  <p class="lede">
+    A widow, a locksmith, and a stretch of coastal
+    highway no one drives anymore. Photographed in
+    8mm and 65mm. Scored by Hildur Gudnadottir.
+  </p>
+
+  <div class="stamp">
+    <div class="num">88<span style="color:#ff5b1f">.</span></div>
+    <div class="lbl">Minutes / 65mm</div>
+  </div>
+
+  <div class="footer">
+    <span>An A24 / Plan B production</span>
+    <span>Critic&rsquo;s Pick &mdash; The Atlantic</span>
+    <span>Press Materials / Confidential</span>
+  </div>
+</div>
+</body>
+</html>
