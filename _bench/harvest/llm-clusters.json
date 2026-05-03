@@ -1,0 +1,609 @@
+{
+  "harvest_run": {
+    "timestamp": "2026-05-03T01:55:30+00:00",
+    "corpus_dir": "/home/user/pixelpitch/_bench/llm-corpus",
+    "decks_processed": 22,
+    "total_unmatched": 23,
+    "unique_signatures": 22
+  },
+  "clusters": [
+    {
+      "id": "auto-cluster-001",
+      "sig_hash": "ef939804a902d858",
+      "signature": "button(bg+txt+r8+face=sans)[][128x32]",
+      "instances": 2,
+      "exemplars": [
+        "01-vd-hero.html#node-1",
+        "10-vd-closing.html#node-0"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "Get the CLI \u2192",
+        "Read the docs \u2192"
+      ],
+      "bbox_typical": {
+        "w_avg": 150.0,
+        "h_avg": 48.0,
+        "w_min": 139,
+        "w_max": 161,
+        "h_min": 48,
+        "h_max": 48
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-002",
+      "sig_hash": "7761674521e76ef2",
+      "signature": "button(brd+txt+r8+face=sans)[][128x32]",
+      "instances": 1,
+      "exemplars": [
+        "01-vd-hero.html#node-0"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "Watch the demo"
+      ],
+      "bbox_typical": {
+        "w_avg": 157.0,
+        "h_avg": 48.0,
+        "w_min": 157,
+        "w_max": 157,
+        "h_min": 48,
+        "h_max": 48
+      },
+      "candidate_atom_id": "text.banner-bordered",
+      "candidate_axis": "text",
+      "candidate_props": {
+        "border": true
+      },
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-003",
+      "sig_hash": "d05edaa4cf694845",
+      "signature": "p(txt+face=sans)[][1024x0]",
+      "instances": 1,
+      "exemplars": [
+        "05-vd-dashboard.html#node-0"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "surf.bento-cell now defaults to surface-3 (#16162a) so cards"
+      ],
+      "bbox_typical": {
+        "w_avg": 1078.0,
+        "h_avg": 20.0,
+        "w_min": 1078,
+        "w_max": 1078,
+        "h_min": 20,
+        "h_max": 20
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-004",
+      "sig_hash": "5e941d134985ca2f",
+      "signature": "button(bg+txt+r8+face=sans)[][256x32]",
+      "instances": 1,
+      "exemplars": [
+        "10-vd-closing.html#node-1"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "curl -fsSL https://slidify.sh/install | sh"
+      ],
+      "bbox_typical": {
+        "w_avg": 304.0,
+        "h_avg": 48.0,
+        "w_min": 304,
+        "w_max": 304,
+        "h_min": 48,
+        "h_max": 48
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-005",
+      "sig_hash": "c26b1d13eec594f9",
+      "signature": "div(bgi=grad/n3/d180+brd-asymR)[]<3>[640x448]{div(bg+txt+face=mono+tr=widest)[][0x0],div(txt+face=serif+tr=tight)[][192x64],h3(txt+face=serif)[][192x0],li(brd-asymB)[][512x32]{span(txt+face=sans)[][0x0],span(txt+face=sans)[][128x0]},li(brd-asymB)[][512x32]{span(txt+face=sans)[][0x0],span(txt+face=sans)[][128x0]},li(brd-asymB)[][512x32]{span(txt+face=sans)[][0x0],span(txt+face=sans)[][192x0]},li(brd-asymB)[][512x32]{span(txt+face=sans)[][0x0],span(txt+face=sans)[][192x0]},li(brd-asymB)[][512x32]{span(txt+face=sans)[][0x0],span(txt+face=sans)[][192x0]}}",
+      "instances": 1,
+      "exemplars": [
+        "12-paper-comparison.html#node-0"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "2014"
+      ],
+      "bbox_typical": {
+        "w_avg": 665.0,
+        "h_avg": 470.0,
+        "w_min": 665,
+        "w_max": 665,
+        "h_min": 470,
+        "h_max": 470
+      },
+      "candidate_atom_id": "surf.unmatched-c26b1d13",
+      "candidate_axis": "surf",
+      "candidate_props": {
+        "border": true,
+        "gradient": true
+      },
+      "candidate_confidence": 0.15,
+      "candidate_reason": "no class/shape signal \u2014 falling back to sig_hash stem"
+    },
+    {
+      "id": "auto-cluster-006",
+      "sig_hash": "27f779de5977c9a8",
+      "signature": "div(txt+txtc+face=serif)[][1088x0]",
+      "instances": 1,
+      "exemplars": [
+        "13-paper-research.html#node-0"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "Figure 4. Tier-0 (atoms) carries the conversion. The\n       "
+      ],
+      "bbox_typical": {
+        "w_avg": 1136.0,
+        "h_avg": 20.0,
+        "w_min": 1136,
+        "w_max": 1136,
+        "h_min": 20,
+        "h_max": 20
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-007",
+      "sig_hash": "a5c7734f9dd43e1a",
+      "signature": "td(txt+face=sans)[][256x32]",
+      "instances": 1,
+      "exemplars": [
+        "14-paper-leaderboard.html#node-0"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "Image only"
+      ],
+      "bbox_typical": {
+        "w_avg": 270.0,
+        "h_avg": 56.0,
+        "w_min": 270,
+        "w_max": 270,
+        "h_min": 56,
+        "h_max": 56
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-008",
+      "sig_hash": "c558c6bd766e5ef6",
+      "signature": "td(txt+face=serif)[][0x32]",
+      "instances": 1,
+      "exemplars": [
+        "14-paper-leaderboard.html#node-1"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "6"
+      ],
+      "bbox_typical": {
+        "w_avg": 48.0,
+        "h_avg": 56.0,
+        "w_min": 48,
+        "w_max": 48,
+        "h_min": 56,
+        "h_max": 56
+      },
+      "candidate_atom_id": "dec.glyph",
+      "candidate_axis": "dec",
+      "candidate_props": {},
+      "candidate_confidence": 0.4,
+      "candidate_reason": "small square bbox"
+    },
+    {
+      "id": "auto-cluster-009",
+      "sig_hash": "d50e021ff1365b56",
+      "signature": "table(brd-asymT)[]<2>[1088x352]{tr(bg+brd-asymB)[]<1>[1088x32]{div(bg)[][192x0]{div(bg)[][128x0]},td()[][256x32]{span(bg+txt+face=sans+tr=widest)[][64x0]},td(txt+face=mono)[][64x32],td(txt+face=sans)[][256x32],td(txt+face=serif)[][0x32]},tr(brd-asymB)[]<1>[1088x32]{div(bg)[][192x0]{div(bg)[][0x0]},td(txt+face=mono)[][64x32],td(txt+face=sans)[][256x32],td(txt+face=sans)[][256x32],td(txt+face=serif)[][0x32]},tr(brd-asymB)[]<1>[1088x32]{div(bg)[][192x0]{div(bg)[][128x0]},td(txt+face=mono)[][64x32],td(txt+face=sans)[][256x32],td(txt+face=sans)[][256x32],td(txt+face=serif)[][0x32]},tr(brd-asymB)[]<1>[1088x32]{div(bg)[][192x0]{div(bg)[][128x0]},td(txt+face=mono)[][64x32],td(txt+face=sans)[][256x32],td(txt+face=sans)[][256x32],td(txt+face=serif)[][0x32]},tr(brd-asymB)[]<1>[1088x32]{div(bg)[][192x0]{div(bg)[][64x0]},td(txt+face=mono)[][64x32],td(txt+face=sans)[][256x32],td(txt+face=sans)[][256x32],td(txt+face=serif)[][0x32]},tr(brd-asymB)[]<1>[1088x32]{div(bg)[][192x0]{div(bg)[][64x0]},td(txt+face=mono)[][64x32],td(txt+face=sans)[][256x32],td(txt+face=sans)[][256x32],td(txt+face=serif)[][0x32]},tr(brd-asymB)[][1088x32]{th(txt+face=mono+tr=widest)[][0x32],th(txt+face=mono+tr=widest)[][256x32],th(txt+face=mono+tr=widest)[][256x32],th(txt+face=mono+tr=widest)[][384x32],th(txt+face=mono+tr=widest)[][64x32]}}",
+      "instances": 1,
+      "exemplars": [
+        "14-paper-leaderboard.html#node-2"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "RK"
+      ],
+      "bbox_typical": {
+        "w_avg": 1120.0,
+        "h_avg": 370.0,
+        "w_min": 1120,
+        "w_max": 1120,
+        "h_min": 370,
+        "h_max": 370
+      },
+      "candidate_atom_id": "text.banner-bordered",
+      "candidate_axis": "text",
+      "candidate_props": {
+        "border": true
+      },
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-010",
+      "sig_hash": "0f76d1e9d1b63f2f",
+      "signature": "p(txt+face=serif)[][256x32]",
+      "instances": 1,
+      "exemplars": [
+        "15-paper-lucide-dash.html#node-0"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "0.12%"
+      ],
+      "bbox_typical": {
+        "w_avg": 268.0,
+        "h_avg": 42.0,
+        "w_min": 268,
+        "w_max": 268,
+        "h_min": 42,
+        "h_max": 42
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-011",
+      "sig_hash": "a265357fb8e68b5b",
+      "signature": "aside(bg+brd-asymR)[]<1>[192x704]{div(bg+brd+r8)[]<1>[192x64]{p(txt+txtc+face=sans)[][128x32],span(txt+face=sans+tr=widest)[][0x0],svg(svg/5+tr=widest)[]<1>[0x0]},div(bg+r8)[][192x32]{span(txt+face=sans)[][0x0],svg(svg/3)[][0x0]},div(brd-asymB)[][192x32]{div(bg+r8)[][0x0]{svg(svg/1)[]<1>[0x0]},div(txt+face=serif)[][64x0]},div(r8)[][192x32]{span(txt+face=sans)[][0x0],svg(svg/2)[]<2>[0x0]},div(r8)[][192x32]{span(txt+face=sans)[][0x0],svg(svg/2)[]<2>[0x0]},div(r8)[][192x32]{span(txt+face=sans)[][0x0],svg(svg/2)[]<2>[0x0]},div(r8)[][192x32]{span(txt+face=sans)[][64x0],svg(svg/1)[]<1>[0x0]},div(r8)[][192x32]{span(txt+face=sans)[][64x0],svg(svg/3)[]<2>[0x0]}}",
+      "instances": 1,
+      "exemplars": [
+        "15-paper-lucide-dash.html#node-1"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "Pitch \u00b7 Console"
+      ],
+      "bbox_typical": {
+        "w_avg": 240.0,
+        "h_avg": 720.0,
+        "w_min": 240,
+        "w_max": 240,
+        "h_min": 720,
+        "h_max": 720
+      },
+      "candidate_atom_id": "dec.illustration-vector",
+      "candidate_axis": "dec",
+      "candidate_props": {
+        "vector": true
+      },
+      "candidate_confidence": 0.45,
+      "candidate_reason": "large svg/canvas bbox"
+    },
+    {
+      "id": "auto-cluster-012",
+      "sig_hash": "3eada29869ae644f",
+      "signature": "div(txt+face=display)[][64x64]",
+      "instances": 1,
+      "exemplars": [
+        "16-mag-cover.html#node-0"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "PP / 04"
+      ],
+      "bbox_typical": {
+        "w_avg": 120.0,
+        "h_avg": 88.0,
+        "w_min": 120,
+        "w_max": 120,
+        "h_min": 88,
+        "h_max": 88
+      },
+      "candidate_atom_id": "surf.unmatched-3eada298",
+      "candidate_axis": "surf",
+      "candidate_props": {},
+      "candidate_confidence": 0.15,
+      "candidate_reason": "no class/shape signal \u2014 falling back to sig_hash stem"
+    },
+    {
+      "id": "auto-cluster-013",
+      "sig_hash": "47aadf7d63fc5ad0",
+      "signature": "div(brd-asymT)[][1280x96]{div(txt+brd-asymL+face=serif)[][704x0],div(txt+face=display)[][64x64]}",
+      "instances": 1,
+      "exemplars": [
+        "16-mag-cover.html#node-1"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "PP / 04"
+      ],
+      "bbox_typical": {
+        "w_avg": 1280.0,
+        "h_avg": 120.0,
+        "w_min": 1280,
+        "w_max": 1280,
+        "h_min": 120,
+        "h_max": 120
+      },
+      "candidate_atom_id": "text.banner-bordered",
+      "candidate_axis": "text",
+      "candidate_props": {
+        "border": true
+      },
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-014",
+      "sig_hash": "8bf2c6d1163c3114",
+      "signature": "div(txt+txtc+face=display)[][448x32]",
+      "instances": 1,
+      "exemplars": [
+        "16-mag-cover.html#node-2"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "A NEWEDITORIAL ENGINE"
+      ],
+      "bbox_typical": {
+        "w_avg": 462.0,
+        "h_avg": 55.0,
+        "w_min": 462,
+        "w_max": 462,
+        "h_min": 55,
+        "h_max": 55
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-015",
+      "sig_hash": "dc779e1f45342bcc",
+      "signature": "div(txt+face=display+tr=wide)[][192x32]",
+      "instances": 1,
+      "exemplars": [
+        "16-mag-cover.html#node-3"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "PITCH"
+      ],
+      "bbox_typical": {
+        "w_avg": 198.0,
+        "h_avg": 55.0,
+        "w_min": 198,
+        "w_max": 198,
+        "h_min": 55,
+        "h_max": 55
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-016",
+      "sig_hash": "14b03af278e3ee48",
+      "signature": "div(txt+txtc+face=display)[][512x160]",
+      "instances": 1,
+      "exemplars": [
+        "17-mag-spread.html#node-0"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "EDITORIALFEATURE"
+      ],
+      "bbox_typical": {
+        "w_avg": 548.0,
+        "h_avg": 181.0,
+        "w_min": 548,
+        "w_max": 548,
+        "h_min": 181,
+        "h_max": 181
+      },
+      "candidate_atom_id": "text.banner",
+      "candidate_axis": "text",
+      "candidate_props": {},
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-017",
+      "sig_hash": "b35ab842202cfdbe",
+      "signature": "div(brd-asymT+grid=3)[][1152x64]{div(txt+face=sans)[][384x0],div(txt+face=sans)[][512x32],div(txt+face=sans)[][64x32]}",
+      "instances": 1,
+      "exemplars": [
+        "18-bru-manifesto.html#node-0"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "04"
+      ],
+      "bbox_typical": {
+        "w_avg": 1168.0,
+        "h_avg": 89.0,
+        "w_min": 1168,
+        "w_max": 1168,
+        "h_min": 89,
+        "h_max": 89
+      },
+      "candidate_atom_id": "text.banner-bordered",
+      "candidate_axis": "text",
+      "candidate_props": {
+        "border": true
+      },
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-018",
+      "sig_hash": "5978601def6711e1",
+      "signature": "div(brd-asymT+grid=3)[][1152x64]{div(txt+face=sans)[][384x0],div(txt+face=sans)[][512x0],div(txt+face=sans)[][64x32]}",
+      "instances": 1,
+      "exemplars": [
+        "18-bru-manifesto.html#node-1"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "03"
+      ],
+      "bbox_typical": {
+        "w_avg": 1168.0,
+        "h_avg": 89.0,
+        "w_min": 1168,
+        "w_max": 1168,
+        "h_min": 89,
+        "h_max": 89
+      },
+      "candidate_atom_id": "text.banner-bordered",
+      "candidate_axis": "text",
+      "candidate_props": {
+        "border": true
+      },
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-019",
+      "sig_hash": "fdc3d14ec9fd8486",
+      "signature": "div(brd-asymT+tr=widest)[][1152x0]{span(txt+face=mono+tr=widest)[][256x0],span(txt+face=mono+tr=widest)[][64x0]}",
+      "instances": 1,
+      "exemplars": [
+        "20-mono-spec.html#node-0"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "PIXELPITCH ENG \u00b7 INTERNAL DISTRIBUTION"
+      ],
+      "bbox_typical": {
+        "w_avg": 1168.0,
+        "h_avg": 22.0,
+        "w_min": 1168,
+        "w_max": 1168,
+        "h_min": 22,
+        "h_max": 22
+      },
+      "candidate_atom_id": "text.banner-bordered",
+      "candidate_axis": "text",
+      "candidate_props": {
+        "border": true
+      },
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-020",
+      "sig_hash": "0c3364648ef2c05d",
+      "signature": "div(brd-asymT+tr=widest)[][1152x0]{span(txt+face=sans+tr=wide)[][128x0],span(txt+face=sans+tr=widest)[][0x0],span(txt+face=sans+tr=widest)[][128x0]}",
+      "instances": 1,
+      "exemplars": [
+        "22-duo-photo.html#node-0"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "Studio Atlas \u00b7 plate xvi"
+      ],
+      "bbox_typical": {
+        "w_avg": 1152.0,
+        "h_avg": 27.0,
+        "w_min": 1152,
+        "w_max": 1152,
+        "h_min": 27,
+        "h_max": 27
+      },
+      "candidate_atom_id": "text.banner-bordered",
+      "candidate_axis": "text",
+      "candidate_props": {
+        "border": true
+      },
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-021",
+      "sig_hash": "d008e8a7def2603e",
+      "signature": "div(txt+brd-asymL+face=sans)[][448x32]",
+      "instances": 1,
+      "exemplars": [
+        "22-duo-photo.html#node-1"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "Slidify treats every shape as a curated object.\n          Th"
+      ],
+      "bbox_typical": {
+        "w_avg": 480.0,
+        "h_avg": 43.0,
+        "w_min": 480,
+        "w_max": 480,
+        "h_min": 43,
+        "h_max": 43
+      },
+      "candidate_atom_id": "text.banner-bordered",
+      "candidate_axis": "text",
+      "candidate_props": {
+        "border": true
+      },
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    },
+    {
+      "id": "auto-cluster-022",
+      "sig_hash": "5df6b0708b228ad5",
+      "signature": "div(txt+txtc+brd-asymL+face=sans+tr=widest)[][192x64]",
+      "instances": 1,
+      "exemplars": [
+        "22-duo-photo.html#node-2"
+      ],
+      "sample_classes": [],
+      "sample_text": [
+        "Photo essay\n        part iii\n        \n          \u00b7 light over"
+      ],
+      "bbox_typical": {
+        "w_avg": 240.0,
+        "h_avg": 68.0,
+        "w_min": 240,
+        "w_max": 240,
+        "h_min": 68,
+        "h_max": 68
+      },
+      "candidate_atom_id": "text.banner-bordered",
+      "candidate_axis": "text",
+      "candidate_props": {
+        "border": true
+      },
+      "candidate_confidence": 0.35,
+      "candidate_reason": "wide-short bbox"
+    }
+  ],
+  "errors": []
+}

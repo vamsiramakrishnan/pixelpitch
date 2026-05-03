@@ -1752,6 +1752,35 @@ patterns:
         <hr data-atom="dec.dotted-rule" style="border:none;border-top:1px dotted rgba(255,255,255,0.20);margin:0;"/>
       expected_recipe_id: dec.dotted-rule
 
+  # ── tag-name fallback for bare <hr> ───────────────────────────────────
+  # Authors who don't stamp `data-atom` on their hairlines still get the
+  # native dec.hairline-rule emit.  Priority 60 (below the explicit
+  # data-atom version at 75) so an author hint always wins.  Harvester
+  # surfaced this as the second-highest-frequency miss in the bench.
+  - id: atom-dec-hairline-rule-bare
+    priority: 60
+    match:
+      anchor.tag_in: [hr]
+    emit:
+      kind: NativeShape
+      confidence: 0.92
+      metadata: { recipe: atom_dec_hairline_rule, axis: dec, shape: line, source: tag-fallback }
+    renderer:
+      component: DecHairlineRule
+      tier: B
+      primitive: decoration.line-stroke
+      version: 1.0.0
+      props:
+        bbox:        { type: bbox,   required: true }
+        orientation: { type: enum,   values: [h, v], default: h }
+        color:       { type: color,  default: 'tokens.palette.ruler' }
+        thicknessPx: { type: number, default: 1 }
+    fixture:
+      sample_html: |
+        <hr style="border:none;border-top:1px solid rgba(17,17,17,0.10);margin:0;"/>
+      expected_recipe_id: dec.hairline-rule
+
+
   - id: atom-dec-corner-crop
     priority: 75
     match:
@@ -2583,6 +2612,37 @@ patterns:
       sample_html: |
         <ul data-atom="ui.checklist" style="list-style:none;padding:0;margin:0;color:#d4d4d8;font-size:15px;"><li style="display:flex;align-items:center;gap:12px;padding:6px 0;"><span style="color:#10b981;">✓</span><span>F1 IR primitives</span></li><li style="display:flex;align-items:center;gap:12px;padding:6px 0;"><span style="color:#10b981;">✓</span><span>F2 token system</span></li><li style="display:flex;align-items:center;gap:12px;padding:6px 0;color:#71717a;"><span>○</span><span>M2 codegen</span></li></ul>
       expected_recipe_id: ui.checklist
+
+  # ── tag-name fallback for bare <button> (shadcn / Tailwind buttons) ──
+  # Highest-frequency miss in the bench harvester (4 instances) — every
+  # <button> with bg or border-radius routes to ui.button-rounded.
+  # Priority 60 (below the explicit data-atom version) so an author hint
+  # always wins.  Width/height bounds keep this from catching huge
+  # button-like containers; real buttons are 80–360 px wide, ≤ 64 px tall.
+  - id: atom-ui-button-rounded
+    priority: 60
+    match:
+      anchor.tag_in:  [button]
+      bbox.h_max:     64
+      bbox.w_min:     80
+      bbox.w_max:     360
+    emit:
+      kind: NativeShape
+      confidence: 0.92
+      metadata: { recipe: atom_ui_button_rounded, axis: ui, kind: button, source: tag-fallback }
+    renderer:
+      component: UiButtonRounded
+      tier: B
+      primitive: slot.cta
+      version: 1.0.0
+      props:
+        bbox:    { type: bbox,   required: true }
+        label:   { type: string, required: true }
+        variant: { type: enum,   values: [primary, secondary, outline, ghost], default: primary }
+    fixture:
+      sample_html: |
+        <button style="height:40px;padding:0 16px;border-radius:8px;background:#a78bfa;color:#0a0a0f;border:0;font-weight:600;font-size:14px;font-family:Inter,sans-serif;">Get the CLI →</button>
+      expected_recipe_id: ui.button-rounded
 
   # ── comp.* additions (1 → 15) — composite slide templates ──────────────
   # These compose other atoms via `renderer.composes:` (CONTRACT-v2 §A.6).
