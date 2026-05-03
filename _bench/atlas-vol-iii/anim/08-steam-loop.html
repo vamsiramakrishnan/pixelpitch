@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="slidify-capture-duration" content="3200">
+<meta name="slidify-capture-fps" content="8">
+<title>Atlas — cinemagraph cup region</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  /* Small region GIF — only the cup top + steam. Background matches
+     the dark sage region of slide 08 where the cup sits, so the GIF
+     blends seamlessly when overlaid. */
+  html, body { margin:0; padding:0; width:280px; height:320px;
+               background:#0F1311; }
+  .ribbon { transform-origin: 50% 100%; }
+  .ribbon path { stroke:#EFE9DC; stroke-width:2.5; fill:none;
+                 stroke-linecap:round; }
+  .r1 { animation: rise 3.2s ease-in-out infinite; animation-delay: 0s; }
+  .r2 { animation: rise 3.2s ease-in-out infinite; animation-delay: 0.6s; }
+  .r3 { animation: rise 3.2s ease-in-out infinite; animation-delay: 1.2s; }
+  @keyframes rise {
+    0%   { opacity: 0;    transform: translateY(0px)    scaleX(1.0); }
+    20%  { opacity: 0.55; transform: translateY(-20px)  scaleX(1.05); }
+    50%  { opacity: 0.45; transform: translateY(-90px)  scaleX(1.18); }
+    80%  { opacity: 0.15; transform: translateY(-160px) scaleX(1.32); }
+    100% { opacity: 0;    transform: translateY(-200px) scaleX(1.42); }
+  }
+</style>
+</head>
+<body>
+  <!-- The cup top is rendered as part of the GIF so the steam emerges
+       from a real surface — otherwise the steam looks like it's
+       floating mid-air over the slide. -->
+  <svg viewBox="0 0 280 320" width="280" height="320"
+       style="display:block;">
+    <defs>
+      <linearGradient id="cup-top" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"  stop-color="#0F1311"/>
+        <stop offset="100%" stop-color="#1F2924"/>
+      </linearGradient>
+    </defs>
+    <!-- dark liquid disk at the bottom of the visible region -->
+    <ellipse cx="140" cy="290" rx="80" ry="14" fill="url(#cup-top)"/>
+    <ellipse cx="140" cy="290" rx="76" ry="10" fill="#0F1311"/>
+
+    <g class="ribbon r1">
+      <path d="M 100 280 Q 84 220 116 170 Q 148 120 124 60"/>
+    </g>
+    <g class="ribbon r2">
+      <path d="M 140 280 Q 156 230 130 175 Q 100 120 130 60"/>
+    </g>
+    <g class="ribbon r3">
+      <path d="M 180 280 Q 200 220 170 170 Q 142 120 174 60"/>
+    </g>
+  </svg>
+</body>
+</html>
