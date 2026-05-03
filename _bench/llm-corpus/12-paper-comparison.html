@@ -1,0 +1,108 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <title>12 Paper Comparison</title>
+    <style>*, *::before, *::after { box-sizing: border-box; }
+html, body { margin:0; padding:0; width:1280px; height:720px;
+             font-family: Inter, -apple-system, 'Segoe UI', Helvetica, sans-serif;
+             -webkit-font-smoothing:antialiased;
+             color:#111111; background:#f7f5ef; }
+.slide { position:relative; width:1280px; height:720px; padding:80px;
+         overflow:hidden; background:#f7f5ef; }</style>
+    </head>
+    <body>
+    <div class="slide" style="padding:0; background:#ffffff;">
+      <!-- masthead -->
+      <div style="position:absolute; top:48px; left:64px; right:64px;
+                  display:flex; justify-content:space-between;
+                  align-items:flex-end;
+                  border-bottom:1px solid rgba(17,17,17,0.10); padding-bottom:14px;">
+        <div>
+          <div style="font-family:Inter, -apple-system, 'Segoe UI', Helvetica, sans-serif; font-size:11px;
+                      letter-spacing:0.32em; text-transform:uppercase;
+                      color:#b91c1c; font-weight:700;">
+            Comparison · field study</div>
+          <h1 style="margin:8px 0 0; font-family:Georgia, 'Iowan Old Style', 'Tiempos', serif;
+                     font-size:42px; line-height:1.05;
+                     letter-spacing:-0.012em; font-weight:700;
+                     color:#111111;">
+            Editable, not photographable.
+          </h1>
+        </div>
+        <div style="font-family:'IBM Plex Mono', 'JetBrains Mono', 'Menlo', monospace; font-size:10.5px;
+                    letter-spacing:0.18em; text-transform:uppercase;
+                    color:#52525b; text-align:right; line-height:1.7;">
+          n = 12 decks<br/>
+          <span style="color:#b91c1c;">verified · apr 2026</span>
+        </div>
+      </div>
+
+      <!-- the split: them-left (52%) / us-right (48%) -->
+      <div style="position:absolute; top:170px; bottom:80px;
+                  left:0; right:0; display:grid;
+                  grid-template-columns: 52fr 48fr;">
+
+        <!-- them column: muted, gray, lower hierarchy -->
+        <div style="padding:36px 36px 36px 64px;
+                    background: linear-gradient(180deg,
+                       rgba(17,17,17,0.03) 0%, transparent 60%);
+                    border-right:1px solid rgba(17,17,17,0.18);">
+          <div style="display:flex; align-items:flex-start;
+                      gap:20px; margin-bottom:20px;">
+            <div style="font-family:Georgia, 'Iowan Old Style', 'Tiempos', serif; font-size:104px;
+                        line-height:0.86; font-weight:700;
+                        color:#9b9b9b; letter-spacing:-0.02em;">2014</div>
+            <div style="padding-top:10px;">
+              <div style="display:inline-block; padding:3px 9px;
+                          font-family:'IBM Plex Mono', 'JetBrains Mono', 'Menlo', monospace; font-size:10px;
+                          letter-spacing:0.22em; text-transform:uppercase;
+                          font-weight:700; background:#9b9b9b;
+                          color:#ffffff;">Them</div>
+              <h3 style="margin:8px 0 0;
+                         font-family:Georgia, 'Iowan Old Style', 'Tiempos', serif;
+                         font-size:24px; font-weight:700;
+                         color:#5a5a5a; letter-spacing:-0.005em;">
+                The screenshot tools.</h3>
+            </div>
+          </div>
+          <ul style="margin:0; padding:0; list-style:none;"><li style="display:flex; gap:18px; padding:13px 0; border-bottom:1px solid rgba(17,17,17,0.08);"><span style="flex:0 0 18px; color:#9b9b9b;">✕</span><span style="text-decoration:line-through; text-decoration-color:rgba(17,17,17,0.35); text-decoration-thickness:1px; color:#7a7a7a; font-size:15.5px; line-height:1.45;">Slides ship as screenshots</span></li><li style="display:flex; gap:18px; padding:13px 0; border-bottom:1px solid rgba(17,17,17,0.08);"><span style="flex:0 0 18px; color:#9b9b9b;">✕</span><span style="text-decoration:line-through; text-decoration-color:rgba(17,17,17,0.35); text-decoration-thickness:1px; color:#7a7a7a; font-size:15.5px; line-height:1.45;">Gradients flatten on export</span></li><li style="display:flex; gap:18px; padding:13px 0; border-bottom:1px solid rgba(17,17,17,0.08);"><span style="flex:0 0 18px; color:#9b9b9b;">✕</span><span style="text-decoration:line-through; text-decoration-color:rgba(17,17,17,0.35); text-decoration-thickness:1px; color:#7a7a7a; font-size:15.5px; line-height:1.45;">Type loses tracking + leading</span></li><li style="display:flex; gap:18px; padding:13px 0; border-bottom:1px solid rgba(17,17,17,0.08);"><span style="flex:0 0 18px; color:#9b9b9b;">✕</span><span style="text-decoration:line-through; text-decoration-color:rgba(17,17,17,0.35); text-decoration-thickness:1px; color:#7a7a7a; font-size:15.5px; line-height:1.45;">No round-trip back to source</span></li><li style="display:flex; gap:18px; padding:13px 0; border-bottom:1px solid rgba(17,17,17,0.08);"><span style="flex:0 0 18px; color:#9b9b9b;">✕</span><span style="text-decoration:line-through; text-decoration-color:rgba(17,17,17,0.35); text-decoration-thickness:1px; color:#7a7a7a; font-size:15.5px; line-height:1.45;">LLM has to guess what works</span></li></ul>
+        </div>
+
+        <!-- us column: confident, dark on bone -->
+        <div style="padding:36px 64px 36px 36px;">
+          <div style="display:flex; align-items:flex-start;
+                      gap:20px; margin-bottom:20px;">
+            <div style="font-family:Georgia, 'Iowan Old Style', 'Tiempos', serif; font-size:104px;
+                        line-height:0.86; font-weight:700;
+                        color:#b91c1c; letter-spacing:-0.02em;">2026</div>
+            <div style="padding-top:10px;">
+              <div style="display:inline-block; padding:3px 9px;
+                          font-family:'IBM Plex Mono', 'JetBrains Mono', 'Menlo', monospace; font-size:10px;
+                          letter-spacing:0.22em; text-transform:uppercase;
+                          font-weight:700; background:#b91c1c;
+                          color:#ffffff;">Us</div>
+              <h3 style="margin:8px 0 0;
+                         font-family:Georgia, 'Iowan Old Style', 'Tiempos', serif;
+                         font-size:24px; font-weight:700;
+                         color:#111111; letter-spacing:-0.005em;">
+                Slidify.</h3>
+            </div>
+          </div>
+          <ul style="margin:0; padding:0; list-style:none;"><li style="display:flex; gap:18px; padding:13px 0; border-bottom:1px solid rgba(17,17,17,0.10);"><span style="flex:0 0 18px; color:#b91c1c; font-weight:700;">✓</span><span style="color:#111111; font-size:15.5px; line-height:1.45;">Every shape is editable PPTX</span></li><li style="display:flex; gap:18px; padding:13px 0; border-bottom:1px solid rgba(17,17,17,0.10);"><span style="flex:0 0 18px; color:#b91c1c; font-weight:700;">✓</span><span style="color:#111111; font-size:15.5px; line-height:1.45;">Native &lt;a:gradFill&gt; on export</span></li><li style="display:flex; gap:18px; padding:13px 0; border-bottom:1px solid rgba(17,17,17,0.10);"><span style="flex:0 0 18px; color:#b91c1c; font-weight:700;">✓</span><span style="color:#111111; font-size:15.5px; line-height:1.45;">Glyph metrics survive end-to-end</span></li><li style="display:flex; gap:18px; padding:13px 0; border-bottom:1px solid rgba(17,17,17,0.10);"><span style="flex:0 0 18px; color:#b91c1c; font-weight:700;">✓</span><span style="color:#111111; font-size:15.5px; line-height:1.45;">Edits in PPTX trace to recipes</span></li><li style="display:flex; gap:18px; padding:13px 0; border-bottom:1px solid rgba(17,17,17,0.10);"><span style="flex:0 0 18px; color:#b91c1c; font-weight:700;">✓</span><span style="color:#111111; font-size:15.5px; line-height:1.45;">`slidify check` blocks bad HTML</span></li></ul>
+        </div>
+      </div>
+
+      <!-- footer mono -->
+      <div style="position:absolute; bottom:32px; left:64px; right:64px;
+                  display:flex; justify-content:space-between;
+                  font-family:'IBM Plex Mono', 'JetBrains Mono', 'Menlo', monospace; font-size:10px;
+                  letter-spacing:0.18em; color:#52525b;
+                  text-transform:uppercase;">
+        <span>Bench · Q1 2026</span>
+        <span style="color:#b91c1c;">— editable, every export, every time</span>
+        <span>15 / 22</span>
+      </div>
+    </div>
+    </body>
+    </html>

@@ -899,55 +899,110 @@ def slide_10_news_data_journalism() -> tuple[str, str]:
 
 
 def slide_11_magazine_cover() -> tuple[str, str]:
-    """Magazine cover: oversize Bebas Neue display, hot pink + black."""
+    """Magazine cover — Bebas Neue display, hot pink + black, no overlaps.
+
+    Three-band composition: masthead bar, hero block (60/40 split between
+    headline left and photo right), footer dek bar.  Headline reads
+    'A FIELD GUIDE TO THE EDITED PAGE' broken across three lines, with
+    the third line ('PAGE') reversed into a black solid for emphasis.
+    """
     t = THEMES["magazine"]
     body = f"""<div class="slide" style="padding:0; background:{t.accent};">
-      <!-- masthead -->
-      <div style="position:absolute; top:36px; left:48px; right:48px;
-                  display:flex; justify-content:space-between; align-items:flex-end;
-                  border-bottom:2px solid {t.fg}; padding-bottom:14px;">
-        <div style="font-family:{t.fonts['display']}; font-size:64px; line-height:0.86;
-                    letter-spacing:0.02em; color:{t.fg};">PITCH</div>
-        <div style="font-family:{t.fonts['body']}; font-style:italic; font-size:14px;
-                    color:{t.fg};">Issue No. 04 · Spring 2026 · $14</div>
+      <!-- masthead band -->
+      <div style="position:absolute; top:0; left:0; right:0; height:96px;
+                  border-bottom:2px solid {t.fg};
+                  display:flex; justify-content:space-between;
+                  align-items:flex-end; padding:0 48px 14px;">
+        <div style="font-family:{t.fonts['display']}; font-size:64px;
+                    line-height:0.86; letter-spacing:0.02em;
+                    color:{t.fg};">PITCH</div>
+        <div style="font-family:{t.fonts['body']}; font-style:italic;
+                    font-size:14px; color:{t.fg};">
+          Issue No. 04 · Spring 2026 · $14</div>
       </div>
 
-      <!-- diagonal photo block -->
-      <div style="position:absolute; top:130px; right:48px; width:520px; height:520px;
-                  background: linear-gradient(135deg,#0a0a0a 0%,#1a1a1a 60%,#3a3a3a 100%);
-                  border:2px solid {t.fg};">
-        <div style="position:absolute; inset:0;
-                    background:radial-gradient(circle at 30% 35%, rgba(255,255,255,0.12) 0%,
-                               transparent 55%);"></div>
-        <div style="position:absolute; bottom:24px; left:24px; right:24px;
-                    color:#fff; font-family:{t.fonts['display']};
-                    font-size:36px; line-height:0.95;">A NEW<br/>EDITORIAL ENGINE</div>
-      </div>
+      <!-- hero band: headline left (60%), photo right (40%) -->
+      <div style="position:absolute; top:96px; bottom:120px; left:0; right:0;
+                  display:grid; grid-template-columns: 60fr 40fr;">
 
-      <!-- huge headline -->
-      <div style="position:absolute; top:170px; left:48px; max-width:680px;">
-        <div style="font-family:{t.fonts['body']}; font-style:italic; font-size:18px;
-                    color:{t.fg}; margin-bottom:16px;">The cover story</div>
-        <h1 data-pptx-role="title"
-            style="margin:0; font-family:{t.fonts['display']};
-                   font-size:184px; line-height:0.84; letter-spacing:-0.02em;
-                   color:{t.fg};">
-          DESIGNED<br/>FOR<br/><span style="color:{t.surface};
-                                            background:{t.fg}; padding:0 16px;">EDITORS</span>
-        </h1>
+        <!-- headline column -->
+        <div style="padding:32px 32px 32px 48px;
+                    display:flex; flex-direction:column;
+                    justify-content:space-between;">
+          <div style="font-family:{t.fonts['body']}; font-style:italic;
+                      font-size:16px; letter-spacing:0.02em;
+                      color:{t.fg};">The cover story · pp. 24 — 31</div>
+          <h1 data-pptx-role="title"
+              style="margin:0; font-family:{t.fonts['display']};
+                     font-size:104px; line-height:0.86;
+                     letter-spacing:-0.005em; color:{t.fg};">
+            A FIELD GUIDE<br/>TO THE
+            <span style="display:inline-block; color:{t.accent};
+                          background:{t.fg}; padding:0 12px;">EDITED</span><br/>
+            PAGE.
+          </h1>
+          <div style="display:flex; gap:18px; align-items:center;
+                      font-family:{t.fonts['body']}; font-size:13px;
+                      color:{t.fg};">
+            <span style="font-weight:700; letter-spacing:0.04em;
+                          text-transform:uppercase;">
+              By the editors
+            </span>
+            <span>·</span>
+            <span style="font-style:italic;">a quiet revolution</span>
+          </div>
+        </div>
+
+        <!-- photo column -->
+        <div style="position:relative;
+                    background:linear-gradient(155deg,
+                      #050505 0%, #1a1a1a 38%,
+                      #2c1622 70%, #3a1218 100%);
+                    border-left:2px solid {t.fg};">
+          <!-- subject highlight -->
+          <div style="position:absolute; inset:0;
+                      background:radial-gradient(circle at 36% 38%,
+                          rgba(255,255,255,0.16) 0%,
+                          rgba(255,255,255,0.04) 30%,
+                          transparent 60%);"></div>
+          <!-- subject silhouette: head + shoulder, abstract -->
+          <svg viewBox="0 0 200 320" width="100%" height="100%"
+               preserveAspectRatio="xMidYMid slice"
+               style="position:absolute; inset:0;">
+            <defs>
+              <linearGradient id="mag-subj" x1="0" y1="0" x2="0.3" y2="1">
+                <stop offset="0%" stop-color="#7a2c30"/>
+                <stop offset="100%" stop-color="#0a0a0a"/>
+              </linearGradient>
+            </defs>
+            <ellipse cx="100" cy="125" rx="50" ry="62" fill="url(#mag-subj)"/>
+            <path d="M 30 320 L 30 240
+                     C 30 200 60 188 100 188
+                     C 140 188 170 200 170 240
+                     L 170 320 Z"
+                  fill="url(#mag-subj)"/>
+          </svg>
+          <!-- caption tag, bottom -->
+          <div style="position:absolute; left:24px; right:24px; bottom:24px;
+                      font-family:{t.fonts['display']}; font-size:30px;
+                      line-height:0.92; letter-spacing:0.005em;
+                      color:#fff;">A NEW<br/>EDITORIAL ENGINE</div>
+        </div>
       </div>
 
       <!-- footer dek -->
-      <div style="position:absolute; bottom:48px; left:48px; right:48px;
-                  display:flex; gap:32px; align-items:flex-end;
-                  border-top:2px solid {t.fg}; padding-top:14px;
+      <div style="position:absolute; bottom:0; left:0; right:0; height:120px;
+                  border-top:2px solid {t.fg};
+                  padding:18px 48px;
+                  display:flex; gap:48px; align-items:flex-start;
                   font-family:{t.fonts['serif']}; color:{t.fg};">
-        <div style="flex:1; font-size:14px; line-height:1.45;">
-          Inside: how slidify rewrote the rules of editable presentations,
+        <div style="flex:0 0 120px; font-family:{t.fonts['display']};
+                    font-size:48px; line-height:0.92;">PP / 04</div>
+        <div style="flex:1; font-size:14px; line-height:1.5;
+                    border-left:2px solid {t.fg}; padding-left:24px;
+                    max-width:760px;">
+          Inside — how slidify rewrote the rules of editable presentations,
           why every shape matters, and the case for typographic restraint.
-        </div>
-        <div style="font-family:{t.fonts['display']}; font-size:24px; line-height:0.9;">
-          PP / 04
         </div>
       </div>
     </div>"""
@@ -1117,7 +1172,7 @@ def slide_14_brutalist_manifesto() -> tuple[str, str]:
         ("02", "TYPE IS A FIRST-CLASS CITIZEN.",
          "Glyphs survive the export with their tracking, leading, and weight intact. We do not flatten."),
         ("03", "GRADIENTS ARE NATIVE.",
-         "Linear and radial fills emit as <a:gradFill>. PowerPoint colour-pickers stay accurate."),
+         "Linear and radial fills emit as &lt;a:gradFill&gt;. PowerPoint colour-pickers stay accurate."),
         ("04", "LLM-LEGIBLE BY CONSTRUCTION.",
          "A pre-flight checker tells the model what works before the conversion runs. No surprises."),
     ]
@@ -1161,130 +1216,304 @@ def slide_14_brutalist_manifesto() -> tuple[str, str]:
 
 
 def slide_15_comparison_vs() -> tuple[str, str]:
-    """Paper-theme us-vs-them: two columns of feature checks."""
+    """Paper-theme comparison — split-canvas us-vs-them with score badges.
+
+    Hard split down the middle of the page: gray "them" half on the left
+    with strikethrough rows, white "us" half on the right with clay
+    check-rule rows.  Big score numerals at the top of each side land
+    the punch immediately.  The layout works as a single unbroken
+    composition rather than two cards floating on a page.
+    """
     t = THEMES["paper"]
     them = [
-        ("Slides ship as screenshots",        False),
-        ("Gradients flatten on export",       False),
-        ("Type loses tracking + leading",     False),
-        ("No round-trip back to source",      False),
-        ("LLM has to guess what works",       False),
+        "Slides ship as screenshots",
+        "Gradients flatten on export",
+        "Type loses tracking + leading",
+        "No round-trip back to source",
+        "LLM has to guess what works",
     ]
     us = [
-        ("Every shape is editable PPTX",      True),
-        ("Native <a:gradFill> on export",     True),
-        ("Glyph metrics survive end-to-end",  True),
-        ("Edits in PPTX trace to recipes",    True),
-        ("`slidify check` blocks bad HTML",   True),
+        "Every shape is editable PPTX",
+        "Native &lt;a:gradFill&gt; on export",
+        "Glyph metrics survive end-to-end",
+        "Edits in PPTX trace to recipes",
+        "`slidify check` blocks bad HTML",
     ]
-    def col(title, sub, items, accent_col, ribbon):
-        rows = "".join(
-            f'<li style="display:flex; gap:14px; padding:12px 0;'
-            f' border-bottom:1px solid {t.border}; font-size:15px; line-height:1.45;">'
-            f'<span style="flex:0 0 20px; font-weight:800; color:{accent_col};">'
-            f'{"✓" if ok else "✕"}</span>'
-            f'<span>{txt}</span></li>'
-            for txt, ok in items
+    def them_rows() -> str:
+        return "".join(
+            f'<li style="display:flex; gap:18px; padding:13px 0;'
+            f' border-bottom:1px solid rgba(17,17,17,0.08);">'
+            f'<span style="flex:0 0 18px; color:#9b9b9b;">✕</span>'
+            f'<span style="text-decoration:line-through;'
+            f' text-decoration-color:rgba(17,17,17,0.35);'
+            f' text-decoration-thickness:1px; color:#7a7a7a;'
+            f' font-size:15.5px; line-height:1.45;">{x}</span></li>'
+            for x in them
         )
-        return (
-            f'<div style="border:1px solid {t.border}; padding:32px 28px;'
-            f' background:{t.surface}; border-radius:{t.radius}px;">'
-            f'<div style="display:inline-block; padding:4px 10px; font-size:11px;'
-            f' letter-spacing:0.22em; text-transform:uppercase; font-weight:700;'
-            f' background:{accent_col}; color:{t.surface};">{ribbon}</div>'
-            f'<h3 style="margin:14px 0 4px; font-family:{t.fonts["display"]};'
-            f' font-size:32px; font-weight:700; letter-spacing:-0.012em;">{title}</h3>'
-            f'<p style="margin:0 0 16px; font-size:13px; color:{t.muted};">{sub}</p>'
-            f'<ul style="margin:0; padding:0; list-style:none;">{rows}</ul></div>'
+    def us_rows() -> str:
+        return "".join(
+            f'<li style="display:flex; gap:18px; padding:13px 0;'
+            f' border-bottom:1px solid rgba(17,17,17,0.10);">'
+            f'<span style="flex:0 0 18px; color:{t.accent};'
+            f' font-weight:700;">✓</span>'
+            f'<span style="color:{t.fg}; font-size:15.5px;'
+            f' line-height:1.45;">{x}</span></li>'
+            for x in us
         )
-    body = f"""<div class="slide" style="padding:64px 88px;">
-      <div data-atom="type.eyebrow-ruled"
-           style="font-family:{t.fonts['body']}; font-size:11px; letter-spacing:0.32em;
-                  text-transform:uppercase; font-weight:700; color:{t.accent};">
-        How we differ</div>
-      <h1 style="margin:14px 0 6px; font-family:{t.fonts['display']};
-                 font-size:54px; line-height:1.05; letter-spacing:-0.012em;
-                 font-weight:700;">
-        Editable, not photographable.
-      </h1>
-      <p style="margin:0 0 36px; max-width:700px; color:{t.muted};
-                font-size:16px; line-height:1.5;">
-        The standard HTML→slide tool flattens design intent. Slidify preserves it.
-      </p>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
-        {col("The screenshot tools", "The status quo since 2014.", them, "#6b7280", "Them")}
-        {col("Slidify",  "What you get when shapes are first-class.", us,   t.accent,  "Us")}
+    body = f"""<div class="slide" style="padding:0; background:{t.surface};">
+      <!-- masthead -->
+      <div style="position:absolute; top:48px; left:64px; right:64px;
+                  display:flex; justify-content:space-between;
+                  align-items:flex-end;
+                  border-bottom:1px solid {t.border}; padding-bottom:14px;">
+        <div>
+          <div style="font-family:{t.fonts['body']}; font-size:11px;
+                      letter-spacing:0.32em; text-transform:uppercase;
+                      color:{t.accent}; font-weight:700;">
+            Comparison · field study</div>
+          <h1 style="margin:8px 0 0; font-family:{t.fonts['display']};
+                     font-size:42px; line-height:1.05;
+                     letter-spacing:-0.012em; font-weight:700;
+                     color:{t.fg};">
+            Editable, not photographable.
+          </h1>
+        </div>
+        <div style="font-family:{t.fonts['mono']}; font-size:10.5px;
+                    letter-spacing:0.18em; text-transform:uppercase;
+                    color:{t.muted}; text-align:right; line-height:1.7;">
+          n = 12 decks<br/>
+          <span style="color:{t.accent};">verified · apr 2026</span>
+        </div>
       </div>
-      <div style="margin-top:24px; font-size:11px; color:{t.muted};
-                  font-family:{t.fonts['mono']}; letter-spacing:0.06em;">
-        Comparison table compiled Apr 2026 — verified against 12 production decks.
+
+      <!-- the split: them-left (52%) / us-right (48%) -->
+      <div style="position:absolute; top:170px; bottom:80px;
+                  left:0; right:0; display:grid;
+                  grid-template-columns: 52fr 48fr;">
+
+        <!-- them column: muted, gray, lower hierarchy -->
+        <div style="padding:36px 36px 36px 64px;
+                    background: linear-gradient(180deg,
+                       rgba(17,17,17,0.03) 0%, transparent 60%);
+                    border-right:1px solid rgba(17,17,17,0.18);">
+          <div style="display:flex; align-items:flex-start;
+                      gap:20px; margin-bottom:20px;">
+            <div style="font-family:{t.fonts['display']}; font-size:104px;
+                        line-height:0.86; font-weight:700;
+                        color:#9b9b9b; letter-spacing:-0.02em;">2014</div>
+            <div style="padding-top:10px;">
+              <div style="display:inline-block; padding:3px 9px;
+                          font-family:{t.fonts['mono']}; font-size:10px;
+                          letter-spacing:0.22em; text-transform:uppercase;
+                          font-weight:700; background:#9b9b9b;
+                          color:{t.surface};">Them</div>
+              <h3 style="margin:8px 0 0;
+                         font-family:{t.fonts['display']};
+                         font-size:24px; font-weight:700;
+                         color:#5a5a5a; letter-spacing:-0.005em;">
+                The screenshot tools.</h3>
+            </div>
+          </div>
+          <ul style="margin:0; padding:0; list-style:none;">{them_rows()}</ul>
+        </div>
+
+        <!-- us column: confident, dark on bone -->
+        <div style="padding:36px 64px 36px 36px;">
+          <div style="display:flex; align-items:flex-start;
+                      gap:20px; margin-bottom:20px;">
+            <div style="font-family:{t.fonts['display']}; font-size:104px;
+                        line-height:0.86; font-weight:700;
+                        color:{t.accent}; letter-spacing:-0.02em;">2026</div>
+            <div style="padding-top:10px;">
+              <div style="display:inline-block; padding:3px 9px;
+                          font-family:{t.fonts['mono']}; font-size:10px;
+                          letter-spacing:0.22em; text-transform:uppercase;
+                          font-weight:700; background:{t.accent};
+                          color:{t.surface};">Us</div>
+              <h3 style="margin:8px 0 0;
+                         font-family:{t.fonts['display']};
+                         font-size:24px; font-weight:700;
+                         color:{t.fg}; letter-spacing:-0.005em;">
+                Slidify.</h3>
+            </div>
+          </div>
+          <ul style="margin:0; padding:0; list-style:none;">{us_rows()}</ul>
+        </div>
+      </div>
+
+      <!-- footer mono -->
+      <div style="position:absolute; bottom:32px; left:64px; right:64px;
+                  display:flex; justify-content:space-between;
+                  font-family:{t.fonts['mono']}; font-size:10px;
+                  letter-spacing:0.18em; color:{t.muted};
+                  text-transform:uppercase;">
+        <span>Bench · Q1 2026</span>
+        <span style="color:{t.accent};">— editable, every export, every time</span>
+        <span>15 / 22</span>
       </div>
     </div>"""
     return "15-comparison-vs", body
 
 
 def slide_16_duotone_photo_essay() -> tuple[str, str]:
-    """Duotone photo with caption block: navy + cream gradient backdrop, serif pull-quote."""
+    """Duotone photo essay — full-bleed editorial composition.
+
+    Construction: a horizon-divided background (deep navy bottom →
+    apricot/cream top, the canonical duotone) with a confident
+    silhouette anchored in the lower-left quadrant — figure looking
+    out toward the right, where a single overlay pull-quote rests
+    against negative sky.  Every form is constructed from layered
+    gradient ellipses + paths so the picture reads photographic
+    rather than schematic.
+    """
     t = THEMES["duotone"]
-    body = f"""<div class="slide" style="padding:0;
-                                          background:linear-gradient(135deg,#0d1f3c 0%,#23456b 60%,#3a6a8a 100%);">
-      <!-- duotone wash -->
-      <div style="position:absolute; inset:0;
-                  background:radial-gradient(ellipse 1100px 720px at 30% 30%,
-                            rgba(255,236,196,0.30) 0%, transparent 60%);"></div>
-      <!-- subject silhouette via SVG -->
+    body = f"""<div class="slide" style="padding:0;">
+      <!-- horizon-divided duotone backdrop -->
       <svg viewBox="0 0 1280 720" width="1280" height="720"
+           preserveAspectRatio="xMidYMid slice"
            style="position:absolute; inset:0;">
         <defs>
-          <linearGradient id="duo-fig" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"  stop-color="#ffecc4" stop-opacity="0.9"/>
-            <stop offset="100%" stop-color="#ff7a59" stop-opacity="0.7"/>
+          <!-- sky: warm cream/apricot -->
+          <linearGradient id="duo-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="#ffd9a0"/>
+            <stop offset="35%"  stop-color="#ffb886"/>
+            <stop offset="80%"  stop-color="#7a6285"/>
+            <stop offset="100%" stop-color="#1a2440"/>
+          </linearGradient>
+          <!-- water: deep navy with warm rim -->
+          <linearGradient id="duo-water" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="#0d1f3c"/>
+            <stop offset="100%" stop-color="#050b1c"/>
+          </linearGradient>
+          <!-- low warm sun glow -->
+          <radialGradient id="duo-sun" cx="0.66" cy="0.62" r="0.34">
+            <stop offset="0%"  stop-color="#ffecc4" stop-opacity="0.95"/>
+            <stop offset="35%" stop-color="#ff7a59" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#ff7a59" stop-opacity="0"/>
+          </radialGradient>
+          <!-- subject silhouette: layered for depth -->
+          <linearGradient id="duo-fig" x1="0" y1="0" x2="0.2" y2="1">
+            <stop offset="0%"   stop-color="#1a2440"/>
+            <stop offset="60%"  stop-color="#0a1124"/>
+            <stop offset="100%" stop-color="#04060f"/>
+          </linearGradient>
+          <linearGradient id="duo-rim" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffecc4" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#ff7a59" stop-opacity="0"/>
           </linearGradient>
         </defs>
-        <ellipse cx="320" cy="380" rx="180" ry="220" fill="url(#duo-fig)"/>
-        <ellipse cx="320" cy="200" rx="80"  ry="92"  fill="url(#duo-fig)"/>
-        <ellipse cx="900" cy="500" rx="240" ry="120" fill="rgba(255,122,89,0.25)"/>
+
+        <!-- sky band -->
+        <rect width="1280" height="468" fill="url(#duo-sky)"/>
+        <!-- horizon line: a fine warm rim where sky meets water -->
+        <rect x="0" y="465" width="1280" height="2" fill="#ff9a6c"
+              opacity="0.55"/>
+        <!-- water band -->
+        <rect y="467" width="1280" height="253" fill="url(#duo-water)"/>
+        <!-- sun glow over both bands -->
+        <rect width="1280" height="720" fill="url(#duo-sun)"/>
+
+        <!-- water reflection: faint warm streaks -->
+        <g opacity="0.18" fill="#ff9a6c">
+          <ellipse cx="850" cy="540" rx="260" ry="3"/>
+          <ellipse cx="850" cy="568" rx="200" ry="2"/>
+          <ellipse cx="850" cy="596" rx="140" ry="1.5"/>
+          <ellipse cx="850" cy="624" rx="90" ry="1"/>
+        </g>
+
+        <!-- distant silhouettes: low hills on horizon -->
+        <path d="M 0 467 L 0 444 Q 120 432 240 442 Q 360 452 480 438
+                 Q 600 424 720 440 Q 840 454 960 442 Q 1080 432 1200 446
+                 L 1280 444 L 1280 467 Z"
+              fill="#1a2440" opacity="0.7"/>
+
+        <!-- subject: figure standing in lower-left quadrant -->
+        <g>
+          <!-- soft rim light from upper-right -->
+          <ellipse cx="305" cy="405" rx="170" ry="220"
+                   fill="url(#duo-rim)" opacity="0.65"/>
+          <!-- shoulders + torso -->
+          <path d="M 215 720
+                   L 215 460
+                   C 215 410 245 372 295 366
+                   C 305 364 320 364 330 366
+                   C 380 372 408 410 408 460
+                   L 408 720 Z"
+                fill="url(#duo-fig)"/>
+          <!-- head -->
+          <ellipse cx="312" cy="310" rx="44" ry="56"
+                   fill="url(#duo-fig)"/>
+          <!-- subtle warm rim on head/shoulder right edge -->
+          <path d="M 356 310 Q 350 350 345 380 Q 360 410 380 460"
+                stroke="#ff9a6c" stroke-width="2"
+                stroke-linecap="round" fill="none"
+                opacity="0.55"/>
+          <path d="M 405 460 Q 410 540 412 720"
+                stroke="#ff9a6c" stroke-width="2"
+                stroke-linecap="round" fill="none"
+                opacity="0.45"/>
+        </g>
       </svg>
 
-      <!-- left strip caption -->
-      <div style="position:absolute; left:48px; top:48px; width:280px;
-                  border-left:2px solid {t.fg}; padding:8px 0 8px 14px;
-                  font-family:{t.fonts['body']}; font-size:13px;
-                  letter-spacing:0.18em; text-transform:uppercase;
-                  color:{t.fg}; font-weight:600;">
-        Photo essay · part iii<br/>
-        <span style="font-style:italic; text-transform:none;
-                     letter-spacing:0.02em; color:{t.muted};">
-          Light over the editing room</span>
+      <!-- top-left strip caption -->
+      <div style="position:absolute; left:64px; top:48px; width:240px;
+                  border-left:2px solid #ffecc4;
+                  padding:8px 0 8px 14px;
+                  font-family:{t.fonts['body']}; font-size:11px;
+                  letter-spacing:0.32em; text-transform:uppercase;
+                  color:#ffecc4; font-weight:600; line-height:1.6;">
+        Photo essay<br/>
+        <span style="color:#ff9a6c;">part iii</span>
+        <span style="color:rgba(255,236,196,0.55);">
+          · light over the editing room</span>
       </div>
 
-      <!-- pull quote -->
-      <div style="position:absolute; left:560px; top:100px; right:80px;">
+      <!-- top-right colophon -->
+      <div style="position:absolute; right:64px; top:48px;
+                  font-family:{t.fonts['mono']}; font-size:10.5px;
+                  letter-spacing:0.22em; text-transform:uppercase;
+                  color:#ffecc4; text-align:right; line-height:1.7;
+                  opacity:0.85;">
+        Plate 16 of 24<br/>
+        <span style="color:#ff9a6c;">Pitch · spring 2026</span>
+      </div>
+
+      <!-- pull-quote: floats over the sky negative space -->
+      <div style="position:absolute; left:520px; top:140px; right:96px;">
         <div style="font-family:{t.fonts['serif']}; font-style:italic;
-                    font-size:62px; line-height:1.08; color:{t.fg};
-                    letter-spacing:-0.005em;">
+                    font-size:54px; line-height:1.08;
+                    letter-spacing:-0.005em; color:#0d1f3c;
+                    font-weight:400;">
           The slides we ship are<br/>
-          <span style="background:{t.accent}; color:#0d1f3c; padding:0 12px;">
-            an act of editing,</span><br/>
+          <span style="background:#0d1f3c; color:#ffecc4;
+                       padding:0 14px;">an act of editing,</span><br/>
           not an accident<br/>of capture.
         </div>
         <div style="margin-top:32px; padding-left:18px;
-                    border-left:2px solid {t.accent}; max-width:520px;
-                    font-family:{t.fonts['body']}; font-size:14px;
-                    line-height:1.5; color:{t.muted};">
-          Slidify treats every shape as a curated object. The export is
-          the artifact, not a flattened souvenir of one.
+                    border-left:2px solid #0d1f3c;
+                    max-width:480px;
+                    font-family:{t.fonts['body']}; font-size:13.5px;
+                    line-height:1.6; color:rgba(13,31,60,0.75);">
+          Slidify treats every shape as a curated object.
+          The export is the artifact — not a flattened
+          souvenir of one.
         </div>
       </div>
 
-      <!-- footer -->
-      <div style="position:absolute; bottom:32px; left:48px; right:48px;
-                  display:flex; justify-content:space-between; align-items:center;
+      <!-- bottom rule -->
+      <div style="position:absolute; bottom:32px; left:64px; right:64px;
+                  display:flex; justify-content:space-between;
+                  align-items:center;
                   font-family:{t.fonts['body']}; font-size:11px;
                   letter-spacing:0.18em; text-transform:uppercase;
-                  color:{t.fg}; border-top:1px solid {t.border}; padding-top:14px;">
-        <span>Pitch Quarterly · Spring 2026</span>
-        <span>Plate 16 of 24</span>
+                  color:#ffecc4;
+                  border-top:1px solid rgba(255,236,196,0.35);
+                  padding-top:14px;">
+        <span>Studio Atlas · plate xvi</span>
+        <span style="font-style:italic; letter-spacing:0.04em;
+                     text-transform:none; color:#ff9a6c;">
+          — captured in navy &amp; apricot</span>
+        <span>16 / 22</span>
       </div>
     </div>"""
     return "16-duotone-photo-essay", body
@@ -1656,15 +1885,13 @@ def slide_22_lucide_dashboard_paper() -> tuple[str, str]:
     """Paper-theme dashboard with lucide icons in tile chrome + sidebar nav."""
     t = THEMES["paper"]
     sidebar_items = [
-        ("bar-chart", "Overview",     True),
+        ("bar-chart",   "Overview",   True),
         ("trending-up", "Trends",     False),
-        ("user",      "Audience",     False),
-        ("globe",     "Geography",    False),
-        ("shield",    "Permissions",  False),
-        ("settings",  "Settings",     False),
+        ("user",        "Audience",   False),
+        ("globe",       "Geography",  False),
+        ("shield",      "Permissions",False),
+        ("lock",        "Settings",   False),
     ]
-    # 'settings' is heavy — use 'lock' instead for confidence
-    sidebar_items[5] = ("lock", "Permissions", False)
     sidebar_html = "".join(
         f'<div style="display:flex; align-items:center; gap:12px;'
         f' padding:10px 14px; border-radius:8px;'
@@ -1766,11 +1993,11 @@ def slide_22_lucide_dashboard_paper() -> tuple[str, str]:
           {stat_tile('shield',    'Drift incidents', '0.12%','arrow-right', '−2.1pp', True)}
         </div>
 
-        <div style="margin-top:18px; padding:18px;
+        <div style="margin-top:14px; padding:14px 18px;
                     background:{t.surface}; border:1px solid {t.border};
                     border-radius:8px;">
           <div style="display:flex; align-items:center; gap:8px;
-                      margin-bottom:14px;">
+                      margin-bottom:10px;">
             {lucide('check', size=16, color='#15803d')}
             <span style="font-size:13px; font-weight:700; color:{t.fg};">
               All checks green</span>
@@ -1781,7 +2008,94 @@ def slide_22_lucide_dashboard_paper() -> tuple[str, str]:
             <span>{lucide('check', size=12, color='#15803d')} self-contained</span>
             <span>{lucide('check', size=12, color='#15803d')} no risky CSS</span>
             <span>{lucide('check', size=12, color='#15803d')} 0 warnings</span>
-            <span>{lucide('check', size=12, color='#15803d')} 21 / 21 atoms hint</span>
+            <span>{lucide('check', size=12, color='#15803d')} 22 / 22 atoms hint</span>
+          </div>
+        </div>
+
+        <!-- chart panel + activity feed fill the lower half -->
+        <div style="margin-top:14px; display:grid;
+                    grid-template-columns: 1.5fr 1fr; gap:14px;">
+          <!-- chart panel -->
+          <div style="padding:18px; background:{t.surface};
+                      border:1px solid {t.border}; border-radius:8px;">
+            <div style="display:flex; justify-content:space-between;
+                        align-items:center; margin-bottom:14px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                {lucide('trending-up', size=14, color=t.accent)}
+                <span style="font-size:13px; font-weight:700; color:{t.fg};">
+                  Native ratio · last 12 weeks</span>
+              </div>
+              <span style="font-family:{t.fonts['mono']}; font-size:10.5px;
+                           letter-spacing:0.18em; color:{t.muted};
+                           text-transform:uppercase;">+4.1 pp</span>
+            </div>
+            <svg viewBox="0 0 460 130" width="100%" height="130">
+              {''.join(
+                  f'<line x1="0" y1="{20 + i*22}" x2="460" y2="{20 + i*22}"'
+                  f' stroke="rgba(17,17,17,0.06)" stroke-width="1"/>'
+                  for i in range(5)
+              )}
+              <path d="M 0 100 L 38 96 L 76 92 L 114 84 L 152 78
+                       L 190 72 L 228 64 L 266 60 L 304 50 L 342 44
+                       L 380 38 L 418 30 L 460 22 L 460 130 L 0 130 Z"
+                    fill="rgba(185,28,28,0.10)"/>
+              <path d="M 0 100 L 38 96 L 76 92 L 114 84 L 152 78
+                       L 190 72 L 228 64 L 266 60 L 304 50 L 342 44
+                       L 380 38 L 418 30 L 460 22"
+                    fill="none" stroke="{t.accent}" stroke-width="2"
+                    stroke-linecap="round"/>
+              <circle cx="460" cy="22" r="4" fill="{t.accent}"/>
+              <circle cx="460" cy="22" r="9" fill="{t.accent}"
+                      opacity="0.18"/>
+            </svg>
+            <div style="display:flex; justify-content:space-between;
+                        margin-top:6px; font-family:{t.fonts['mono']};
+                        font-size:9.5px; letter-spacing:0.18em;
+                        color:{t.muted}; text-transform:uppercase;">
+              <span>Wk 14</span><span>Wk 18</span>
+              <span>Wk 22</span><span>Wk 26</span>
+            </div>
+          </div>
+
+          <!-- activity feed -->
+          <div style="padding:18px; background:{t.surface};
+                      border:1px solid {t.border}; border-radius:8px;">
+            <div style="display:flex; align-items:center; gap:8px;
+                        margin-bottom:12px;">
+              {lucide('sparkles', size=14, color=t.accent)}
+              <span style="font-size:13px; font-weight:700; color:{t.fg};">
+                Recent activity</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px;
+                        font-size:12px; color:{t.fg};">
+              <div style="display:flex; gap:10px; align-items:flex-start;">
+                {lucide('check', size=12, color='#15803d')}
+                <div>
+                  <div style="font-weight:600;">Atlas-vol-iii compiled</div>
+                  <div style="color:{t.muted}; font-family:{t.fonts['mono']};
+                              font-size:10px; letter-spacing:0.06em;">
+                    12 frames · 814 KB · 2 m ago</div>
+                </div>
+              </div>
+              <div style="display:flex; gap:10px; align-items:flex-start;">
+                {lucide('arrow-up-right', size=12, color=t.accent)}
+                <div>
+                  <div style="font-weight:600;">LLM corpus build</div>
+                  <div style="color:{t.muted}; font-family:{t.fonts['mono']};
+                              font-size:10px; letter-spacing:0.06em;">
+                    22 slides · 285 KB · 6 m ago</div>
+                </div>
+              </div>
+              <div style="display:flex; gap:10px; align-items:flex-start;">
+                {lucide('eye', size=12, color=t.muted)}
+                <div>
+                  <div style="font-weight:600;">Bench preview rendered</div>
+                  <div style="color:{t.muted}; font-family:{t.fonts['mono']};
+                              font-size:10px; letter-spacing:0.06em;">
+                    34 PNGs · 14 m ago</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>
@@ -1789,38 +2103,54 @@ def slide_22_lucide_dashboard_paper() -> tuple[str, str]:
     return "22-lucide-dashboard-paper", body
 
 
+# SLIDES — (fn, theme_name, output_stem).  The output_stem encodes the
+# theme register as a prefix (vd, paper, mag, bru, mono, duo) so an `ls`
+# of the corpus immediately shows what register each slide belongs to.
+# Slides are grouped by register: vercel-dark first (10), then paper
+# (5), magazine (2), brutalist (2), mono-spec (2), duotone (1).
 SLIDES: list[tuple] = [
-    # (fn, theme_name) — the existing nine all run vercel-dark.
-    (slide_01_hero,            "vercel-dark"),
-    (slide_02_kpi_grid,        "vercel-dark"),
-    (slide_03_feature_three_up,"vercel-dark"),
-    (slide_04_pricing,         "vercel-dark"),
-    (slide_05_dashboard,       "vercel-dark"),
-    (slide_06_team,            "vercel-dark"),
-    (slide_07_quote,           "vercel-dark"),
-    (slide_08_roadmap,         "vercel-dark"),
-    (slide_09_closing,         "vercel-dark"),
-    (slide_10_news_data_journalism, "paper"),
-    (slide_11_magazine_cover,       "magazine"),
-    (slide_12_magazine_spread,      "magazine"),
-    (slide_13_product_spec,         "mono-spec"),
-    (slide_14_brutalist_manifesto,  "brutalist"),
-    (slide_15_comparison_vs,        "paper"),
-    (slide_16_duotone_photo_essay,  "duotone"),
-    (slide_17_research_figure,      "paper"),
-    (slide_18_timeline_history,     "mono-spec"),
-    (slide_19_brutalist_stat_wall,  "brutalist"),
-    (slide_20_ranking_leaderboard,  "paper"),
-    (slide_21_lucide_feature_grid,  "vercel-dark"),
-    (slide_22_lucide_dashboard_paper,"paper"),
+    # ── vercel-dark · startup register (10) ───────────────────────────
+    (slide_01_hero,                 "vercel-dark", "01-vd-hero"),
+    (slide_02_kpi_grid,             "vercel-dark", "02-vd-kpi-grid"),
+    (slide_03_feature_three_up,     "vercel-dark", "03-vd-feature-three"),
+    (slide_04_pricing,              "vercel-dark", "04-vd-pricing"),
+    (slide_05_dashboard,            "vercel-dark", "05-vd-dashboard"),
+    (slide_06_team,                 "vercel-dark", "06-vd-team"),
+    (slide_07_quote,                "vercel-dark", "07-vd-quote"),
+    (slide_08_roadmap,              "vercel-dark", "08-vd-roadmap"),
+    (slide_21_lucide_feature_grid,  "vercel-dark", "09-vd-lucide-features"),
+    (slide_09_closing,              "vercel-dark", "10-vd-closing"),
+    # ── paper · editorial register (5) ────────────────────────────────
+    (slide_10_news_data_journalism, "paper",       "11-paper-news"),
+    (slide_15_comparison_vs,        "paper",       "12-paper-comparison"),
+    (slide_17_research_figure,      "paper",       "13-paper-research"),
+    (slide_20_ranking_leaderboard,  "paper",       "14-paper-leaderboard"),
+    (slide_22_lucide_dashboard_paper,"paper",      "15-paper-lucide-dash"),
+    # ── magazine · display register (2) ───────────────────────────────
+    (slide_11_magazine_cover,       "magazine",    "16-mag-cover"),
+    (slide_12_magazine_spread,      "magazine",    "17-mag-spread"),
+    # ── brutalist · neon-yellow register (2) ──────────────────────────
+    (slide_14_brutalist_manifesto,  "brutalist",   "18-bru-manifesto"),
+    (slide_19_brutalist_stat_wall,  "brutalist",   "19-bru-stat-wall"),
+    # ── mono-spec · technical register (2) ────────────────────────────
+    (slide_13_product_spec,         "mono-spec",   "20-mono-spec"),
+    (slide_18_timeline_history,     "mono-spec",   "21-mono-timeline"),
+    # ── duotone · photo-essay register (1) ────────────────────────────
+    (slide_16_duotone_photo_essay,  "duotone",     "22-duo-photo"),
 ]
 
 
 def main() -> int:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    for fn, theme_name in SLIDES:
+    # Cull any HTMLs not in the current SLIDES list — keeps the dir
+    # clean across renumberings.
+    keep = {f"{stem}.html" for _, _, stem in SLIDES}
+    for old in OUT_DIR.glob("*.html"):
+        if old.name not in keep:
+            old.unlink()
+    for fn, theme_name, stem in SLIDES:
         theme = THEMES[theme_name]
-        stem, body = fn()
+        _, body = fn()  # function's own stem ignored; SLIDES stem wins
         path = OUT_DIR / f"{stem}.html"
         path.write_text(
             _wrap(stem.replace('-', ' ').title(), body, theme),
