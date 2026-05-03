@@ -233,6 +233,119 @@ def test_union_line_box_returns_none_when_no_text():
     assert _union_line_box(unit) is None
 
 
+def test_padded_text_atom_uses_css_padding_as_textframe_margins(tmp_path):
+    bbox = BoundingBox(x=20, y=30, w=180, h=42)
+    el = DomElement(
+        id=1,
+        parent_id=None,
+        depth=0,
+        tag="SPAN",
+        bbox=bbox,
+        text="Streaming",
+        background_color="rgb(239, 246, 255)",
+        border="1px solid rgb(147, 197, 253)",
+        border_top="1px solid rgb(147, 197, 253)",
+        border_right="1px solid rgb(147, 197, 253)",
+        border_bottom="1px solid rgb(147, 197, 253)",
+        border_left="1px solid rgb(147, 197, 253)",
+        border_radius="999px",
+        padding_top="4px",
+        padding_right="12px",
+        padding_bottom="4px",
+        padding_left="12px",
+        font_size="14px",
+        font_family="Inter, sans-serif",
+        stable_selector=".pill",
+    )
+    unit = VisualUnit(id="u1", kind=UnitKind.Generic, bbox=bbox, elements=[el])
+    op = EmitOp(
+        unit_id="u1",
+        decision=Decision(kind=DecisionKind.NativeText),
+        z_order=0,
+        bbox=bbox,
+    )
+
+    em = Emitter()
+    slide = em.prs.slides.add_slide(em.prs.slide_layouts[6])
+    em._emit_native_text(slide, unit, op)
+    out = tmp_path / "out.pptx"
+    em.save(out)
+    em.close()
+
+    prs = Presentation(str(out))
+    target = next(
+        sh for sh in prs.slides[0].shapes
+        if sh.has_text_frame and sh.text_frame.text == "Streaming"
+    )
+    tf = target.text_frame
+    assert tf.margin_left == Emu(12 * 9525)
+    assert tf.margin_right == Emu(12 * 9525)
+    assert tf.margin_top == Emu(4 * 9525)
+    assert tf.margin_bottom == Emu(4 * 9525)
+
+
+def test_mixed_flex_text_frame_starts_after_leading_icon(tmp_path):
+    parent_bbox = BoundingBox(x=95, y=259, w=407, h=28)
+    icon_bbox = BoundingBox(x=95, y=259, w=28, h=28)
+    name = DomElement(
+        id=1,
+        parent_id=None,
+        depth=0,
+        tag="DIV",
+        cls="name",
+        bbox=parent_bbox,
+        mixed_content_text="Inference Edge",
+        display="flex",
+        gap="10px",
+        font_size="13px",
+        font_family="Inter, sans-serif",
+        stable_selector=".name",
+    )
+    icon = DomElement(
+        id=2,
+        parent_id=1,
+        depth=1,
+        tag="SPAN",
+        cls="icon",
+        bbox=icon_bbox,
+        background_color="rgb(99, 102, 241)",
+        stable_selector=".icon",
+    )
+    icon_unit = VisualUnit(
+        id="u_icon",
+        kind=UnitKind.Generic,
+        bbox=icon_bbox,
+        elements=[icon],
+    )
+    unit = VisualUnit(
+        id="u_name",
+        kind=UnitKind.Generic,
+        bbox=parent_bbox,
+        elements=[name],
+        children=[icon_unit],
+    )
+    op = EmitOp(
+        unit_id="u_name",
+        decision=Decision(kind=DecisionKind.NativeText),
+        z_order=0,
+        bbox=parent_bbox,
+    )
+
+    em = Emitter()
+    slide = em.prs.slides.add_slide(em.prs.slide_layouts[6])
+    em._emit_native_text(slide, unit, op)
+    out = tmp_path / "out.pptx"
+    em.save(out)
+    em.close()
+
+    prs = Presentation(str(out))
+    target = next(
+        sh for sh in prs.slides[0].shapes
+        if sh.has_text_frame and sh.text_frame.text == "Inference Edge"
+    )
+    assert target.left == Emu((95 + 28 + 10) * 9525)
+
+
 def test_apply_explicit_autofit_replaces_existing():
     # Build a textbox, then call _apply_explicit_autofit twice — confirm only
     # one normAutofit remains and it has the latest values.

@@ -121,6 +121,62 @@ def _paints_backplate(el: DomElement) -> bool:
     )
 
 
+def _element_padding_px(el: DomElement) -> tuple[float, float, float, float]:
+    """Return element padding as ``(left, right, top, bottom)`` in px."""
+    return (
+        max(0.0, parse_px(getattr(el, "padding_left", "0px"))),
+        max(0.0, parse_px(getattr(el, "padding_right", "0px"))),
+        max(0.0, parse_px(getattr(el, "padding_top", "0px"))),
+        max(0.0, parse_px(getattr(el, "padding_bottom", "0px"))),
+    )
+
+
+def _apply_textframe_margins(tf, el: DomElement) -> None:
+    left, right, top, bottom = _element_padding_px(el)
+    tf.margin_left = Emu(px_to_emu(left))
+    tf.margin_right = Emu(px_to_emu(right))
+    tf.margin_top = Emu(px_to_emu(top))
+    tf.margin_bottom = Emu(px_to_emu(bottom))
+
+
+def _content_budget_px(el: DomElement, bbox: BoundingBox) -> tuple[float, float]:
+    left, right, top, bottom = _element_padding_px(el)
+    return max(1.0, bbox.w - left - right), max(1.0, bbox.h - top - bottom)
+
+
+def _mixed_content_text_bbox(unit: VisualUnit, anchor: DomElement) -> BoundingBox:
+    """Approximate the direct text slot inside flex mixed-content atoms.
+
+    The walker records direct text nodes on the parent element, but a flex row
+    like ``<div class=name><span class=icon/> Label</div>`` reports the
+    parent's full bbox. If we emit that full bbox, the icon child paints over
+    the first glyphs. For horizontal flex/inline-flex rows, trim any leading
+    child units from the text frame and preserve the CSS gap.
+    """
+    display = (getattr(anchor, "display", "") or "").lower()
+    if "flex" not in display:
+        return anchor.bbox
+    children = [
+        c for c in unit.children
+        if c.bbox.y < anchor.bbox.y + anchor.bbox.h
+        and c.bbox.y + c.bbox.h > anchor.bbox.y
+        and c.bbox.x <= anchor.bbox.x + anchor.bbox.w
+        and c.bbox.x + c.bbox.w <= anchor.bbox.x + anchor.bbox.w
+    ]
+    leading = [
+        c for c in children
+        if c.bbox.x <= anchor.bbox.x + 1.0 and c.bbox.w <= anchor.bbox.w * 0.5
+    ]
+    if not leading:
+        return anchor.bbox
+    gap = max(0.0, parse_px(getattr(anchor, "gap", "0px")))
+    left = max(c.bbox.x + c.bbox.w for c in leading) + gap
+    right = anchor.bbox.x + anchor.bbox.w
+    if left >= right - 1:
+        return anchor.bbox
+    return BoundingBox(x=left, y=anchor.bbox.y, w=right - left, h=anchor.bbox.h)
+
+
 def _dominant_line_border(el: DomElement) -> tuple[str, float, object | None] | None:
     sides = [
         ("top", el.border_top),
@@ -478,7 +534,7 @@ class Emitter:
         if _has_visible_border(anchor):
             emit_bbox = anchor.bbox
         elif (getattr(anchor, "mixed_content_text", None) or "").strip():
-            emit_bbox = anchor.bbox
+            emit_bbox = _mixed_content_text_bbox(unit, anchor)
         else:
             emit_bbox = _union_line_box(unit) or op.bbox
 
@@ -541,16 +597,17 @@ class Emitter:
         deco_stack = derive_decorations(anchor, palette=self._brand_palette)
         if not deco_stack.is_empty():
             deco_stack.emit_below(slide, emit_bbox)
-        if unit_anchor_el is not None and not _is_bg_clip_text(unit_anchor_el):
+        if (
+            unit_anchor_el is not None
+            and unit_anchor_el.id == anchor.id
+            and not _is_bg_clip_text(unit_anchor_el)
+        ):
             self._emit_text_backplate(slide, unit_anchor_el, emit_bbox)
         tb = slide.shapes.add_textbox(x, y, w, h)
         _apply_rotation(tb, anchor)
         tf = tb.text_frame
         tf.word_wrap = True
-        tf.margin_left = Emu(0)
-        tf.margin_right = Emu(0)
-        tf.margin_top = Emu(0)
-        tf.margin_bottom = Emu(0)
+        _apply_textframe_margins(tf, anchor)
         _ensure_default_normautofit(tf)
         # PowerPoint substitutes Inter/etc with Calibri when the source font
         # isn't installed — Calibri is wider, so big headlines that fit in 3
@@ -620,7 +677,7 @@ class Emitter:
             # Decorations on the unit-level still fire ABOVE.
             if not deco_stack.is_empty():
                 deco_stack.emit_above(slide, emit_bbox)
-            if unit_anchor_el is not None:
+            if unit_anchor_el is not None and unit_anchor_el.id == anchor.id:
                 self._emit_side_border_lines(slide, unit_anchor_el, op.bbox)
             return
 
@@ -636,8 +693,9 @@ class Emitter:
                     continue
                 scale_runs.append((t, max(8.0, parse_pt(e.font_size))))
             if scale_runs:
+                budget_w, budget_h = _content_budget_px(anchor, emit_bbox)
                 font_scale = self._apply_textframe_wrap_and_scale(
-                    tf, scale_runs, emit_bbox.w, emit_bbox.h,
+                    tf, scale_runs, budget_w, budget_h,
                     genre=genre_for_family(anchor.font_family),
                 )
         except Exception:
@@ -660,7 +718,7 @@ class Emitter:
         # Decoration layer (ABOVE): rim highlight / hairline / inset glow.
         if not deco_stack.is_empty():
             deco_stack.emit_above(slide, emit_bbox)
-        if unit_anchor_el is not None:
+        if unit_anchor_el is not None and unit_anchor_el.id == anchor.id:
             self._emit_side_border_lines(slide, unit_anchor_el, op.bbox)
 
     def _emit_text_element_as_own_shape(
@@ -676,10 +734,7 @@ class Emitter:
         _apply_rotation(tb, e)
         tf = tb.text_frame
         tf.word_wrap = True
-        tf.margin_left = Emu(0)
-        tf.margin_right = Emu(0)
-        tf.margin_top = Emu(0)
-        tf.margin_bottom = Emu(0)
+        _apply_textframe_margins(tf, e)
         _ensure_default_normautofit(tf)
         # Per-element font-metrics + wrap policy.
         font_scale = 1.0
@@ -687,8 +742,9 @@ class Emitter:
             text = (e.pptx_text or e.text or "").strip()
             if text:
                 pt_size = max(8.0, parse_pt(e.font_size))
+                budget_w, budget_h = _content_budget_px(e, e.bbox)
                 font_scale = self._apply_textframe_wrap_and_scale(
-                    tf, [(text, pt_size)], e.bbox.w, e.bbox.h,
+                    tf, [(text, pt_size)], budget_w, budget_h,
                     genre=genre_for_family(e.font_family),
                 )
         except Exception:
@@ -876,10 +932,14 @@ class Emitter:
         tb = slide.shapes.add_textbox(x, y, w, h)
         tf = tb.text_frame
         tf.word_wrap = True
-        tf.margin_left = Emu(0)
-        tf.margin_right = Emu(0)
-        tf.margin_top = Emu(0)
-        tf.margin_bottom = Emu(0)
+        anchor = unit.elements[0] if unit.elements else None
+        if anchor is not None:
+            _apply_textframe_margins(tf, anchor)
+        else:
+            tf.margin_left = Emu(0)
+            tf.margin_right = Emu(0)
+            tf.margin_top = Emu(0)
+            tf.margin_bottom = Emu(0)
         _ensure_default_normautofit(tf)
         # PowerPoint substitutes Inter/etc with Calibri when the source font
         # isn't installed — Calibri is wider, so big headlines that fit in 3

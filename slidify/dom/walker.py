@@ -628,6 +628,10 @@ _WALKER_JS_TEMPLATE = r"""
             mixed_content_text: mixedContentText,
             is_offcanvas: offCanvas,
             display: cs.display || 'inline',
+            padding_top: cs.paddingTop || '0px',
+            padding_right: cs.paddingRight || '0px',
+            padding_bottom: cs.paddingBottom || '0px',
+            padding_left: cs.paddingLeft || '0px',
             runs: runs,
             font_family: cs.fontFamily || '',
             font_size: cs.fontSize || '16px',
@@ -730,6 +734,10 @@ async def walk(page: Page) -> list[DomElement]:
                 mixed_content_text=entry.get("mixed_content_text"),
                 is_offcanvas=entry.get("is_offcanvas", False),
                 display=entry.get("display", "inline"),
+                padding_top=entry.get("padding_top", "0px"),
+                padding_right=entry.get("padding_right", "0px"),
+                padding_bottom=entry.get("padding_bottom", "0px"),
+                padding_left=entry.get("padding_left", "0px"),
                 runs=[
                     TextRun(
                         text=r.get("text", ""),

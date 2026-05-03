@@ -135,6 +135,13 @@ class DomElement(BaseModel):
     # the parent text frame.
     display: str = "inline"
     runs: list[TextRun] | None = None
+    # Computed CSS padding. PPTX text frames expose equivalent inset margins;
+    # carrying these through keeps chips, buttons, callout labels, and bordered
+    # text atoms editable without gluing glyphs to their backplates.
+    padding_top: str = "0px"
+    padding_right: str = "0px"
+    padding_bottom: str = "0px"
+    padding_left: str = "0px"
     font_family: str = ""
     font_size: str = "16px"
     font_weight: str = "400"
@@ -360,24 +367,24 @@ class ConversionResult(BaseModel):
     # any clip is a deterministic fact — not a render error. Surfacing it
     # here lets authors and agents catch the failure mode at compile time
     # instead of eyeballing PNGs. Empty = nothing overflowed.
-    overflow_elements: list["OverflowElement"] = Field(default_factory=list)
+    overflow_elements: list[OverflowElement] = Field(default_factory=list)
     # Escape-hatch metering — `report.escapeRate` per CONTRACT-v2 §F.4.
     # Wired by M6's compile_ir.py when the IR→PPTX path embeds any
     # `chrome.escape-hatch` raster.
-    escape_rate: "EscapeRate" = Field(default_factory=lambda: EscapeRate())
+    escape_rate: EscapeRate = Field(default_factory=lambda: EscapeRate())
     # Coverage oracle telemetry: DOM elements with text content whose bbox
     # isn't represented in any produced VisualUnit. The dual of
     # `unmatched_signatures` — surfaces dropped CONTENT (clusterer silently
     # skipped a subtree) rather than dropped SHAPES (clusterer produced a
     # unit but no tier-0 pattern matched). Empty = every text-bearing
     # element has at least one unit covering its region.
-    coverage_gaps: list["CoverageGap"] = Field(default_factory=list)
+    coverage_gaps: list[CoverageGap] = Field(default_factory=list)
     # Emit-pathway exclusivity audit telemetry: cases where an absorbing
     # parent emit op (NativeText / NativeBullet / NativePicture / NativeSvg
     # / NativeTable) overlaps a descendant unit that ALSO emits — the
     # structural fingerprint of visual duplication in the produced PPTX.
     # Empty = emit pathways are clean.
-    exclusivity_violations: list["ExclusivityViolation"] = Field(default_factory=list)
+    exclusivity_violations: list[ExclusivityViolation] = Field(default_factory=list)
 
 
 class CoverageGap(BaseModel):

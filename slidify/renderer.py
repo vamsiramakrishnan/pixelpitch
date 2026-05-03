@@ -208,20 +208,44 @@ class Renderer:
             )
 
     async def _capture_decoration_only(self, page: Page) -> bytes:
-        """Blank every text node, screenshot, restore. The result is the
-        decoration layer (gradients, shapes, borders, shadows) without any
-        text pixels — used by the surgical-hybrid emitter for pixel-exact
-        backgrounds."""
-        # Walks all text nodes, stashes originals on the document, blanks them.
+        """Hide text paint, screenshot, restore.
+
+        The result is the decoration layer (gradients, shapes, borders,
+        shadows) without text pixels. Do not blank text nodes: that changes
+        layout in normal document flow and moves cards/charts before the
+        raster backplate is captured.
+        """
         await page.evaluate(
             r"""() => {
                 const stash = [];
-                const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-                let n;
-                while ((n = walker.nextNode())) {
-                    if (!n.nodeValue) continue;
-                    stash.push([n, n.nodeValue]);
-                    n.nodeValue = '';
+                const style = document.createElement('style');
+                style.setAttribute('data-slidify-no-text', 'true');
+                style.textContent = `
+                    body *, body *::before, body *::after {
+                        color: transparent !important;
+                        -webkit-text-fill-color: transparent !important;
+                        text-shadow: none !important;
+                        caret-color: transparent !important;
+                    }
+                    svg text, svg tspan {
+                        fill: transparent !important;
+                        stroke: transparent !important;
+                    }
+                `;
+                document.head.appendChild(style);
+                stash.push(['style-node', style, null]);
+                for (const el of Array.from(document.body.querySelectorAll('*'))) {
+                    const cs = getComputedStyle(el);
+                    const clip = [
+                        cs.backgroundClip || '',
+                        cs.webkitBackgroundClip || '',
+                        cs.getPropertyValue('background-clip') || '',
+                        cs.getPropertyValue('-webkit-background-clip') || '',
+                    ].join(' ');
+                    if (!clip.includes('text')) continue;
+                    stash.push(['style', el, el.getAttribute('style')]);
+                    el.style.setProperty('background-image', 'none', 'important');
+                    el.style.setProperty('background-color', 'transparent', 'important');
                 }
                 window.__slidify_text_stash = stash;
             }"""
@@ -241,7 +265,14 @@ class Renderer:
             await page.evaluate(
                 r"""() => {
                     const stash = window.__slidify_text_stash || [];
-                    for (const [n, v] of stash) n.nodeValue = v;
+                    for (const item of stash) {
+                        if (item[0] === 'style-node') {
+                            item[1].remove();
+                        } else if (item[0] === 'style') {
+                            if (item[2] === null) item[1].removeAttribute('style');
+                            else item[1].setAttribute('style', item[2]);
+                        }
+                    }
                     window.__slidify_text_stash = null;
                 }"""
             )
