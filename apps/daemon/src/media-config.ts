@@ -50,13 +50,13 @@ const ENV_KEYS = {
   fishaudio: ['PIXELPITCH_FISHAUDIO_API_KEY', 'FISH_AUDIO_API_KEY'],
 };
 
-function configFile(projectRoot) {
-  return path.join(projectRoot, '.od', 'media-config.json');
+function configFile(dataDir) {
+  return path.join(dataDir, 'media-config.json');
 }
 
-async function readStored(projectRoot) {
+async function readStored(dataDir) {
   try {
-    const raw = await readFile(configFile(projectRoot), 'utf8');
+    const raw = await readFile(configFile(dataDir), 'utf8');
     const parsed = JSON.parse(raw);
     if (parsed && typeof parsed === 'object' && parsed.providers) {
       return parsed.providers;
@@ -68,8 +68,8 @@ async function readStored(projectRoot) {
   }
 }
 
-async function writeStored(projectRoot, providers) {
-  const file = configFile(projectRoot);
+async function writeStored(dataDir, providers) {
+  const file = configFile(dataDir);
   await mkdir(path.dirname(file), { recursive: true });
   await writeFile(file, JSON.stringify({ providers }, null, 2), 'utf8');
 }
@@ -88,8 +88,8 @@ function readEnvKey(providerId) {
  * Resolve credentials for a provider. Env vars win, then stored config.
  * Returns { apiKey, baseUrl } where either may be empty string.
  */
-export async function resolveProviderConfig(projectRoot, providerId) {
-  const stored = await readStored(projectRoot);
+export async function resolveProviderConfig(dataDir, providerId) {
+  const stored = await readStored(dataDir);
   const entry = stored[providerId] || {};
   const envKey = readEnvKey(providerId);
   return {
@@ -103,8 +103,8 @@ export async function resolveProviderConfig(projectRoot, providerId) {
  * frontend can show "••••" + a "configured" indicator without leaking
  * the secret back into the DOM.
  */
-export async function readMaskedConfig(projectRoot) {
-  const stored = await readStored(projectRoot);
+export async function readMaskedConfig(dataDir) {
+  const stored = await readStored(dataDir);
   const providers = {};
   for (const id of PROVIDER_IDS) {
     const entry = stored[id] || {};
@@ -135,7 +135,7 @@ export async function readMaskedConfig(projectRoot) {
  * pushing `{providers: {}}` onto a daemon that had keys from a
  * previous session) without silently destroying the user's data.
  */
-export async function writeConfig(projectRoot, body) {
+export async function writeConfig(dataDir, body) {
   const incoming = body && typeof body === 'object' ? body.providers || {} : {};
   const force = Boolean(body && typeof body === 'object' && body.force === true);
   const next = {};
@@ -154,7 +154,7 @@ export async function writeConfig(projectRoot, body) {
     next[id] = { apiKey, baseUrl };
   }
   if (Object.keys(next).length === 0) {
-    const prior = await readStored(projectRoot);
+    const prior = await readStored(dataDir);
     const priorIds = Object.keys(prior).filter(
       (id) => prior[id] && (prior[id].apiKey || prior[id].baseUrl),
     );
@@ -175,6 +175,6 @@ export async function writeConfig(projectRoot, body) {
       }
     }
   }
-  await writeStored(projectRoot, next);
-  return readMaskedConfig(projectRoot);
+  await writeStored(dataDir, next);
+  return readMaskedConfig(dataDir);
 }

@@ -26,9 +26,9 @@ afterEach(() => {
 });
 
 function createDb() {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'od-project-status-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pixelpitch-project-status-'));
   tempDirs.push(dir);
-  return openDatabase(dir, { dataDir: path.join(dir, '.od') });
+  return openDatabase(dir, { dataDir: path.join(dir, '.pixelpitch') });
 }
 
 function seedProject(db, projectId, runStatus = 'succeeded') {

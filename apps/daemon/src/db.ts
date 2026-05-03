@@ -14,7 +14,7 @@ let dbInstance = null;
 let dbFile = null;
 
 export function openDatabase(projectRoot, { dataDir } = {}) {
-  const dir = dataDir ? path.resolve(dataDir) : path.join(projectRoot, '.od');
+  const dir = dataDir ? path.resolve(dataDir) : path.join(projectRoot, '.pixelpitch');
   const file = path.join(dir, 'app.sqlite');
   if (dbInstance && dbFile === file) return dbInstance;
   if (dbInstance) closeDatabase();

@@ -6,7 +6,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const e2eDir = path.resolve(__dirname, '..');
 
 const targets = [
-  path.join(e2eDir, '.od-data'),
+  path.join(e2eDir, '.pixelpitch-data'),
   path.join(e2eDir, 'test-results'),
   path.join(e2eDir, 'reports', 'test-results'),
   path.join(e2eDir, 'reports', 'html'),
@@ -25,14 +25,14 @@ await mkdir(path.join(e2eDir, 'reports'), { recursive: true });
 
 // Recreate runtime roots so local inspection stays predictable even before
 // Playwright or the daemon materializes them.
-await mkdir(path.join(e2eDir, '.od-data'), { recursive: true });
+await mkdir(path.join(e2eDir, '.pixelpitch-data'), { recursive: true });
 await mkdir(path.join(e2eDir, 'reports', 'test-results'), {
   recursive: true,
 });
 
 // Best-effort removal of accidental empty directories directly under the
 // test data root. This keeps old project ids from piling up across runs.
-const projectsRoot = path.join(e2eDir, '.od-data', 'projects');
+const projectsRoot = path.join(e2eDir, '.pixelpitch-data', 'projects');
 try {
   const entries = await readdir(projectsRoot, { withFileTypes: true });
   await Promise.all(

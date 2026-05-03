@@ -13,7 +13,7 @@
 
 每次执行 `pnpm run test:ui`（或 `pnpm --filter @pixelpitch/e2e test:ui`）前，系统会先自动清理旧的：
 
-- `e2e/.od-data/`
+- `e2e/.pixelpitch-data/`
 - `e2e/reports/test-results/`
 - `e2e/reports/playwright-html-report/`
 - `e2e/reports/results.json`

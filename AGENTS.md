@@ -27,7 +27,7 @@ This file is the single source of truth for agents entering this repository. Rea
 ## Inactive or placeholder directories
 
 - `apps/nextjs` and `packages/shared` have been removed; do not recreate or reference them.
-- `.pixelpitch/`, `.tmp/`, `e2e/.od-data`, Playwright reports, and agent scratch directories are local runtime data and must stay out of git.
+- `.pixelpitch/`, `.tmp/`, `e2e/.pixelpitch-data`, Playwright reports, and agent scratch directories are local runtime data and must stay out of git.
 
 # Development workflow
 

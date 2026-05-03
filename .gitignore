@@ -51,6 +51,8 @@ bun.lockb
 
 # pixelpitch daemon local data dir (project-local SQLite + cache)
 .pixelpitch/
+.pixelpitch-data/
+.od/
 .claude/worktrees/
 .claude/agents/
 .gemini/agents/

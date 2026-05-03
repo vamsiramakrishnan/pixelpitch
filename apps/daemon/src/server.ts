@@ -315,7 +315,7 @@ const PROMPT_TEMPLATES_DIR = resolveDaemonResourceDir(
 );
 const RUNTIME_DATA_DIR = process.env.PIXELPITCH_DATA_DIR
   ? path.resolve(PROJECT_ROOT, process.env.PIXELPITCH_DATA_DIR)
-  : path.join(PROJECT_ROOT, '.od');
+  : path.join(PROJECT_ROOT, '.pixelpitch');
 const ARTIFACTS_DIR = path.join(RUNTIME_DATA_DIR, 'artifacts');
 const PROJECTS_DIR = path.join(RUNTIME_DATA_DIR, 'projects');
 fs.mkdirSync(PROJECTS_DIR, { recursive: true });
@@ -1834,7 +1834,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
 
   app.get('/api/media/config', async (_req, res) => {
     try {
-      const cfg = await readMaskedConfig(PROJECT_ROOT);
+      const cfg = await readMaskedConfig(RUNTIME_DATA_DIR);
       res.json(cfg);
     } catch (err) {
       res
@@ -1845,7 +1845,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
 
   app.put('/api/media/config', async (req, res) => {
     try {
-      const cfg = await writeConfig(PROJECT_ROOT, req.body);
+      const cfg = await writeConfig(RUNTIME_DATA_DIR, req.body);
       res.json(cfg);
     } catch (err) {
       const status = typeof err?.status === 'number' ? err.status : 400;
@@ -1911,6 +1911,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       task.status = 'running';
       generateMedia({
         projectRoot: PROJECT_ROOT,
+        dataDir: RUNTIME_DATA_DIR,
         projectsRoot: PROJECTS_DIR,
         projectId,
         surface: req.body?.surface,

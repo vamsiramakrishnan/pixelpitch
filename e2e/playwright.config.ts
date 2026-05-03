@@ -35,7 +35,7 @@ export default defineConfig({
   },
   webServer: {
     command:
-      `PIXELPITCH_DATA_DIR=e2e/.od-data ` +
+      `PIXELPITCH_DATA_DIR=e2e/.pixelpitch-data ` +
       `pnpm --dir .. tools-dev run web --daemon-port ${daemonPort} --web-port ${webPort}`,
     url: baseURL,
     reuseExistingServer: false,

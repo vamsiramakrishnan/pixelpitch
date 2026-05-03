@@ -110,7 +110,7 @@ pnpm --filter @pixelpitch/e2e test:ui
 
 运行开始前会自动清理旧的 e2e 运行时数据和上一次报告，避免：
 
-- `.od-data` 里累积空 project 目录
+- `.pixelpitch-data` 里累积空 project 目录
 - `e2e/reports/test-results` 混入旧失败截图
 - 报告内容和本次执行结果不一致
 

@@ -24,9 +24,10 @@ export async function listSkills(skillsRoot) {
       if (!stats.isFile()) continue;
       const raw = await readFile(skillPath, "utf8");
       const { data, body } = parseFrontmatter(raw);
+      const pixelpitch = data.pixelpitch || data.od || {};
       const hasAttachments = await dirHasAttachments(dir);
-      const mode = data.od?.mode || inferMode(body, data.description);
-      const surface = normalizeSurface(data.od?.surface, mode);
+      const mode = pixelpitch.mode || inferMode(body, data.description);
+      const surface = normalizeSurface(pixelpitch.surface, mode);
       out.push({
         id: data.name || entry.name,
         name: data.name || entry.name,
@@ -34,28 +35,28 @@ export async function listSkills(skillsRoot) {
         triggers: Array.isArray(data.triggers) ? data.triggers : [],
         mode,
         surface,
-        craftRequires: normalizeCraftRequires(data.od?.craft?.requires),
+        craftRequires: normalizeCraftRequires(pixelpitch.craft?.requires),
         platform: normalizePlatform(
-          data.od?.platform,
+          pixelpitch.platform,
           mode,
           body,
           data.description
         ),
-        scenario: normalizeScenario(data.od?.scenario, body, data.description),
-        previewType: data.od?.preview?.type || "html",
-        designSystemRequired: data.od?.design_system?.requires ?? true,
-        defaultFor: normalizeDefaultFor(data.od?.default_for),
+        scenario: normalizeScenario(pixelpitch.scenario, body, data.description),
+        previewType: pixelpitch.preview?.type || "html",
+        designSystemRequired: pixelpitch.design_system?.requires ?? true,
+        defaultFor: normalizeDefaultFor(pixelpitch.default_for),
         upstream:
-          typeof data.od?.upstream === "string" ? data.od.upstream : null,
-        featured: normalizeFeatured(data.od?.featured),
+          typeof pixelpitch.upstream === "string" ? pixelpitch.upstream : null,
+        featured: normalizeFeatured(pixelpitch.featured),
         // Optional metadata hints used by 'Use this prompt' fast-create so
         // the resulting project mirrors the shipped example.html. Each hint
         // is only consumed when its kind matches the skill mode; missing
         // hints fall back to the same defaults the new-project form uses.
-        fidelity: normalizeFidelity(data.od?.fidelity),
-        speakerNotes: normalizeBoolHint(data.od?.speaker_notes),
-        animations: normalizeBoolHint(data.od?.animations),
-        examplePrompt: derivePrompt(data),
+        fidelity: normalizeFidelity(pixelpitch.fidelity),
+        speakerNotes: normalizeBoolHint(pixelpitch.speaker_notes),
+        animations: normalizeBoolHint(pixelpitch.animations),
+        examplePrompt: derivePrompt(data, pixelpitch),
         body: hasAttachments ? withSkillRootPreamble(body, dir) : body,
         dir,
       });
@@ -125,7 +126,7 @@ function normalizeDefaultFor(value) {
   return [String(value)];
 }
 
-// Optional `od.fidelity` hint for prototype skills. Only 'wireframe' and
+// Optional `pixelpitch.fidelity` hint for prototype skills. Only 'wireframe' and
 // 'high-fidelity' are meaningful — anything else collapses to null so the
 // caller falls back to the form default ('high-fidelity').
 function normalizeFidelity(value) {
@@ -146,7 +147,7 @@ function normalizeBoolHint(value) {
   return null;
 }
 
-// Coerce `od.featured` into a numeric priority. Lower numbers float to the
+// Coerce `pixelpitch.featured` into a numeric priority. Lower numbers float to the
 // top of the Examples gallery; `true` is treated as priority 1; anything
 // missing/unrecognised becomes null so non-featured skills keep their
 // natural alphabetical order.
@@ -160,12 +161,12 @@ function normalizeFeatured(value) {
   return null;
 }
 
-// Prefer an explicitly authored `od.example_prompt`. Fall back to the
+// Prefer an explicitly authored `pixelpitch.example_prompt`. Fall back to the
 // skill description's first sentence — it's already written in actionable
 // language ("Admin / analytics dashboard in a single HTML file…") so it
 // serves as a passable starter prompt.
-function derivePrompt(data) {
-  const explicit = data.od?.example_prompt;
+function derivePrompt(data, pixelpitch = data.pixelpitch || data.od || {}) {
+  const explicit = pixelpitch.example_prompt;
   if (typeof explicit === "string" && explicit.trim()) return explicit.trim();
   const desc =
     typeof data.description === "string" ? data.description.trim() : "";

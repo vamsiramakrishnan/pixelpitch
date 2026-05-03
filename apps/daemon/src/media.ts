@@ -209,6 +209,7 @@ function clampWithWarning(value, allowed, flagName) {
  */
 export async function generateMedia(args) {
   const {
+    dataDir,
     projectRoot,
     projectsRoot,
     projectId,
@@ -313,7 +314,10 @@ export async function generateMedia(args) {
     imageRef,
   };
 
-  const credentials = await resolveProviderConfig(projectRoot, def.provider);
+  const credentials = await resolveProviderConfig(
+    dataDir || path.join(projectRoot, '.pixelpitch'),
+    def.provider,
+  );
 
   let bytes;
   let providerNote;
