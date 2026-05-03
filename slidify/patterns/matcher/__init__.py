@@ -5,6 +5,7 @@ from slidify.patterns.matcher.core import (
     Pattern,
     PatternHit,
     PatternStats,
+    _h_data_atom_id,
     get_default_patterns,
     match,
 )
@@ -14,7 +15,7 @@ __all__ = [
     "Pattern",
     "PatternHit",
     "PatternStats",
+    "_h_data_atom_id",
     "get_default_patterns",
     "match",
 ]
-
