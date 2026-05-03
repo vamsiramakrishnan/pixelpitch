@@ -56,7 +56,7 @@ from slidify.models import (
     VisualUnit,
 )
 from slidify.shadows import apply_shadows, parse_box_shadows
-from slidify.svg_shapes import emit_svg_shapes
+from slidify.svg.shapes import emit_svg_shapes
 from slidify.text_metrics import (
     compute_font_scale_for_textbox,
     genre_for_family,

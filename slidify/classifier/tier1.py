@@ -15,7 +15,7 @@ from slidify.gradients import parse_gradient
 from slidify.models import Decision, DecisionKind, UnitKind, VisualUnit
 from slidify.preset_shapes import clip_path_to_preset
 from slidify.shadows import is_translatable_shadow
-from slidify.svg_shapes import is_translatable_svg
+from slidify.svg.shapes import is_translatable_svg
 
 
 def _has_canvas(unit: VisualUnit) -> bool:

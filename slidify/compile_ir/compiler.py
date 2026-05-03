@@ -82,17 +82,17 @@ from slidify.ir import (
     _color_to_hex_alpha,
     normalize_shadows,
 )
-from slidify.path import (
-    detect_prst_txwarp,
-    make_custgeom_xml,
-    path_bbox,
-)
 from slidify.pattern_fills import apply_pattern_fill
 from slidify.shadows import (
     BoxShadow as ShBoxShadow,
 )
 from slidify.shadows import (
     apply_shadow,
+)
+from slidify.svg.path import (
+    detect_prst_txwarp,
+    make_custgeom_xml,
+    path_bbox,
 )
 
 log = structlog.get_logger(__name__)
