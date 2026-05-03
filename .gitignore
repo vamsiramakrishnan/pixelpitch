@@ -17,9 +17,6 @@ dist/
 # Output artifacts
 *.pptx
 !tests/fixtures/**/*.pptx
-!examples/**/*.pptx
-!_bench/corpus/divergent-deck.pptx
-!_bench/dist/**/*.pptx
 *.pdf
 out/
 slide-*.png
