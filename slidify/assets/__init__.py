@@ -1,12 +1,9 @@
-"""Compatibility shim for ``slidify.assets.font_resolver``."""
+"""Asset helpers for fonts and future media fetching."""
 
+from slidify.assets.font_embed import FontVariants, discover_inter, embed_fonts_in_pptx
 from slidify.assets.font_resolver import (
     RequestedFont,
     ResolvedFont,
-    _families_compatible,
-    _genre_for,
-    _normalize_family,
-    _parse_weight,
     collect_requested_families,
     resolve_and_subset_for_deck,
     resolve_to_files,
@@ -14,14 +11,14 @@ from slidify.assets.font_resolver import (
 )
 
 __all__ = [
+    "FontVariants",
     "RequestedFont",
     "ResolvedFont",
-    "_families_compatible",
-    "_genre_for",
-    "_normalize_family",
-    "_parse_weight",
     "collect_requested_families",
+    "discover_inter",
+    "embed_fonts_in_pptx",
     "resolve_and_subset_for_deck",
     "resolve_to_files",
     "subset_fonts",
 ]
+
