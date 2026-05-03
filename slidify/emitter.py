@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import io
-import math
 import re
 from pathlib import Path
 from urllib.parse import urlparse
@@ -12,12 +11,29 @@ import httpx
 import structlog
 from lxml import etree
 from pptx import Presentation
-from pptx.enum.shapes import MSO_SHAPE
 from pptx.enum.text import MSO_AUTO_SIZE, PP_ALIGN
 from pptx.util import Emu, Pt
 
 from slidify.colors import parse_color
 from slidify.decorations import derive_decorations
+from slidify.emitter_geometry import (
+    _apply_rotation,
+    _clamp_bbox,
+    _emu_rect,
+    _emu_rect_offcanvas,
+    _grow_bbox_for_fallback_wrap,
+    _rotation_degrees,
+)
+from slidify.emitter_metrics import native_area_ratio
+from slidify.emitter_shapes import _shape_kind_for_anchor
+from slidify.emitter_text import (
+    _are_spatially_distinct,
+    _has_title_sized_text,
+    _is_bg_clip_text,
+    _resolve_run_color,
+    _try_apply_gradient_text_fill,
+    _union_line_box,
+)
 from slidify.exceptions import EmitError
 from slidify.fonts import is_bold
 from slidify.fonts import resolve as resolve_font
@@ -39,12 +55,10 @@ from slidify.models import (
     RenderedSlide,
     VisualUnit,
 )
-from slidify.preset_shapes import detect_preset_shape
 from slidify.shadows import apply_shadows, parse_box_shadows
 from slidify.svg_shapes import emit_svg_shapes
 from slidify.text_metrics import (
     compute_font_scale_for_textbox,
-    estimate_wrapped_lines,
     genre_for_family,
     shrink_pill_bbox_to_fit_text,
 )
@@ -94,6 +108,17 @@ def _ensure_default_normautofit(text_frame) -> None:
 
 log = structlog.get_logger(__name__)
 
+__all__ = [
+    "Emitter",
+    "_apply_explicit_autofit",
+    "_grow_bbox_for_fallback_wrap",
+    "_resolve_run_color",
+    "_rotation_degrees",
+    "_try_apply_gradient_text_fill",
+    "_union_line_box",
+    "native_area_ratio",
+]
+
 
 _TEXT_ALIGN_MAP = {
     "left": PP_ALIGN.LEFT,
@@ -103,146 +128,6 @@ _TEXT_ALIGN_MAP = {
     "start": PP_ALIGN.LEFT,
     "end": PP_ALIGN.RIGHT,
 }
-
-
-def _clamp_bbox(b: BoundingBox) -> BoundingBox:
-    """Tight clamp to slide bounds — used only when we need a contained
-    region (e.g., screenshot crops). DO NOT use for placing decorative
-    shapes; clamping a top:-220px overlay to top:0 *moves* its visual
-    center. Use `_emu_rect_offcanvas` instead for shapes whose origin
-    can legitimately sit outside the slide.
-    """
-    x = max(0.0, min(b.x, SLIDE_W_PX - 1))
-    y = max(0.0, min(b.y, SLIDE_H_PX - 1))
-    w = max(1.0, min(b.w, SLIDE_W_PX - x))
-    h = max(1.0, min(b.h, SLIDE_H_PX - y))
-    return BoundingBox(x=x, y=y, w=w, h=h)
-
-
-def _emu_rect(b: BoundingBox) -> tuple[Emu, Emu, Emu, Emu]:
-    b = _clamp_bbox(b)
-    return (
-        Emu(px_to_emu(b.x)),
-        Emu(px_to_emu(b.y)),
-        Emu(px_to_emu(b.w)),
-        Emu(px_to_emu(b.h)),
-    )
-
-
-def _grow_bbox_for_fallback_wrap(
-    bbox: BoundingBox,
-    text: str,
-    font_size_pt: float,
-    font_family: str | None,
-    line_height_factor: float = 1.25,
-    max_lines: int = 4,
-) -> BoundingBox:
-    """If ``text`` would wrap to N lines at ``bbox.w`` with the genre-
-    appropriate fallback font but ``bbox.h`` only fits 1 line, grow
-    ``bbox.h`` to fit those N lines.
-
-    Background: slidify pulls bboxes from ``getBoundingClientRect()`` in
-    headless Chrome. When the source font isn't installed (e.g. Source
-    Serif Pro on a CI box that only has DejaVu Serif), the browser
-    rendered the headline as one line at width W. The PPTX gets a
-    1-line-tall textbox. LibreOffice opens the PPTX with its OWN
-    fallback (DejaVu Serif Bold for serif, ~15% wider than the browser's
-    fallback), and the text now genuinely needs to wrap. With a 1-line
-    bbox, the wrapped lines clip OR overflow horizontally past the bbox
-    into the next column. Either way the slide diverges.
-
-    Growing the bbox vertically is a defensive correction — the
-    extra space is invisible when the text really does fit (since
-    ``word_wrap=true`` only consumes what it needs). ``max_lines``
-    bounds the growth so a runaway misestimate can't push N lines into
-    the next layout band.
-
-    Skipped for *titles* (>= 24pt). Display headlines are designed to
-    sit on one line; if they overflow we lean on per-run ``<a:rPr sz=>``
-    shrink (see ``_apply_textframe_wrap_and_scale``) so the layout
-    keeps its visual rhythm. Body / caption text is what benefits from
-    vertical growth.
-    """
-    if not text or font_size_pt <= 0:
-        return bbox
-    if font_size_pt >= 24.0:
-        # Display headline — shrink-to-fit is the right tool, not wrap.
-        return bbox
-    line_height_px = font_size_pt * 1.333 * line_height_factor
-    if bbox.h >= line_height_px * 2:
-        return bbox  # already multi-line; trust the source.
-    genre = genre_for_family(font_family)
-    try:
-        n_lines = estimate_wrapped_lines(
-            text, bbox_w_px=bbox.w, font_size_pt=font_size_pt, genre=genre
-        )
-    except Exception:
-        return bbox
-    if n_lines <= 1:
-        return bbox
-    n_lines = min(n_lines, max_lines)
-    new_h = max(bbox.h, n_lines * line_height_px)
-    return BoundingBox(x=bbox.x, y=bbox.y, w=bbox.w, h=new_h)
-
-
-def _emu_rect_offcanvas(b: BoundingBox) -> tuple[Emu, Emu, Emu, Emu]:
-    """Convert px bbox → EMU rect WITHOUT clamping origin to >= 0. PPTX
-    accepts negative shape positions and clips at the slide boundary, which
-    is exactly what we want for decorative overlays anchored off-canvas
-    (auroras, glow ovals positioned with top: -220px etc).
-
-    Width/height are clamped to >= 1 px to avoid python-pptx errors on
-    zero-size shapes; otherwise the shape is emitted as-is.
-    """
-    w = max(1.0, b.w)
-    h = max(1.0, b.h)
-    return (
-        Emu(px_to_emu(b.x)),
-        Emu(px_to_emu(b.y)),
-        Emu(px_to_emu(w)),
-        Emu(px_to_emu(h)),
-    )
-
-
-def _rotation_degrees(transform: str) -> float:
-    """Extract native 2D rotation degrees from CSS transform text."""
-    t = (transform or "").strip()
-    if not t or t.lower() == "none":
-        return 0.0
-    m = re.search(r"rotate\(\s*([-+]?\d*\.?\d+)(deg|rad|turn)?\s*\)", t, re.I)
-    if m:
-        value = float(m.group(1))
-        unit = (m.group(2) or "deg").lower()
-        if unit == "rad":
-            return math.degrees(value)
-        if unit == "turn":
-            return value * 360.0
-        return value
-    m = re.search(r"matrix\(\s*([^)]+)\)", t, re.I)
-    if not m:
-        return 0.0
-    parts = [p.strip() for p in m.group(1).split(",")]
-    if len(parts) < 4:
-        return 0.0
-    try:
-        a = float(parts[0])
-        b = float(parts[1])
-    except ValueError:
-        return 0.0
-    angle = math.degrees(math.atan2(b, a))
-    return 0.0 if abs(angle) < 0.01 else angle
-
-
-def _apply_rotation(shape, el: DomElement | None) -> None:
-    if el is None:
-        return
-    angle = _rotation_degrees(el.transform)
-    if not angle:
-        return
-    try:
-        shape.rotation = angle
-    except Exception:
-        pass
 
 
 class Emitter:
@@ -1405,327 +1290,3 @@ class Emitter:
             slide.notes_slide.notes_text_frame.text = text
         except Exception as e:
             log.warning("emitter.notes_failed", error=str(e))
-
-
-def _shape_kind_for_anchor(
-    anchor: DomElement, radius_px: float
-) -> tuple[int, BoundingBox | None]:
-    """Pick the right MSO_SHAPE for an anchor.
-
-    Priority: explicit clip-path / class hint → preset (chevron, arrow,
-    star, hexagon, callout, etc.) via `slidify.preset_shapes`. Then fall
-    back to OVAL for true circles, ROUNDED_RECTANGLE for radius > 0,
-    RECTANGLE otherwise.
-
-    Returns `(preset, bbox_override)`. `bbox_override` is non-None when
-    the matched preset implies a smaller visible area than the source
-    element (e.g. `clip-path: inset(...)` shrinks the rectangle, and
-    `clip-path: circle(...)` clips to an inscribed disc) — callers must
-    place the shape at the override bbox rather than the unit bbox.
-    """
-    match = detect_preset_shape(anchor)
-    if match is not None:
-        return match.preset, match.bbox_override
-    w = anchor.bbox.w
-    h = anchor.bbox.h
-    if w > 0 and h > 0:
-        if radius_px >= min(w, h) * 0.45:
-            return MSO_SHAPE.OVAL, None
-    return (
-        MSO_SHAPE.ROUNDED_RECTANGLE if radius_px > 0 else MSO_SHAPE.RECTANGLE,
-        None,
-    )
-
-
-def _union_line_box(unit: VisualUnit) -> BoundingBox | None:
-    """Return the union of every text run's line boxes inside `unit`.
-
-    The walker captures `Range.getClientRects()` per text node — each
-    rect is a visual line at its exact rendered pixel position. The
-    union is where the type ACTUALLY sat in the source, regardless of
-    the CSS box-model container's bbox (which is often oversized due
-    to padding / line-height overhead).
-
-    Leaf-text elements (a plain `<h1>Thank you.</h1>` with no inline
-    children) carry text on the element itself rather than as a list
-    of runs, so the walker doesn't capture per-run line_boxes for
-    them. Without falling back to ``el.bbox`` for those, a unit
-    containing both a leaf `<h1>` and a multi-run `<div class="sub">`
-    would compute its emit bbox from the sub's lines alone — clipping
-    the headline to the subtitle's height (slide-17 "Thank you." at
-    180px shrunk into a 29px tall textbox).
-
-    Returns None when no text-bearing element exists in the unit.
-    """
-    boxes: list[BoundingBox] = []
-    for el in unit.all_elements():
-        if el.runs:
-            for r in el.runs:
-                if r.is_break:
-                    continue
-                boxes.extend(r.line_boxes)
-        elif el.text and el.text.strip():
-            # Leaf text: walker doesn't expose per-line rects, but the
-            # element's own bbox is a tight fit for the rendered glyphs
-            # (CSS line-height defines the box height directly).
-            boxes.append(el.bbox)
-    if not boxes:
-        return None
-    minx = min(b.x for b in boxes)
-    miny = min(b.y for b in boxes)
-    maxx = max(b.x + b.w for b in boxes)
-    maxy = max(b.y + b.h for b in boxes)
-    return BoundingBox(x=minx, y=miny, w=maxx - minx, h=maxy - miny)
-
-
-def _are_spatially_distinct(elems: list[DomElement]) -> bool:
-    """True iff elems should each emit as their own textbox.
-
-    Triggers when any pair of elements has non-overlapping x-ranges OR
-    non-overlapping y-ranges — i.e., they don't visually share a region.
-    Putting them in a single textbox would either:
-      - stack their text on top of each other when they're laid out
-        horizontally (timeline step labels with `position:absolute; left:N`)
-      - clip the second paragraph when they're laid out vertically inside
-        a tight container (feature-row title + description with their own
-        y-bands).
-
-    Inline-styled siblings (multiple `<span>` runs of the same `<h1>`)
-    are NOT spatially distinct — they share a y-band and overlap in x —
-    so they continue through the existing single-textbox path.
-    """
-    if len(elems) < 2:
-        return False
-    boxes = [e.bbox for e in elems]
-    for i in range(len(boxes)):
-        for j in range(i + 1, len(boxes)):
-            a, b = boxes[i], boxes[j]
-            x_overlap = max(0.0, min(a.x2, b.x2) - max(a.x, b.x))
-            y_overlap = max(0.0, min(a.y2, b.y2) - max(a.y, b.y))
-            # Either axis has zero overlap → they're not in the same
-            # visual region, so they should emit at their own bboxes.
-            if x_overlap <= 0 or y_overlap <= 0:
-                return True
-    return False
-
-
-def _has_title_sized_text(unit: VisualUnit) -> bool:
-    """True iff the unit has at least one text element/run rendered at >= 20px.
-
-    The cutoff matches CSS `text-xl` / `text-2xl` (display headings). Below it
-    the text is body / labels / captions where wrap-on-overflow is acceptable
-    and auto-fit causes more harm than good (LibreOffice's TEXT_TO_FIT_SHAPE
-    over-shrinks small frames).
-    """
-    for e in unit.all_elements():
-        if e.runs:
-            for r in e.runs:
-                if parse_px(r.font_size) >= 20.0:
-                    return True
-        elif e.text and e.text.strip():
-            if parse_px(e.font_size) >= 20.0:
-                return True
-    return False
-
-
-def _is_bg_clip_text(anchor: DomElement) -> bool:
-    """Heuristic detection of the CSS `background-clip: text` recipe.
-
-    Pattern:
-      .x { background: linear-gradient(...); -webkit-background-clip: text;
-           color: transparent; }
-
-    The browser computes:
-      anchor.color           = "rgba(0, 0, 0, 0)"
-      anchor.background_image = "linear-gradient(...)"
-
-    We can't see the `background-clip` property in the computed-style snapshot
-    we collect, but the (transparent color + gradient bg-image) combination is
-    a sufficiently distinctive marker. PPTX cannot natively reproduce
-    gradient-clipped text on a block-level shape, so we paint the run with the
-    gradient's first stop color and leave the textbox unfilled.
-    """
-    if not anchor.background_image or anchor.background_image == "none":
-        return False
-    if "gradient(" not in anchor.background_image:
-        return False
-    # color: transparent? In computed form it's `rgba(*, *, *, 0)`.
-    col_str = (anchor.color or "").strip().lower()
-    import re as _re
-
-    return _re.match(r"rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*0(?:\.0+)?\s*\)", col_str) is not None
-
-
-def _try_apply_gradient_text_fill(
-    font, spec: dict, fallback_el: DomElement | None = None
-) -> bool:
-    """Native gradient fill on a text run via OOXML's `<a:gradFill>` inside
-    `<a:rPr>`. Returns True iff a gradient was applied.
-
-    Triggers only when the spec has a transparent text color AND a
-    parseable gradient bg-image — i.e. the CSS `background-clip: text`
-    pattern. python-pptx exposes `font.fill.gradient()` for this; we then
-    populate the stops directly. The result is what the CSS author actually
-    wanted: glyph-shaped gradient, not a gradient rectangle.
-
-    When the spec's own background_image is "none" (an inner `<em>` /
-    `<span>` inside a gradient-clipped parent), `fallback_el`'s
-    background_image is consulted so the gradient is inherited.
-    """
-    raw_color = spec.get("color") or ""
-    if parse_color(raw_color) is not None:
-        return False  # color is a real RGB, not transparent
-    spec_bg = spec.get("background_image") or "none"
-    if spec_bg == "none" and fallback_el is not None:
-        bg_image = fallback_el.background_image or "none"
-    else:
-        bg_image = spec_bg
-    if not bg_image or bg_image == "none":
-        return False
-    grad = parse_gradient(bg_image)
-    if grad is None or len(grad.stops) < 2:
-        return False
-    try:
-        font.fill.gradient()
-    except Exception:
-        return False
-    # python-pptx pre-creates 2 stops; we may have more or fewer.
-    # Easiest robust path: drop down to OOXML and rewrite the gsLst.
-    try:
-        from lxml import etree as _et
-
-        ns_a = "http://schemas.openxmlformats.org/drawingml/2006/main"
-        # font.fill._xPr is the rPr element where the fill lives.
-        rpr = font._rPr
-        if rpr is None:
-            return False
-        grad_fill = rpr.find(f"{{{ns_a}}}gradFill")
-        if grad_fill is None:
-            return False
-        gs_lst = grad_fill.find(f"{{{ns_a}}}gsLst")
-        if gs_lst is None:
-            return False
-        # Wipe existing stops and rebuild.
-        for child in list(gs_lst):
-            gs_lst.remove(child)
-        for stop in grad.stops:
-            gs = _et.SubElement(
-                gs_lst,
-                f"{{{ns_a}}}gs",
-                attrib={"pos": str(int(round(max(0.0, min(1.0, stop.position)) * 100_000)))},
-            )
-            srgb = _et.SubElement(
-                gs, f"{{{ns_a}}}srgbClr", attrib={"val": stop.color_hex}
-            )
-            if stop.alpha < 0.999:
-                _et.SubElement(
-                    srgb,
-                    f"{{{ns_a}}}alpha",
-                    attrib={"val": str(int(round(stop.alpha * 100_000)))},
-                )
-        # Set direction: linear → <a:lin ang="..."/>, radial → <a:path path="circle">.
-        # python-pptx may have already inserted a <a:lin> default; replace it.
-        for tag in ("lin", "path"):
-            for el in grad_fill.findall(f"{{{ns_a}}}{tag}"):
-                grad_fill.remove(el)
-        from slidify.gradients import LinearGradient, RadialGradient
-
-        if isinstance(grad, LinearGradient):
-            pptx_deg = (grad.angle_deg - 90.0) % 360.0
-            _et.SubElement(
-                grad_fill,
-                f"{{{ns_a}}}lin",
-                attrib={"ang": str(int(round(pptx_deg * 60_000))), "scaled": "0"},
-            )
-        elif isinstance(grad, RadialGradient):
-            path = _et.SubElement(
-                grad_fill, f"{{{ns_a}}}path", attrib={"path": "circle"}
-            )
-            cx = max(0.0, min(1.0, grad.cx))
-            cy = max(0.0, min(1.0, grad.cy))
-            _et.SubElement(
-                path,
-                f"{{{ns_a}}}fillToRect",
-                attrib={
-                    "l": str(int(round(cx * 100_000))),
-                    "t": str(int(round(cy * 100_000))),
-                    "r": str(int(round((1.0 - cx) * 100_000))),
-                    "b": str(int(round((1.0 - cy) * 100_000))),
-                },
-            )
-        return True
-    except Exception:
-        return False
-
-
-def _resolve_run_color(spec: dict, fallback_el: DomElement):
-    """Pick the RGB color for a styled text run.
-
-    Special case: when the run's color is fully transparent (rgba(*,*,*,0))
-    AND the run's parent has a background-image gradient, this is the
-    `background-clip: text` pattern — text is filled with the gradient. PPTX
-    can't reproduce gradient-clipped text natively, so we substitute the
-    gradient's first (focal) stop color as a solid fallback. This matches
-    most users' expectation: the dominant accent color shows through.
-    """
-    raw_color = spec.get("color") or fallback_el.color
-    parsed = parse_color(raw_color)
-    if parsed is not None:
-        return parsed[0]
-    # parse_color returned None — color is transparent or unrecognized.
-    # Try the run's own bg-image first, then fall back to the anchor's
-    # bg-image (covers leaf-text elements where the gradient is on the
-    # element itself, not on a wrapping span). The literal string "none"
-    # is the CSS default — treat it as no-bg-image so the fallback fires
-    # for inner spans (e.g. `<em>` inside a gradient-clipped `<h1>`).
-    own_bg = spec.get("background_image")
-    if not own_bg or own_bg == "none":
-        own_bg = None
-    bg_image = own_bg or fallback_el.background_image or "none"
-    if bg_image and bg_image != "none":
-        from slidify.gradients import parse_gradient
-
-        grad = parse_gradient(bg_image)
-        if grad is not None and grad.stops:
-            # Use the FIRST stop (focal/dominant color in radial; start of
-            # the linear). For a 3-stop gradient like `from-indigo-500 via-
-            # purple-500 to-pink-500`, we get the indigo — visually the
-            # closest single-color match for "this text should look colorful".
-            stop = grad.stops[0]
-            from pptx.dml.color import RGBColor
-
-            try:
-                return RGBColor(
-                    int(stop.color_hex[0:2], 16),
-                    int(stop.color_hex[2:4], 16),
-                    int(stop.color_hex[4:6], 16),
-                )
-            except (ValueError, IndexError):
-                pass
-    return None
-
-
-def native_area_ratio(
-    ops: list[EmitOp], slide_w: int = SLIDE_W_PX, slide_h: int = SLIDE_H_PX
-) -> float:
-    """Compute fraction of slide area covered by native (non-raster) ops.
-
-    Naively sums non-overlapping native bbox area. Approximate but bounded.
-    """
-    total = float(slide_w * slide_h)
-    if total <= 0:
-        return 0.0
-    native_area = 0.0
-    for op in ops:
-        if op.decision.kind in (
-            DecisionKind.NativeText,
-            DecisionKind.NativeShape,
-            DecisionKind.NativeBullet,
-            DecisionKind.NativePicture,
-            DecisionKind.NativeSvg,
-            DecisionKind.NativeTable,
-            DecisionKind.Hybrid,  # hybrid keeps text editable; fill counts as native shape
-        ):
-            bb = _clamp_bbox(op.bbox)
-            native_area += bb.w * bb.h
-    return min(1.0, native_area / total)
