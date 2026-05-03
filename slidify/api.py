@@ -19,14 +19,25 @@ so peak memory is bounded by `render_concurrency`, not by deck size.
 from __future__ import annotations
 
 import asyncio
-import re
 import time
-from collections.abc import AsyncIterable, AsyncIterator, Iterable
-from dataclasses import dataclass, field
+from collections.abc import AsyncIterator
 from pathlib import Path
 
 import structlog
 
+from slidify.api_config import ConversionConfig
+from slidify.api_oracle import (
+    force_full_raster as _force_full_raster,
+)
+from slidify.api_oracle import (
+    force_raster_overlapping as _force_raster_overlapping,
+)
+from slidify.api_oracle import (
+    oracle_with_correction as _oracle_with_correction,
+)
+from slidify.api_sources import SlideSource, _inline_local_images, _normalize_source
+from slidify.api_state import SlidePlan as _SlidePlan
+from slidify.api_state import SlideSummary as _SlideSummary
 from slidify.atom_inference import infer_atom_id
 from slidify.cache import MemoryCache, StructuralCache
 from slidify.classifier.llm import LLMProvider, auto_select_backend, build_provider
@@ -34,291 +45,33 @@ from slidify.classifier.tier1 import classify_tier1
 from slidify.classifier.tier2 import classify_tier2
 from slidify.classifier.tier3 import Tier3Stats, classify_tier3
 from slidify.emitter import Emitter, native_area_ratio
-from slidify.geom import SLIDE_H_PX, SLIDE_W_PX
 from slidify.models import (
     ConversionResult,
     Decision,
     DecisionKind,
-    EmitOp,
     FidelityReport,
     RenderedSlide,
     UnmatchedSignature,
     VisualUnit,
 )
-from slidify.oracle import FidelityOracle
 from slidify.patterns import PatternStats, classify_tier0, get_default_catalog
 from slidify.patterns.signatures import signature, signature_hash
-from slidify.progress import ProgressCallback, emit_progress
+from slidify.progress import emit_progress
 from slidify.promotion import promote, to_emit_ops
 from slidify.renderer import Renderer
-from slidify.splitter import split_slides
 from slidify.units import cluster, flatten
 
 log = structlog.get_logger(__name__)
 
-
-SlideSource = (
-    str
-    | Path
-    | Iterable[str | Path]
-    | AsyncIterable[str | Path]
-)
-
-
-@dataclass
-class ConversionConfig:
-    """User-facing configuration for `convert`.
-
-    Attributes:
-        viewport: (w, h) in pixels for browser rendering.
-        run_oracle: whether to validate output via LibreOffice/SSIM/OCR.
-        run_tier3: enable LLM adjudication for ambiguous units.
-        llm_backend: one of {"gemini-aistudio", "gemini-vertex", "anthropic",
-            "claude-vertex"}. None = auto-detect from environment.
-        llm_model: override default model for chosen backend.
-        google_project: override GOOGLE_CLOUD_PROJECT for Vertex backends.
-        google_location: override GOOGLE_CLOUD_LOCATION for Vertex backends.
-        cache: optional pre-built structural cache.
-        max_oracle_iterations: max self-healing passes after a failed slide.
-        render_concurrency: how many slides to render in parallel; also bounds
-            the peak number of in-memory rendered slides.
-        keep_plans_for_oracle: when True (default), retain per-slide plans
-            (units + decisions + ground-truth PNG) until oracle has run, so
-            the auto-correction loop can re-emit failing slides natively.
-            Set False on huge decks to drop plan state right after emit and
-            rely on a single oracle pass without auto-correction.
-
-    Use `ConversionConfig.fast()` for the lowest-latency configuration
-    (no oracle, no LLM); `ConversionConfig.from_env()` reads SLIDIFY_*
-    environment variables (handy for containers and CI).
-    """
-
-    viewport: tuple[int, int] = (SLIDE_W_PX, SLIDE_H_PX)
-    run_oracle: bool = True
-    run_tier3: bool = True
-    llm_backend: str | None = None
-    llm_model: str | None = None
-    google_project: str | None = None
-    google_location: str | None = None
-    cache: StructuralCache | None = None
-    max_oracle_iterations: int = 2
-    render_concurrency: int = 4
-    keep_plans_for_oracle: bool = True
-    # Differential render: take a second screenshot per slide with all text
-    # blanked. The emitter uses that decoration-only image when it needs to
-    # raster a Hybrid background, eliminating text bleed-through. Costs a
-    # second screenshot per slide (~150 ms on default viewport). On by
-    # default — the visual quality win on textured backgrounds (mesh
-    # gradients, glassmorphism, photo overlays) outweighs the small
-    # latency cost. Set to False for huge decks where wall-clock time
-    # matters more than perfect background fidelity.
-    differential_render: bool = True
-    # Embed the source fonts (Inter etc.) into the .pptx so PowerPoint
-    # renders with the same typeface that sized the original CSS bboxes.
-    # Without this, Calibri substitution shifts every text-frame width,
-    # causing titles to wrap, badges to overflow, alignment to drift.
-    # On by default; disable for faster emit on decks where the
-    # default-Office font is acceptable.
-    embed_fonts: bool = True
-    # Re-open the produced .pptx and verify that the editable-shape count
-    # per slide matches what the emitter intended to produce. Catches
-    # silent shape-drop bugs that the SSIM oracle can't see (it only
-    # checks pixels, so a missing-but-pixel-similar shape passes).
-    # Cheap (~1ms/slide); on by default.
-    run_editability_check: bool = True
-    # Optional structured progress callback. Receives JSON-serializable events
-    # at stable pipeline boundaries so CLIs, agents, and CI can track long
-    # conversions without scraping renderer/font logs.
-    progress_callback: ProgressCallback | None = None
-
-    # ---- Constructors ------------------------------------------------------
-
-    @classmethod
-    def fast(cls) -> ConversionConfig:
-        """Lowest-latency profile: no oracle, no LLM, no editability check.
-
-        Suitable for previewing decks while iterating on HTML — drops every
-        post-emit verification pass so wall-clock time scales linearly with
-        the number of slides.
-        """
-        return cls(
-            run_oracle=False,
-            run_tier3=False,
-            run_editability_check=False,
-            keep_plans_for_oracle=False,
-        )
-
-    @classmethod
-    def from_env(cls) -> ConversionConfig:
-        """Build a config from `SLIDIFY_*` environment variables.
-
-        Recognized variables (all optional):
-
-        * ``SLIDIFY_NO_ORACLE=1``         — disable the fidelity oracle.
-        * ``SLIDIFY_NO_TIER3=1``          — disable the LLM adjudicator.
-        * ``SLIDIFY_LOW_MEMORY=1``        — drop per-slide state after emit.
-        * ``SLIDIFY_NO_FONTS=1``          — skip font embedding.
-        * ``SLIDIFY_LLM_BACKEND``         — override backend selection.
-        * ``SLIDIFY_LLM_MODEL``           — override model name.
-        * ``SLIDIFY_RENDER_CONCURRENCY``  — int, default 4.
-
-        Vertex credentials read directly from ``GOOGLE_CLOUD_PROJECT`` /
-        ``GOOGLE_CLOUD_LOCATION`` (the canonical names; we don't shadow them).
-        """
-        import os
-
-        def _flag(name: str) -> bool:
-            return os.environ.get(name, "").strip().lower() in {"1", "true", "yes", "on"}
-
-        cfg = cls()
-        if _flag("SLIDIFY_NO_ORACLE"):
-            cfg.run_oracle = False
-        if _flag("SLIDIFY_NO_TIER3"):
-            cfg.run_tier3 = False
-        if _flag("SLIDIFY_LOW_MEMORY"):
-            cfg.keep_plans_for_oracle = False
-        if _flag("SLIDIFY_NO_FONTS"):
-            cfg.embed_fonts = False
-        if backend := os.environ.get("SLIDIFY_LLM_BACKEND"):
-            cfg.llm_backend = backend
-        if model := os.environ.get("SLIDIFY_LLM_MODEL"):
-            cfg.llm_model = model
-        if rc := os.environ.get("SLIDIFY_RENDER_CONCURRENCY"):
-            try:
-                cfg.render_concurrency = max(1, int(rc))
-            except ValueError:
-                pass
-        return cfg
-
-
-@dataclass
-class _SlidePlan:
-    index: int
-    rendered: RenderedSlide
-    units: list[VisualUnit]
-    units_flat: list[VisualUnit]
-    units_by_id: dict[str, VisualUnit]
-    decisions: dict[str, Decision] = field(default_factory=dict)
-    ops: list[EmitOp] = field(default_factory=list)
-    notes: str = ""
-
-
-@dataclass
-class _SlideSummary:
-    """Lightweight per-slide bookkeeping kept after `_SlidePlan` is dropped."""
-
-    index: int
-    ops: list[EmitOp]
-    decisions_by_tier: dict[str, int]
-    overflow: list = field(default_factory=list)
-    coverage_gaps: list = field(default_factory=list)
-    exclusivity_violations: list = field(default_factory=list)
-
-
-# -----------------------------------------------------------------------------
-# Source normalization
-# -----------------------------------------------------------------------------
-
-
-async def _normalize_source(source: SlideSource) -> AsyncIterator[str]:
-    """Yield slide HTML strings from any supported source form.
-
-    For Path sources we inject ``<base href="file:///parent/">`` into
-    each slide chunk so relative ``<img src="foo.gif">`` references —
-    common when embedding captured animation GIFs alongside the deck —
-    resolve through Playwright's ``set_content`` (which serves from
-    ``about:blank`` by default and otherwise can't see local files).
-    """
-    if isinstance(source, str):
-        for chunk in split_slides(source):
-            yield chunk
-        return
-
-    if isinstance(source, Path):
-        if source.is_dir():
-            for path in sorted(source.glob("*.html")):
-                yield _inline_local_images(path.read_text(encoding="utf-8"), path.parent)
-            return
-        # Single file: still split (so a single big concatenated file works).
-        text = source.read_text(encoding="utf-8")
-        for chunk in split_slides(text):
-            yield _inline_local_images(chunk, source.parent)
-        return
-
-    if hasattr(source, "__aiter__"):
-        async for item in source:  # type: ignore[union-attr]
-            yield _read_item(item)
-        return
-
-    if hasattr(source, "__iter__"):
-        for item in source:  # type: ignore[union-attr]
-            yield _read_item(item)
-        return
-
-    raise TypeError(f"unsupported slide source type: {type(source).__name__}")
-
-
-_IMG_SRC_RE = re.compile(
-    r'(<img\b[^>]*\bsrc\s*=\s*)(["\'])([^"\']+)\2',
-    re.IGNORECASE,
-)
-
-
-def _inline_local_images(html: str, base_dir: Path) -> str:
-    """Inline relative ``<img src="local.gif">`` references as data
-    URIs so they resolve through Playwright's ``set_content`` (which
-    serves from ``about:blank`` and blocks cross-origin file:// loads).
-
-    Slidify's renderer feeds HTML to the browser as a string, not a
-    file URL, so the browser has no source location to resolve relative
-    paths against. ``<base href="file://...">`` is the canonical fix
-    but Chromium refuses about:blank → file:// for security. Inlining
-    is the renderer-portable workaround.
-
-    Only rewrites paths that resolve to a real local file under
-    ``base_dir``. URLs (http, https, data:, file:) are left alone.
-    """
-    def _rewrite(match: re.Match) -> str:
-        prefix, quote, src = match.group(1), match.group(2), match.group(3)
-        # Skip absolute URLs and data: URIs.
-        if src.startswith(("http://", "https://", "data:", "file://", "//")):
-            return match.group(0)
-        # Resolve relative path against base_dir.
-        candidate = (base_dir / src).resolve()
-        if not candidate.is_file():
-            return match.group(0)
-        try:
-            data = candidate.read_bytes()
-        except OSError:
-            return match.group(0)
-        mime = _guess_mime(candidate.suffix.lower())
-        import base64
-        b64 = base64.b64encode(data).decode("ascii")
-        return f'{prefix}{quote}data:{mime};base64,{b64}{quote}'
-
-    return _IMG_SRC_RE.sub(_rewrite, html)
-
-
-def _guess_mime(suffix: str) -> str:
-    return {
-        ".gif": "image/gif",
-        ".png": "image/png",
-        ".jpg": "image/jpeg",
-        ".jpeg": "image/jpeg",
-        ".webp": "image/webp",
-        ".svg": "image/svg+xml",
-        ".bmp": "image/bmp",
-    }.get(suffix, "application/octet-stream")
-
-
-def _read_item(item: str | Path) -> str:
-    if isinstance(item, Path):
-        return item.read_text(encoding="utf-8")
-    if isinstance(item, str):
-        # Heuristic: if it looks like a path and a file exists, read it. Otherwise
-        # treat as HTML content. We bias toward HTML to keep the str API stable.
-        return item
-    raise TypeError(f"slide item must be str or Path, got {type(item).__name__}")
+__all__ = [
+    "ConversionConfig",
+    "SlideSource",
+    "_force_full_raster",
+    "_force_raster_overlapping",
+    "_inline_local_images",
+    "convert",
+    "convert_sync",
+]
 
 
 # -----------------------------------------------------------------------------
@@ -1038,189 +791,3 @@ async def _process_one(
         notes=plan.notes,
     )
     return plan
-
-
-# -----------------------------------------------------------------------------
-# Oracle + auto-correction
-# -----------------------------------------------------------------------------
-
-
-async def _oracle_with_correction(
-    pptx_path: Path,
-    plans: list[_SlidePlan],
-    summaries: list[_SlideSummary],
-    cfg: ConversionConfig,
-    renderer: Renderer,
-) -> list[FidelityReport]:
-    oracle = FidelityOracle()
-    ground_truths = [p.rendered.ground_truth_png for p in plans]
-
-    def _units_per_slide() -> list[tuple[dict[str, VisualUnit], dict[str, Decision]]]:
-        # Snapshot per-slide (units_by_id, decisions) so the oracle can
-        # attribute failing regions back to the unit/decision that produced
-        # them. When state was dropped (low_memory), the maps are empty and
-        # attribution is skipped for that slide.
-        return [(p.units_by_id, p.decisions) for p in plans]
-
-    reports = await oracle.evaluate(
-        pptx_path, ground_truths, units_per_slide=_units_per_slide()
-    )
-
-    if not cfg.keep_plans_for_oracle:
-        # No state to re-emit from — return the first-pass reports.
-        return reports
-
-    for _iter in range(cfg.max_oracle_iterations):
-        failing = [r for r in reports if not r.passed]
-        if not failing:
-            break
-        log.info("oracle.iter", failing=len(failing))
-        any_changed = False
-        for r in failing:
-            plan = plans[r.slide_index]
-            if not plan.units:
-                continue  # state was dropped, can't fix
-            if not r.failing_regions:
-                _force_full_raster(plan)
-                any_changed = True
-                continue
-            for region in r.failing_regions:
-                if _force_raster_overlapping(plan, region):
-                    any_changed = True
-        if not any_changed:
-            break
-
-        emitter = Emitter()
-        try:
-            for plan in plans:
-                if not plan.units:
-                    # Re-emit from cached ops if state was dropped.
-                    plan.ops = summaries[plan.index].ops
-                else:
-                    plan.ops = to_emit_ops(plan.units, plan.decisions)
-                await emitter.emit_slide(
-                    plan.index,
-                    plan.rendered,
-                    plan.units_by_id,
-                    plan.ops,
-                    renderer,
-                    notes=plan.notes,
-                )
-            emitter.save(pptx_path)
-        finally:
-            emitter.close()
-        # Update summaries with the new ops so native_area_ratio reflects fixes.
-        for plan in plans:
-            summaries[plan.index].ops = plan.ops
-        reports = await oracle.evaluate(
-            pptx_path, ground_truths, units_per_slide=_units_per_slide()
-        )
-
-    return reports
-
-
-def _force_full_raster(plan: _SlidePlan) -> None:
-    new_decisions: dict[str, Decision] = {}
-    # The earlier two-level iteration (children + grandchildren) missed any
-    # deeper descendant: brutalist decks routinely nest 4–5 levels deep
-    # (`.slide > .frame > .head > .row > h1`), and an h1 left as
-    # NativeText would paint over the full-slide raster. Walk the whole
-    # tree once.
-    for u in plan.units:
-        new_decisions[u.id] = Decision(
-            kind=DecisionKind.Raster,
-            confidence=1.0,
-            reason="oracle_full_raster",
-            source_tier="oracle_fix",
-        )
-        stack = list(u.children)
-        while stack:
-            c = stack.pop()
-            new_decisions[c.id] = Decision(
-                kind=DecisionKind.Skip,
-                confidence=1.0,
-                reason="absorbed by oracle_full_raster",
-                source_tier="oracle_fix",
-            )
-            stack.extend(c.children)
-    plan.decisions = {**plan.decisions, **new_decisions}
-
-
-def _force_raster_overlapping(plan: _SlidePlan, region) -> bool:
-    """Mark the smallest unit overlapping `region` as Raster.
-
-    We pick the *smallest* overlapping unit (most specific) to avoid promoting
-    the whole slide to raster just because a single text region drifted.
-    Returns True if anything changed.
-    """
-    region_area = region.w * region.h
-    if region_area <= 0:
-        return False
-
-    candidates: list[VisualUnit] = []
-    for u in plan.units_flat:
-        if u.bbox.area <= 0:
-            continue
-        contained = u.bbox.intersect_area(region) / region_area
-        if contained < 0.5:
-            continue
-        if u.bbox.area > region_area * 10:
-            continue
-        candidates.append(u)
-
-    if not candidates:
-        return False
-
-    target = min(candidates, key=lambda u: u.bbox.area)
-    cur = plan.decisions.get(target.id)
-    if cur is not None and cur.kind in (DecisionKind.Raster, DecisionKind.Skip):
-        return False
-
-    plan.decisions[target.id] = Decision(
-        kind=DecisionKind.Raster,
-        confidence=1.0,
-        reason="oracle_region_fix",
-        source_tier="oracle_fix",
-    )
-    # Recursively skip ALL descendants AND any spatially-contained sibling
-    # units. Direct children alone isn't enough for two reasons:
-    #   1. Deeper descendants (text-bearing grandchildren) keep their
-    #      NativeText decision and re-paint atop the raster.
-    #   2. The DOM hierarchy may not match the spatial hierarchy: a
-    #      brutalist `.frame` div is a SIBLING of `.head`/`.lay` rather
-    #      than their ancestor (it's an absolutely-positioned overlay).
-    #      Rastering only its DOM subtree leaves the head's title and
-    #      ladder text drawing on top of the rastered frame interior,
-    #      producing the slide-27 doubled-title artifact.
-    # Both holes are closed by skipping every unit whose bbox is mostly
-    # contained in the target's bbox.
-    skip_set: set[str] = set()
-    stack: list[VisualUnit] = list(target.children)
-    while stack:
-        c = stack.pop()
-        skip_set.add(c.id)
-        stack.extend(c.children)
-    target_bbox = target.bbox
-    target_area = target_bbox.area
-    if target_area > 0:
-        for u in plan.units_flat:
-            if u.id == target.id or u.id in skip_set:
-                continue
-            if u.bbox.area <= 0:
-                continue
-            # Don't absorb siblings *larger* than the target — those are
-            # genuinely above us in the spatial hierarchy and may carry
-            # important content that extends outside the rastered patch.
-            if u.bbox.area > target_area:
-                continue
-            inter = u.bbox.intersect_area(target_bbox)
-            if inter / u.bbox.area >= 0.85:
-                skip_set.add(u.id)
-    for uid in skip_set:
-        plan.decisions[uid] = Decision(
-            kind=DecisionKind.Skip,
-            confidence=1.0,
-            reason="absorbed by oracle_region_fix",
-            source_tier="oracle_fix",
-        )
-    return True
