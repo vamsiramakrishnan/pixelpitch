@@ -663,7 +663,7 @@ def _h_border_per_side(unit, anchor, catalog, value):
     for side, want in value.items():
         if side not in sides:
             return False
-        width, style = sides[side]
+        _width, style = sides[side]
         w = (want or "").lower()
         if w == "none":
             if style != "none":
