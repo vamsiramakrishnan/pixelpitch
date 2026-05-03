@@ -1,0 +1,36 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`slotNumeralToIR > emits a snapshot-stable numeral-md value 1`] = `
+{
+  "bbox": {
+    "h": 120,
+    "w": 300,
+    "x": 0,
+    "y": 0,
+  },
+  "kind": "text",
+  "metadata": {
+    "axis": "slot",
+    "role": "slot.numeral",
+    "scale": "numeral-md",
+  },
+  "paragraphs": [
+    {
+      "align": "left",
+      "runs": [
+        {
+          "color": "#f5f5f7",
+          "fontFamily": "Inter, sans-serif",
+          "fontSizePx": 88,
+          "fontWeight": 800,
+          "italic": false,
+          "text": "42%",
+          "underline": false,
+        },
+      ],
+    },
+  ],
+  "recipeId": "slot.numeral",
+  "zOrder": 0,
+}
+`;

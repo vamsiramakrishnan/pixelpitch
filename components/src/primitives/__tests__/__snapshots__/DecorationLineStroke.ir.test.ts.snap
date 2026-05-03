@@ -1,0 +1,59 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`decorationLineStrokeToIR > emits a snapshot-stable horizontal hairline 1`] = `
+{
+  "bbox": {
+    "h": 1,
+    "w": 1280,
+    "x": 0,
+    "y": 360,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 1,
+        "w": 1280,
+        "x": 0,
+        "y": 360,
+      },
+      "commands": [
+        {
+          "op": "M",
+          "x": 0,
+          "y": 360.5,
+        },
+        {
+          "op": "L",
+          "x": 1280,
+          "y": 360.5,
+        },
+      ],
+      "fillRule": "nonzero",
+      "kind": "path",
+      "metadata": {
+        "axis": "decoration",
+        "dash": "solid",
+        "orientation": "h",
+        "role": "decoration.line-stroke",
+        "thicknessPx": 1,
+      },
+      "recipeId": "decoration.line-stroke",
+      "strokeColor": "#27272a",
+      "strokeLinecap": "butt",
+      "strokeLinejoin": "miter",
+      "strokeWidthPx": 1,
+      "zOrder": 0,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "decoration",
+    "dash": "solid",
+    "orientation": "h",
+    "role": "decoration.line-stroke",
+    "thicknessPx": 1,
+  },
+  "recipeId": "decoration.line-stroke",
+  "zOrder": 0,
+}
+`;

@@ -1,0 +1,198 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 8,
+        "w": 510,
+        "x": 145,
+        "y": 120
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 8,
+            "w": 510,
+            "x": 145,
+            "y": 120
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 8,
+                "w": 510,
+                "x": 145,
+                "y": 120
+              },
+              "kind": "text",
+              "metadata": {
+                "role": "eyebrow-text"
+              },
+              "paragraphs": [
+                {
+                  "align": "left",
+                  "runs": [
+                    {
+                      "color": "#a78bfa",
+                      "fontFamily": "Inter, sans-serif",
+                      "fontSizePx": 13,
+                      "fontWeight": 600,
+                      "italic": false,
+                      "text": "EYEBROW",
+                      "underline": false
+                    }
+                  ]
+                }
+              ],
+              "recipeId": "slot.eyebrow.text",
+              "zOrder": 10
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "slot",
+            "role": "slot.eyebrow",
+            "withRule": "none"
+          },
+          "recipeId": "slot.eyebrow",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "type",
+        "primitive": "slot.eyebrow",
+        "role": "type.eyebrow-ruled",
+        "version": "1.0.0"
+      },
+      "recipeId": "type.eyebrow-ruled",
+      "zOrder": 0
+    },
+    {
+      "bbox": {
+        "h": 24,
+        "w": 510,
+        "x": 145,
+        "y": 136
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 24,
+            "w": 510,
+            "x": 145,
+            "y": 136
+          },
+          "kind": "text",
+          "metadata": {
+            "axis": "slot",
+            "gradientFill": {
+              "angleDeg": 135,
+              "kind": "linear-gradient",
+              "stops": [
+                {
+                  "color": "#818cf8",
+                  "position": 0
+                },
+                {
+                  "color": "#c084fc",
+                  "position": 0.5
+                },
+                {
+                  "color": "#f472b6",
+                  "position": 1
+                }
+              ]
+            },
+            "role": "slot.numeral",
+            "scale": "numeral-md"
+          },
+          "paragraphs": [
+            {
+              "align": "left",
+              "runs": [
+                {
+                  "color": "#818cf8",
+                  "fontFamily": "Inter, sans-serif",
+                  "fontSizePx": 88,
+                  "fontWeight": 800,
+                  "italic": false,
+                  "text": "Roadmap",
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "slot.numeral",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "type",
+        "primitive": "slot.numeral",
+        "role": "type.big-number-gradient",
+        "version": "1.0.0"
+      },
+      "recipeId": "type.big-number-gradient",
+      "zOrder": 10
+    },
+    {
+      "bbox": {
+        "h": 40,
+        "w": 480,
+        "x": 160,
+        "y": 190
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 40,
+            "w": 480,
+            "x": 160,
+            "y": 190
+          },
+          "children": [],
+          "kind": "group",
+          "metadata": {
+            "axis": "frame",
+            "innerBbox": {
+              "h": 0,
+              "w": 288,
+              "x": 256,
+              "y": 286
+            },
+            "insetPx": 96,
+            "padding": "cozy",
+            "role": "frame.safe-area"
+          },
+          "recipeId": "frame.safe-area",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "ui",
+        "primitive": "frame.safe-area",
+        "role": "ui.stepper",
+        "version": "1.0.0"
+      },
+      "recipeId": "ui.stepper",
+      "zOrder": 20
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "comp",
+    "composite": true,
+    "role": "comp.roadmap-quarterly",
+    "version": "1.0.0"
+  },
+  "recipeId": "comp.roadmap-quarterly",
+  "zOrder": 0
+}

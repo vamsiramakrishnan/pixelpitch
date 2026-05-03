@@ -32,6 +32,11 @@ export type { GlassPanelProps } from './components/GlassPanel';
 export { default as AnnotatedCallout, annotatedCalloutToIR } from './components/AnnotatedCallout';
 export type { AnnotatedCalloutProps, PointerSide } from './components/AnnotatedCallout';
 
+// Tier-A primitives (hand-written, structural, survive trend rotation).
+// M3 owns the rest of Tier-A; M6 owns EscapeHatch specifically per CONTRACT-v2 §B.1.
+export { default as EscapeHatch, escapeHatchToIR } from './primitives/EscapeHatch';
+export type { EscapeHatchProps } from './primitives/EscapeHatch';
+
 // IR types (re-exported under './ir' subpath too)
 export type {
   Color,
@@ -52,3 +57,60 @@ export type {
   RasterNode,
   GroupNodeT,
 } from './ir/schema';
+
+// ---- Wave-2 / Crew F1 (IR extensions) ---------------------------------------
+export type {
+  PathShapeNode,
+  PathCommand,
+  Arrowhead,
+  ArrowheadKind,
+  ArrowheadSize,
+  ClipPath,
+  PatternFill,
+} from './ir/schema';
+export { normalizeShadows, pathBbox } from './ir/normalize';
+
+// ---- Wave-2B / Crew M3 (Tier-A primitives) ---------------------------------
+//
+// Hand-written structural primitives consumed by codegen-emitted Tier-B
+// recipes. See `components/CONTRACT-v2.md` §B.1 for the roster.
+export * from './primitives';
+
+// ---- Wave-2 / Crew F2 (tokens) ---------------------------------------------
+export {
+  DEFAULT_TOKENS,
+  DENSITY_MULTIPLIERS,
+  FONT_CSS_VAR,
+  GRADIENT_CSS_VAR,
+  PALETTE_CSS_VAR,
+  THEME_PRESETS,
+  TokenProvider,
+  defaultElevation,
+  defaultFonts,
+  defaultRadii,
+  defaultSpaceSlots,
+  defaultTypeScale,
+  getTokensFromBundle,
+  tokens,
+  useTokens,
+  variant,
+} from './tokens';
+
+export type {
+  DensityMode,
+  ElevationTier,
+  FontFamilyKey,
+  GradientKey,
+  GradientStopSpec,
+  PaletteKey,
+  RadiusKey,
+  SpaceSlotKey,
+  ThemePresetKey,
+  TokenBundle,
+  TokenProviderProps,
+  TokensApi,
+  TypeKey,
+  TypeSpec,
+  VariantConfig,
+  VariantSelection,
+} from './tokens';

@@ -1,0 +1,165 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <title>22 Duo Photo</title>
+    <style>*, *::before, *::after { box-sizing: border-box; }
+html, body { margin:0; padding:0; width:1280px; height:720px;
+             font-family: Inter, -apple-system, 'Segoe UI', Helvetica, sans-serif;
+             -webkit-font-smoothing:antialiased;
+             color:#ffecc4; background:#0d1f3c; }
+.slide { position:relative; width:1280px; height:720px; padding:80px;
+         overflow:hidden; background:#0d1f3c; }</style>
+    </head>
+    <body>
+    <div class="slide" style="padding:0;">
+      <!-- horizon-divided duotone backdrop -->
+      <svg viewBox="0 0 1280 720" width="1280" height="720"
+           preserveAspectRatio="xMidYMid slice"
+           style="position:absolute; inset:0;">
+        <defs>
+          <!-- sky: warm cream/apricot -->
+          <linearGradient id="duo-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="#ffd9a0"/>
+            <stop offset="35%"  stop-color="#ffb886"/>
+            <stop offset="80%"  stop-color="#7a6285"/>
+            <stop offset="100%" stop-color="#1a2440"/>
+          </linearGradient>
+          <!-- water: deep navy with warm rim -->
+          <linearGradient id="duo-water" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="#0d1f3c"/>
+            <stop offset="100%" stop-color="#050b1c"/>
+          </linearGradient>
+          <!-- low warm sun glow -->
+          <radialGradient id="duo-sun" cx="0.66" cy="0.62" r="0.34">
+            <stop offset="0%"  stop-color="#ffecc4" stop-opacity="0.95"/>
+            <stop offset="35%" stop-color="#ff7a59" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#ff7a59" stop-opacity="0"/>
+          </radialGradient>
+          <!-- subject silhouette: layered for depth -->
+          <linearGradient id="duo-fig" x1="0" y1="0" x2="0.2" y2="1">
+            <stop offset="0%"   stop-color="#1a2440"/>
+            <stop offset="60%"  stop-color="#0a1124"/>
+            <stop offset="100%" stop-color="#04060f"/>
+          </linearGradient>
+          <linearGradient id="duo-rim" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffecc4" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#ff7a59" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+
+        <!-- sky band -->
+        <rect width="1280" height="468" fill="url(#duo-sky)"/>
+        <!-- horizon line: a fine warm rim where sky meets water -->
+        <rect x="0" y="465" width="1280" height="2" fill="#ff9a6c"
+              opacity="0.55"/>
+        <!-- water band -->
+        <rect y="467" width="1280" height="253" fill="url(#duo-water)"/>
+        <!-- sun glow over both bands -->
+        <rect width="1280" height="720" fill="url(#duo-sun)"/>
+
+        <!-- water reflection: faint warm streaks -->
+        <g opacity="0.18" fill="#ff9a6c">
+          <ellipse cx="850" cy="540" rx="260" ry="3"/>
+          <ellipse cx="850" cy="568" rx="200" ry="2"/>
+          <ellipse cx="850" cy="596" rx="140" ry="1.5"/>
+          <ellipse cx="850" cy="624" rx="90" ry="1"/>
+        </g>
+
+        <!-- distant silhouettes: low hills on horizon -->
+        <path d="M 0 467 L 0 444 Q 120 432 240 442 Q 360 452 480 438
+                 Q 600 424 720 440 Q 840 454 960 442 Q 1080 432 1200 446
+                 L 1280 444 L 1280 467 Z"
+              fill="#1a2440" opacity="0.7"/>
+
+        <!-- subject: figure standing in lower-left quadrant -->
+        <g>
+          <!-- soft rim light from upper-right -->
+          <ellipse cx="305" cy="405" rx="170" ry="220"
+                   fill="url(#duo-rim)" opacity="0.65"/>
+          <!-- shoulders + torso -->
+          <path d="M 215 720
+                   L 215 460
+                   C 215 410 245 372 295 366
+                   C 305 364 320 364 330 366
+                   C 380 372 408 410 408 460
+                   L 408 720 Z"
+                fill="url(#duo-fig)"/>
+          <!-- head -->
+          <ellipse cx="312" cy="310" rx="44" ry="56"
+                   fill="url(#duo-fig)"/>
+          <!-- subtle warm rim on head/shoulder right edge -->
+          <path d="M 356 310 Q 350 350 345 380 Q 360 410 380 460"
+                stroke="#ff9a6c" stroke-width="2"
+                stroke-linecap="round" fill="none"
+                opacity="0.55"/>
+          <path d="M 405 460 Q 410 540 412 720"
+                stroke="#ff9a6c" stroke-width="2"
+                stroke-linecap="round" fill="none"
+                opacity="0.45"/>
+        </g>
+      </svg>
+
+      <!-- top-left strip caption -->
+      <div style="position:absolute; left:64px; top:48px; width:240px;
+                  border-left:2px solid #ffecc4;
+                  padding:8px 0 8px 14px;
+                  font-family:Inter, -apple-system, 'Segoe UI', Helvetica, sans-serif; font-size:11px;
+                  letter-spacing:0.32em; text-transform:uppercase;
+                  color:#ffecc4; font-weight:600; line-height:1.6;">
+        Photo essay<br/>
+        <span style="color:#ff9a6c;">part iii</span>
+        <span style="color:rgba(255,236,196,0.55);">
+          · light over the editing room</span>
+      </div>
+
+      <!-- top-right colophon -->
+      <div style="position:absolute; right:64px; top:48px;
+                  font-family:'IBM Plex Mono', 'JetBrains Mono', 'Menlo', monospace; font-size:10.5px;
+                  letter-spacing:0.22em; text-transform:uppercase;
+                  color:#ffecc4; text-align:right; line-height:1.7;
+                  opacity:0.85;">
+        Plate 16 of 24<br/>
+        <span style="color:#ff9a6c;">Pitch · spring 2026</span>
+      </div>
+
+      <!-- pull-quote: floats over the sky negative space -->
+      <div style="position:absolute; left:520px; top:140px; right:96px;">
+        <div style="font-family:'Playfair Display', 'Times New Roman', Georgia, serif; font-style:italic;
+                    font-size:54px; line-height:1.08;
+                    letter-spacing:-0.005em; color:#0d1f3c;
+                    font-weight:400;">
+          The slides we ship are<br/>
+          <span style="background:#0d1f3c; color:#ffecc4;
+                       padding:0 14px;">an act of editing,</span><br/>
+          not an accident<br/>of capture.
+        </div>
+        <div style="margin-top:32px; padding-left:18px;
+                    border-left:2px solid #0d1f3c;
+                    max-width:480px;
+                    font-family:Inter, -apple-system, 'Segoe UI', Helvetica, sans-serif; font-size:13.5px;
+                    line-height:1.6; color:rgba(13,31,60,0.75);">
+          Slidify treats every shape as a curated object.
+          The export is the artifact — not a flattened
+          souvenir of one.
+        </div>
+      </div>
+
+      <!-- bottom rule -->
+      <div style="position:absolute; bottom:32px; left:64px; right:64px;
+                  display:flex; justify-content:space-between;
+                  align-items:center;
+                  font-family:Inter, -apple-system, 'Segoe UI', Helvetica, sans-serif; font-size:11px;
+                  letter-spacing:0.18em; text-transform:uppercase;
+                  color:#ffecc4;
+                  border-top:1px solid rgba(255,236,196,0.35);
+                  padding-top:14px;">
+        <span>Studio Atlas · plate xvi</span>
+        <span style="font-style:italic; letter-spacing:0.04em;
+                     text-transform:none; color:#ff9a6c;">
+          — captured in navy &amp; apricot</span>
+        <span>16 / 22</span>
+      </div>
+    </div>
+    </body>
+    </html>

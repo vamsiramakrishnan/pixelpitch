@@ -1,0 +1,115 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <title>16 Mag Cover</title>
+    <style>*, *::before, *::after { box-sizing: border-box; }
+html, body { margin:0; padding:0; width:1280px; height:720px;
+             font-family: 'Playfair Display', 'Times New Roman', Georgia, serif;
+             -webkit-font-smoothing:antialiased;
+             color:#0a0a0a; background:#fde9ec; }
+.slide { position:relative; width:1280px; height:720px; padding:80px;
+         overflow:hidden; background:#fde9ec; }</style>
+    </head>
+    <body>
+    <div class="slide" style="padding:0; background:#e11d48;">
+      <!-- masthead band -->
+      <div style="position:absolute; top:0; left:0; right:0; height:96px;
+                  border-bottom:2px solid #0a0a0a;
+                  display:flex; justify-content:space-between;
+                  align-items:flex-end; padding:0 48px 14px;">
+        <div style="font-family:'Bebas Neue', 'Anton', Impact, sans-serif; font-size:64px;
+                    line-height:0.86; letter-spacing:0.02em;
+                    color:#0a0a0a;">PITCH</div>
+        <div style="font-family:'Playfair Display', 'Times New Roman', Georgia, serif; font-style:italic;
+                    font-size:14px; color:#0a0a0a;">
+          Issue No. 04 · Spring 2026 · $14</div>
+      </div>
+
+      <!-- hero band: headline left (60%), photo right (40%) -->
+      <div style="position:absolute; top:96px; bottom:120px; left:0; right:0;
+                  display:grid; grid-template-columns: 60fr 40fr;">
+
+        <!-- headline column -->
+        <div style="padding:32px 32px 32px 48px;
+                    display:flex; flex-direction:column;
+                    justify-content:space-between;">
+          <div style="font-family:'Playfair Display', 'Times New Roman', Georgia, serif; font-style:italic;
+                      font-size:16px; letter-spacing:0.02em;
+                      color:#0a0a0a;">The cover story · pp. 24 — 31</div>
+          <h1 data-pptx-role="title"
+              style="margin:0; font-family:'Bebas Neue', 'Anton', Impact, sans-serif;
+                     font-size:104px; line-height:0.86;
+                     letter-spacing:-0.005em; color:#0a0a0a;">
+            A FIELD GUIDE<br/>TO THE
+            <span style="display:inline-block; color:#e11d48;
+                          background:#0a0a0a; padding:0 12px;">EDITED</span><br/>
+            PAGE.
+          </h1>
+          <div style="display:flex; gap:18px; align-items:center;
+                      font-family:'Playfair Display', 'Times New Roman', Georgia, serif; font-size:13px;
+                      color:#0a0a0a;">
+            <span style="font-weight:700; letter-spacing:0.04em;
+                          text-transform:uppercase;">
+              By the editors
+            </span>
+            <span>·</span>
+            <span style="font-style:italic;">a quiet revolution</span>
+          </div>
+        </div>
+
+        <!-- photo column -->
+        <div style="position:relative;
+                    background:linear-gradient(155deg,
+                      #050505 0%, #1a1a1a 38%,
+                      #2c1622 70%, #3a1218 100%);
+                    border-left:2px solid #0a0a0a;">
+          <!-- subject highlight -->
+          <div style="position:absolute; inset:0;
+                      background:radial-gradient(circle at 36% 38%,
+                          rgba(255,255,255,0.16) 0%,
+                          rgba(255,255,255,0.04) 30%,
+                          transparent 60%);"></div>
+          <!-- subject silhouette: head + shoulder, abstract -->
+          <svg viewBox="0 0 200 320" width="100%" height="100%"
+               preserveAspectRatio="xMidYMid slice"
+               style="position:absolute; inset:0;">
+            <defs>
+              <linearGradient id="mag-subj" x1="0" y1="0" x2="0.3" y2="1">
+                <stop offset="0%" stop-color="#7a2c30"/>
+                <stop offset="100%" stop-color="#0a0a0a"/>
+              </linearGradient>
+            </defs>
+            <ellipse cx="100" cy="125" rx="50" ry="62" fill="url(#mag-subj)"/>
+            <path d="M 30 320 L 30 240
+                     C 30 200 60 188 100 188
+                     C 140 188 170 200 170 240
+                     L 170 320 Z"
+                  fill="url(#mag-subj)"/>
+          </svg>
+          <!-- caption tag, bottom -->
+          <div style="position:absolute; left:24px; right:24px; bottom:24px;
+                      font-family:'Bebas Neue', 'Anton', Impact, sans-serif; font-size:30px;
+                      line-height:0.92; letter-spacing:0.005em;
+                      color:#fff;">A NEW<br/>EDITORIAL ENGINE</div>
+        </div>
+      </div>
+
+      <!-- footer dek -->
+      <div style="position:absolute; bottom:0; left:0; right:0; height:120px;
+                  border-top:2px solid #0a0a0a;
+                  padding:18px 48px;
+                  display:flex; gap:48px; align-items:flex-start;
+                  font-family:'Playfair Display', 'Times New Roman', Georgia, serif; color:#0a0a0a;">
+        <div style="flex:0 0 120px; font-family:'Bebas Neue', 'Anton', Impact, sans-serif;
+                    font-size:48px; line-height:0.92;">PP / 04</div>
+        <div style="flex:1; font-size:14px; line-height:1.5;
+                    border-left:2px solid #0a0a0a; padding-left:24px;
+                    max-width:760px;">
+          Inside — how slidify rewrote the rules of editable presentations,
+          why every shape matters, and the case for typographic restraint.
+        </div>
+      </div>
+    </div>
+    </body>
+    </html>

@@ -1,0 +1,36 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`slotHeadingToIR > emits a snapshot-stable slide-title heading 1`] = `
+{
+  "bbox": {
+    "h": 80,
+    "w": 1080,
+    "x": 100,
+    "y": 100,
+  },
+  "kind": "text",
+  "metadata": {
+    "axis": "slot",
+    "role": "slot.heading",
+    "scale": "slide-title",
+  },
+  "paragraphs": [
+    {
+      "align": "left",
+      "runs": [
+        {
+          "color": "#f5f5f7",
+          "fontFamily": "Inter, sans-serif",
+          "fontSizePx": 56,
+          "fontWeight": 800,
+          "italic": false,
+          "text": "Hello world",
+          "underline": false,
+        },
+      ],
+    },
+  ],
+  "recipeId": "slot.heading",
+  "zOrder": 0,
+}
+`;

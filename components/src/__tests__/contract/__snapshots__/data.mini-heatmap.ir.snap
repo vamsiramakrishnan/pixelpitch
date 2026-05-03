@@ -1,0 +1,39 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [],
+      "kind": "group",
+      "metadata": {
+        "axis": "data",
+        "cols": 0,
+        "cornerPx": 2,
+        "gapPx": 2,
+        "role": "data.heatmap",
+        "rows": 0
+      },
+      "recipeId": "data.heatmap",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "data",
+    "primitive": "data.heatmap",
+    "role": "data.mini-heatmap",
+    "version": "1.0.0"
+  },
+  "recipeId": "data.mini-heatmap",
+  "zOrder": 0
+}

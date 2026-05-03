@@ -1,0 +1,76 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`annotationLeaderLineToIR > emits a snapshot-stable arrow leader 1`] = `
+{
+  "bbox": {
+    "h": 200,
+    "w": 400,
+    "x": 0,
+    "y": 0,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 400,
+        "x": 0,
+        "y": 0,
+      },
+      "commands": [
+        {
+          "op": "M",
+          "x": 30,
+          "y": 30,
+        },
+        {
+          "op": "L",
+          "x": 370,
+          "y": 170,
+        },
+      ],
+      "fillRule": "nonzero",
+      "kind": "path",
+      "markerEnd": {
+        "kind": "arrow",
+        "size": "md",
+      },
+      "metadata": {
+        "axis": "annotation",
+        "dashed": false,
+        "from": {
+          "x": 30,
+          "y": 30,
+        },
+        "role": "annotation.leader-line",
+        "to": {
+          "x": 370,
+          "y": 170,
+        },
+      },
+      "recipeId": "annotation.leader-line",
+      "strokeColor": "#d4d4d8",
+      "strokeLinecap": "round",
+      "strokeLinejoin": "miter",
+      "strokeWidthPx": 1.5,
+      "zOrder": 0,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "annotation",
+    "dashed": false,
+    "from": {
+      "x": 30,
+      "y": 30,
+    },
+    "role": "annotation.leader-line",
+    "thicknessPx": 1.5,
+    "to": {
+      "x": 370,
+      "y": 170,
+    },
+  },
+  "recipeId": "annotation.leader-line",
+  "zOrder": 0,
+}
+`;

@@ -1,0 +1,78 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "commands": [
+            {
+              "op": "M",
+              "x": 100,
+              "y": 200
+            },
+            {
+              "op": "L",
+              "x": 700,
+              "y": 200
+            }
+          ],
+          "fillRule": "nonzero",
+          "kind": "path",
+          "metadata": {
+            "axis": "decoration",
+            "dash": "dotted",
+            "orientation": "h",
+            "role": "decoration.line-stroke",
+            "thicknessPx": 1
+          },
+          "recipeId": "decoration.line-stroke",
+          "strokeColor": "tokens.palette.ruler",
+          "strokeDasharray": [
+            1,
+            2
+          ],
+          "strokeLinecap": "round",
+          "strokeLinejoin": "miter",
+          "strokeWidthPx": 1,
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "decoration",
+        "dash": "dotted",
+        "orientation": "h",
+        "role": "decoration.line-stroke",
+        "thicknessPx": 1
+      },
+      "recipeId": "decoration.line-stroke",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "dec",
+    "primitive": "decoration.line-stroke",
+    "role": "dec.dotted-rule",
+    "version": "1.0.0"
+  },
+  "recipeId": "dec.dotted-rule",
+  "zOrder": 0
+}

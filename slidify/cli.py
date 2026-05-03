@@ -25,7 +25,6 @@ import click
 
 from slidify import __version__
 from slidify.api import ConversionConfig, convert
-from slidify.models import UnmatchedSignature
 
 # ---------------------------------------------------------------------------
 # convert
@@ -235,7 +234,8 @@ def _next_steps(result) -> list[str]:
     if result.unmatched_signatures:
         hints.append(
             f"{len(result.unmatched_signatures)} unmatched DOM signatures recorded. "
-            "Run `slidify harvest <corpus_dir>` to surface Tier-0 candidates."
+            "Run `slidify harvest <corpus_dir> --output clusters.json` "
+            "to surface Tier-0 candidates."
         )
     if not hints:
         hints.append("Open the .pptx in PowerPoint to verify editability.")
@@ -518,17 +518,37 @@ def promote_unmatched_to_yaml(
     type=click.Path(exists=True, dir_okay=True, file_okay=True, path_type=Path),
 )
 @click.option(
-    "--top",
-    type=int,
-    default=20,
-    show_default=True,
-    help="Number of most-common unmatched signatures to report.",
+    "--output", "-o", "output_path",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=None,
+    help="Write clusters.json (CONTRACT-v2 §G.3 schema) to this path.",
 )
+@click.option(
+    "--top-n",
+    type=int,
+    default=50,
+    show_default=True,
+    help="Cap the number of clusters written to clusters.json.",
+)
+@click.option(
+    "--min-occurrences",
+    type=int,
+    default=1,
+    show_default=True,
+    help="Drop clusters whose total instance count is below this threshold.",
+)
+# Back-compat aliases for the previous flags. Emit a deprecation note when used.
 @click.option(
     "--out-json",
     type=click.Path(dir_okay=False, path_type=Path),
     default=None,
-    help="Write the full ranked report as JSON to this path.",
+    hidden=True,
+)
+@click.option(
+    "--top",
+    type=int,
+    default=None,
+    hidden=True,
 )
 @click.option(
     "--promote-yaml",
@@ -550,65 +570,153 @@ def promote_unmatched_to_yaml(
     show_default=True,
     help="Minimum occurrences before --promote-yaml writes a stub.",
 )
+@click.option(
+    "--json", "json_out",
+    is_flag=True,
+    default=False,
+    help=(
+        "Print the clusters.json payload to stdout instead of (or in "
+        "addition to) writing it to --output. Implies machine-readable "
+        "output for piping into other tools."
+    ),
+)
 def harvest(
     input_path: Path,
-    top: int,
+    output_path: Path | None,
+    top_n: int,
+    min_occurrences: int,
     out_json: Path | None,
+    top: int | None,
     promote_yaml: Path | None,
     min_count: int,
+    json_out: bool,
 ) -> None:
-    """Run slidify across a corpus and report the most-common unmatched signatures.
+    """Run slidify across a corpus and emit clustered Tier-0 candidate atoms.
 
-    Use the output to author new entries in `slidify/patterns/data/patterns.yaml`.
-    Each unmatched signature represents a structural shape the heuristic
-    pipeline currently has to guess at — adding a Tier-0 recipe for it makes
-    the engine cheaper and more accurate for everyone.
+    Walks INPUT_PATH for *.html files, runs the slidify fast pipeline on each,
+    and aggregates every Tier-0 miss (`UnmatchedSignature`) into clusters keyed
+    by structural signature hash. Each cluster ships with a heuristic atom-id
+    + axis proposal so designers can promote the most-common shapes into
+    `atoms.yaml` (and patterns.yaml) without re-walking the corpus by hand.
+
+    See CONTRACT-v2 §G.3 for the clusters.json schema.
     """
-    html_paths = _harvest_inputs(input_path)
-    if not html_paths:
-        click.echo(f"No HTML files found under {input_path}", err=True)
+    from slidify.harvester import aggregate_corpus, report_to_dict, write_report
+
+    # `--json` mode means stdout must be parseable JSON for piping
+    # (`slidify harvest <corpus> --json | jq ...`). Route every human-
+    # readable status line to stderr so the JSON object stands alone
+    # on stdout. Errors and deprecation warnings already go to err=True
+    # below; the additions here cover the progress/summary path.
+    def _info(msg: str = "") -> None:
+        click.echo(msg, err=json_out)
+
+    # Resolve back-compat aliases.
+    if out_json is not None and output_path is None:
+        output_path = out_json
+        click.echo(
+            click.style(
+                "warning: --out-json is deprecated; use --output / -o.",
+                fg="yellow",
+            ),
+            err=True,
+        )
+    if top is not None:
+        top_n = top
+        click.echo(
+            click.style(
+                "warning: --top is deprecated; use --top-n.",
+                fg="yellow",
+            ),
+            err=True,
+        )
+
+    if not input_path.exists():
+        click.echo(f"slidify harvest: input path does not exist: {input_path}", err=True)
+        sys.exit(2)
+
+    _info(f"Harvesting {input_path}…")
+
+    def _on_progress(path: Path, n_sigs: int) -> None:
+        _info(f"  {path.name:<48} {n_sigs:>4d} unmatched")
+
+    report = aggregate_corpus(
+        input_path,
+        min_occurrences=min_occurrences,
+        on_progress=_on_progress,
+    )
+
+    if report.decks_processed == 0:
+        click.echo(f"slidify harvest: no decks processed under {input_path}", err=True)
         sys.exit(1)
 
-    click.echo(f"Harvesting {len(html_paths)} file(s)…")
-
-    aggregate: dict[str, UnmatchedSignature] = {}
-    for path in html_paths:
-        try:
-            sigs = asyncio.run(_harvest_one(path))
-        except Exception as e:
-            click.echo(f"  {path}: ERROR — {e}", err=True)
-            continue
-        for s in sigs:
-            existing = aggregate.get(s.sig_hash)
-            if existing is None:
-                aggregate[s.sig_hash] = s.model_copy()
-            else:
-                existing.n_occurrences += s.n_occurrences
-
-    ranked = sorted(aggregate.values(), key=lambda u: -u.n_occurrences)
-    click.echo(f"\nUnique unmatched signatures: {len(ranked)}")
-    click.echo(f"Total occurrences: {sum(u.n_occurrences for u in ranked)}\n")
-
-    click.echo(f"Top {min(top, len(ranked))} by occurrence:")
-    click.echo("─" * 80)
-    for i, sig in enumerate(ranked[:top], 1):
-        cls_short = (sig.sample_classes or "—")[:64]
-        text_short = (sig.sample_text or "—")[:40]
-        click.echo(
-            f"{i:3d}. ×{sig.n_occurrences:<4d} {sig.bbox_w:>4d}×{sig.bbox_h:<3d}  "
-            f"hash={sig.sig_hash}"
+    _info("")
+    _info(f"Decks processed       : {report.decks_processed}")
+    _info(f"Total unmatched units : {report.total_unmatched}")
+    _info(f"Unique signatures     : {report.unique_signatures}")
+    if report.errors:
+        _info(
+            click.style(f"Per-deck errors       : {len(report.errors)}", fg="yellow")
         )
-        click.echo(f"      classes : {cls_short}")
-        click.echo(f"      sample  : {text_short}")
-        click.echo(f"      sig     : {sig.sig[:120]}")
 
-    if out_json:
-        payload = [s.model_dump() for s in ranked]
-        out_json.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-        click.echo(f"\nWrote full report: {out_json}")
+    n_show = min(top_n, len(report.clusters))
+    if n_show:
+        _info("")
+        _info(f"Top {n_show} clusters:")
+        _info("─" * 80)
+        for c in report.clusters[:n_show]:
+            cand = report.candidates.get(c.id)
+            atom = cand.candidate_atom_id if cand else "?"
+            axis = cand.candidate_axis if cand else "?"
+            _info(
+                f"  {c.id}  ×{c.instances:<4d}  "
+                f"{int(c.bbox_typical.get('w_avg', 0)):>4d}×"
+                f"{int(c.bbox_typical.get('h_avg', 0)):<3d}  "
+                f"→ {axis}  {atom}"
+            )
+            if c.sample_classes:
+                _info(f"      classes : {', '.join(c.sample_classes[:3])}")
+
+    if output_path is not None:
+        write_report(report, output_path, top_n=top_n)
+        _info("")
+        _info(f"Wrote clusters.json   : {output_path}")
+    if json_out:
+        # The ONLY thing on stdout in --json mode: the parseable payload.
+        # All status lines above were routed to stderr via `_info()`.
+        click.echo(json.dumps(report_to_dict(report, top_n=top_n), indent=2))
+    elif output_path is None:
+        _info("")
+        _info(
+            "(no --output / --json supplied — pass --output PATH or --json "
+            "to persist clusters.json)"
+        )
 
     if promote_yaml:
-        n_new = promote_unmatched_to_yaml(ranked, promote_yaml, min_count=min_count)
+        # Bridge the new aggregated `report.clusters` flow back to
+        # `promote_unmatched_to_yaml`, which still expects a list of
+        # `UnmatchedSignature` objects. The merge that combined our
+        # cluster-aggregated harvest with main's signature-driven
+        # promote step had left this calling an undefined `ranked`
+        # local — every `slidify harvest --promote-yaml ...` invocation
+        # raised NameError before this fix.
+        from slidify.models import UnmatchedSignature
+
+        promote_sigs = [
+            UnmatchedSignature(
+                sig=c.signature,
+                sig_hash=c.sig_hash,
+                bbox_w=int(c.bbox_typical.get("w_avg", 0)),
+                bbox_h=int(c.bbox_typical.get("h_avg", 0)),
+                sample_classes=", ".join(c.sample_classes[:3]),
+                sample_text=(c.sample_text[0] if c.sample_text else ""),
+                n_occurrences=c.instances,
+            )
+            for c in report.clusters
+        ]
+        n_new = promote_unmatched_to_yaml(
+            promote_sigs, promote_yaml, min_count=min_count
+        )
         click.echo(
             f"\nPromoted {n_new} stub(s) (min_count={min_count}) → {promote_yaml}"
         )
@@ -977,6 +1085,81 @@ def version_cmd(json_out: bool) -> None:
         click.echo(f"  {k:<16}{info[k]}")
 
 
+@cli.command(name="check")
+@click.argument(
+    "html_path",
+    type=click.Path(exists=True, dir_okay=False, file_okay=True, path_type=Path),
+)
+@click.option(
+    "--json", "json_out", is_flag=True,
+    help="Emit JSON to stdout. Pipes cleanly into jq / scripts.",
+)
+@click.option(
+    "--deep", "deep", is_flag=True,
+    help="Run the full convert pipeline (Chromium + matcher) with write=False "
+         "so the report includes native_area_ratio + matcher decisions. "
+         "Slower (1-3s/slide); intended for CI / corpus runs.",
+)
+def check_cmd(html_path: Path, json_out: bool, deep: bool) -> None:
+    """Pre-flight static checker for slide HTML.
+
+    Tells the caller whether the HTML will convert cleanly to PPTX
+    BEFORE running the full pipeline. Designed for two consumers:
+
+      * LLMs in an authoring loop — `slidify check slide.html --json`
+        in <100ms, reject + regenerate on any external_assets or
+        risky_css that lacks a `data-slidify-allow-raster` opt-in.
+      * CI corpus runs — `slidify check slide.html --deep --json`
+        gives the matcher's actual decisions and predicted
+        native_area_ratio.
+    """
+    from slidify.checker import check_html, check_html_deep
+
+    html = html_path.read_text(encoding="utf-8")
+    rep = check_html_deep(html) if deep else check_html(html)
+    payload = rep.to_dict()
+
+    if json_out:
+        click.echo(json.dumps(payload, indent=2))
+        # Exit nonzero if anything is broken — lets `&&` chains gate.
+        if not rep.self_contained or rep.risky_css:
+            sys.exit(2)
+        return
+
+    # Human-readable output.
+    if rep.self_contained and not rep.risky_css and not rep.warnings:
+        click.echo(click.style("✓ self-contained, no risky CSS, no warnings.", fg="green"))
+    else:
+        if not rep.self_contained:
+            click.echo(click.style("⚠ NOT self-contained:", fg="red"))
+            for a in rep.external_assets:
+                click.echo(f"  - {a.kind:<14} {a.url}")
+        if rep.risky_css:
+            click.echo(click.style("⚠ risky CSS:", fg="yellow"))
+            for r in rep.risky_css:
+                click.echo(f"  - {r.property:<22} = {r.value[:40]:<40}  ({r.selector})")
+                click.echo(f"      {r.reason}")
+        if rep.warnings:
+            click.echo(click.style("ℹ warnings:", fg="cyan"))
+            for w in rep.warnings:
+                click.echo(f"  - {w}")
+    if rep.atom_hints:
+        click.echo("")
+        click.echo(f"atom hints declared: {', '.join(rep.atom_hints[:10])}")
+    if rep.deep is not None:
+        click.echo("")
+        d = rep.deep
+        click.echo(f"native_area_ratio: {d['native_area_ratio']:.4f}")
+        click.echo(f"slides           : {d['n_slides']}")
+        if d.get("unmatched_signatures"):
+            click.echo(f"unmatched sigs   : {len(d['unmatched_signatures'])}")
+        er = d.get("escape_rate") or {}
+        if er.get("value", 0) > 0:
+            click.echo(f"escape_rate      : {er['value']:.4f}")
+    if not rep.self_contained or rep.risky_css:
+        sys.exit(2)
+
+
 @cli.command(name="doctor")
 @click.option("--json", "json_out", is_flag=True, help="Print machine-readable JSON.")
 def doctor_cmd(json_out: bool) -> None:
@@ -1153,11 +1336,11 @@ _MANIFEST: dict = {
         },
         {
             "name": "harvest",
-            "summary": "Run a corpus and rank unmatched DOM signatures (Tier-0 candidates).",
-            "usage": "slidify harvest <dir> [--top N] [--out-json PATH]",
+            "summary": "Run a corpus and emit clustered Tier-0 candidate atoms.",
+            "usage": "slidify harvest <dir> [--output PATH] [--top-n N] [--min-occurrences N]",
             "examples": [
-                {"desc": "Top 20 unmatched signatures across a corpus",
-                 "cmd":  "slidify harvest examples/corpus/ --top 20 --out-json harvest.json"},
+                {"desc": "Mine a corpus and write clusters.json",
+                 "cmd":  "slidify harvest examples/corpus/ --output clusters.json --top-n 50"},
             ],
         },
         {
@@ -1505,6 +1688,143 @@ def guide_cmd(
 # ---------------------------------------------------------------------------
 
 
+# ---------------------------------------------------------------------------
+# report-escape-clusters — CONTRACT-v2 §F.5 promotion-loop scaffold
+# ---------------------------------------------------------------------------
+#
+# When the harvester clusters escape-hatch usage by intent and a cluster
+# crosses a threshold (default ≥15 instances), it auto-files a GitHub issue
+# tagged `atom-proposal` for the designer to review. v1 of this command
+# only PRINTS what it would file — actual GitHub integration is M4 follow-up.
+#
+# TODO(M4): wire to gh CLI / GitHub REST. Cluster signature, sample CSS
+# payloads, draft manifest row → `atom-proposal` issue per cluster.
+
+@cli.command(name="report-escape-clusters")
+@click.argument(
+    "report_path",
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    required=False,
+)
+@click.option(
+    "--threshold",
+    type=int,
+    default=15,
+    show_default=True,
+    help="Minimum cluster size before a promotion would be proposed.",
+)
+@click.option(
+    "--auto-file-issues",
+    is_flag=True,
+    help="(stub) Would file `atom-proposal` issues to GitHub. v1 only logs "
+    "'would file'; actual gh integration is M4 follow-up.",
+)
+def report_escape_clusters_cmd(
+    report_path: Path | None, threshold: int, auto_file_issues: bool
+) -> None:
+    """Inspect `escape_rate.byIntent` clusters; surface promotion candidates.
+
+    Per CONTRACT-v2 §F.5. The harvester clusters escape-hatch usage across a
+    corpus and promotes intents that cross a threshold to atom proposals.
+
+    \b
+    v1 (this command): prints what would be filed.
+    v2 (M4 follow-up): actually files `atom-proposal` GitHub issues.
+
+    \b
+    Examples:
+        slidify report-escape-clusters report.json
+        slidify report-escape-clusters report.json --threshold 25
+        slidify report-escape-clusters report.json --auto-file-issues  # stub
+    """
+    if report_path is None:
+        click.echo(
+            "slidify: pass a report.json path "
+            "(produced by `slidify convert ... --report-json report.json`).",
+            err=True,
+        )
+        sys.exit(2)
+
+    try:
+        data = json.loads(report_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        click.echo(f"slidify: invalid JSON: {e}", err=True)
+        sys.exit(2)
+
+    escape = data.get("escape_rate", {}) or data.get("escapeRate", {})
+    by_intent: dict[str, float] = escape.get("byIntent", {}) or {}
+    total_value: float = float(escape.get("value", 0.0))
+
+    if not by_intent:
+        click.echo(
+            "No escape-hatch usage recorded in this report. "
+            "Either the deck used no `chrome.escape-hatch` atoms or "
+            "the escape-rate metering wasn't populated."
+        )
+        return
+
+    click.echo(f"Escape rate: {total_value:.4f} (deck-wide area share)")
+    click.echo(f"Threshold  : {threshold} (intent count)")
+    click.echo("─" * 64)
+
+    # Prefer the count-based comparison when the report carries counts
+    # (post-compile_ir.to_report_dict update). Fall back to area share
+    # only when older reports omit `countByIntent`. This makes
+    # `--threshold` an actually-functional knob instead of a no-op.
+    count_by_intent = escape.get("countByIntent") or escape.get("count_by_intent") or {}
+
+    if count_by_intent:
+        candidates = sorted(
+            count_by_intent.items(), key=lambda kv: -kv[1]
+        )
+        for intent, count in candidates:
+            share = float(by_intent.get(intent, 0.0))
+            would_promote = int(count) >= int(threshold)
+            marker = (
+                click.style("→ would-promote", fg="yellow")
+                if would_promote else "  observe"
+            )
+            click.echo(
+                f"  {intent:<32}{int(count):>5d}× ({share:>6.4f})  {marker}"
+            )
+            if would_promote and auto_file_issues:
+                # TODO(M4): replace with `gh issue create --label atom-proposal ...`
+                click.echo(
+                    click.style(
+                        f"    [would file] atom-proposal issue for "
+                        f"intent={intent} count={int(count)} share={share:.4f}",
+                        dim=True,
+                    )
+                )
+    else:
+        # Backward-compat: report.json predates `countByIntent`. Fall back
+        # to area-share threshold (1% floor); document the limitation.
+        click.echo(
+            click.style(
+                "warning: report.json lacks 'countByIntent'; falling back "
+                "to 1%-area-share floor (recompile with current slidify "
+                "to use --threshold).",
+                fg="yellow",
+            ),
+            err=True,
+        )
+        candidates = sorted(by_intent.items(), key=lambda kv: -kv[1])
+        for intent, share in candidates:
+            would_promote = share >= 0.01
+            marker = (
+                click.style("→ would-promote", fg="yellow")
+                if would_promote else "  observe"
+            )
+            click.echo(f"  {intent:<32}{share:>8.4f}    {marker}")
+            if would_promote and auto_file_issues:
+                click.echo(
+                    click.style(
+                        f"    [would file] atom-proposal issue for intent={intent}",
+                        dim=True,
+                    )
+                )
+
+
 @cli.command(name="field")
 @click.argument("json_path", type=click.Path(exists=True, dir_okay=False, path_type=Path))
 @click.argument("dotted_path")
@@ -1558,7 +1878,9 @@ def main() -> None:
     args = sys.argv[1:]
     known_subs = {
         "convert", "harvest", "compat", "capture-gif",
+        "check",
         "doctor", "version", "manifest", "guide", "field",
+        "report-escape-clusters",
         "prime-atom-cache",
         "--help", "-h", "--version", "-V",
     }

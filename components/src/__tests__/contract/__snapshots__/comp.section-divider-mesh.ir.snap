@@ -1,0 +1,220 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 200,
+                "w": 600,
+                "x": 100,
+                "y": 100
+              },
+              "borderRadiusPx": 0,
+              "fill": {
+                "cx": 0.5,
+                "cy": 0.5,
+                "kind": "radial-gradient",
+                "shape": "ellipse",
+                "stops": [
+                  {
+                    "color": {
+                      "alpha": 0.32,
+                      "hex": "#a78bfa"
+                    },
+                    "position": 0
+                  },
+                  {
+                    "color": {
+                      "alpha": 0,
+                      "hex": "#a78bfa"
+                    },
+                    "position": 1
+                  }
+                ]
+              },
+              "kind": "shape",
+              "metadata": {
+                "axis": "surface",
+                "cx": 0.5,
+                "cy": 0.5,
+                "intensity": "med",
+                "role": "surface.radial-blob",
+                "shape": "ellipse"
+              },
+              "recipeId": "surface.radial-blob",
+              "shape": "rect",
+              "zOrder": 0
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "surface",
+            "cx": 0.5,
+            "cy": 0.5,
+            "intensity": "med",
+            "role": "surface.radial-blob",
+            "shape": "ellipse"
+          },
+          "recipeId": "surface.radial-blob",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "bg",
+        "primitive": "surface.radial-blob",
+        "role": "bg.aurora-corners",
+        "version": "1.0.0"
+      },
+      "recipeId": "bg.aurora-corners",
+      "zOrder": 0
+    },
+    {
+      "bbox": {
+        "h": 110.00000000000001,
+        "w": 330,
+        "x": 130,
+        "y": 130
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 110.00000000000001,
+            "w": 330,
+            "x": 130,
+            "y": 130
+          },
+          "kind": "text",
+          "metadata": {
+            "axis": "slot",
+            "role": "slot.numeral",
+            "scale": "numeral-md"
+          },
+          "paragraphs": [
+            {
+              "align": "left",
+              "runs": [
+                {
+                  "color": "#f5f5f7",
+                  "fontFamily": "Inter, sans-serif",
+                  "fontSizePx": 88,
+                  "fontWeight": 800,
+                  "italic": false,
+                  "text": "Sample",
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "slot.numeral",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "dec",
+        "primitive": "slot.numeral",
+        "role": "dec.numeral-chapter",
+        "version": "1.0.0"
+      },
+      "recipeId": "dec.numeral-chapter",
+      "zOrder": 10
+    },
+    {
+      "bbox": {
+        "h": 8,
+        "w": 510,
+        "x": 130,
+        "y": 256
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 8,
+            "w": 510,
+            "x": 130,
+            "y": 256
+          },
+          "children": [
+            {
+              "bbox": {
+                "h": 8,
+                "w": 510,
+                "x": 130,
+                "y": 256
+              },
+              "kind": "text",
+              "metadata": {
+                "role": "eyebrow-text"
+              },
+              "paragraphs": [
+                {
+                  "align": "left",
+                  "runs": [
+                    {
+                      "color": "#a78bfa",
+                      "fontFamily": "Inter, sans-serif",
+                      "fontSizePx": 13,
+                      "fontWeight": 600,
+                      "italic": false,
+                      "text": "HEADLINE",
+                      "underline": false
+                    }
+                  ]
+                }
+              ],
+              "recipeId": "slot.eyebrow.text",
+              "zOrder": 10
+            }
+          ],
+          "kind": "group",
+          "metadata": {
+            "axis": "slot",
+            "role": "slot.eyebrow",
+            "withRule": "none"
+          },
+          "recipeId": "slot.eyebrow",
+          "zOrder": 0
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "type",
+        "primitive": "slot.eyebrow",
+        "role": "type.eyebrow-ruled",
+        "version": "1.0.0"
+      },
+      "recipeId": "type.eyebrow-ruled",
+      "zOrder": 20
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "comp",
+    "composite": true,
+    "role": "comp.section-divider-mesh",
+    "version": "1.0.0"
+  },
+  "recipeId": "comp.section-divider-mesh",
+  "zOrder": 0
+}

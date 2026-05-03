@@ -125,12 +125,18 @@ def _handler(name: str):
 
 @_handler("anchor.tag_in")
 def _h_tag_in(unit, anchor, catalog, value):
-    return anchor.tag in value
+    # Chromium's getComputedStyle yields tag names in uppercase
+    # (`BUTTON`, `HR`, `DIV`).  Normalise both sides so atoms.yaml can
+    # be written in the conventional lowercase form (`[button]`,
+    # `[hr]`).  Without this, every tag-based atom misses silently.
+    tag = (anchor.tag or "").lower()
+    return tag in [str(v).lower() for v in value]
 
 
 @_handler("anchor.tag_not_in")
 def _h_tag_not_in(unit, anchor, catalog, value):
-    return anchor.tag not in value
+    tag = (anchor.tag or "").lower()
+    return tag not in [str(v).lower() for v in value]
 
 
 @_handler("classes_all")

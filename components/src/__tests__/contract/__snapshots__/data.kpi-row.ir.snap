@@ -1,0 +1,37 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [],
+      "kind": "group",
+      "metadata": {
+        "axis": "data",
+        "cellCount": 0,
+        "role": "data.kpi-row",
+        "withDividers": false
+      },
+      "recipeId": "data.kpi-row",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "data",
+    "primitive": "data.kpi-row",
+    "role": "data.kpi-row",
+    "version": "1.0.0"
+  },
+  "recipeId": "data.kpi-row",
+  "zOrder": 0
+}

@@ -1,0 +1,55 @@
+// AUTO-GENERATED from slidify/patterns/data/atoms.yaml.
+// DO NOT EDIT — edit atoms.yaml + run `npm run codegen-atoms` instead.
+
+import type { ReactNode } from 'react';
+import type { Bbox, GroupNodeT } from '../ir/schema';
+import { tokens as defaultTokens, type TokensApi } from '../tokens';
+import { typePullquoteSerifToIR } from './TypePullquoteSerif';
+
+export const CompQuoteEditorialVersion = '1.0.0';
+
+export interface CompQuoteEditorialProps {
+  bbox: Bbox;
+  quote: string;
+  attribution?: string;
+}
+
+export default function CompQuoteEditorial(_props: CompQuoteEditorialProps): ReactNode {
+  // Composite atoms render as a flat HTML preview shell. The IR emitter
+  // is the authoritative composition; this preview surfaces the recipeId
+  // for designers eyeballing the deck.
+  return (
+    <div
+      data-recipe-id="comp.quote-editorial"
+      data-composite="true"
+      style={{
+        position: 'absolute',
+        left: _props.bbox.x,
+        top: _props.bbox.y,
+        width: _props.bbox.w,
+        height: _props.bbox.h,
+      }}
+    />
+  );
+}
+
+export function compQuoteEditorialToIR(
+  props: CompQuoteEditorialProps,
+  tokens: TokensApi = defaultTokens,
+): GroupNodeT {
+  return {
+    kind: 'group',
+    recipeId: 'comp.quote-editorial',
+    bbox: { ...props.bbox },
+    zOrder: 0,
+    metadata: {
+      role: 'comp.quote-editorial',
+      axis: 'comp',
+      composite: true,
+      version: '1.0.0',
+    },
+    children: [
+    { ...typePullquoteSerifToIR({ bbox: { x: props.bbox.x + 0.1 * props.bbox.w, y: props.bbox.y + 0.2 * props.bbox.h, w: 0.8 * props.bbox.w, h: 0.45 * props.bbox.h }, quote: props.quote, attribution: props.attribution } as never, tokens), zOrder: 0 },
+    ],
+  };
+}

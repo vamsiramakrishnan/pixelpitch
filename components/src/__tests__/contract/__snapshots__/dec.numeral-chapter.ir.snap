@@ -1,0 +1,51 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "kind": "text",
+      "metadata": {
+        "axis": "slot",
+        "role": "slot.numeral",
+        "scale": "numeral-md"
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#f5f5f7",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 88,
+              "fontWeight": 800,
+              "italic": false,
+              "text": "Sample",
+              "underline": false
+            }
+          ]
+        }
+      ],
+      "recipeId": "slot.numeral",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "dec",
+    "primitive": "slot.numeral",
+    "role": "dec.numeral-chapter",
+    "version": "1.0.0"
+  },
+  "recipeId": "dec.numeral-chapter",
+  "zOrder": 0
+}

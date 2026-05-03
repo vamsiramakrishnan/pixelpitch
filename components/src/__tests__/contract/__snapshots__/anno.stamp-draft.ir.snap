@@ -1,0 +1,102 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "border": {
+            "color": "#ef4444",
+            "style": "solid",
+            "width": 2
+          },
+          "borderRadiusPx": 4,
+          "fill": {
+            "color": {
+              "alpha": 0.16,
+              "hex": "#ef4444"
+            },
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "kind": "stamp",
+            "role": "annotation-badge-bg",
+            "rotateDeg": -12,
+            "tone": "danger"
+          },
+          "recipeId": "annotation.badge.bg",
+          "shape": "rounded-rect",
+          "zOrder": 0
+        },
+        {
+          "bbox": {
+            "h": 200,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "kind": "text",
+          "metadata": {
+            "label": "DRAFT",
+            "role": "annotation-badge-label"
+          },
+          "paragraphs": [
+            {
+              "align": "center",
+              "runs": [
+                {
+                  "color": "#ef4444",
+                  "fontFamily": "Inter, sans-serif",
+                  "fontSizePx": 14,
+                  "fontWeight": 700,
+                  "italic": false,
+                  "text": "DRAFT",
+                  "underline": false
+                }
+              ]
+            }
+          ],
+          "recipeId": "annotation.badge.label",
+          "zOrder": 10
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "annotation",
+        "kind": "stamp",
+        "label": "DRAFT",
+        "role": "annotation.badge",
+        "rotateDeg": -12,
+        "tone": "danger"
+      },
+      "recipeId": "annotation.badge",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "anno",
+    "primitive": "annotation.badge",
+    "role": "anno.stamp-draft",
+    "version": "1.0.0"
+  },
+  "recipeId": "anno.stamp-draft",
+  "zOrder": 0
+}

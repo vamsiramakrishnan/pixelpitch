@@ -1,0 +1,7194 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://slidify.dev/atoms.schema.json",
+  "title": "Slidify atom catalog (Tier-B recipes)",
+  "description": "Validates an LLM-side atom payload of the form { atom, version?, props }. One entry per Tier-B atom row in slidify/patterns/data/atoms.yaml.",
+  "oneOf": [
+    {
+      "$ref": "#/definitions/bg.dot-lattice-fine"
+    },
+    {
+      "$ref": "#/definitions/bg.dot-lattice-coarse"
+    },
+    {
+      "$ref": "#/definitions/bg.line-grid"
+    },
+    {
+      "$ref": "#/definitions/bg.crosshatch"
+    },
+    {
+      "$ref": "#/definitions/bg.diagonal"
+    },
+    {
+      "$ref": "#/definitions/bg.spotlight-tight"
+    },
+    {
+      "$ref": "#/definitions/bg.spotlight-soft"
+    },
+    {
+      "$ref": "#/definitions/bg.scrim-bottom"
+    },
+    {
+      "$ref": "#/definitions/bg.scrim-top"
+    },
+    {
+      "$ref": "#/definitions/bg.aurora-corners"
+    },
+    {
+      "$ref": "#/definitions/surf.card-flat"
+    },
+    {
+      "$ref": "#/definitions/surf.card-raised"
+    },
+    {
+      "$ref": "#/definitions/surf.card-floating"
+    },
+    {
+      "$ref": "#/definitions/surf.card-depth"
+    },
+    {
+      "$ref": "#/definitions/surf.card-bordered"
+    },
+    {
+      "$ref": "#/definitions/surf.card-paper"
+    },
+    {
+      "$ref": "#/definitions/surf.bento-cell"
+    },
+    {
+      "$ref": "#/definitions/surf.section-band"
+    },
+    {
+      "$ref": "#/definitions/surf.frame-letterbox"
+    },
+    {
+      "$ref": "#/definitions/surf.tape-band"
+    },
+    {
+      "$ref": "#/definitions/type.big-number"
+    },
+    {
+      "$ref": "#/definitions/type.big-number-xl"
+    },
+    {
+      "$ref": "#/definitions/type.big-number-gradient"
+    },
+    {
+      "$ref": "#/definitions/type.eyebrow-ruled"
+    },
+    {
+      "$ref": "#/definitions/type.eyebrow-tape"
+    },
+    {
+      "$ref": "#/definitions/type.pullquote-serif"
+    },
+    {
+      "$ref": "#/definitions/type.pullquote-brutalist"
+    },
+    {
+      "$ref": "#/definitions/type.numerals-tabular"
+    },
+    {
+      "$ref": "#/definitions/mask.octagon"
+    },
+    {
+      "$ref": "#/definitions/mask.callout"
+    },
+    {
+      "$ref": "#/definitions/mask.gradient-fade-edge"
+    },
+    {
+      "$ref": "#/definitions/mask.rounded-rect-clip"
+    },
+    {
+      "$ref": "#/definitions/dec.brace-left"
+    },
+    {
+      "$ref": "#/definitions/dec.brace-right"
+    },
+    {
+      "$ref": "#/definitions/dec.brace-top"
+    },
+    {
+      "$ref": "#/definitions/dec.brace-bottom"
+    },
+    {
+      "$ref": "#/definitions/dec.plus"
+    },
+    {
+      "$ref": "#/definitions/dec.star-5"
+    },
+    {
+      "$ref": "#/definitions/dec.star-6"
+    },
+    {
+      "$ref": "#/definitions/dec.arrow-right"
+    },
+    {
+      "$ref": "#/definitions/dec.arrow-left"
+    },
+    {
+      "$ref": "#/definitions/dec.arrow-up"
+    },
+    {
+      "$ref": "#/definitions/dec.arrow-down"
+    },
+    {
+      "$ref": "#/definitions/dec.hairline-rule"
+    },
+    {
+      "$ref": "#/definitions/dec.dotted-rule"
+    },
+    {
+      "$ref": "#/definitions/dec.corner-crop"
+    },
+    {
+      "$ref": "#/definitions/dec.section-divider"
+    },
+    {
+      "$ref": "#/definitions/dec.numeral-chapter"
+    },
+    {
+      "$ref": "#/definitions/dec.bullet-dot"
+    },
+    {
+      "$ref": "#/definitions/data.connector"
+    },
+    {
+      "$ref": "#/definitions/data.bar-set-h"
+    },
+    {
+      "$ref": "#/definitions/data.bar-set-v"
+    },
+    {
+      "$ref": "#/definitions/data.donut"
+    },
+    {
+      "$ref": "#/definitions/data.donut-multi-segment"
+    },
+    {
+      "$ref": "#/definitions/data.kpi-row"
+    },
+    {
+      "$ref": "#/definitions/data.data-table"
+    },
+    {
+      "$ref": "#/definitions/data.mini-heatmap"
+    },
+    {
+      "$ref": "#/definitions/data.bullet-bar"
+    },
+    {
+      "$ref": "#/definitions/data.delta-badge"
+    },
+    {
+      "$ref": "#/definitions/anno.callout-bubble"
+    },
+    {
+      "$ref": "#/definitions/anno.numbered-hotspot"
+    },
+    {
+      "$ref": "#/definitions/anno.tooltip"
+    },
+    {
+      "$ref": "#/definitions/anno.stamp-draft"
+    },
+    {
+      "$ref": "#/definitions/anno.stamp-new"
+    },
+    {
+      "$ref": "#/definitions/anno.stamp-internal"
+    },
+    {
+      "$ref": "#/definitions/anno.highlighter-mark"
+    },
+    {
+      "$ref": "#/definitions/anno.redaction-bar"
+    },
+    {
+      "$ref": "#/definitions/anno.brace-labeled"
+    },
+    {
+      "$ref": "#/definitions/anno.sticker"
+    },
+    {
+      "$ref": "#/definitions/ui.code-block"
+    },
+    {
+      "$ref": "#/definitions/ui.code-block-syntax"
+    },
+    {
+      "$ref": "#/definitions/ui.terminal-window"
+    },
+    {
+      "$ref": "#/definitions/ui.device-phone"
+    },
+    {
+      "$ref": "#/definitions/ui.device-laptop"
+    },
+    {
+      "$ref": "#/definitions/ui.browser-mac"
+    },
+    {
+      "$ref": "#/definitions/ui.browser-win"
+    },
+    {
+      "$ref": "#/definitions/ui.browser-minimal"
+    },
+    {
+      "$ref": "#/definitions/ui.status-dot"
+    },
+    {
+      "$ref": "#/definitions/ui.stepper"
+    },
+    {
+      "$ref": "#/definitions/ui.progress-bar"
+    },
+    {
+      "$ref": "#/definitions/ui.checklist"
+    },
+    {
+      "$ref": "#/definitions/comp.hero-investor"
+    },
+    {
+      "$ref": "#/definitions/comp.hero-product"
+    },
+    {
+      "$ref": "#/definitions/comp.agenda-2col"
+    },
+    {
+      "$ref": "#/definitions/comp.agenda-toc"
+    },
+    {
+      "$ref": "#/definitions/comp.big-stat-hero"
+    },
+    {
+      "$ref": "#/definitions/comp.three-up-stats"
+    },
+    {
+      "$ref": "#/definitions/comp.quote-editorial"
+    },
+    {
+      "$ref": "#/definitions/comp.section-divider-mesh"
+    },
+    {
+      "$ref": "#/definitions/comp.roadmap-quarterly"
+    },
+    {
+      "$ref": "#/definitions/comp.team-grid"
+    },
+    {
+      "$ref": "#/definitions/comp.closing-cta"
+    },
+    {
+      "$ref": "#/definitions/comp.bento-mixed"
+    },
+    {
+      "$ref": "#/definitions/comp.annotated-screenshot"
+    },
+    {
+      "$ref": "#/definitions/comp.data-overview"
+    }
+  ],
+  "definitions": {
+    "bg.dot-lattice-fine": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "bg.dot-lattice-fine"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "bgColor": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "tilePx": {
+              "type": "number"
+            },
+            "dotRadiusPx": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "bg.dot-lattice-coarse": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "bg.dot-lattice-coarse"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "tilePx": {
+              "type": "number"
+            },
+            "dotRadiusPx": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "bg.line-grid": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "bg.line-grid"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "spacingPx": {
+              "type": "number"
+            },
+            "strokeWidthPx": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "bg.crosshatch": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "bg.crosshatch"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "spacingPx": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "bg.diagonal": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "bg.diagonal"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "spacingPx": {
+              "type": "number"
+            },
+            "angleDeg": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "bg.spotlight-tight": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "bg.spotlight-tight"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "cx": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "cy": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "bg.spotlight-soft": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "bg.spotlight-soft"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "cx": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "cy": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "bg.scrim-bottom": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "bg.scrim-bottom"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "opacity": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "bg.scrim-top": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "bg.scrim-top"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "opacity": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "bg.aurora-corners": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "bg.aurora-corners"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "colorTL": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "colorTR": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "colorBL": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "colorBR": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "surf.card-flat": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "surf.card-flat"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "bgColor": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "radius": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "surf.card-raised": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "surf.card-raised"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "bgColor": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "radius": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "surf.card-floating": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "surf.card-floating"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "bgColor": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "radius": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "surf.card-depth": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "surf.card-depth"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "bgColor": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "accentColor": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "radius": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "surf.card-bordered": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "surf.card-bordered"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "bgColor": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "borderColor": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "borderPx": {
+              "type": "number"
+            },
+            "radius": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "surf.card-paper": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "surf.card-paper"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "bgColor": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "radius": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "surf.bento-cell": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "surf.bento-cell"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "bgColor": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "radius": {
+              "type": "number"
+            },
+            "padding": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "surf.section-band": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "surf.section-band"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "fill": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "IR Fill or token reference"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "surf.frame-letterbox": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "surf.frame-letterbox"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "bandPx": {
+              "type": "number"
+            },
+            "bgColor": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "surf.tape-band": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "surf.tape-band"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "skewDeg": {
+              "type": "number"
+            },
+            "fill": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "IR Fill or token reference"
+            },
+            "label": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "type.big-number": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "type.big-number"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "value": {
+              "type": "string"
+            },
+            "unit": {
+              "type": "string"
+            },
+            "gradient": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "bbox",
+            "value"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "type.big-number-xl": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "type.big-number-xl"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "value": {
+              "type": "string"
+            },
+            "unit": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "bbox",
+            "value"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "type.big-number-gradient": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "type.big-number-gradient"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "value": {
+              "type": "string"
+            },
+            "unit": {
+              "type": "string"
+            },
+            "gradient": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "IR LinearGradient or token reference"
+            }
+          },
+          "required": [
+            "bbox",
+            "value"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "type.eyebrow-ruled": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "type.eyebrow-ruled"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "label": {
+              "type": "string"
+            },
+            "ruleSide": {
+              "type": "string",
+              "enum": [
+                "right",
+                "left",
+                "both",
+                "none"
+              ]
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox",
+            "label"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "type.eyebrow-tape": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "type.eyebrow-tape"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "label": {
+              "type": "string"
+            },
+            "skewDeg": {
+              "type": "number"
+            },
+            "fill": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "IR Fill or token reference"
+            }
+          },
+          "required": [
+            "bbox",
+            "label"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "type.pullquote-serif": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "type.pullquote-serif"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "quote": {
+              "type": "string"
+            },
+            "attribution": {
+              "type": "string"
+            },
+            "size": {
+              "type": "string",
+              "enum": [
+                "sm",
+                "lg"
+              ]
+            }
+          },
+          "required": [
+            "bbox",
+            "quote"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "type.pullquote-brutalist": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "type.pullquote-brutalist"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "quote": {
+              "type": "string"
+            },
+            "attribution": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "bbox",
+            "quote"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "type.numerals-tabular": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "type.numerals-tabular"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "digits": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "bbox",
+            "digits"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "mask.octagon": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "mask.octagon"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "src": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "bbox",
+            "src"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "mask.callout": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "mask.callout"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "src": {
+              "type": "string"
+            },
+            "pointerSide": {
+              "type": "string",
+              "enum": [
+                "top",
+                "right",
+                "bottom",
+                "left"
+              ]
+            }
+          },
+          "required": [
+            "bbox",
+            "src"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "mask.gradient-fade-edge": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "mask.gradient-fade-edge"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "src": {
+              "type": "string"
+            },
+            "edge": {
+              "type": "string",
+              "enum": [
+                "top",
+                "right",
+                "bottom",
+                "left",
+                "all"
+              ]
+            },
+            "fadePct": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox",
+            "src"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "mask.rounded-rect-clip": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "mask.rounded-rect-clip"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "src": {
+              "type": "string"
+            },
+            "radiusPx": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox",
+            "src"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "dec.brace-left": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "dec.brace-left"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "dec.brace-right": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "dec.brace-right"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "dec.brace-top": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "dec.brace-top"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "dec.brace-bottom": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "dec.brace-bottom"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "dec.plus": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "dec.plus"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "dec.star-5": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "dec.star-5"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "dec.star-6": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "dec.star-6"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "dec.arrow-right": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "dec.arrow-right"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "dec.arrow-left": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "dec.arrow-left"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "dec.arrow-up": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "dec.arrow-up"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "dec.arrow-down": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "dec.arrow-down"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "dec.hairline-rule": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "dec.hairline-rule"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "orientation": {
+              "type": "string",
+              "enum": [
+                "h",
+                "v"
+              ]
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "thicknessPx": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "dec.dotted-rule": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "dec.dotted-rule"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "orientation": {
+              "type": "string",
+              "enum": [
+                "h",
+                "v"
+              ]
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "dec.corner-crop": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "dec.corner-crop"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "corners": {
+              "type": "string",
+              "enum": [
+                "tl",
+                "tr",
+                "bl",
+                "br",
+                "all"
+              ]
+            },
+            "sizePx": {
+              "type": "number"
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "dec.section-divider": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "dec.section-divider"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "fill": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "IR Fill or token reference"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "dec.numeral-chapter": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "dec.numeral-chapter"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "digits": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "bbox",
+            "digits"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "dec.bullet-dot": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "dec.bullet-dot"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "sizePx": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "data.connector": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "data.connector"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "from": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "to": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "straight",
+                "orthogonal",
+                "curved"
+              ]
+            },
+            "head": {
+              "type": "string",
+              "enum": [
+                "none",
+                "arrow",
+                "dot",
+                "diamond",
+                "bar"
+              ]
+            },
+            "dashed": {
+              "type": "boolean"
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox",
+            "from",
+            "to"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "data.bar-set-h": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "data.bar-set-h"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "bars": {
+              "type": "array"
+            },
+            "max": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox",
+            "bars"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "data.bar-set-v": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "data.bar-set-v"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "bars": {
+              "type": "array"
+            },
+            "max": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox",
+            "bars"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "data.donut": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "data.donut"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "segments": {
+              "type": "array"
+            },
+            "thicknessPx": {
+              "type": "number"
+            },
+            "startDeg": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox",
+            "segments"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "data.donut-multi-segment": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "data.donut-multi-segment"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "segments": {
+              "type": "array"
+            },
+            "thicknessPx": {
+              "type": "number"
+            },
+            "startDeg": {
+              "type": "number"
+            },
+            "gapDeg": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox",
+            "segments"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "data.kpi-row": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "data.kpi-row"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "kpis": {
+              "type": "array"
+            }
+          },
+          "required": [
+            "bbox",
+            "kpis"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "data.data-table": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "data.data-table"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "headers": {
+              "type": "array"
+            },
+            "rows": {
+              "type": "array"
+            },
+            "zebra": {
+              "type": "boolean"
+            },
+            "align": {
+              "type": "array"
+            }
+          },
+          "required": [
+            "bbox",
+            "headers",
+            "rows"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "data.mini-heatmap": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "data.mini-heatmap"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "cells": {
+              "type": "array"
+            },
+            "colorScale": {
+              "type": "array"
+            }
+          },
+          "required": [
+            "bbox",
+            "cells"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "data.bullet-bar": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "data.bullet-bar"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "value": {
+              "type": "number"
+            },
+            "target": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            },
+            "ranges": {
+              "type": "array"
+            }
+          },
+          "required": [
+            "bbox",
+            "value",
+            "target",
+            "max"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "data.delta-badge": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "data.delta-badge"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "value": {
+              "type": "string"
+            },
+            "direction": {
+              "type": "string",
+              "enum": [
+                "up",
+                "down",
+                "flat"
+              ]
+            },
+            "size": {
+              "type": "string",
+              "enum": [
+                "sm",
+                "md"
+              ]
+            }
+          },
+          "required": [
+            "bbox",
+            "value"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "anno.callout-bubble": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "anno.callout-bubble"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "body": {
+              "type": "string"
+            },
+            "pointerSide": {
+              "type": "string",
+              "enum": [
+                "top",
+                "right",
+                "bottom",
+                "left"
+              ]
+            },
+            "pointerOffset": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "bgColor": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox",
+            "body"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "anno.numbered-hotspot": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "anno.numbered-hotspot"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "n": {
+              "type": "string"
+            },
+            "anchor": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "bgColor": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox",
+            "n",
+            "anchor"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "anno.tooltip": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "anno.tooltip"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "body": {
+              "type": "string"
+            },
+            "leaderTo": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "bgColor": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox",
+            "body",
+            "leaderTo"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "anno.stamp-draft": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "anno.stamp-draft"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "rotateDeg": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "anno.stamp-new": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "anno.stamp-new"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "rotateDeg": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "anno.stamp-internal": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "anno.stamp-internal"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "rotateDeg": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "anno.highlighter-mark": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "anno.highlighter-mark"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            },
+            "opacity": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "anno.redaction-bar": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "anno.redaction-bar"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "anno.brace-labeled": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "anno.brace-labeled"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "side": {
+              "type": "string",
+              "enum": [
+                "left",
+                "right",
+                "top",
+                "bottom"
+              ]
+            },
+            "label": {
+              "type": "string"
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox",
+            "label"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "anno.sticker": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "anno.sticker"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "body": {
+              "type": "string"
+            },
+            "rotateDeg": {
+              "type": "number"
+            },
+            "bgColor": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox",
+            "body"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "ui.code-block": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "ui.code-block"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "code": {
+              "type": "string"
+            },
+            "language": {
+              "type": "string"
+            },
+            "showLineNumbers": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "bbox",
+            "code"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "ui.code-block-syntax": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "ui.code-block-syntax"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "code": {
+              "type": "string"
+            },
+            "language": {
+              "type": "string"
+            },
+            "showLineNumbers": {
+              "type": "boolean"
+            },
+            "theme": {
+              "type": "string",
+              "enum": [
+                "dark",
+                "light"
+              ]
+            }
+          },
+          "required": [
+            "bbox",
+            "code",
+            "language"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "ui.terminal-window": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "ui.terminal-window"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "body": {
+              "type": "string"
+            },
+            "prompt": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "bbox",
+            "body"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "ui.device-phone": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "ui.device-phone"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "screenshotSrc": {
+              "type": "string"
+            },
+            "notch": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "ui.device-laptop": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "ui.device-laptop"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "screenshotSrc": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "ui.browser-mac": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "ui.browser-mac"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "ui.browser-win": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "ui.browser-win"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "ui.browser-minimal": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "ui.browser-minimal"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "ui.status-dot": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "ui.status-dot"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "live",
+                "idle",
+                "error",
+                "offline"
+              ]
+            },
+            "sizePx": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "ui.stepper": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "ui.stepper"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "steps": {
+              "type": "array"
+            },
+            "current": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bbox",
+            "steps",
+            "current"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "ui.progress-bar": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "ui.progress-bar"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "value": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            },
+            "color": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "hex"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "string",
+                  "pattern": "^tokens\\.[a-zA-Z0-9_.\\-]+$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bbox",
+            "value"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "ui.checklist": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "ui.checklist"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "items": {
+              "type": "array"
+            }
+          },
+          "required": [
+            "bbox",
+            "items"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "comp.hero-investor": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "comp.hero-investor"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "eyebrow": {
+              "type": "string"
+            },
+            "headline": {
+              "type": "string"
+            },
+            "lede": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "bbox",
+            "eyebrow",
+            "headline"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "comp.hero-product": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "comp.hero-product"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "eyebrow": {
+              "type": "string"
+            },
+            "headline": {
+              "type": "string"
+            },
+            "cta": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "bbox",
+            "eyebrow",
+            "headline"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "comp.agenda-2col": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "comp.agenda-2col"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "headline": {
+              "type": "string"
+            },
+            "items": {
+              "type": "array"
+            }
+          },
+          "required": [
+            "bbox",
+            "headline",
+            "items"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "comp.agenda-toc": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "comp.agenda-toc"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "items": {
+              "type": "array"
+            }
+          },
+          "required": [
+            "bbox",
+            "items"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "comp.big-stat-hero": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "comp.big-stat-hero"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "eyebrow": {
+              "type": "string"
+            },
+            "value": {
+              "type": "string"
+            },
+            "unit": {
+              "type": "string"
+            },
+            "headline": {
+              "type": "string"
+            },
+            "delta": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "bbox",
+            "eyebrow",
+            "value",
+            "headline"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "comp.three-up-stats": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "comp.three-up-stats"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "eyebrow": {
+              "type": "string"
+            },
+            "headline": {
+              "type": "string"
+            },
+            "kpis": {
+              "type": "array"
+            }
+          },
+          "required": [
+            "bbox",
+            "eyebrow",
+            "headline",
+            "kpis"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "comp.quote-editorial": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "comp.quote-editorial"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "quote": {
+              "type": "string"
+            },
+            "attribution": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "bbox",
+            "quote"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "comp.section-divider-mesh": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "comp.section-divider-mesh"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "chapter": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "bbox",
+            "chapter",
+            "title"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "comp.roadmap-quarterly": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "comp.roadmap-quarterly"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "eyebrow": {
+              "type": "string"
+            },
+            "quarters": {
+              "type": "array"
+            }
+          },
+          "required": [
+            "bbox",
+            "eyebrow",
+            "quarters"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "comp.team-grid": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "comp.team-grid"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "headline": {
+              "type": "string"
+            },
+            "members": {
+              "type": "array"
+            }
+          },
+          "required": [
+            "bbox",
+            "headline",
+            "members"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "comp.closing-cta": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "comp.closing-cta"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "headline": {
+              "type": "string"
+            },
+            "cta": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "bbox",
+            "headline"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "comp.bento-mixed": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "comp.bento-mixed"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "cells": {
+              "type": "array"
+            }
+          },
+          "required": [
+            "bbox",
+            "cells"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "comp.annotated-screenshot": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "comp.annotated-screenshot"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "url": {
+              "type": "string"
+            },
+            "screenshot": {
+              "type": "string"
+            },
+            "annotations": {
+              "type": "array"
+            }
+          },
+          "required": [
+            "bbox",
+            "screenshot",
+            "annotations"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    },
+    "comp.data-overview": {
+      "type": "object",
+      "properties": {
+        "atom": {
+          "const": "comp.data-overview"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "bbox": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "w",
+                "h"
+              ],
+              "additionalProperties": false
+            },
+            "headline": {
+              "type": "string"
+            },
+            "kpis": {
+              "type": "array"
+            },
+            "chart": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "required": [
+            "bbox",
+            "headline",
+            "kpis"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "atom",
+        "props"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "bbox": {
+    "h": 200,
+    "w": 600,
+    "x": 100,
+    "y": 100
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 600,
+        "x": 100,
+        "y": 100
+      },
+      "children": [
+        {
+          "bbox": {
+            "h": 37,
+            "w": 600,
+            "x": 100,
+            "y": 100
+          },
+          "borderRadiusPx": 0,
+          "fill": {
+            "color": "#0e0e1a",
+            "kind": "solid"
+          },
+          "kind": "shape",
+          "metadata": {
+            "role": "table-header-bg"
+          },
+          "recipeId": "data.table.header-bg",
+          "shape": "rect",
+          "zOrder": 0
+        },
+        {
+          "bbox": {
+            "h": 1,
+            "w": 600,
+            "x": 100,
+            "y": 136.5
+          },
+          "commands": [
+            {
+              "op": "M",
+              "x": 100,
+              "y": 137
+            },
+            {
+              "op": "L",
+              "x": 700,
+              "y": 137
+            }
+          ],
+          "fillRule": "nonzero",
+          "kind": "path",
+          "metadata": {
+            "kind": "header",
+            "role": "table-h-divider"
+          },
+          "recipeId": "data.table.h-divider-0",
+          "strokeColor": {
+            "alpha": 0.4,
+            "hex": "#ffffff"
+          },
+          "strokeLinecap": "butt",
+          "strokeLinejoin": "miter",
+          "strokeWidthPx": 1,
+          "zOrder": 10
+        }
+      ],
+      "kind": "group",
+      "metadata": {
+        "axis": "data",
+        "columns": 0,
+        "role": "data.table",
+        "rows": 0,
+        "withRowDividers": false,
+        "withVerticalDividers": false,
+        "zebra": true
+      },
+      "recipeId": "data.table",
+      "zOrder": 0
+    }
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "data",
+    "primitive": "data.table",
+    "role": "data.data-table",
+    "version": "1.0.0"
+  },
+  "recipeId": "data.data-table",
+  "zOrder": 0
+}

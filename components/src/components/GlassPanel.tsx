@@ -8,11 +8,21 @@
  *   4. ...caller-provided childrenIR pasted on top
  *   5. Inset glow rect (transparent fill, inset shadow white@10%, blur 18px)
  *
- * NOTE on the IR:
+ * NOTE on the IR (Wave-2 / pre-F1 shadows):
  *   ShapeNode currently exposes only a single `shadow` slot (not an array of
  *   `boxShadow` layers). The inset glow is therefore a dedicated transparent
- *   rect on top of children carrying one inset shadow. If the schema later
- *   gains `boxShadow: BoxShadow[]`, this can collapse onto the base.
+ *   rect on top of children carrying one inset shadow. Once F1's
+ *   `shadows: BoxShadow[]` array lands, a follow-up cleanup PR can collapse
+ *   this onto the base.
+ *
+ * Wave-2 / Crew F2: now token-aware. All defaults flow through tokens with
+ * explicit alphas for v0.1 visual parity:
+ *   - tint default     -> `tokens.palette('ghost',   0.08)` (white @ 8%)
+ *   - rim default      -> `tokens.palette('ruler',   0.2)`  (white @ 20%)
+ *   - hairline         -> `tokens.palette('ruler',   0.18)` (white @ 18%)
+ *   - rim bottom       -> `tokens.palette('ruler',   0)`    (transparent)
+ *   - inset glow       -> `tokens.palette('divider', 0.1)`  (white @ 10%)
+ *   - default radius   -> `tokens.radius('bento')`          (24)
  */
 
 import type { ReactNode } from 'react';
@@ -23,6 +33,7 @@ import type {
   Node as IRNode,
   ShapeNode,
 } from '../ir/schema';
+import { tokens as defaultTokens, type TokensApi } from '../tokens';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -34,33 +45,25 @@ export interface GlassPanelProps {
   children?: ReactNode;
   /** Caller-provided IR children pasted on top of the panel chrome. */
   childrenIR?: IRNode[];
-  /** Base tint, default white@8%. */
+  /** Base tint, default `tokens.palette('ghost', 0.08)`. */
   tint?: Color;
-  /** Corner radius, default 24. */
+  /** Corner radius, default `tokens.radius('bento')` (24). */
   borderRadiusPx?: number;
-  /** Rim highlight color, default white@20%. */
+  /** Rim highlight color, default `tokens.palette('ruler', 0.2)`. */
   rimColor?: Color;
 }
-
-// ---------------------------------------------------------------------------
-// Defaults
-// ---------------------------------------------------------------------------
-
-const DEFAULT_TINT: Color = { hex: '#ffffff', alpha: 0.08 };
-const DEFAULT_RIM: Color = { hex: '#ffffff', alpha: 0.2 };
-const DEFAULT_RADIUS = 24;
-const HAIRLINE: Color = { hex: '#ffffff', alpha: 0.18 };
-const RIM_BOTTOM: Color = { hex: '#ffffff', alpha: 0 };
-const INSET_GLOW: Color = { hex: '#ffffff', alpha: 0.1 };
 
 // ---------------------------------------------------------------------------
 // React component (HTML preview)
 // ---------------------------------------------------------------------------
 
 export default function GlassPanel(props: GlassPanelProps): ReactNode {
-  const radius = props.borderRadiusPx ?? DEFAULT_RADIUS;
-  const tint = colorToCss(props.tint ?? DEFAULT_TINT);
-  const rim = colorToCss(props.rimColor ?? DEFAULT_RIM);
+  const t = defaultTokens;
+  const radius = props.borderRadiusPx ?? t.radius('bento');
+  const tint = colorToCss(props.tint ?? t.palette('ghost', 0.08));
+  const rim = colorToCss(props.rimColor ?? t.palette('ruler', 0.2));
+  const hairline = colorToCss(t.palette('ruler', 0.18));
+  const insetGlow = colorToCss(t.palette('divider', 0.1));
   return (
     <div
       style={{
@@ -71,10 +74,10 @@ export default function GlassPanel(props: GlassPanelProps): ReactNode {
         height: props.bbox.h,
         borderRadius: radius,
         background: tint,
-        border: '1px solid rgba(255,255,255,0.18)',
+        border: `1px solid ${hairline}`,
         backdropFilter: 'blur(18px) saturate(140%)',
         WebkitBackdropFilter: 'blur(18px) saturate(140%)',
-        boxShadow: `inset 0 1px 0 ${rim}, inset 0 0 18px rgba(255,255,255,0.1)`,
+        boxShadow: `inset 0 1px 0 ${rim}, inset 0 0 18px ${insetGlow}`,
         overflow: 'hidden',
       }}
     >
@@ -85,7 +88,7 @@ export default function GlassPanel(props: GlassPanelProps): ReactNode {
           left: 0,
           right: 0,
           height: '50%',
-          background: `linear-gradient(180deg, ${rim}, rgba(255,255,255,0))`,
+          background: `linear-gradient(180deg, ${rim}, ${colorToCss(t.palette('ruler', 0))})`,
           pointerEvents: 'none',
         }}
       />
@@ -98,11 +101,20 @@ export default function GlassPanel(props: GlassPanelProps): ReactNode {
 // IR emitter
 // ---------------------------------------------------------------------------
 
-export function glassPanelToIR(props: GlassPanelProps): GroupNodeT {
+/**
+ * IR emitter. `tokens` defaults to vercel-dark for backward compatibility.
+ */
+export function glassPanelToIR(
+  props: GlassPanelProps,
+  tokens: TokensApi = defaultTokens,
+): GroupNodeT {
   const { bbox } = props;
-  const radius = props.borderRadiusPx ?? DEFAULT_RADIUS;
-  const tint = props.tint ?? DEFAULT_TINT;
-  const rimTop = props.rimColor ?? DEFAULT_RIM;
+  const radius = props.borderRadiusPx ?? tokens.radius('bento');
+  const tint = props.tint ?? tokens.palette('ghost', 0.08);
+  const rimTop = props.rimColor ?? tokens.palette('ruler', 0.2);
+  const rimBottom = tokens.palette('ruler', 0);
+  const hairlineColor = tokens.palette('ruler', 0.18);
+  const insetGlowColor = tokens.palette('divider', 0.1);
 
   const children: IRNode[] = [];
 
@@ -133,7 +145,7 @@ export function glassPanelToIR(props: GlassPanelProps): GroupNodeT {
       angleDeg: 180,
       stops: [
         { color: rimTop, position: 0 },
-        { color: RIM_BOTTOM, position: 1 },
+        { color: rimBottom, position: 1 },
       ],
     },
   };
@@ -149,7 +161,7 @@ export function glassPanelToIR(props: GlassPanelProps): GroupNodeT {
     shape: 'rounded-rect',
     borderRadiusPx: radius,
     fill: { kind: 'none' },
-    border: { width: 1, color: HAIRLINE, style: 'solid' },
+    border: { width: 1, color: hairlineColor, style: 'solid' },
   };
   children.push(hairline);
 
@@ -175,7 +187,7 @@ export function glassPanelToIR(props: GlassPanelProps): GroupNodeT {
       offsetY: 0,
       blur: 18,
       spread: 0,
-      color: INSET_GLOW,
+      color: insetGlowColor,
       inset: true,
     },
   };
