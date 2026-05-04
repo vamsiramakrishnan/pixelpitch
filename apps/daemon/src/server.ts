@@ -650,7 +650,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
 
   // File watcher for project-scoped updates (deck-plan.json etc)
   // Keeps a snapshot of the last known good plan per project to detect regressions.
-  const lastKnownPlans = new Map<string, { phase: string; slideCount: number }>();
+  const lastKnownPlans = new Map<string, { phase: string; slideCount: number; snapshot?: string }>();
   try {
     fs.watch(PROJECTS_DIR, { recursive: true }, (eventType, filename) => {
       if (filename && filename.endsWith('deck-plan.json')) {
@@ -665,16 +665,25 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
           const prev = lastKnownPlans.get(projectId);
           const slideCount = Array.isArray(plan.slides) ? plan.slides.length : 0;
 
-          // Guard: prevent phase regression from ready→narrative with slide loss
-          if (prev && prev.phase === 'ready' && plan.phase === 'narrative' && slideCount < prev.slideCount) {
+          // Guard: prevent phase regression from ready→narrative with slide loss.
+          // If the agent clobbered the plan, RESTORE it from the backup.
+          if (prev && prev.snapshot && prev.phase === 'ready' && plan.phase === 'narrative' && slideCount < prev.slideCount) {
             console.warn(
               `[od] deck-plan regression detected for ${projectId}: ` +
               `phase ${prev.phase}→${plan.phase}, slides ${prev.slideCount}→${slideCount}. ` +
-              `Agent may have clobbered the plan. The web app may show stale state.`,
+              `RESTORING from backup.`,
             );
+            try {
+              fs.writeFileSync(planPath, prev.snapshot);
+              // Don't update lastKnownPlans — keep the good state
+              return;
+            } catch (restoreErr) {
+              console.warn(`[od] failed to restore deck-plan for ${projectId}:`, restoreErr);
+            }
           }
 
-          lastKnownPlans.set(projectId, { phase: plan.phase, slideCount });
+          // Save snapshot for future restore
+          lastKnownPlans.set(projectId, { phase: plan.phase, slideCount, snapshot: raw });
         } catch {
           // plan might be mid-write; ignore parse errors
         }
