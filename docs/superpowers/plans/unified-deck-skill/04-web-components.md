@@ -20,7 +20,7 @@
 - [ ] **Step 1: Create the component**
 
 ```tsx
-import type { DeckPhase } from '../../types';
+import type { DeckPhase } from '@pixelpitch/contracts';
 
 const PHASES: { key: DeckPhase; label: string }[] = [
   { key: 'narrative', label: 'Narrative' },
@@ -78,7 +78,7 @@ git commit -m "feat(deck): add DeckPhaseBar phase progress component"
 - [ ] **Step 1: Create the component**
 
 ```tsx
-import type { DeckPlan } from '../../types';
+import type { DeckPlan } from '@pixelpitch/contracts';
 
 interface Props {
   plan: DeckPlan;
@@ -171,7 +171,7 @@ git commit -m "feat(deck): add StoryCanvas live card stack for narrative intervi
 
 ```tsx
 import { useState } from 'react';
-import type { DeckBeat, DeckBeatType } from '../../types';
+import type { DeckBeat, DeckBeatType } from '@pixelpitch/contracts';
 import { Icon } from '../Icon';
 
 interface Props {
@@ -284,7 +284,7 @@ git commit -m "feat(deck): add OutlineEditor with drag-reorder and inline editin
 - [ ] **Step 1: Create the horizontal thumbnail strip**
 
 ```tsx
-import type { DeckSlide } from '../../types';
+import type { DeckSlide } from '@pixelpitch/contracts';
 
 interface Props {
   slides: DeckSlide[];
@@ -345,7 +345,7 @@ git commit -m "feat(deck): add SlideStrip horizontal thumbnail navigation"
 - [ ] **Step 1: Create the thumbnail grid with quality badges**
 
 ```tsx
-import type { DeckSlide } from '../../types';
+import type { DeckSlide } from '@pixelpitch/contracts';
 
 interface Props {
   slides: DeckSlide[];
@@ -430,7 +430,7 @@ git commit -m "feat(deck): add SlideSorter thumbnail grid with quality badges"
 - [ ] **Step 1: Create the main slide editing workspace**
 
 ```tsx
-import type { DeckPlan, DeckSlide } from '../../types';
+import type { DeckPlan, DeckSlide } from '@pixelpitch/contracts';
 import { SlideStrip } from './SlideStrip';
 
 interface Props {
@@ -523,7 +523,7 @@ git commit -m "feat(deck): add SlideEditor with preview, nav, and speaker notes"
 - [ ] **Step 1: Create the export overlay**
 
 ```tsx
-import type { DeckPlan, FidelityIssue } from '../../types';
+import type { DeckPlan, FidelityIssue } from '@pixelpitch/contracts';
 import { Icon } from '../Icon';
 
 interface Props {
@@ -640,7 +640,7 @@ git commit -m "feat(deck): add ExportPanel with fidelity report and download"
 
 ```tsx
 import { useState } from 'react';
-import type { DeckBeat, DeckEvidenceType } from '../../types';
+import type { DeckBeat, DeckEvidenceType } from '@pixelpitch/contracts';
 
 interface Props {
   beat: DeckBeat;
@@ -733,7 +733,7 @@ git commit -m "feat(deck): add SlidePlanner content card with evidence selector"
 
 ```tsx
 import { useEffect, useState } from 'react';
-import type { DeckPlan } from '../../types';
+import type { DeckPlan } from '@pixelpitch/contracts';
 import { DeckPhaseBar } from './DeckPhaseBar';
 import { ExportPanel } from './ExportPanel';
 import { OutlineEditor } from './OutlineEditor';
@@ -911,8 +911,8 @@ const [deckPlan, setDeckPlan] = useState<DeckPlan | null>(null);
 
 useEffect(() => {
   if (!isDeck || !projectId) return;
-  // Fetch deck-plan.json from project files
-  fetch(`/api/projects/${projectId}/files/deck/deck-plan.json`)
+  // Use the dedicated deck plan endpoint (not generic file API)
+  fetch(`/api/projects/${projectId}/deck/plan`)
     .then((r) => r.ok ? r.json() : null)
     .then(setDeckPlan)
     .catch(() => setDeckPlan(null));
