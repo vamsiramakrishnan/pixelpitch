@@ -91,7 +91,7 @@ import {
   upsertPreviewComment,
 } from './db.js';
 import { DeckManager } from './deck.js';
-import { validatePhaseTransition } from '@pixelpitch/contracts';
+import { validatePhaseTransition, validatePlanUpdate } from '@pixelpitch/contracts';
 import {
   buildDeployFileSet,
   checkDeploymentUrl,
@@ -938,11 +938,9 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       const plan = await manager.getPlan();
       const updated = { ...plan, ...req.body };
 
-      if (req.body.phase && req.body.phase !== plan.phase) {
-        const validation = validatePhaseTransition(plan, req.body.phase);
-        if (!validation.valid) {
-          return sendApiError(res, 400, 'INVALID_PHASE_TRANSITION', validation.errors.join(', '));
-        }
+      const validation = validatePlanUpdate(plan, req.body);
+      if (!validation.valid) {
+        return sendApiError(res, 400, 'INVALID_PLAN_UPDATE', validation.errors.join(', '));
       }
 
       await manager.updatePlan(updated);

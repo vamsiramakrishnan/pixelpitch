@@ -94,13 +94,24 @@ The web app reads ONLY `deck/deck-plan.json` to decide what to render. If a slid
 
 **Every file you write must be reflected in deck-plan.json immediately.**
 
-Rules:
+### NEVER construct deck-plan.json from scratch after initial creation
 
-1. **Before writing any slide fragment**, add an entry to `deck-plan.json.slides[]` with `status: "generating"` and the target `file` path. Write the updated plan FIRST, then write the slide.
-2. **After writing a slide fragment**, update that slide's entry in `deck-plan.json` to `status: "ready"` (or `"needs-data"` / `"needs-evidence"`). Write the updated plan immediately.
-3. **After finishing all slides**, set `deck-plan.json.phase` to `"ready"`. Write the updated plan.
-4. **Never leave the plan out of sync.** If you write 13 slide files but the plan still says `phase: "narrative"` with `slides: []`, the web app shows the interview UI, not the slides.
-5. **When transitioning phases**, always update `deck-plan.json.phase` BEFORE doing the work for the next phase.
+After the initial creation of deck-plan.json, ALWAYS follow the read→modify→write pattern:
+
+1. **Read** the current deck-plan.json from disk
+2. **Modify** only the specific fields you're changing (add a slide entry, update a status, change the phase)
+3. **Write** the modified plan back
+
+NEVER build a new JSON object from memory and write it. This is how slides get dropped — you forget to include the 13 slides that are already there. The plan is append-only for slides.
+
+### Rules
+
+1. **Before writing any slide fragment**, READ the plan, add an entry to `slides[]` with `status: "generating"`, WRITE the plan. Then write the slide.
+2. **After writing a slide fragment**, READ the plan, update that slide's `status` to `"ready"`, WRITE the plan.
+3. **After finishing all slides**, READ the plan, set `phase` to `"ready"`, WRITE the plan.
+4. **Never leave the plan out of sync.** If you write 13 slides but the plan still says `phase: "narrative"` with `slides: []`, the web app shows the interview UI, not the slides.
+5. **When transitioning phases**, READ→MODIFY→WRITE. Never construct from scratch.
+6. **The daemon rejects destructive updates**: dropping all slides from a plan that has slides, or reverting to `narrative` after slides exist, will be rejected by the API with a 400 error.
 
 ### JSON update sequence (mandatory)
 
