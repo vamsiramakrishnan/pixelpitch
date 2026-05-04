@@ -80,11 +80,20 @@ export function DeckSlidePreview({ projectId, plan, slideId, thumbnail = false, 
   <style>${themeCSS ?? ''}</style>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      /* Compatibility layer: map theme tokens to framework tokens */
+      --text-1: var(--fg, #111111);
+      --text-2: var(--muted, #5f6f89);
+      --text-3: var(--accent, #1a73e8);
+      --grad: linear-gradient(135deg, var(--accent, #1a73e8), var(--accent-2, #8430ce));
+      --accent-2: color-mix(in oklch, var(--accent, #1a73e8) 60%, #8b5cf6);
+      --border: var(--border, rgba(0,0,0,0.1));
+    }
     body {
       overflow: hidden;
       background: var(--bg, var(--deck-bg, #ffffff));
       color: var(--fg, var(--deck-fg, #111111));
-      font-family: var(--deck-font-body, system-ui, sans-serif);
+      font-family: var(--deck-font-body, var(--deck-font-display, system-ui, sans-serif));
     }
     .slide {
       display: flex;
