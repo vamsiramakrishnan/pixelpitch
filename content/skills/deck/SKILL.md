@@ -88,9 +88,44 @@ deck/
     02-problem.html
 ```
 
-Responsibilities:
+### CRITICAL: deck-plan.json is the source of truth
 
-- `deck/deck-plan.json` is the single source of truth for phase, metadata, composition, interview history, narrative beats, slide manifest, and export state.
+The web app reads ONLY `deck/deck-plan.json` to decide what to render. If a slide file exists on disk but is not listed in `deck-plan.json.slides[]`, the web app does not know about it. If the phase is wrong, the web app shows the wrong UI.
+
+**Every file you write must be reflected in deck-plan.json immediately.**
+
+Rules:
+
+1. **Before writing any slide fragment**, add an entry to `deck-plan.json.slides[]` with `status: "generating"` and the target `file` path. Write the updated plan FIRST, then write the slide.
+2. **After writing a slide fragment**, update that slide's entry in `deck-plan.json` to `status: "ready"` (or `"needs-data"` / `"needs-evidence"`). Write the updated plan immediately.
+3. **After finishing all slides**, set `deck-plan.json.phase` to `"ready"`. Write the updated plan.
+4. **Never leave the plan out of sync.** If you write 13 slide files but the plan still says `phase: "narrative"` with `slides: []`, the web app shows the interview UI, not the slides.
+5. **When transitioning phases**, always update `deck-plan.json.phase` BEFORE doing the work for the next phase.
+
+### JSON update sequence (mandatory)
+
+When generating slides, follow this exact write order for EACH slide:
+
+```
+Step 1: Read deck-plan.json
+Step 2: Add slide entry: { id: "s3", beatId: "b3", type: "content", title: "BYO MCP", file: "slides/03-byo-mcp.html", status: "generating", speakerNotes: "" }
+Step 3: Write updated deck-plan.json  ← plan now knows about this slide
+Step 4: Write deck/slides/03-byo-mcp.html  ← the actual slide content
+Step 5: Read deck-plan.json again
+Step 6: Update slide status to "ready" and add speakerNotes
+Step 7: Write updated deck-plan.json  ← plan reflects completed slide
+```
+
+After ALL slides are written:
+
+```
+Step N: Read deck-plan.json
+Step N+1: Set phase to "ready"
+Step N+2: Write updated deck-plan.json  ← web app now shows SlideEditor
+```
+
+### Other responsibilities
+
 - `deck/theme.css` binds the selected design system and theme to CSS custom properties on `:root`.
 - `deck/framework.js` and `deck/framework.css` are copied from this skill's assets and are not agent-edited after scaffold.
 - `deck/slides/*.html` are pure fragments. Each file contains one `<section class="slide" data-slide-id="...">` and no `<html>`, `<head>`, `<body>`, or `<script>`.
@@ -158,30 +193,61 @@ Transition to `phase: "structure"` only after `title`, `audience`, `keyMessage`,
 
 The deck has five phases. Move forward only when the gate is satisfied.
 
-| Phase | Agent action | Gate |
-|---|---|---|
-| `narrative` | Ask one interview question at a time and update metadata. | `title`, `audience`, and `keyMessage` are non-empty. |
-| `structure` | Propose and revise `narrative.beats[]`. | Beats include at least one `ask` or `plan` and each beat has a specific summary. |
-| `generating` | Create `theme.css`, copy framework assets, and write slide fragments sequentially. | Every slide entry maps to an existing file. |
-| `ready` | Handle per-slide edits, quality fixes, notes, and export preparation. | Every slide status is `ready` or `fixed`. |
-| `exporting` | Let the daemon assemble and run slidify; then repair fidelity issues. | `slidify.fidelityIssues[]` is reviewed and accepted or fixed. |
+**CRITICAL: Every phase transition MUST be written to `deck-plan.json` immediately.** The web app renders a different UI for each phase. If you don't update the phase field, the user sees the wrong screen.
 
-Set phase changes by editing `deck/deck-plan.json`. Keep all edits schema-valid. Do not set `ready` while any slide is `pending`, `generating`, `needs-data`, or `needs-evidence`.
+| Phase | Agent action | Gate | When to write phase change |
+|---|---|---|---|
+| `narrative` | Ask one interview question at a time and update metadata. | `title`, `audience`, and `keyMessage` are non-empty. | Write `phase: "structure"` to deck-plan.json BEFORE proposing beats. |
+| `structure` | Propose and revise `narrative.beats[]`. | Beats include at least one `ask` or `plan` and each beat has a specific summary. | Write `phase: "generating"` to deck-plan.json BEFORE writing any slide files. |
+| `generating` | Create `theme.css`, copy framework assets, and write slide fragments sequentially. | Every slide entry maps to an existing file. | Write `phase: "ready"` to deck-plan.json AFTER all slides have status `ready` or `fixed`. |
+| `ready` | Handle per-slide edits, quality fixes, notes, and export preparation. | Every slide status is `ready` or `fixed`. | Write `phase: "exporting"` when user requests export. |
+| `exporting` | Let the daemon assemble and run slidify; then repair fidelity issues. | `slidify.fidelityIssues[]` is reviewed and accepted or fixed. | Write `phase: "ready"` after repairs. |
+
+### What happens if you skip phase updates
+
+- If you write slides but leave `phase: "narrative"` → user sees the interview screen, not their slides
+- If you write slides but don't add them to `slides[]` → user sees blank preview, no thumbnails
+- If you set `phase: "ready"` but `slides[]` is empty → user sees an empty editor with 0/0 counter
+- If the user gave a rich brief and you skip the interview → still create `deck-plan.json` with populated `title`, `audience`, `tone`, `keyMessage`, `narrative.beats[]` and set `phase: "structure"` or `"generating"` immediately
+
+### When user provides a rich brief upfront
+
+If the user's first message contains enough detail to skip the interview (audience, key points, decision/ask), do NOT force a multi-turn interview. Instead:
+
+1. Create `deck-plan.json` immediately with populated metadata fields
+2. Populate `narrative.beats[]` from their key points
+3. Set `phase: "generating"` (skip `narrative` and `structure`)
+4. Begin generating slides with proper plan synchronization
+
+The interview is for users who need help building the story. Users who arrive with a clear brief should get slides fast.
 
 ## Slide Generation Loop
 
-Generate slides sequentially. For each slide:
+Generate slides sequentially. For EACH slide, follow this exact sequence:
 
-1. Read `deck/theme.css`, the target beat from `deck/deck-plan.json`, and the selected reference entry from `references/slide-types.md`.
-2. Set that slide's status to `generating`.
-3. Write one fragment at `deck/slides/{nn}-{slug}.html`.
-4. Include one `<section class="slide" data-slide-id="{id}" data-slide-type="{type}">`.
-5. Add `data-pptx-role="title"` to the slide title.
-6. Add `data-atom` when a native slidify atom fits a chart, mesh, ring, gradient text, icon, or shape pattern.
-7. Add `data-pptx-allow-overflow="true"` only for intentional bleed.
-8. Add `data-pptx-rasterize="true"` only for irreducible canvas, WebGL, blend, or complex mask zones.
-9. Write speaker notes in the `speakerNotes` field of `deck-plan.json`; do not put presenter-only prose on the visible slide.
-10. Run the quality gate. Set status to `ready`, `fixed`, `needs-data`, or `needs-evidence`.
+### Before writing any slides
+
+1. Read `deck/deck-plan.json`.
+2. Verify `phase` is `"generating"`. If not, set it and write the plan.
+3. Read `deck/theme.css` and the selected reference from `references/slide-types.md`.
+
+### For each slide (repeat for every beat → slide mapping)
+
+1. **Add slide entry to plan**: Read `deck-plan.json`, add a new entry to `slides[]` with `status: "generating"`, `file: "slides/{nn}-{slug}.html"`, and the beat mapping. **Write the updated plan to disk.**
+2. **Write the slide fragment** at `deck/slides/{nn}-{slug}.html`.
+3. Include one `<section class="slide" data-slide-id="{id}" data-slide-type="{type}">`.
+4. Add `data-pptx-role="title"` to the slide title element.
+5. Add `data-atom` when a native slidify atom fits.
+6. Add `data-pptx-rasterize="true"` only for irreducible effects.
+7. Run the quality gate checklist (see below).
+8. **Update slide entry in plan**: Read `deck-plan.json`, set this slide's `status` to `"ready"` (or `"needs-data"` / `"needs-evidence"`), add `speakerNotes`. **Write the updated plan to disk.**
+
+### After all slides are written
+
+1. Read `deck-plan.json`.
+2. Verify every slide has `status: "ready"` or `"fixed"` (or `"needs-data"`/`"needs-evidence"` for incomplete ones).
+3. Set `phase: "ready"`.
+4. **Write the updated plan to disk.** ← This makes the web app show the Slide Editor.
 
 Fragment template:
 
