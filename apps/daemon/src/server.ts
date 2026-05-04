@@ -899,7 +899,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     try {
       const project = getProject(db, req.params.id);
       if (!project) return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
-      const manager = new DeckManager(project.path);
+      const manager = new DeckManager(projectDir(PROJECTS_DIR, req.params.id));
       const plan = await manager.getPlan();
       res.json(plan);
     } catch (err) {
@@ -912,7 +912,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     try {
       const project = getProject(db, req.params.id);
       if (!project) return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
-      const manager = new DeckManager(project.path);
+      const manager = new DeckManager(projectDir(PROJECTS_DIR, req.params.id));
       const plan = await manager.getPlan();
       const updated = { ...plan, ...req.body };
 
@@ -941,7 +941,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     try {
       const project = getProject(db, req.params.id);
       if (!project) return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
-      const manager = new DeckManager(project.path);
+      const manager = new DeckManager(projectDir(PROJECTS_DIR, req.params.id));
       const result = await manager.assemble();
       res.json(result);
     } catch (err) {
@@ -954,7 +954,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     try {
       const project = getProject(db, req.params.id);
       if (!project) return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
-      const manager = new DeckManager(project.path);
+      const manager = new DeckManager(projectDir(PROJECTS_DIR, req.params.id));
       const result = await manager.export(req.body);
       res.json(result);
     } catch (err) {
