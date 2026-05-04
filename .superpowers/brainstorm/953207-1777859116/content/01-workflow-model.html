@@ -1,0 +1,69 @@
+<h2>How should the deck authoring workflow surface in the UI?</h2>
+<p class="subtitle">The skill needs to produce structured output that the web app renders as interactive screens. This decides the interaction architecture.</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Multi-Phase Chat Protocol</h3>
+      <p>The agent drives the workflow through question forms. Each phase (narrative → structure → generation) is a structured question form the user fills out in the chat pane. The preview pane shows the evolving deck.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul>
+          <li>Works with existing QuestionForm mechanism — no new web components needed</li>
+          <li>Agent controls the pace and can adapt based on responses</li>
+          <li>Familiar chat-first experience</li>
+        </ul></div>
+        <div class="cons"><h4>Cons</h4><ul>
+          <li>Outline/structure editing is constrained to form fields</li>
+          <li>No spatial manipulation (can't drag-reorder slides)</li>
+          <li>History of forms clutters the chat log</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Structured Artifact with Embedded UI</h3>
+      <p>The agent emits a special artifact (e.g., <code>&lt;artifact type="deck-workspace"&gt;</code>) that renders as a full interactive workspace inside the preview iframe — with outline panel, slide sorter, and per-slide editing. The iframe communicates with the host via postMessage.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul>
+          <li>Rich spatial UI: drag-reorder, inline editing, thumbnails</li>
+          <li>Self-contained — the artifact IS the workspace</li>
+          <li>Works within existing artifact streaming mechanism</li>
+        </ul></div>
+        <div class="cons"><h4>Cons</h4><ul>
+          <li>Complex iframe-hosted app — state sync between iframe and host is fragile</li>
+          <li>The "artifact" is a tool, not a document — conceptual mismatch</li>
+          <li>Hard to version/persist meaningfully as a project file</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Native Web Components + Agent Protocol</h3>
+      <p>Build new React components in the web app (SlideOutline, SlideSorter, SlideEditor) that render based on structured JSON the agent writes to project files. The agent writes <code>deck-plan.json</code> (outline), generates individual <code>slide-*.html</code> files, and the web app renders a deck-specific workspace with a thumbnail strip, per-slide preview, and scoped chat.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul>
+          <li>First-class React components — full keyboard nav, drag-drop, accessibility</li>
+          <li>Each slide is its own file — clean per-slide chat scoping</li>
+          <li>deck-plan.json is the structured contract between agent and UI</li>
+          <li>Slidify can convert individual slides or the whole deck</li>
+        </ul></div>
+        <div class="cons"><h4>Cons</h4><ul>
+          <li>Requires new web components (SlideOutline, SlideSorter, SlideEditor)</li>
+          <li>Requires new daemon endpoints or file-watching for deck-plan.json</li>
+          <li>Most engineering effort</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 32px; padding: 16px; background: rgba(26,115,232,0.06); border-radius: 8px; border-left: 3px solid #1a73e8;">
+  <p style="margin: 0; font-size: 13px; color: #5f6f89;"><strong>Recommendation:</strong> Option C gives us the best foundation for the slide authoring UX you described. The <code>deck-plan.json</code> contract is the key mechanism — it's what lets the agent and the UI stay in sync across the narrative → structure → generation → polish phases. Options A and B try to shoehorn a spatial workflow into chat or iframe, which works for demos but breaks for real slide editing.</p>
+</div>

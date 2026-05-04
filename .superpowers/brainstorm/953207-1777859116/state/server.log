@@ -1,0 +1,10 @@
+{"type":"server-started","port":64180,"host":"0.0.0.0","url_host":"localhost","url":"http://localhost:64180","screen_dir":"/home/user/pixelpitch/.superpowers/brainstorm/953207-1777859116/content","state_dir":"/home/user/pixelpitch/.superpowers/brainstorm/953207-1777859116/state"}
+{"type":"screen-added","file":"/home/user/pixelpitch/.superpowers/brainstorm/953207-1777859116/content/01-workflow-model.html"}
+{"type":"screen-added","file":"/home/user/pixelpitch/.superpowers/brainstorm/953207-1777859116/content/02-deck-plan-contract.html"}
+{"type":"screen-added","file":"/home/user/pixelpitch/.superpowers/brainstorm/953207-1777859116/content/03-deck-folder-structure.html"}
+{"type":"screen-added","file":"/home/user/pixelpitch/.superpowers/brainstorm/953207-1777859116/content/04-anti-strawman.html"}
+{"type":"screen-added","file":"/home/user/pixelpitch/.superpowers/brainstorm/953207-1777859116/content/05-hybrid-stitching.html"}
+{"type":"screen-added","file":"/home/user/pixelpitch/.superpowers/brainstorm/953207-1777859116/content/06-visual-workflow-phases.html"}
+{"type":"screen-added","file":"/home/user/pixelpitch/.superpowers/brainstorm/953207-1777859116/content/07-polished-workspace.html"}
+{"type":"screen-added","file":"/home/user/pixelpitch/.superpowers/brainstorm/953207-1777859116/content/waiting.html"}
+{"type":"server-stopped","reason":"idle timeout"}

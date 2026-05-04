@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach, afterEach } from 'vitest';
-import { DeckManager } from './deck';
+import { DeckManager } from './deck.js';
 import { mkdir, writeFile, rm, readFile } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
@@ -33,8 +33,8 @@ describe('DeckManager', () => {
     const manager = new DeckManager(TMP_DIR);
     const plan = await manager.getPlan();
     expect(plan.phase).toBe('ready');
-    expect(plan.slides[0].file).toBe('slides/1.html');
-    expect(plan.slides[0].status).toBe('ready');
+    expect(plan.slides[0]!.file).toBe('slides/1.html');
+    expect(plan.slides[0]!.status).toBe('ready');
   });
 
   it('updatePlan: should write plan to disk', async () => {

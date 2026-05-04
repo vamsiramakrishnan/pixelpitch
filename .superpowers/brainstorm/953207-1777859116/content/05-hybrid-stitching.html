@@ -1,0 +1,152 @@
+<h2>Hybrid Stitching — Each Layer Does What It's Best At</h2>
+<p class="subtitle">Not A or B or C. All three, each at the moment they're strongest.</p>
+
+<div class="section">
+  <h3>The problem with picking one</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+    <div style="padding: 14px; background: rgba(217,48,37,0.05); border-radius: 8px; border: 1px solid rgba(217,48,37,0.1);">
+      <div style="font-size: 13px; font-weight: 600; color: #d93025;">Agent-only</div>
+      <p style="font-size: 12px; color: #5f6f89; margin: 6px 0 0;">Burns tokens on mechanical assembly every time a slide changes. The agent is a writer, not a compiler.</p>
+    </div>
+    <div style="padding: 14px; background: rgba(217,48,37,0.05); border-radius: 8px; border: 1px solid rgba(217,48,37,0.1);">
+      <div style="font-size: 13px; font-weight: 600; color: #d93025;">Web-app-only</div>
+      <p style="font-size: 12px; color: #5f6f89; margin: 6px 0 0;">Works for preview but can't produce a real deck.html for slidify or external sharing. The web app is a viewer, not an assembler.</p>
+    </div>
+    <div style="padding: 14px; background: rgba(217,48,37,0.05); border-radius: 8px; border: 1px solid rgba(217,48,37,0.1);">
+      <div style="font-size: 13px; font-weight: 600; color: #d93025;">Daemon-only</div>
+      <p style="font-size: 12px; color: #5f6f89; margin: 6px 0 0;">File watcher adds latency and complexity. Rebuild-on-every-change is noisy when the agent is writing 6 slides in sequence.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 28px;">
+  <h3>The hybrid: each layer at the right moment</h3>
+</div>
+
+<div style="position: relative; padding: 0 0 0 40px;">
+  <!-- Timeline line -->
+  <div style="position: absolute; left: 18px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, #1a73e8, #34a853, #f9ab00, #8430ce, #d93025); border-radius: 1px;"></div>
+
+  <!-- Phase 1: Agent writes -->
+  <div style="position: relative; margin-bottom: 20px;">
+    <div style="position: absolute; left: -31px; top: 4px; width: 12px; height: 12px; background: #1a73e8; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 0 2px #1a73e8;"></div>
+    <div style="padding: 16px; background: rgba(26,115,232,0.04); border-radius: 10px; border: 1px solid rgba(26,115,232,0.12);">
+      <div class="label" style="color: #1a73e8;">AGENT writes fragments</div>
+      <div style="font-size: 14px; font-weight: 600; margin: 6px 0;">Authoring phase — agent writes what it's good at</div>
+      <div style="font-size: 13px; color: #5f6f89; line-height: 1.6;">
+        The agent writes <code>deck-plan.json</code>, <code>theme.css</code>, and individual <code>slides/*.html</code> fragments. It never assembles. It never writes <code>deck.html</code>. Each slide is ~100 lines of pure content. The agent's token budget goes to <em>design quality</em>, not <em>file plumbing</em>.
+      </div>
+      <div style="margin-top: 10px; font-size: 12px; padding: 8px 12px; background: rgba(26,115,232,0.06); border-radius: 6px; font-family: ui-monospace, monospace;">
+        agent → Write("deck/slides/03-solution.html", "&lt;section&gt;...&lt;/section&gt;")<br>
+        agent → Write("deck/deck-plan.json", { slides: [..., {id:"s3", file:"slides/03-solution.html", status:"ready"}] })
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 2: Web app stitches for preview -->
+  <div style="position: relative; margin-bottom: 20px;">
+    <div style="position: absolute; left: -31px; top: 4px; width: 12px; height: 12px; background: #34a853; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 0 2px #34a853;"></div>
+    <div style="padding: 16px; background: rgba(52,168,83,0.04); border-radius: 10px; border: 1px solid rgba(52,168,83,0.12);">
+      <div class="label" style="color: #34a853;">WEB APP stitches for preview</div>
+      <div style="font-size: 14px; font-weight: 600; margin: 6px 0;">Preview phase — web app shows what it's good at</div>
+      <div style="font-size: 13px; color: #5f6f89; line-height: 1.6;">
+        The web app reads <code>deck-plan.json</code>, fetches each slide file via the project file API, and builds a live <code>srcdoc</code> by injecting <code>theme.css</code> + <code>framework.js</code> + slide sections into the iframe. Instant preview. No round-trip. No file write. The user sees every slide update the moment the agent finishes writing the fragment.
+      </div>
+      <div style="margin-top: 10px; font-size: 12px; padding: 8px 12px; background: rgba(52,168,83,0.06); border-radius: 6px; font-family: ui-monospace, monospace;">
+        webapp → fetch("/api/projects/{id}/files/deck/deck-plan.json")<br>
+        webapp → fetch each slide file referenced in plan.slides[].file<br>
+        webapp → buildDeckSrcdoc(theme, framework, slideFragments)<br>
+        webapp → iframe.srcdoc = stitchedHtml
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 3: Daemon assembles for export -->
+  <div style="position: relative; margin-bottom: 20px;">
+    <div style="position: absolute; left: -31px; top: 4px; width: 12px; height: 12px; background: #f9ab00; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 0 2px #f9ab00;"></div>
+    <div style="padding: 16px; background: rgba(251,188,4,0.04); border-radius: 10px; border: 1px solid rgba(251,188,4,0.12);">
+      <div class="label" style="color: #e37400;">DAEMON assembles for export</div>
+      <div style="font-size: 14px; font-weight: 600; margin: 6px 0;">Export phase — daemon produces what slidify needs</div>
+      <div style="font-size: 13px; color: #5f6f89; line-height: 1.6;">
+        When the user clicks "Export to PPTX", the daemon reads <code>deck-plan.json</code>, reads all slide fragments, and writes a final <code>deck.html</code> — a real file on disk with all sections inlined, theme embedded, framework included. This is the artifact slidify converts. It only gets built once, at export time. Not on every edit.
+      </div>
+      <div style="margin-top: 10px; font-size: 12px; padding: 8px 12px; background: rgba(251,188,4,0.06); border-radius: 6px; font-family: ui-monospace, monospace;">
+        daemon → POST /api/projects/{id}/deck/assemble<br>
+        daemon → read deck-plan.json + theme.css + framework.js + all slides/*.html<br>
+        daemon → write deck/deck.html (complete, self-contained)<br>
+        daemon → exec slidify convert deck/deck.html --output deck.pptx<br>
+        daemon → return { pptx: "deck/deck.pptx", fidelity: [...] }
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 4: Agent for exceptional repair -->
+  <div style="position: relative;">
+    <div style="position: absolute; left: -31px; top: 4px; width: 12px; height: 12px; background: #8430ce; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 0 2px #8430ce;"></div>
+    <div style="padding: 16px; background: rgba(132,48,206,0.04); border-radius: 10px; border: 1px solid rgba(132,48,206,0.12);">
+      <div class="label" style="color: #8430ce;">AGENT repairs fidelity issues</div>
+      <div style="font-size: 14px; font-weight: 600; margin: 6px 0;">Post-export phase — agent fixes what slidify flagged</div>
+      <div style="font-size: 13px; color: #5f6f89; line-height: 1.6;">
+        After export, the daemon returns a fidelity report: which slides converted natively, which got rasterized, which had overflow or missing fonts. The agent reads this report and surgically fixes individual slide fragments — replacing <code>backdrop-filter</code> with a solid gradient, adding <code>data-pptx-role</code> hints, or simplifying a layout that exceeds slidify's capabilities. Then the daemon re-exports.
+      </div>
+      <div style="margin-top: 10px; font-size: 12px; padding: 8px 12px; background: rgba(132,48,206,0.06); border-radius: 6px; font-family: ui-monospace, monospace;">
+        agent → Read fidelity report from deck-plan.json.slidify.fidelityIssues<br>
+        agent → Edit("deck/slides/04-architecture.html") — fix rasterized gradient<br>
+        agent → Update deck-plan.json.slides[3].status = "fixed"<br>
+        user → clicks "Re-export" → daemon reassembles + slidify converts again
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 32px;">
+  <h3>Why this hybrid is correct</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+    <div style="padding: 16px; background: rgba(26,115,232,0.04); border-radius: 8px;">
+      <div style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">Each layer does one job</div>
+      <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+        <tr style="border-bottom: 1px solid rgba(0,0,0,0.06);">
+          <td style="padding: 6px 0; color: #1a73e8; font-weight: 600;">Agent</td>
+          <td style="padding: 6px 0;">Authors content fragments + theme</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(0,0,0,0.06);">
+          <td style="padding: 6px 0; color: #34a853; font-weight: 600;">Web app</td>
+          <td style="padding: 6px 0;">Live preview via srcdoc stitching</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(0,0,0,0.06);">
+          <td style="padding: 6px 0; color: #f9ab00; font-weight: 600;">Daemon</td>
+          <td style="padding: 6px 0;">Assembles deck.html for export</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #8430ce; font-weight: 600;">Agent (repair)</td>
+          <td style="padding: 6px 0;">Fixes slidify fidelity issues</td>
+        </tr>
+      </table>
+    </div>
+    <div style="padding: 16px; background: rgba(26,115,232,0.04); border-radius: 8px;">
+      <div style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">Token budget goes to quality</div>
+      <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+        <tr style="border-bottom: 1px solid rgba(0,0,0,0.06);">
+          <td style="padding: 6px 0; color: #5f6f89;">Tokens on assembly</td>
+          <td style="padding: 6px 0; font-weight: 600; color: #34a853;">0</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(0,0,0,0.06);">
+          <td style="padding: 6px 0; color: #5f6f89;">Tokens on design per slide</td>
+          <td style="padding: 6px 0; font-weight: 600; color: #1a73e8;">100%</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(0,0,0,0.06);">
+          <td style="padding: 6px 0; color: #5f6f89;">Files in agent context</td>
+          <td style="padding: 6px 0; font-weight: 600;">~200 lines (theme + 1 slide)</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #5f6f89;">Rebuild latency</td>
+          <td style="padding: 6px 0; font-weight: 600;">0ms (web app stitches live)</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 20px; padding: 16px; background: rgba(26,115,232,0.06); border-radius: 8px; border-left: 3px solid #1a73e8;">
+  <p style="margin: 0; font-size: 13px; color: #5f6f89;"><strong>The principle:</strong> Write once (agent fragments) → view instantly (web app srcdoc) → materialize on demand (daemon assembly) → repair surgically (agent fidelity fixes). No layer duplicates another layer's work. The deck.html file only exists when something outside the web app needs it (slidify, PDF export, external sharing).</p>
+</div>

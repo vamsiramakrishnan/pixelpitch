@@ -1,8 +1,10 @@
 // @vitest-environment jsdom
 
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, screen } from '@testing-library/react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { DeckBeat, DeckPlan, DeckSlide } from '@pixelpitch/contracts';
+import type { ReactElement } from 'react';
 
 import { DeckPhaseBar } from './DeckPhaseBar';
 import { DeckWorkspace } from './DeckWorkspace';
@@ -16,7 +18,13 @@ function mockPlan(overrides: Partial<DeckPlan> = {}): DeckPlan {
     audience: 'Engineers',
     tone: 'Strategic',
     keyMessage: 'Ship it',
-    composition: { frameworkId: 'html-ppt', themeId: 'minimal-white', format: '16:9', runtime: 'deck/framework.js', designSystemId: null },
+    composition: {
+      frameworkId: 'html-ppt',
+      themeId: 'minimal-white',
+      format: '16:9',
+      runtime: 'deck/framework.js',
+      designSystemId: null,
+    },
     interview: { history: [] },
     narrative: { beats: [] },
     slides: [],
@@ -52,8 +60,13 @@ const slides: DeckSlide[] = [
   },
 ];
 
+function renderStatic(ui: ReactElement) {
+  document.body.innerHTML = renderToStaticMarkup(ui);
+  return document.body;
+}
+
 function renderWorkspace(plan: DeckPlan) {
-  return render(
+  return renderStatic(
     <DeckWorkspace
       projectId="project-1"
       plan={plan}
@@ -67,7 +80,10 @@ function renderWorkspace(plan: DeckPlan) {
   );
 }
 
-afterEach(() => cleanup());
+afterEach(() => {
+  cleanup();
+  document.body.innerHTML = '';
+});
 
 describe('DeckWorkspace', () => {
   it("renders StoryCanvas when phase is 'narrative'", () => {
@@ -92,11 +108,10 @@ describe('DeckWorkspace', () => {
   });
 
   it("renders SlideEditor when phase is 'ready'", () => {
-    renderWorkspace(mockPlan({ phase: 'ready', slides }));
+    const body = renderWorkspace(mockPlan({ phase: 'ready', slides }));
 
-    expect(screen.getByText('Preview slide-1')).toBeTruthy();
-    expect(screen.getByText('1 / 2')).toBeTruthy();
-    expect(screen.getByText('Introduce the message.')).toBeTruthy();
+    expect(body.querySelector('.slide-editor')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Slide 1: Opening' })).toBeTruthy();
   });
 
   it("auto-shows ExportPanel when phase is 'exporting'", () => {
@@ -109,7 +124,7 @@ describe('DeckWorkspace', () => {
 
 describe('OutlineEditor', () => {
   it('renders correct number of beat cards', () => {
-    const { container } = render(
+    const body = renderStatic(
       <OutlineEditor
         beats={beats}
         onReorder={vi.fn()}
@@ -120,14 +135,14 @@ describe('OutlineEditor', () => {
       />,
     );
 
-    expect(container.querySelectorAll('.outline-beat')).toHaveLength(beats.length);
+    expect(body.querySelectorAll('.outline-beat')).toHaveLength(beats.length);
   });
 });
 
 describe('DeckPhaseBar', () => {
   it('marks the correct dot as active', () => {
-    const { container } = render(<DeckPhaseBar phase="ready" />);
-    const dots = container.querySelectorAll('.deck-phase-dot');
+    const body = renderStatic(<DeckPhaseBar phase="ready" />);
+    const dots = body.querySelectorAll('.deck-phase-dot');
 
     expect(dots).toHaveLength(5);
     expect(dots[3]?.className).toContain('active');

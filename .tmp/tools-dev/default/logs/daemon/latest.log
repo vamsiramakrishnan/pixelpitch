@@ -6,3 +6,81 @@
   "updatedAt": "2026-05-03T15:06:40.645Z",
   "url": "http://127.0.0.1:35435"
 }
+
+[tools-dev] launching daemon at 2026-05-03T16:10:45.321Z
+{
+  "pid": 886819,
+  "state": "running",
+  "updatedAt": "2026-05-03T16:10:46.009Z",
+  "url": "http://127.0.0.1:41101"
+}
+
+[tools-dev] launching daemon at 2026-05-03T16:14:04.269Z
+{
+  "pid": 888369,
+  "state": "running",
+  "updatedAt": "2026-05-03T16:14:04.803Z",
+  "url": "http://127.0.0.1:17456"
+}
+
+[tools-dev] launching daemon at 2026-05-03T16:15:36.540Z
+{
+  "pid": 889309,
+  "state": "running",
+  "updatedAt": "2026-05-03T16:15:37.091Z",
+  "url": "http://127.0.0.1:17456"
+}
+
+[tools-dev] launching daemon at 2026-05-03T16:16:26.733Z
+node:net:1926
+      const error = new UVExceptionWithHostPort(rval, 'listen', address, port);
+                    ^
+
+Error: listen EPERM: operation not permitted /tmp/tsx-1000/18.pipe
+    at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+    at listenInCluster (node:net:2005:12)
+    at Server.listen (node:net:2127:5)
+    at file:///home/user/pixelpitch/node_modules/.bun/tsx@4.21.0/node_modules/tsx/dist/cli.mjs:53:31537
+    at new Promise (<anonymous>)
+    at createIpcServer (file:///home/user/pixelpitch/node_modules/.bun/tsx@4.21.0/node_modules/tsx/dist/cli.mjs:53:31515)
+    at async file:///home/user/pixelpitch/node_modules/.bun/tsx@4.21.0/node_modules/tsx/dist/cli.mjs:55:459 {
+  code: 'EPERM',
+  errno: -1,
+  syscall: 'listen',
+  address: '/tmp/tsx-1000/18.pipe',
+  port: -1
+}
+
+Node.js v24.14.1
+
+[tools-dev] launching daemon at 2026-05-03T16:17:59.531Z
+{
+  "pid": 890566,
+  "state": "running",
+  "updatedAt": "2026-05-03T16:18:00.071Z",
+  "url": "http://127.0.0.1:17456"
+}
+
+[tools-dev] launching daemon at 2026-05-03T16:19:21.115Z
+{
+  "pid": 891524,
+  "state": "running",
+  "updatedAt": "2026-05-03T16:19:21.694Z",
+  "url": "http://127.0.0.1:17456"
+}
+
+[tools-dev] launching daemon at 2026-05-03T16:29:12.101Z
+{
+  "pid": 899575,
+  "state": "running",
+  "updatedAt": "2026-05-03T16:29:12.690Z",
+  "url": "http://127.0.0.1:17456"
+}
+
+[tools-dev] launching daemon at 2026-05-03T16:37:55.960Z
+{
+  "pid": 905205,
+  "state": "running",
+  "updatedAt": "2026-05-03T16:37:56.582Z",
+  "url": "http://127.0.0.1:17456"
+}

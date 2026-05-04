@@ -49,6 +49,7 @@ export async function listSkills(skillsRoot) {
         upstream:
           typeof pixelpitch.upstream === "string" ? pixelpitch.upstream : null,
         featured: normalizeFeatured(pixelpitch.featured),
+        narrative: !!pixelpitch.narrative,
         // Optional metadata hints used by 'Use this prompt' fast-create so
         // the resulting project mirrors the shipped example.html. Each hint
         // is only consumed when its kind matches the skill mode; missing

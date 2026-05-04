@@ -1,0 +1,116 @@
+<h2>What should the <code>deck-plan.json</code> contract look like?</h2>
+<p class="subtitle">This file is the single source of truth between the agent and the web app. It drives which UI phase the workspace shows and what content populates each component.</p>
+
+<div class="section">
+  <h3>Proposed Schema</h3>
+  <div class="mockup">
+    <div class="mockup-header">deck-plan.json</div>
+    <div class="mockup-body" style="font-family: ui-monospace, monospace; font-size: 12px; line-height: 1.6; white-space: pre; background: #0f172a; color: #e2e8f0; padding: 20px; border-radius: 0 0 8px 8px;">
+{
+  "version": 1,
+  "phase": "narrative" | "structure" | "generating" | "ready" | "exporting",
+  "title": "Q3 APAC AI Practice Review",
+  "audience": "VP Engineering + Regional Leads",
+  "theme": "tech-sharing",
+  "designSystem": "google-cloud",
+
+  "narrative": {
+    "beats": [
+      { "id": "b1", "label": "Context", "summary": "APAC AI practice scale and scope" },
+      { "id": "b2", "label": "Problem", "summary": "Customer latency during peak inference" },
+      { "id": "b3", "label": "Solution", "summary": "Vertex AI traffic-splitting endpoints" },
+      { "id": "b4", "label": "Evidence", "summary": "Reference deployment: 40% latency drop" },
+      { "id": "b5", "label": "Architecture", "summary": "Multi-region serving diagram" },
+      { "id": "b6", "label": "Timeline", "summary": "6-week implementation plan" },
+      { "id": "b7", "label": "Ask", "summary": "Approve POC budget" }
+    ]
+  },
+
+  "slides": [
+    {
+      "id": "s1",
+      "beatId": "b1",
+      "type": "title",
+      "title": "APAC AI Practice — Q3 Review",
+      "file": "slide-01-title.html",
+      "status": "ready",
+      "speakerNotes": "Welcome everyone, today we're covering..."
+    },
+    {
+      "id": "s2",
+      "beatId": "b2",
+      "type": "content",
+      "title": "The Latency Challenge",
+      "file": "slide-02-problem.html",
+      "status": "generating",
+      "speakerNotes": ""
+    }
+  ],
+
+  "slidify": {
+    "lastExport": null,
+    "fidelityIssues": []
+  }
+}</div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 24px;">
+  <h3>How <code>phase</code> drives the UI</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+
+    <div style="padding: 14px; background: rgba(26,115,232,0.06); border-radius: 8px; border: 1px solid rgba(26,115,232,0.15);">
+      <div class="label" style="color: #1a73e8;">phase: "narrative"</div>
+      <p style="font-size: 13px; margin: 6px 0 0;">Web app shows <strong>Outline Editor</strong> — editable beat list with drag-reorder. Chat scoped to "help me build the story." No slides yet.</p>
+    </div>
+
+    <div style="padding: 14px; background: rgba(52,168,83,0.06); border-radius: 8px; border: 1px solid rgba(52,168,83,0.15);">
+      <div class="label" style="color: #34a853;">phase: "structure"</div>
+      <p style="font-size: 13px; margin: 6px 0 0;">Web app shows <strong>Slide Planner</strong> — beats mapped to slide cards. User assigns types (title, content, data, image). Agent suggests slide count and flow.</p>
+    </div>
+
+    <div style="padding: 14px; background: rgba(251,188,4,0.06); border-radius: 8px; border: 1px solid rgba(251,188,4,0.15);">
+      <div class="label" style="color: #f9ab00;">phase: "generating"</div>
+      <p style="font-size: 13px; margin: 6px 0 0;">Web app shows <strong>Slide Sorter</strong> with live thumbnails. Each slide file generates in sequence. Status badges: ready / generating / pending.</p>
+    </div>
+
+    <div style="padding: 14px; background: rgba(132,48,206,0.06); border-radius: 8px; border: 1px solid rgba(132,48,206,0.15);">
+      <div class="label" style="color: #8430ce;">phase: "ready"</div>
+      <p style="font-size: 13px; margin: 6px 0 0;">Web app shows <strong>Deck Workspace</strong> — thumbnail strip + full preview + per-slide chat. Click a slide to scope the chat. Arrow keys navigate. Edit any slide individually.</p>
+    </div>
+
+  </div>
+
+  <div style="padding: 14px; background: rgba(217,48,37,0.06); border-radius: 8px; border: 1px solid rgba(217,48,37,0.15); margin-top: 12px;">
+    <div class="label" style="color: #d93025;">phase: "exporting"</div>
+    <p style="font-size: 13px; margin: 6px 0 0;">Web app shows <strong>Export Panel</strong> — slidify progress, fidelity report, download button. Shows which slides convert natively vs. rasterize.</p>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 24px;">
+  <h3>Key design decisions</h3>
+</div>
+
+<div class="options">
+  <div class="option" data-choice="one-file" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>One HTML file per slide</h3>
+      <p>Each slide is <code>slide-01-title.html</code>, <code>slide-02-problem.html</code>, etc. The agent generates them individually. The web app stitches them into a preview deck. Slidify converts each independently.</p>
+      <p style="font-size: 12px; color: #5f6f89;"><strong>Enables:</strong> per-slide chat scoping, parallel generation, granular slidify fidelity reports, individual slide regeneration without touching others.</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="single-file" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Single deck.html with section markers</h3>
+      <p>One file with <code>&lt;section class="slide" id="s1"&gt;</code> markers. The agent edits sections in place. The web app parses sections for the sorter/editor.</p>
+      <p style="font-size: 12px; color: #5f6f89;"><strong>Enables:</strong> shared CSS across slides, framework skeleton stays intact, existing deck rendering "just works", simpler file management.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 16px; padding: 16px; background: rgba(26,115,232,0.06); border-radius: 8px; border-left: 3px solid #1a73e8;">
+  <p style="margin: 0; font-size: 13px; color: #5f6f89;"><strong>Recommendation:</strong> Option B (single file with section markers). The existing deck framework is load-bearing — it handles scaling, navigation, print layout, and keyboard events. Splitting into per-slide files means re-implementing all of that, plus a stitcher. The web app can parse <code>&lt;section class="slide"&gt;</code> markers to populate the sorter and scope edits, while the agent keeps writing to one file with the proven skeleton.</p>
+</div>

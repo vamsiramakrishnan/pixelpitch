@@ -1,0 +1,102 @@
+<h2>How do we make slides that aren't strawman?</h2>
+<p class="subtitle">The gap between "AI-generated deck" and "deck I'd actually present" is content fidelity, visual evidence, and narrative confidence. Here's what a cracked team would build.</p>
+
+<div class="section">
+  <h3>Why AI decks feel like strawmen today</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+    <div style="padding: 16px; background: rgba(217,48,37,0.06); border-radius: 8px; border: 1px solid rgba(217,48,37,0.12);">
+      <div style="font-size: 14px; font-weight: 600; color: #d93025; margin-bottom: 8px;">Placeholder content syndrome</div>
+      <p style="font-size: 13px; margin: 0; color: #5f6f89;">Slides say "Key Metric: [X%]" or "Customer Name: [TBD]". The user does all the hard work of filling in real data. The AI produced a template, not a deck.</p>
+    </div>
+    <div style="padding: 16px; background: rgba(217,48,37,0.06); border-radius: 8px; border: 1px solid rgba(217,48,37,0.12);">
+      <div style="font-size: 14px; font-weight: 600; color: #d93025; margin-bottom: 8px;">Generic narrative arc</div>
+      <p style="font-size: 13px; margin: 0; color: #5f6f89;">"Problem → Solution → Benefits → Next Steps" — every deck. No customer-specific insight, no surprising data point, no opinion. The story could be about anything.</p>
+    </div>
+    <div style="padding: 16px; background: rgba(217,48,37,0.06); border-radius: 8px; border: 1px solid rgba(217,48,37,0.12);">
+      <div style="font-size: 14px; font-weight: 600; color: #d93025; margin-bottom: 8px;">No visual evidence</div>
+      <p style="font-size: 13px; margin: 0; color: #5f6f89;">Architecture slides show boxes labeled "Service A" → "Service B". Data slides show fake bar charts. No real diagrams, no real screenshots, no real numbers.</p>
+    </div>
+    <div style="padding: 16px; background: rgba(217,48,37,0.06); border-radius: 8px; border: 1px solid rgba(217,48,37,0.12);">
+      <div style="font-size: 14px; font-weight: 600; color: #d93025; margin-bottom: 8px;">No presenter confidence</div>
+      <p style="font-size: 13px; margin: 0; color: #5f6f89;">The user didn't build the story — they described it in one sentence and got 12 slides back. They can't defend slide 7 because they didn't write slide 7.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 28px;">
+  <h3>What a cracked team builds instead</h3>
+</div>
+
+<div class="section">
+  <div style="display: grid; grid-template-columns: 60px 1fr; gap: 16px; align-items: start; padding: 18px; background: rgba(26,115,232,0.04); border-radius: 10px; border: 1px solid rgba(26,115,232,0.1); margin-bottom: 12px;">
+    <div style="width: 48px; height: 48px; background: rgba(26,115,232,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px;">1</div>
+    <div>
+      <div style="font-size: 15px; font-weight: 600; margin-bottom: 6px;">Narrative interview, not prompt-and-pray</div>
+      <p style="font-size: 13px; color: #5f6f89; margin: 0 0 10px;">The agent conducts a structured interview: "Who's in the room? What do they already know? What's the one thing they should remember? What decision do you need from them?" Each answer sharpens the story arc. The user builds the narrative through conversation, not through a single prompt.</p>
+      <div style="font-size: 12px; padding: 10px 14px; background: rgba(26,115,232,0.06); border-radius: 6px; color: #1a73e8;">
+        <strong>UI mechanism:</strong> QuestionForm with direction-cards for audience/tone, then an interactive outline editor where the user can reorder, split, merge beats. Each beat shows a one-line summary the user wrote or approved — not AI-generated filler.
+      </div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 60px 1fr; gap: 16px; align-items: start; padding: 18px; background: rgba(52,168,83,0.04); border-radius: 10px; border: 1px solid rgba(52,168,83,0.1); margin-bottom: 12px;">
+    <div style="width: 48px; height: 48px; background: rgba(52,168,83,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px;">2</div>
+    <div>
+      <div style="font-size: 15px; font-weight: 600; margin-bottom: 6px;">Content-first slide cards, not layout-first</div>
+      <p style="font-size: 13px; color: #5f6f89; margin: 0 0 10px;">Before any visual design, each slide shows its <em>content intent</em> as a card: the headline, the supporting point, the evidence type (data, diagram, quote, image), and the speaker note. The user edits the substance before the agent touches layout.</p>
+      <div style="font-size: 12px; padding: 10px 14px; background: rgba(52,168,83,0.06); border-radius: 6px; color: #188038;">
+        <strong>UI mechanism:</strong> Slide Planner view — cards in a horizontal strip. Each card shows: beat label, headline, evidence type selector (dropdown: chart / diagram / screenshot / quote / stat / none), key data point input, speaker note textarea. User fills in the substance, agent handles the design.
+      </div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 60px 1fr; gap: 16px; align-items: start; padding: 18px; background: rgba(251,188,4,0.04); border-radius: 10px; border: 1px solid rgba(251,188,4,0.1); margin-bottom: 12px;">
+    <div style="width: 48px; height: 48px; background: rgba(251,188,4,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px;">3</div>
+    <div>
+      <div style="font-size: 15px; font-weight: 600; margin-bottom: 6px;">Real visual evidence, generated or attached</div>
+      <p style="font-size: 13px; color: #5f6f89; margin: 0 0 10px;">When a slide needs an architecture diagram, the agent generates one using Mermaid/SVG — not a placeholder box. When a slide needs a chart, the agent builds it from data the user provides. When a slide needs a screenshot, the user drags it onto the slide card. The system never ships a slide with "[insert image here]".</p>
+      <div style="font-size: 12px; padding: 10px 14px; background: rgba(251,188,4,0.06); border-radius: 6px; color: #e37400;">
+        <strong>UI mechanism:</strong> Evidence attachment per slide card. For "diagram" type: agent generates inline SVG using Mermaid syntax from the user's description. For "chart" type: agent generates a data-driven chart from user-pasted numbers. For "image" type: drag-drop zone on the slide card. For "stat" type: big-number layout auto-generated.
+      </div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 60px 1fr; gap: 16px; align-items: start; padding: 18px; background: rgba(132,48,206,0.04); border-radius: 10px; border: 1px solid rgba(132,48,206,0.1); margin-bottom: 12px;">
+    <div style="width: 48px; height: 48px; background: rgba(132,48,206,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px;">4</div>
+    <div>
+      <div style="font-size: 15px; font-weight: 600; margin-bottom: 6px;">Progressive rendering with live critique</div>
+      <p style="font-size: 13px; color: #5f6f89; margin: 0 0 10px;">Each slide renders as soon as its content card is complete — the user sees it immediately, not after all 12 are done. The agent runs a self-critique after each slide: "Does this slide earn its place? Is the headline specific enough? Does the evidence support the claim?" Issues surface as inline badges on the slide thumbnail.</p>
+      <div style="font-size: 12px; padding: 10px 14px; background: rgba(132,48,206,0.06); border-radius: 6px; color: #8430ce;">
+        <strong>UI mechanism:</strong> Slide sorter with live thumbnails. Each thumbnail shows a quality badge: green (strong), amber (needs evidence), red (placeholder content detected). Clicking a badge scopes the chat to that slide's issue. The agent can suggest: "Slide 4 says 'significant improvement' — can you give me the actual percentage?"
+      </div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 60px 1fr; gap: 16px; align-items: start; padding: 18px; background: rgba(217,48,37,0.04); border-radius: 10px; border: 1px solid rgba(217,48,37,0.1); margin-bottom: 12px;">
+    <div style="width: 48px; height: 48px; background: rgba(217,48,37,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px;">5</div>
+    <div>
+      <div style="font-size: 15px; font-weight: 600; margin-bottom: 6px;">Presenter rehearsal with confidence scoring</div>
+      <p style="font-size: 13px; color: #5f6f89; margin: 0 0 10px;">Before export, a rehearsal mode shows each slide with its speaker notes. The agent asks: "Can you explain this slide in your own words?" If the user struggles, the slide content is too far from what they actually know — the agent rewrites it closer to what the user said aloud. The user should be able to defend every slide because they co-authored every slide.</p>
+      <div style="font-size: 12px; padding: 10px 14px; background: rgba(217,48,37,0.06); border-radius: 6px; color: #d93025;">
+        <strong>UI mechanism:</strong> Presenter preview mode. Full-screen slide + speaker notes. "Explain this slide" button that records the user's description and compares it to the slide content. Confidence indicator per slide. Optional: rewrite the slide to match the user's natural phrasing.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 28px;">
+  <h3>The anti-strawman contract</h3>
+  <div style="padding: 18px; background: #0f172a; border-radius: 10px; color: #e2e8f0; font-size: 13px; line-height: 1.8;">
+    <div style="color: #8ab4f8; font-weight: 600; margin-bottom: 8px;">Rules the skill enforces:</div>
+    <div>1. No slide ships with placeholder text — if the agent doesn't have real content, it asks for it</div>
+    <div>2. Every data slide must reference a specific number the user provided</div>
+    <div>3. Every architecture diagram must be generated, not described</div>
+    <div>4. Every headline must be specific — "40% latency reduction in 6 weeks" not "Significant improvement"</div>
+    <div>5. Speaker notes are not optional — they're the proof the user can present this</div>
+    <div>6. The agent pushes back on vague beats: "What specifically happened at the reference customer?"</div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 20px; padding: 16px; background: rgba(26,115,232,0.06); border-radius: 8px; border-left: 3px solid #1a73e8;">
+  <p style="margin: 0; font-size: 13px; color: #5f6f89;"><strong>The core insight:</strong> Strawman decks happen because the user delegates content, not just design. The fix isn't better AI generation — it's a workflow where the user <em>authors the substance</em> (through interview + content cards + evidence attachment) and the AI handles the <em>craft</em> (layout, typography, visual hierarchy, theme binding). The user should never see a slide they didn't intellectually build.</p>
+</div>
