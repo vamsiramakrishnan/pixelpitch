@@ -33,6 +33,9 @@ import { OFFICIAL_DESIGNER_PROMPT } from './official-system.js';
 import { DISCOVERY_AND_PHILOSOPHY } from './discovery.js';
 import { DECK_FRAMEWORK_DIRECTIVE } from './deck-framework.js';
 import { MEDIA_GENERATION_CONTRACT } from './media-contract.js';
+import { join } from 'node:path';
+import { readFileSync, existsSync } from 'node:fs';
+import type { ChatMessageScope } from '@pixelpitch/contracts';
 
 type ProjectMetadata = {
   kind?: string;
@@ -86,6 +89,7 @@ export interface ComposeInput {
     | 'video'
     | 'audio'
     | undefined;
+  skillNarrative?: boolean | undefined;
   designSystemBody?: string | undefined;
   designSystemTitle?: string | undefined;
   // Craft references the active skill opted into via `od.craft.requires`.
@@ -104,30 +108,77 @@ export interface ComposeInput {
   // Snapshot of HTML files that the agent should treat as a starting
   // reference rather than a fixed deliverable.
   template?: ProjectTemplate | undefined;
+  // Optional scope for focused editing (e.g. only one slide of a deck)
+  scope?: ChatMessageScope | undefined;
+  projectId?: string | undefined;
+  projectPath?: string | undefined;
 }
 
 export function composeSystemPrompt({
   skillBody,
   skillName,
   skillMode,
+  skillNarrative,
   designSystemBody,
   designSystemTitle,
   craftBody,
   craftSections,
   metadata,
   template,
+  scope,
+  projectId,
+  projectPath,
 }: ComposeInput): string {
   // Discovery + philosophy goes FIRST so its hard rules ("emit a form on
-  // turn 1", "branch on brand on turn 2", "TodoWrite on turn 3", run
+  // turn 1", "brand on turn 2", "TodoWrite on turn 3", run
   // checklist + critique before <artifact>) win precedence over softer
   // wording later in the official base prompt.
-  const parts: string[] = [
-    DISCOVERY_AND_PHILOSOPHY,
+  //
+  // For narrative-first skills (skillNarrative: true), we skip this block
+  // because the skill itself manages the arc (interview -> outline -> slides).
+  const parts: string[] = [];
+  
+  if (skillNarrative) {
+    parts.push(
+      '\n\n# Discovery override — narrative-first skill\n\n' +
+      'This skill uses a narrative-first interview. Follow the skill body\'s Narrative Interview Protocol instead of the standard discovery turns. ' +
+      'Do NOT emit the standard 3-turn discovery form / direction-picker / brand-spec sequence — the skill body below defines its own interview arc, outline gate, and revision loop.\n',
+    );
+  } else {
+    parts.push(DISCOVERY_AND_PHILOSOPHY);
+  }
+
+  parts.push(
     '\n\n---\n\n# Identity and workflow charter (background)\n\n',
     BASE_SYSTEM_PROMPT,
-  ];
+  );
+
+  if (metadata?.kind === 'deck' && scope?.type === 'slide' && projectPath) {
+    const slideId = scope.id;
+    try {
+      const planPath = join(projectPath, 'deck', 'deck-plan.json');
+      if (existsSync(planPath)) {
+        const plan = JSON.parse(readFileSync(planPath, 'utf-8'));
+        const slide = plan.slides.find((s: any) => s.id === slideId);
+        if (slide) {
+          const fragmentPath = join(projectPath, 'deck', slide.file);
+          const themePath = join(projectPath, 'deck', 'theme.css');
+
+          if (existsSync(fragmentPath)) {
+            const fragment = readFileSync(fragmentPath, 'utf-8');
+            const theme = existsSync(themePath) ? readFileSync(themePath, 'utf-8') : '';
+
+            parts.push(`\n\n## Focused Context: Slide ${slideId}\n\nYou are currently editing ONLY the slide fragment below. Do not modify other slides. Use the provided theme tokens. Follow the overall project tone and message.\n\n### Slide Fragment\n\`\`\`html\n${fragment}\n\`\`\`\n\n### theme.css\n\`\`\`css\n${theme}\n\`\`\``);
+          }
+        }
+      }
+    } catch (err) {
+      // Fallback to full context if plan is missing or unreadable
+    }
+  }
 
   if (designSystemBody && designSystemBody.trim().length > 0) {
+
     parts.push(
       `\n\n## Active design system${designSystemTitle ? ` — ${designSystemTitle}` : ''}\n\nTreat the following DESIGN.md as authoritative for color, typography, spacing, and component rules. Do not invent tokens outside this palette. When you copy the active skill's seed template, bind these tokens into its \`:root\` block before generating any layout.\n\n${designSystemBody.trim()}`,
     );

@@ -90,6 +90,8 @@ import {
   upsertMessage,
   upsertPreviewComment,
 } from './db.js';
+import { DeckManager } from './deck.js';
+import { validatePhaseTransition } from '@pixelpitch/contracts';
 import {
   buildDeployFileSet,
   checkDeploymentUrl,
@@ -610,6 +612,23 @@ export function createSseResponse(
   };
 }
 
+// Global SSE manager for project-scoped events
+const projectSseClients = new Map();
+
+/**
+ * @param {string} projectId
+ * @param {string} event
+ * @param {any} data
+ */
+function sendToProject(projectId, event, data) {
+  const clients = projectSseClients.get(projectId);
+  if (clients) {
+    for (const sse of clients) {
+      sse.send(event, data);
+    }
+  }
+}
+
 export async function startServer({ port = 17456, host = process.env.PIXELPITCH_BIND_HOST || '0.0.0.0', returnServer = false } = {}) {
   let resolvedPort = port;
   const app = express();
@@ -627,6 +646,22 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
 
   if (fs.existsSync(STATIC_DIR)) {
     app.use(express.static(STATIC_DIR));
+  }
+
+  // File watcher for project-scoped updates (deck-plan.json etc)
+  try {
+    fs.watch(PROJECTS_DIR, { recursive: true }, (eventType, filename) => {
+      if (filename && filename.endsWith('deck-plan.json')) {
+        // filename is relative to PROJECTS_DIR (e.g. "projectId/deck/deck-plan.json")
+        const parts = filename.split(/[/\\]/);
+        const projectId = parts[0];
+        if (projectId) {
+          sendToProject(projectId, 'deck:plan:updated', { path: filename });
+        }
+      }
+    });
+  } catch (err) {
+    console.warn('[od] failed to start file watcher:', err);
   }
 
   app.get('/api/health', async (_req, res) => {
@@ -829,6 +864,23 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     res.json(body);
   });
 
+  app.get('/api/projects/:id/events', (req, res) => {
+    const projectId = req.params.id;
+    const sse = createSseResponse(res);
+    
+    if (!projectSseClients.has(projectId)) {
+      projectSseClients.set(projectId, new Set());
+    }
+    const clients = projectSseClients.get(projectId);
+    clients.add(sse);
+    
+    res.on('close', () => {
+      clients.delete(sse);
+      if (clients.size === 0) projectSseClients.delete(projectId);
+      sse.cleanup();
+    });
+  });
+
   app.patch('/api/projects/:id', (req, res) => {
     try {
       const patch = req.body || {};
@@ -840,6 +892,74 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       res.json(body);
     } catch (err) {
       sendApiError(res, 400, 'BAD_REQUEST', String(err));
+    }
+  });
+
+  app.get('/api/projects/:id/deck/plan', async (req, res) => {
+    try {
+      const project = getProject(db, req.params.id);
+      if (!project) return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
+      const manager = new DeckManager(project.path);
+      const plan = await manager.getPlan();
+      res.json(plan);
+    } catch (err) {
+      const status = (err as any).status || 500;
+      sendApiError(res, status, 'INTERNAL_ERROR', String(err));
+    }
+  });
+
+  app.patch('/api/projects/:id/deck/plan', async (req, res) => {
+    try {
+      const project = getProject(db, req.params.id);
+      if (!project) return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
+      const manager = new DeckManager(project.path);
+      const plan = await manager.getPlan();
+      const updated = { ...plan, ...req.body };
+
+      if (req.body.phase && req.body.phase !== plan.phase) {
+        const validation = validatePhaseTransition(plan, req.body.phase);
+        if (!validation.valid) {
+          return sendApiError(res, 400, 'INVALID_PHASE_TRANSITION', validation.errors.join(', '));
+        }
+      }
+
+      await manager.updatePlan(updated);
+
+      // Broadcast change to project-scoped SSE listeners
+      if (typeof sendToProject === 'function') {
+        sendToProject(req.params.id, 'deck:plan:updated', { phase: updated.phase });
+      }
+
+      res.json(updated);
+    } catch (err) {
+      const status = (err as any).status || 400;
+      sendApiError(res, status, 'BAD_REQUEST', String(err));
+    }
+  });
+
+  app.post('/api/projects/:id/deck/assemble', async (req, res) => {
+    try {
+      const project = getProject(db, req.params.id);
+      if (!project) return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
+      const manager = new DeckManager(project.path);
+      const result = await manager.assemble();
+      res.json(result);
+    } catch (err) {
+      const status = (err as any).status || 500;
+      sendApiError(res, status, 'INTERNAL_ERROR', String(err));
+    }
+  });
+
+  app.post('/api/projects/:id/deck/export', async (req, res) => {
+    try {
+      const project = getProject(db, req.params.id);
+      if (!project) return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
+      const manager = new DeckManager(project.path);
+      const result = await manager.export(req.body);
+      res.json(result);
+    } catch (err) {
+      const status = (err as any).status || 500;
+      sendApiError(res, status, 'INTERNAL_ERROR', String(err));
     }
   });
 
@@ -2092,6 +2212,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     projectId,
     skillId,
     designSystemId,
+    scope,
   }) => {
     const project =
       typeof projectId === 'string' && projectId
@@ -2104,10 +2225,12 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
         ? designSystemId
         : project?.designSystemId;
     const metadata = project?.metadata;
+    const projectPath = project?.path;
 
     let skillBody;
     let skillName;
     let skillMode;
+    let skillNarrative = false;
     let skillCraftRequires = [];
     if (effectiveSkillId) {
       const skill = (await listSkills(SKILLS_DIR)).find(
@@ -2117,6 +2240,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
         skillBody = skill.body;
         skillName = skill.name;
         skillMode = skill.mode;
+        skillNarrative = !!skill.narrative;
         if (Array.isArray(skill.craftRequires))
           skillCraftRequires = skill.craftRequires;
       }
@@ -2152,12 +2276,16 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       skillBody,
       skillName,
       skillMode,
+      skillNarrative,
       designSystemBody,
       designSystemTitle,
       craftBody,
       craftSections,
       metadata,
       template,
+      scope,
+      projectId,
+      projectPath,
     });
   };
 
@@ -2276,6 +2404,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       projectId,
       skillId,
       designSystemId,
+      scope: chatBody.scope,
     });
     const instructionPrompt = [daemonSystemPrompt, systemPrompt]
       .map((part) => (typeof part === 'string' ? part.trim() : ''))
