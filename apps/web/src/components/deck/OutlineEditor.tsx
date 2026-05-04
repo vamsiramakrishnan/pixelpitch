@@ -77,7 +77,7 @@ export function OutlineEditor({
       </div>
       <div className="outline-editor-list">
         {beats.map((beat, idx) => {
-          const colors = BEAT_COLORS[beat.type];
+          const colors = BEAT_COLORS[beat.type] ?? BEAT_COLORS.custom;
           return (
             <div
               key={beat.id}
