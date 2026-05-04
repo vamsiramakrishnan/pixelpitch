@@ -93,10 +93,54 @@ rg -n "## Precedence|User-approved facts|Slidify compatibility adds hints" conte
 | Three consecutive slides use the same dark card grid because the framework template does. | Theme rhythm wins. Insert a divider, hero metric, image proof, or white/quiet slide unless monotone pacing is intentional. |
 ```
 
+Concrete agent behavior examples:
+
+```css
+/* DESIGN.md suggests pale text on pale card: do not write this. */
+:root {
+  --deck-surface: #f6f0ff;
+  --deck-text: #d9ccff;
+}
+
+/* Write this instead: keep brand lavender, but make readable text the default. */
+:root {
+  --deck-surface: #f6f0ff;
+  --deck-surface-tint: #e8dcff;
+  --deck-text: #23163f;
+  --deck-muted: #5d4f7a;
+  --deck-accent: #8f68ff;
+}
+```
+
+```html
+<!-- "Improve productivity" is too vague: do not write this as ready content. -->
+<section class="slide" data-slide-id="productivity" data-status="needs-evidence">
+  <h1 data-pptx-role="title">Improve productivity</h1>
+</section>
+
+<!-- Write the concrete replacement only when the user provides evidence. -->
+<section class="slide" data-slide-id="productivity" data-status="ready">
+  <h1 data-pptx-role="title">Support triage time fell 31% after routing automation</h1>
+  <p class="source-line">Source: Zendesk export, February-April 2026</p>
+</section>
+```
+
+```html
+<!-- If the gradient must survive export, annotate it instead of flattening the whole slide. -->
+<h1
+  class="gradient-title"
+  data-pptx-role="title"
+  data-atom="gradient-title"
+  data-pptx-rasterize="true"
+>
+  Export reliability is now a launch blocker we can remove
+</h1>
+```
+
 - [ ] Verification command:
 
 ```bash
-rg -n "## Conflict Resolution|Improve productivity|needs-data|Theme rhythm wins" content/craft/deck-authoring.md
+rg -n "## Conflict Resolution|Improve productivity|needs-data|Theme rhythm wins|--deck-surface|data-pptx-rasterize" content/craft/deck-authoring.md
 ```
 
 ## Task 5: Write Narrative Specificity Section
@@ -413,7 +457,6 @@ Sender: codex
 Receiver: claude
 Summary: Wrote the deck authoring craft implementation plan with exact section content, precedence rules, conflict examples, quality gate, and references to existing craft files.
 Files changed:
-- docs/superpowers/plans/unified-deck-skill/02-skill-content.md
 - docs/superpowers/plans/unified-deck-skill/05-craft-rules.md
 Verification: plans are complete, all steps have content
 Next handoff: claude reviews and integrates
