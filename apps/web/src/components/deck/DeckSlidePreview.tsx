@@ -32,9 +32,8 @@ export function useDeckAssets(projectId: string): DeckAssets {
     Promise.all([
       fetchAsset('deck/theme.css'),
       fetchAsset('deck/framework.css'),
-      fetchAsset('deck/framework.js'),
-    ]).then(([theme, fwCss, fwJs]) => {
-      if (!cancelled) setAssets({ themeCSS: theme, frameworkCSS: fwCss, frameworkJS: fwJs });
+    ]).then(([theme, fwCss]) => {
+      if (!cancelled) setAssets({ themeCSS: theme, frameworkCSS: fwCss, frameworkJS: null });
     });
     return () => { cancelled = true; };
   }, [projectId]);
@@ -134,7 +133,6 @@ export function DeckSlidePreview({ projectId, plan, slideId, thumbnail = false, 
   <div class="deck-stage">
     ${slideHTML}
   </div>
-  ${!thumbnail && frameworkJS ? `<script>${frameworkJS}<\/script>` : ''}
 </body>
 </html>`;
 
