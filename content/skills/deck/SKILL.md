@@ -345,19 +345,166 @@ Generate slides sequentially. For EACH slide, follow this exact sequence:
 3. Set `phase: "ready"`.
 4. **Write the updated plan to disk.** ← This makes the web app show the Slide Editor.
 
-Fragment template:
+### Visual quality contract
+
+Unified deck fragments must look like finished presentation pages, not bare semantic blocks. Match the density and hierarchy of `guizang-ppt` and designer-grade `html-ppt` output:
+
+- Every slide must include top chrome, bottom footer, and one main `.frame` content container.
+- Every slide must show a slide title or act label in the chrome and a page counter such as `ACT II · 04 / 12` or `04 / 12`.
+- Every slide must include footer branding, source context, or deck section context. Never leave the bottom edge empty.
+- Use `.slide.dark` for hero, thesis, section divider, statement, and quote slides.
+- Use `.slide.light` for data, comparison, product detail, diagrams, and dense evidence slides.
+- Use `.slide.hero.dark` or `.slide.hero.light` only for covers, act openers, and closing asks where the visual field should feel larger.
+- Use `.frame` for the main content region, with grid classes or explicit `display:grid` only when needed for composition. Set `min-height` or padding so the content fills the slide, not just the top-left corner.
+- Prefer reusable component classes over one-off inline pixels. Inline style is allowed for slide-specific proportions, max widths, or emphasis, but not as the primary layout system.
+
+### Component library reference
+
+Use these shared framework classes from `framework.css` / `html-ppt/assets/base.css` whenever they fit:
+
+- Slide system: `.slide`, `.slide.is-active`, `.slide.is-prev`, `body.single .slide`
+- Typography: `.eyebrow`, `.kicker`, `.title`, `.h1`, `.h2`, `.h3`, `.h4`, `.lede`, `.dim`, `.dim2`, `.mono`, `.serif`, `.gradient-text`
+- Layout: `.stack`, `.row`, `.row.wrap`, `.grid`, `.g2`, `.g3`, `.g4`, `.center`, `.fill`, `.sp-t`, `.sp-b`, `.mt-s`, `.mt-m`, `.mt-l`, `.mb-s`, `.mb-m`, `.mb-l`
+- Cards and markers: `.card`, `.card-soft`, `.card-outline`, `.card-accent`, `.card-hover`, `.pill`, `.pill-accent`
+- Dividers and chrome: `.divider`, `.divider-accent`, `.deck-header`, `.deck-footer`, `.slide-number`, `.progress-bar`
+- Utilities: `.hidden`, `.nowrap`, `.tr`, `.tc`, `.tl`, `.uppercase`, `.notes`
+
+Use this richer deck fragment API for unified deck slides. These are the classes agents should rely on for designer-grade fragments; if a selected framework/theme does not already expose them, define the missing presentation-only aliases in `deck/theme.css` before generating slides, not in individual fragments:
+
+- Chrome and page structure: `.chrome`, `.foot`, `.frame`
+- Typography hierarchy: `.kicker`, `.h-hero`, `.h-xl`, `.h-sub`, `.h-md`, `.lead`, `.meta-row`
+- Grids: `.grid-6`, `.grid-4`, `.grid-3`, `.grid-2-7-5`, `.grid-2-6-6`, `.grid-2-8-4`, `.grid-3-3`, `.split`, `.split-55`
+- Evidence components: `.stat-card`, `.stat-label`, `.stat-nb`, `.stat-unit`, `.stat-note`, `.callout`, `.callout-src`
+- Process/detail components: `.pipeline-section`, `.pipeline-label`, `.pipeline`, `.step`, `.step-nb`, `.step-title`, `.step-desc`
+- Media components: `.frame-img`, `.img-cap`, `.img-slot`
+
+### Typography rules
+
+- Use `.kicker` for section labels and act labels.
+- Use `.h-hero` for cover and closing hero text. Covers should read at roughly `10vw` scale.
+- Use `.h-xl` for section and data slide titles.
+- Use `.h-sub` for subtitles or a secondary thesis line.
+- Use `.h-md` for card titles, comparison headings, and supporting claims.
+- Use `.lead` for body paragraphs and constrain it with `max-width` so lines stay editorial.
+- Use `.meta-row` for source lines, date ranges, market/category context, and semantic separators.
+- For quote slides, use an editorial blockquote at roughly `6vw`, tight line-height, and tight letter spacing.
+
+### Layout rules
+
+- Use `.frame` as the centered main stage on every slide. It should normally fill the available space between `.chrome` and `.foot`.
+- Use `.grid-6` for six stat cards in a 3-by-2 matrix.
+- Use `.grid-4` for four feature cards, proof cards, risks, or pillars.
+- Use `.grid-3` for three-part narratives or three-card metric rows.
+- Use `.grid-2-7-5`, `.grid-2-6-6`, or `.grid-2-8-4` for split evidence, product/detail, and before/after slides.
+- Use `.stat-card` with `.stat-label`, `.stat-nb`, and `.stat-note`; do not render loose numbers without labels and notes.
+- Use `.callout` with `.callout-src` for customer quotes, internal thesis quotes, and source-backed claims.
+- Section dividers should be sparse but still include `.chrome`, `.frame`, `.kicker`, `.h-xl` or blockquote, `.meta-row`, and `.foot`.
+
+### Rich fragment templates
+
+Cover / hero:
 
 ```html
-<section class="slide" data-slide-id="02-problem" data-slide-type="problem-statement">
-  <div class="slide-shell">
-    <p class="eyebrow">Problem</p>
-    <h1 data-pptx-role="title">A concrete actor is blocked by a concrete constraint</h1>
-    <div class="evidence-grid">
-      <article class="evidence-card">
-        <strong>Known fact</strong>
-        <span>Use only user-provided evidence or labelled source material.</span>
+<section class="slide hero dark" data-slide-id="01-cover" data-slide-type="cover">
+  <div class="chrome">
+    <div>Product Strategy · Executive Brief</div>
+    <div>ACT I · 01 / 12</div>
+  </div>
+  <div class="frame" style="display:grid; gap:4vh; align-content:center; min-height:80vh">
+    <div class="kicker">Board Review · May 2026</div>
+    <h1 class="h-hero" data-pptx-role="title">The next growth system</h1>
+    <h2 class="h-sub">A focused plan to convert pipeline demand into durable expansion.</h2>
+    <p class="lead" style="max-width:60vw">
+      Use the user's actual thesis here. Keep it specific, decision-oriented, and evidence-backed.
+    </p>
+    <div class="meta-row">
+      <span>Confidential</span><span>·</span><span>Prepared for leadership</span>
+    </div>
+  </div>
+  <div class="foot">
+    <div>Pixelpitch Strategy Deck</div>
+    <div>01 / 12</div>
+  </div>
+</section>
+```
+
+Data / evidence slide:
+
+```html
+<section class="slide light" data-slide-id="03-market" data-slide-type="data-grid">
+  <div class="chrome">
+    <div>Market Signal · Evidence</div>
+    <div>ACT I · 03 / 12</div>
+  </div>
+  <div class="frame" style="padding-top:5vh">
+    <div class="kicker">Measured Traction</div>
+    <h2 class="h-xl" data-pptx-role="title">Demand is concentrating around three urgent workflows.</h2>
+    <p class="lead" style="max-width:58vw; margin-bottom:5vh">
+      Each number must come from user-provided evidence or labelled source material.
+    </p>
+    <div class="grid-6">
+      <article class="stat-card">
+        <div class="stat-label">Qualified Pipeline</div>
+        <div class="stat-nb">$4.8M</div>
+        <div class="stat-note">Open opportunities created since January.</div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-label">Enterprise Pull</div>
+        <div class="stat-nb">62<span class="stat-unit">%</span></div>
+        <div class="stat-note">Share of inbound from teams above 1,000 employees.</div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-label">Cycle Compression</div>
+        <div class="stat-nb">31<span class="stat-unit">d</span></div>
+        <div class="stat-note">Median time from demo to security review.</div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-label">Expansion Trigger</div>
+        <div class="stat-nb">4.2×</div>
+        <div class="stat-note">Usage lift after the second team activates.</div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-label">Retention Cohort</div>
+        <div class="stat-nb">91<span class="stat-unit">%</span></div>
+        <div class="stat-note">Logo retention for accounts with admin rollout.</div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-label">Decision Window</div>
+        <div class="stat-nb">Q3</div>
+        <div class="stat-note">Budget owners are consolidating platform spend.</div>
       </article>
     </div>
+  </div>
+  <div class="foot">
+    <div>Source: CRM export and finance model</div>
+    <div>Market Evidence</div>
+  </div>
+</section>
+```
+
+Statement / quote slide:
+
+```html
+<section class="slide dark" data-slide-id="06-thesis" data-slide-type="statement">
+  <div class="chrome">
+    <div>Strategic Thesis · Operating Shift</div>
+    <div>ACT II · 06 / 12</div>
+  </div>
+  <div class="frame" style="display:grid; gap:5vh; align-content:center; min-height:80vh">
+    <div class="kicker">The Shift</div>
+    <blockquote data-pptx-role="title" style="font-family:var(--font-serif); font-weight:700; font-size:6vw; line-height:1.08; letter-spacing:-.03em; max-width:82vw">
+      "The winning team will make the workflow feel inevitable, not merely faster."
+    </blockquote>
+    <p class="lead" style="max-width:55vw; opacity:.72">
+      Follow the quote with one concise implication: what changes, who acts, and why now.
+    </p>
+    <div class="meta-row">
+      <span>Leadership interview</span><span>·</span><span>April 2026</span>
+    </div>
+  </div>
+  <div class="foot">
+    <div>Decision Narrative</div>
+    <div>06 / 12</div>
   </div>
 </section>
 ```
