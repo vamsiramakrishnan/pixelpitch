@@ -134,24 +134,109 @@ Never assemble a monolithic `deck.html` during authoring. The web app stitches f
 
 ## Narrative Interview Protocol
 
-Run the interview one question at a time. If the user already supplied a rich brief, summarize what is known and ask only for the highest-risk missing item. Do not ask a long questionnaire in one message.
+Run the interview one question at a time using visual question forms. If the user already supplied a rich brief, skip to the first unanswered question or straight to beat proposal.
 
-Required fields before `phase: "structure"`:
+### CRITICAL: Use question-form tags, not plain text questions
 
-- `title`: working deck title.
-- `audience`: who decides, learns, buys, approves, or acts.
-- `tone`: visual and verbal tone.
-- `keyMessage`: the sentence the audience should remember.
-- `decision`: the action the deck must drive, stored as an `ask` or `plan` beat.
-- `evidence`: real numbers, quotes, diagrams, screenshots, tables, or source material.
+The web app renders `<question-form>` tags as interactive visual cards. Plain text questions are hard to parse and easy to skip. Always use the form tag for structured input.
 
-Interview sequence:
+### Required fields before `phase: "structure"`
 
-1. Ask for audience and decision: "Who is this for, and what should they decide or do after the deck?"
-2. Ask for key message: "What one sentence should the audience remember?"
-3. Ask for evidence: "What real numbers, artifacts, customer names, dates, screenshots, or source documents can support that claim?"
-4. Ask for tone and constraints: "Should this feel executive, technical, editorial, sales-led, urgent, calm, or something else? Any brand/design system?"
-5. Ask for format and delivery: "Is this 16:9 presentation, 3:4 social carousel, A4 handout, or speaker-mode talk with notes?"
+- `title`: working deck title
+- `audience`: who decides, learns, buys, approves, or acts
+- `tone`: visual and verbal tone
+- `keyMessage`: the sentence the audience should remember
+- `decision`: the action the deck must drive
+- `evidence`: real numbers, quotes, diagrams, screenshots, tables, or source material
+
+### Interview forms (emit one per turn)
+
+**Turn 1 — Audience and decision:**
+
+```
+<question-form id="deck-audience" title="Who is this deck for?">
+{
+  "questions": [
+    {
+      "id": "audience",
+      "label": "Primary audience",
+      "type": "radio",
+      "options": ["C-Suite / VP", "Engineering leads", "Product / Design", "Customer / External", "Board / Investors", "Internal team"],
+      "required": true
+    },
+    {
+      "id": "decision",
+      "label": "What should they decide or do after this deck?",
+      "type": "text",
+      "placeholder": "e.g., Approve the POC budget, Adopt the platform, Greenlight the launch",
+      "required": true
+    }
+  ]
+}
+</question-form>
+```
+
+**Turn 2 — Key message and tone:**
+
+```
+<question-form id="deck-message" title="What's the core message?">
+{
+  "questions": [
+    {
+      "id": "keyMessage",
+      "label": "The one sentence they should remember",
+      "type": "text",
+      "placeholder": "e.g., Enterprise agent deployment requires these 8 primitives that competitors are missing",
+      "required": true
+    },
+    {
+      "id": "tone",
+      "label": "Tone",
+      "type": "radio",
+      "options": ["Executive / Strategic", "Technical / Evidence-driven", "Sales / Persuasive", "Editorial / Thought leadership", "Urgent / Action-required", "Educational / Workshop"],
+      "required": true
+    }
+  ]
+}
+</question-form>
+```
+
+**Turn 3 — Format and evidence:**
+
+```
+<question-form id="deck-format" title="Format and evidence">
+{
+  "questions": [
+    {
+      "id": "format",
+      "label": "Delivery format",
+      "type": "radio",
+      "options": ["16:9 presentation", "3:4 social carousel", "Speaker-mode with notes", "A4 handout"],
+      "required": true
+    },
+    {
+      "id": "evidence",
+      "label": "What real evidence can support the key claims? (numbers, customer names, screenshots, data)",
+      "type": "textarea",
+      "placeholder": "e.g., 40% latency reduction at Customer X, $18.6K MRR, deployment screenshot from Grafana",
+      "required": false,
+      "help": "The more specific, the stronger the deck. Slides without evidence get marked needs-data."
+    }
+  ]
+}
+</question-form>
+```
+
+### When user provides a rich brief
+
+If the first message contains audience, key points, and a decision/ask, skip the interview forms entirely:
+
+1. Extract `title`, `audience`, `tone`, `keyMessage` from the brief
+2. Create `deck-plan.json` with populated fields
+3. Propose beats based on the brief content
+4. Set `phase: "generating"` and begin slides
+
+Do NOT force a multi-turn interview when the user already told you everything.
 
 After each answer, update `deck-plan.json.interview.history[]` with `questionId`, `question`, `answer`, and an ISO timestamp. Keep `interview.pendingQuestionId` set while waiting for the next answer; remove it when the answer is recorded.
 
