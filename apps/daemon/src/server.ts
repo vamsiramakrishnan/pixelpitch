@@ -649,15 +649,37 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
   }
 
   // File watcher for project-scoped updates (deck-plan.json etc)
+  // Keeps a snapshot of the last known good plan per project to detect regressions.
+  const lastKnownPlans = new Map<string, { phase: string; slideCount: number }>();
   try {
     fs.watch(PROJECTS_DIR, { recursive: true }, (eventType, filename) => {
       if (filename && filename.endsWith('deck-plan.json')) {
-        // filename is relative to PROJECTS_DIR (e.g. "projectId/deck/deck-plan.json")
         const parts = filename.split(/[/\\]/);
         const projectId = parts[0];
-        if (projectId) {
-          sendToProject(projectId, 'deck:plan:updated', { path: filename });
+        if (!projectId) return;
+
+        const planPath = path.join(PROJECTS_DIR, filename);
+        try {
+          const raw = fs.readFileSync(planPath, 'utf-8');
+          const plan = JSON.parse(raw);
+          const prev = lastKnownPlans.get(projectId);
+          const slideCount = Array.isArray(plan.slides) ? plan.slides.length : 0;
+
+          // Guard: prevent phase regression from ready→narrative with slide loss
+          if (prev && prev.phase === 'ready' && plan.phase === 'narrative' && slideCount < prev.slideCount) {
+            console.warn(
+              `[od] deck-plan regression detected for ${projectId}: ` +
+              `phase ${prev.phase}→${plan.phase}, slides ${prev.slideCount}→${slideCount}. ` +
+              `Agent may have clobbered the plan. The web app may show stale state.`,
+            );
+          }
+
+          lastKnownPlans.set(projectId, { phase: plan.phase, slideCount });
+        } catch {
+          // plan might be mid-write; ignore parse errors
         }
+
+        sendToProject(projectId, 'deck:plan:updated', { path: filename });
       }
     });
   } catch (err) {
