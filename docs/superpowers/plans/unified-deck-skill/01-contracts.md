@@ -160,7 +160,7 @@ export * from './deck';
 - [ ] Add tests for `validatePhaseTransition`.
 
 ```typescript
-import { describe, expect, it } from 'bun:test';
+import { describe, expect, it } from 'vitest';
 import { DeckPlan, validatePhaseTransition } from './deck';
 
 const mockPlan: DeckPlan = {

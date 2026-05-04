@@ -88,18 +88,27 @@ export class DeckManager {
     const deckHtml = join(this.projectPath, 'deck', 'deck.html');
     const outputPptx = join(this.projectPath, 'deck', 'deck.pptx');
 
-    // Invoke slidify
-    const { stdout, stderr } = await execAsync(`bunx slidify ${deckHtml} --output ${outputPptx}`);
+    // Invoke slidify (Python CLI, not a bun package — installed via uv)
+    const { stdout, stderr } = await execAsync(`slidify convert ${deckHtml} --output ${outputPptx} --json`);
     
-    // Simple mock parser for fidelity issues (real one would parse slidify output)
+    // Parse slidify's structured JSON report (--json flag outputs fidelity data)
     const fidelityReport: FidelityIssue[] = [];
-    if (stdout.includes('rasterized')) {
-      fidelityReport.push({
-        slideId: 'unknown',
-        issue: 'rasterized',
-        detail: 'Complex CSS detected, slide was rasterized',
-        severity: 'warning'
-      });
+    try {
+      const report = JSON.parse(stdout);
+      if (Array.isArray(report.slides)) {
+        for (const slide of report.slides) {
+          if (slide.strategy === 'raster' || slide.issues?.length) {
+            fidelityReport.push({
+              slideId: slide.id ?? `slide-${slide.index}`,
+              issue: slide.strategy === 'raster' ? 'rasterized' : (slide.issues?.[0]?.type ?? 'layout-drift'),
+              detail: slide.issues?.[0]?.message ?? `Slide converted via ${slide.strategy}`,
+              severity: slide.strategy === 'raster' ? 'warning' : 'info',
+            });
+          }
+        }
+      }
+    } catch {
+      // Fallback: slidify didn't produce JSON, log stderr for debugging
     }
 
     const plan = await this.getPlan();
@@ -136,6 +145,16 @@ app.get('/api/projects/:id/deck/plan', async (req, res) => {
   res.json(plan);
 });
 
+app.patch('/api/projects/:id/deck/plan', async (req, res) => {
+  const project = await db.projects.get(req.params.id);
+  const manager = new DeckManager(project.path);
+  const plan = await manager.getPlan();
+  const updated = { ...plan, ...req.body };
+  await manager.updatePlan(updated);
+  sse.emitToProject(req.params.id, 'deck:plan:updated', { phase: updated.phase });
+  res.json(updated);
+});
+
 app.post('/api/projects/:id/deck/assemble', async (req, res) => {
   const project = await db.projects.get(req.params.id);
   const manager = new DeckManager(project.path);
@@ -165,8 +184,8 @@ if (path.endsWith('deck-plan.json')) {
 ```typescript
 // In apps/daemon/src/prompts/system.ts
 
-// 1. Add narrative check
-const isNarrative = skillBody?.includes('narrative: true');
+// 1. Add narrative check — use parsed frontmatter, not string matching
+const isNarrative = skill?.narrative === true;
 
 // 2. If narrative, skip standard discovery turns
 if (isNarrative) {
@@ -196,7 +215,7 @@ if (req.scope?.type === 'slide') {
 - [ ] Create `apps/daemon/src/deck.test.ts`.
 
 ```typescript
-import { describe, expect, it, beforeEach, afterEach } from 'bun:test';
+import { describe, expect, it, beforeEach, afterEach } from 'vitest';
 import { DeckManager } from './deck';
 import { mkdir, writeFile, rm } from 'fs/promises';
 import { join } from 'path';
