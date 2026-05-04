@@ -818,6 +818,57 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
           }
         }
       }
+      // For deck projects, seed framework assets so the agent doesn't have to copy them.
+      if (
+        metadata &&
+        typeof metadata === 'object' &&
+        metadata.kind === 'deck'
+      ) {
+        const projDir = await ensureProject(PROJECTS_DIR, id);
+        const deckDir = path.join(projDir, 'deck');
+        const slidesDir = path.join(deckDir, 'slides');
+        fs.mkdirSync(deckDir, { recursive: true });
+        fs.mkdirSync(slidesDir, { recursive: true });
+        // Copy framework assets from the deck skill
+        const skillDir = path.join(SKILLS_DIR, 'deck', 'assets');
+        for (const [src, dst] of [
+          ['framework.js', 'framework.js'],
+          ['framework.css', 'framework.css'],
+        ] as const) {
+          const srcPath = path.join(skillDir, src);
+          const dstPath = path.join(deckDir, dst);
+          try {
+            if (fs.existsSync(srcPath) && !fs.existsSync(dstPath)) {
+              fs.copyFileSync(srcPath, dstPath);
+            }
+          } catch { /* best-effort */ }
+        }
+        // Seed initial deck-plan.json if it doesn't exist
+        const planPath = path.join(deckDir, 'deck-plan.json');
+        if (!fs.existsSync(planPath)) {
+          const initialPlan = {
+            version: 1,
+            phase: 'narrative',
+            title: name.trim(),
+            audience: '',
+            tone: '',
+            keyMessage: '',
+            composition: {
+              frameworkId: 'html-ppt',
+              themeId: 'minimal-white',
+              format: '16:9',
+              runtime: 'deck/framework.js',
+              designSystemId: designSystemId ?? null,
+            },
+            interview: { history: [], pendingQuestionId: 'audience-decision' },
+            narrative: { beats: [] },
+            slides: [],
+            slidify: { lastExport: null, fidelityIssues: [] },
+          };
+          fs.writeFileSync(planPath, JSON.stringify(initialPlan, null, 2));
+        }
+      }
+
       /** @type {import('@pixelpitch/contracts').CreateProjectResponse} */
       const body = { project, conversationId: cid };
       res.json(body);
