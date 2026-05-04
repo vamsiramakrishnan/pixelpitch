@@ -67,6 +67,13 @@ import { ChatPane } from './ChatPane';
 import { DeckWorkspace } from './deck';
 import { FileWorkspace } from './FileWorkspace';
 
+const DECK_PLAN_PATH = 'deck/deck-plan.json';
+
+function isDeckPlanProjectFile(file: ProjectFile): boolean {
+  const filePath = file.path ?? file.name;
+  return filePath === DECK_PLAN_PATH || filePath === 'deck-plan.json';
+}
+
 interface Props {
   project: Project;
   routeFileName: string | null;
@@ -1303,21 +1310,51 @@ export function ProjectView({
 
   const [deckPlan, setDeckPlan] = useState<import('@pixelpitch/contracts').DeckPlan | null>(null);
   const [deckExporting, setDeckExporting] = useState(false);
+  const hasDeckPlanFile = useMemo(
+    () => projectFiles.some(isDeckPlanProjectFile),
+    [projectFiles],
+  );
+
+  const fetchDeckPlan = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/projects/${project.id}/deck/plan`);
+      if (!res.ok) {
+        setDeckPlan(null);
+        return;
+      }
+      setDeckPlan(await res.json());
+    } catch {
+      setDeckPlan(null);
+    }
+  }, [project.id]);
 
   useEffect(() => {
-    if (!isDeck || !project.id) return;
-    const planFile = projectFiles.find(
-      (f) => f.name === 'deck-plan.json' || f.path === 'deck/deck-plan.json',
-    );
-    if (!planFile) {
+    if (!isDeck || !project.id) {
       setDeckPlan(null);
       return;
     }
-    fetch(`/api/projects/${project.id}/deck/plan`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then(setDeckPlan)
-      .catch(() => setDeckPlan(null));
-  }, [isDeck, project.id, projectFiles]);
+    if (!hasDeckPlanFile) {
+      setDeckPlan(null);
+      return;
+    }
+    void fetchDeckPlan();
+  }, [fetchDeckPlan, hasDeckPlanFile, isDeck, project.id]);
+
+  useEffect(() => {
+    if (!isDeck || !project.id || typeof EventSource === 'undefined') return;
+
+    const events = new EventSource(`/api/projects/${project.id}/events`);
+    const handleDeckPlanUpdated = () => {
+      void refreshProjectFiles();
+      void fetchDeckPlan();
+    };
+
+    events.addEventListener('deck:plan:updated', handleDeckPlanUpdated);
+    return () => {
+      events.removeEventListener('deck:plan:updated', handleDeckPlanUpdated);
+      events.close();
+    };
+  }, [fetchDeckPlan, isDeck, project.id, refreshProjectFiles]);
 
   const handleDeckUpdatePlan = useCallback(
     (updates: Partial<import('@pixelpitch/contracts').DeckPlan>) => {
