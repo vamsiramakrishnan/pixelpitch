@@ -84,3 +84,11 @@ Node.js v24.14.1
   "updatedAt": "2026-05-03T16:37:56.582Z",
   "url": "http://127.0.0.1:17456"
 }
+
+[tools-dev] launching daemon at 2026-05-04T03:15:39.068Z
+{
+  "pid": 1000006,
+  "state": "running",
+  "updatedAt": "2026-05-04T03:15:39.776Z",
+  "url": "http://127.0.0.1:17456"
+}
