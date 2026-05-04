@@ -33,10 +33,12 @@ deck/
 
 ## deck-plan.json Schema
 
+The `deck-plan.json` is the central contract. It is versioned and strictly validated at each phase transition.
+
 ```typescript
 interface DeckPlan {
-  version: 1;
-  phase: 'narrative' | 'structure' | 'generating' | 'ready' | 'exporting';
+  version: 1;                       // Incremented on breaking schema changes
+  phase: DeckPhase;
   
   // Deck metadata
   title: string;
@@ -44,46 +46,80 @@ interface DeckPlan {
   tone: string;
   keyMessage: string;
   
-  // Design system + theme
-  designSystemId: string | null;
-  themeId: string | null;           // visual theme preset (usually from html-ppt/assets/themes/ or full-deck template id)
+  // Composition: Selected layers for the deck
+  composition: {
+    frameworkId: string;            // e.g., 'html-ppt', 'replit-deck'
+    themeId: string;                // e.g., 'tokyo-night.css'
+    format: '16:9' | '3:4' | 'A4';
+    runtime: string;                // path to framework.js
+    designSystemId: string | null;
+  };
+  
+  // Interview History: Preserves the narrative discovery phase
+  interview: {
+    history: Array<{
+      questionId: string;
+      question: string;
+      answer: string;
+      timestamp: string;
+    }>;
+    pendingQuestionId?: string;     // If an interview is in-flight
+  };
   
   // Narrative beats (phase: narrative → structure)
   narrative: {
-    beats: Array<{
-      id: string;
-      type: 'context' | 'problem' | 'solution' | 'evidence' | 'how' | 'plan' | 'ask' | 'custom';
-      label: string;
-      summary: string;              // user-authored or user-approved one-liner
-      evidenceType?: 'stat' | 'chart' | 'diagram' | 'quote' | 'screenshot' | 'table' | 'none';
-      dataPoints?: string[];        // specific numbers/facts the user provided
-    }>;
+    beats: DeckBeat[];
   };
   
   // Slide manifest (phase: structure → ready)
-  slides: Array<{
-    id: string;
-    beatId: string;                 // links back to narrative beat
-    type: 'title' | 'section' | 'content' | 'data' | 'diagram' | 'image' | 'quote' | 'cta';
-    title: string;
-    file: string;                   // relative path: slides/01-title.html
-    status: 'pending' | 'generating' | 'ready' | 'needs-evidence' | 'needs-data' | 'fixed';
-    speakerNotes: string;
-    qualityIssues?: string[];       // populated by agent self-critique
-  }>;
+  slides: DeckSlide[];
   
   // Export state
   slidify: {
     lastExport: string | null;      // ISO timestamp
-    fidelityIssues: Array<{
-      slideId: string;
-      issue: string;                // 'rasterized' | 'overflow' | 'font-missing' | 'layout-drift'
-      detail: string;
-      severity: 'info' | 'warning' | 'error';
-    }>;
+    fidelityIssues: FidelityIssue[];
+    exportPath?: string;            // relative path to produced .pptx
   };
 }
+
+type DeckPhase = 'narrative' | 'structure' | 'generating' | 'ready' | 'exporting';
+
+interface DeckBeat {
+  id: string;
+  type: 'context' | 'problem' | 'solution' | 'evidence' | 'how' | 'plan' | 'ask' | 'custom';
+  label: string;
+  summary: string;
+  evidenceType?: 'stat' | 'chart' | 'diagram' | 'quote' | 'screenshot' | 'table' | 'none';
+  dataPoints?: string[];
+}
+
+interface DeckSlide {
+  id: string;
+  beatId: string;
+  type: string;                     // maps to archetype in slide-types.md
+  title: string;
+  file: string;                     // slides/01-title.html
+  status: 'pending' | 'generating' | 'ready' | 'needs-evidence' | 'needs-data' | 'fixed';
+  speakerNotes: string;
+  qualityIssues?: string[];
+}
+
+interface FidelityIssue {
+  slideId: string;
+  issue: 'rasterized' | 'overflow' | 'font-missing' | 'layout-drift';
+  detail: string;
+  severity: 'info' | 'warning' | 'error';
+}
 ```
+
+### Version Migration & Validation
+
+- **Migration**: The daemon's `DeckManager` service handles migrations. `version: 1` introduces the structured `composition` and `interview` blocks. `version: 0` (legacy) assumes a flat `themeId` and no narrative history.
+- **Validation Rules**:
+  - **Phase: narrative**: `title`, `audience`, and `keyMessage` must be non-empty before transitioning to `structure`.
+  - **Phase: structure**: `narrative.beats[]` must contain at least one 'ask' or 'plan' beat.
+  - **Phase: generating**: Each slide must map to a valid file on disk.
+  - **Phase: ready**: All slides must have `status: 'ready'` or `status: 'fixed'`.
 
 ## Hybrid Stitching Model
 
@@ -96,21 +132,52 @@ Each layer activates at the right moment:
 | **Daemon** | Export | Reads deck-plan.json, inlines all fragments into deck.html, runs slidify. Only materializes deck.html on demand. |
 | **Agent** | Post-export repair | Reads slidify fidelity report, fixes individual slide fragments, daemon re-exports. |
 
+### Stitched HTML Structure (srcdoc)
+
+The web app builds the preview `srcdoc` by wrapping fragments in a standard shell:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/api/projects/:id/files/deck/framework.css">
+  <link rel="stylesheet" href="/api/projects/:id/files/deck/theme.css">
+  <script src="/api/projects/:id/files/deck/framework.js" defer></script>
+</head>
+<body class="deck-runtime">
+  <div class="slides-container">
+    <!-- Web app inlines the active slide fragment here -->
+    <section class="slide" data-slide-id="01-title">
+      <h1>Title Content</h1>
+    </section>
+  </div>
+</body>
+</html>
+```
+
+### Live Preview Sync
+
+1. Web app watches `deck-plan.json` and `slides/*.html` via existing file watch events.
+2. When a slide fragment changes (agent stream or manual edit), the web app re-fetches the specific fragment.
+3. The `srcdoc` is updated in the iframe. Because `framework.js` is built to be stateless/re-initializable, the preview remains stable without a full page reload.
+
 ## Workflow Phases & UI Components
 
 ### Phase 1: Narrative Interview
 
 **Agent behavior**: Emits structured question forms (QuestionForm protocol) one at a time. Each answer updates `deck-plan.json` metadata fields (audience, tone, keyMessage).
+- **Daemon Behavior**: The daemon detects the `narrative: true` flag and allows the agent to maintain a long-running interview state. It emits SSE events of type `deck:interview:question` when the agent requests input.
 
 **Web app renders**: Split view.
 - Left: Chat pane with visual question forms (direction-cards for tone, pills for audience type, text input for key message).
 - Right: **Story Canvas** — a live card stack that fills in as each question is answered. Cards for Audience, Key Message, Tone, Decision Needed. The user sees their story parameters crystallizing in real-time.
 
-**Transition**: Agent writes initial `narrative.beats[]` array and sets `phase: 'structure'`.
+**Transition**: Agent writes initial `narrative.beats[]` array and sets `phase: 'structure'`. Daemon emits `deck:phase:changed`.
 
 ### Phase 2: Narrative Outline
 
 **Agent behavior**: Proposes beat sequence based on interview answers. Writes `narrative.beats[]` to deck-plan.json.
+- **Daemon Behavior**: Validates that beats are logically connected to the key message.
 
 **Web app renders**: Full-width **Outline Editor**.
 - Draggable beat cards with colored type badges (Context=blue, Problem=red, Solution=green, Evidence=purple, How=amber, Plan=gray, Ask=blue-accent).
@@ -141,6 +208,7 @@ Each layer activates at the right moment:
 ### Phase 4: Slide Editor (Polish)
 
 **Agent behavior**: Responds to per-slide chat. Reads only theme.css + the target slide fragment (200 lines context). Edits the specific slide file. Never touches other slides.
+- **Daemon Behavior**: Routes chat messages to the agent with a "per-slide" prompt decorator. The daemon automatically injects the active slide's HTML fragment into the prompt's `extraContext`.
 
 **Web app renders**: **Deck Workspace** (the polished UI from the mockup).
 - Top bar: phase dots, deck title, Present + Export buttons.
@@ -152,6 +220,7 @@ Each layer activates at the right moment:
 ### Phase 5: Export
 
 **Agent behavior**: On export request, agent optionally runs a final consistency check. Daemon handles the actual export.
+- **Daemon Behavior**: Invokes the `assemble` logic followed by the `slidify` CLI. Writes the fidelity report back to `deck-plan.json`.
 
 **Web app renders**: **Export Panel** overlay.
 - Progress bar for slidify conversion.
@@ -432,20 +501,147 @@ Before setting a slide to `status: 'ready'`, the agent checks:
 
 ## Daemon Changes
 
-| Change | File | Purpose |
-|--------|------|---------|
-| Deck assembly endpoint | `apps/daemon/src/server.ts` | `POST /api/projects/:id/deck/assemble` — reads deck-plan.json, inlines slides, writes deck.html |
-| Slidify export endpoint | `apps/daemon/src/server.ts` | `POST /api/projects/:id/deck/export` — runs slidify on assembled deck.html, returns fidelity report |
-| deck-plan.json watcher | `apps/daemon/src/server.ts` | Optional: notify web app via SSE when deck-plan.json changes |
+The daemon provides the orchestration layer between the agent's file outputs and the web app's UI.
+
+### API Contracts
+
+#### `POST /api/projects/:id/deck/assemble`
+Assembles the slide fragments into a monolithic `deck.html`.
+- **Request**: Empty (uses current project state)
+- **Response**: `DeckAssembleResponse`
+- **Error Cases**:
+  - `404`: `deck-plan.json` missing
+  - `422`: Slide fragment missing for an entry in the manifest
+
+#### `POST /api/projects/:id/deck/export`
+Invokes `slidify` to produce a `.pptx` and generates a fidelity report.
+- **Request**: `DeckExportRequest`
+- **Response**: `DeckExportResponse`
+- **Process**:
+  1. Internal call to `assemble`.
+  2. Runs `slidify deck.html --output deck.pptx`.
+  3. Parses `slidify` logs to produce `FidelityIssue[]`.
+  4. Updates `deck-plan.json` with the report.
+
+#### `GET /api/projects/:id/deck/plan`
+Reads the current `deck-plan.json`.
+- **Response**: `DeckPlan`
+
+### SSE Events
+The daemon emits events over the existing project SSE stream:
+- `deck:plan:updated`: Triggered when `deck-plan.json` is modified on disk.
+- `deck:phase:changed`: Triggered when the `phase` field changes.
+- `deck:interview:question`: Triggered when the agent needs input during Phase 1.
+- `deck:export:progress`: Periodic updates during the `slidify` run.
+
+### Per-Slide Chat Routing
+When the web app sends a message with `scope: { type: 'slide', id: string }`:
+1. The daemon resolves the slide's HTML fragment path from `deck-plan.json`.
+2. It reads the fragment and `theme.css`.
+3. It constructs a focused prompt where the `extraContext` includes *only* these two files, ensuring the agent remains focused on the active slide.
 
 ## Contracts Changes
 
-| Change | File | Purpose |
-|--------|------|---------|
-| `DeckPlan` type | `packages/contracts/src/api/deck.ts` | TypeScript interface for deck-plan.json schema |
-| `DeckPhase` union | `packages/contracts/src/api/deck.ts` | Phase type union |
-| `SlideSummary` type | `packages/contracts/src/api/deck.ts` | Per-slide metadata for web app rendering |
-| `FidelityIssue` type | `packages/contracts/src/api/deck.ts` | Slidify fidelity report item |
+New types in `packages/contracts/src/api/deck.ts` to support the unified deck workflow.
+
+```typescript
+/**
+ * Core Deck Plan contract
+ */
+export interface DeckPlan {
+  version: number;
+  phase: DeckPhase;
+  title: string;
+  audience: string;
+  tone: string;
+  keyMessage: string;
+  composition: DeckComposition;
+  interview: DeckInterview;
+  narrative: {
+    beats: DeckBeat[];
+  };
+  slides: DeckSlide[];
+  slidify: DeckExportState;
+}
+
+export type DeckPhase = 'narrative' | 'structure' | 'generating' | 'ready' | 'exporting';
+
+export interface DeckComposition {
+  frameworkId: string;
+  themeId: string;
+  format: '16:9' | '3:4' | 'A4';
+  runtime: string;
+  designSystemId: string | null;
+}
+
+export interface DeckInterview {
+  history: Array<{
+    questionId: string;
+    question: string;
+    answer: string;
+    timestamp: string;
+  }>;
+  pendingQuestionId?: string;
+}
+
+export interface DeckBeat {
+  id: string;
+  type: DeckBeatType;
+  label: string;
+  summary: string;
+  evidenceType?: DeckEvidenceType;
+  dataPoints?: string[];
+}
+
+export type DeckBeatType = 'context' | 'problem' | 'solution' | 'evidence' | 'how' | 'plan' | 'ask' | 'custom';
+export type DeckEvidenceType = 'stat' | 'chart' | 'diagram' | 'quote' | 'screenshot' | 'table' | 'none';
+
+export interface DeckSlide {
+  id: string;
+  beatId: string;
+  type: string;
+  title: string;
+  file: string;
+  status: DeckSlideStatus;
+  speakerNotes: string;
+  qualityIssues?: string[];
+}
+
+export type DeckSlideStatus = 'pending' | 'generating' | 'ready' | 'needs-evidence' | 'needs-data' | 'fixed';
+
+export interface DeckExportState {
+  lastExport: string | null;
+  fidelityIssues: FidelityIssue[];
+  exportPath?: string;
+}
+
+export interface FidelityIssue {
+  slideId: string;
+  issue: 'rasterized' | 'overflow' | 'font-missing' | 'layout-drift';
+  detail: string;
+  severity: 'info' | 'warning' | 'error';
+}
+
+/**
+ * API Request/Response Shapes
+ */
+export interface DeckAssembleResponse {
+  success: boolean;
+  outputPath: string; // deck.html
+  slideCount: number;
+}
+
+export interface DeckExportRequest {
+  target: 'pptx' | 'pdf';
+  includeFidelityReport: boolean;
+}
+
+export interface DeckExportResponse {
+  success: boolean;
+  pptxPath: string;
+  fidelityReport: FidelityIssue[];
+}
+```
 
 ## Skill Reorganization: Compose, Not Replace
 
@@ -628,16 +824,32 @@ The daemon audit identified these specific gaps:
 
 ### 1. Discovery Protocol is Hardcoded for 2 Steps
 
-The current discovery.ts forces a 3-turn cycle: Turn 1 (briefing form) → Turn 2 (direction
-picker or spec extraction) → Turn 3 (TodoWrite plan + implement). The narrative interview
-needs a flexible multi-turn mode where the agent keeps asking until `deck-plan.json` is
-committed.
+The current `discovery.ts` forces a 3-turn cycle: Turn 1 (briefing form) → Turn 2 (direction picker or spec extraction) → Turn 3 (TodoWrite plan + implement). The narrative interview needs a flexible multi-turn mode where the agent keeps asking until `deck-plan.json` is committed.
 
-**Fix**: Add a `narrative: true` flag to skill frontmatter. When active, `composeSystemPrompt`
-injects a "Narrative Interview" layer that overrides the hardcoded 3-turn cycle and
-prioritizes content structure over HTML generation.
+**Fix**: Add a `narrative: true` flag to skill frontmatter. 
+- When `narrative: true` is detected in `composeSystemPrompt()`, the daemon injects a "Narrative Interview" layer that overrides the hardcoded cycle.
+- The daemon allows the agent to skip the `TodoWrite` phase as long as it is emitting `QuestionForm` artifacts or updating the `interview` block in `deck-plan.json`.
+- The cycle only resumes standard behavior once the agent writes `phase: 'structure'` to `deck-plan.json`.
 
-### 2. No DESIGN.md → theme.css Extraction
+### 2. Unified Deck Skill Detection
+
+The daemon needs to know when to activate the deck-specific UI and API logic.
+
+**Detection Logic**:
+1. **Frontmatter Check**: The daemon reads the active skill's `SKILL.md`. If `pixelpitch.mode: deck` is present, it flags the project as a deck project.
+2. **File Check**: If `deck/deck-plan.json` exists in the project root, the daemon assumes the unified workflow is active.
+3. **Skill Routing**: When a project is flagged as a deck project, the daemon's file watcher prioritizes `deck-plan.json` changes and routes them to the `deck:plan:updated` SSE event.
+
+### 3. Per-Slide Chat Context Routing
+
+Standalone skills often suffer from "context bloat" where the agent reads the entire 2000-line `deck.html` to fix one typo.
+
+**Fix**: The daemon implements a "Context Slicer" for deck projects:
+- When a chat message has a slide scope (e.g., `slideId: "02-problem"`), the daemon looks up the slide's file path in `deck-plan.json`.
+- It constructs an `extraContext` array containing *only* the specific slide fragment and `theme.css`.
+- It appends a system instruction: "You are editing ONLY Slide [N]. Do not suggest changes to other slides. Your output must be the complete HTML fragment for this slide."
+
+### 4. No DESIGN.md → theme.css Extraction
 
 The agent currently "eyeballs" DESIGN.md prose and manually writes CSS. There's no shared
 logic or token standard.
@@ -647,15 +859,15 @@ in a defined order: (1) read DESIGN.md, (2) extract palette section → `--bg`, 
 `--accent`, `--shell`, (3) extract typography → `--font-display`, `--font-body`, (4) write
 `theme.css`. The extraction pattern is documented in `references/token-extraction.md`.
 
-### 3. No Deck Assembly Endpoint
+### 5. No Deck Assembly Endpoint
 
 The agent currently writes the entire deck manually. There's no daemon endpoint to assemble
 slide fragments into a complete `deck.html`.
 
-**Fix**: `POST /api/projects/:id/deck/assemble` and
+**Fix**: Implement `POST /api/projects/:id/deck/assemble` and
 `POST /api/projects/:id/deck/export` (see Daemon Changes section).
 
-### 4. Craft Rules Need Unified Deck Section
+### 6. Craft Rules Need Unified Deck Section
 
 `slidify-compat.md` and `anti-ai-slop.md` are concatenated without collision checking.
 
