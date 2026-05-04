@@ -64,6 +64,7 @@ import {
 import { AppChromeHeader } from './AppChromeHeader';
 import { AvatarMenu } from './AvatarMenu';
 import { ChatPane } from './ChatPane';
+import { DeckWorkspace } from './deck';
 import { FileWorkspace } from './FileWorkspace';
 
 interface Props {
@@ -1300,6 +1301,67 @@ export function ProjectView({
     [skills, project.skillId],
   );
 
+  const [deckPlan, setDeckPlan] = useState<import('@pixelpitch/contracts').DeckPlan | null>(null);
+  const [deckExporting, setDeckExporting] = useState(false);
+
+  useEffect(() => {
+    if (!isDeck || !project.id) return;
+    const planFile = projectFiles.find(
+      (f) => f.name === 'deck-plan.json' || f.path === 'deck/deck-plan.json',
+    );
+    if (!planFile) {
+      setDeckPlan(null);
+      return;
+    }
+    fetch(`/api/projects/${project.id}/deck/plan`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then(setDeckPlan)
+      .catch(() => setDeckPlan(null));
+  }, [isDeck, project.id, projectFiles]);
+
+  const handleDeckUpdatePlan = useCallback(
+    (updates: Partial<import('@pixelpitch/contracts').DeckPlan>) => {
+      if (!deckPlan) return;
+      const updated = { ...deckPlan, ...updates };
+      setDeckPlan(updated as import('@pixelpitch/contracts').DeckPlan);
+      fetch(`/api/projects/${project.id}/deck/plan`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      }).catch(() => {});
+    },
+    [deckPlan, project.id],
+  );
+
+  const handleDeckExport = useCallback(async () => {
+    setDeckExporting(true);
+    try {
+      const res = await fetch(`/api/projects/${project.id}/deck/export`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ target: 'pptx', includeFidelityReport: true }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setDeckPlan((prev) =>
+          prev
+            ? {
+                ...prev,
+                phase: 'exporting' as const,
+                slidify: {
+                  lastExport: new Date().toISOString(),
+                  fidelityIssues: data.fidelityReport ?? [],
+                  exportPath: data.pptxPath,
+                },
+              }
+            : null,
+        );
+      }
+    } finally {
+      setDeckExporting(false);
+    }
+  }, [project.id]);
+
   // Hand the pending prompt to ChatPane exactly once. We snapshot the value
   // into local state on mount so it survives the ChatPane remount triggered
   // when `activeConversationId` resolves from `null` to a real id (the
@@ -1394,61 +1456,114 @@ export function ProjectView({
             <span className="meta" data-testid="project-meta">{projectMeta}</span>
         </div>
       </AppChromeHeader>
-      <div className="split">
-        <ChatPane
-          // The conversation id is part of the key so switching conversations
-          // resets internal scroll/draft state inside ChatPane and ChatComposer.
-          key={activeConversationId ?? 'no-conv'}
-          messages={messages}
-          streaming={streaming}
-          error={error}
+      {isDeck && deckPlan ? (
+        <DeckWorkspace
           projectId={project.id}
-          projectFiles={projectFiles}
-          projectFileNames={projectFileNames}
-          onEnsureProject={handleEnsureProject}
-          previewComments={previewComments}
-          attachedComments={attachedComments}
-          onAttachComment={attachPreviewComment}
-          onDetachComment={detachPreviewComment}
-          onDeleteComment={(commentId) => void removePreviewComment(commentId)}
-          onSend={handleSend}
-          onStop={handleStop}
-          onRequestOpenFile={requestOpenFile}
-          initialDraft={initialDraft}
-          onSubmitForm={(text) => {
-            if (streaming) return;
-            void handleSend(text, [], []);
-          }}
-          onContinueRemainingTasks={handleContinueRemainingTasks}
-          onNewConversation={handleNewConversation}
-          conversations={conversations}
-          activeConversationId={activeConversationId}
-          onSelectConversation={handleSelectConversation}
-          onDeleteConversation={handleDeleteConversation}
-          onRenameConversation={handleRenameConversation}
-          onOpenSettings={onOpenSettings}
-          petConfig={config.pet}
-          onAdoptPet={onAdoptPetInline}
-          onTogglePet={onTogglePet}
-          onOpenPetSettings={onOpenPetSettings}
+          plan={deckPlan}
+          onUpdatePlan={handleDeckUpdatePlan}
+          onExport={handleDeckExport}
+          exporting={deckExporting}
+          chatPane={
+            <ChatPane
+              key={activeConversationId ?? 'no-conv'}
+              messages={messages}
+              streaming={streaming}
+              error={error}
+              projectId={project.id}
+              projectFiles={projectFiles}
+              projectFileNames={projectFileNames}
+              onEnsureProject={handleEnsureProject}
+              previewComments={previewComments}
+              attachedComments={attachedComments}
+              onAttachComment={attachPreviewComment}
+              onDetachComment={detachPreviewComment}
+              onDeleteComment={(commentId) => void removePreviewComment(commentId)}
+              onSend={handleSend}
+              onStop={handleStop}
+              onRequestOpenFile={requestOpenFile}
+              initialDraft={initialDraft}
+              onSubmitForm={(text) => {
+                if (streaming) return;
+                void handleSend(text, [], []);
+              }}
+              onContinueRemainingTasks={handleContinueRemainingTasks}
+              onNewConversation={handleNewConversation}
+              conversations={conversations}
+              activeConversationId={activeConversationId}
+              onSelectConversation={handleSelectConversation}
+              onDeleteConversation={handleDeleteConversation}
+              onRenameConversation={handleRenameConversation}
+              onOpenSettings={onOpenSettings}
+              petConfig={config.pet}
+              onAdoptPet={onAdoptPetInline}
+              onTogglePet={onTogglePet}
+              onOpenPetSettings={onOpenPetSettings}
+            />
+          }
+          renderSlidePreview={(slideId) => (
+            <div className="deck-slide-preview-placeholder" data-slide-id={slideId}>
+              {/* TODO: build srcdoc from theme.css + framework.js + slide fragment */}
+            </div>
+          )}
+          renderSlideThumbnail={(slide) => (
+            <div className="deck-slide-thumb-placeholder">{slide.title}</div>
+          )}
         />
-        <FileWorkspace
-          projectId={project.id}
-          files={projectFiles}
-          onRefreshFiles={() => {
-            void refreshProjectFiles();
-          }}
-          isDeck={isDeck}
-          onExportAsPptx={handleExportAsPptx}
-          streaming={streaming}
-          openRequest={openRequest}
-          tabsState={openTabsState}
-          onTabsStateChange={persistTabsState}
-          previewComments={previewComments}
-          onSavePreviewComment={savePreviewComment}
-          onRemovePreviewComment={removePreviewComment}
-        />
-      </div>
+      ) : (
+        <div className="split">
+          <ChatPane
+            key={activeConversationId ?? 'no-conv'}
+            messages={messages}
+            streaming={streaming}
+            error={error}
+            projectId={project.id}
+            projectFiles={projectFiles}
+            projectFileNames={projectFileNames}
+            onEnsureProject={handleEnsureProject}
+            previewComments={previewComments}
+            attachedComments={attachedComments}
+            onAttachComment={attachPreviewComment}
+            onDetachComment={detachPreviewComment}
+            onDeleteComment={(commentId) => void removePreviewComment(commentId)}
+            onSend={handleSend}
+            onStop={handleStop}
+            onRequestOpenFile={requestOpenFile}
+            initialDraft={initialDraft}
+            onSubmitForm={(text) => {
+              if (streaming) return;
+              void handleSend(text, [], []);
+            }}
+            onContinueRemainingTasks={handleContinueRemainingTasks}
+            onNewConversation={handleNewConversation}
+            conversations={conversations}
+            activeConversationId={activeConversationId}
+            onSelectConversation={handleSelectConversation}
+            onDeleteConversation={handleDeleteConversation}
+            onRenameConversation={handleRenameConversation}
+            onOpenSettings={onOpenSettings}
+            petConfig={config.pet}
+            onAdoptPet={onAdoptPetInline}
+            onTogglePet={onTogglePet}
+            onOpenPetSettings={onOpenPetSettings}
+          />
+          <FileWorkspace
+            projectId={project.id}
+            files={projectFiles}
+            onRefreshFiles={() => {
+              void refreshProjectFiles();
+            }}
+            isDeck={isDeck}
+            onExportAsPptx={handleExportAsPptx}
+            streaming={streaming}
+            openRequest={openRequest}
+            tabsState={openTabsState}
+            onTabsStateChange={persistTabsState}
+            previewComments={previewComments}
+            onSavePreviewComment={savePreviewComment}
+            onRemovePreviewComment={removePreviewComment}
+          />
+        </div>
+      )}
     </div>
   );
 }
