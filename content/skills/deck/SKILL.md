@@ -240,7 +240,7 @@ The web app renders `<question-form>` tags as interactive visual cards. Plain te
 
 **Turn 4 — Visual direction (use direction-cards):**
 
-After audience, message, tone, and format are known, present 4-6 visual directions as rich cards. Source directions from the project's selected design system, or from the html-ppt theme library if no design system is selected. Each card must have real palette colors, font samples, and mood descriptions.
+After audience, message, tone, and format are known, present 4-6 visual directions as rich cards. Source directions from the project's selected design system, or from the html-ppt theme library if no design system is selected. Each card must have real palette colors, font samples, and mood descriptions. Each `palette` must contain exactly six strings in this order: background, surface, border, muted text, foreground text, accent. This matches the web picker swatch order and the deck preview token mapping (`--bg`, `--surface`, `--border`, `--muted`, `--fg`, `--accent`).
 
 ```
 <question-form id="deck-visual" title="Choose a visual direction">
@@ -305,7 +305,7 @@ If the first message contains audience, key points, and a decision/ask, skip the
 1. Extract `title`, `audience`, `tone`, `keyMessage` from the brief
 2. Create `deck-plan.json` with populated fields
 3. Propose beats based on the brief content
-4. Set `phase: "generating"` and begin slides
+4. Set `phase: "structure"` and present the outline review form before generating slides
 
 Do NOT force a multi-turn interview when the user already told you everything.
 
@@ -345,6 +345,39 @@ Use this initial `deck-plan.json` shape:
 
 Transition to `phase: "structure"` only after `title`, `audience`, `keyMessage`, and at least one decision-driving `ask` or `plan` beat are known.
 
+### Outline review form
+
+During the `structure` phase, present a visual summary card for the proposed narrative arc before writing any slide fragments. Emit this as a `question-form` after writing `narrative.beats[]` and before setting `phase: "generating"`. The form should summarize the act structure, decision arc, and evidence gaps so the user can approve the outline or request revisions.
+
+Use this valid form shape:
+
+```
+<question-form id="deck-outline-review" title="Review the narrative arc">
+{
+  "description": "Act I: establish the current pressure and why it matters. Act II: prove the opportunity with the strongest evidence. Act III: show the plan and the decision needed now. Evidence gaps: list any beats marked needs-data.",
+  "questions": [
+    {
+      "id": "outlineDecision",
+      "label": "Proceed with this outline?",
+      "type": "radio",
+      "options": ["Approve outline and generate slides", "Revise the narrative arc first", "Add or replace evidence before generation"],
+      "required": true
+    },
+    {
+      "id": "outlineNotes",
+      "label": "What should change?",
+      "type": "textarea",
+      "placeholder": "e.g., Move the ask earlier, add a risk slide, combine slides 4 and 5",
+      "required": false
+    }
+  ],
+  "submitLabel": "Continue"
+}
+</question-form>
+```
+
+Only move from `structure` to `generating` after the user approves the outline, or when the original prompt explicitly asked for immediate generation and included a complete slide-by-slide outline.
+
 ## Phase Transitions
 
 The deck has five phases. Move forward only when the gate is satisfied.
@@ -354,7 +387,7 @@ The deck has five phases. Move forward only when the gate is satisfied.
 | Phase | Agent action | Gate | When to write phase change |
 |---|---|---|---|
 | `narrative` | Ask one interview question at a time and update metadata. | `title`, `audience`, and `keyMessage` are non-empty. | Write `phase: "structure"` to deck-plan.json BEFORE proposing beats. |
-| `structure` | Propose and revise `narrative.beats[]`. | Beats include at least one `ask` or `plan` and each beat has a specific summary. | Write `phase: "generating"` to deck-plan.json BEFORE writing any slide files. |
+| `structure` | Propose and revise `narrative.beats[]`, then emit the outline review form. | Beats include at least one `ask` or `plan`, each beat has a specific summary, and the user has approved the outline. | Write `phase: "generating"` to deck-plan.json BEFORE writing any slide files. |
 | `generating` | Create `theme.css`, copy framework assets, and write slide fragments sequentially. | Every slide entry maps to an existing file. | Write `phase: "ready"` to deck-plan.json AFTER all slides have status `ready` or `fixed`. |
 | `ready` | Handle per-slide edits, quality fixes, notes, and export preparation. | Every slide status is `ready` or `fixed`. | Write `phase: "exporting"` when user requests export. |
 | `exporting` | Let the daemon assemble and run slidify; then repair fidelity issues. | `slidify.fidelityIssues[]` is reviewed and accepted or fixed. | Write `phase: "ready"` after repairs. |
@@ -364,7 +397,7 @@ The deck has five phases. Move forward only when the gate is satisfied.
 - If you write slides but leave `phase: "narrative"` → user sees the interview screen, not their slides
 - If you write slides but don't add them to `slides[]` → user sees blank preview, no thumbnails
 - If you set `phase: "ready"` but `slides[]` is empty → user sees an empty editor with 0/0 counter
-- If the user gave a rich brief and you skip the interview → still create `deck-plan.json` with populated `title`, `audience`, `tone`, `keyMessage`, `narrative.beats[]` and set `phase: "structure"` or `"generating"` immediately
+- If the user gave a rich brief and you skip the interview → still create `deck-plan.json` with populated `title`, `audience`, `tone`, `keyMessage`, `narrative.beats[]`, set `phase: "structure"`, and emit the outline review form before generation
 
 ### When user provides a rich brief upfront
 
@@ -372,8 +405,8 @@ If the user's first message contains enough detail to skip the interview (audien
 
 1. Create `deck-plan.json` immediately with populated metadata fields
 2. Populate `narrative.beats[]` from their key points
-3. Set `phase: "generating"` (skip `narrative` and `structure`)
-4. Begin generating slides with proper plan synchronization
+3. Set `phase: "structure"` and emit the outline review form
+4. Begin generating slides with proper plan synchronization only after outline approval
 
 The interview is for users who need help building the story. Users who arrive with a clear brief should get slides fast.
 
@@ -429,7 +462,7 @@ Use these shared framework classes from `framework.css` / `html-ppt/assets/base.
 - Dividers and chrome: `.divider`, `.divider-accent`, `.deck-header`, `.deck-footer`, `.slide-number`, `.progress-bar`
 - Utilities: `.hidden`, `.nowrap`, `.tr`, `.tc`, `.tl`, `.uppercase`, `.notes`
 
-Use this richer deck fragment API for unified deck slides. These are the classes agents should rely on for designer-grade fragments; if a selected framework/theme does not already expose them, define the missing presentation-only aliases in `deck/theme.css` before generating slides, not in individual fragments:
+Use this richer deck fragment API for unified deck slides. These classes are defined in `framework.css` and should be available after copying the framework asset. If a selected external framework does not expose an equivalent class, define only the missing presentation-only aliases in `deck/theme.css` before generating slides, not in individual fragments:
 
 - Chrome and page structure: `.chrome`, `.foot`, `.frame`
 - Typography hierarchy: `.kicker`, `.h-hero`, `.h-xl`, `.h-sub`, `.h-md`, `.lead`, `.meta-row`
@@ -565,6 +598,86 @@ Statement / quote slide:
   <div class="foot">
     <div>Decision Narrative</div>
     <div>06 / 12</div>
+  </div>
+</section>
+```
+
+Process / plan slide:
+
+```html
+<section class="slide light" data-slide-id="08-plan" data-slide-type="process">
+  <div class="chrome">
+    <div>Execution Plan · Workstreams</div>
+    <div>ACT III · 08 / 12</div>
+  </div>
+  <div class="frame" style="display:grid; gap:4vh; align-content:center; min-height:80vh">
+    <div>
+      <div class="kicker">Operating Model</div>
+      <h2 class="h-xl" data-pptx-role="title">The plan converts the decision into four accountable moves.</h2>
+    </div>
+    <div class="pipeline-section">
+      <div class="pipeline-label">90-day sequence</div>
+      <div class="pipeline">
+        <article class="step">
+          <div class="step-nb">01</div>
+          <div class="step-title">Name the owner</div>
+          <div class="step-desc">Identify the directly responsible team, escalation path, and weekly review rhythm.</div>
+        </article>
+        <article class="step">
+          <div class="step-nb">02</div>
+          <div class="step-title">Prove the workflow</div>
+          <div class="step-desc">Run the pilot against the user's real success metric and baseline.</div>
+        </article>
+        <article class="step">
+          <div class="step-nb">03</div>
+          <div class="step-title">Package the proof</div>
+          <div class="step-desc">Turn pilot evidence into rollout criteria, enablement, and buyer-facing artifacts.</div>
+        </article>
+        <article class="step">
+          <div class="step-nb">04</div>
+          <div class="step-title">Scale the motion</div>
+          <div class="step-desc">Expand only after the adoption, quality, and economics gates are met.</div>
+        </article>
+      </div>
+    </div>
+    <div class="meta-row">
+      <span>Owner</span><span>·</span><span>Metric</span><span>·</span><span>Gate</span><span>·</span><span>Decision</span>
+    </div>
+  </div>
+  <div class="foot">
+    <div>Plan details must reflect user-approved scope</div>
+    <div>Execution Plan</div>
+  </div>
+</section>
+```
+
+Closing / ask slide:
+
+```html
+<section class="slide hero dark" data-slide-id="12-ask" data-slide-type="ask">
+  <div class="chrome">
+    <div>Decision · Closing Ask</div>
+    <div>ACT III · 12 / 12</div>
+  </div>
+  <div class="frame grid-2-7-5" style="align-items:center; min-height:80vh">
+    <div class="stack">
+      <div class="kicker">Decision Needed</div>
+      <h2 class="h-hero" data-pptx-role="title" style="font-size:8vw">Approve the next move.</h2>
+      <p class="lead">
+        Replace this with the user's exact ask, named owner, budget or time commitment, and approval deadline.
+      </p>
+    </div>
+    <aside class="callout">
+      <div class="h-md">What approval unlocks</div>
+      <p class="lead" style="font-size:24px; margin-top:18px">
+        Summarize the measurable outcome, the risk of waiting, and the first milestone after approval.
+      </p>
+      <div class="callout-src">Decision log · May 2026</div>
+    </aside>
+  </div>
+  <div class="foot">
+    <div>Next step: confirm owner and date</div>
+    <div>12 / 12</div>
   </div>
 </section>
 ```
