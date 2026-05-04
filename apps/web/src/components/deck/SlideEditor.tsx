@@ -17,8 +17,8 @@ export function SlideEditor({
   slidePreview,
   renderThumbnail,
 }: Props) {
-  const activeSlide = plan.slides.find((s) => s.id === activeSlideId);
-  const activeIdx = plan.slides.findIndex((s) => s.id === activeSlideId);
+  const activeSlide = activeSlideId ? plan.slides.find((s) => s.id === activeSlideId) : undefined;
+  const activeIdx = activeSlide ? plan.slides.indexOf(activeSlide) : -1;
 
   function navigate(delta: number) {
     const next = Math.max(0, Math.min(plan.slides.length - 1, activeIdx + delta));
@@ -28,7 +28,8 @@ export function SlideEditor({
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target as HTMLElement).isContentEditable) return;
       if (e.key === 'ArrowLeft') navigate(-1);
       else if (e.key === 'ArrowRight') navigate(1);
     }

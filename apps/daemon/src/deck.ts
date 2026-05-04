@@ -97,20 +97,31 @@ export class DeckManager {
     const fidelityReport: FidelityIssue[] = [];
     try {
       const report = JSON.parse(stdout);
-      if (Array.isArray(report.slides)) {
-        for (const slide of report.slides) {
-          if (slide.strategy === 'raster' || (slide.issues && slide.issues.length > 0)) {
+      // slidify ConversionResult uses fidelity_reports (not slides)
+      // each FidelityReport has: slide_index, failing_units[{decision_kind, reason}]
+      const reports = report.fidelity_reports ?? report.slides ?? [];
+      if (Array.isArray(reports)) {
+        for (const entry of reports) {
+          const units = entry.failing_units ?? entry.issues ?? [];
+          const slideId = entry.slide_id ?? entry.id ?? `slide-${entry.slide_index ?? entry.index}`;
+          const kind = entry.decision_kind ?? entry.strategy;
+          if (kind === 'raster' || kind === 'preserve_raster' || units.length > 0) {
+            const firstUnit = units[0];
+            const issueType =
+              kind === 'raster' || kind === 'preserve_raster'
+                ? 'rasterized' as const
+                : (firstUnit?.type ?? 'layout-drift') as FidelityIssue['issue'];
             fidelityReport.push({
-              slideId: slide.id ?? `slide-${slide.index}`,
-              issue: slide.strategy === 'raster' ? 'rasterized' : (slide.issues?.[0]?.type ?? 'layout-drift'),
-              detail: slide.issues?.[0]?.message ?? `Slide converted via ${slide.strategy}`,
-              severity: slide.strategy === 'raster' ? 'warning' : 'info',
+              slideId,
+              issue: issueType,
+              detail: firstUnit?.reason ?? firstUnit?.message ?? `Slide converted via ${kind}`,
+              severity: kind === 'raster' || kind === 'preserve_raster' ? 'warning' : 'info',
             });
           }
         }
       }
-    } catch (err) {
-      console.warn('Failed to parse slidify JSON report:', err);
+    } catch {
+      // slidify didn't produce parseable JSON — fidelity report stays empty
     }
 
     const plan = await this.getPlan();

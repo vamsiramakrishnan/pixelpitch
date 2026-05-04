@@ -37,10 +37,21 @@ export function OutlineEditor({
   }
 
   function handleDrop(targetIdx: number) {
-    if (dragIdx === null || dragIdx === targetIdx) return;
+    if (dragIdx === null || dragIdx === targetIdx) {
+      setDragIdx(null);
+      return;
+    }
+    if (dragIdx < 0 || dragIdx >= beats.length) {
+      setDragIdx(null);
+      return;
+    }
     const next = [...beats];
     const [moved] = next.splice(dragIdx, 1);
-    next.splice(targetIdx, 0, moved!);
+    if (!moved) {
+      setDragIdx(null);
+      return;
+    }
+    next.splice(targetIdx, 0, moved);
     onReorder(next);
     setDragIdx(null);
   }
@@ -75,6 +86,7 @@ export function OutlineEditor({
               onDragStart={() => handleDragStart(idx)}
               onDragOver={(e) => e.preventDefault()}
               onDrop={() => handleDrop(idx)}
+              onDragEnd={() => setDragIdx(null)}
             >
               <span className="outline-beat-handle" aria-hidden>
                 ⠿

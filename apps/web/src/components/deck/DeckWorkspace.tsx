@@ -32,10 +32,11 @@ export function DeckWorkspace({
   const [showExport, setShowExport] = useState(false);
 
   useEffect(() => {
-    if (plan.slides.length > 0 && !activeSlideId) {
+    if (plan.slides.length === 0) return;
+    if (!activeSlideId || !plan.slides.some((s) => s.id === activeSlideId)) {
       setActiveSlideId(plan.slides[0]!.id);
     }
-  }, [plan.slides.length, activeSlideId]);
+  }, [plan.slides, activeSlideId]);
 
   const handleUpdateBeats = useCallback(
     (beats: DeckBeat[]) => {
@@ -141,7 +142,22 @@ export function DeckWorkspace({
           </>
         ) : null}
 
-        {plan.phase === 'ready' || plan.phase === 'exporting' ? (
+        {plan.phase === 'ready' ? (
+          <>
+            <div className="deck-workspace-chat">{chatPane}</div>
+            <div className="deck-workspace-editor">
+              <SlideEditor
+                plan={plan}
+                activeSlideId={activeSlideId}
+                onSelectSlide={setActiveSlideId}
+                slidePreview={activePreview}
+                renderThumbnail={renderSlideThumbnail}
+              />
+            </div>
+          </>
+        ) : null}
+
+        {plan.phase === 'exporting' ? (
           <>
             <div className="deck-workspace-chat">{chatPane}</div>
             <div className="deck-workspace-editor">
@@ -157,7 +173,7 @@ export function DeckWorkspace({
         ) : null}
       </div>
 
-      {showExport ? (
+      {showExport || plan.phase === 'exporting' ? (
         <ExportPanel
           plan={plan}
           exporting={exporting}
