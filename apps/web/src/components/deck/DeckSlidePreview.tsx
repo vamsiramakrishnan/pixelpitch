@@ -3,49 +3,52 @@ import { projectRawUrl } from '../../providers/registry';
 import { buildSrcdoc } from '../../runtime/srcdoc';
 import type { DeckPlan } from '@pixelpitch/contracts';
 
+export interface DeckAssets {
+  themeCSS: string | null;
+  frameworkCSS: string | null;
+  frameworkJS: string | null;
+}
+
 interface Props {
   projectId: string;
   plan: DeckPlan;
   slideId: string;
   thumbnail?: boolean;
+  sharedAssets?: DeckAssets;
 }
 
-export function DeckSlidePreview({ projectId, plan, slideId, thumbnail = false }: Props) {
-  const [themeCSS, setThemeCSS] = useState<string | null>(null);
-  const [frameworkCSS, setFrameworkCSS] = useState<string | null>(null);
-  const [frameworkJS, setFrameworkJS] = useState<string | null>(null);
-  const [slideHTML, setSlideHTML] = useState<string | null>(null);
-
-  const slide = plan.slides.find((s) => s.id === slideId);
-  const slideFile = slide?.file;
+export function useDeckAssets(projectId: string): DeckAssets {
+  const [assets, setAssets] = useState<DeckAssets>({ themeCSS: null, frameworkCSS: null, frameworkJS: null });
 
   useEffect(() => {
     if (!projectId) return;
     let cancelled = false;
     async function fetchAsset(path: string): Promise<string | null> {
       try {
-        const url = projectRawUrl(projectId, path);
-        const res = await fetch(url);
-        if (!res.ok) return null;
-        return res.text();
-      } catch {
-        return null;
-      }
+        const res = await fetch(projectRawUrl(projectId, path));
+        return res.ok ? res.text() : null;
+      } catch { return null; }
     }
-
     Promise.all([
       fetchAsset('deck/theme.css'),
       fetchAsset('deck/framework.css'),
       fetchAsset('deck/framework.js'),
     ]).then(([theme, fwCss, fwJs]) => {
-      if (cancelled) return;
-      setThemeCSS(theme);
-      setFrameworkCSS(fwCss);
-      setFrameworkJS(fwJs);
+      if (!cancelled) setAssets({ themeCSS: theme, frameworkCSS: fwCss, frameworkJS: fwJs });
     });
-
     return () => { cancelled = true; };
   }, [projectId]);
+
+  return assets;
+}
+
+export function DeckSlidePreview({ projectId, plan, slideId, thumbnail = false, sharedAssets }: Props) {
+  const fallbackAssets = useDeckAssets(sharedAssets ? '' : projectId);
+  const { themeCSS, frameworkCSS, frameworkJS } = sharedAssets ?? fallbackAssets;
+  const [slideHTML, setSlideHTML] = useState<string | null>(null);
+
+  const slide = plan.slides.find((s) => s.id === slideId);
+  const slideFile = slide?.file;
 
   useEffect(() => {
     if (!projectId || !slideFile) return;

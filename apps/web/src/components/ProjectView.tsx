@@ -64,7 +64,7 @@ import {
 import { AppChromeHeader } from './AppChromeHeader';
 import { AvatarMenu } from './AvatarMenu';
 import { ChatPane } from './ChatPane';
-import { DeckSlidePreview, DeckWorkspace } from './deck';
+import { DeckSlidePreview, DeckWorkspace, useDeckAssets } from './deck';
 import { FileWorkspace } from './FileWorkspace';
 
 const DECK_PLAN_PATH = 'deck/deck-plan.json';
@@ -1310,6 +1310,7 @@ export function ProjectView({
 
   const [deckPlan, setDeckPlan] = useState<DeckPlan | null>(null);
   const [deckExporting, setDeckExporting] = useState(false);
+  const deckAssets = useDeckAssets(isDeck ? project.id : '');
   const seededDeckPlanRef = useRef<string | null>(null);
   const hasDeckPlanFile = useMemo(
     () => projectFiles.some(isDeckPlanProjectFile),
@@ -1566,6 +1567,7 @@ export function ProjectView({
                 projectId={project.id}
                 plan={deckPlan}
                 slideId={slideId}
+                sharedAssets={deckAssets}
               />
             ) : null
           }
@@ -1574,6 +1576,7 @@ export function ProjectView({
               <DeckSlidePreview
                 projectId={project.id}
                 plan={deckPlan}
+                sharedAssets={deckAssets}
                 slideId={slide.id}
                 thumbnail
               />
