@@ -4,24 +4,30 @@
 
 **Goal:** Define the shared TypeScript interfaces and validation logic for the unified deck workflow.
 **Architecture:** Centralized contracts in `packages/contracts` used by both the daemon and web app to ensure schema consistency across the narrative, structure, and export phases.
-**Tech Stack:** TypeScript, Bun (test runner)
+**Tech Stack:** TypeScript, Vitest (test runner)
 ---
 
-## Task 1: Create `packages/contracts/src/api/deck.ts`
+## Task 1: Initialize `packages/contracts/src/api/deck.ts`
 
-- [ ] Create the file `packages/contracts/src/api/deck.ts`.
-- [ ] Export all interfaces and types from the spec.
-- [ ] Add `DECK_PLAN_VERSION = 1` constant.
-- [ ] Add type guards for phase transitions.
+- [ ] Create the file `packages/contracts/src/api/deck.ts` with the version constant.
+- [ ] Write the basic phase type.
 
 ```typescript
-/**
- * Core Deck Plan contract
- */
 export const DECK_PLAN_VERSION = 1;
-
 export type DeckPhase = 'narrative' | 'structure' | 'generating' | 'ready' | 'exporting';
+```
 
+- [ ] Verification command:
+
+```bash
+test -f packages/contracts/src/api/deck.ts && rg "DECK_PLAN_VERSION = 1" packages/contracts/src/api/deck.ts
+```
+
+## Task 2: Define Composition and Interview Types
+
+- [ ] Append `DeckComposition` and `DeckInterview` to `packages/contracts/src/api/deck.ts`.
+
+```typescript
 export interface DeckComposition {
   frameworkId: string;            // e.g., 'html-ppt', 'replit-deck'
   themeId: string;                // e.g., 'tokyo-night.css'
@@ -39,7 +45,19 @@ export interface DeckInterview {
   }>;
   pendingQuestionId?: string;
 }
+```
 
+- [ ] Verification command:
+
+```bash
+rg -n "DeckComposition|DeckInterview" packages/contracts/src/api/deck.ts
+```
+
+## Task 3: Define Beat and Evidence Types
+
+- [ ] Append `DeckBeatType`, `DeckEvidenceType`, and `DeckBeat` to `packages/contracts/src/api/deck.ts`.
+
+```typescript
 export type DeckBeatType = 'context' | 'problem' | 'solution' | 'evidence' | 'how' | 'plan' | 'ask' | 'custom';
 export type DeckEvidenceType = 'stat' | 'chart' | 'diagram' | 'quote' | 'screenshot' | 'table' | 'none';
 
@@ -51,7 +69,19 @@ export interface DeckBeat {
   evidenceType?: DeckEvidenceType;
   dataPoints?: string[];
 }
+```
 
+- [ ] Verification command:
+
+```bash
+rg -n "DeckBeatType|DeckEvidenceType|DeckBeat" packages/contracts/src/api/deck.ts
+```
+
+## Task 4: Define Slide and Fidelity Types
+
+- [ ] Append `DeckSlideStatus`, `DeckSlide`, and `FidelityIssue` to `packages/contracts/src/api/deck.ts`.
+
+```typescript
 export type DeckSlideStatus = 'pending' | 'generating' | 'ready' | 'needs-evidence' | 'needs-data' | 'fixed';
 
 export interface DeckSlide {
@@ -71,7 +101,19 @@ export interface FidelityIssue {
   detail: string;
   severity: 'info' | 'warning' | 'error';
 }
+```
 
+- [ ] Verification command:
+
+```bash
+rg -n "DeckSlide|FidelityIssue" packages/contracts/src/api/deck.ts
+```
+
+## Task 5: Define Export and Plan Types
+
+- [ ] Append `DeckExportState` and `DeckPlan` to `packages/contracts/src/api/deck.ts`.
+
+```typescript
 export interface DeckExportState {
   lastExport: string | null;      // ISO timestamp
   fidelityIssues: FidelityIssue[];
@@ -96,10 +138,20 @@ export interface DeckPlan {
   slides: DeckSlide[];
   slidify: DeckExportState;
 }
+```
 
-/**
- * API Request/Response Shapes
- */
+- [ ] Verification command:
+
+```bash
+rg -n "DeckExportState|DeckPlan" packages/contracts/src/api/deck.ts
+```
+
+## Task 6: Define API Request/Response and Scope Types
+
+- [ ] Append `DeckAssembleResponse`, `DeckExportRequest`, `DeckExportResponse`, `DeckPlanUpdateRequest`, and `ChatMessageScope` to `packages/contracts/src/api/deck.ts`.
+- [ ] Note: `ChatMessageScope` is used by the daemon for per-slide chat routing.
+
+```typescript
 export interface DeckAssembleResponse {
   success: boolean;
   outputPath: string; // deck.html
@@ -117,8 +169,39 @@ export interface DeckExportResponse {
   fidelityReport: FidelityIssue[];
 }
 
+export interface DeckPlanUpdateRequest {
+  phase?: DeckPhase;
+  title?: string;
+  audience?: string;
+  tone?: string;
+  keyMessage?: string;
+  composition?: Partial<DeckComposition>;
+  interview?: Partial<DeckInterview>;
+  narrative?: {
+    beats?: DeckBeat[];
+  };
+  slides?: DeckSlide[];
+}
+
+export interface ChatMessageScope {
+  type: 'slide';
+  id: string;
+}
+```
+
+- [ ] Verification command:
+
+```bash
+rg -n "DeckPlanUpdateRequest|ChatMessageScope" packages/contracts/src/api/deck.ts
+```
+
+## Task 7: Implement `validatePhaseTransition`
+
+- [ ] Append the validation function to `packages/contracts/src/api/deck.ts`.
+
+```typescript
 /**
- * Validation Logic
+ * Validation Logic for phase transitions
  */
 export function validatePhaseTransition(plan: DeckPlan, nextPhase: DeckPhase): { valid: boolean; errors: string[] } {
   const errors: string[] = [];
@@ -142,22 +225,39 @@ export function validatePhaseTransition(plan: DeckPlan, nextPhase: DeckPhase): {
     }
   }
 
+  // Phase sequence validation (optional but recommended)
+  if (plan.phase === 'narrative' && nextPhase === 'ready') {
+    errors.push('Cannot jump from narrative to ready; must go through structure and generating');
+  }
+
   return { valid: errors.length === 0, errors };
 }
 ```
 
-## Task 2: Update `packages/contracts/src/api/index.ts`
+- [ ] Verification command:
 
-- [ ] Export everything from `./deck` in `packages/contracts/src/api/index.ts`.
-
-```typescript
-export * from './deck';
+```bash
+rg -n "function validatePhaseTransition" packages/contracts/src/api/deck.ts
 ```
 
-## Task 3: Create Test for Contracts
+## Task 8: Update `packages/contracts/src/index.ts`
+
+- [ ] Add the export for the deck contracts to `packages/contracts/src/index.ts`.
+
+```typescript
+export * from './api/deck';
+```
+
+- [ ] Verification command:
+
+```bash
+rg "export \* from './api/deck'" packages/contracts/src/index.ts
+```
+
+## Task 9: Create and Run Validation Tests
 
 - [ ] Create `packages/contracts/src/api/deck.test.ts`.
-- [ ] Add tests for `validatePhaseTransition`.
+- [ ] Add comprehensive tests for phase transitions including success and failure cases.
 
 ```typescript
 import { describe, expect, it } from 'vitest';
@@ -183,21 +283,88 @@ const mockPlan: DeckPlan = {
   slidify: { lastExport: null, fidelityIssues: [] }
 };
 
-describe('DeckPlan Validation', () => {
-  it('should block transition to structure if metadata is missing', () => {
+describe('DeckPlan Phase Validation', () => {
+  it('narrative -> structure: fails without title/audience/keyMessage', () => {
     const result = validatePhaseTransition(mockPlan, 'structure');
     expect(result.valid).toBe(false);
     expect(result.errors).toContain('Title is required');
+    expect(result.errors).toContain('Audience is required');
+    expect(result.errors).toContain('Key message is required');
   });
 
-  it('should allow transition to structure if metadata is present', () => {
+  it('narrative -> structure: passes with all three', () => {
     const validPlan = { ...mockPlan, title: 'Test', audience: 'Test', keyMessage: 'Test' };
     const result = validatePhaseTransition(validPlan, 'structure');
     expect(result.valid).toBe(true);
   });
+
+  it('structure -> generating: fails without beats', () => {
+    const plan = { ...mockPlan, title: 'T', audience: 'A', keyMessage: 'K', phase: 'structure' } as DeckPlan;
+    const result = validatePhaseTransition(plan, 'generating');
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('At least one narrative beat is required');
+  });
+
+  it('structure -> generating: fails without ask/plan beat', () => {
+    const plan = { 
+      ...mockPlan, 
+      title: 'T', audience: 'A', keyMessage: 'K', phase: 'structure',
+      narrative: { beats: [{ id: '1', type: 'context', label: 'L', summary: 'S' }] }
+    } as DeckPlan;
+    const result = validatePhaseTransition(plan, 'generating');
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Narrative must contain an "ask" or "plan" beat');
+  });
+
+  it('structure -> generating: passes with valid beats', () => {
+    const plan = { 
+      ...mockPlan, 
+      title: 'T', audience: 'A', keyMessage: 'K', phase: 'structure',
+      narrative: { beats: [{ id: '1', type: 'ask', label: 'L', summary: 'S' }] }
+    } as DeckPlan;
+    const result = validatePhaseTransition(plan, 'generating');
+    expect(result.valid).toBe(true);
+  });
+
+  it('generating -> ready: fails with incomplete slides', () => {
+    const plan = { 
+      ...mockPlan, 
+      phase: 'generating',
+      slides: [{ id: '1', status: 'pending' }] 
+    } as any as DeckPlan;
+    const result = validatePhaseTransition(plan, 'ready');
+    expect(result.valid).toBe(false);
+    expect(result.errors[0]).toContain('Incomplete slides: 1');
+  });
+
+  it('generating -> ready: passes when all ready/fixed', () => {
+    const plan = { 
+      ...mockPlan, 
+      phase: 'generating',
+      slides: [{ id: '1', status: 'ready' }, { id: '2', status: 'fixed' }] 
+    } as any as DeckPlan;
+    const result = validatePhaseTransition(plan, 'ready');
+    expect(result.valid).toBe(true);
+  });
+
+  it('Invalid transitions: narrative -> ready should be rejected', () => {
+    const result = validatePhaseTransition(mockPlan, 'ready');
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Cannot jump from narrative to ready; must go through structure and generating');
+  });
 });
 ```
 
-## Verification
+- [ ] Verification command:
 
-- [ ] Run tests: `bun test packages/contracts/src/api/deck.test.ts`
+```bash
+bun test packages/contracts/src/api/deck.test.ts
+```
+
+## Final Verification
+
+- [ ] Ensure all types are exported and tested.
+
+```bash
+rg -n "DeckPhase|DeckBeat|DeckSlide|FidelityIssue|ChatMessageScope|DeckPlanUpdateRequest" packages/contracts/src/api/deck.ts
+```
