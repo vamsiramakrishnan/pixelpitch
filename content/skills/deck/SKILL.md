@@ -238,6 +238,66 @@ The web app renders `<question-form>` tags as interactive visual cards. Plain te
 </question-form>
 ```
 
+**Turn 4 — Visual direction (use direction-cards):**
+
+After audience, message, tone, and format are known, present 4-6 visual directions as rich cards. Source directions from the project's selected design system, or from the html-ppt theme library if no design system is selected. Each card must have real palette colors, font samples, and mood descriptions.
+
+```
+<question-form id="deck-visual" title="Choose a visual direction">
+{
+  "questions": [
+    {
+      "id": "direction",
+      "label": "Visual style for this deck",
+      "type": "direction-cards",
+      "cards": [
+        {
+          "id": "executive-dark",
+          "label": "Executive Dark — Samsung / McKinsey",
+          "mood": "Deep navy substrate, crisp white type, single accent. Reads like a board-room strategic brief. High contrast, editorial precision.",
+          "references": ["McKinsey reports", "Samsung SDS brand", "Bloomberg Terminal", "The Economist"],
+          "palette": ["#0a0e2a", "#111836", "#1a2040", "#8b92a8", "#f0f2f7", "#3b82f6"],
+          "displayFont": "Inter, system-ui, sans-serif",
+          "bodyFont": "Inter, system-ui, sans-serif"
+        },
+        {
+          "id": "editorial-warm",
+          "label": "Editorial Warm — Monocle / FT",
+          "mood": "Warm cream paper, serif headlines, restrained ink palette. Reads like a financial newspaper's weekend magazine. Confident and quiet.",
+          "references": ["Monocle", "Financial Times", "NYT Magazine", "Stripe 2019"],
+          "palette": ["#f7f3ee", "#faf8f5", "#eae4db", "#7a7064", "#2c2520", "#c2553a"],
+          "displayFont": "Georgia, 'Iowan Old Style', serif",
+          "bodyFont": "-apple-system, system-ui, sans-serif"
+        },
+        {
+          "id": "modern-minimal",
+          "label": "Modern Minimal — Linear / Vercel",
+          "mood": "Near-white substrate, tight sans-serif, single cobalt accent. Software-native precision. Content is the only thing that registers.",
+          "references": ["Linear", "Vercel", "Notion", "Stripe docs"],
+          "palette": ["#fafafa", "#ffffff", "#e5e5e5", "#737373", "#171717", "#2563eb"],
+          "displayFont": "-apple-system, 'SF Pro Display', system-ui, sans-serif",
+          "bodyFont": "-apple-system, system-ui, sans-serif"
+        },
+        {
+          "id": "tech-dark",
+          "label": "Tech Dark — GitHub / Tokyo Night",
+          "mood": "Slate-blue dark substrate, green/purple accents, monospace for metadata. Reads like a developer keynote. Atmospheric, code-native.",
+          "references": ["GitHub Universe", "Supabase Launch Week", "Vercel Ship", "Next.js Conf"],
+          "palette": ["#0d1117", "#161b22", "#21262d", "#8b949e", "#f0f6fc", "#58a6ff"],
+          "displayFont": "Inter, system-ui, sans-serif",
+          "bodyFont": "Inter, system-ui, sans-serif"
+        }
+      ]
+    }
+  ]
+}
+</question-form>
+```
+
+Adapt the card options based on the audience and tone from previous answers. For executive audiences, lead with Executive Dark and Editorial Warm. For engineering audiences, lead with Tech Dark and Modern Minimal. Always include at least one dark and one light option.
+
+If a design system is selected, add a card sourced from its DESIGN.md palette and typography. The design system card should be the first option.
+
 ### When user provides a rich brief
 
 If the first message contains audience, key points, and a decision/ask, skip the interview forms entirely:
