@@ -65,6 +65,9 @@ export function DeckSlidePreview({ projectId, plan, slideId, thumbnail = false }
   const srcDoc = useMemo(() => {
     if (!slideHTML) return null;
 
+    // The slide fragment is already a <section class="slide">.
+    // Don't wrap it in another section — just inject it directly.
+    // Use --bg (from theme.css) for body background, with white fallback.
     const fullDoc = `<!DOCTYPE html>
 <html>
 <head>
@@ -74,21 +77,52 @@ export function DeckSlidePreview({ projectId, plan, slideId, thumbnail = false }
   <style>${themeCSS ?? ''}</style>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { overflow: hidden; background: var(--deck-bg, #0f172a); }
-    .slide { display: flex; flex-direction: column; width: 1920px; height: 1080px; overflow: hidden; }
-    .deck-stage { width: 1920px; height: 1080px; position: relative; }
-    ${thumbnail ? `
-      .slide { transform-origin: top left; }
-    ` : ''}
+    body {
+      overflow: hidden;
+      background: var(--bg, var(--deck-bg, #ffffff));
+      color: var(--fg, var(--deck-fg, #111111));
+      font-family: var(--deck-font-body, system-ui, sans-serif);
+    }
+    .slide {
+      display: flex;
+      flex-direction: column;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: var(--bg, var(--deck-bg, #ffffff));
+      color: var(--fg, var(--deck-fg, #111111));
+      padding: 80px;
+      position: relative;
+    }
+    .slide.active { display: flex; }
+    .slide-shell {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 24px;
+    }
+    .deck-stage {
+      width: 1920px;
+      height: 1080px;
+      position: relative;
+      transform-origin: top left;
+    }
+    .eyebrow {
+      font-size: 18px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent, var(--deck-accent, #1a73e8));
+    }
+    h1 { font-family: var(--deck-font-display, system-ui, sans-serif); line-height: 1.1; }
+    ${thumbnail ? `.deck-stage { pointer-events: none; }` : ''}
   </style>
 </head>
 <body>
   <div class="deck-stage">
-    <section class="slide active" data-slide-id="${slideId}">
-      ${slideHTML}
-    </section>
+    ${slideHTML}
   </div>
-  ${!thumbnail && frameworkJS ? `<script>${frameworkJS}</script>` : ''}
+  ${!thumbnail && frameworkJS ? `<script>${frameworkJS}<\/script>` : ''}
 </body>
 </html>`;
 
