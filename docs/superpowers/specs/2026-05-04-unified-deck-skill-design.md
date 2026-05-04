@@ -293,15 +293,152 @@ Rules the skill enforces through its workflow body and craft rule integration:
 | `SlideSummary` type | `packages/contracts/src/api/deck.ts` | Per-slide metadata for web app rendering |
 | `FidelityIssue` type | `packages/contracts/src/api/deck.ts` | Slidify fidelity report item |
 
+## Skill Reorganization: Compose, Not Replace
+
+The 22 existing deck skills are NOT deleted. They reorganize into composable layers:
+
+### Infrastructure Skills (have real assets)
+
+These skills ship `assets/` and `references/` directories with templates, layout libraries,
+CSS, JS, and authoring guides. They remain as selectable **frameworks**:
+
+| Skill | Assets | References | Role |
+|-------|--------|------------|------|
+| `html-ppt` | base.css, fonts.css, runtime.js, themes/, animations/ | layouts.md, themes.md, animations.md, authoring-guide.md, presenter-mode.md, full-decks.md | Primary composable engine — richest layout library |
+| `simple-deck` | template.html | layouts.md, checklist.md | Lightweight single-file seed |
+| `replit-deck` | template.html | layouts.md, themes.md, components.md, checklist.md | 8 built-in visual themes |
+| `guizang-ppt` | template.html, example-slides.html | layouts.md, themes.md, components.md, styles.md, checklist.md | Magazine/editorial style |
+
+### Theme-Only Skills (SKILL.md body only, no assets)
+
+These 17 skills have no `assets/` or `references/` directories. Their entire value is the
+visual description, color palette, layout instructions, and example HTML in the SKILL.md body.
+They become **theme descriptors** that compose with any framework:
+
+`html-ppt-course-module`, `html-ppt-dir-key-nav-minimal`, `html-ppt-graphify-dark-graph`,
+`html-ppt-hermes-cyber-terminal`, `html-ppt-knowledge-arch-blueprint`,
+`html-ppt-obsidian-claude-gradient`, `html-ppt-pitch-deck`, `html-ppt-presenter-mode-reveal`,
+`html-ppt-product-launch`, `html-ppt-taste-brutalist`, `html-ppt-taste-editorial`,
+`html-ppt-tech-sharing`, `html-ppt-testing-safety-alert`, `html-ppt-weekly-report`,
+`html-ppt-xhs-pastel-card`, `html-ppt-xhs-post`, `html-ppt-xhs-white-editorial`
+
+### Special Skills
+
+| Skill | Role |
+|-------|------|
+| `pptx-html-fidelity-audit` | Post-export audit — compares PPTX against source HTML. Remains standalone. |
+| `slide-author` | Teaches the atomic-seed grammar for slidify-native HTML. Remains as craft guidance. |
+
+### 6-Layer Composition Model (from Codex Audit)
+
+The unified deck skill composes by selecting one option from each layer:
+
+| Layer | What it governs | Sources |
+|-------|----------------|---------|
+| **Runtime** | Navigation, progress, overview, theme cycling, notes drawer, presenter popup, export hooks | `html-ppt/assets/runtime.js` (richest), `simple-deck/assets/template.html` (iframe nav), `replit-deck/assets/template.html` (proven iframe bridge) |
+| **Format** | Slide dimensions and output target | 16:9 horizontal (default), 3:4 XHS portrait (`xhs-post`), presenter-mode (`presenter-mode-reveal`), PPTX export target |
+| **Theme** | Token sets, color palettes, typography, mood | `html-ppt/assets/themes/` (36 CSS files), `guizang-ppt` (5 magazine themes), `replit-deck` (8 complete themes), taste rules (brutalist, editorial), 17 SKILL.md-only theme descriptors |
+| **Layout** | Reusable slide archetypes | `html-ppt` (31 layouts), `guizang-ppt` (10 magazine layouts), `simple-deck` (8 minimal layouts), `replit-deck` (10 theme-paired layouts), taste archetype lists |
+| **Scenario** | Narrative structure and content scaffolding | pitch-deck, product-launch, tech-sharing, weekly-report, course-module, safety-alert, xhs-post, architecture, dev-tool tutorial |
+| **Craft/QA** | Quality rules, validation, export compatibility | slidify-compat, anti-ai-slop, class inventory validation, theme rhythm, font discipline, footer rail |
+
+### How composition works
+
+The unified deck skill's workflow selects layers through the narrative interview:
+
+1. **Audience + purpose** → determines **scenario** (pitch-deck for VCs, tech-sharing for engineers)
+2. **Tone + mood** → determines **theme** (editorial for warm/premium, brutalist for dense/technical)
+3. **Design system** → overrides theme tokens with brand palette (or no DS = theme defaults)
+4. **Format** → usually 16:9, but XHS/portrait for social, presenter-mode for conference
+5. **Runtime + layout** → auto-selected based on theme + format, or user picks explicitly
+
+The skill body contains references to existing skill directories:
+
+```markdown
+## Framework: html-ppt engine
+Read the assets and references from `content/skills/html-ppt/`:
+- Runtime: `assets/runtime.js`, `assets/base.css`, `assets/fonts.css`
+- Animations: `assets/animations/`
+- Layouts: `references/layouts.md` (31 archetypes)
+- Themes: `references/themes.md` and `assets/themes/` (36 token sets)
+
+## Alternative frameworks
+- For lightweight single-file: read `content/skills/simple-deck/`
+- For Replit Slides gallery: read `content/skills/replit-deck/`
+- For magazine editorial: read `content/skills/guizang-ppt/`
+```
+
+Existing skills stay in `content/skills/` untouched. The unified deck skill references them
+as composable pieces — it reads their SKILL.md bodies for theme descriptions and their
+`assets/` + `references/` directories for framework infrastructure.
+
+### Truly distinct skills that stay standalone
+
+These skills have unique capabilities beyond theming that justify standalone access:
+
+| Skill | Why standalone | Also composable? |
+|-------|---------------|-----------------|
+| `html-ppt-presenter-mode-reveal` | Unique runtime: BroadcastChannel sync, draggable timer, speaker popup | Yes — presenter runtime can overlay any theme |
+| `html-ppt-xhs-post` | Unique format: 3:4 portrait, 810×1080, 9-slide social carousel | Yes — portrait format works with any theme |
+| `html-ppt-taste-brutalist` | Unique taste rules: banned patterns, archetype checklists, not just tokens | Yes — taste rules compose on top of themes |
+| `html-ppt-taste-editorial` | Same: archetype-driven, prescriptive substrate rules | Yes — taste rules compose on top of themes |
+| `pptx-html-fidelity-audit` | Not authoring — post-export repair utility | No — operates on completed decks |
+
+## Daemon Gaps (from Gemini Audit)
+
+The daemon audit identified these specific gaps:
+
+### 1. Discovery Protocol is Hardcoded for 2 Steps
+
+The current discovery.ts forces a 3-turn cycle: Turn 1 (briefing form) → Turn 2 (direction
+picker or spec extraction) → Turn 3 (TodoWrite plan + implement). The narrative interview
+needs a flexible multi-turn mode where the agent keeps asking until `deck-plan.json` is
+committed.
+
+**Fix**: Add a `narrative: true` flag to skill frontmatter. When active, `composeSystemPrompt`
+injects a "Narrative Interview" layer that overrides the hardcoded 3-turn cycle and
+prioritizes content structure over HTML generation.
+
+### 2. No DESIGN.md → theme.css Extraction
+
+The agent currently "eyeballs" DESIGN.md prose and manually writes CSS. There's no shared
+logic or token standard.
+
+**Fix**: The unified deck skill's workflow explicitly instructs the agent to extract tokens
+in a defined order: (1) read DESIGN.md, (2) extract palette section → `--bg`, `--fg`,
+`--accent`, `--shell`, (3) extract typography → `--font-display`, `--font-body`, (4) write
+`theme.css`. The extraction pattern is documented in `references/token-extraction.md`.
+
+### 3. No Deck Assembly Endpoint
+
+The agent currently writes the entire deck manually. There's no daemon endpoint to assemble
+slide fragments into a complete `deck.html`.
+
+**Fix**: `POST /api/projects/:id/deck/assemble` and
+`POST /api/projects/:id/deck/export` (see Daemon Changes section).
+
+### 4. Craft Rules Need Unified Deck Section
+
+`slidify-compat.md` and `anti-ai-slop.md` are concatenated without collision checking.
+
+**Fix**: Create `content/craft/deck-authoring.md` that composes the deck-relevant rules from
+all four craft files into one coherent reference, with explicit precedence when rules
+conflict (e.g., "anti-ai-slop governs content; slidify-compat governs HTML attributes;
+neither constrains visual design").
+
 ## Skill Content
 
 | File | Purpose |
 |------|---------|
-| `content/skills/deck/SKILL.md` | Unified deck skill — narrative interview protocol, slide generation workflow, self-critique rules, anti-strawman enforcement |
-| `content/skills/deck/assets/framework.js` | Deck framework (nav, scaling, print) — copied into each deck folder |
-| `content/skills/deck/assets/framework.css` | Framework base styles (slide sizing, transitions) |
-| `content/skills/deck/references/slide-types.md` | Catalog of slide type layouts the agent can use |
-| `content/skills/deck/references/narrative-patterns.md` | Common narrative arc patterns (problem-solution, journey, comparison, etc.) |
+| `content/skills/deck/SKILL.md` | Unified deck skill — narrative interview protocol, slide generation workflow, self-critique rules, anti-strawman enforcement, framework/theme selection |
+| `content/skills/deck/assets/framework.js` | Deck framework (nav, scaling, print) — sourced from html-ppt's runtime.js |
+| `content/skills/deck/assets/framework.css` | Framework base styles — sourced from html-ppt's base.css |
+| `content/skills/deck/references/slide-types.md` | Catalog of slide type layouts — composed from html-ppt, simple-deck, replit-deck layout libraries |
+| `content/skills/deck/references/narrative-patterns.md` | Narrative arc patterns (problem-solution, journey, comparison, etc.) |
+| `content/skills/deck/references/token-extraction.md` | How to extract DESIGN.md prose into theme.css variables |
+| `content/skills/deck/references/frameworks.md` | Catalog of available frameworks and when to use each |
+| `content/skills/deck/references/themes.md` | Catalog of available themes with visual descriptions |
+| `content/craft/deck-authoring.md` | Unified craft reference for deck projects |
 
 ## Verification
 
@@ -313,10 +450,21 @@ Rules the skill enforces through its workflow body and craft rule integration:
 
 ## Harness Collaboration Plan
 
-Divide work across three harnesses with disjoint ownership:
+Divide work across three harnesses with disjoint ownership.
+Existing skills are NOT deleted — they are referenced as composable pieces.
 
 | Harness | Owns | Work |
 |---------|------|------|
-| **Codex** | `content/skills/deck/`, `content/themes/` | Build the unified SKILL.md, extract theme presets from 22 existing skills, write narrative-patterns.md and slide-types.md references |
-| **Gemini** | `packages/contracts/src/api/deck.ts`, `apps/daemon/src/` | DeckPlan TypeScript types, deck assembly endpoint, slidify export endpoint |
-| **Claude** | `apps/web/src/components/deck/` | All 9 React components: DeckWorkspace, StoryCanvas, OutlineEditor, SlidePlanner, SlideSorter, SlideEditor, SlideStrip, ExportPanel, DeckPhaseBar |
+| **Codex** | `content/skills/deck/`, `content/craft/deck-authoring.md` | Build the unified SKILL.md that references existing skills as frameworks/themes. Compose references (slide-types.md, narrative-patterns.md, token-extraction.md, frameworks.md, themes.md) by reading existing skill assets. Write deck-authoring.md craft rule. |
+| **Gemini** | `packages/contracts/src/api/deck.ts`, `apps/daemon/src/server.ts` (deck endpoints only) | DeckPlan TypeScript types, deck assembly endpoint, slidify export endpoint, deck-plan.json SSE notification. |
+| **Claude** | `apps/web/src/components/deck/` | All 9 React components: DeckWorkspace, StoryCanvas, OutlineEditor, SlidePlanner, SlideSorter, SlideEditor, SlideStrip, ExportPanel, DeckPhaseBar. |
+
+### What Codex does NOT do
+
+Codex does not delete, rename, or move any existing skill directory. The unified
+`content/skills/deck/SKILL.md` references existing skills by path:
+- "For the html-ppt framework, read `content/skills/html-ppt/assets/` and `content/skills/html-ppt/references/`"
+- "For the tech-sharing theme, read `content/skills/html-ppt-tech-sharing/SKILL.md` body"
+
+This means existing skills continue to work standalone for users who invoke them directly,
+while the unified deck skill composes them into a narrative-first workflow.
