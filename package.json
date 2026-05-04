@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "bootstrap": "bash tools/bootstrap.sh",
-    "build:packages": "bun run --filter @pixelpitch/platform build && bun run --filter @pixelpitch/sidecar-proto build && bun run --filter @pixelpitch/sidecar build && bun run --filter @pixelpitch/tools-dev build && bun run --filter @pixelpitch/daemon build",
+    "build:packages": "bun run --filter @pixelpitch/contracts build && bun run --filter @pixelpitch/platform build && bun run --filter @pixelpitch/sidecar-proto build && bun run --filter @pixelpitch/sidecar build && bun run --filter @pixelpitch/tools-dev build && bun run --filter @pixelpitch/daemon build",
     "build:web": "bun run --filter @pixelpitch/web build",
     "build": "bun run build:packages && bun run build:web",
     "dev": "bun run build:packages && node tools/dev/bin/tools-dev.mjs run web",

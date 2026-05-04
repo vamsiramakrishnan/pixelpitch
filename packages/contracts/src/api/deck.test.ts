@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { DeckPlan } from './deck';
-import { validatePhaseTransition } from './deck';
+import type { DeckPlan } from './deck.js';
+import { validatePhaseTransition } from './deck.js';
 
 function mockPlan(overrides: Partial<DeckPlan> = {}): DeckPlan {
   return {

@@ -42,7 +42,6 @@ const EXTRA_ALLOWED_DEV_ORIGINS = (process.env.PIXELPITCH_ALLOWED_DEV_ORIGINS ??
   .filter(Boolean);
 
 const nextConfig: NextConfig = {
-  transpilePackages: ['@pixelpitch/contracts'],
   allowedDevOrigins: [
     '127.0.0.1',
     '*.cloudworkstations.dev',
