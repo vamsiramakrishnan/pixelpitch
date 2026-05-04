@@ -4,7 +4,7 @@
 
 Pixelpitch has 22 deck skills that are essentially the same authoring workflow with different visual themes bolted on. The result is a flat prompt-and-pray experience: user writes one sentence, agent produces 12 slides of placeholder content, user spends an hour fixing. No narrative phase, no per-slide editing, no structured evidence, no export feedback loop.
 
-This spec replaces all 22 with a single narrative-first deck skill that produces structured output the web app renders as interactive UI — outline editor, slide planner, slide sorter, per-slide editor, and slidify export panel.
+This spec composes all 22 through a single narrative-first deck skill that produces structured output the web app renders as interactive UI — outline editor, slide planner, slide sorter, per-slide editor, and slidify export panel. Existing skills stay callable as standalone skills; the unified deck skill reads them as framework, theme, scenario, format, and craft inputs.
 
 ## Architecture Decision: Option C — Native Web Components + Agent Protocol
 
@@ -46,7 +46,7 @@ interface DeckPlan {
   
   // Design system + theme
   designSystemId: string | null;
-  themeId: string | null;           // visual theme preset (from content/themes/)
+  themeId: string | null;           // visual theme preset (usually from html-ppt/assets/themes/ or full-deck template id)
   
   // Narrative beats (phase: narrative → structure)
   narrative: {
@@ -187,6 +187,33 @@ The daemon's existing `composeSystemPrompt()` (in `prompts/system.ts:136-144`) i
 | `typography` | Enforces type hierarchy across slides — hero stat sizes, body text minimums, heading/subheading relationships. Prevents the "everything is 14px" problem. |
 | `slidify-compat` | Teaches the agent to annotate HTML with `data-pptx-*` hints. Agent uses `data-atom` for native patterns, `data-pptx-rasterize` for irreducible effects. Does NOT constrain design — just annotates for conversion. |
 
+### `content/craft/deck-authoring.md` outline
+
+Create one deck-specific craft file that composes the reusable craft rules into an agent-readable operating manual. It should not duplicate every rule verbatim; it should name the source rule, state the deck-specific interpretation, and define precedence.
+
+| Section | Contents |
+|---------|----------|
+| `# Deck Authoring Craft` | Scope: narrative decks, web previews, slidify export, slide fragments. States that this file composes `anti-ai-slop`, `color`, `typography`, and `slidify-compat`. |
+| `## Precedence` | Ordered conflict rules: user-approved facts > design system tokens > anti-ai-slop content specificity > typography hierarchy > color contrast/accessibility > slidify annotations. |
+| `## Conflict Resolution` | Explicit cases: anti-ai-slop can block vague copy even if layout is ready; slidify-compat can require attributes but cannot force plain visuals; color can reject inaccessible theme combinations; typography can split overloaded slides. |
+| `## Narrative Specificity` | Beat quality requirements, concrete headlines, evidence gates, no invented stats, no placeholder labels. Links back to Anti-Strawman Contract. |
+| `## Slide Density` | Per-slide text budgets, one job per slide, when to split beats, when to combine small beats, max cards/columns per archetype. |
+| `## Theme Rhythm` | Alternation rules from `simple-deck` and `guizang-ppt`: avoid 3+ same-surface slides, use section dividers for breath, reserve hero slides for pivots. |
+| `## Typography` | Display/body roles, minimum readable sizes, line-length targets, no all-caps paragraphs, hero stat treatment. |
+| `## Color` | Contrast, accent caps, data color semantics, warning/error color preservation, theme/design-system token binding. |
+| `## Motion and FX` | At most 1-2 animation families per slide, one canvas FX per slide, reduced-motion must remain respected. |
+| `## Slidify Compatibility` | Required `data-pptx-*` / `data-atom` hints, native vs hybrid vs raster policy, export repair loop. |
+| `## Quality Gate` | Checklist the agent runs before setting slide `status: ready`. Same gate appears in the Anti-Strawman section. |
+
+#### Precedence examples
+
+| Situation | Rule |
+|-----------|------|
+| A branded DESIGN.md uses low-contrast pale text on pale cards | `color` wins for accessibility; keep the palette but adjust token pairing. |
+| A slide uses gradient text and `mix-blend-mode`, but slidify may rasterize it | `slidify-compat` adds conversion hints; it does not remove the effect unless the user asks for editability. |
+| A layout has room for "Improve productivity" as a headline | `anti-ai-slop` blocks it until the beat states who improved, by how much, and over what timeframe. |
+| A dense data table is faithful to the source but unreadable at 1920×1080 | `typography` and slide-density rules split it into a table slide plus a takeaway slide. |
+
 ### The non-kneecapping principle
 
 From `slidify-compat.md`:
@@ -223,25 +250,47 @@ The existing `inspirationDesignSystemIds` mechanism (from NewProjectPanel) carri
 
 When no design system is selected, the agent has unconstrained creative freedom, guided only by craft rules. This is the "freeform" path — the agent invents a visual language from the prompt context.
 
-## Visual Themes (Extracted from 22 Skills)
+## Visual Themes (Composed from Existing Skills)
 
-The 22 existing deck skills become theme presets in `content/themes/`:
+The 22 existing deck skills should be referenced in-place, not copied into a new `content/themes/` tree. The audit found the reusable theme assets already live in the `html-ppt` skill, and the full-deck visual directions already live as scoped templates:
+
+```
+content/skills/html-ppt/assets/themes/           ← 36 reusable theme CSS files
+content/skills/html-ppt/templates/full-decks/    ← 15 scoped full-deck templates
+content/skills/html-ppt-*/SKILL.md               ← theme/scenario/taste descriptors
+content/skills/replit-deck/references/themes.md  ← 8 Replit visual systems
+content/skills/guizang-ppt/references/themes.md  ← 5 magazine/editorial systems
+```
+
+The unified deck skill should treat those paths as catalogs:
+
+| Source | Use |
+|--------|-----|
+| `html-ppt/assets/themes/*.css` | Token-level visual presets that can bind to any narrative scenario. |
+| `html-ppt/templates/full-decks/<id>/index.html` + `style.css` | Full visual systems with scoped `.tpl-<id>` structure, useful when the scenario exactly matches. |
+| `html-ppt-*/SKILL.md` | Natural-language theme, scenario, and taste instructions; read for voice, layout intent, and anti-patterns. |
+| `replit-deck/references/themes.md` | Board-deck and memo-like visual systems: helix, holm, vance, bevel, world-dark, world-mint, atlas, bluehouse. |
+| `guizang-ppt/references/themes.md` | Magazine/storytelling systems: Monocle default, Indigo Porcelain, Forest Ink, Kraft Paper, Dune. |
+
+### Reference, do not copy
+
+- Do not create `content/themes/` as a duplicate source of truth.
+- `themeId` in `deck-plan.json` can point to a theme CSS basename (`tokyo-night`) or a full-deck template id (`knowledge-arch-blueprint`).
+- Generated `deck/theme.css` is the project-local materialization after binding a design system, selected theme, and narrative need.
+- Full-deck template CSS stays scoped under `.tpl-<name>` when borrowed; the deck skill extracts patterns and token intent, not an unscoped CSS dump.
+
+The earlier draft shape below is retained only as an anti-goal; these directories should not be created:
 
 ```
 content/themes/
-  tech-sharing/       ← from html-ppt-tech-sharing
-  product-launch/     ← from html-ppt-product-launch
-  weekly-report/      ← from html-ppt-weekly-report
-  pitch-deck/         ← from html-ppt-pitch-deck
-  editorial/          ← from html-ppt-taste-editorial
-  brutalist/          ← from html-ppt-taste-brutalist
-  course-module/      ← from html-ppt-course-module
-  ...
+  tech-sharing/       ← use content/skills/html-ppt-tech-sharing/SKILL.md + html-ppt templates instead
+  product-launch/     ← use content/skills/html-ppt-product-launch/SKILL.md + html-ppt templates instead
+  weekly-report/      ← use content/skills/html-ppt-weekly-report/SKILL.md + html-ppt templates instead
+  pitch-deck/         ← use content/skills/html-ppt-pitch-deck/SKILL.md + html-ppt templates instead
+  editorial/          ← use content/skills/html-ppt-taste-editorial/SKILL.md instead
+  brutalist/          ← use content/skills/html-ppt-taste-brutalist/SKILL.md instead
+  course-module/      ← use content/skills/html-ppt-course-module/SKILL.md + full-deck template instead
 ```
-
-Each theme directory contains:
-- `THEME.md`: visual description, sample layouts, recommended slide types.
-- `example.html`: reference rendering.
 
 Themes are orthogonal to design systems:
 - **Design system** = brand identity (Apple, Stripe, Google Cloud).
@@ -249,6 +298,69 @@ Themes are orthogonal to design systems:
 - Any design system × any theme = valid combination.
 
 The agent applies the theme's layout patterns while binding the design system's tokens.
+
+### Theme catalogs
+
+#### `html-ppt/assets/themes/` — 36 CSS themes
+
+| Theme CSS | Mood / best use |
+|-----------|-----------------|
+| `academic-paper.css` | Scholarly, restrained, citation-friendly research decks. |
+| `arctic-cool.css` | Cool, airy, pale blue technical explainers. |
+| `aurora.css` | Atmospheric, luminous, soft high-tech narratives. |
+| `bauhaus.css` | Geometric, primary-color, design-history or product principle decks. |
+| `blueprint.css` | Engineering plan, schematic thinking, architecture walkthroughs. |
+| `catppuccin-latte.css` | Friendly light developer aesthetic. |
+| `catppuccin-mocha.css` | Friendly dark developer aesthetic. |
+| `corporate-clean.css` | Conservative business updates, exec reviews, operating plans. |
+| `cyberpunk-neon.css` | High-energy security, AI, systems, or launch decks. |
+| `dracula.css` | Dark code/editor feel for developer talks. |
+| `editorial-serif.css` | Premium essay, thought leadership, taste-forward strategy. |
+| `engineering-whiteprint.css` | Crisp whiteboard/diagram decks for technical audiences. |
+| `glassmorphism.css` | Layered translucent product or AI interface concepts. |
+| `gruvbox-dark.css` | Warm dark terminal/developer vibe. |
+| `japanese-minimal.css` | Quiet, spacious, precise, ceremony-like presentations. |
+| `magazine-bold.css` | Editorial covers, bold opinion, image-led stories. |
+| `memphis-pop.css` | Playful consumer, education, youth/social energy. |
+| `midcentury.css` | Warm retro-modern, tasteful product or culture decks. |
+| `minimal-white.css` | Clean default, high readability, broad business use. |
+| `neo-brutalism.css` | Loud, hard-edged, opinionated, anti-polish decks. |
+| `news-broadcast.css` | Urgent briefings, market updates, incident summaries. |
+| `nord.css` | Calm dark technical decks with muted blues. |
+| `pitch-deck-vc.css` | Fundraising, market, traction, ask, investor rhythm. |
+| `rainbow-gradient.css` | High-energy creative/product launch moments. |
+| `retro-tv.css` | Nostalgic media, culture, analog-tech references. |
+| `rose-pine.css` | Soft dark, elegant, indie/developer storytelling. |
+| `sharp-mono.css` | Stark monospace, audit, systems, CLI, infra decks. |
+| `soft-pastel.css` | Gentle lifestyle, learning, wellness, accessible explainers. |
+| `solarized-light.css` | Code/documentation decks with low-glare light palette. |
+| `sunset-warm.css` | Warm persuasive narratives, community, customer stories. |
+| `swiss-grid.css` | Structured, typographic, institutional, high-clarity decks. |
+| `terminal-green.css` | CLI, cybersecurity, retro terminal, operational logs. |
+| `tokyo-night.css` | Sleek dark developer/AI product decks. |
+| `vaporwave.css` | Retro-futurist, internet culture, expressive launch decks. |
+| `xiaohongshu-white.css` | White editorial social carousel / XHS style. |
+| `y2k-chrome.css` | Metallic, glossy, fashion-tech, Y2K campaign decks. |
+
+#### `html-ppt/templates/full-decks/` — 15 scoped visual systems
+
+| Template id | Mood / best use |
+|-------------|-----------------|
+| `course-module` | Lesson sequence, learning objectives, checkpoints, recap. |
+| `dir-key-nav-minimal` | Minimal keynote, one idea per slide, high negative space. |
+| `graphify-dark-graph` | Dark knowledge graph, AI-native dev tools, data/network launches. |
+| `hermes-cyber-terminal` | Honest CLI review, terminal traces, benchmarks, diffs. |
+| `knowledge-arch-blueprint` | Cream blueprint architecture, systems maps, white-paper diagrams. |
+| `obsidian-claude-gradient` | GitHub-dark purple gradient, MCP/agent/dev workflow tutorials. |
+| `pitch-deck` | Investor sequence, market/problem/solution/traction/ask. |
+| `presenter-mode-reveal` | Talk runtime with speaker tools and reveal-oriented pacing. |
+| `product-launch` | Feature reveal, positioning, proof, CTA. |
+| `tech-sharing` | Engineering education, explainers, demos, architecture. |
+| `testing-safety-alert` | Safety, risk, incident, red-team, policy-as-code warning tone. |
+| `weekly-report` | Operating cadence, status, metrics, blockers, next steps. |
+| `xhs-pastel-card` | Soft macaron social/lifestyle carousel. |
+| `xhs-post` | 3:4 portrait XHS carousel format. |
+| `xhs-white-editorial` | White editorial Chinese-first social/deck hybrid. |
 
 ## Anti-Strawman Contract
 
@@ -261,6 +373,48 @@ Rules the skill enforces through its workflow body and craft rule integration:
 5. **Speaker notes are mandatory** — the agent writes them and the user reviews. The notes are the proof the user can present the slide.
 6. **The agent pushes back** — during narrative interview, the agent challenges vague beats: "What specifically happened at the reference customer? Give me a number."
 7. **Quality badges are visible** — every slide thumbnail shows its quality state. The user can't export without addressing red badges.
+
+### Beat specificity examples
+
+| Vague beat | Specific beat |
+|------------|---------------|
+| "Show traction." | "Show 42 paying teams, $18.6K MRR, and 31% month-over-month growth from Feb-Apr 2026." |
+| "Explain the architecture." | "Explain how the daemon watches `deck-plan.json`, stitches slide fragments, then runs slidify only during export." |
+| "Talk about customers." | "Use the Northwind Studios quote about first-month payback and show the $1,800 to $200 bandwidth drop." |
+| "Discuss risks." | "List the three launch blockers: font licensing, PPTX rasterization on blend effects, and missing export retry telemetry." |
+| "Make an ask slide." | "Ask for a decision today: approve two engineers for six weeks to build deck assembly and export repair." |
+
+### Agent pushback prompt
+
+When a beat fails specificity, the agent should not silently invent content. It should write a concise form or chat prompt like:
+
+```markdown
+I can make this slide strong, but the current beat is too vague to render without filler.
+
+Please provide one of these:
+- a number, date, customer name, artifact, or before/after comparison;
+- the exact decision this slide should drive;
+- permission to mark the slide `needs-evidence` and keep it out of export until filled.
+
+Current beat: "Show traction"
+Better shape: "Show [metric] changed from [before] to [after] over [timeframe], because [cause]."
+```
+
+### Slide-ready quality gate
+
+Before setting a slide to `status: 'ready'`, the agent checks:
+
+| Gate | Ready condition | Failing status |
+|------|-----------------|----------------|
+| Beat linkage | Slide maps to one `beatId` and advances that beat. | `needs-evidence` |
+| Headline | Headline names a concrete actor, claim, metric, or decision. | `needs-evidence` |
+| Evidence | Stats, quotes, charts, screenshots, and tables come from user-provided inputs or clearly labeled source material. | `needs-data` |
+| No placeholders | No `[TBD]`, `[X]`, lorem ipsum, generic labels, fake company/customer names, or invented charts. | `needs-data` |
+| Layout fit | Content fits 1920×1080 without overflow, clipped text, or illegible type. | `fixed` |
+| Visual role | The selected layout matches the beat type: data slide for numbers, diagram slide for systems, CTA for ask. | `fixed` |
+| Theme rhythm | Deck does not stack 3+ same-surface slides unless intentionally approved. | `fixed` |
+| Speaker notes | Notes explain what the presenter should say and include the evidence source or caveat. | `needs-evidence` |
+| Slidify hints | Native/hybrid/rasterizable elements have appropriate `data-pptx-*` / `data-atom` hints. | `fixed` |
 
 ## Web App Components to Build
 
@@ -352,25 +506,109 @@ The unified deck skill's workflow selects layers through the narrative interview
 4. **Format** → usually 16:9, but XHS/portrait for social, presenter-mode for conference
 5. **Runtime + layout** → auto-selected based on theme + format, or user picks explicitly
 
-The skill body contains references to existing skill directories:
+Composition is not just metadata. The unified `SKILL.md` must make the agent read the smallest useful body of source material, then make an explicit layer selection before generating slides.
+
+### Skill-body framework selection instructions
+
+The unified skill body should contain instructions like this:
 
 ```markdown
-## Framework: html-ppt engine
-Read the assets and references from `content/skills/html-ppt/`:
-- Runtime: `assets/runtime.js`, `assets/base.css`, `assets/fonts.css`
-- Animations: `assets/animations/`
-- Layouts: `references/layouts.md` (31 archetypes)
-- Themes: `references/themes.md` and `assets/themes/` (36 token sets)
+## Framework Selection
 
-## Alternative frameworks
-- For lightweight single-file: read `content/skills/simple-deck/`
-- For Replit Slides gallery: read `content/skills/replit-deck/`
-- For magazine editorial: read `content/skills/guizang-ppt/`
+Before writing `deck-plan.json`, select exactly one base framework and document it in
+`deck-plan.json.themeId` or a future `frameworkId`.
+
+Default to `html-ppt` when the user needs:
+- slidify export,
+- multiple slide archetypes,
+- animations or canvas FX,
+- theme CSS from `assets/themes/`,
+- full-deck templates from `templates/full-decks/`.
+
+Use `simple-deck` only when the user explicitly wants a tiny single-file deck,
+fast editing, or a 6-10 slide minimal narrative with no advanced runtime.
+
+Use `replit-deck` when the deck should feel like a polished board memo,
+gallery catalog, finance update, consumer card deck, or Replit-style theme study.
+
+Use `guizang-ppt` when the user wants a magazine/editorial presentation,
+Chinese-first story pacing, strong theme rhythm, or image-heavy essay slides.
+
+After selecting the framework, read only the needed references:
+- `html-ppt`: `references/layouts.md`, `references/themes.md`, `references/animations.md`, and any selected `templates/full-decks/<id>/README.md`.
+- `simple-deck`: `references/layouts.md` and `references/checklist.md`.
+- `replit-deck`: `references/layouts.md`, `references/themes.md`, and `references/components.md`.
+- `guizang-ppt`: `references/layouts.md`, `references/themes.md`, `references/components.md`, and `references/checklist.md`.
 ```
+
+### Skill-body layer-selection example
+
+The agent should also write its layer decision as a compact planning block:
+
+```markdown
+## Layer Decision
+
+- Runtime: `html-ppt/assets/runtime.js`, because this deck needs thumbnails, keyboard navigation, overview, notes, and slidify export.
+- Format: 16:9 horizontal, because the user asked for a board presentation.
+- Theme: `pitch-deck-vc.css`, with the user's selected design system overriding palette and typography tokens.
+- Layouts: `cover`, `stat-highlight`, `kpi-grid`, `comparison`, `roadmap`, `cta`.
+- Scenario: pitch-deck arc, because the audience is investors and the key action is funding approval.
+- Craft/QA: apply `deck-authoring.md`; every traction slide must contain user-provided metrics or stay `needs-data`.
+```
+
+### Concrete composition examples
+
+| User intent | Runtime | Format | Theme | Layout set | Scenario | Craft emphasis |
+|-------------|---------|--------|-------|------------|----------|----------------|
+| "Series A deck for infrastructure startup" | `html-ppt` | 16:9 | `pitch-deck-vc.css` or `pitch-deck` template | cover, stat, KPI, comparison, roadmap, CTA | pitch-deck | anti-ai-slop data gates, investor ask clarity |
+| "Engineering talk on our new sync daemon" | `html-ppt` | 16:9 | `tokyo-night.css` + `tech-sharing` template cues | code, terminal, arch-diagram, flow-diagram, timeline | tech-sharing | diagram specificity, slidify atom hints |
+| "Weekly business review" | `html-ppt` or `replit-deck` | 16:9 | `corporate-clean.css` or `helix` | KPI row, table, chart-line, todo-checklist | weekly-report | no invented metrics, table readability |
+| "XHS educational carousel" | `html-ppt` | 3:4 portrait | `xiaohongshu-white.css` or `xhs-post` | cover, big quote, cards, CTA | XHS social explainer | portrait fit, one claim per slide |
+| "Architecture essay in Chinese" | `guizang-ppt` or `html-ppt` | 16:9 | `knowledge-arch-blueprint` / Indigo Porcelain | hero cover, act divider, diagram, quote+image | architecture / essay | theme rhythm, image ratio rules |
 
 Existing skills stay in `content/skills/` untouched. The unified deck skill references them
 as composable pieces — it reads their SKILL.md bodies for theme descriptions and their
 `assets/` + `references/` directories for framework infrastructure.
+
+### Reference catalogs from `html-ppt`
+
+#### 31 single-page layouts
+
+| Group | Layout files |
+|-------|--------------|
+| Openers / transitions | `cover.html`, `toc.html`, `section-divider.html` |
+| Text-centric | `bullets.html`, `two-column.html`, `three-column.html`, `big-quote.html` |
+| Numbers / data | `stat-highlight.html`, `kpi-grid.html`, `table.html`, `chart-bar.html`, `chart-line.html`, `chart-pie.html`, `chart-radar.html` |
+| Code / terminal | `code.html`, `diff.html`, `terminal.html` |
+| Diagrams / flows | `flow-diagram.html`, `arch-diagram.html`, `process-steps.html`, `mindmap.html` |
+| Plans / comparisons | `timeline.html`, `roadmap.html`, `gantt.html`, `comparison.html`, `pros-cons.html`, `todo-checklist.html` |
+| Visuals | `image-hero.html`, `image-grid.html` |
+| Closers | `cta.html`, `thanks.html` |
+
+#### 20 canvas FX modules
+
+| FX module | Best use |
+|-----------|----------|
+| `particle-burst` | Reveal moments, stat pages. |
+| `confetti-cannon` | Thank-you, success, launch wins. |
+| `firework` | Celebration and product launch slides. |
+| `starfield` | Sci-fi/deep-space covers. |
+| `matrix-rain` | Security, terminal, data stream contexts. |
+| `knowledge-graph` | RAG, graph, knowledge-base slides. |
+| `neural-net` | ML architecture and model explanation. |
+| `constellation` | Ambient hero backgrounds. |
+| `orbit-ring` | Layered systems and platform orbit metaphors. |
+| `galaxy-swirl` | Intro/cover atmosphere. |
+| `word-cascade` | Vocabulary or concept cloud slides. |
+| `letter-explode` | Big title reveal. |
+| `chain-react` | Pipeline, sequence, dependency slides. |
+| `magnetic-field` | Abstract flow and energy. |
+| `data-stream` | API, data, security slides. |
+| `gradient-blob` | Soft atmospheric backgrounds. |
+| `sparkle-trail` | Interactive reveal canvases. |
+| `shockwave` | Impact, alert, launch. |
+| `typewriter-multi` | Terminal boot logs and agent traces. |
+| `counter-explosion` | KPI reveal and record highs. |
 
 ### Truly distinct skills that stay standalone
 
@@ -439,6 +677,53 @@ neither constrains visual design").
 | `content/skills/deck/references/frameworks.md` | Catalog of available frameworks and when to use each |
 | `content/skills/deck/references/themes.md` | Catalog of available themes with visual descriptions |
 | `content/craft/deck-authoring.md` | Unified craft reference for deck projects |
+
+### Reference file contents
+
+| File | Must contain |
+|------|--------------|
+| `SKILL.md` | Frontmatter with `pixelpitch.mode: deck`, `craft.requires`, narrative interview rules, phase transitions, deck-plan write protocol, framework selection markdown, slide generation loop, per-slide editing rules, export repair loop, anti-strawman pushback language. |
+| `assets/framework.js` | Stable runtime copied or adapted from `html-ppt/assets/runtime.js`: keyboard navigation, active slide state, overview, notes hooks, print/export affordances, no agent-edited business logic. |
+| `assets/framework.css` | Stable base layout from `html-ppt/assets/base.css`: 1920×1080 slide shell, scaling primitives, typography slots, grid/card primitives, print styles, no theme-specific colors except fallback tokens. |
+| `references/slide-types.md` | A normalized slide archetype catalog that maps beat types to layouts across frameworks. It should list html-ppt's 31 layouts, simple-deck's 8 layouts, replit-deck's 10 layouts, and guizang-ppt's 10 layouts, with "when to use", evidence requirements, and slidify notes. |
+| `references/narrative-patterns.md` | Scenario-to-arc guide: pitch, product launch, weekly report, tech talk, course module, safety alert, architecture explainer, XHS carousel, editorial essay. Each arc includes beat sequence, evidence needs, slide-count guidance, and common failure modes. |
+| `references/token-extraction.md` | Deterministic DESIGN.md-to-CSS procedure: palette extraction, typography extraction, spacing scale, semantic token names, theme override order, multi-design-system blending, fallback tokens. |
+| `references/frameworks.md` | Framework selection matrix: `html-ppt`, `simple-deck`, `replit-deck`, `guizang-ppt`, plus standalone overlays such as presenter mode and XHS portrait. Include assets to read and assets to copy. |
+| `references/themes.md` | In-place theme catalog: 36 `html-ppt` CSS themes, 15 full-deck templates, 17 SKILL.md-only theme descriptors, 8 Replit themes, 5 Guizang themes. Include mood, best scenario, compatible formats, and caution flags. |
+| `content/craft/deck-authoring.md` | Deck-specific craft synthesis with precedence, conflict resolution, quality gate checklist, and references back to anti-ai-slop/color/typography/slidify-compat. |
+
+### `slide-types.md` source mapping
+
+| Source | Layouts to include | Best role |
+|--------|--------------------|-----------|
+| `html-ppt/references/layouts.md` | `cover`, `toc`, `section-divider`, `bullets`, `two-column`, `three-column`, `big-quote`, `stat-highlight`, `kpi-grid`, `table`, `chart-bar`, `chart-line`, `chart-pie`, `chart-radar`, `code`, `diff`, `terminal`, `flow-diagram`, `arch-diagram`, `process-steps`, `mindmap`, `timeline`, `roadmap`, `gantt`, `comparison`, `pros-cons`, `todo-checklist`, `image-hero`, `image-grid`, `cta`, `thanks` | Default broad layout library for generated decks. |
+| `simple-deck/references/layouts.md` | Cover, body slide, big stat, three-point row, pipeline, big quote, before/after, closing/CTA | Minimal fast decks and strict theme rhythm. |
+| `replit-deck/references/layouts.md` | `cover-hero`, `kpi-row-6`, `split-hero-metric`, `memo-hero-statement`, `two-column-ask`, `gallery-plate`, `campaign-cover`, `finance-hero-grid`, `chapter-plate`, `pill-headline-cards-row` | Board memo, finance, gallery, consumer card, campaign decks. |
+| `guizang-ppt/references/layouts.md` | Hero cover, act divider, big numbers grid, quote+image, image grid, pipeline, hero question, big quote, A/B comparison, lead image + side text | Magazine/editorial storytelling, Chinese-first decks, image-heavy essays. |
+
+### `themes.md` source mapping
+
+| Source | Themes | Notes |
+|--------|--------|-------|
+| `html-ppt/assets/themes/*.css` | 36 CSS themes listed in Visual Themes | Treat as token presets. They are reusable across scenarios. |
+| `html-ppt/templates/full-decks/*` | 15 scoped full-deck templates listed in Visual Themes | Treat as pattern systems. Borrow structure, rhythm, and scoped classes. |
+| `html-ppt-*` SKILL bodies | 17 descriptors | Read for scenario voice and taste constraints; do not move or duplicate. |
+| `replit-deck/references/themes.md` | `helix`, `holm`, `vance`, `bevel`, `world-dark`, `world-mint`, `atlas`, `bluehouse` | Strongly tied to the Replit layout set; keep theme-layout pairings. |
+| `guizang-ppt/references/themes.md` | Monocle default, Indigo Porcelain, Forest Ink, Kraft Paper, Dune | Editorial palettes with strict rhythm and image rules. |
+
+### `narrative-patterns.md` starter arcs
+
+| Scenario | Beat sequence | Works when | Avoid |
+|----------|---------------|------------|-------|
+| Pitch deck | context → problem → solution → proof → market → traction → plan → ask | Audience must decide funding/resources. | Generic market slides without real wedge or ask. |
+| Product launch | audience pain → insight → product reveal → how it works → proof → rollout → CTA | Audience needs adoption or launch confidence. | Feature lists without a positioning claim. |
+| Weekly report | headline status → KPI deltas → shipped work → risks/blockers → decisions needed → next week | Operating cadence and accountable follow-up. | Status theater with no owners, dates, or deltas. |
+| Tech sharing | problem context → mental model → architecture → implementation → demo path → tradeoffs → next steps | Engineering audience needs understanding and reuse. | "Architecture" slides that are only boxes with labels. |
+| Course module | learning goal → concept → worked example → practice/checkpoint → recap → next module | Teaching a procedure or concept. | Too many concepts on one slide. |
+| Safety alert | incident/risk → impact → root cause → controls → owner plan → escalation ask | Urgency, compliance, red-team, launch readiness. | Softeners that hide severity or accountability. |
+| Architecture explainer | system goal → constraints → components → data/control flow → failure modes → roadmap | Technical decision review. | Diagrams without boundaries, protocols, or ownership. |
+| XHS carousel | hook → contradiction → 3-5 teachable points → personal/brand proof → save/share CTA | Social education or compact editorial. | Horizontal deck density squeezed into portrait. |
+| Editorial essay | thesis → scene/context → evidence sequence → counterpoint → synthesis → memorable close | Thought leadership and taste-forward arguments. | Business-template pacing with no narrative tension. |
 
 ## Verification
 
