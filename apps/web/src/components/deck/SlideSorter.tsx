@@ -31,6 +31,7 @@ export function SlideSorter({ slides, onSelect, renderThumbnail }: Props) {
           >
             <div className="slide-sorter-preview">
               {renderThumbnail(slide)}
+              <span className="slide-thumb-click-target" aria-hidden />
             </div>
             <div className="slide-sorter-meta">
               <span>{idx + 1} · {slide.title}</span>

@@ -34,6 +34,7 @@ export function SlideStrip({ slides, activeId, onSelect, renderThumbnail }: Prop
               className="slide-thumb-badge"
               style={{ background: STATUS_COLORS[slide.status] ?? 'rgba(255,255,255,0.15)' }}
             />
+            <span className="slide-thumb-click-target" aria-hidden />
           </div>
         </button>
       ))}

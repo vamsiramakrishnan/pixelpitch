@@ -9346,6 +9346,17 @@ body.entry-resizing { cursor: col-resize; user-select: none; }
   pointer-events: none;
 }
 
+.slide-thumb-click-target {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.slide-sorter-preview {
+  position: relative;
+}
+
 /* ── Deck badge on project cards ── */
 .design-card-deck-badge {
   display: flex;
