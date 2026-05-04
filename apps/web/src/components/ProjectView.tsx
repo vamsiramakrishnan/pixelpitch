@@ -64,7 +64,7 @@ import {
 import { AppChromeHeader } from './AppChromeHeader';
 import { AvatarMenu } from './AvatarMenu';
 import { ChatPane } from './ChatPane';
-import { DeckWorkspace } from './deck';
+import { DeckSlidePreview, DeckWorkspace } from './deck';
 import { FileWorkspace } from './FileWorkspace';
 
 const DECK_PLAN_PATH = 'deck/deck-plan.json';
@@ -1560,14 +1560,27 @@ export function ProjectView({
               onOpenPetSettings={onOpenPetSettings}
             />
           }
-          renderSlidePreview={(slideId) => (
-            <div className="deck-slide-preview-placeholder" data-slide-id={slideId}>
-              {/* TODO: build srcdoc from theme.css + framework.js + slide fragment */}
-            </div>
-          )}
-          renderSlideThumbnail={(slide) => (
-            <div className="deck-slide-thumb-placeholder">{slide.title}</div>
-          )}
+          renderSlidePreview={(slideId) =>
+            deckPlan ? (
+              <DeckSlidePreview
+                projectId={project.id}
+                plan={deckPlan}
+                slideId={slideId}
+              />
+            ) : null
+          }
+          renderSlideThumbnail={(slide) =>
+            deckPlan ? (
+              <DeckSlidePreview
+                projectId={project.id}
+                plan={deckPlan}
+                slideId={slide.id}
+                thumbnail
+              />
+            ) : (
+              <div className="deck-slide-thumb-placeholder">{slide.title}</div>
+            )
+          }
         />
       ) : (
         <div className="split">

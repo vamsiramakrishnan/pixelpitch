@@ -1,4 +1,5 @@
 export { DeckPhaseBar } from './DeckPhaseBar';
+export { DeckSlidePreview } from './DeckSlidePreview';
 export { DeckWorkspace } from './DeckWorkspace';
 export { ExportPanel } from './ExportPanel';
 export { OutlineEditor } from './OutlineEditor';

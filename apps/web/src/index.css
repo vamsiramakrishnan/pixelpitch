@@ -9327,3 +9327,21 @@ body.entry-resizing { cursor: col-resize; user-select: none; }
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ── Deck slide preview iframes ── */
+.deck-slide-preview-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: var(--radius, 8px);
+  background: var(--bg-subtle);
+}
+
+.deck-slide-thumb-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: var(--radius-sm, 6px);
+  background: var(--bg-subtle);
+  pointer-events: none;
+}
