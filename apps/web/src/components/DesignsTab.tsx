@@ -174,7 +174,14 @@ export function DesignsTab({ projects, skills, designSystems, onOpen, onDelete }
                 >
                   <Icon name="close" size={12} />
                 </button>
-                <div className="design-card-thumb" aria-hidden />
+                <div className="design-card-thumb" aria-hidden>
+                  {isDeckProject(p, skills) ? (
+                    <div className="design-card-deck-badge">
+                      <Icon name="present" size={16} strokeWidth={1.5} />
+                      <span>Deck</span>
+                    </div>
+                  ) : null}
+                </div>
                 <div className="design-card-meta-block">
                   <div className="design-card-name" title={p.name}>{p.name}</div>
                   <div className="design-card-meta">
@@ -241,7 +248,14 @@ export function DesignsTab({ projects, skills, designSystems, onOpen, onDelete }
                           >
                             <Icon name="close" size={12} />
                           </button>
-                          <div className="design-kanban-card-name" title={p.name}>{p.name}</div>
+                          <div className="design-kanban-card-name" title={p.name}>
+                            {isDeckProject(p, skills) ? (
+                              <span className="design-kanban-deck-tag">
+                                <Icon name="present" size={10} strokeWidth={1.8} />
+                              </span>
+                            ) : null}
+                            {p.name}
+                          </div>
                           <div className="design-kanban-card-meta">
                             {ds ? <span className="ds">{ds}</span> : <span>{t('designs.cardFreeform')}</span>}
                             {skill ? ` · ${skill}` : ''}
@@ -263,6 +277,12 @@ export function DesignsTab({ projects, skills, designSystems, onOpen, onDelete }
 
 function statusLabel(status: ProjectDisplayStatus, t: ReturnType<typeof useT>): string {
   return t(STATUS_LABEL_KEYS[status]);
+}
+
+function isDeckProject(project: Project, skills: SkillSummary[]): boolean {
+  if (!project.skillId) return false;
+  const skill = skills.find((s) => s.id === project.skillId);
+  return skill?.mode === 'deck';
 }
 
 function relativeTime(ts: number, t: ReturnType<typeof useT>): string {

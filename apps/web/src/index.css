@@ -9345,3 +9345,29 @@ body.entry-resizing { cursor: col-resize; user-select: none; }
   background: var(--bg-subtle);
   pointer-events: none;
 }
+
+/* ── Deck badge on project cards ── */
+.design-card-deck-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm, 6px);
+  background: color-mix(in srgb, var(--accent) 15%, var(--bg-panel));
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 600;
+  z-index: 1;
+}
+
+.design-kanban-deck-tag {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 4px;
+  color: var(--accent);
+  vertical-align: middle;
+}
