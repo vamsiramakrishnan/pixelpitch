@@ -148,6 +148,8 @@ export function ProjectView({
   const reattachControllersRef = useRef<Map<string, AbortController>>(new Map());
   const reattachCancelControllersRef = useRef<Map<string, AbortController>>(new Map());
   const completedReattachRunsRef = useRef<Set<string>>(new Set());
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [titleDraft, setTitleDraft] = useState('');
   const skillCache = useRef<Map<string, string>>(new Map());
   const designCache = useRef<Map<string, string>>(new Map());
   const templateCache = useRef<Map<string, ProjectTemplate>>(new Map());
@@ -1338,23 +1340,57 @@ export function ProjectView({
         )}
       >
         <div className="app-project-title">
-            <span
-              className="title editable"
-              data-testid="project-title"
-              tabIndex={0}
-              role="textbox"
-              suppressContentEditableWarning
-              contentEditable
-              onBlur={(e) => handleProjectRename(e.currentTarget.textContent ?? '')}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  (e.currentTarget as HTMLElement).blur();
-                }
-              }}
-            >
-              {project.name}
-            </span>
+            {editingTitle ? (
+              <input
+                aria-label="Project name"
+                className="title-input"
+                autoFocus
+                value={titleDraft}
+                onChange={(e) => setTitleDraft(e.target.value)}
+                onBlur={() => {
+                  handleProjectRename(titleDraft);
+                  setEditingTitle(false);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleProjectRename(titleDraft);
+                    setEditingTitle(false);
+                  } else if (e.key === 'Escape') {
+                    setEditingTitle(false);
+                  }
+                }}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  outline: 'none',
+                  font: 'inherit',
+                  color: 'inherit',
+                  padding: 0,
+                  margin: 0,
+                  width: 'auto',
+                  minWidth: '100px'
+                }}
+              />
+            ) : (
+              <span
+                className="title editable"
+                data-testid="project-title"
+                tabIndex={0}
+                role="button"
+                onClick={() => {
+                  setTitleDraft(project.name);
+                  setEditingTitle(true);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setTitleDraft(project.name);
+                    setEditingTitle(true);
+                  }
+                }}
+              >
+                {project.name}
+              </span>
+            )}
             <span className="meta" data-testid="project-meta">{projectMeta}</span>
         </div>
       </AppChromeHeader>

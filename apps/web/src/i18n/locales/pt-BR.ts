@@ -357,6 +357,7 @@ export const ptBR: Dict = {
   'chat.deleteConversation': 'Excluir conversa',
   'chat.deleteConversationConfirm':
     'Excluir "{title}"? Isso remove as mensagens.',
+  'chat.renameConversation': 'Rename conversation',
   'chat.untitledConversation': 'Conversa sem título',
   'chat.startTitle': 'Comece uma conversa',
   'chat.startHint':

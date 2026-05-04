@@ -406,6 +406,7 @@ export interface Dict {
   'chat.emptyConversations': string;
   'chat.deleteConversation': string;
   'chat.deleteConversationConfirm': string;
+  'chat.renameConversation': string;
   'chat.untitledConversation': string;
   'chat.startTitle': string;
   'chat.startHint': string;

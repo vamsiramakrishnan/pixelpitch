@@ -1,15 +1,12 @@
-<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' role='img' aria-label='Open Design'>
-  <title>Open Design</title>
-  <g stroke='#1F1B16' stroke-width='3.4' stroke-linecap='square' fill='none'>
-    <path d='M10 24 L10 10 L24 10' />
-    <path d='M40 10 L54 10 L54 24' />
-    <path d='M54 40 L54 54 L40 54' />
-    <path d='M24 54 L10 54 L10 40' />
-  </g>
-  <g stroke='#C2532D' stroke-width='3' stroke-linecap='round'>
-    <line x1='32' y1='20' x2='32' y2='44' />
-    <line x1='20' y1='32' x2='44' y2='32' />
-    <line x1='23.51' y1='23.51' x2='40.49' y2='40.49' />
-    <line x1='40.49' y1='23.51' x2='23.51' y2='40.49' />
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="Google Cloud APAC AI Practice">
+  <title>Google Cloud APAC AI Practice</title>
+  <rect x="5" y="5" width="54" height="54" rx="14" fill="#FFFFFF"/>
+  <path d="M23 42H42.5C48.02 42 52.5 37.66 52.5 32.3C52.5 27.06 48.2 22.8 42.84 22.62C40.96 17.8 36.18 14.5 30.75 14.5C24.12 14.5 18.66 19.28 17.78 25.45C13.18 26.42 9.5 30.12 9.5 34.78C9.5 39.82 13.84 42 18.5 42H23Z" stroke="#1A73E8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M18.02 25.5C18.72 20.92 22.08 17.18 26.48 15.68" stroke="#34A853" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M43 22.62C45.96 22.76 48.56 24.22 50.2 26.42" stroke="#FBBC04" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M18.5 42C13.84 42 9.5 39.82 9.5 34.78C9.5 31.7 11.1 29.06 13.56 27.36" stroke="#EA4335" stroke-width="3.2" stroke-linecap="round"/>
+  <circle cx="28" cy="33" r="3.4" fill="#1A73E8"/>
+  <circle cx="38" cy="33" r="3.4" fill="#34A853"/>
+  <path d="M31.4 33H34.6M33 29.8V36.2" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+  <path d="M46.5 14.5L47.9 18.1L51.5 19.5L47.9 20.9L46.5 24.5L45.1 20.9L41.5 19.5L45.1 18.1L46.5 14.5Z" fill="#FBBC04"/>
 </svg>

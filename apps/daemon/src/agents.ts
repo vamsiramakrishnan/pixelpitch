@@ -274,6 +274,12 @@ export const AGENT_DEFS = [
     name: 'Gemini CLI',
     bin: 'gemini',
     versionArgs: ['--version'],
+    helpArgs: ['--help'],
+    capabilityFlags: {
+      '--approval-mode': 'approvalMode',
+      '--yolo': 'yolo',
+      '--skip-trust': 'skipTrust',
+    },
     fallbackModels: [
       DEFAULT_MODEL_OPTION,
       { id: 'gemini-2.5-pro', label: 'gemini-2.5-pro' },
@@ -282,9 +288,20 @@ export const AGENT_DEFS = [
     // Gemini reads from stdin when `-p` is omitted and stdin is a pipe.
     // Passing the full composed prompt as a CLI arg causes ENAMETOOLONG on
     // Windows (CreateProcess limit ~32 KB) for any non-trivial prompt.
-    // `--yolo` skips interactive approval prompts in the no-TTY web UI.
+    // Approval mode skips interactive tool prompts in the no-TTY web UI.
+    // Newer Gemini CLIs prefer `--approval-mode yolo`; older builds used the
+    // legacy `--yolo` boolean. Probe help output so we do not pass both.
     buildArgs: (_prompt, _imagePaths, _extra, options = {}) => {
-      const args = ['--output-format', 'stream-json', '--skip-trust', '--yolo'];
+      const caps = agentCapabilities.get('gemini') || {};
+      const args = ['--output-format', 'stream-json'];
+      if (caps.skipTrust !== false) {
+        args.push('--skip-trust');
+      }
+      if (caps.approvalMode) {
+        args.push('--approval-mode', 'yolo');
+      } else if (caps.yolo !== false) {
+        args.push('--yolo');
+      }
       if (options.model && options.model !== 'default') {
         args.push('--model', options.model);
       }

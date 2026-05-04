@@ -325,7 +325,7 @@ function WaitingPill({
     ? humanizeStatus(latestStatus.label, t)
     : t('assistant.waitingFirstOutput');
   return (
-    <div className="op-waiting">
+    <div className="op-waiting" aria-live="polite">
       <span className="op-waiting-dot" aria-hidden />
       <span className="op-waiting-label">{label}</span>
       {latestStatus?.detail ? (
@@ -500,7 +500,7 @@ function ThinkingBlock({ text }: { text: string }) {
 
 function StatusPill({ label, detail }: { label: string; detail?: string | undefined }) {
   return (
-    <div className="status-pill">
+    <div className="status-pill" aria-live="polite">
       <span className="status-label">{label}</span>
       {detail ? <span className="status-detail">{detail}</span> : null}
     </div>

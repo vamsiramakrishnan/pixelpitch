@@ -358,6 +358,7 @@ export const ar: Dict = {
   'chat.deleteConversation': 'حذف المحادثة',
   'chat.deleteConversationConfirm':
     'هل تريد حذف "{title}"؟ سيؤدي هذا لإزالة رسائلها.',
+  'chat.renameConversation': 'Rename conversation',
   'chat.untitledConversation': 'محادثة بدون عنوان',
   'chat.startTitle': 'ابدأ محادثة',
   'chat.startHint':

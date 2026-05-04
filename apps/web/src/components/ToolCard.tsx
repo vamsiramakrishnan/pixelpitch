@@ -9,6 +9,7 @@
  *   3. generic command/output fallback
  */
 import { useState } from 'react';
+import { Icon } from './Icon';
 import { useT } from '../i18n';
 import { parseTodoWriteInput } from '../runtime/todos';
 import { getToolRenderer, toRenderProps } from '../runtime/tool-renderers';
@@ -304,6 +305,30 @@ function WebSearchCard({ input }: { input: unknown }) {
   );
 }
 
+type ToolIconName = 'search' | 'file' | 'edit' | 'file-code' | '';
+
+function toolIcon(family: string): ToolIconName {
+  switch (family) {
+    case 'list_files':
+    case 'search':
+    case 'grep':
+      return 'search';
+    case 'read':
+    case 'read_file':
+      return 'file';
+    case 'write':
+    case 'write_file':
+    case 'edit':
+      return 'edit';
+    case 'bash':
+    case 'shell':
+    case 'execute':
+      return 'file-code';
+    default:
+      return '';
+  }
+}
+
 function GenericCard({
   name,
   input,
@@ -314,10 +339,11 @@ function GenericCard({
   result?: Props['result'];
 }) {
   const summary = describeInput(input);
+  const iconName = toolIcon(name);
   return (
     <div className="op-card op-generic">
       <div className="op-card-head">
-        <span className="op-icon" aria-hidden>·</span>
+        {iconName ? <Icon name={iconName} size={12} /> : <span className="op-icon" aria-hidden>·</span>}
         <span className="op-title">{name}</span>
         {summary ? <span className="op-meta">{truncate(summary, 200)}</span> : null}
         <ResultBadge result={result} />

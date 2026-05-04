@@ -358,6 +358,7 @@ export const ko: Dict = {
   'chat.deleteConversation': '대화 삭제',
   'chat.deleteConversationConfirm':
     '"{title}" 대화를 삭제하시겠습니까? 관련 메시지가 모두 삭제됩니다.',
+  'chat.renameConversation': 'Rename conversation',
   'chat.untitledConversation': '제목 없는 대화',
   'chat.startTitle': '대화 시작하기',
   'chat.startHint':

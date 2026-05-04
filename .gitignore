@@ -56,6 +56,10 @@ bun.lockb
 .claude/worktrees/
 .claude/agents/
 .gemini/agents/
+
+# Harness collaboration control plane
+.harness-tape/
+.harness-handoffs/
 examples/corpus/out/
 # _bench is the iteration scratch dir — most of it is throwaway, but
 # the corpus HTML files + preview PNGs + heatmaps + scores ARE the

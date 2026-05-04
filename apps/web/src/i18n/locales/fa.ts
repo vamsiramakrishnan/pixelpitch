@@ -358,6 +358,7 @@ export const fa: Dict = {
   'chat.deleteConversation': 'حذف مکالمه',
   'chat.deleteConversationConfirm':
     'آیا «{title}» حذف شود؟ این کار پیام‌های آن را حذف می‌کند.',
+  'chat.renameConversation': 'Rename conversation',
   'chat.untitledConversation': 'مکالمه بدون عنوان',
   'chat.startTitle': 'یک مکالمه شروع کنید',
   'chat.startHint':

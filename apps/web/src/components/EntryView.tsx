@@ -133,6 +133,20 @@ export function EntryView({
     () => agents.find((a) => a.id === config.agentId) ?? null,
     [agents, config.agentId],
   );
+  const dashboardStats = useMemo(() => {
+    const active = projects.filter((project) =>
+      project.status?.value === 'running' ||
+      project.status?.value === 'queued' ||
+      project.status?.value === 'awaiting_input',
+    ).length;
+    const shipped = projects.filter((project) => project.status?.value === 'succeeded').length;
+    return {
+      total: projects.length,
+      active,
+      shipped,
+      systems: designSystems.length,
+    };
+  }, [projects, designSystems.length]);
 
   const envMetaLine = useMemo(() => {
     if (config.mode === 'api') {
@@ -410,6 +424,19 @@ export function EntryView({
             <CenteredLoader label={t('entry.loadingWorkspace')} />
           ) : (
             <>
+              <section className="entry-dashboard" aria-label="Studio overview">
+                <div className="entry-dashboard-copy">
+                  <span className="entry-dashboard-kicker">Studio</span>
+                  <h1>APAC AI Practice</h1>
+                  <p>Customer AI workspaces, prototypes, design systems, and delivery playbooks.</p>
+                </div>
+                <div className="entry-dashboard-stats" aria-label="Workspace summary">
+                  <DashboardStat label="Workspaces" value={dashboardStats.total} tone="blue" />
+                  <DashboardStat label="Active" value={dashboardStats.active} tone="green" />
+                  <DashboardStat label="Shipped" value={dashboardStats.shipped} tone="yellow" />
+                  <DashboardStat label="Systems" value={dashboardStats.systems} tone="red" />
+                </div>
+              </section>
               {topTab === 'designs' ? (
                 <DesignsTab
                   projects={projects}
@@ -469,6 +496,23 @@ export function EntryView({
           onClose={() => setPreviewPromptTemplate(null)}
         />
       ) : null}
+    </div>
+  );
+}
+
+function DashboardStat({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: number;
+  tone: 'blue' | 'green' | 'yellow' | 'red';
+}) {
+  return (
+    <div className={`entry-dashboard-stat ${tone}`}>
+      <span className="entry-dashboard-stat-value">{value}</span>
+      <span className="entry-dashboard-stat-label">{label}</span>
     </div>
   );
 }

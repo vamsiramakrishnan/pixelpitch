@@ -69,6 +69,8 @@ export function SketchEditor({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const [tool, setTool] = useState<Tool>('pen');
+  // Canvas colors are intentionally light-locked — dark-mode shifts the
+  // chrome but the drawing surface stays warm-white for ink contrast.
   const [color, setColor] = useState('#1c1b1a');
   const [size, setSize] = useState(2);
   const drawingRef = useRef<SketchItem | null>(null);

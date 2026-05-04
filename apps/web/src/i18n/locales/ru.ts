@@ -357,6 +357,7 @@ export const ru: Dict = {
   'chat.deleteConversation': 'Удалить разговор',
   'chat.deleteConversationConfirm':
     'Удалить «{title}»? Это удалит его сообщения.',
+  'chat.renameConversation': 'Rename conversation',
   'chat.untitledConversation': 'Разговор без названия',
   'chat.startTitle': 'Начать разговор',
   'chat.startHint':

@@ -358,6 +358,7 @@ export const pl: Dict = {
   'chat.deleteConversation': 'Usuń rozmowę',
   'chat.deleteConversationConfirm':
       'Usunąć „{title}”? Spowoduje to usunięcie wszystkich wiadomości.',
+  'chat.renameConversation': 'Rename conversation',
   'chat.untitledConversation': 'Rozmowa bez tytułu',
   'chat.startTitle': 'Zacznij rozmowę',
   'chat.startHint':

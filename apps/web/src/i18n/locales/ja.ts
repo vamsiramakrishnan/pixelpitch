@@ -357,6 +357,7 @@ export const ja: Dict = {
   'chat.deleteConversation': '会話を削除',
   'chat.deleteConversationConfirm':
     '"{title}" を削除しますか？メッセージも削除されます。',
+  'chat.renameConversation': 'Rename conversation',
   'chat.untitledConversation': '無題の会話',
   'chat.startTitle': '会話を始める',
   'chat.startHint':

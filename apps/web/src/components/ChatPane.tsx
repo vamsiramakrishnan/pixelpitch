@@ -632,6 +632,20 @@ function ConversationRow({
           {displayTitle}
         </button>
       )}
+      {onRename ? (
+        <button
+          type="button"
+          className="chat-conv-item-rename"
+          title={t('chat.renameConversation')}
+          onClick={(e) => {
+            e.stopPropagation();
+            setDraft(conversation.title ?? '');
+            setEditing(true);
+          }}
+        >
+          <Icon name="edit" size={11} />
+        </button>
+      ) : null}
       <span className="chat-conv-item-meta">{relTime(conversation.updatedAt, t)}</span>
       <button
         type="button"

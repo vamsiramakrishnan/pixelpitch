@@ -4,18 +4,21 @@ import { I18nProvider } from '../src/i18n';
 import '../src/index.css';
 
 export const metadata: Metadata = {
-  title: 'Pixelpitch',
+  title: 'Google Cloud APAC AI Practice',
   icons: {
-    icon: '/app-icon.svg',
+    icon: '/logo.svg',
     // Safari pinned-tab mask icon — Next.js's Metadata API doesn't have a
     // dedicated `mask` field, so we surface it via the generic `other`
     // bucket which renders as a raw <link rel="mask-icon" ...>.
-    other: [{ rel: 'mask-icon', url: '/app-icon.svg', color: '#363636' }],
+    other: [{ rel: 'mask-icon', url: '/logo.svg', color: '#1a73e8' }],
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: '#F4EFE6',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#F8FAFC' },
+    { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
+  ],
 };
 
 /**

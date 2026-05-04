@@ -36,9 +36,19 @@ function resolveDevTsconfigPath() {
 }
 
 const DEV_TSCONFIG_PATH = resolveDevTsconfigPath();
+const EXTRA_ALLOWED_DEV_ORIGINS = (process.env.PIXELPITCH_ALLOWED_DEV_ORIGINS ?? '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 const nextConfig: NextConfig = {
-  allowedDevOrigins: ['127.0.0.1'],
+  allowedDevOrigins: [
+    '127.0.0.1',
+    '*.cloudworkstations.dev',
+    '*.*.cloudworkstations.dev',
+    '15656-workstation-llafesw4.cluster-lepiidrhzbaaqvmyactjvgxiyo.cloudworkstations.dev',
+    ...EXTRA_ALLOWED_DEV_ORIGINS,
+  ],
   reactStrictMode: true,
   ...(DEV_TSCONFIG_PATH ? { typescript: { tsconfigPath: DEV_TSCONFIG_PATH } } : {}),
   // Keep the bundle output predictable so the daemon's STATIC_DIR can point

@@ -103,10 +103,7 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
       q: string;
       cursor: number;
     } | null>(null);
-    // Slash-command popover state — when the draft starts with `/` and
-    // the cursor is still inside that token (no space committed yet),
-    // we show a small palette of supported commands. The query is the
-    // text after `/` so the user can type-to-filter.
+    const [mentionIndex, setMentionIndex] = useState(0);
     const [slash, setSlash] = useState<{
       q: string;
       cursor: number;
@@ -402,8 +399,12 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
       // query up to the cursor.
       const before = value.slice(0, cursor);
       const m = /(^|\s)@([^\s@]*)$/.exec(before);
-      if (m) setMention({ q: m[2] ?? "", cursor });
-      else setMention(null);
+      if (m) {
+        setMention({ q: m[2] ?? "", cursor });
+        setMentionIndex(0);
+      } else {
+        setMention(null);
+      }
       // Slash-command popover — open as soon as the draft starts with
       // `/` (and the cursor is still inside the bare command token, no
       // space yet). Closes once the user commits a space or moves past
@@ -545,8 +546,30 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
                     return;
                   }
                 }
+                if (mention && filteredFiles.length > 0) {
+                  if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    setMentionIndex((i) => (i + 1) % filteredFiles.length);
+                    return;
+                  }
+                  if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    setMentionIndex(
+                      (i) => (i - 1 + filteredFiles.length) % filteredFiles.length,
+                    );
+                    return;
+                  }
+                  if (e.key === 'Tab' || (e.key === 'Enter' && !e.shiftKey && !e.metaKey && !e.ctrlKey)) {
+                    e.preventDefault();
+                    const safe = Math.min(mentionIndex, filteredFiles.length - 1);
+                    const file = filteredFiles[safe]!;
+                    insertMention(file.path ?? file.name);
+                    return;
+                  }
+                }
                 if (mention && e.key === "Escape") {
                   setMention(null);
+                  setMentionIndex(0);
                   return;
                 }
                 if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
@@ -556,7 +579,11 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
               }}
             />
             {mention && filteredFiles.length > 0 ? (
-              <MentionPopover files={filteredFiles} onPick={insertMention} />
+              <MentionPopover
+                files={filteredFiles}
+                activeIndex={Math.min(mentionIndex, filteredFiles.length - 1)}
+                onPick={insertMention}
+              />
             ) : null}
             {slash && filteredSlash.length > 0 ? (
               <SlashPopover
@@ -927,23 +954,39 @@ function SlashPopover({
 
 function MentionPopover({
   files,
+  activeIndex,
   onPick,
 }: {
   files: ProjectFile[];
+  activeIndex: number;
   onPick: (path: string) => void;
 }) {
   const ref = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (ref.current) ref.current.scrollTop = 0;
   }, [files]);
+  useEffect(() => {
+    if (!ref.current) return;
+    const active = ref.current.querySelector<HTMLElement>('.mention-item.active');
+    active?.scrollIntoView({ block: 'nearest' });
+  }, [activeIndex]);
   return (
-    <div className="mention-popover" data-testid="mention-popover" ref={ref}>
-      {files.map((f) => {
+    <div
+      className="mention-popover"
+      data-testid="mention-popover"
+      ref={ref}
+      role="listbox"
+    >
+      {files.map((f, idx) => {
         const key = f.path ?? f.name;
+        const active = idx === activeIndex;
         return (
           <button
             key={key}
-            className="mention-item"
+            role="option"
+            aria-selected={active}
+            className={`mention-item${active ? ' active' : ''}`}
+            onMouseDown={(e) => e.preventDefault()}
             onClick={() => onPick(key)}
           >
             <code>{key}</code>
