@@ -19,7 +19,7 @@ import {
   upsertPreviewComment,
   writeProjectTextFile,
 } from '../providers/registry';
-import { composeSystemPrompt } from '@pixelpitch/contracts';
+import { DECK_PLAN_VERSION, composeSystemPrompt, type DeckPlan } from '@pixelpitch/contracts';
 import { navigate } from '../router';
 import { agentDisplayName } from '../utils/agentLabels';
 import { playSound, showCompletionNotification } from '../utils/notifications';
@@ -1304,12 +1304,13 @@ export function ProjectView({
   }, [skills, designSystems, project.skillId, project.designSystemId, t]);
 
   const isDeck = useMemo(
-    () => skills.find((s) => s.id === project.skillId)?.mode === 'deck',
-    [skills, project.skillId],
+    () => project.metadata?.kind === 'deck' || skills.find((s) => s.id === project.skillId)?.mode === 'deck',
+    [skills, project.skillId, project.metadata?.kind],
   );
 
-  const [deckPlan, setDeckPlan] = useState<import('@pixelpitch/contracts').DeckPlan | null>(null);
+  const [deckPlan, setDeckPlan] = useState<DeckPlan | null>(null);
   const [deckExporting, setDeckExporting] = useState(false);
+  const seededDeckPlanRef = useRef<string | null>(null);
   const hasDeckPlanFile = useMemo(
     () => projectFiles.some(isDeckPlanProjectFile),
     [projectFiles],
@@ -1329,12 +1330,34 @@ export function ProjectView({
   }, [project.id]);
 
   useEffect(() => {
+    if (!isDeck || !project.id || deckPlan || hasDeckPlanFile) return;
+    if (seededDeckPlanRef.current === project.id) return;
+    seededDeckPlanRef.current = project.id;
+    const initialPlan = createInitialDeckPlan(project);
+    void writeProjectTextFile(
+      project.id,
+      DECK_PLAN_PATH,
+      JSON.stringify(initialPlan, null, 2),
+    ).then((file) => {
+      if (!file) {
+        seededDeckPlanRef.current = null;
+        return;
+      }
+      setDeckPlan(initialPlan);
+      void refreshProjectFiles();
+      void fetchDeckPlan();
+    });
+  }, [deckPlan, fetchDeckPlan, hasDeckPlanFile, isDeck, project, refreshProjectFiles]);
+
+  useEffect(() => {
     if (!isDeck || !project.id) {
       setDeckPlan(null);
       return;
     }
     if (!hasDeckPlanFile) {
-      setDeckPlan(null);
+      if (seededDeckPlanRef.current !== project.id) {
+        setDeckPlan(null);
+      }
       return;
     }
     void fetchDeckPlan();
@@ -1357,10 +1380,10 @@ export function ProjectView({
   }, [fetchDeckPlan, isDeck, project.id, refreshProjectFiles]);
 
   const handleDeckUpdatePlan = useCallback(
-    (updates: Partial<import('@pixelpitch/contracts').DeckPlan>) => {
+    (updates: Partial<DeckPlan>) => {
       if (!deckPlan) return;
       const updated = { ...deckPlan, ...updates };
-      setDeckPlan(updated as import('@pixelpitch/contracts').DeckPlan);
+      setDeckPlan(updated as DeckPlan);
       fetch(`/api/projects/${project.id}/deck/plan`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -1493,7 +1516,7 @@ export function ProjectView({
             <span className="meta" data-testid="project-meta">{projectMeta}</span>
         </div>
       </AppChromeHeader>
-      {isDeck && deckPlan ? (
+      {isDeck ? (
         <DeckWorkspace
           projectId={project.id}
           plan={deckPlan}
@@ -1628,6 +1651,28 @@ function isTerminalRunStatus(status: ChatMessage['runStatus']): boolean {
 
 function isActiveRunStatus(status: ChatMessage['runStatus']): boolean {
   return status === 'queued' || status === 'running';
+}
+
+function createInitialDeckPlan(project: Project): DeckPlan {
+  return {
+    version: DECK_PLAN_VERSION,
+    phase: 'narrative',
+    title: project.name || 'Untitled Deck',
+    audience: '',
+    tone: '',
+    keyMessage: '',
+    composition: {
+      frameworkId: 'html-ppt',
+      themeId: 'minimal-white',
+      format: '16:9',
+      runtime: 'deck/framework.js',
+      designSystemId: project.designSystemId,
+    },
+    interview: { history: [] },
+    narrative: { beats: [] },
+    slides: [],
+    slidify: { lastExport: null, fidelityIssues: [] },
+  };
 }
 
 type BufferedTextUpdates = ReturnType<typeof createBufferedTextUpdates>;

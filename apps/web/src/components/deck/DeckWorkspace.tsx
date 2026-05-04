@@ -9,7 +9,7 @@ import { StoryCanvas } from './StoryCanvas';
 
 interface Props {
   projectId: string;
-  plan: DeckPlan;
+  plan: DeckPlan | null;
   onUpdatePlan: (updates: Partial<DeckPlan>) => void;
   onExport: () => Promise<void>;
   exporting: boolean;
@@ -32,30 +32,34 @@ export function DeckWorkspace({
   const [showExport, setShowExport] = useState(false);
 
   useEffect(() => {
+    if (!plan) return;
     if (plan.slides.length === 0) return;
     if (!activeSlideId || !plan.slides.some((s) => s.id === activeSlideId)) {
       setActiveSlideId(plan.slides[0]!.id);
     }
-  }, [plan.slides, activeSlideId]);
+  }, [plan, activeSlideId]);
 
   const handleUpdateBeats = useCallback(
     (beats: DeckBeat[]) => {
+      if (!plan) return;
       onUpdatePlan({ narrative: { beats } });
     },
-    [onUpdatePlan],
+    [onUpdatePlan, plan],
   );
 
   const handleEditBeat = useCallback(
     (id: string, updates: Partial<DeckBeat>) => {
+      if (!plan) return;
       const beats = plan.narrative.beats.map((b) =>
         b.id === id ? { ...b, ...updates } : b,
       );
       onUpdatePlan({ narrative: { beats } });
     },
-    [plan.narrative.beats, onUpdatePlan],
+    [plan, onUpdatePlan],
   );
 
   const handleAddBeat = useCallback(() => {
+    if (!plan) return;
     const beats: DeckBeat[] = [
       ...plan.narrative.beats,
       {
@@ -66,14 +70,15 @@ export function DeckWorkspace({
       },
     ];
     onUpdatePlan({ narrative: { beats } });
-  }, [plan.narrative.beats, onUpdatePlan]);
+  }, [plan, onUpdatePlan]);
 
   const handleRemoveBeat = useCallback(
     (id: string) => {
+      if (!plan) return;
       const beats = plan.narrative.beats.filter((b) => b.id !== id);
       onUpdatePlan({ narrative: { beats } });
     },
-    [plan.narrative.beats, onUpdatePlan],
+    [plan, onUpdatePlan],
   );
 
   const handleProceed = useCallback(() => {
@@ -89,6 +94,36 @@ export function DeckWorkspace({
     () => (activeSlideId ? renderSlidePreview(activeSlideId) : null),
     [activeSlideId, renderSlidePreview],
   );
+
+  if (!plan) {
+    return (
+      <div className="deck-workspace">
+        <div className="deck-workspace-topbar">
+          <DeckPhaseBar phase="narrative" />
+          <span className="deck-workspace-title">Starting narrative interview...</span>
+          <div className="deck-workspace-actions">
+            <button type="button" className="topbar-btn" disabled>
+              Export PPTX
+            </button>
+          </div>
+        </div>
+        <div className="deck-workspace-body">
+          <div className="deck-workspace-chat">{chatPane}</div>
+          <div className="deck-workspace-canvas">
+            <div className="deck-workspace-loading" role="status" aria-live="polite">
+              <div className="deck-workspace-loading-icon" aria-hidden>
+                <span>...</span>
+              </div>
+              <div className="deck-workspace-loading-text">Your deck is being set up</div>
+              <div className="deck-workspace-loading-hint">
+                Starting narrative interview and preparing deck-plan.json.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="deck-workspace">

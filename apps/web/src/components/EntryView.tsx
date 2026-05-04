@@ -118,6 +118,7 @@ export function EntryView({
   const [resizing, setResizing] = useState(false);
   const [petRailHidden, setPetRailHiddenState] = useState<boolean>(() => loadPetRailHidden());
   const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
+  const [quickDeckPrompt, setQuickDeckPrompt] = useState('');
   const avatarMenuRef = useRef<HTMLDivElement | null>(null);
 
   function setPetRailHidden(next: boolean) {
@@ -147,6 +148,12 @@ export function EntryView({
       systems: designSystems.length,
     };
   }, [projects, designSystems.length]);
+  const quickDeckSkill = useMemo(
+    () => skills.find((skill) => skill.id === 'deck')
+      ?? skills.find((skill) => skill.mode === 'deck')
+      ?? null,
+    [skills],
+  );
 
   const envMetaLine = useMemo(() => {
     if (config.mode === 'api') {
@@ -185,6 +192,27 @@ export function EntryView({
 
   function handleCreate(input: CreateInput) {
     onCreateProject(input);
+  }
+
+  function handleQuickDeckSubmit() {
+    const prompt = quickDeckPrompt.trim();
+    if (!prompt || !quickDeckSkill || loading) return;
+    onCreateProject({
+      name: quickDeckName(prompt),
+      skillId: quickDeckSkill.id,
+      designSystemId: null,
+      metadata: {
+        kind: 'deck',
+        speakerNotes:
+          typeof quickDeckSkill.speakerNotes === 'boolean'
+            ? quickDeckSkill.speakerNotes
+            : true,
+      },
+      pendingPrompt:
+        `Start a deck about: ${prompt}\n\n` +
+        `Immediately create deck/deck-plan.json with phase "narrative", then begin the narrative interview.`,
+    });
+    setQuickDeckPrompt('');
   }
 
   const startWidthRef = useRef(0);
@@ -424,6 +452,29 @@ export function EntryView({
             <CenteredLoader label={t('entry.loadingWorkspace')} />
           ) : (
             <>
+              <section className="entry-deck-hero" aria-label="Start a deck">
+                <div className="entry-deck-hero-icon" aria-hidden>
+                  <Icon name="present" size={22} strokeWidth={1.8} />
+                </div>
+                <div className="entry-deck-hero-text">
+                  <div className="entry-deck-hero-title">Start a deck</div>
+                  <div className="entry-deck-hero-sub">Shape the story first, then generate slides.</div>
+                </div>
+                <textarea
+                  className="entry-deck-hero-input"
+                  value={quickDeckPrompt}
+                  rows={1}
+                  placeholder="Describe your deck in a few words..."
+                  disabled={loading || !quickDeckSkill}
+                  onClick={(e) => e.stopPropagation()}
+                  onChange={(e) => setQuickDeckPrompt(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key !== 'Enter' || e.shiftKey) return;
+                    e.preventDefault();
+                    handleQuickDeckSubmit();
+                  }}
+                />
+              </section>
               <section className="entry-dashboard" aria-label="Studio overview">
                 <div className="entry-dashboard-copy">
                   <span className="entry-dashboard-kicker">Studio</span>
@@ -592,4 +643,11 @@ function kindForSkill(skill: SkillSummary): ProjectKind {
   if (skill.mode === 'video' || skill.surface === 'video') return 'video';
   if (skill.mode === 'audio' || skill.surface === 'audio') return 'audio';
   return 'other';
+}
+
+function quickDeckName(prompt: string): string {
+  const firstLine = prompt.split(/\r?\n/)[0]?.trim() ?? '';
+  const cleaned = firstLine.replace(/\s+/g, ' ');
+  if (!cleaned) return 'Untitled deck';
+  return cleaned.length > 54 ? `${cleaned.slice(0, 51).trimEnd()}...` : cleaned;
 }

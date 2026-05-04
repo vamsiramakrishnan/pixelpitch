@@ -163,7 +163,8 @@ export function NewProjectPanel({
     }
     if (tab === 'deck') {
       const list = skills.filter((s) => s.mode === 'deck');
-      return list.find((s) => s.defaultFor.includes('deck'))?.id
+      return skills.find((s) => s.id === 'deck')?.id
+        ?? list.find((s) => s.defaultFor.includes('deck'))?.id
         ?? list[0]?.id
         ?? null;
     }
