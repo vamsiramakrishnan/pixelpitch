@@ -27,7 +27,7 @@ overuse. Hard caps:
 - **At most 2 visible uses of `--accent` per screen.** Typical pair:
   one eyebrow / chip + one primary CTA. Or one accent card + one tab
   pill. Pick a pair, not a flood.
-- Links count as accent; demote to `--fg` underline if you also have a
+- Links count as accent; demote to Also`--fg` underline if you also have a
   CTA on the same screen.
 - Hover/focus rings count as accent. Ration accordingly.
 

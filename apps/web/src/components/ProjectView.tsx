@@ -13,9 +13,12 @@ import {
   deletePreviewComment,
   fetchPreviewComments,
   fetchDesignSystem,
+  fetchLiveArtifacts,
   fetchProjectFiles,
   fetchSkill,
+  exportProjectFileAsPptx,
   patchPreviewCommentStatus,
+  projectFileUrl,
   upsertPreviewComment,
   writeProjectTextFile,
 } from '../providers/registry';
@@ -47,6 +50,7 @@ import type {
   ChatMessage,
   Conversation,
   DesignSystemSummary,
+  LiveArtifactSummary,
   OpenTabsState,
   Project,
   PreviewComment,
@@ -125,10 +129,12 @@ export function ProjectView({
   const [previewComments, setPreviewComments] = useState<PreviewComment[]>([]);
   const [attachedComments, setAttachedComments] = useState<PreviewComment[]>([]);
   const [streaming, setStreaming] = useState(false);
+  const [pptxExporting, setPptxExporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [artifact, setArtifact] = useState<Artifact | null>(null);
   const [filesRefresh, setFilesRefresh] = useState(0);
   const [projectFiles, setProjectFiles] = useState<ProjectFile[]>([]);
+  const [liveArtifacts, setLiveArtifacts] = useState<LiveArtifactSummary[]>([]);
   // The persisted set of open tabs + active tab. Persisted via PUT on every
   // change; loaded once when the project mounts.
   const [openTabsState, setOpenTabsState] = useState<OpenTabsState>({
@@ -334,6 +340,12 @@ export function ProjectView({
     return next;
   }, [project.id]);
 
+  const refreshLiveArtifacts = useCallback(async (): Promise<LiveArtifactSummary[]> => {
+    const next = await fetchLiveArtifacts(project.id);
+    setLiveArtifacts(next);
+    return next;
+  }, [project.id]);
+
   const requestOpenFile = useCallback((name: string) => {
     if (!name) return;
     setOpenRequest({ name, nonce: Date.now() });
@@ -358,7 +370,8 @@ export function ProjectView({
   useEffect(() => {
     if (!daemonLive) return;
     void refreshProjectFiles();
-  }, [daemonLive, refreshProjectFiles, filesRefresh]);
+    void refreshLiveArtifacts();
+  }, [daemonLive, refreshProjectFiles, refreshLiveArtifacts, filesRefresh]);
 
   // When the URL points at a specific file, fire an open request so the
   // FileWorkspace promotes it to an active tab. We watch routeFileName
@@ -658,6 +671,9 @@ export function ProjectView({
               textBuffer.appendContent(delta);
             },
             onAgentEvent: (ev) => {
+              if (ev.kind === 'live_artifact' || ev.kind === 'live_artifact_refresh') {
+                void refreshLiveArtifacts();
+              }
               textBuffer.appendEvent(ev);
             },
             onDone: () => {
@@ -677,6 +693,7 @@ export function ProjectView({
               setStreaming(false);
               persistNow();
               void refreshProjectFiles();
+              void refreshLiveArtifacts();
               onProjectsRefresh();
             },
             onError: (err) => {
@@ -920,6 +937,9 @@ export function ProjectView({
       const handlers = {
         onDelta: textBuffer.appendContent,
         onAgentEvent: (ev: AgentEvent) => {
+          if (ev.kind === 'live_artifact' || ev.kind === 'live_artifact_refresh') {
+            void refreshLiveArtifacts();
+          }
           if (ev.kind === 'text') textBuffer.appendTextEvent(ev.text);
           else pushEvent(ev);
         },
@@ -969,6 +989,7 @@ export function ProjectView({
               return updated;
             });
           });
+          void refreshLiveArtifacts();
           onProjectsRefresh();
         },
         onError: (err: Error) => {
@@ -1152,46 +1173,25 @@ export function ProjectView({
   );
 
   const handleExportAsPptx = useCallback(
-    (fileName: string) => {
-      if (streaming) return;
-      const baseTitle = fileName.replace(/\.html?$/i, '') || fileName;
-      const prompt =
-        `Export @${fileName} as an editable PPTX file titled "${baseTitle}".\n\n` +
-        `**Generate.** Use python-pptx (preferred — full XML control). Apply the ` +
-        `footer-rail + cursor-flow discipline from \`skills/pptx-html-fidelity-audit/SKILL.md\` ` +
-        `Step 4 from the start: define \`CONTENT_MAX_Y = 6.70"\` and \`FOOTER_TOP = 6.85"\` ` +
-        `as constants, route every content block through a \`Cursor\` that refuses to cross ` +
-        `the rail, and use budget centering (not \`MARGIN_TOP\`) for hero/cover slides. ` +
-        `Preserve \`<em>\` / \`<i>\` as \`italic=True\` on Latin runs only — never on CJK. ` +
-        `Set the \`<a:latin>\` and \`<a:ea>\` typeface slots explicitly so Chinese runs ` +
-        `don't fall back to Microsoft JhengHei.\n\n` +
-        `**Verify (mandatory gate).** After writing, run ` +
-        `\`python skills/pptx-html-fidelity-audit/scripts/verify_layout.py "${baseTitle}.pptx"\` ` +
-        `(quote the path — filenames may contain spaces). Zero rail violations is the gate ` +
-        `for "shippable". If violations remain, walk Steps 2-4 of the SKILL.md ` +
-        `(extract dump → audit table → re-export) — do not declare done by eyeballing the ` +
-        `deck. If 🟡 typography issues surface (italic missing, unexpected \`Calibri\` / ` +
-        `\`Microsoft JhengHei\` in the XML), consult ` +
-        `\`skills/pptx-html-fidelity-audit/references/font-discipline.md\` for the ` +
-        `five-layer font audit.\n\n` +
-        `**Customizing rails.** The default \`CONTENT_MAX_Y = 6.70"\` / ` +
-        `\`FOOTER_TOP = 6.85"\` constants suit a 16:9 canvas with a slim footer. If the ` +
-        `design system needs different rails (wider footer, 4:3 canvas), pass ` +
-        `\`--content-max-y\` / \`--canvas-h\` to \`verify_layout.py\` and update the matching ` +
-        `constants in the export script — see \`references/layout-discipline.md\` §1.\n\n` +
-        `If \`python-pptx\` or the verifier is unavailable in this environment, say so ` +
-        `explicitly — don't claim fidelity is correct without evidence.\n\n` +
-        `Save into the current project folder (this conversation's working directory) as ` +
-        `\`${baseTitle}.pptx\`. Report the on-disk path and a 1-line fidelity summary ` +
-        `(e.g. "0 rail violations across 14 slides") when done.`;
-      const attachment: ChatAttachment = {
-        path: fileName,
-        name: fileName,
-        kind: 'file',
-      };
-      void handleSend(prompt, [attachment], []);
+    async (fileName: string) => {
+      if (streaming || pptxExporting) return;
+      setError(null);
+      setPptxExporting(true);
+      try {
+        const result = await exportProjectFileAsPptx(project.id, fileName);
+        setFilesRefresh((n) => n + 1);
+        requestOpenFile(result.file.name);
+        triggerProjectFileDownload(project.id, result.file.name);
+        if (result.audit && !result.audit.ok) {
+          setError(`PPTX exported, but the fidelity audit found issues:\n${result.audit.output}`);
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : String(err));
+      } finally {
+        setPptxExporting(false);
+      }
     },
-    [streaming, handleSend],
+    [streaming, pptxExporting, project.id, requestOpenFile],
   );
 
   const handleStop = useCallback(() => {
@@ -1435,12 +1435,16 @@ export function ProjectView({
         <FileWorkspace
           projectId={project.id}
           files={projectFiles}
+          liveArtifacts={liveArtifacts}
           onRefreshFiles={() => {
             void refreshProjectFiles();
           }}
+          onRefreshLiveArtifacts={() => {
+            void refreshLiveArtifacts();
+          }}
           isDeck={isDeck}
           onExportAsPptx={handleExportAsPptx}
-          streaming={streaming}
+          streaming={streaming || pptxExporting}
           openRequest={openRequest}
           tabsState={openTabsState}
           onTabsStateChange={persistTabsState}
@@ -1601,4 +1605,13 @@ function createBufferedTextUpdates({
   }
 
   return { appendContent, appendTextEvent, appendEvent, flush, cancel };
+}
+
+function triggerProjectFileDownload(projectId: string, fileName: string): void {
+  const a = document.createElement('a');
+  a.href = projectFileUrl(projectId, fileName);
+  a.download = fileName.split('/').pop() || fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }

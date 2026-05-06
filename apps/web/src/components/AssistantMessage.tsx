@@ -344,6 +344,9 @@ function humanizeStatus(label: string, t: (k: keyof Dict) => string): string {
   if (label === 'requesting') return t('assistant.statusRequesting');
   if (label === 'thinking') return t('assistant.statusThinking');
   if (label === 'streaming') return t('assistant.statusStreaming');
+  if (label === 'warning') return 'Warning';
+  if (label === 'error') return 'Error';
+  if (label === 'tool') return 'Using tool';
   return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
@@ -499,9 +502,10 @@ function ThinkingBlock({ text }: { text: string }) {
 }
 
 function StatusPill({ label, detail }: { label: string; detail?: string | undefined }) {
+  const t = useT();
   return (
-    <div className="status-pill" aria-live="polite">
-      <span className="status-label">{label}</span>
+    <div className={`status-pill status-${label}`} aria-live="polite">
+      <span className="status-label">{humanizeStatus(label, t)}</span>
       {detail ? <span className="status-detail">{detail}</span> : null}
     </div>
   );
@@ -709,7 +713,13 @@ function buildBlocks(events: AgentEvent[]): Block[] {
     }
     if (ev.kind === 'tool_result') continue;
     if (ev.kind === 'status') {
-      if (ev.label === 'streaming' || ev.label === 'starting' || ev.label === 'requesting' || ev.label === 'thinking') continue;
+      if (
+        ev.label === 'streaming' ||
+        ev.label === 'starting' ||
+        ev.label === 'requesting' ||
+        ev.label === 'thinking' ||
+        ev.label === 'tool'
+      ) continue;
       const last = out[out.length - 1];
       if (last && last.kind === 'status' && last.label === ev.label) continue;
       out.push({ kind: 'status', label: ev.label, detail: ev.detail });

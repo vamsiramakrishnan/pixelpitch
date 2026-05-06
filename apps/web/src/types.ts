@@ -179,6 +179,51 @@ export type AgentEvent = PersistedAgentEvent;
 
 export type { ChatAttachment, ChatCommentAttachment, ChatMessage };
 
+export type LiveArtifactStatus = 'active' | 'archived' | 'error';
+export type LiveArtifactRefreshStatus = 'never' | 'idle' | 'running' | 'succeeded' | 'failed';
+
+export interface LiveArtifactSummary {
+  id: string;
+  projectId: string;
+  title: string;
+  slug: string;
+  status: LiveArtifactStatus;
+  pinned: boolean;
+  preview: { type: 'html' | 'jsx' | 'markdown'; entry: string };
+  refreshStatus: LiveArtifactRefreshStatus;
+  createdAt: string;
+  updatedAt: string;
+  lastRefreshedAt?: string;
+  hasDocument: boolean;
+}
+
+export interface LiveArtifact extends LiveArtifactSummary {
+  document: {
+    format: string;
+    templatePath: string;
+    generatedPreviewPath: string;
+    dataPath: string;
+    dataJson?: Record<string, unknown>;
+    sourceJson?: Record<string, unknown>;
+  };
+}
+
+export interface LiveArtifactRefreshLogEntry {
+  id: string;
+  refreshId: string;
+  sequence: number;
+  step: string;
+  status: string;
+  startedAt: string;
+  finishedAt?: string;
+  durationMs?: number;
+  error?: { message: string; code?: string };
+}
+
+export interface LiveArtifactWorkspaceEntry extends LiveArtifactSummary {
+  tabId: string;
+}
+
 export interface Artifact {
   identifier: string;
   artifactType?: string;

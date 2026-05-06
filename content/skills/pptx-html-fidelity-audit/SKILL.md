@@ -1,6 +1,6 @@
 ---
 name: pptx-html-fidelity-audit
-description: Audit a python-pptx export against its source HTML deck, identify layout/content drift (footer overflow, cropped content, missing italic/em, lost styling, off-rhythm spacing), and re-export with strict footer-rail + cursor-flow layout discipline. Use this skill whenever the user has a .pptx that was generated from an HTML slide deck and asks to compare/audit/verify/fix the export — including phrases like "compare ppt with html", "fidelity audit", "fix the pptx", "ppt is cut off", "footer overlap", "italic missing in pptx", "re-export the deck", "pptx-html-fidelity-audit", or any case where a python-pptx → HTML round-trip needs verification or repair. Also trigger when the user shows you a deck.html and a deck.pptx side by side and is debugging visual differences.
+description: Audit a Slidify or python-pptx export against its source HTML deck, identify layout/content drift (footer overflow, cropped content, missing italic/em, lost styling, off-rhythm spacing), and re-export with strict footer-rail + cursor-flow layout discipline. Use this skill whenever the user has a .pptx that was generated from an HTML slide deck and asks to compare/audit/verify/fix the export — including phrases like "compare ppt with html", "fidelity audit", "fix the pptx", "ppt is cut off", "footer overlap", "italic missing in pptx", "re-export the deck", "slidify export", "pptx-html-fidelity-audit", or any case where an HTML → PPTX export needs verification or repair. Also trigger when the user shows you a deck.html and a deck.pptx side by side and is debugging visual differences.
 triggers:
   - "pptx fidelity"
   - "pptx audit"
@@ -16,7 +16,7 @@ pixelpitch:
 
 # PPTX ↔ HTML Fidelity Audit
 
-A repeatable workflow for catching the ways a `python-pptx` export silently drifts from its HTML source — and fixing them with a layout discipline that prevents the same regressions on the next pass.
+A repeatable workflow for catching the ways an HTML → PPTX export silently drifts from its HTML source — and fixing them with a layout discipline that prevents the same regressions on the next pass. In Pixelpitch, prefer Slidify for re-export (`slidify convert`) because it is the editable-PPTX compiler used by the app's Export → PPTX button. Use custom `python-pptx` only when Slidify is unavailable or the user explicitly needs a bespoke exporter.
 
 ## When this skill applies
 
@@ -101,9 +101,27 @@ Severity rubric:
 
 After the table, write a short root-cause section: 90 % of the issues usually come from 2–3 systemic causes (e.g. "no footer rail enforced", "hero stacks pinned to MARGIN_TOP instead of centered", "italic never propagated"). Naming the systemic causes makes the re-export script much smaller and more correct.
 
-### Step 4 — Re-export with footer-rail + cursor-flow layout discipline
+### Step 4 — Re-export with Slidify first
 
-This is the load-bearing technique. See `references/layout-discipline.md` for the full rules; the summary:
+For Pixelpitch decks, the first re-export attempt should be Slidify:
+
+```bash
+slidify convert deck.html deck.pptx --json --report-json deck.slidify-report.json
+slidify field deck.slidify-report.json native_area_ratio
+```
+
+If Slidify reports low native coverage or the verifier finds layout violations, repair the HTML source rather than replacing the compiler. Add non-visual hints where they match the deck:
+
+- `data-pptx-role="title"` on the real slide title.
+- `data-atom="<id>"` when the visual cluster matches a known atom.
+- `data-pptx-rasterize="true"` for irreducible WebGL/canvas/mask effects.
+- `data-pptx-allow-overflow="true"` for intentional decorative bleed.
+
+Then re-run `slidify convert`. Only drop to a custom `python-pptx` exporter if the user asks for one or Slidify cannot represent the required artifact.
+
+### Step 4b — If custom python-pptx is required, use footer-rail + cursor-flow layout discipline
+
+This is the load-bearing technique for bespoke exporters. See `references/layout-discipline.md` for the full rules; the summary:
 
 **Define the rails up front, once, for the whole deck:**
 

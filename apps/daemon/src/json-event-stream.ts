@@ -94,7 +94,14 @@ function handleOpenCodeEvent(obj, onEvent, state) {
   return false;
 }
 
-function handleGeminiEvent(obj, onEvent) {
+function firstString(...values) {
+  for (const value of values) {
+    if (typeof value === 'string' && value.length > 0) return value;
+  }
+  return '';
+}
+
+function handleGeminiEvent(obj, onEvent, state) {
   if (!obj || typeof obj !== 'object') return false;
 
   if (obj.type === 'init') {
@@ -106,26 +113,98 @@ function handleGeminiEvent(obj, onEvent) {
     return true;
   }
 
+  if (obj.type === 'message' && obj.role === 'user') {
+    state.geminiInThinking = false;
+    onEvent({ type: 'status', label: 'requesting' });
+    return true;
+  }
+
   if (
     obj.type === 'message' &&
     obj.role === 'assistant' &&
     typeof obj.content === 'string' &&
     obj.content.length > 0
   ) {
+    state.geminiInThinking = false;
+    if (obj.delta) onEvent({ type: 'status', label: 'streaming' });
     onEvent({ type: 'text_delta', delta: obj.content });
     return true;
   }
 
-  if (obj.type === 'result' && obj.stats && typeof obj.stats === 'object') {
-    const usage = {};
-    if (typeof obj.stats.input_tokens === 'number') usage.input_tokens = obj.stats.input_tokens;
-    if (typeof obj.stats.output_tokens === 'number') usage.output_tokens = obj.stats.output_tokens;
-    if (typeof obj.stats.cached === 'number') usage.cached_read_tokens = obj.stats.cached;
+  if (obj.type === 'tool_use') {
+    const id = firstString(obj.tool_id, obj.toolId, obj.id, obj.callId);
+    const name = firstString(obj.tool_name, obj.toolName, obj.name, obj.tool);
+    if (!id || !name) return false;
+    state.geminiInThinking = false;
+    onEvent({ type: 'status', label: 'tool', detail: name });
     onEvent({
-      type: 'usage',
-      usage,
-      durationMs: typeof obj.stats.duration_ms === 'number' ? obj.stats.duration_ms : undefined,
+      type: 'tool_use',
+      id,
+      name,
+      input: obj.parameters ?? obj.input ?? obj.args ?? null,
     });
+    return true;
+  }
+
+  if (obj.type === 'tool_result') {
+    const toolUseId = firstString(obj.tool_id, obj.toolId, obj.id, obj.callId);
+    if (!toolUseId) return false;
+    const errorMessage =
+      obj.error && typeof obj.error === 'object'
+        ? firstString(obj.error.message, obj.error.type)
+        : '';
+    onEvent({
+      type: 'tool_result',
+      toolUseId,
+      content: stringifyContent(obj.output ?? errorMessage),
+      isError: obj.status === 'error' || Boolean(obj.error),
+    });
+    return true;
+  }
+
+  if (obj.type === 'error') {
+    const severity = firstString(obj.severity);
+    const message = firstString(obj.message, obj.error?.message, obj.error?.type) || 'Gemini CLI error';
+    onEvent({
+      type: 'status',
+      label: severity === 'warning' ? 'warning' : 'error',
+      detail: message,
+    });
+    return true;
+  }
+
+  if (
+    (obj.type === 'thinking' || obj.type === 'thought' || obj.type === 'thought_delta') &&
+    firstString(obj.delta, obj.content, obj.text, obj.thought)
+  ) {
+    if (!state.geminiInThinking) {
+      state.geminiInThinking = true;
+      onEvent({ type: 'thinking_start' });
+    }
+    onEvent({ type: 'thinking_delta', delta: firstString(obj.delta, obj.content, obj.text, obj.thought) });
+    return true;
+  }
+
+  if (obj.type === 'result') {
+    if (obj.stats && typeof obj.stats === 'object') {
+      const usage = {};
+      if (typeof obj.stats.input_tokens === 'number') usage.input_tokens = obj.stats.input_tokens;
+      if (typeof obj.stats.output_tokens === 'number') usage.output_tokens = obj.stats.output_tokens;
+      if (typeof obj.stats.cached === 'number') usage.cached_read_tokens = obj.stats.cached;
+      if (typeof obj.stats.total_tokens === 'number') usage.total_tokens = obj.stats.total_tokens;
+      onEvent({
+        type: 'usage',
+        usage,
+        durationMs: typeof obj.stats.duration_ms === 'number' ? obj.stats.duration_ms : undefined,
+      });
+    }
+    if (obj.status === 'error') {
+      onEvent({
+        type: 'status',
+        label: 'error',
+        detail: firstString(obj.error?.message, obj.error?.type) || 'Gemini CLI result failed',
+      });
+    }
     return true;
   }
 
@@ -290,6 +369,7 @@ export function createJsonEventStreamHandler(kind, onEvent) {
     cursorTextSoFar: '',
     openCodeToolUses: new Set(),
     codexToolUses: new Set(),
+    geminiInThinking: false,
   };
 
   function handleLine(line) {
@@ -302,7 +382,7 @@ export function createJsonEventStreamHandler(kind, onEvent) {
     }
 
     if (kind === 'opencode' && handleOpenCodeEvent(obj, onEvent, state)) return;
-    if (kind === 'gemini' && handleGeminiEvent(obj, onEvent)) return;
+    if (kind === 'gemini' && handleGeminiEvent(obj, onEvent, state)) return;
     if (kind === 'cursor-agent' && handleCursorEvent(obj, onEvent, state)) return;
     if (kind === 'codex' && handleCodexEvent(obj, onEvent, state)) return;
 

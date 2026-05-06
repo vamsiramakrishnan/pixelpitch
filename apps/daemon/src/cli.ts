@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 // @ts-nocheck
 import { startServer } from './server.js';
+import { runMcpStdio } from './mcp.js';
+import { runConnectorsToolCli } from './tools-connectors-cli.js';
 
 const argv = process.argv.slice(2);
 
@@ -45,9 +47,13 @@ const MEDIA_GENERATE_BOOLEAN_FLAGS = new Set([
   'help',
   'h',
 ]);
+const MCP_STRING_FLAGS = new Set(['daemon-url']);
+const MCP_BOOLEAN_FLAGS = new Set(['help', 'h']);
 
 const SUBCOMMAND_MAP = {
   media: runMedia,
+  mcp: runMcp,
+  tools: runTools,
 };
 
 const first = argv.find((a) => !a.startsWith('-'));
@@ -60,7 +66,7 @@ if (first && SUBCOMMAND_MAP[first]) {
 
 // Default: daemon mode.
 let port = Number(process.env.PIXELPITCH_PORT) || 17456;
-let host = process.env.PIXELPITCH_BIND_HOST || '0.0.0.0';
+let host = process.env.PIXELPITCH_BIND_HOST || '127.0.0.1';
 let open = true;
 
 for (let i = 0; i < argv.length; i++) {
@@ -99,9 +105,19 @@ function printRootHelp() {
       Designed to be invoked by a code agent — picks up PIXELPITCH_DAEMON_URL
       and PIXELPITCH_PROJECT_ID from the env that the daemon injected on spawn.
 
+  pixelpitch mcp [--daemon-url <url>]
+      Run a stdio MCP server that proxies read-only tool calls to a
+      running Pixelpitch daemon. Wire it into a coding agent in another
+      repo to pull project files without exporting a zip.
+
+  pixelpitch tools connectors list
+  pixelpitch tools connectors execute --connector <id> --tool <name> --input input.json
+      Invoke connected read-only connector tools from an agent run using
+      PIXELPITCH_DAEMON_URL and PIXELPITCH_TOOL_TOKEN.
+
 Options:
   --port <n>       Port to listen on (default: 17456, env: PIXELPITCH_PORT).
-  --host <addr>    Interface address to bind to (default: 0.0.0.0, env: PIXELPITCH_BIND_HOST).
+  --host <addr>    Interface address to bind to (default: 127.0.0.1, env: PIXELPITCH_BIND_HOST).
                    Set to a specific IP (e.g. a Tailscale address) to restrict access
                    to that interface only.
   --no-open        Do not open the browser after start.
@@ -112,6 +128,62 @@ What the daemon does:
   * proxies messages (text + images) to the selected agent via child-process spawn
   * exposes /api/projects/:id/media/generate — the unified image/video/audio
     dispatcher that the agent calls via \`pixelpitch media generate\`.`);
+}
+
+async function runMcp(args) {
+  const flags = parseFlags(args, {
+    string: MCP_STRING_FLAGS,
+    boolean: MCP_BOOLEAN_FLAGS,
+  });
+  if (flags.help || flags.h) {
+    printMcpHelp();
+    return;
+  }
+  const daemonUrl =
+    flags['daemon-url'] ||
+    process.env.PIXELPITCH_DAEMON_URL ||
+    `http://127.0.0.1:${Number(process.env.PIXELPITCH_PORT) || 17456}`;
+  await runMcpStdio({ daemonUrl });
+}
+
+function printMcpHelp() {
+  console.log(`Usage:
+  pixelpitch mcp [--daemon-url <url>]
+
+Options:
+  --daemon-url <url>  Pixelpitch daemon URL (default: PIXELPITCH_DAEMON_URL or http://127.0.0.1:17456).
+
+Tools:
+  list_projects, get_active_context, get_project, list_files, get_file,
+  get_artifact, search_files.`);
+}
+
+async function runTools(args) {
+  const sub = args.find((a) => !a.startsWith('-')) || '';
+  if (sub === 'help' || sub === '-h' || sub === '--help' || sub === '') {
+    printToolsHelp();
+    return;
+  }
+  const idx = args.indexOf(sub);
+  const subArgs = [...args.slice(0, idx), ...args.slice(idx + 1)];
+  if (sub === 'connectors') {
+    const result = await runConnectorsToolCli(subArgs);
+    if (result.exitCode) process.exit(result.exitCode);
+    return;
+  }
+  console.error(`unknown subcommand: pixelpitch tools ${sub}`);
+  printToolsHelp();
+  process.exit(1);
+}
+
+function printToolsHelp() {
+  console.log(`Usage:
+  pixelpitch tools connectors list [--format compact|json]
+  pixelpitch tools connectors execute --connector <id> --tool <name> --input input.json [--format compact|json]
+
+Environment:
+  PIXELPITCH_DAEMON_URL  Daemon base URL injected into agent runs.
+  PIXELPITCH_TOOL_TOKEN  Bearer token injected into agent runs.`);
 }
 
 // ---------------------------------------------------------------------------

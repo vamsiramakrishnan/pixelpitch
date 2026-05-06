@@ -92,6 +92,60 @@ describe('streamViaDaemon', () => {
     expect(handlers.onDone).toHaveBeenCalledWith('hello');
   });
 
+  it('translates daemon agent status detail and tool events', async () => {
+    const handlers = createDaemonHandlers();
+    vi.stubGlobal(
+      'fetch',
+      vi.fn()
+        .mockResolvedValueOnce(jsonResponse({ runId: 'run-1' }))
+        .mockResolvedValueOnce(
+          sseResponse(
+            [
+              'event: agent',
+              'data: {"type":"status","label":"warning","detail":"Loop detected"}',
+              '',
+              'event: agent',
+              'data: {"type":"tool_use","id":"tool-1","name":"read_file","input":{"path":"deck/deck-plan.json"}}',
+              '',
+              'event: agent',
+              'data: {"type":"tool_result","toolUseId":"tool-1","content":"ok","isError":false}',
+              '',
+              'event: end',
+              'data: {"code":0,"status":"succeeded"}',
+              '',
+              '',
+            ].join('\n'),
+          ),
+        ),
+    );
+
+    await streamViaDaemon({
+      agentId: 'mock',
+      history: [{ id: '1', role: 'user', content: 'hello' }],
+      systemPrompt: '',
+      signal: new AbortController().signal,
+      handlers,
+    });
+
+    expect(handlers.onAgentEvent).toHaveBeenCalledWith({
+      kind: 'status',
+      label: 'warning',
+      detail: 'Loop detected',
+    });
+    expect(handlers.onAgentEvent).toHaveBeenCalledWith({
+      kind: 'tool_use',
+      id: 'tool-1',
+      name: 'read_file',
+      input: { path: 'deck/deck-plan.json' },
+    });
+    expect(handlers.onAgentEvent).toHaveBeenCalledWith({
+      kind: 'tool_result',
+      toolUseId: 'tool-1',
+      content: 'ok',
+      isError: false,
+    });
+  });
+
   it('reads unified SSE error payload messages', async () => {
     const handlers = createDaemonHandlers();
     vi.stubGlobal(

@@ -7,7 +7,7 @@ describe('/api/version', () => {
   let baseUrl: string;
 
   beforeAll(async () => {
-    const started = await startServer({ port: 0, returnServer: true }) as {
+    const started = await startServer({ port: 0, host: '127.0.0.1', returnServer: true }) as {
       url: string;
       server: http.Server;
     };
@@ -15,7 +15,13 @@ describe('/api/version', () => {
     server = started.server;
   });
 
-  afterAll(() => new Promise<void>((resolve) => server.close(() => resolve())));
+  afterAll(() => new Promise<void>((resolve) => {
+    if (!server) {
+      resolve();
+      return;
+    }
+    server.close(() => resolve());
+  }));
 
   it('returns current app version info', async () => {
     const res = await fetch(`${baseUrl}/api/version`);
@@ -44,5 +50,33 @@ describe('/api/version', () => {
     expect(healthRes.ok).toBe(true);
     expect(versionRes.ok).toBe(true);
     expect(health).toEqual({ ok: true, version: version.version?.version });
+  });
+
+  it('exposes dependency-aware readiness endpoints', async () => {
+    const [readyRes, healthzRes] = await Promise.all([
+      fetch(`${baseUrl}/api/readyz`),
+      fetch(`${baseUrl}/api/healthz`),
+    ]);
+    const ready = await readyRes.json() as {
+      ok?: unknown;
+      status?: unknown;
+      version?: unknown;
+      checks?: Record<string, unknown>;
+    };
+    const healthz = await healthzRes.json() as unknown;
+
+    expect(readyRes.ok).toBe(true);
+    expect(healthzRes.ok).toBe(true);
+    expect(ready).toEqual({
+      ok: true,
+      status: 'ok',
+      version: expect.any(String),
+      checks: {
+        database: 'ok',
+        projectsDir: 'ok',
+        resources: 'ok',
+      },
+    });
+    expect(healthz).toEqual(ready);
   });
 });

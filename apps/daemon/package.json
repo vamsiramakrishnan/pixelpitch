@@ -24,7 +24,7 @@
     "package.json"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json && tsc -p tsconfig.sidecar.json",
+    "build": "bun run --filter @pixelpitch/contracts build && tsc -p tsconfig.json && tsc -p tsconfig.sidecar.json",
     "daemon": "bun run build && node dist/cli.js --no-open",
     "dev": "bun run build && node dist/cli.js --no-open",
     "start": "bun run build && node dist/cli.js",
@@ -32,6 +32,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.sidecar.json --noEmit && tsc -p tsconfig.tests.json --noEmit"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
     "@pixelpitch/contracts": "workspace:0.2.0",
     "@pixelpitch/platform": "workspace:0.2.0",
     "@pixelpitch/sidecar": "workspace:0.2.0",

@@ -6,16 +6,19 @@ import {
   uploadProjectFiles,
   writeProjectTextFile,
 } from '../providers/registry';
-import type { OpenTabsState, PreviewComment, PreviewCommentTarget, ProjectFile } from '../types';
+import type { LiveArtifactSummary, OpenTabsState, PreviewComment, PreviewCommentTarget, ProjectFile } from '../types';
 import { DesignFilesPanel } from './DesignFilesPanel';
 import { FileViewer } from './FileViewer';
 import { Icon } from './Icon';
+import { LiveArtifactViewer, liveArtifactTabId, parseLiveArtifactTabId } from './LiveArtifactViewer';
 import { PasteTextDialog } from './PasteTextDialog';
 import { SketchEditor, type SketchDocument, type SketchItem } from './SketchEditor';
 
 interface Props {
   projectId: string;
   files: ProjectFile[];
+  liveArtifacts?: LiveArtifactSummary[];
+  onRefreshLiveArtifacts?: () => Promise<void> | void;
   onRefreshFiles: () => Promise<void> | void;
   isDeck: boolean;
   onExportAsPptx?: ((fileName: string) => void) | undefined;
@@ -43,6 +46,8 @@ const DESIGN_FILES_TAB = '__design_files__';
 export function FileWorkspace({
   projectId,
   files,
+  liveArtifacts = [],
+  onRefreshLiveArtifacts,
   onRefreshFiles,
   isDeck,
   onExportAsPptx,
@@ -118,6 +123,15 @@ export function FileWorkspace({
       active: name,
     });
     setActiveTab(name);
+  }
+
+  function openLiveArtifact(artifactId: string) {
+    const tabId = liveArtifactTabId(artifactId);
+    onTabsStateChange({
+      tabs: persistedTabs.includes(tabId) ? persistedTabs : [...persistedTabs, tabId],
+      active: tabId,
+    });
+    setActiveTab(tabId);
   }
 
   function closeTab(name: string) {
@@ -304,6 +318,7 @@ export function FileWorkspace({
 
   const activeFile = useMemo<ProjectFile | null>(() => {
     if (activeTab === DESIGN_FILES_TAB) return null;
+    if (parseLiveArtifactTabId(activeTab)) return null;
     const onDisk = files.find((f) => f.name === activeTab);
     if (onDisk) return onDisk;
     if (isSketchName(activeTab) && sketches[activeTab]) {
@@ -317,6 +332,11 @@ export function FileWorkspace({
     }
     return null;
   }, [activeTab, files, sketches]);
+
+  const activeLiveArtifact = useMemo(() => {
+    const artifactId = parseLiveArtifactTabId(activeTab);
+    return artifactId ? liveArtifacts.find((item) => item.id === artifactId) ?? null : null;
+  }, [activeTab, liveArtifacts]);
 
   // Tabs rendered are persisted tabs plus any pending (un-saved) sketches.
   const tabNames = useMemo(() => {
@@ -358,11 +378,13 @@ export function FileWorkspace({
             sketchEntry && (sketchEntry.dirty || !sketchEntry.persisted) ? ' •' : '';
           const isPending = sketchEntry && !sketchEntry.persisted;
           const onDisk = files.find((f) => f.name === name);
-          const kind = onDisk?.kind ?? (isSketchName(name) ? 'sketch' : 'text');
+          const artifactId = parseLiveArtifactTabId(name);
+          const liveArtifact = artifactId ? liveArtifacts.find((item) => item.id === artifactId) : null;
+          const kind = liveArtifact ? 'html' : (onDisk?.kind ?? (isSketchName(name) ? 'sketch' : 'text'));
           return (
             <Tab
               key={name}
-              label={`${name}${dirtyMark}`}
+              label={`${liveArtifact?.title ?? name}${dirtyMark}`}
               active={activeTab === name}
               onActivate={() =>
                 isPending ? activatePending(name) : setPersistedActive(name)
@@ -379,13 +401,27 @@ export function FileWorkspace({
           <DesignFilesPanel
             projectId={projectId}
             files={files}
+            liveArtifacts={liveArtifacts.map((artifact) => ({
+              ...artifact,
+              tabId: liveArtifactTabId(artifact.id),
+            }))}
             onRefreshFiles={onRefreshFiles}
             onOpenFile={openFile}
+            onOpenLiveArtifact={(tabId) => {
+              const artifactId = parseLiveArtifactTabId(tabId);
+              if (artifactId) openLiveArtifact(artifactId);
+            }}
             onDeleteFile={(name) => void handleDelete(name)}
             onUpload={() => fileInputRef.current?.click()}
             onUploadFiles={(picked) => void uploadFiles(picked)}
             onPaste={() => setShowPasteDialog(true)}
             onNewSketch={startNewSketch}
+          />
+        ) : activeLiveArtifact ? (
+          <LiveArtifactViewer
+            projectId={projectId}
+            summary={activeLiveArtifact}
+            onUpdated={onRefreshLiveArtifacts}
           />
         ) : isActiveSketch && activeSketch && activeFile ? (
           activeSketch.loaded ? (

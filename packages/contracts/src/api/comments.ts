@@ -1,4 +1,4 @@
-import type { OkResponse } from '../common';
+import type { OkResponse } from '../common.js';
 
 export type PreviewCommentStatus =
   | 'open'
@@ -60,4 +60,3 @@ export interface PreviewCommentsResponse {
 }
 
 export interface PreviewCommentDeleteResponse extends OkResponse {}
-

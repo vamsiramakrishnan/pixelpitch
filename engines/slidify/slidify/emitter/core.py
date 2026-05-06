@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import tempfile
 import re
 from pathlib import Path
 from urllib.parse import urlparse
@@ -166,6 +167,42 @@ def _character_spacing_val(letter_spacing: str | None, font_size: str | None) ->
     # DrawingML ``spc`` is thousandths of an em. CSS letter-spacing is an
     # absolute px offset, so normalize it against this run's font size.
     return int(round((px * 72.0 / 96.0) / pt * 1000.0))
+
+
+def _css_duration_ms(raw: str | None) -> float:
+    if not raw:
+        return 0.0
+    vals: list[float] = []
+    for part in str(raw).split(","):
+        s = part.strip().lower()
+        try:
+            if s.endswith("ms"):
+                vals.append(float(s[:-2]))
+            elif s.endswith("s"):
+                vals.append(float(s[:-1]) * 1000.0)
+        except ValueError:
+            continue
+    return max(vals or [0.0])
+
+
+def _parse_record_hint(raw: str, duration_ms: int, fps: int) -> tuple[int, int]:
+    """Parse `data-pptx-record` values like `gif duration=2s fps=15`."""
+    for key, value in re.findall(r"(duration|fps)\s*=\s*([0-9.]+(?:ms|s)?)", raw):
+        if key == "fps":
+            try:
+                fps = max(2, min(30, int(float(value))))
+            except ValueError:
+                pass
+            continue
+        ms = _css_duration_ms(value)
+        if ms <= 0:
+            try:
+                ms = float(value) * 1000.0
+            except ValueError:
+                ms = 0.0
+        if ms > 0:
+            duration_ms = max(100, min(10_000, int(ms)))
+    return duration_ms, fps
 
 
 def _mixed_content_text_bbox(unit: VisualUnit, anchor: DomElement) -> BoundingBox:
@@ -464,6 +501,9 @@ class Emitter:
             return
 
         if kind == DecisionKind.Raster:
+            if op.decision.metadata.get("animated_gif"):
+                if await self._emit_animated_gif(slide, unit, op, rendered):
+                    return
             await self._emit_raster(slide, unit, op, rendered, renderer)
             return
 
@@ -1672,6 +1712,61 @@ class Emitter:
             return
         x, y, w, h = _emu_rect(op.bbox)
         slide.shapes.add_picture(io.BytesIO(png), x, y, w, h)
+
+    async def _emit_animated_gif(
+        self,
+        slide,
+        unit: VisualUnit,
+        op: EmitOp,
+        rendered: RenderedSlide,
+    ) -> bool:
+        """Capture an animated unit region and embed it as a GIF picture.
+
+        This is intentionally an opt-in or high-confidence path. PPTX cannot
+        express CSS keyframes natively, but PowerPoint does replay animated
+        GIF pictures in slideshow mode, which preserves motion while keeping
+        the rest of the slide on native emit paths.
+        """
+        try:
+            from slidify.anim_capture import capture_html_to_gif
+
+            duration_ms, fps = self._animation_capture_options(unit)
+            bbox = _clamp_bbox(op.bbox)
+            if bbox.w <= 0 or bbox.h <= 0:
+                return False
+            with tempfile.TemporaryDirectory(prefix="slidify-gif-") as tmp:
+                tmp_path = Path(tmp)
+                html_path = tmp_path / "slide.html"
+                gif_path = tmp_path / "region.gif"
+                html_path.write_text(rendered.html, encoding="utf-8")
+                await capture_html_to_gif(
+                    html_path,
+                    gif_path,
+                    duration_ms=duration_ms,
+                    fps=fps,
+                    viewport=(rendered.viewport_w, rendered.viewport_h),
+                    clip=(bbox.x, bbox.y, bbox.w, bbox.h),
+                    settle_ms=80,
+                )
+                data = gif_path.read_bytes()
+            x, y, w, h = _emu_rect(bbox)
+            slide.shapes.add_picture(io.BytesIO(data), x, y, w, h)
+            return True
+        except Exception as e:
+            log.warning("emitter.animated_gif_failed", error=str(e))
+            return False
+
+    def _animation_capture_options(self, unit: VisualUnit) -> tuple[int, int]:
+        duration_ms = 1500
+        fps = 12
+        for e in unit.elements:
+            raw = (e.pptx_record or "").strip()
+            if raw:
+                duration_ms, fps = _parse_record_hint(raw, duration_ms, fps)
+            css_ms = _css_duration_ms(e.animation_duration)
+            if css_ms > 0:
+                duration_ms = max(duration_ms, min(int(css_ms), 5000))
+        return duration_ms, fps
 
     def _emit_region_raster(
         self, slide, ground_truth_png: bytes, bbox: BoundingBox

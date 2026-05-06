@@ -85,6 +85,7 @@ async def capture_html_to_gif(
     duration_ms: int | None = None,
     fps: int | None = None,
     viewport: tuple[int, int] = DEFAULT_VIEWPORT,
+    clip: tuple[float, float, float, float] | None = None,
     settle_ms: int = 250,
 ) -> Path:
     """Render ``html_path`` in headless Chromium and write an animated GIF.
@@ -114,7 +115,7 @@ async def capture_html_to_gif(
         frames=spec.frame_count,
     )
 
-    pngs = await _capture_frames(html_path, spec, settle_ms=settle_ms)
+    pngs = await _capture_frames(html_path, spec, settle_ms=settle_ms, clip=clip)
     _write_gif(pngs, gif_path, fps=spec.fps)
     log.info("anim_capture.done", gif=str(gif_path),
              frames=len(pngs), bytes=gif_path.stat().st_size)
@@ -122,7 +123,11 @@ async def capture_html_to_gif(
 
 
 async def _capture_frames(
-    html_path: Path, spec: CaptureSpec, *, settle_ms: int
+    html_path: Path,
+    spec: CaptureSpec,
+    *,
+    settle_ms: int,
+    clip: tuple[float, float, float, float] | None = None,
 ) -> list[bytes]:
     """Drive Playwright through the slide and sample frames at the
     declared fps.
@@ -180,7 +185,7 @@ async def _capture_frames(
         interval = spec.frame_interval_ms
         n = spec.frame_count
         for i in range(n):
-            png = await _cdp_screenshot(client)
+            png = await _cdp_screenshot(client, clip=clip)
             pngs.append(png)
             if i < n - 1:
                 await page.wait_for_timeout(interval)
@@ -190,12 +195,24 @@ async def _capture_frames(
     return pngs
 
 
-async def _cdp_screenshot(client) -> bytes:
+async def _cdp_screenshot(
+    client, *, clip: tuple[float, float, float, float] | None = None
+) -> bytes:
     """Take a screenshot via raw CDP — much faster than Playwright's
     ``page.screenshot()`` because it skips the wait-for-stable logic."""
     import base64
 
-    res = await client.send("Page.captureScreenshot", {"format": "png"})
+    params: dict = {"format": "png"}
+    if clip is not None:
+        x, y, w, h = clip
+        params["clip"] = {
+            "x": max(0.0, float(x)),
+            "y": max(0.0, float(y)),
+            "width": max(1.0, float(w)),
+            "height": max(1.0, float(h)),
+            "scale": 1,
+        }
+    res = await client.send("Page.captureScreenshot", params)
     return base64.b64decode(res["data"])
 
 

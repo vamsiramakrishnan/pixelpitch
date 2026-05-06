@@ -2,16 +2,19 @@ import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { useT } from '../i18n';
 import type { Dict } from '../i18n/types';
 import { projectFileUrl } from '../providers/registry';
-import type { ProjectFile, ProjectFileKind } from '../types';
+import type { LiveArtifactWorkspaceEntry, ProjectFile, ProjectFileKind } from '../types';
 import { Icon } from './Icon';
+import { LiveArtifactBadges } from './LiveArtifactBadges';
 
 type TranslateFn = (key: keyof Dict, vars?: Record<string, string | number>) => string;
 
 interface Props {
   projectId: string;
   files: ProjectFile[];
+  liveArtifacts?: LiveArtifactWorkspaceEntry[];
   onRefreshFiles: () => Promise<void> | void;
   onOpenFile: (name: string) => void;
+  onOpenLiveArtifact?: (tabId: LiveArtifactWorkspaceEntry['tabId']) => void;
   onDeleteFile: (name: string) => void;
   onUpload: () => void;
   onUploadFiles: (files: File[]) => void;
@@ -42,8 +45,10 @@ const SECTION_FILE_LIMIT_INCREMENT = 200;
 export function DesignFilesPanel({
   projectId,
   files,
+  liveArtifacts = [],
   onRefreshFiles,
   onOpenFile,
+  onOpenLiveArtifact,
   onDeleteFile,
   onUpload,
   onUploadFiles,
@@ -157,10 +162,35 @@ export function DesignFilesPanel({
           </div>
         </div>
         <div className="df-body">
-          {files.length === 0 ? (
+          {files.length === 0 && liveArtifacts.length === 0 ? (
             <div className="df-empty">{t('designFiles.empty')}</div>
           ) : (
-            SECTION_ORDER.filter((s) => grouped[s].length > 0).map((section) => {
+            <>
+            {liveArtifacts.length > 0 ? (
+              <div className="df-section" key="live-artifacts">
+                <div className="df-section-label">
+                  Live Artifacts
+                  <span className="df-section-count">{liveArtifacts.length}</span>
+                </div>
+                {liveArtifacts.map((artifact) => (
+                  <button
+                    key={artifact.id}
+                    type="button"
+                    className="df-row live-artifact-row"
+                    onClick={() => onOpenLiveArtifact?.(artifact.tabId)}
+                    onDoubleClick={() => onOpenLiveArtifact?.(artifact.tabId)}
+                  >
+                    <span className="df-row-icon" data-kind="html" aria-hidden>◈</span>
+                    <span className="df-row-name-wrap">
+                      <span className="df-row-name">{artifact.title}</span>
+                      <LiveArtifactBadges status={artifact.status} refreshStatus={artifact.refreshStatus} />
+                    </span>
+                    <span className="df-row-time">{relativeTime(Date.parse(artifact.updatedAt), t)}</span>
+                  </button>
+                ))}
+              </div>
+            ) : null}
+            {SECTION_ORDER.filter((s) => grouped[s].length > 0).map((section) => {
               const sectionFiles = grouped[section];
               const visibleLimit = sectionLimits[section] ?? INITIAL_SECTION_FILE_LIMIT;
               const visibleFiles = sectionFiles.slice(0, visibleLimit);
@@ -244,7 +274,8 @@ export function DesignFilesPanel({
                 ) : null}
               </div>
               );
-            })
+            })}
+            </>
           )}
           <div
             className={`df-drop ${draggingFiles ? 'dragging' : ''}`}

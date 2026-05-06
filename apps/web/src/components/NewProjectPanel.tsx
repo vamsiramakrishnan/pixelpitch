@@ -72,6 +72,40 @@ const TAB_LABEL_KEYS: Record<CreateTab, keyof Dict> = {
   other: 'newproj.tabOther',
 };
 
+const TAB_META: Record<CreateTab, {
+  icon: Parameters<typeof Icon>[0]['name'];
+  hint: string;
+}> = {
+  prototype: {
+    icon: 'grid',
+    hint: 'Interactive UI',
+  },
+  deck: {
+    icon: 'present',
+    hint: 'Slides + export',
+  },
+  template: {
+    icon: 'file',
+    hint: 'Saved structure',
+  },
+  image: {
+    icon: 'image',
+    hint: 'Visual prompt',
+  },
+  video: {
+    icon: 'play',
+    hint: 'Motion brief',
+  },
+  audio: {
+    icon: 'mic',
+    hint: 'Voice or sound',
+  },
+  other: {
+    icon: 'sparkles',
+    hint: 'Freeform',
+  },
+};
+
 export function NewProjectPanel({
   skills,
   designSystems,
@@ -87,6 +121,7 @@ export function NewProjectPanel({
   const importInputRef = useRef<HTMLInputElement | null>(null);
   const [importing, setImporting] = useState(false);
   const [tab, setTab] = useState<CreateTab>('prototype');
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const tabsRef = useRef<HTMLDivElement | null>(null);
   const [tabScroll, setTabScroll] = useState({ left: false, right: false });
   const [name, setName] = useState('');
@@ -197,6 +232,10 @@ export function NewProjectPanel({
       behavior: 'smooth',
     });
   }
+
+  useEffect(() => {
+    setShowAdvanced(false);
+  }, [tab]);
 
   useEffect(() => {
     const el = tabsRef.current;
@@ -319,7 +358,13 @@ export function NewProjectPanel({
               tabIndex={tab === entry ? 0 : -1}
               onClick={() => setTab(entry)}
             >
-              {t(TAB_LABEL_KEYS[entry])}
+              <span className="newproj-tab-icon" aria-hidden>
+                <Icon name={TAB_META[entry].icon} size={14} />
+              </span>
+              <span className="newproj-tab-copy">
+                <strong>{t(TAB_LABEL_KEYS[entry])}</strong>
+                <small>{TAB_META[entry].hint}</small>
+              </span>
             </button>
           ))}
         </div>
@@ -334,7 +379,11 @@ export function NewProjectPanel({
         </button>
       </div>
       <div className="newproj-body">
-        <h3 className="newproj-title">{titleForTab(tab, t)}</h3>
+        <div className="newproj-intro">
+          <span className="newproj-kicker">Create</span>
+          <h3 className="newproj-title">{titleForTab(tab, t)}</h3>
+          <p>{descriptionForTab(tab)}</p>
+        </div>
 
         <input
           className="newproj-name"
@@ -356,95 +405,128 @@ export function NewProjectPanel({
           />
         ) : null}
 
-        {tab === 'image' ? (
-          <PromptTemplatePicker
-            surface="image"
-            templates={promptTemplates}
-            value={imagePromptTemplate}
-            onChange={setImagePromptTemplate}
-          />
-        ) : null}
-
-        {tab === 'video' ? (
-          <PromptTemplatePicker
-            surface="video"
-            templates={promptTemplates}
-            value={videoPromptTemplate}
-            onChange={setVideoPromptTemplate}
-          />
-        ) : null}
-
-        {tab === 'prototype' ? (
-          <FidelityPicker value={fidelity} onChange={setFidelity} />
-        ) : null}
-
-        {tab === 'deck' ? (
-          <ToggleRow
-            label={t('newproj.toggleSpeakerNotes')}
-            hint={t('newproj.toggleSpeakerNotesHint')}
-            checked={speakerNotes}
-            onChange={setSpeakerNotes}
-          />
-        ) : null}
-
         {tab === 'template' ? (
-          <>
-            <TemplatePicker
-              templates={templates}
-              value={templateId}
-              onChange={setTemplateId}
-            />
-            <ToggleRow
-              label={t('newproj.toggleAnimations')}
-              hint={t('newproj.toggleAnimationsHint')}
-              checked={animations}
-              onChange={setAnimations}
-            />
-          </>
-        ) : null}
-
-        {tab === 'image' ? (
-          <MediaProjectOptions
-            surface="image"
-            imageModel={imageModel}
-            imageAspect={imageAspect}
-            imageStyle={imageStyle}
-            mediaProviders={mediaProviders}
-            onImageModel={setImageModel}
-            onImageAspect={setImageAspect}
-            onImageStyle={setImageStyle}
+          <TemplatePicker
+            templates={templates}
+            value={templateId}
+            onChange={setTemplateId}
           />
         ) : null}
 
-        {tab === 'video' ? (
-          <MediaProjectOptions
-            surface="video"
-            videoModel={videoModel}
-            videoAspect={videoAspect}
-            videoLength={videoLength}
-            mediaProviders={mediaProviders}
-            onVideoModel={setVideoModel}
-            onVideoAspect={setVideoAspect}
-            onVideoLength={setVideoLength}
-          />
-        ) : null}
+        <button
+          type="button"
+          className={`newproj-advanced-toggle${showAdvanced ? ' open' : ''}`}
+          onClick={() => setShowAdvanced((v) => !v)}
+          aria-expanded={showAdvanced}
+        >
+          <span>
+            {advancedSummaryForTab({
+              tab,
+              fidelity,
+              speakerNotes,
+              animations,
+              imageAspect,
+              videoAspect,
+              videoLength,
+              audioKind,
+              audioDuration,
+              hasPromptTemplate:
+                tab === 'image'
+                  ? imagePromptTemplate != null
+                  : tab === 'video'
+                    ? videoPromptTemplate != null
+                    : false,
+            })}
+          </span>
+          <Icon name="chevron-right" size={15} />
+        </button>
 
-        {tab === 'audio' ? (
-          <MediaProjectOptions
-            surface="audio"
-            audioKind={audioKind}
-            audioModel={audioModel}
-            audioDuration={audioDuration}
-            voice={voice}
-            mediaProviders={mediaProviders}
-            onAudioKind={(kind) => {
-              setAudioKind(kind);
-              setAudioModel(DEFAULT_AUDIO_MODEL[kind]);
-            }}
-            onAudioModel={setAudioModel}
-            onAudioDuration={setAudioDuration}
-            onVoice={setVoice}
-          />
+        {showAdvanced ? (
+          <div className="newproj-advanced">
+            {tab === 'image' ? (
+              <PromptTemplatePicker
+                surface="image"
+                templates={promptTemplates}
+                value={imagePromptTemplate}
+                onChange={setImagePromptTemplate}
+              />
+            ) : null}
+
+            {tab === 'video' ? (
+              <PromptTemplatePicker
+                surface="video"
+                templates={promptTemplates}
+                value={videoPromptTemplate}
+                onChange={setVideoPromptTemplate}
+              />
+            ) : null}
+
+            {tab === 'prototype' ? (
+              <FidelityPicker value={fidelity} onChange={setFidelity} />
+            ) : null}
+
+            {tab === 'deck' ? (
+              <ToggleRow
+                label={t('newproj.toggleSpeakerNotes')}
+                hint={t('newproj.toggleSpeakerNotesHint')}
+                checked={speakerNotes}
+                onChange={setSpeakerNotes}
+              />
+            ) : null}
+
+            {tab === 'template' ? (
+              <ToggleRow
+                label={t('newproj.toggleAnimations')}
+                hint={t('newproj.toggleAnimationsHint')}
+                checked={animations}
+                onChange={setAnimations}
+              />
+            ) : null}
+
+            {tab === 'image' ? (
+              <MediaProjectOptions
+                surface="image"
+                imageModel={imageModel}
+                imageAspect={imageAspect}
+                imageStyle={imageStyle}
+                mediaProviders={mediaProviders}
+                onImageModel={setImageModel}
+                onImageAspect={setImageAspect}
+                onImageStyle={setImageStyle}
+              />
+            ) : null}
+
+            {tab === 'video' ? (
+              <MediaProjectOptions
+                surface="video"
+                videoModel={videoModel}
+                videoAspect={videoAspect}
+                videoLength={videoLength}
+                mediaProviders={mediaProviders}
+                onVideoModel={setVideoModel}
+                onVideoAspect={setVideoAspect}
+                onVideoLength={setVideoLength}
+              />
+            ) : null}
+
+            {tab === 'audio' ? (
+              <MediaProjectOptions
+                surface="audio"
+                audioKind={audioKind}
+                audioModel={audioModel}
+                audioDuration={audioDuration}
+                voice={voice}
+                mediaProviders={mediaProviders}
+                onAudioKind={(kind) => {
+                  setAudioKind(kind);
+                  setAudioModel(DEFAULT_AUDIO_MODEL[kind]);
+                }}
+                onAudioModel={setAudioModel}
+                onAudioDuration={setAudioDuration}
+                onVoice={setVoice}
+              />
+            ) : null}
+          </div>
         ) : null}
 
         <button
@@ -1398,6 +1480,55 @@ function titleForTab(tab: CreateTab, t: TranslateFn): string {
       return t('newproj.titleAudio');
     case 'other':
       return t('newproj.titleOther');
+  }
+}
+
+function descriptionForTab(tab: CreateTab): string {
+  switch (tab) {
+    case 'prototype':
+      return 'Generate an interactive product or workflow prototype with a matching file workspace.';
+    case 'deck':
+      return 'Create a presentation-ready deck that can be refined and exported.';
+    case 'template':
+      return 'Start from a saved project structure and customize it with the agent.';
+    case 'image':
+      return 'Set up an image generation workspace with optional prompt templates.';
+    case 'video':
+      return 'Set up a video generation workspace with duration and format defaults.';
+    case 'audio':
+      return 'Create a speech, music, or sound-effect workspace.';
+    case 'other':
+      return 'Open a flexible workspace when the output does not fit a preset.';
+  }
+}
+
+function advancedSummaryForTab(input: {
+  tab: CreateTab;
+  fidelity: 'wireframe' | 'high-fidelity';
+  speakerNotes: boolean;
+  animations: boolean;
+  imageAspect: MediaAspect;
+  videoAspect: MediaAspect;
+  videoLength: number;
+  audioKind: AudioKind;
+  audioDuration: number;
+  hasPromptTemplate: boolean;
+}): string {
+  switch (input.tab) {
+    case 'prototype':
+      return `Options: ${input.fidelity === 'high-fidelity' ? 'high fidelity' : 'wireframe'}`;
+    case 'deck':
+      return `Options: speaker notes ${input.speakerNotes ? 'on' : 'off'}`;
+    case 'template':
+      return `Options: animations ${input.animations ? 'on' : 'off'}`;
+    case 'image':
+      return `Options: ${input.imageAspect}, ${input.hasPromptTemplate ? 'template selected' : 'no template'}`;
+    case 'video':
+      return `Options: ${input.videoAspect}, ${input.videoLength}s, ${input.hasPromptTemplate ? 'template selected' : 'no template'}`;
+    case 'audio':
+      return `Options: ${input.audioKind}, ${input.audioDuration}s`;
+    case 'other':
+      return 'Options: freeform workspace';
   }
 }
 

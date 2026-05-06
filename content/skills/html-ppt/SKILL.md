@@ -288,11 +288,24 @@ skill emits): [`docs/slidify-evolution.md`](../../docs/slidify-evolution.md).
 
 ### Export
 
+When the user asks you to create or repair an editable PowerPoint file,
+use the bundled Slidify CLI. Do not hand-roll a fresh `python-pptx`
+export unless the user explicitly asks for a custom exporter or Slidify
+is unavailable. Slidify is the system compiler for HTML decks: it renders
+the source, classifies native atoms, emits editable PPTX shapes where it
+can, and intentionally rasters only the effects that need it.
+
 ```bash
 slidify convert deck.html out.pptx --json --report-json /tmp/r.json
 slidify field /tmp/r.json native_area_ratio        # how editable the result is
-slidify check deck.html                             # exit 0 ok / 3 = drift
+python content/skills/pptx-html-fidelity-audit/scripts/verify_layout.py out.pptx
 ```
 
 Inside the pixelpitch web app, the daemon shells out to this same
-`slidify` binary when the user clicks Export → PPTX.
+`slidify` binary when the user clicks Export → PPTX, then runs the
+`pptx-html-fidelity-audit` verifier against the generated file. If the
+verifier reports rail/canvas violations, treat that as an audit finding:
+report the violations, inspect the HTML for the offending slide structure,
+add non-visual Slidify hints (`data-pptx-role`, `data-atom`,
+`data-pptx-rasterize`, `data-pptx-allow-overflow`) where appropriate,
+and re-run `slidify convert`.

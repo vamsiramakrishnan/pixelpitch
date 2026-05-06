@@ -355,6 +355,8 @@ function translateAgentEvent(data: DaemonAgentPayload): AgentEvent | null {
           ? data.model
           : typeof data.ttftMs === 'number'
             ? `first token in ${Math.round((data.ttftMs as number) / 100) / 10}s`
+            : typeof data.detail === 'string'
+              ? data.detail
             : undefined,
     };
   }
@@ -376,6 +378,28 @@ function translateAgentEvent(data: DaemonAgentPayload): AgentEvent | null {
       toolUseId: data.toolUseId,
       content: String(data.content ?? ''),
       isError: Boolean(data.isError),
+    };
+  }
+  if (t === 'live_artifact') {
+    return {
+      kind: 'live_artifact',
+      action: data.action,
+      projectId: data.projectId,
+      artifactId: data.artifactId,
+      title: data.title,
+      refreshStatus: data.refreshStatus,
+    };
+  }
+  if (t === 'live_artifact_refresh') {
+    return {
+      kind: 'live_artifact_refresh',
+      phase: data.phase,
+      projectId: data.projectId,
+      artifactId: data.artifactId,
+      refreshId: data.refreshId,
+      title: data.title,
+      refreshedSourceCount: data.refreshedSourceCount,
+      error: data.error,
     };
   }
   if (t === 'usage') {

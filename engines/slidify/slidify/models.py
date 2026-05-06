@@ -188,6 +188,9 @@ class DomElement(BaseModel):
     is_img: bool = False
     is_video: bool = False
     img_src: str | None = None
+    animation_name: str = "none"
+    animation_duration: str = "0s"
+    transition_duration: str = "0s"
     svg_path_count: int = 0
     svg_shapes: list[dict] | None = None
     # HTML <table> capture. Only populated on the <table> element itself, and
@@ -203,6 +206,7 @@ class DomElement(BaseModel):
     pptx_skip: bool = False
     pptx_text: str | None = None
     pptx_notes: str | None = None
+    pptx_record: str | None = None
     aria_label: str | None = None
     stable_selector: str = ""
     # Decoration opt-in: HTML can carry `data-slidify-decorate="hero|glass|tactile|recessed|aurora"`

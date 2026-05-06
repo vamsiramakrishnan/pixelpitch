@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { chmodSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { AGENT_DEFS, resolveAgentExecutable } from '../src/agents.js';
+import { AGENT_DEFS, resolveAgentExecutable, spawnEnvForAgent } from '../src/agents.js';
 
 const codex = AGENT_DEFS.find((agent) => agent.id === 'codex');
 const copilot = AGENT_DEFS.find((agent) => agent.id === 'copilot');
@@ -266,6 +266,63 @@ test('claude flags promptViaStdin and never embeds the prompt in argv', () => {
   // `-p` (print mode) must still be present; without it claude drops into
   // an interactive REPL that the daemon has no TTY for.
   assert.ok(args.includes('-p'), 'claude argv must include -p');
+});
+
+test('claude spawn env strips ANTHROPIC_API_KEY by default', () => {
+  const env = spawnEnvForAgent('claude', {
+    ANTHROPIC_API_KEY: 'hosted-key',
+    OPENAI_API_KEY: 'openai-key',
+  });
+
+  assert.equal('ANTHROPIC_API_KEY' in env, false);
+  assert.equal(env.OPENAI_API_KEY, 'openai-key');
+});
+
+test('claude spawn env strips ANTHROPIC_API_KEY case-insensitively', () => {
+  const env = spawnEnvForAgent('claude', {
+    Anthropic_Api_Key: 'hosted-key',
+  });
+
+  assert.equal('Anthropic_Api_Key' in env, false);
+});
+
+test('claude spawn env preserves ANTHROPIC_API_KEY for custom Anthropic base URL', () => {
+  const env = spawnEnvForAgent('claude', {
+    ANTHROPIC_API_KEY: 'gateway-key',
+    ANTHROPIC_BASE_URL: 'https://anthropic-gateway.example.test',
+  });
+
+  assert.equal(env.ANTHROPIC_API_KEY, 'gateway-key');
+  assert.equal(env.ANTHROPIC_BASE_URL, 'https://anthropic-gateway.example.test');
+});
+
+test('claude spawn env strips ANTHROPIC_API_KEY when ANTHROPIC_BASE_URL is blank', () => {
+  const env = spawnEnvForAgent('claude', {
+    ANTHROPIC_API_KEY: 'hosted-key',
+    ANTHROPIC_BASE_URL: '   ',
+  });
+
+  assert.equal('ANTHROPIC_API_KEY' in env, false);
+  assert.equal(env.ANTHROPIC_BASE_URL, '   ');
+});
+
+test('non-claude spawn env preserves ANTHROPIC_API_KEY', () => {
+  const env = spawnEnvForAgent('codex', {
+    ANTHROPIC_API_KEY: 'shared-key',
+  });
+
+  assert.equal(env.ANTHROPIC_API_KEY, 'shared-key');
+});
+
+test('spawn env does not mutate the input object', () => {
+  const baseEnv = {
+    ANTHROPIC_API_KEY: 'hosted-key',
+  };
+
+  const env = spawnEnvForAgent('claude', baseEnv);
+
+  assert.equal(baseEnv.ANTHROPIC_API_KEY, 'hosted-key');
+  assert.equal('ANTHROPIC_API_KEY' in env, false);
 });
 
 // ---- OpenClaude fallback (issue #235) -------------------------------------

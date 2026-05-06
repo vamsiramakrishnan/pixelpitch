@@ -82,12 +82,50 @@ test('gemini stream emits init text and usage events', () => {
 
   assert.deepEqual(events, [
     { type: 'status', label: 'initializing', model: 'gemini-3-flash-preview' },
+    { type: 'status', label: 'streaming' },
     { type: 'text_delta', delta: 'hello' },
     {
       type: 'usage',
       usage: { input_tokens: 9, output_tokens: 4, cached_read_tokens: 2 },
       durationMs: 321,
     },
+  ]);
+});
+
+test('gemini stream emits user, tool, warning, and thinking events', () => {
+  const events = [];
+  const handler = createJsonEventStreamHandler('gemini', (event) => events.push(event));
+
+  handler.feed(
+    JSON.stringify({ type: 'message', role: 'user', content: 'do work' }) + '\n' +
+      JSON.stringify({
+        type: 'tool_use',
+        tool_name: 'read_file',
+        tool_id: 'tool-1',
+        parameters: { path: 'deck/deck-plan.json' },
+      }) +
+      '\n' +
+      JSON.stringify({
+        type: 'tool_result',
+        tool_id: 'tool-1',
+        status: 'success',
+        output: 'ok',
+      }) +
+      '\n' +
+      JSON.stringify({ type: 'error', severity: 'warning', message: 'Loop detected' }) +
+      '\n' +
+      JSON.stringify({ type: 'thought_delta', delta: 'checking plan state' }) +
+      '\n',
+  );
+
+  assert.deepEqual(events, [
+    { type: 'status', label: 'requesting' },
+    { type: 'status', label: 'tool', detail: 'read_file' },
+    { type: 'tool_use', id: 'tool-1', name: 'read_file', input: { path: 'deck/deck-plan.json' } },
+    { type: 'tool_result', toolUseId: 'tool-1', content: 'ok', isError: false },
+    { type: 'status', label: 'warning', detail: 'Loop detected' },
+    { type: 'thinking_start' },
+    { type: 'thinking_delta', delta: 'checking plan state' },
   ]);
 });
 
@@ -260,6 +298,64 @@ test('codex json stream emits command execution tool events', () => {
       content: 'hello-from-codex\n',
       isError: false,
     },
+  ]);
+});
+
+test('gemini stream handles result without stats (error-only)', () => {
+  const events = [];
+  const handler = createJsonEventStreamHandler('gemini', (event) => events.push(event));
+
+  handler.feed(
+    JSON.stringify({
+      type: 'result',
+      status: 'error',
+      error: { type: 'AUTH_ERROR', message: 'API key invalid' },
+    }) + '\n',
+  );
+
+  assert.deepEqual(events, [
+    { type: 'status', label: 'error', detail: 'API key invalid' },
+  ]);
+});
+
+test('gemini stream emits thinking_start only once per thinking block', () => {
+  const events = [];
+  const handler = createJsonEventStreamHandler('gemini', (event) => events.push(event));
+
+  handler.feed(
+    JSON.stringify({ type: 'thought_delta', delta: 'first chunk' }) + '\n' +
+      JSON.stringify({ type: 'thought_delta', delta: ' second chunk' }) + '\n' +
+      JSON.stringify({ type: 'message', role: 'assistant', content: 'answer', delta: true }) + '\n' +
+      JSON.stringify({ type: 'thought_delta', delta: 'new block' }) + '\n',
+  );
+
+  assert.deepEqual(events, [
+    { type: 'thinking_start' },
+    { type: 'thinking_delta', delta: 'first chunk' },
+    { type: 'thinking_delta', delta: ' second chunk' },
+    { type: 'status', label: 'streaming' },
+    { type: 'text_delta', delta: 'answer' },
+    { type: 'thinking_start' },
+    { type: 'thinking_delta', delta: 'new block' },
+  ]);
+});
+
+test('gemini stream handles result with stats and error', () => {
+  const events = [];
+  const handler = createJsonEventStreamHandler('gemini', (event) => events.push(event));
+
+  handler.feed(
+    JSON.stringify({
+      type: 'result',
+      status: 'error',
+      error: { type: 'TURN_LIMIT', message: 'Max turns exceeded' },
+      stats: { input_tokens: 50, output_tokens: 10, duration_ms: 800 },
+    }) + '\n',
+  );
+
+  assert.deepEqual(events, [
+    { type: 'usage', usage: { input_tokens: 50, output_tokens: 10 }, durationMs: 800 },
+    { type: 'status', label: 'error', detail: 'Max turns exceeded' },
   ]);
 });
 

@@ -284,6 +284,9 @@ export const AGENT_DEFS = [
       DEFAULT_MODEL_OPTION,
       { id: 'gemini-2.5-pro', label: 'gemini-2.5-pro' },
       { id: 'gemini-2.5-flash', label: 'gemini-2.5-flash' },
+      { id: 'gemini-3-pro-preview', label: 'gemini-3-pro-preview' },
+      { id: 'gemini-3-flash-preview', label: 'gemini-3-flash-preview' },
+      { id: 'gemini-3.1-pro-preview', label: 'gemini-3.1-pro-preview' },
     ],
     // Gemini reads from stdin when `-p` is omitted and stdin is a pipe.
     // Passing the full composed prompt as a CLI arg causes ENAMETOOLONG on
@@ -828,6 +831,30 @@ export function resolveAgentBin(id) {
   const def = getAgentDef(id);
   if (!def?.bin) return null;
   return resolveAgentExecutable(def);
+}
+
+// Claude Code reads local credentials from its own auth/config files. Passing
+// ANTHROPIC_API_KEY from the daemon process can accidentally override that
+// setup or leak a hosted-provider key into a CLI run. Keep the key only when
+// the user is explicitly targeting a custom Anthropic-compatible endpoint.
+export function spawnEnvForAgent(agentId, baseEnv = {}) {
+  const env = { ...baseEnv };
+  if (agentId !== 'claude') return env;
+
+  const hasCustomBaseUrl = Object.keys(env).some(
+    (key) =>
+      key.toUpperCase() === 'ANTHROPIC_BASE_URL' &&
+      typeof env[key] === 'string' &&
+      env[key].trim() !== '',
+  );
+  if (hasCustomBaseUrl) return env;
+
+  for (const key of Object.keys(env)) {
+    if (key.toUpperCase() === 'ANTHROPIC_API_KEY') {
+      delete env[key];
+    }
+  }
+  return env;
 }
 
 // Daemon's /api/chat needs to validate the user's model pick against the

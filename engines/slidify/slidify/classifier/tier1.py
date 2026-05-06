@@ -26,6 +26,35 @@ def _has_video(unit: VisualUnit) -> bool:
     return any(e.is_video for e in unit.all_elements())
 
 
+def _has_record_hint(unit: VisualUnit) -> bool:
+    return any((e.pptx_record or "").strip() for e in unit.elements)
+
+
+def _has_css_animation(unit: VisualUnit) -> bool:
+    for e in unit.elements:
+        name = (e.animation_name or "").strip().lower()
+        if name and name != "none" and _duration_ms(e.animation_duration) > 0:
+            return True
+    return False
+
+
+def _duration_ms(raw: str | None) -> float:
+    """Return the longest CSS time in a comma-separated duration list."""
+    if not raw:
+        return 0.0
+    values: list[float] = []
+    for part in str(raw).split(","):
+        s = part.strip().lower()
+        try:
+            if s.endswith("ms"):
+                values.append(float(s[:-2]))
+            elif s.endswith("s"):
+                values.append(float(s[:-1]) * 1000.0)
+        except ValueError:
+            continue
+    return max(values or [0.0])
+
+
 def _has_complex_svg(unit: VisualUnit) -> bool:
     # Iterate this unit's DIRECT elements only — never descendants. A
     # child unit's SVG should fire its own classifier; bubbling the rule
@@ -329,6 +358,18 @@ def rule_canvas_always_raster(unit: VisualUnit) -> Decision | None:
     return None
 
 
+def rule_record_animation_gif(unit: VisualUnit) -> Decision | None:
+    if _has_record_hint(unit) or _has_css_animation(unit) or _has_video(unit):
+        return Decision(
+            kind=DecisionKind.Raster,
+            confidence=1.0,
+            reason="animated_gif",
+            metadata={"animated_gif": True},
+            source_tier="tier1",
+        )
+    return None
+
+
 def rule_video_always_raster(unit: VisualUnit) -> Decision | None:
     if _has_video(unit):
         return Decision(
@@ -569,6 +610,7 @@ def rule_plain_rectangle(unit: VisualUnit) -> Decision | None:
 RULES: list[RuleFn] = [
     rule_skip_hint,
     rule_caller_rasterize,
+    rule_record_animation_gif,
     rule_canvas_always_raster,
     rule_video_always_raster,
     rule_complex_svg_raster,

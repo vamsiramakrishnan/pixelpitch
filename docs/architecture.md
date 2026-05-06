@@ -242,13 +242,15 @@ Rationale:
 
 | File | Purpose |
 |---|---|
-| `~/.pixelpitch/config.toml` | daemon-global: default agent preference, keys (optional, BYOK), telemetry opt-in (default off) |
-| `~/.pixelpitch/agents.json` | cached agent detection results |
-| `./.pixelpitch/config.json` | project-local: active design system, preferred skills, preferred mode |
+| `.pixelpitch/app.sqlite` | daemon metadata: projects, conversations, messages, tabs, templates, runs |
+| `.pixelpitch/projects/<id>/` | project files: generated HTML, assets, uploads, sketches, exports |
+| `.pixelpitch/artifacts/` | saved render/export artifacts |
+| `.pixelpitch/app-config.json` | daemon-persisted app preferences synced from the web shell |
+| `.pixelpitch/media-config.json` | daemon-persisted BYOK media provider credentials |
 | `./skills/<skill>/SKILL.md` | skill manifest (standard Claude Code format) |
 | `./DESIGN.md` | active design system ([awesome-claude-design][acd] format) |
 
-All config is plain text / TOML / JSON — no binary formats, no sqlite. Reviewable in PRs.
+Runtime data defaults under the repository-local `.pixelpitch/` directory. Set `PIXELPITCH_DATA_DIR` to relocate it for tests, packaged runs, or isolated deployments.
 
 ## 7. Protocol between web and daemon
 
@@ -258,6 +260,8 @@ Representative API surface:
 
 ```
 GET  /api/health
+GET  /api/readyz
+GET  /api/healthz
 GET  /api/agents
 GET  /api/skills
 GET  /api/design-systems
@@ -279,7 +283,35 @@ Full schema in [`schemas/protocol.md`](schemas/protocol.md) (TODO: write).
 bun run dev       # starts daemon + web foreground loop
 ```
 
+Operational endpoints:
+
+| Endpoint | Purpose | Failure behavior |
+|---|---|---|
+| `GET /api/health` | Cheap liveness and version check | Returns `200` when the daemon HTTP process is alive |
+| `GET /api/readyz` | Dependency-aware readiness for monitors and launchers | Returns `503` if SQLite, data dir access, or core resource discovery fails |
+| `GET /api/healthz` | Alias for readiness, matching common platform conventions | Same as `/api/readyz` |
+
+Local lifecycle and diagnostics are owned by `tools-dev`:
+
+```sh
+bun run dev
+bun run status
+bun run logs
+bun run doctor
+pnpm tools-dev check --json
+```
+
 When a reverse proxy sits in front of the daemon, `/api/*` includes SSE streams and must stay unbuffered. The daemon sends `Cache-Control: no-cache, no-transform` and `X-Accel-Buffering: no`, and also emits SSE comment keepalives, but nginx can still break chunked streams if gzip is enabled. For nginx, set `proxy_buffering off;`, `gzip off;`, and long `proxy_read_timeout` / `proxy_send_timeout` values on the API location. Otherwise browsers can report `net::ERR_INCOMPLETE_CHUNKED_ENCODING 200 (OK)` on long generations.
+
+For LAN or reverse-proxy access, bind and expose deliberately:
+
+```sh
+PIXELPITCH_BIND_HOST=127.0.0.1 bun run dev      # local only; this is the default
+PIXELPITCH_BIND_HOST=0.0.0.0 bun run dev        # reachable on LAN if firewall allows it
+PIXELPITCH_DATA_DIR=/srv/pixelpitch/data ...    # isolate runtime data
+```
+
+The daemon stores local credentials and can execute installed agent CLIs, so production deployments should keep it behind a trusted reverse proxy or local desktop sidecar. Do not expose it directly to the public internet without adding authentication and a tighter origin policy.
 
 ### Docker
 ```yaml

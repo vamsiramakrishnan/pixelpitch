@@ -147,6 +147,25 @@ export function EntryView({
       systems: designSystems.length,
     };
   }, [projects, designSystems.length]);
+  const latestProject = useMemo(
+    () =>
+      [...projects].sort((a, b) => {
+        const aTime = a.updatedAt || a.createdAt || 0;
+        const bTime = b.updatedAt || b.createdAt || 0;
+        return bTime - aTime;
+      })[0] ?? null,
+    [projects],
+  );
+  const activeProject = useMemo(
+    () =>
+      projects.find((project) =>
+        project.status?.value === 'running' ||
+        project.status?.value === 'queued' ||
+        project.status?.value === 'awaiting_input',
+      ) ?? null,
+    [projects],
+  );
+  const featuredProject = activeProject ?? latestProject;
 
   const envMetaLine = useMemo(() => {
     if (config.mode === 'api') {
@@ -185,6 +204,12 @@ export function EntryView({
 
   function handleCreate(input: CreateInput) {
     onCreateProject(input);
+  }
+
+  function focusCreatePanel() {
+    const input = document.querySelector<HTMLInputElement>('[data-testid="new-project-name"]');
+    input?.focus();
+    input?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
   const startWidthRef = useRef(0);
@@ -427,14 +452,56 @@ export function EntryView({
               <section className="entry-dashboard" aria-label="Studio overview">
                 <div className="entry-dashboard-copy">
                   <span className="entry-dashboard-kicker">Studio</span>
-                  <h1>APAC AI Practice</h1>
-                  <p>Customer AI workspaces, prototypes, design systems, and delivery playbooks.</p>
+                  <h1>Make the next artifact</h1>
+                  <p>Start with a focused output, then iterate with chat, files, comments, and design-system context in one workspace.</p>
+                  <div className="entry-dashboard-flow" aria-label="Creation workflow">
+                    <span><Icon name="send" size={13} /> Brief</span>
+                    <span><Icon name="file" size={13} /> Files</span>
+                    <span><Icon name="eye" size={13} /> Preview</span>
+                  </div>
+                  <div className="entry-dashboard-actions">
+                    <button type="button" className="primary entry-dashboard-action" onClick={focusCreatePanel}>
+                      <Icon name="plus" size={14} />
+                      <span>New project</span>
+                    </button>
+                    {featuredProject ? (
+                      <button
+                        type="button"
+                        className="ghost entry-dashboard-action"
+                        onClick={() => onOpenProject(featuredProject.id)}
+                      >
+                        <Icon name="chevron-right" size={14} />
+                        <span>{activeProject ? 'Resume active' : 'Open latest'}</span>
+                      </button>
+                    ) : null}
+                  </div>
                 </div>
-                <div className="entry-dashboard-stats" aria-label="Workspace summary">
-                  <DashboardStat label="Workspaces" value={dashboardStats.total} tone="blue" />
-                  <DashboardStat label="Active" value={dashboardStats.active} tone="green" />
-                  <DashboardStat label="Shipped" value={dashboardStats.shipped} tone="yellow" />
-                  <DashboardStat label="Systems" value={dashboardStats.systems} tone="red" />
+                <div className="entry-dashboard-work" aria-label="Workspace summary">
+                  {featuredProject ? (
+                    <button
+                      type="button"
+                      className={`entry-dashboard-current status-${featuredProject.status?.value ?? 'idle'}`}
+                      onClick={() => onOpenProject(featuredProject.id)}
+                    >
+                      <span className="entry-dashboard-current-label">
+                        {activeProject ? 'Needs attention' : 'Latest workspace'}
+                      </span>
+                      <strong>{featuredProject.name}</strong>
+                      <span>{projectStatusLabel(featuredProject)}</span>
+                    </button>
+                  ) : (
+                    <div className="entry-dashboard-current empty">
+                      <span className="entry-dashboard-current-label">No workspaces yet</span>
+                      <strong>Create your first project</strong>
+                      <span>Pick a format on the left and start from a clean workspace.</span>
+                    </div>
+                  )}
+                  <div className="entry-dashboard-stats" aria-label="Workspace summary">
+                    <DashboardStat label="Workspaces" value={dashboardStats.total} tone="blue" />
+                    <DashboardStat label="Active" value={dashboardStats.active} tone="green" />
+                    <DashboardStat label="Shipped" value={dashboardStats.shipped} tone="yellow" />
+                    <DashboardStat label="Systems" value={dashboardStats.systems} tone="red" />
+                  </div>
                 </div>
               </section>
               {topTab === 'designs' ? (
@@ -498,6 +565,27 @@ export function EntryView({
       ) : null}
     </div>
   );
+}
+
+function projectStatusLabel(project: Project) {
+  switch (project.status?.value) {
+    case 'queued':
+      return 'Queued';
+    case 'running':
+      return 'Running now';
+    case 'awaiting_input':
+      return 'Awaiting input';
+    case 'succeeded':
+      return 'Completed';
+    case 'failed':
+      return 'Failed';
+    case 'canceled':
+      return 'Canceled';
+    case 'not_started':
+      return 'Ready to start';
+    default:
+      return 'Ready to continue';
+  }
 }
 
 function DashboardStat({
