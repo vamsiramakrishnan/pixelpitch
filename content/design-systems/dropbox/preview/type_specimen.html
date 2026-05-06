@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — Dropbox</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Sharp Grotesk', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--color-black, #1e1919);
+      line-height: 1.5;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 120px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 80px 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 60px 24px;
+      }
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 120px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-body, 'Sharp Grotesk', sans-serif);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #8c8c8c);
+      margin-bottom: 24px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'Sharp Grotesk', sans-serif);
+      font-size: 64px;
+      font-weight: 600;
+      line-height: 1.05;
+      letter-spacing: -0.8px;
+      color: var(--color-black, #1e1919);
+      margin-bottom: 32px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'Sharp Grotesk', sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.50;
+      color: var(--color-mid-gray, #637282);
+      max-width: 720px;
+      margin-bottom: 40px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 120px;
+      height: 1px;
+      background: var(--color-blue-hover, #0050d4);
+      border: none;
+      margin: 0;
+    }
+
+    /* Font families section */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px;
+      margin-bottom: 120px;
+      margin-top: 80px;
+    }
+
+    .font-card {
+      background: transparent;
+      border: 1px solid var(--color-border-subtle, #ebebeb);
+      border-radius: 4px;
+      padding: 40px;
+    }
+
+    .font-card__label {
+      font-family: var(--font-body, 'Sharp Grotesk', sans-serif);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--slate, #8c8c8c);
+      margin-bottom: 16px;
+    }
+
+    .font-card__name {
+      font-family: var(--font-display, 'Sharp Grotesk', sans-serif);
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 1.10;
+      color: var(--ink, #0061ff);
+      margin-bottom: 12px;
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono, SFMono-Regular, Consolas, monospace);
+      font-size: 12px;
+      color: var(--slate, #8c8c8c);
+      word-break: break-word;
+      line-height: 1.40;
+    }
+
+    /* Character set block */
+    .charmap-block {
+      background: transparent;
+      border: 1px solid var(--color-border-subtle, #ebebeb);
+      border-radius: 4px;
+      padding: 60px 48px;
+      margin-bottom: 120px;
+    }
+
+    .charmap-block__label {
+      font-family: var(--font-body, 'Sharp Grotesk', sans-serif);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--slate, #8c8c8c);
+      margin-bottom: 32px;
+    }
+
+    .charmap-block__chars {
+      font-family: var(--font-display, 'Sharp Grotesk', sans-serif);
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1.80;
+      letter-spacing: -0.3px;
+      color: var(--color-black, #1e1919);
+      word-break: break-word;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-body, 'Sharp Grotesk', sans-serif);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--slate, #8c8c8c);
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--color-border-default, #e2e0de);
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 60px;
+      align-items: baseline;
+      padding: 40px 0;
+      border-bottom: 1px solid var(--color-border-subtle, #ebebeb);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 900px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-display, 'Sharp Grotesk', sans-serif);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink, #0061ff);
+      margin-bottom: 12px;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, SFMono-Regular, Consolas, monospace);
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 1.80;
+      color: var(--slate, #8c8c8c);
+      letter-spacing: 0.02em;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--color-black, #1e1919);
+      overflow-wrap: break-word;
+      word-spacing: 0.05em;
+    }
+
+    /* Ramp section */
+    .ramp-section {
+      margin-bottom: 120px;
+    }
+
+    /* Drop cap demo */
+    .dropcap-demo {
+      margin-bottom: 120px;
+    }
+
+    .dropcap-demo__label {
+      font-family: var(--font-body, 'Sharp Grotesk', sans-serif);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--slate, #8c8c8c);
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--color-border-default, #e2e0de);
+    }
+
+    .dropcap-container {
+      background: transparent;
+      border: 1px solid var(--color-border-subtle, #ebebeb);
+      border-radius: 4px;
+      padding: 60px 48px;
+      max-width: 760px;
+    }
+
+    .dropcap-para {
+      font-family: var(--font-body, 'Sharp Grotesk', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.56;
+      color: var(--color-black, #1e1919);
+      margin: 0;
+      text-align: left;
+    }
+
+    .dropcap {
+      float: left;
+      font-family: var(--font-display, 'Sharp Grotesk', sans-serif);
+      font-size: 96px;
+      font-weight: 600;
+      line-height: 0.80;
+      color: var(--ink, #0061ff);
+      margin-right: 12px;
+      margin-top: -4px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 200px 48px;
+      color: var(--slate, #8c8c8c);
+      font-family: var(--font-body, 'Sharp Grotesk', sans-serif);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 32px auto 0;
+      border: 2px solid var(--color-border-default, #e2e0de);
+      border-top-color: var(--ink, #0061ff);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Cloud storage that works the way you do.',
+      'Real-time collaboration across your team.',
+      'Keep files organized with intelligent search.',
+      'Security and peace of mind built in.',
+      'Sync everything, everywhere instantly.',
+      'Your files, on every device you own.',
+      'Shared spaces for teams and projects.',
+      'More than storage. It\'s how work happens.',
+      'Comments and feedback on the same page.',
+      'Version history that keeps you safe.',
+    ];
+
+    const DROPCAP_TEXT = 'Clean, spacious, and built for collaboration. Dropbox design speaks through simplicity and breathing room—every element gets space to exist, every action gets room to be understood. The two-voice typography system pairs Sharp Grotesk's confident geometric headlines with warm, readable body text that guides users through complex file management tasks. Sharp Grotesk at display sizes carries a distinctive technical character that signals precision without coldness. Below 28px, the typography switches to body styling that feels approachable and scannable. Letter-spacing tightens at scale for visual density, then relaxes at reading sizes for comfort. Line-height follows the same logic: tight headlines (1.07) create visual impact; relaxed body (1.56) invites reading. The result is a typography system that feels less like a productivity tool and more like an intelligent workspace—ordered, calm, and generous with whitespace. Every interaction builds on this foundation of clarity and care.';
+
+    fetch('../tokens.json')
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#d93025">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Design System';
+      const summary = tokens.meta?.summary || '';
+
+      const ramp = tokens.typography?.ramp || [];
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Type Specimen</div>';
+      html += '  <h1 class="header__title">' + esc(title) + '</h1>';
+      html += '  <p class="header__subtitle">' + esc(summary) + '</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      const families = [
+        { label: 'Display & Headlines', name: 'Sharp Grotesk', fallback: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif', note: 'Geometric sans, confident & precise' },
+        { label: 'Body & UI', name: 'Sharp Grotesk', fallback: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif', note: 'All-purpose workhorse below 28px' },
+        { label: 'Monospace', name: 'SFMono-Regular', fallback: 'Consolas, Liberation Mono, Menlo, monospace', note: 'Code, metadata, token references' }
+      ];
+
+      html += '<div class="font-families">';
+      families.forEach(f => {
+        html += '<div class="font-card">';
+        html += '  <div class="font-card__label">' + esc(f.label) + '</div>';
+        html += '  <div class="font-card__name">' + esc(f.name) + '</div>';
+        html += '  <div class="font-card__fallback">' + esc(f.fallback) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      /* Character set */
+      html += '<div class="charmap-block">';
+      html += '  <div class="charmap-block__label">Sharp Grotesk Character Set</div>';
+      html += '  <div class="charmap-block__chars" style="font-family:\'Sharp Grotesk\',sans-serif;font-weight:600">';
+      html += '    AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>';
+      html += '    0123456789 !@#$%&amp;*()–—'\'\".,?;:<br>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Type ramp */
+      if (ramp.length) {
+        html += '<div class="ramp-section">';
+        html += '<div class="section-label">Type Ramp</div>';
+        ramp.forEach((entry, i) => {
+          html += rampRow(entry, i);
+        });
+        html += '</div>';
+      }
+
+      /* Drop cap demo */
+      html += '<div class="dropcap-demo">';
+      html += '<div class="dropcap-demo__label">Drop Cap · Sharp Grotesk 600, Dropbox Blue</div>';
+      html += '<div class="dropcap-container">';
+      const firstChar = DROPCAP_TEXT.charAt(0);
+      const restText = DROPCAP_TEXT.substring(1);
+      html += '<p class="dropcap-para">';
+      html += '<span class="dropcap">' + esc(firstChar) + '</span>';
+      html += esc(restText);
+      html += '</p>';
+      html += '</div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(entry, idx) {
+      const role = entry.role || 'Role ' + (idx + 1);
+      const size = entry.size || '16px';
+      const weight = entry.weight || 400;
+      const lh = entry.lineHeight || '1.5';
+      const ls = entry.letterSpacing || '0';
+
+      let fontFamily = 'var(--font-body)';
+      if (entry.fontKey === 'display') fontFamily = 'var(--font-display)';
+      else if (entry.fontKey === 'mono') fontFamily = 'var(--font-mono)';
+
+      const sizeNum = parseFloat(size);
+      const sampleIdx = idx % EDITORIAL_SAMPLES.length;
+      let sample = EDITORIAL_SAMPLES[sampleIdx];
+
+      /* Truncate very large samples */
+      if (sizeNum >= 44) {
+        sample = sample.split('.')[0].slice(0, 35);
+        if (!sample.endsWith('.')) sample += '.';
+      }
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + ';';
+      fontStyle += 'font-family:' + fontFamily + ';';
+      if (ls && ls !== '0' && ls !== 'normal') fontStyle += 'letter-spacing:' + ls + ';';
+
+      let meta = esc(size) + ' / ' + esc(String(weight));
+      meta += '\nSharp Grotesk';
+      meta += '\nline-height: ' + esc(String(lh));
+      if (ls && ls !== '0' && ls !== 'normal') meta += '\nletter-spacing: ' + esc(ls);
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(sample) + '</div>' +
+        '</div>';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

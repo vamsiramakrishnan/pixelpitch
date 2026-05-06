@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colorful — Type Specimen</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+    }
+    
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 56px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 12px;
+    }
+    
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate, #666666);
+      max-width: 600px;
+      font-weight: 400;
+    }
+    
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--signal, #3b82f6) 0%, #ec4899 50%, #f59e0b 100%);
+      border: none;
+      margin-top: 24px;
+      border-radius: 2px;
+    }
+
+    /* Intro text */
+    .header__intro {
+      margin-top: 32px;
+      max-width: 700px;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--slate, #666666);
+    }
+
+    /* Font families */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 56px;
+    }
+    
+    .font-card {
+      background: var(--surface, #f5f5f5);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 12px;
+      padding: 28px 24px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .font-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.1);
+    }
+    
+    .font-card__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 8px;
+    }
+    
+    .font-card__name {
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1.3;
+      margin-bottom: 4px;
+      color: var(--ink, #111111);
+    }
+    
+    .font-card__fallback {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      word-break: break-all;
+      opacity: 0.75;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--border, #e5e5e5);
+    }
+
+    /* Pangram block */
+    .pangram-block {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 12px;
+      padding: 48px 40px;
+      margin-bottom: 64px;
+    }
+    
+    .pangram-block__label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 20px;
+    }
+    
+    .pangram-block__chars {
+      font-size: 32px;
+      line-height: 1.6;
+      letter-spacing: 0.02em;
+      color: var(--ink, #111111);
+      word-break: break-all;
+      font-weight: 400;
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 40px;
+      align-items: baseline;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+    
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 720px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+      text-transform: capitalize;
+    }
+    
+    .ramp-meta__detail {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      line-height: 1.8;
+      color: var(--slate, #666666);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--ink, #111111);
+      overflow-wrap: break-word;
+    }
+
+    /* Ramp section container */
+    .ramp-section {
+      margin-bottom: 64px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+    
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Accent highlights */
+    .accent-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: linear-gradient(135deg, var(--signal, #3b82f6) 0%, #ec4899 100%);
+      border-radius: 50%;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Typography establishes a clear visual hierarchy and makes every word count.',
+      'Bold, expressive type brings personality and energy to the digital experience.',
+      'Vibrant color paired with confident letterforms creates immediate impact.',
+      'Each typeface weight serves a distinct purpose in the system\'s voice.',
+      'Readability is paramount, even when pushing the boundaries of expression.',
+      'The interplay of scale and weight guides users through content intuitively.',
+      'Modern sans-serif families offer flexibility across all screen sizes and contexts.',
+      'Monospace type ensures precision and clarity in technical, code-heavy environments.',
+      'High-contrast palettes demand equally confident typographic choices.',
+      'Type is the primary interface between meaning and the human eye.',
+    ];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Colorful';
+      const summary = tokens.meta?.summary || 'Vibrant design system';
+
+      /* Build type ramp from tokens or create defaults */
+      const ramp = buildRamp(tokens);
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">' + esc(title) + '</h1>';
+      html += '  <p class="header__subtitle">Type Specimen</p>';
+      html += '  <hr class="header__rule">';
+      html += '  <p class="header__intro">' + esc(summary) + '</p>';
+      html += '</header>';
+
+      /* Font families overview */
+      const families = [
+        { label: 'Display', name: 'Inter', fallback: 'system-ui, sans-serif' },
+        { label: 'Body', name: 'Inter', fallback: 'system-ui, sans-serif' },
+        { label: 'Monospace', name: 'JetBrains Mono', fallback: 'ui-monospace, monospace' }
+      ];
+
+      html += '<div class="font-families">';
+      families.forEach(f => {
+        html += '<div class="font-card">';
+        html += '  <div class="font-card__label">' + esc(f.label) + '</div>';
+        html += '  <div class="font-card__name">' + esc(f.name) + '</div>';
+        html += '  <div class="font-card__fallback">' + esc(f.fallback) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      /* Character set block */
+      html += '<div class="pangram-block">';
+      html += '  <div class="pangram-block__label">Full Character Set</div>';
+      html += '  <div class="pangram-block__chars">AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>0123456789 !@#$%&amp;*()&ndash;&mdash;&lsquo;&rsquo;&ldquo;&rdquo;</div>';
+      html += '</div>';
+
+      /* Type ramp */
+      if (ramp.length) {
+        html += '<div class="ramp-section">';
+        html += '<div class="section-label">Type Ramp</div>';
+        ramp.forEach((entry, i) => {
+          html += rampRow(entry, i);
+        });
+        html += '</div>';
+      }
+
+      app.innerHTML = html;
+    }
+
+    function buildRamp(tokens) {
+      const ramp = tokens.typography?.ramp || [];
+      
+      /* If empty, create sensible defaults from design.md specs */
+      if (!ramp || ramp.length === 0) {
+        return [
+          { role: 'Hero', fontSize: '96px', fontWeight: '700', lineHeight: '1.0', letterSpacing: '-0.02em' },
+          { role: 'Display Large', fontSize: '64px', fontWeight: '700', lineHeight: '1.1', letterSpacing: '-0.01em' },
+          { role: 'Display Medium', fontSize: '48px', fontWeight: '700', lineHeight: '1.15', letterSpacing: '-0.01em' },
+          { role: 'Display Small', fontSize: '32px', fontWeight: '600', lineHeight: '1.2', letterSpacing: '0em' },
+          { role: 'Heading Large', fontSize: '24px', fontWeight: '600', lineHeight: '1.3', letterSpacing: '0em' },
+          { role: 'Heading Medium', fontSize: '20px', fontWeight: '600', lineHeight: '1.4', letterSpacing: '0em' },
+          { role: 'Heading Small', fontSize: '16px', fontWeight: '600', lineHeight: '1.5', letterSpacing: '0em' },
+          { role: 'Body Large', fontSize: '16px', fontWeight: '400', lineHeight: '1.6', letterSpacing: '0em' },
+          { role: 'Body Default', fontSize: '14px', fontWeight: '400', lineHeight: '1.6', letterSpacing: '0em' },
+          { role: 'Body Small', fontSize: '12px', fontWeight: '400', lineHeight: '1.5', letterSpacing: '0em' },
+          { role: 'Caption', fontSize: '12px', fontWeight: '500', lineHeight: '1.4', letterSpacing: '0.05em' },
+          { role: 'Label', fontSize: '11px', fontWeight: '600', lineHeight: '1.4', letterSpacing: '0.1em' }
+        ];
+      }
+
+      return ramp;
+    }
+
+    function rampRow(entry, idx) {
+      const role = entry.role || 'Role ' + (idx + 1);
+      const size = entry.fontSize || entry.size || '16px';
+      const weight = entry.fontWeight || entry.weight || '400';
+      const lh = entry.lineHeight || entry.lh || '1.5';
+      const ls = entry.letterSpacing || entry.ls || 'normal';
+      const family = entry.fontFamily || entry.font || '';
+
+      const sampleIdx = idx % EDITORIAL_SAMPLES.length;
+      const sizeNum = parseFloat(size);
+      
+      /* Truncate very large samples */
+      let sample = EDITORIAL_SAMPLES[sampleIdx];
+      if (sizeNum >= 64) {
+        sample = sample.split('.')[0] + '.';
+      } else if (sizeNum >= 48) {
+        const words = sample.split(' ');
+        sample = words.slice(0, Math.ceil(words.length / 2)).join(' ');
+      }
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + ';';
+      if (ls !== 'normal') fontStyle += 'letter-spacing:' + ls + ';';
+      if (family) fontStyle += 'font-family:\'' + esc(family) + '\',var(--font-body,system-ui,sans-serif);';
+
+      let meta = '';
+      meta += esc(role) + '\n';
+      meta += esc(size) + ' / ' + esc(weight);
+      meta += '\nLine Height: ' + esc(String(lh));
+      if (ls !== 'normal') meta += '\nTracking: ' + esc(ls);
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(sample) + '</div>' +
+        '</div>';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

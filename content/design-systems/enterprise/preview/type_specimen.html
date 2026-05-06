@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — Enterprise</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 48px 24px;
+      }
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 96px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 96px;
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 24px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 96px;
+      height: 1px;
+      background: var(--ink, #111111);
+      border: none;
+      margin: 0;
+    }
+
+    /* Font families section */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+      margin-bottom: 96px;
+      margin-top: 64px;
+    }
+
+    .font-card {
+      background: transparent;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 0;
+      padding: 32px;
+    }
+
+    .font-card__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .font-card__name {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      word-break: break-word;
+    }
+
+    /* Character set block */
+    .charmap-block {
+      background: transparent;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 0;
+      padding: 48px;
+      margin-bottom: 96px;
+    }
+
+    .charmap-block__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+    }
+
+    .charmap-block__chars {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 32px;
+      font-weight: 400;
+      line-height: 1.8;
+      letter-spacing: 0.02em;
+      color: var(--ink, #111111);
+      word-break: break-word;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--ink, #111111);
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 800px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 1.8;
+      color: var(--slate, #666666);
+      letter-spacing: 0.02em;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--ink, #111111);
+      overflow-wrap: break-word;
+      word-spacing: 0.1em;
+    }
+
+    /* Ramp section */
+    .ramp-section {
+      margin-bottom: 96px;
+    }
+
+    /* Weight showcase */
+    .weight-showcase {
+      margin-bottom: 96px;
+    }
+
+    .weight-showcase__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--ink, #111111);
+    }
+
+    .weight-row {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 32px;
+      align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .weight-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 600px) {
+      .weight-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+    }
+
+    .weight-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      font-weight: 500;
+    }
+
+    .weight-sample {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 28px;
+      line-height: 1.3;
+      color: var(--ink, #111111);
+    }
+
+    /* Scale demo */
+    .scale-demo {
+      margin-bottom: 96px;
+    }
+
+    .scale-demo__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--ink, #111111);
+    }
+
+    .scale-samples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+    }
+
+    .scale-item {
+      background: var(--bone, #f5f5f5);
+      padding: 24px;
+      border-radius: 8px;
+    }
+
+    .scale-item__size {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .scale-item__sample {
+      font-family: var(--font-body, system-ui, sans-serif);
+      color: var(--ink, #111111);
+      line-height: 1.4;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 160px 48px;
+      color: var(--slate, #666666);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 24px auto 0;
+      border: 2px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Enterprise systems demand clarity and precision.',
+      'Data visualization requires structural typography.',
+      'Workflows depend on consistent information hierarchy.',
+      'Usability scales when typography is disciplined.',
+      'High-contrast interfaces serve accessibility and speed.',
+      'Drag-and-drop patterns need visual feedback layers.',
+      'Structured layouts emerge from typographic constraint.',
+      'Scanability trumps decoration in corporate design.',
+      'Information density requires optical balance.',
+      'Users trust systems that communicate with confidence.',
+    ];
+
+    const BODY_SAMPLE = 'Enterprise design prioritizes clarity and speed. Every typographic choice must serve the user\'s workflow. Ubuntu provides the structural foundation—versatile, legible, and refined. At body sizes, letterforms prioritize readability in high-density data environments. Weights escalate deliberately: Light for secondary content, Regular for body copy, Medium for labels, Bold for emphasis. The sans-serif structure eliminates decoration while maintaining warmth. Professional contexts demand restraint. No serifs. No flourish. Just clear, purposeful type that gets out of the way and lets information breathe.';
+
+    fetch('../tokens.json')
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#3b82f6">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Design System';
+      const summary = tokens.meta?.summary || '';
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Type Specimen</div>';
+      html += '  <h1 class="header__title">' + esc(title) + '</h1>';
+      html += '  <p class="header__subtitle">' + esc(summary) + '</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      const families = [
+        { label: 'Display & Headings', name: 'Oswald', fallback: 'sans-serif' },
+        { label: 'Body & UI', name: 'Ubuntu', fallback: 'system-ui, sans-serif' },
+        { label: 'Monospace', name: 'Ubuntu Mono', fallback: 'ui-monospace, monospace' }
+      ];
+
+      html += '<div class="font-families">';
+      families.forEach(f => {
+        html += '<div class="font-card">';
+        html += '  <div class="font-card__label">' + esc(f.label) + '</div>';
+        html += '  <div class="font-card__name">' + esc(f.name) + '</div>';
+        html += '  <div class="font-card__fallback">' + esc(f.fallback) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      /* Character set */
+      html += '<div class="charmap-block">';
+      html += '  <div class="charmap-block__label">Character Set</div>';
+      html += '  <div class="charmap-block__chars">';
+      html += '    AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>';
+      html += '    0123456789 !@#$%&amp;*()&ndash;&mdash;&lsquo;&rsquo;&ldquo;&rdquo;';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Display scale */
+      html += '<div class="scale-demo">';
+      html += '<div class="scale-demo__label">Display Scale — Oswald Bold</div>';
+      html += '<div class="scale-samples">';
+      const displaySizes = [
+        { size: '96px', label: 'Hero' },
+        { size: '72px', label: 'Title' },
+        { size: '56px', label: 'Section Head' },
+        { size: '44px', label: 'Subtitle' },
+        { size: '32px', label: 'Body Large' }
+      ];
+      displaySizes.forEach(s => {
+        html += '<div class="scale-item">';
+        html += '  <div class="scale-item__size">' + esc(s.label) + ' · ' + esc(s.size) + '</div>';
+        html += '  <div class="scale-item__sample" style="font-family:var(--font-display);font-size:' + s.size + ';font-weight:700;line-height:0.95">';
+        html += esc(EDITORIAL_SAMPLES[Math.floor(Math.random() * EDITORIAL_SAMPLES.length)].split('.')[0]) + '.';
+        html += '  </div>';
+        html += '</div>';
+      });
+      html += '</div>';
+      html += '</div>';
+
+      /* Body scale */
+      html += '<div class="scale-demo">';
+      html += '<div class="scale-demo__label">Body Scale — Ubuntu Regular</div>';
+      html += '<div class="scale-samples">';
+      const bodySizes = [
+        { size: '18px', label: 'Large' },
+        { size: '16px', label: 'Standard' },
+        { size: '14px', label: 'Small' },
+        { size: '12px', label: 'Caption' }
+      ];
+      bodySizes.forEach(s => {
+        html += '<div class="scale-item">';
+        html += '  <div class="scale-item__size">' + esc(s.label) + ' · ' + esc(s.size) + '</div>';
+        html += '  <div class="scale-item__sample" style="font-family:var(--font-body);font-size:' + s.size + ';font-weight:400">';
+        html += esc(BODY_SAMPLE.substring(0, 60)) + '…';
+        html += '  </div>';
+        html += '</div>';
+      });
+      html += '</div>';
+      html += '</div>';
+
+      /* Weight showcase */
+      html += '<div class="weight-showcase">';
+      html += '<div class="weight-showcase__label">Ubuntu Weight Family</div>';
+      const weights = [
+        { weight: 100, name: 'Thin' },
+        { weight: 200, name: 'Extra Light' },
+        { weight: 300, name: 'Light' },
+        { weight: 400, name: 'Regular' },
+        { weight: 500, name: 'Medium' },
+        { weight: 600, name: 'Semi Bold' },
+        { weight: 700, name: 'Bold' },
+        { weight: 800, name: 'Extra Bold' },
+        { weight: 900, name: 'Black' }
+      ];
+      weights.forEach(w => {
+        html += '<div class="weight-row">';
+        html += '  <div class="weight-label">' + esc(w.name) + ' ' + w.weight + '</div>';
+        html += '  <div class="weight-sample" style="font-weight:' + w.weight + '">Enterprise design systems scale through constraint.</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      /* Typographic hierarchy */
+      html += '<div class="ramp-section">';
+      html += '<div class="section-label">Typographic Hierarchy</div>';
+
+      const hierarchy = [
+        { role: 'Hero', size: '96px', weight: 700, family: 'display', desc: 'OSWALD BOLD\n0.95 line height\n-0.02 letter spacing' },
+        { role: 'Title', size: '72px', weight: 700, family: 'display', desc: 'OSWALD BOLD\n0.95 line height' },
+        { role: 'Section Head', size: '56px', weight: 700, family: 'display', desc: 'OSWALD BOLD\n0.95 line height' },
+        { role: 'Heading', size: '44px', weight: 600, family: 'display', desc: 'OSWALD SEMI BOLD\n1.1 line height' },
+        { role: 'Subheading', size: '32px', weight: 600, family: 'body', desc: 'UBUNTU SEMI BOLD\n1.2 line height' },
+        { role: 'Body', size: '16px', weight: 400, family: 'body', desc: 'UBUNTU REGULAR\n1.6 line height' },
+        { role: 'Small', size: '14px', weight: 400, family: 'body', desc: 'UBUNTU REGULAR\n1.5 line height' },
+        { role: 'Caption', size: '12px', weight: 500, family: 'mono', desc: 'UBUNTU MONO MEDIUM\n1.4 line height' }
+      ];
+
+      hierarchy.forEach((h, i) => {
+        let fontStyle = 'font-size:' + h.size + ';font-weight:' + h.weight + ';';
+        let fontFamily = h.family === 'display' ? 'var(--font-display)' : (h.family === 'mono' ? 'var(--font-mono)' : 'var(--font-body)');
+        fontStyle += 'font-family:' + fontFamily + ';';
+        if (h.role === 'Hero' || h.role === 'Title' || h.role === 'Section Head') fontStyle += 'line-height:0.95;';
+        else if (h.role === 'Heading') fontStyle += 'line-height:1.1;';
+        else if (h.role === 'Subheading') fontStyle += 'line-height:1.2;';
+        else if (h.role === 'Body') fontStyle += 'line-height:1.6;';
+        else fontStyle += 'line-height:1.5;';
+
+        const sample = EDITORIAL_SAMPLES[i % EDITORIAL_SAMPLES.length];
+
+        html += '<div class="ramp-row">';
+        html += '  <div class="ramp-meta">';
+        html += '    <div class="ramp-meta__role">' + esc(h.role) + '</div>';
+        html += '    <pre class="ramp-meta__detail">' + esc(h.desc) + '</pre>';
+        html += '  </div>';
+        html += '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(sample) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

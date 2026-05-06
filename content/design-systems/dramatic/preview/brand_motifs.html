@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Dramatic</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--signal, #3b82f6);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 28px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 24px;
+      width: 8px;
+      height: 8px;
+      border-radius: 0;
+      background: var(--signal, #3b82f6);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 2px solid var(--signal, #3b82f6);
+      border-radius: var(--radius-md, 8px);
+      padding: 32px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: var(--radius-md, 8px);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--ink, #111111);
+      background: transparent;
+    }
+
+    .dd-card__icon--dont {
+      color: var(--ink, #111111);
+      background: transparent;
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: var(--radius-md, 8px);
+      overflow: hidden;
+      height: 120px;
+      border: 2px solid var(--signal, #3b82f6);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.4;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+      color: var(--ink, #111111);
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--bone, #f5f5f5);
+      border: 2px solid var(--signal, #3b82f6);
+      border-radius: var(--radius-md, 8px);
+      padding: 48px 40px;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 54px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 2px solid var(--signal, #3b82f6);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--slate, #666666);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 700;
+      color: var(--signal, #3b82f6);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--bone, #f5f5f5);
+      border: 2px solid var(--signal, #3b82f6);
+      border-radius: var(--radius-md, 8px);
+      padding: 32px;
+      max-width: 840px;
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+    }
+
+    /* ──── High-Contrast Visual ──── */
+    .contrast-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .contrast-section {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .contrast-slide {
+      border: 2px solid var(--signal, #3b82f6);
+      border-radius: var(--radius-md, 8px);
+      aspect-ratio: 16 / 10;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .contrast-slide--correct {
+      background: var(--paper, #ffffff);
+    }
+
+    .contrast-slide--incorrect {
+      background: var(--bone, #f5f5f5);
+    }
+
+    .contrast-slide__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 12px;
+    }
+
+    .contrast-slide__headline {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 40px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 0;
+    }
+
+    .contrast-slide__accent {
+      color: var(--signal, #3b82f6);
+    }
+
+    .contrast-slide__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 2px solid var(--signal, #3b82f6);
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 18px;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ──── Interaction States ──── */
+    .state-demo {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .state-box {
+      border: 2px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      padding: 24px;
+      background: var(--paper, #ffffff);
+    }
+
+    .state-box__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 12px;
+    }
+
+    .state-button {
+      display: inline-block;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: all 200ms cubic-bezier(0.2, 0, 0.38, 0.9);
+    }
+
+    .state-button--default {
+      background: var(--signal, #3b82f6);
+      color: var(--paper, #ffffff);
+    }
+
+    .state-button--default:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .state-button--default:active {
+      transform: translateY(0);
+    }
+
+    .state-button--outline {
+      background: transparent;
+      color: var(--signal, #3b82f6);
+      border: 2px solid var(--signal, #3b82f6);
+    }
+
+    .state-button--outline:hover {
+      background: var(--signal, #3b82f6);
+      color: var(--paper, #ffffff);
+    }
+
+    .state-button--disabled {
+      background: var(--bone, #f5f5f5);
+      color: var(--slate, #666666);
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#3b82f6">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">The <span>Dramatic</span> Difference</h1>';
+      html += '  <p class="header__subtitle">High-contrast, theatrical design that commands attention through bold layouts, immersive visuals, and unconventional compositions.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Dramatic is not quiet. Bold typography, high contrast, and purposeful negative space create layouts that demand engagement. Primary blue (#3B82F6) is the singular accent that signals interaction and importance. Every element has weight and intention. The system favors clean sans-serif precision over ornament, decisive borders over shadows, and rapid motion (150–200ms) over gradual fades. This is design that doesn\'t whisper—it speaks directly to the user with clarity and confidence.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>High contrast: white canvas (#FFFFFF) against deep ink (#111111) with sharp visual separation</li>';
+      html += '    <li>Primary blue accent (#3B82F6) signals interactivity, emphasis, and system state</li>';
+      html += '    <li>Bold sans-serif typography (system-ui stack) at generous scales for headlines</li>';
+      html += '    <li>Subtle rounded corners (8px) on cards and buttons—not sharp, not organic</li>';
+      html += '    <li>Borders over shadows—structural clarity through 2px signal-blue rules</li>';
+      html += '    <li>Rapid, purposeful motion: 150–250ms transitions with stable easing curves</li>';
+      html += '    <li>Bone gray (#F5F5F5) background for elevated content, creating distinct visual hierarchy</li>';
+      html += '    <li>Mono ALL-CAPS labels in 13px signal-blue for kickers and section headers</li>';
+      html += '    <li>Generous whitespace and breathing room—nothing cramped or ornamental</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use sharp contrast: pure white backgrounds with black or dark gray text</li>';
+      html += '      <li>Reserve primary blue (#3B82F6) for interactive states and system feedback</li>';
+      html += '      <li>Scale headlines boldly: 54–72px for primary, 36–44px for secondary</li>';
+      html += '      <li>Apply 2px borders with signal blue for emphasis and visual containment</li>';
+      html += '      <li>Use 8px rounded corners consistently on cards, inputs, and buttons</li>';
+      html += '      <li>Employ quick transitions (150–200ms) for hover and active states</li>';
+      html += '      <li>Stack colors: white, bone gray, signal blue—nothing in between</li>';
+      html += '      <li>Build explicit hover, focus, active, and disabled states on all interactions</li>';
+      html += '      <li>Pair sans-serif display with sans-serif body for unified, modern voice</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Mix serif and sans-serif typefaces in the same composition</li>';
+      html += '      <li>Use gradients, blurs, or glassmorphism effects</li>';
+      html += '      <li>Apply multiple accent colors—signal blue is singular and supreme</li>';
+      html += '      <li>Replace borders with box-shadows for structural definition</li>';
+      html += '      <li>Round corners aggressively (16px+) or use full-circle buttons unless intentional</li>';
+      html += '      <li>Animate with long easing curves (300ms+) or bouncy transitions</li>';
+      html += '      <li>Introduce subtle tints or desaturated colors—commit to the core palette</li>';
+      html += '      <li>Build interactions without clear, visible state changes</li>';
+      html += '      <li>Use emoji, decorative icons, or illustration as primary visual language</li>';
+      html += '      <li>Create asymmetrical layouts without purpose—composition should feel intentional</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── High-Contrast Visual ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Contrast & Hierarchy</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.65; color: var(--slate); margin-bottom: 24px; max-width: 840px;">Dramatic succeeds through clarity. White and ink create maximum readability. Signal blue appears only where action or emphasis is needed. Bone gray lifts secondary content without introducing muddiness. This three-tier system forces decision-making and prevents visual noise.</p>';
+      html += '  <div class="contrast-section">';
+
+      html += '    <div class="contrast-slide contrast-slide--correct">';
+      html += '      <div class="contrast-slide__kicker">Correct</div>';
+      html += '      <div class="contrast-slide__headline">Bold, <span class="contrast-slide__accent">direct</span> communication</div>';
+      html += '      <div class="contrast-slide__label">High contrast. Signal blue only for action.</div>';
+      html += '    </div>';
+
+      html += '    <div class="contrast-slide contrast-slide--incorrect">';
+      html += '      <div class="contrast-slide__kicker">Avoid</div>';
+      html += '      <div class="contrast-slide__headline">Subtle, muted, <span class="contrast-slide__accent">faded</span> approach</div>';
+      html += '      <div class="contrast-slide__label">Multiple colors dilute impact and clarity.</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#111111' : '#ffffff';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Typography Pairing ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Display + Body Lockup</div>';
+      html += '    <div class="type-pairing__display">Bold sans-serif drives <span>impact</span></div>';
+
+      html += '    <div class="type-pairing__body">A unified sans-serif system creates clarity and modernity. Display type sets headlines at generous scales (54–96px) with tight line height, while body text opens at 18px with 1.65 line height for comfortable reading. This pairing signals confidence without pretense. Every weight decision reinforces the system\'s directness.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Display Font</span>';
+      html += '        system-ui, 700 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Body Font</span>';
+      html += '        system-ui, 400 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Mono Font</span>';
+      html += '        ui-monospace, 600 weight';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Type Ramp Section ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Type Ramp & Roles</div>';
+      html += '  <div style="border: 2px solid var(--signal); border-radius: 8px; padding: 32px; background: var(--paper);">';
+
+      const ramp = [
+        { role: 'Hero', size: '96px', weight: '700', lineHeight: '0.95', font: 'system-ui', example: 'Commanding statement' },
+        { role: 'Display', size: '72px', weight: '700', lineHeight: '0.95', font: 'system-ui', example: 'Major headline' },
+        { role: 'Headline', size: '54px', weight: '700', lineHeight: '1.10', font: 'system-ui', example: 'Card or section title' },
+        { role: 'Subhead', size: '36px', weight: '700', lineHeight: '1.10', font: 'system-ui', example: 'Section divider' },
+        { role: 'Lead', size: '28px', weight: '600', lineHeight: '1.35', font: 'system-ui', example: 'Intro paragraph emphasis' },
+        { role: 'Body', size: '18px', weight: '400', lineHeight: '1.65', font: 'system-ui', example: 'Main paragraph text for reading' },
+        { role: 'Caption', size: '16px', weight: '500', lineHeight: '1.35', font: 'system-ui', example: 'Image caption or label' },
+        { role: 'Label', size: '13px', weight: '600', lineHeight: '1.00', font: 'ui-monospace', example: 'BUTTON TEXT' },
+        { role: 'Meta', size: '12px', weight: '600', lineHeight: '1.00', font: 'ui-monospace', example: 'KICKER OR TAG' }
+      ];
+
+      ramp.forEach((item, i) => {
+        const fontFamily = item.font === 'system-ui' ? 'var(--font-display)' : 'var(--font-mono)';
+        
+        html += '<div style="margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--border); display: flex; gap: 24px; align-items: flex-start;">';
+        html += '  <div style="flex: 0 0 160px;">';
+        html += '    <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--signal); font-weight: 600; margin-bottom: 4px;">' + esc(item.role) + '</div>';
+        html += '    <div style="font-family: var(--font-mono); font-size: 12px; color: var(--slate); line-height: 1.5;">' + esc(item.size) + '<br>' + esc(item.font) + ' ' + esc(item.weight) + '<br>LH ' + esc(item.lineHeight) + '</div>';
+        html += '  </div>';
+        html += '  <div style="flex: 1;">';
+        html += '    <div style="font-family: ' + fontFamily + '; font-size: ' + item.size + '; font-weight: ' + item.weight + '; line-height: ' + item.lineHeight + '; letter-spacing: ' + (item.role === 'Hero' || item.role === 'Display' || item.role === 'Headline' ? '-0.02em' : '0') + '; color: var(--ink); margin-bottom: 8px;">' + esc(item.example) + '</div>';

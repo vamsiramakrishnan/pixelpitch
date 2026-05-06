@@ -1,0 +1,103 @@
+/* Reddit — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #dae0e6;
+  --ink:     #7193ff;
+  --slate:   #666666;
+  --signal:  #7193ff;
+  --bone:    #1a1a1b;
+  --border:  #edeff1;
+  --surface: #ff4500;
+
+  /* Extended palette */
+  --color-orangered-hover: #d93b00;
+  --color-orangered-light: #ffe5d9;
+  --color-accessible-orangered-text: #c23600;
+  --color-periwinkle-light: #d4dfff;
+  --color-reddit-blue: #0079d3;
+  --color-reddit-gold: #ffd700;
+  --color-platinum: #a0e8ff;
+  --color-card-white: #ffffff;
+  --color-card-hover: #f6f7f8;
+  --color-dark-canvas: #030303;
+  --color-dark-elevated: #272729;
+  --color-text-primary: #1c1c1c;
+  --color-text-secondary: #576f76;
+  --color-text-tertiary: #616466;
+  --color-border-strong: #cccccc;
+  --color-icon-default: #878a8c;
+  --color-success-green: #46d160;
+  --color-error-red: #ea0027;
+  --color-warning-amber: #ffb000;
+  --color-mod-green: #00a328;
+  --color-nsfw-pink: #ff585b;
+  --color-spoiler-gray: #545452;
+
+  /* Semantic */
+  --success: #46d160;
+  --warning: #ffb000;
+  --danger:  #ea0027;
+  --info:    #d4dfff;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 40px;
+  --t-page-heading: 24px;
+  --t-section-heading: 18px;
+  --t-post-title: 18px;
+  --t-post-title-compact: 14px;
+  --t-body: 14px;
+  --t-comment-author: 12px;
+  --t-metadata: 12px;
+  --t-flair-tag: 12px;
+  --t-button-label: 14px;
+  --t-tab-nav: 14px;
+  --t-caption: 10px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   24px;
+  --radius-full: 1200px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    8px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

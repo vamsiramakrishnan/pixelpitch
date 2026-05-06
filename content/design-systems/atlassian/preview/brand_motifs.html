@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Atlassian Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bone);
+      color: var(--color-n800);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+    }
+    .header__title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.5px;
+      color: var(--color-n800);
+      margin-bottom: 12px;
+    }
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--color-n500);
+      max-width: 600px;
+      line-height: 1.5;
+    }
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 3px;
+      background: var(--ink);
+      border: none;
+      margin-top: 24px;
+      border-radius: 0;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 56px;
+    }
+    .section__label {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-n500);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Key characteristics */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+    .traits-list li {
+      position: relative;
+      padding: 12px 0 12px 28px;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--color-n800);
+      border-bottom: 1px solid var(--border);
+    }
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 18px;
+      width: 6px;
+      height: 6px;
+      border-radius: 0;
+      background: var(--ink);
+    }
+
+    /* Do's and Don'ts */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 640px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .dd-card {
+      background: var(--bone);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 24px;
+      overflow: hidden;
+    }
+    .dd-card__heading {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dd-card__heading--do { color: var(--color-green-500); }
+    .dd-card__heading--dont { color: var(--color-red-500); }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+    .dd-card__icon--do {
+      background: var(--color-green-100);
+      color: var(--color-green-500);
+    }
+    .dd-card__icon--dont {
+      background: var(--color-red-100);
+      color: var(--color-red-500);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+    .dd-list li {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--color-n800);
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* Color harmony strip */
+    .harmony-strip {
+      display: flex;
+      border-radius: 0;
+      overflow: hidden;
+      height: 80px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+    }
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      border-right: 1px solid rgba(255,255,255,0.4);
+    }
+    .harmony-strip__swatch:last-child {
+      border-right: none;
+    }
+    .harmony-strip__swatch:hover {
+      flex: 1.8;
+    }
+    .harmony-strip__label {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 0;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* Type pairing demo */
+    .type-pairing {
+      background: var(--color-n10);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 40px 32px;
+    }
+    .type-pairing__display {
+      font-family: var(--font-display);
+      font-size: 29px;
+      font-weight: 600;
+      line-height: 1.10;
+      letter-spacing: -0.01em;
+      color: var(--color-n800);
+      margin-bottom: 16px;
+    }
+    .type-pairing__body {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.43;
+      color: var(--color-n500);
+      max-width: 640px;
+    }
+    .type-pairing__meta {
+      display: flex;
+      gap: 24px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .type-pairing__meta-item {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--color-n500);
+    }
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--color-n800);
+    }
+
+    /* Atmosphere card */
+    .atmosphere-card {
+      background: var(--color-n10);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 28px 24px;
+    }
+    .atmosphere-card p {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--color-n800);
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--color-n500);
+      font-size: 14px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border);
+      border-top-color: var(--ink);
+      border-radius: 0;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['bone', 'paper', 'ink', 'slate', 'signal', 'border'];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#ff5630">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.title || 'Design System';
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">The DNA of<br>Enterprise Work</h1>';
+      html += '  <p class="header__subtitle">Atlassian's design language is built for teams who live in their tools. Dense, structured, and unapologetically functional.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ---- Atmosphere / Description ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">System Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>The Atlassian Design System prioritizes information density, scanability, and functional clarity over decorative flair. Every surface exists to frame work—Jira boards, Confluence pages, Bitbucket diffs—and the interface chrome stays deliberately quiet so the content can be loud. The result is a system that feels productive rather than pretty: compact, structured, and unapologetically utilitarian.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Key Characteristics ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Light-mode native with white canvas (#ffffff) and cool-neutral surface hierarchy (#f4f5f7 for sunken regions)</li>';
+      html += '    <li>Atlassian Blue (#0052cc) as the singular interactive accent—never decorative, always purposeful</li>';
+      html += '    <li>Compact type scale: 11px for metadata through 29px for page titles; Inter for all UI text</li>';
+      html += '    <li>Strict 8px spacing grid with 4px half-step; components are dense but precisely spaced</li>';
+      html += '    <li>Status lozenges as a first-class pattern for workflow states: To Do, In Progress, Done</li>';
+      html += '    <li>Board-column layout as a native primitive for Kanban, Trello, and project views</li>';
+      html += '    <li>Inline editing everywhere—text that becomes an input on click</li>';
+      html += '    <li>Avatar groups with white ring borders and overlap stacking for team contexts</li>';
+      html += '    <li>N-naming convention: colors named by hue + luminance step (N500, N800, etc.)</li>';
+      html += '    <li>3px border-radius for buttons and components—the system signature</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ---- Do's and Don'ts ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+      html += '    <div class="dd-card">';
+      html += '      <div class="dd-card__heading dd-card__heading--do">';
+      html += '        <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '      </div>';
+      html += '      <ul class="dd-list">';
+      html += '        <li>Use #0052cc (Atlassian Blue) exclusively for interactive elements—buttons, links, active states, focus rings</li>';
+      html += '        <li>Apply status lozenges for every workflow state; they are the canonical way to show progress</li>';
+      html += '        <li>Keep body text at 14px and headings at weight 600—the system's density depends on this</li>';
+      html += '        <li>Use #172b4d (N800) for headings and #42526e (N500) for body text</li>';
+      html += '        <li>Reserve 3px border-radius for buttons; 4px for cards and containers</li>';
+      html += '        <li>Employ avatar groups with white ring borders and overlap stacking for teams</li>';
+      html += '        <li>Support inline editing—read-mode text that becomes editable on click</li>';
+      html += '        <li>Use #f4f5f7 (N20) sunken surface for secondary regions: sidebars, columns, code blocks</li>';
+      html += '        <li>Stack notifications with 4px solid colored left border for semantic signals</li>';
+      html += '        <li>Use the navy-tinted shadow color rgba(9, 30, 66, ...) for all elevation</li>';
+      html += '      </ul>';
+      html += '    </div>';
+      html += '    <div class="dd-card">';
+      html += '      <div class="dd-card__heading dd-card__heading--dont">';
+      html += '        <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '      </div>';
+      html += '      <ul class="dd-list">';
+      html += '        <li>Don\'t use rounded corners beyond 4px on product UI—ADS is compact and squared</li>';
+      html += '        <li>Don\'t use pure black (#000000) for text—N800 (#172b4d) is the darkest color</li>';
+      html += '        <li>Don\'t apply blue decoratively—it is exclusively for interactive and active states</li>';
+      html += '        <li>Don\'t use generic rgba(0,0,0,...) shadows—the navy tint is integral to the system</li>';
+      html += '        <li>Don\'t make lozenges large or sentence-case—always compact, uppercase, tight</li>';
+      html += '        <li>Don\'t skip the 8px spacing grid—Atlassian's density discipline breaks without it</li>';
+      html += '        <li>Don\'t hide status behind color alone—combine background, text color, and label</li>';
+      html += '        <li>Don\'t use weight 700 (bold) for headings—600 (semibold) is the standard</li>';
+      html += '        <li>Don\'t introduce warm grays—the neutral scale has a cool blue undertone throughout</li>';
+      html += '        <li>Don\'t animate beyond 200ms—enterprise users need speed, not delight</li>';
+      html += '      </ul>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Color Harmony Strip ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Core Color Palette</div>';
+      html += '  <div class="harmony-strip">';
+      
+      const harmonyMapping = {
+        'bone': { name: 'Bone', hex: colors.bone },
+        'paper': { name: 'Paper', hex: colors.paper },
+        'ink': { name: 'Ink (Blue)', hex: colors.ink },
+        'slate': { name: 'Slate', hex: colors.slate },
+        'signal': { name: 'Signal', hex: colors.signal },
+        'border': { name: 'Border', hex: colors.border }
+      };
+
+      Object.entries(harmonyMapping).forEach(([key, data]) => {
+        if (data.hex) {
+          const lum = relativeLuminance(data.hex);
+          const labelColor = lum > 0.4 ? '#172b4d' : '#ffffff';
+          const labelBg = lum > 0.4 ? 'rgba(0,0,0,0.06)' : 'rgba(0,0,0,0.20)';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(data.hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + ';background:' + labelBg + '">' + esc(data.name) + '</span>';
+          html += '</div>';
+        }
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Semantic Colors ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Semantic Signals</div>';
+      html += '  <div class="harmony-strip">';
+
+      const semanticMapping = {
+        'success': { name: 'Success', hex: '#00875a' },
+        'warning': { name: 'Warning', hex: '#ffab00' },
+        'danger': { name: 'Danger', hex: '#ff5630' },
+        'info': { name: 'Info', hex: '#deebff' }
+      };
+
+      Object.entries(semanticMapping).forEach(([key, data]) => {
+        const lum = relativeLuminance(data.hex);
+        const labelColor = lum > 0.4 ? '#172b4d' : '#ffffff';
+        const labelBg = lum > 0.4 ? 'rgba(0,0,0,0.06)' : 'rgba(0,0,0,0.20)';
+        html += '<div class="harmony-strip__swatch" style="background:' + esc(data.hex) + '">';
+        html += '  <span class="harmony-strip__label" style="color:' + labelColor + ';background:' + labelBg + '">' + esc(data.name) + '</span>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Typography Pairing Demo ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography System</div>';
+      html += '  <div class="type-pairing">';
+      html += '    <div class="type-pairing__display">Dense, Structured, Functional</div>';
+      html += '    <div class="type-pairing__body">Atlassian products are built for teams who live in their tools. The typography system reflects this reality: compact scales, generous weight variation, and zero decorative flair. Inter governs all UI text with absolute consistency. Page titles sit at 29px with semibold weight; body copy holds at 14px. Every character exists to convey information, and every size exists to establish hierarchy. The result is a type system that prioritizes clarity and density over polish.</div>';
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Display/Headings:</span> Inter, 600 weight (Semibold)</div>';
+      html += '      <div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Body:</span> Inter, 400 weight (Regular)</div>';
+      html += '      <div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Code:</span> SF Mono, 500 weight</div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Spacing & Grid ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Grid</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Atlassian's spacing system runs on a strict 8px base grid with a 4px half-step for tight contexts. Components snap to this grid religiously: 8px inner padding on lozenges, 16px card padding, 24px section gaps, 32px page margins. This mathematical discipline is what gives Atlassian products their characteristic dense-but-not-cramped feel. Every pixel is accounted for, and whitespace is never arbitrary—it serves hierarchy.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    /* ---- Utilities ---- */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function relativeLuminance(hex) {
+      try {
+        const [r, g, b] = hexToRgb(hex).map(c => {
+          c /= 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      } catch { return 0.5; }
+    }
+  </script>
+</body>
+</html>

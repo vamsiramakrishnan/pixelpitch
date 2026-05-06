@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Energetic — Components Library</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-6) var(--s-5);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--s-4);
+      margin-bottom: var(--s-7);
+      border-bottom: 4px solid var(--ink);
+      border-top: 4px solid var(--ink);
+      padding-top: var(--s-4);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-display);
+      font-size: 56px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-5);
+      border-bottom: 4px solid var(--signal);
+      border-top: 4px solid var(--signal);
+      padding-top: var(--s-5);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+      text-transform: uppercase;
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.6;
+      color: var(--slate);
+      max-width: 720px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: var(--s-5);
+      text-transform: uppercase;
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--slate);
+      min-width: 120px;
+      text-transform: uppercase;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      line-height: 1;
+      border: 3px solid var(--ink);
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.12s ease;
+      text-decoration: none;
+      gap: var(--s-2);
+    }
+
+    .btn:hover {
+      background: var(--ink);
+      color: var(--paper);
+      transform: translateY(-2px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn--primary {
+      background: var(--signal);
+      border-color: var(--signal);
+      color: var(--paper);
+    }
+
+    .btn--primary:hover {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--paper);
+    }
+
+    .btn--secondary {
+      background: var(--paper);
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+
+    .btn--secondary:hover {
+      background: var(--bone);
+    }
+
+    .btn--ghost {
+      border: none;
+      background: transparent;
+      color: var(--signal);
+      padding: 0;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      letter-spacing: 0;
+      text-transform: none;
+      font-weight: 600;
+    }
+
+    .btn--ghost:hover {
+      color: var(--ink);
+      text-decoration-color: var(--ink);
+    }
+
+    .btn--sm {
+      padding: 8px 16px;
+      font-size: 11px;
+    }
+
+    .btn--lg {
+      padding: 14px 28px;
+      font-size: 13px;
+    }
+
+    .btn--block {
+      width: 100%;
+    }
+
+    /* ──── CARDS ──── */
+    .card {
+      background: var(--paper);
+      border: 2px solid var(--ink);
+      border-radius: var(--card-radius);
+      padding: var(--s-4);
+      transition: all 0.15s ease;
+    }
+
+    .card:hover {
+      border-color: var(--signal);
+      transform: translateY(-2px);
+    }
+
+    .card__header {
+      margin-bottom: var(--s-3);
+      padding-bottom: var(--s-3);
+      border-bottom: 2px solid var(--border);
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      text-transform: uppercase;
+    }
+
+    .card__body {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--slate);
+    }
+
+    .card__footer {
+      margin-top: var(--s-4);
+      padding-top: var(--s-3);
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--slate);
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    /* ──── BADGES & PILLS ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2);
+      margin-bottom: var(--s-4);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-2);
+      padding: var(--s-1) var(--s-3);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      line-height: 1.4;
+      border-radius: var(--radius-full);
+      background: var(--bone);
+      color: var(--ink);
+      border: 2px solid var(--border);
+    }
+
+    .badge--signal {
+      background: var(--signal);
+      color: var(--paper);
+      border-color: var(--signal);
+    }
+
+    .badge--success {
+      background: #10b981;
+      color: var(--paper);
+      border-color: #10b981;
+    }
+
+    .badge--danger {
+      background: #ef4444;
+      color: var(--paper);
+      border-color: #ef4444;
+    }
+
+    .badge--warning {
+      background: #f59e0b;
+      color: var(--paper);
+      border-color: #f59e0b;
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    /* ──── INPUT FIELDS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .input {
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      border: 2px solid var(--ink);
+      border-radius: var(--button-radius);
+      outline: none;
+      transition: all 0.12s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .input:hover {
+      border-color: var(--signal);
+    }
+
+    .input--error {
+      border-color: #ef4444;
+    }
+
+    .input--error:focus {
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    /* ──── UTILITY ──── */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+      margin-top: var(--s-4);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .divider {
+      border: none;
+      border-top: 2px solid var(--signal);
+      margin: var(--s-5) 0;
+    }
+
+    .demo-box {
+      background: var(--bone);
+      border: 2px dashed var(--border);
+      padding: var(--s-4);
+      text-align: center;
+      color: var(--slate);
+      font-size: 14px;
+      border-radius: var(--card-radius);
+      margin-bottom: var(--s-3);
+    }
+
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-3) 0;
+      margin-top: var(--s-8);
+      border-top: 2px solid var(--signal);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── GRID SHOWCASE ──── */
+    .component-showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--s-3);
+      margin-bottom: var(--s-5);
+    }
+
+    .showcase-item {
+      background: var(--bone);
+      border: 2px solid var(--ink);
+      border-radius: var(--card-radius);
+      padding: var(--s-3);
+      text-align: center;
+    }
+
+    .showcase-item__label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-top: var(--s-2);
+    }
+
+    /* ──── TYPOGRAPHY SHOWCASE ──── */
+    .typography-sample {
+      margin-bottom: var(--s-5);
+      padding-bottom: var(--s-4);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .typography-sample__title {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .typography-sample__content {
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ink);
+    }
+
+    /* ──── RESPONSIVE ──── */
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-5) var(--s-3);
+      }
+
+      .stage-head__title {
+        font-size: 42px;
+      }
+
+      .section__title {
+        font-size: 36px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .button-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: var(--s-3);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">Energetic</div>
+      <div class="masthead__tagline">
+        Bold &<br>Expressive
+      </div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Component System</h1>
+      <p class="stage-head__subtitle">
+        Dynamic, vibrant components with thick borders, geometric shapes, and high-contrast colors. Every interaction conveys motion and vitality through bold typography and energetic styling.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Interactive</div>
+      <h2 class="section__title">Buttons</h2>
+
+      <div class="subsection-label">Primary Action</div>
+      <div class="button-row">
+        <button class="btn btn--primary">Primary Button</button>
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary btn--lg">Large Button</button>
+      </div>
+
+      <div class="subsection-label">Secondary Action</div>
+      <div class="button-row">
+        <button class="btn btn--secondary">Secondary Button</button>
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary btn--lg">Large Button</button>
+      </div>
+
+      <div class="subsection-label">Default (Outline)</div>
+      <div class="button-row">
+        <button class="btn">Default Button</button>
+        <button class="btn btn--sm">Small</button>
+        <button class="btn btn--lg">Large Button</button>
+      </div>
+
+      <div class="subsection-label">Ghost (Text Only)</div>
+      <div class="button-row">
+        <a href="#" class="btn btn--ghost">Learn More</a>
+        <a href="#" class="btn btn--ghost">View Documentation</a>
+        <a href="#" class="btn btn--ghost">Get Started</a>
+      </div>
+
+      <div class="subsection-label">Block Width</div>
+      <button class="btn btn--primary btn--block" style="margin-bottom: var(--s-3);">Full Width Primary Button</button>
+      <button class="btn btn--secondary btn--block">Full Width Secondary Button</button>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Containers</div>
+      <h2 class="section__title">Cards</h2>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__header">
+            <h3 class="card__title">Card Title</h3>
+          </div>
+          <div class="card__body">
+            <p>Bold card design with thick borders and energetic styling. Perfect for highlighting key information and creating visual hierarchy.</p>
+          </div>
+          <div class="card__footer">
+            Updated today
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__header">
+            <h3 class="card__title">Feature Card</h3>
+          </div>
+          <div class="card__body">
+            <p>Cards provide structure and emphasis. Hover effects add interactivity and feedback to the user experience.</p>
+          </div>
+          <div class="card__footer">
+            5 min read
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__header">
+            <h3 class="card__title">Content Card</h3>
+          </div>
+          <div class="card__body">
+            <p>Every card maintains consistent spacing and typography. The design system ensures visual cohesion across all surfaces.</p>
+          </div>
+          <div class="card__footer">
+            In progress
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="section">
+      <div class="section__kicker">Status</div>
+      <h2 class="section__title">Badges & Pills</h2>
+
+      <div class="subsection-label">Status Indicators</div>
+      <div class="badge-row">
+        <span class="badge"><span class="badge__dot"></span>Active</span>
+        <span class="badge badge--signal"><span class="badge__dot"></span>Featured</span>
+        <span class="badge badge--success"><span class="badge__dot"></span>Success</span>
+        <span class="badge badge--warning"><span class="badge__dot"></span>Warning</span>
+        <span class="badge badge--danger"><span class="badge__dot"></span>Error</span>
+      </div>
+
+      <div class="subsection-label">Tags & Labels</div>
+      <div class="badge-row">
+        <span class="badge">Design</span>
+        <span class="badge">Development</span>
+        <span class="badge badge--signal">Urgent</span>
+        <span class="badge">Documentation</span>
+        <span class="badge">Component</span>
+      </div>
+    </section>
+
+    <!-- Input Fields Section -->
+    <section class="section">
+      <div class="section__kicker">Forms</div>
+      <h2 class="section__title">Input Fields</h2>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Text Input</label>
+          <input type="text" class="input" placeholder="Enter your text here">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Email Input</label>
+          <input type="email" class="input" placeholder="your@email.com">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Search Input</label>
+          <input type="search" class="input" placeholder="Search...">
+        </div>
+      </div>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Focused State</label>
+          <input type="text" class="input" placeholder="Click to see focus ring" autofocus>
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Error State</label>
+          <input type="text" class="input input--error" placeholder="This field has an error">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Disabled</label>
+          <input type="text" class="input" placeholder="Disabled field" disabled>
+        </div>
+      </div>
+
+      <div class="subsection-label">Textarea</div>
+      <textarea class="input" placeholder="Multi-line text input" style="resize: vertical; min-height: 100px;"></textarea>
+    </section>
+
+    <!-- Typography Section -->
+    <section class="section">
+      <div class="section__kicker">Typography</div>
+      <h2 class="section__title">Type Hierarchy</h2>
+
+      <div class="typography-sample">
+        <div class="typography-sample__title">Display (Bold, Expressive)</div>
+        <div class="typography-sample__content" style="font-family: var(--font-display); font-size: 48px; font-weight: 900; letter-spacing: -0.03em; text-transform: uppercase;">
+          Bold Energetic Heading
+        </div>
+      </div>
+
+      <div class="typography-sample">
+        <div class="typography-sample__title">Body Text (Regular, Readable)</div>
+        <div class="typography-sample__content">
+          The system prioritizes bold, expressive typography that conveys motion and vitality. Body text remains clear and accessible while supporting the overall aesthetic.
+        </div>
+      </div>
+
+      <div class="typography-sample">
+        <div class="typography-sample__title">Monospace (Structured, Technical)</div>
+        <div class="typography-sample__content" style="font-family: var(--font-mono); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; font-size: 12px;">
+          CODE_EXAMPLE_UPPERCASE_BOLD
+        </div>
+      </div>
+    </section>
+
+    <!-- Color Showcase Section -->
+    <section class="section">
+      <div class="section__kicker">Palette</div>
+      <h2 class="section__title">Color System</h2>
+
+      <div class="component-showcase">
+        <div class="showcase-item" style="background: var(--paper); border-color: var(--ink);">
+          <div style="width: 100%; height: 60px; background: var(--paper); border: 2px solid var(--ink); border-radius: 4px;"></div>
+          <div class="showcase-item__label">Paper<br>#ffffff</div>
+        </div>
+
+        <div class="showcase-item">
+          <div style="width: 100%; height: 60px; background: var(--ink); border: 2px solid var(--ink); border-radius: 4px;"></div>
+          <div class="showcase-item__label">Ink<br>#111111</div>
+        </div>
+
+        <div class="showcase-item">
+          <div style="width: 100%; height: 60px; background: var(--signal); border: 2px solid var(--signal); border-radius: 4px;"></div>
+          <div class="showcase-item__label">Signal<br>#3b82f6</div>
+        </div>
+
+        <div class="showcase-item">
+          <div style="width: 100%; height: 60px; background: var(--slate); border: 2px solid var(--slate); border-radius: 4px;"></div>
+          <div class="showcase-item__label">Slate<br>#666666</div>
+        </div>
+
+        <div class="showcase-item">
+          <div style="width: 100%; height: 60px; background: var(--bone); border: 2px solid var(--ink); border-radius: 4px;"></div>
+          <div class="showcase-item__label">Bone<br>#f5f5f5</div>
+        </div>
+
+        <div class="showcase-item">
+          <div style="width: 100%; height: 60px; background: #10b981; border: 2px solid #10b981; border-radius: 4px;"></div>
+          <div class="showcase-item__label">Success<br>#10b981</div>
+        </div>
+
+        <div class="showcase-item">
+          <div style="width: 100%; height: 60px; background: #f59e0b; border: 2px solid #f59e0b; border-radius: 4px;"></div>
+          <div class="showcase-item__label">Warning<br>#f59e0b</div>
+        </div>
+
+        <div class="showcase-item">
+          <div style="width: 100%; height: 60px; background: #ef4444; border: 2px solid #ef4444; border-radius: 4px;"></div>
+          <div class="showcase-item__label">Error<br>#ef4444</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Spacing Section -->
+    <section class="section">
+      <div class="section__kicker">Grid</div>
+      <h2 class="section__title">Spacing Scale</h2>
+
+      <p style="font-size: 14px; color: var(--slate); margin-bottom: var(--s-4);">
+        The spacing scale is built on an 8px base unit, providing consistent rhythm and alignment throughout the system.
+      </p>
+
+      <div class="component-showcase">
+        <div class="showcase-item">
+          <div style="width: 100%; height: var(--s-1); background: var(--signal); border-radius: 2px; margin-bottom: var(--s-2);"></div>
+          <div class="showcase-item__label">s-1: 4px</div>
+        </div>
+
+        <div class="showcase-item">
+          <div style="width: 100%; height: var(--s-2); background: var(--signal); border-radius: 2px; margin-bottom: var(--s-2);"></div>
+          <div class="showcase-item__label">s-2: 8px</div>
+        </div>
+
+        <div class="showcase-item">
+          <div style="width: 100%; height: var(--s-3); background: var(--signal); border-radius: 2px; margin-bottom: var(--s-2);"></div>
+          <div class="showcase-item__label">s-3: 16px</div>
+        </div>
+
+        <div class="showcase-item">
+          <div style="width: 100%; height: var(--s-4); background: var(--signal); border-radius: 2px; margin-bottom: var(--s-2);"></div>
+          <div class="showcase-item__label">s-4: 24px</div>
+        </div>
+
+        <div class="showcase-item">
+          <div style="width: 100%; height: var(--s-5); background: var(--signal); border-radius: 2px; margin-bottom: var(--s-2);"></div>
+          <div class="showcase-item__label">s-5: 32px</div>
+        </div>
+
+        <div class="showcase-item">
+          <div style="width: 100%; height: var(--s-6); background: var(--signal); border-radius: 2px; margin-bottom: var(--s-2);"></div>
+          <div class="showcase-item__label">s-6: 48px</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Radii Section -->
+    <section class="section">
+      <div class="section__kicker">Borders</div>
+      <h2 class="section__title">Border Radius</h2>
+
+      <div class="component-showcase">
+        <div class="showcase-item">
+          <div style="width: 100%; height: 60px; background: var(--signal); border-radius: var(--radius-none);"></div>
+          <div class="showcase-item__label">None: 0</div>
+        </div>
+
+        <div class="showcase-item">
+          <div style="width: 100%; height: 60px; background: var(--signal); border-radius: var(--radius-sm);"></div>
+          <div class="showcase-item__label">Small: 4px</div>
+        </div>
+
+        <div class="showcase-item">
+          <div style="width: 100%; height: 60px; background: var(--signal); border-radius: var(--radius-md);"></div>
+          <div class="showcase-item__label">Medium: 8px</div>
+        </div>
+
+        <div class="showcase-item">
+          <div style="width: 100%; height: 60px; background: var(--signal); border-radius: var(--radius-lg);"></div>
+          <div class="showcase-item__label">Large: 16px</div>
+        </div>
+
+        <div class="showcase-item">
+          <div style="width: 100%; height: 60px; background: var

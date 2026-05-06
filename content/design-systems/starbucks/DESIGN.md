@@ -40,6 +40,7 @@ The surfaces breathe through rounded geometry. Every button is a 50px full-pill.
 ### Secondary & Accent
 
 - **Gold** (`#cba258`): Reserved almost exclusively for Rewards-status ceremony — Gold-tier callouts, partnership badges (SkyMiles, Bonvoy), and premium-feeling accents. Never a general-purpose brand color.
+- **Accessible Siren Gold Text** (`#8b6820`): Darker variant for text on light surfaces. Passes WCAG AA.
 - **Gold Light** (`#dfc49d`): Softer gold for background washes on gold-tier sections.
 - **Gold Lightest** (`#faf6ee`): Cream-gold page-surface wash used under partnership sections on the Rewards page — ties the gold accent back into the warm neutral system.
 
@@ -57,7 +58,7 @@ The surfaces breathe through rounded geometry. Every button is a 50px full-pill.
 - **Text Black Soft** (`rgba(0, 0, 0, 0.58)`): Secondary/metadata text on light surfaces.
 - **Text White** (`rgba(255, 255, 255, 1)`): Primary heading/body text on dark green surfaces.
 - **Text White Soft** (`rgba(255, 255, 255, 0.70)`): Secondary text on dark-green surfaces — footer link descriptions, caption text.
-- **Rewards Green** (`#33433d`): A dedicated muted slate-green used only on Rewards-page text blocks — a slightly "dustier" reading color than Text Black that signals "reward surface" without using full Starbucks Green.
+- **Rewards Green** (`#8da098`): A dedicated muted slate-green used only on Rewards-page text blocks — a slightly "dustier" reading color than Text Black that signals "reward surface" without using full Starbucks Green.
 
 ### Semantic & Accent
 

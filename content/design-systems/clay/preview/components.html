@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clay — Component Library</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-body);
+    }
+
+    .page {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 48px 40px;
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 60px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .masthead__logo {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.64px;
+      color: var(--ink);
+    }
+
+    .masthead__tagline {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--slate);
+      text-align: right;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: 80px;
+    }
+
+    .stage-head__kicker {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.08px;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 12px;
+    }
+
+    .stage-head__title {
+      font-size: 80px;
+      font-weight: 600;
+      letter-spacing: -3.2px;
+      line-height: 1;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+
+    .stage-head__subtitle {
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--slate);
+      max-width: 720px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: 100px;
+      padding-bottom: 80px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.08px;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 12px;
+    }
+
+    .section__title {
+      font-size: 44px;
+      font-weight: 600;
+      letter-spacing: -0.88px;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 40px;
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-showcase {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .button-group__label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate);
+      margin-bottom: 8px;
+    }
+
+    .button-set {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: -0.16px;
+      line-height: 1.5;
+      border: none;
+      background: transparent;
+      color: var(--ink);
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: var(--color-dark-charcoal);
+      color: var(--color-pure-white);
+      transform: rotateZ(-8deg) translateY(-8px);
+      box-shadow: rgb(0,0,0) -7px 7px 0px;
+    }
+
+    .btn:focus {
+      outline: 2px solid rgb(20, 110, 245);
+      outline-offset: 2px;
+    }
+
+    .btn--white {
+      background: var(--color-pure-white);
+      border: 1px solid var(--border);
+    }
+
+    .btn--white:hover {
+      background: var(--color-dark-charcoal);
+      color: var(--color-pure-white);
+    }
+
+    .btn--outlined {
+      border: 1px solid #717989;
+      background: transparent;
+    }
+
+    .btn--outlined:hover {
+      background: var(--ink);
+      color: var(--color-pure-white);
+      border-color: var(--ink);
+    }
+
+    .btn--matcha {
+      background: var(--color-matcha-600);
+      color: var(--color-pure-white);
+    }
+
+    .btn--matcha:hover {
+      background: var(--color-matcha-800);
+    }
+
+    .btn--slushie {
+      background: var(--color-slushie-500);
+      color: var(--color-pure-white);
+    }
+
+    .btn--slushie:hover {
+      background: var(--color-slushie-800);
+    }
+
+    .btn--lemon {
+      background: var(--color-lemon-500);
+      color: var(--ink);
+    }
+
+    .btn--lemon:hover {
+      background: var(--color-lemon-700);
+      color: var(--color-pure-white);
+    }
+
+    .btn--ube {
+      background: var(--color-ube-300);
+      color: var(--color-ube-900);
+    }
+
+    .btn--ube:hover {
+      background: var(--color-ube-800);
+      color: var(--color-pure-white);
+    }
+
+    .btn--sm {
+      padding: 6px 12px;
+      font-size: 12.8px;
+    }
+
+    .btn--lg {
+      padding: 16px 32px;
+      font-size: 20px;
+    }
+
+    .btn--pill {
+      border-radius: var(--radius-full);
+    }
+
+    /* ──── CARDS ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 32px;
+      margin-bottom: 60px;
+    }
+
+    .card {
+      background: var(--color-pure-white);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: rgba(0,0,0,0.08) 0px 2px 8px;
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: rgba(0,0,0,0.12) 0px 8px 16px;
+    }
+
+    .card__image {
+      display: block;
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: var(--bone);
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .card__kicker {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.08px;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 8px;
+    }
+
+    .card__heading {
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.56px;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .card__body {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate);
+      margin-bottom: 20px;
+    }
+
+    .card__footer {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .card--dashed {
+      border: 1px dashed var(--border);
+    }
+
+    /* ──── INPUT FIELDS ──── */
+    .inputs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+      margin-bottom: 60px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .input-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .input {
+      padding: 12px 16px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--color-pure-white);
+      border: 1px solid #717989;
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: rgb(20, 110, 245);
+      box-shadow: 0 0 0 2px rgba(20, 110, 245, 0.1);
+    }
+
+    .input:disabled {
+      background: var(--bone);
+      color: var(--slate);
+      cursor: not-allowed;
+    }
+
+    /* ──── BADGES & TAGS ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      font-family: var(--font-body);
+      font-size: 9.6px;
+      font-weight: 600;
+      line-height: 1.5;
+      background: var(--bone);
+      color: var(--slate);
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .badge--success {
+      background: rgba(132, 231, 165, 0.15);
+      color: var(--signal);
+      border-color: var(--signal);
+    }
+
+    .badge--warning {
+      background: rgba(240, 170, 0, 0.1);
+      color: var(--color-lemon-700);
+      border-color: var(--color-lemon-500);
+    }
+
+    .badge--info {
+      background: var(--color-badge-blue-bg);
+      color: var(--color-badge-blue-text);
+      border-color: var(--color-cool-border);
+    }
+
+    .badge--matcha {
+      background: rgba(7, 138, 82, 0.1);
+      color: var(--color-matcha-600);
+      border-color: var(--color-matcha-600);
+    }
+
+    .badge--slushie {
+      background: rgba(59, 211, 253, 0.1);
+      color: var(--color-slushie-500);
+      border-color: var(--color-slushie-500);
+    }
+
+    .badge--ube {
+      background: rgba(193, 176, 255, 0.2);
+      color: var(--color-ube-800);
+      border-color: var(--color-ube-300);
+    }
+
+    /* ──── COLORED SECTIONS ──── */
+    .section--matcha {
+      background: var(--color-matcha-600);
+      color: var(--color-pure-white);
+      padding: 60px 40px;
+      margin: 0 -40px;
+      border: none;
+    }
+
+    .section--matcha .section__kicker,
+    .section--matcha .section__title {
+      color: var(--color-pure-white);
+    }
+
+    .section--matcha .section__subtitle {
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .section--matcha .btn:not(.btn--white) {
+      background: var(--color-pure-white);
+      color: var(--color-matcha-600);
+    }
+
+    .section--slushie {
+      background: var(--color-slushie-500);
+      color: var(--color-pure-white);
+      padding: 60px 40px;
+      margin: 0 -40px;
+      border: none;
+    }
+
+    .section--slushie .section__kicker,
+    .section--slushie .section__title {
+      color: var(--color-pure-white);
+    }
+
+    .section--slushie .section__subtitle {
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .section--lemon {
+      background: var(--color-lemon-400);
+      color: var(--ink);
+      padding: 60px 40px;
+      margin: 0 -40px;
+      border: none;
+    }
+
+    .section--lemon .section__kicker {
+      color: var(--ink);
+    }
+
+    .section--ube {
+      background: var(--color-ube-800);
+      color: var(--color-pure-white);
+      padding: 60px 40px;
+      margin: 0 -40px;
+      border: none;
+    }
+
+    .section--ube .section__kicker,
+    .section--ube .section__title {
+      color: var(--color-pure-white);
+    }
+
+    /* ──── DEMO CONTENT ──── */
+    .subsection-title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.4px;
+      color: var(--ink);
+      margin: 40px 0 20px 0;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .feature-tile {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .feature-tile__icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .feature-tile__name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+
+    .feature-tile__description {
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--slate);
+    }
+
+    .color-palette {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .color-swatch {
+      border-radius: 12px;
+      padding: 20px 16px;
+      text-align: center;
+      box-shadow: rgba(0,0,0,0.08) 0px 2px 8px;
+    }
+
+    .color-swatch__name {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .color-swatch__hex {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      opacity: 0.75;
+    }
+
+    /* ──── FOOTER ──── */
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 32px 0;
+      margin-top: 80px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--slate);
+    }
+
+    /* ──── RESPONSIVE ──── */
+    @media (max-width: 768px) {
+      .page {
+        padding: 32px 20px;
+      }
+
+      .stage-head__title {
+        font-size: 48px;
+        letter-spacing: -1.92px;
+      }
+
+      .section__title {
+        font-size: 32px;
+        letter-spacing: -0.64px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .color-palette {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .masthead {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+      }
+
+      .section--matcha,
+      .section--slushie,
+      .section--lemon,
+      .section--ube {
+        margin: 0 -20px;
+        padding: 40px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">Clay</div>
+      <div class="masthead__tagline">Component<br>Library</div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Creative Vocabulary</h1>
+      <p class="stage-head__subtitle">
+        Clay's component system combines warm artisanal aesthetics with playful micro-interactions. Every element is crafted to delight—from buttons that tilt on hover to generously rounded cards that feel handmade.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Interaction</div>
+      <h2 class="section__title">Buttons & Actions</h2>
+
+      <div class="button-group">
+        <div class="button-group__label">Default Transparent</div>
+        <div class="button-set">
+          <button class="btn">Explore</button>
+          <button class="btn">Learn More</button>
+          <button class="btn">Get Started</button>
+        </div>
+      </div>
+
+      <div class="button-group" style="margin-top: 32px;">
+        <div class="button-group__label">White Solid</div>
+        <div class="button-set">
+          <button class="btn btn--white">Sign Up</button>
+          <button class="btn btn--white btn--sm">Small</button>
+          <button class="btn btn--white btn--lg">Large Button</button>
+        </div>
+      </div>
+
+      <div class="button-group" style="margin-top: 32px;">
+        <div class="button-group__label">Outlined</div>
+        <div class="button-set">
+          <button class="btn btn--outlined">View Docs</button>
+          <button class="btn btn--outlined">Try Demo</button>
+          <button class="btn btn--outlined btn--pill">Pill Style</button>
+        </div>
+      </div>
+
+      <div class="button-group" style="margin-top: 32px;">
+        <div class="button-group__label">Color Variants</div>
+        <div class="button-set">
+          <button class="btn btn--matcha">Matcha</button>
+          <button class="btn btn--slushie">Slushie</button>
+          <button class="btn btn--lemon">Lemon</button>
+          <button class="btn btn--ube">Ube</button>
+        </div>
+      </div>
+
+      <p style="font-size: 14px; color: var(--slate); margin-top: 32px; font-style: italic;">💡 Hover any button to see the playful tilt and shadow animation.</p>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Containers</div>
+      <h2 class="section__title">Cards & Surfaces</h2>
+
+      <div class="cards-grid">
+        <div class="card">
+          <svg class="card__image" viewBox="0 0 320 180" style="background: linear-gradient(135deg, #f8cc65 0%, #fbbd41 100%);">
+            <rect width="320" height="180" fill="currentColor"/>
+          </svg>
+          <div class="card__kicker">Product</div>
+          <h3 class="card__heading">Data Enrichment</h3>
+          <p class="card__body">Transform raw data into actionable insights with Clay's intelligent enrichment platform.</p>
+          <div class="card__footer">
+            <button class="btn btn--sm">Learn more</button>
+          </div>
+        </div>
+
+        <div class="card card--dashed">
+          <svg class="card__image" viewBox="0 0 320 180" style="background: linear-gradient(135deg, #3bd3fd 0%, #0089ad 100%);">
+            <rect width="320" height="180" fill="currentColor"/>
+          </svg>
+          <div class="card__kicker">Feature</div>
+          <h3 class="card__heading">Real-Time Sync</h3>
+          <p class="card__body">Dashed border variant. Keep your data synchronized across all platforms in real-time.</p>
+          <div class="card__footer">
+            <button class="btn btn--sm btn--slushie">Explore</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <svg class="card__image" viewBox="0 0 320 180" style="background: linear-gradient(135deg, #078a52 0%, #02492a 100%);">
+            <rect width="320" height="180" fill="currentColor"/>
+          </svg>
+          <div class="card__kicker">Integration</div>
+          <h3 class="card__heading">API Access</h3>
+          <p class="card__body">Seamless API integration with your existing tech stack and workflows.</p>
+          <div class="card__footer">
+            <button class="btn btn--sm btn--matcha">View API</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Input Fields Section -->
+    <section class="section">
+      <div class="section__kicker">Forms</div>
+      <h2 class="section__title">Input Fields & States</h2>
+
+      <div class="inputs-grid">
+        <div class="input-group">
+          <label class="input-label">Default State</label>
+          <input type="text" class="input" placeholder="Enter text...">
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Focus State</label>
+          <input type="text" class="input" placeholder="Click to focus" autofocus>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Disabled State</label>
+          <input type="text" class="input" placeholder="Disabled input" disabled>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Email Input</label>
+          <input type="email" class="input" placeholder="you@example.com">
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Search Input</label>
+          <input type="search" class="input" placeholder="Search...">
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Textarea</label>
+          <textarea class="input" placeholder="Multi-line input..." rows="3"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="section">
+      <div class="section__kicker">Status</div>
+      <h2 class="section__title">Badges & Tags</h2>
+
+      <h3 class="subsection-title">Status Badges</h3>
+      <div class="badge-row">
+        <span class="badge badge--success">
+          <span class="badge__dot"></span>
+          Active
+        </span>
+        <span class="badge badge--info">
+          <span class="badge__dot"></span>
+          Processing
+        </span>
+        <span class="badge badge--warning">
+          <span class="badge__dot"></span>
+          Pending
+        </span>
+        <span class="badge">
+          <span class="badge__dot"></span>
+          Neutral
+        </span>
+      </div>
+
+      <h3 class="subsection-title">Color-Coded Tags</h3>
+      <div class="badge-row">
+        <span class="badge badge--matcha">Matcha</span>
+        <span class="badge badge--slushie">Slushie</span>
+        <span class="badge badge--ube">Ube</span>
+        <span class="badge" style="background: rgba(248, 204, 101, 0.15); color: var(--color-lemon-700); border-color: var(--color-lemon-500);">Lemon</span>
+      </div>
+    </section>
+
+    <!-- Color Palette Section -->
+    <section class="section">
+      <div class="section__kicker">Palette</div>
+      <h2 class="section__title">Named Color Swatches</h2>
+
+      <h3 class="subsection-title">Primary Colors</h3>
+      <div class="color-palette">
+        <div class="color-swatch" style="background: var(--paper); border: 1px solid var(--border);">
+          <div class="color-swatch__name">Paper</div>
+          <div class="color-swatch__hex">#faf9f7</div>
+        </div>
+        <div class="color-swatch" style="background: var(--ink); color: white;">
+          <div class="color-swatch__name">Ink</div>
+          <div class="color-swatch__hex">#fc7981</div>
+        </div>
+        <div class="color-swatch" style="background: var(--signal); color: white;">
+          <div class="color-swatch__name">Signal</div>
+          <div class="color-swatch__hex">#84e7a5</div>
+        </div>
+        <div class="color-swatch" style="background: var(--slate); color: white;">
+          <div class="color-swatch__name">Slate</div>
+          <div class="color-swatch__hex">#77736b</div>
+        </div>
+        <div class="color-swatch" style="background: var(--bone); border: 1px solid var(--border);">
+          <div class="color-swatch__name">Bone</div>
+          <div class="color-swatch__hex">#eff1f3</div>
+        </div>
+        <div class="color-swatch" style="background: var(--border); border: 1px solid #bbb;">
+          <div class="color-swatch__name">Border</div>
+          <div class="color-swatch__hex">#dad4c8</div>
+        </div>
+      </div>
+
+      <h3 class="subsection-title">Swatch Palette</h3>
+      <div class="color-palette">
+        <div class="color-swatch" style="background: var(--color-matcha-600); color: white;">
+          <div class="color-swatch__name">Matcha</div>
+          <div class="color-swatch__hex">#078a52</div>
+        </div>
+        <div class="color-swatch" style="background: var(--color-slushie-500); color: white;">
+          <div class="color-swatch__name">Slushie</div>
+          <div class="color-swatch__hex">#3bd3fd</div>
+        </div>
+        <div class="color-swatch" style="background: var(--color-lemon-500); color: var(--ink);">
+          <div class="color-swatch__name">Lemon</div>
+          <div class="color-swatch__hex">#fbbd41</div>
+        </div>
+        <div class="color-swatch" style="background: var(--color-ube-300); color: var(--color-ube-900);">
+          <div class="color-swatch__name">Ube</div>
+          <div class="color-swatch__hex">#c1b0ff</div>
+        </div>
+        <div class="color-swatch" style="background: var(--color-blueberry-800); color: white;">
+          <div class="color-swatch__name">Blueberry</div>
+          <div class="color-swatch__hex">#01418d</div>
+        </div>
+        <div class="color-swatch" style="background: var(--color-pure-white); border: 1px solid var(--border);">
+          <div class="color-swatch__name">Pure White</div>
+          <div class="color-swatch__hex">#ffffff</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Colored Sections -->
+    <section class="section section--matcha">
+      <div class="section__kicker">Matcha Section</div>
+      <h2 class="section__title">Colored Backgrounds</h2>
+      <p style="font-size: 18px; line-height: 1.6; max-width: 600px; margin-bottom: 24px;">
+        Full-width swatch sections create visual interest and guide user attention. White text on dark swatches, dark text on light swatches.
+      </p>
+      <button class="btn btn--white">Learn About Matcha</button>
+    </section>
+
+    <section class="section section--slushie" style="margin-top: 0; padding-top: 60px; border-top: none;">
+      <div class="section__kicker">Slushie Section</div>
+      <h2 class="section__title">Each Color Tells a Story</h2>
+      <p style="font-size: 18px; line-height: 1.6; max-width: 600px; margin-bottom: 24px;">
+        The playful, named palette makes design decisions intuitive. No hex codes to memorize—just pick the flavor that fits.
+      </p>
+      <button class="btn btn--white">Explore Slushie</button

@@ -1,0 +1,100 @@
+/* Binance.US — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #f0b90b;
+  --ink:     #f0b90b;
+  --slate:   #848e9c;
+  --signal:  #f0b90b;
+  --bone:    #ffffff;
+  --border:  #ffd000;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-accessible-binance-gold-text: #9a7000;
+  --color-light-gold: #f8d12f;
+  --color-active-yellow: #d0980b;
+  --color-focus-blue: #1eaedb;
+  --color-snow: #f5f5f5;
+  --color-binance-dark: #222126;
+  --color-dark-card: #2b2f36;
+  --color-ink: #1e2026;
+  --color-secondary-text: #32313a;
+  --color-steel: #686a6c;
+  --color-muted: #777e90;
+  --color-hover-dark: #1a1a1a;
+  --color-crypto-green: #0ecb81;
+  --color-crypto-red: #f6465d;
+  --color-border-light: #e6e8ea;
+
+  /* Semantic */
+  --success: #0ecb81;
+  --warning: #f0b90b;
+  --danger:  #f6465d;
+  --info:    #1eaedb;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 60px;
+  --t-display-secondary: 34px;
+  --t-heading-1: 28px;
+  --t-heading-2: 24px;
+  --t-heading-3: 24px;
+  --t-heading-4: 20px;
+  --t-body-large: 20px;
+  --t-body: 16px;
+  --t-body-semibold: 16px;
+  --t-body-bold: 16px;
+  --t-button: 16px;
+  --t-button-small: 14.4px;
+  --t-caption: 14px;
+  --t-caption-semibold: 14px;
+  --t-small: 12px;
+  --t-tiny: 11px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   16px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    8px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

@@ -1,0 +1,94 @@
+/* Ferrari — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #181818;
+  --slate:   #666666;
+  --signal:  #da291c;
+  --bone:    #d2d2d2;
+  --border:  #d2d2d2;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-dark-red: #b01e0a;
+  --color-deep-red: #9d2211;
+  --color-racing-yellow: #fff200;
+  --color-modena-yellow: #f6e500;
+  --color-absolute-black: #000000;
+  --color-dark-surface: #303030;
+  --color-mid-gray: #8f8f8f;
+  --color-silver-gray: #969696;
+  --color-warning-red: #f13a2c;
+  --color-success-green: #03904a;
+  --color-info-blue: #4c98b9;
+  --color-link-hover-blue: #3860be;
+
+  /* Semantic */
+  --success: #03904a;
+  --warning: #f13a2c;
+  --danger:  #da291c;
+  --info:    #4c98b9;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-section-title: 26px;
+  --t-card-heading: 24px;
+  --t-subheading: 18px;
+  --t-ui-heading: 16px;
+  --t-body-bold: 16px;
+  --t-button-label: 16px;
+  --t-small-button: 14.4px;
+  --t-nav-link: 13px;
+  --t-caption: 13px;
+  --t-micro-button: 12px;
+  --t-label-upper: 12px;
+  --t-micro-label: 11px;
+  --t-cookie-text: 45px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   5px;
+  --radius-md:   8px;
+  --radius-lg:   80px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    8px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

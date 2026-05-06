@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Expo</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'system-ui');
+      background: var(--paper, #f0f0f3);
+      color: var(--ink, #1c2024);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 144px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #60646c);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-body, 'system-ui');
+      font-size: 64px;
+      font-weight: 700;
+      line-height: 1.10;
+      letter-spacing: -1.6px;
+      color: var(--ink, #1c2024);
+      margin-bottom: 16px;
+      max-width: 90%;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'system-ui');
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.40;
+      color: var(--slate, #60646c);
+      max-width: 75%;
+      margin-bottom: 48px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 120px;
+      height: 2px;
+      background: var(--signal, #47c2ff);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 144px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #60646c);
+      margin-bottom: 48px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #7e8288);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 100px;
+      gap: 32px;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(28, 32, 36, 0.08);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink, #1c2024);
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body, 'system-ui');
+      font-size: 12px;
+      color: var(--slate, #60646c);
+      margin-top: 4px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 3px;
+      background: var(--signal, #47c2ff);
+      min-width: 3px;
+      border-radius: 1.5px;
+      transition: opacity 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.7;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink, #1c2024);
+      text-align: right;
+    }
+
+    /* Rule weights */
+    .rule-demo {
+      padding: 40px 0;
+      border-bottom: 1px solid rgba(28, 32, 36, 0.08);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 20px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink, #1c2024);
+    }
+
+    .rule-demo__label {
+      font-family: var(--font-body, 'system-ui');
+      font-size: 12px;
+      color: var(--slate, #60646c);
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 12px;
+      color: var(--slate, #60646c);
+    }
+
+    .rule-demo__container {
+      width: 100%;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      padding: 0;
+      background: var(--surface, #ffffff);
+      border-radius: 8px;
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    .rule-demo__none-label {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 12px;
+      color: var(--slate, #60646c);
+      margin-left: 16px;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 80px;
+      margin-bottom: 48px;
+    }
+
+    .radius-item {
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+
+    .radius-item__box {
+      width: 140px;
+      height: 140px;
+      background: var(--surface, #ffffff);
+      border: 2px solid var(--border, #7e8288);
+      flex-shrink: 0;
+    }
+
+    .radius-item__info {
+      flex: 1;
+      padding-top: 8px;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink, #1c2024);
+      margin-bottom: 6px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 12px;
+      color: var(--slate, #60646c);
+      margin-bottom: 16px;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body, 'system-ui');
+      font-size: 14px;
+      line-height: 1.40;
+      color: var(--slate, #60646c);
+    }
+
+    /* Philosophy block */
+    .philosophy {
+      background: var(--surface, #ffffff);
+      padding: 48px;
+      border: 1px solid var(--border, #7e8288);
+      border-radius: 16px;
+      margin-bottom: 96px;
+    }
+
+    .philosophy__title {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #60646c);
+      margin-bottom: 20px;
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body, 'system-ui');
+      font-size: 16px;
+      line-height: 1.40;
+      color: var(--ink, #1c2024);
+    }
+
+    .philosophy__text strong {
+      font-weight: 600;
+    }
+
+    .philosophy__text em {
+      font-style: italic;
+    }
+
+    .philosophy__text code {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 14px;
+      background: rgba(28, 32, 36, 0.04);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* Grid demo */
+    .grid-demo {
+      background: var(--surface, #ffffff);
+      padding: 48px;
+      border: 1px solid var(--border, #7e8288);
+      border-radius: 16px;
+      margin-bottom: 96px;
+    }
+
+    .grid-demo__title {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #60646c);
+      margin-bottom: 32px;
+    }
+
+    .grid-demo__visual {
+      width: 100%;
+      height: 240px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+      padding: 24px;
+      border: 1px dashed rgba(28, 32, 36, 0.16);
+      border-radius: 8px;
+      background: rgba(71, 194, 255, 0.04);
+    }
+
+    .grid-demo__column {
+      background: var(--signal, #47c2ff);
+      opacity: 0.15;
+      border: 1px solid var(--signal, #47c2ff);
+      border-radius: 4px;
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--signal, #47c2ff);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 8px;
+    }
+
+    .grid-demo__info {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+
+    .grid-demo__stat {
+      font-family: var(--font-body, 'system-ui');
+      font-size: 14px;
+      color: var(--ink, #1c2024);
+      line-height: 1.40;
+    }
+
+    .grid-demo__stat-label {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #60646c);
+      margin-bottom: 6px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #60646c);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 2px solid rgba(71, 194, 255, 0.3);
+      border-top-color: var(--signal, #47c2ff);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 900px) {
+      .page {
+        padding: 64px 24px;
+      }
+
+      .header {
+        margin-bottom: 96px;
+      }
+
+      .header__title {
+        font-size: 48px;
+        letter-spacing: -1.2px;
+        max-width: 95%;
+      }
+
+      .header__subtitle {
+        font-size: 16px;
+        max-width: 90%;
+      }
+
+      .section {
+        margin-bottom: 96px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 100px 1fr 70px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+
+      .radius-item {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .grid-demo__info {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '1px', label: 'hairline' },
+      's-2': { value: '2px', label: 'thin' },
+      's-3': { value: '4px', label: 'xs' },
+      's-4': { value: '8px', label: 'sm' },
+      's-5': { value: '12px', label: 'md' },
+      's-6': { value: '16px', label: 'lg' },
+      's-7': { value: '24px', label: 'xl' },
+      's-8': { value: '32px', label: '2xl' },
+      's-9': { value: '40px', label: '2xl+' },
+      's-10': { value: '48px', label: '3xl' },
+      's-11': { value: '64px', label: '4xl' },
+      's-12': { value: '80px', label: '5xl' },
+      's-13': { value: '96px', label: '6xl' },
+      's-14': { value: '144px', label: '8xl' }
+    };
+
+    const DEFAULT_RULES = {
+      'flat': { name: 'Flat', weight: 'none', color: 'transparent', use: 'Page background, default state' },
+      'border': { name: 'Border', weight: '1px', color: 'var(--border)', use: 'Card edges, input fields, dividers' },
+      'elevated': { name: 'Elevated', weight: '0 2px 8px rgba(0,0,0,0.08)', color: 'shadow', use: 'Card shadows, hover states, lift' }
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'Never used — Expo embraces rounded corners' },
+      'sm': { value: '8px', use: 'Buttons, form inputs, small components' },
+      'md': { value: '8px', use: 'Standard internal elements' },
+      'lg': { value: '16px', use: 'Feature tabs, content panels, containers' },
+      'full': { value: '9999px', use: 'Pill-shaped buttons, avatars, primary CTAs' }
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#eb8e90">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      
+      const gfUrl = tokens.typography?.googleFontsUrl || tokens.googleFontsUrl;
+      if (gfUrl) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = gfUrl;
+        document.head.appendChild(link);
+      }
+
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const rules = DEFAULT_RULES;
+      const radius = DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">SPACING &amp; RULES</div>';
+      html += '  <h1 class="header__title">Breathing room.<br>Built for builders.</h1>';
+      html += '  <p class="header__subtitle">Expo\'s spacing system creates gallery-like breathing room between features. Every interval serves a purpose — from the tightest pixel to the largest section break.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Philosophy block */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Spacing Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Expo uses an <strong>8px base unit</strong> to create a modular scale that breathes. What makes it distinctive is the <strong>gallery-like vertical pacing</strong> — sections float as islands in white space, connected by scrolling rather than visual continuation. Each major section gets 96–144px of breathing room, creating a premium, unhurried browsing experience. <strong>Content density is earned through surrounding void</strong>: body copy stays tight and information-dense, but it\'s surrounded by generous margins that communicate confidence and craftsmanship. The whitespace IS the primary design element.';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 3);
+        const label = obj.label || key;
+        
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Depth philosophy */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Depth Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Expo uses <strong>gentle shadows as whispers</strong> rather than architectural statements. The primary depth mechanism is <strong>background color contrast</strong> — white cards floating on the cool-tinted Cloud Gray canvas — rather than aggressive shadow casting. When shadows appear, they\'re soft, diffused, and directional (downward), creating the feeling of paper hovering millimeters above a desk. There are no harsh drop-shadows or layered elevations. The border is the statement; the shadow is the suggestion.';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Rule weights */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth & Elevation</div>';
+
+      Object.entries(rules).forEach(([key, rule]) => {
+        const weight = rule.weight;
+        const color = rule.color;
+        const weightNum = parseFloat(weight) || 0;
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <div>';
+        html += '      <div class="rule-demo__name">' + esc(rule.name) + '</div>';
+        html += '      <div class="rule-demo__label">' + esc(rule.use) + '</div>';
+        html += '    </div>';
+        html += '    <div class="rule-demo__spec">' + esc(weight) + '</div>';
+        html += '  </div>';
+        
+        if (weight === 'none') {
+          html += '  <div class="rule-demo__container" style="background: var(--paper);">';
+          html += '    <div class="rule-demo__none-label">No border or shadow — page background</div>';
+          html += '  </div>';
+        } else if (rule.color === 'shadow') {
+          html += '  <div class="rule-demo__container" style="box-shadow: ' + weight + '; background: var(--surface);">';
+          html += '  </div>';
+        } else {
+          html += '  <div class="rule-demo__container">';
+          html += '    <div class="rule-demo__line" style="height:' + weightNum + 'px; background:' + color + '"></div>';
+          html += '  </div>';
+        }
+        
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Grid visualization */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Layout Grid</div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__title">12-Column Grid (centered, max 1200px)</div>';
+      html += '    <div class="grid-demo__visual">';
+      for (let i = 1; i <= 12; i++) {
+        html += '      <div class="grid-demo__column">' + i + '</div>';
+      }
+      html += '    </div>';
+      html += '    <div class="grid-demo__info">';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Max container width</div>';
+      html += '        <div class="grid-demo__stat">1200–1400px, centered on viewport</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Gutters &amp; margins</div>';
+      html += '        <div class="grid-demo__stat">16–24px component gaps, 48–96px outer padding</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Hero layout</div>';
+      html += '        <div class="grid-demo__stat">Centered single-column with massive breathing room</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Feature sections</div>';
+      html += '        <div class="grid-demo__stat">Alternating image left/right, full-width showcases</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; color: var(--slate); line-height: 1.40; margin-bottom: 48px;">Expo embraces <strong>pill-shaped geometry</strong> throughout the interface. Buttons, cards, images, and containers use generously rounded or fully pill-shaped corners, creating an organic, approachable feel that contradicts the typical sharp-edged developer tool aesthetic.</p>';
+
+      Object.entries(radius).forEach(([key, obj]) => {
+        const radiusValue = obj.value;
+
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__demo">';
+        html += '    <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '  </div>';
+        html += '  <div class="radius-item__info">';
+        html += '    <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '    <div class="radius-item__value">' + esc(radiusValue) + '</div>';
+        html += '    <div class="radius-item__description">' + esc(obj.use) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Typography spacing */
+      html += '<div class="philosophy" style="margin-bottom: 0;">';
+      html += '  <div class="philosophy__title">Typographic Spacing</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Expo\'s typography is set in <strong>system-ui sans-serif with extremely tight letter-spacing</strong>. Display headlines at 64px use <code>-1.6px</code> letter-spacing; section headings at 48px use <code>-2px</code>. This creates a premium, confidence-radiating visual presence. Body text (16–18px) maintains standard letter-spacing (0), creating high readability without sacrificing the tight, refined aesthetic. Monospace code uses JetBrains Mono for technical content.';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Clean</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 72px;
+      font-weight: 600;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--signal, #3b82f6);
+      font-style: normal;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 1px;
+      background: var(--ink, #111111);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 28px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 24px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--signal, #3b82f6);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      padding: 32px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: var(--radius-md, 8px);
+      overflow: hidden;
+      height: 120px;
+      border: 1px solid var(--border, #e5e5e5);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.4;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      padding: 48px 40px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 54px;
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #3b82f6);
+      font-style: normal;
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--slate, #666666);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--ink, #111111);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--bone, #f5f5f5);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      padding: 32px;
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+    }
+
+    /* ──── Simplicity Visual ──── */
+    .simplicity-demo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .simplicity-demo {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .simplicity-slide {
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      aspect-ratio: 16 / 10;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: var(--paper, #ffffff);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .simplicity-slide__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .simplicity-slide__headline {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 40px;
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 0;
+    }
+
+    .simplicity-slide__accent {
+      color: var(--signal, #3b82f6);
+      font-style: normal;
+    }
+
+    .simplicity-slide__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* ──── Type Ramp ──── */
+    .type-ramp {
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      padding: 32px;
+      background: var(--paper, #ffffff);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .type-ramp__item {
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .type-ramp__item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .type-ramp__meta {
+      flex: 0 0 160px;
+    }
+
+    .type-ramp__meta-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .type-ramp__meta-detail {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      line-height: 1.5;
+    }
+
+    .type-ramp__sample {
+      flex: 1;
+    }
+
+    .type-ramp__sample-text {
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 18px;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ──── Responsive ──── */
+    @media (max-width: 640px) {
+      .page {
+        padding: 48px 20px;
+      }
+
+      .header__title {
+        font-size: 48px;
+      }
+
+      .header__subtitle {
+        font-size: 18px;
+      }
+
+      .section {
+        margin-bottom: 60px;
+      }
+
+      .type-pairing__display {
+        font-size: 40px;
+      }
+
+      .simplicity-slide__headline {
+        font-size: 32px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#3b82f6">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">The <span>Essence</span> of Clean</h1>';
+      html += '  <p class="header__subtitle">Purposeful simplicity. Maximum legibility. Minimum chrome. Every element earns its place through clarity and function.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Clean is systematic restraint. A white canvas, neutral typography at generous scale, a single primary accent in blue, and strategic negative space. No illustrations. No gradients. No decorative motion. Interactions are swift and purposeful—150–250ms transitions with stable easing. The grid is your foundation. Buttons breathe. Cards align. Every pixel serves information hierarchy, not ego. The result is a system that disappears behind content, amplifying clarity.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>White paper canvas with neutral gray and blue accents only</li>';
+      html += '    <li>Legible, system-native sans-serif (system-ui) for all text roles</li>';
+      html += '    <li>Primary blue (#3B82F6) as the sole interactive signal</li>';
+      html += '    <li>Generous whitespace and breathing room around all content</li>';
+      html += '    <li>Rounded corners on interactive elements (8px default) for softness</li>';
+      html += '    <li>Subtle depth via hairline borders and minimal shadow (0 2px 8px @ 8% opacity)</li>';
+      html += '    <li>Explicit state design: hover, focus-visible, active, disabled, loading</li>';
+      html += '    <li>Swift, purposeful transitions (150–250ms) on interaction</li>';
+      html += '    <li>Information-first layout: typography hierarchy over decoration</li>';
+      html += '    <li>No illustrations, gradients, or decorative effects</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use 8px spacing grid for all margins and padding</li>';
+      html += '      <li>Apply 8px border-radius on buttons and card containers</li>';
+      html += '      <li>Default all text to system-ui sans-serif at 16px baseline</li>';
+      html += '      <li>Use Primary Blue (#3B82F6) for interactive states only</li>';
+      html += '      <li>Employ ample whitespace—breathing room matters more than density</li>';
+      html += '      <li>Layer depth via subtle borders and light shadows</li>';
+      html += '      <li>Make hover and focus states visually distinct and predictable</li>';
+      html += '      <li>Keep transitions short and stable (150–250ms easing)</li>';
+      html += '      <li>Organize content with clear typographic hierarchy</li>';
+      html += '      <li>Test all interactive states: hover, focus, active, disabled, loading</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use color outside the core palette—no custom colors</li>';
+      html += '      <li>Apply border-radius of 0 or 16px+ on standard components</li>';
+      html += '      <li>Mix typefaces or use decorative fonts—system-ui always</li>';
+      html += '      <li>Add gradients, blur effects, or glassmorphism</li>';
+      html += '      <li>Crowd the interface—negative space is a feature, not waste</li>';
+      html += '      <li>Use heavy or ornate shadows—max shadow is elevated state</li>';
+      html += '      <li>Apply multiple accent colors on a single screen</li>';
+      html += '      <li>Exceed 250ms on transition durations</li>';
+      html += '      <li>Omit visible focus states for keyboard navigation</li>';
+      html += '      <li>Include illustrations, icons outside system, or animated decorations</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Simplicity Principle Visual ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">The Simplicity Principle</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.65; color: var(--slate); margin-bottom: 24px; max-width: 840px;">Simplicity is not emptiness—it\'s purpose. Each element must justify its presence through clarity, legibility, or direct function. Whitespace is not unused space; it\'s the breathing room that makes content scannable and comprehensible.</p>';
+      html += '  <div class="simplicity-demo">';
+
+      html += '    <div class="simplicity-slide">';
+      html += '      <div class="simplicity-slide__kicker">Principle</div>';
+      html += '      <div class="simplicity-slide__headline">One job per <span class="simplicity-slide__accent">element</span></div>';
+      html += '      <div class="simplicity-slide__label">Purposeful, not decorative. Clear, not clever.</div>';
+      html += '    </div>';
+
+      html += '    <div class="simplicity-slide">';
+      html += '      <div class="simplicity-slide__kicker">Anti-Pattern</div>';
+      html += '      <div class="simplicity-slide__headline">Visual <span class="simplicity-slide__accent">clutter</span> obscures intent</div>';
+      html += '      <div class="simplicity-slide__label">Too many colors, effects, and decorations confuse hierarchy.</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#111111' : '#ffffff';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Typography Pairing ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Display + Body</div>';
+      html += '    <div class="type-pairing__display">System typefaces for <span>maximum clarity</span></div>';
+
+      html += '    <div class="type-pairing__body">Clean uses native system fonts (system-ui for display and body, ui-monospace for code). No custom typefaces means universal legibility, instant rendering, and perfect platform parity. Hierarchy emerges from scale, weight, and whitespace—not font variation. Headlines set at 600 weight. Body text floats at 400. A mono stack for data and code. This constraint is a feature.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Display Font</span>';
+      html += '        system-ui, 600 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Body Font</span>';
+      html += '        system-ui, 400 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Mono Font</span>';
+      html += '        ui-monospace, 400 weight';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Type Ramp Section ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Type Ramp & Roles</div>';
+      html += '  <div class="type-ramp">';
+
+      const ramp = [
+        { role: 'Display', size: '72px', weight: '600', lineHeight: '0.95', font: 'system-ui', example: 'Key headline or hero text' },
+        { role: 'Headline', size: '54px', weight: '600', lineHeight: '1.10', font: 'system-ui', example: 'Major section heading' },
+        { role: 'Subhead', size: '36px', weight: '600', lineHeight: '1.10', font: 'system-ui', example: 'Subsection title' },
+        { role: 'Lead', size: '28px', weight: '500', lineHeight: '1.35', font: 'system-ui', example: 'Introductory paragraph' },
+        { role: 'Body', size: '18px', weight: '400', lineHeight: '1.65', font: 'system-ui', example: 'Main paragraph text for reading and comprehension' },
+        { role: 'Small', size: '16px', weight: '400', lineHeight: '1.5', font: 'system-ui', example: 'Secondary or caption text' },
+        { role: 'Label', size: '14px', weight: '500', lineHeight: '1.35', font: 'system-ui', example: 'Form labels and metadata' },
+        { role: 'Code', size: '13px', weight: '500', lineHeight: '1.5', font: 'ui-monospace', example: 'code, tokens, technical data' },
+        { role: 'Meta', size: '13px', weight: '500', lineHeight: '1.00', font: 'ui-monospace', example: 'DATE · SOURCE · COUNT' }
+      ];
+
+      ramp.forEach((item, i) => {
+        const fontFamily = item.font === 'system-ui' ? 'system-ui, sans-serif' : 'ui-monospace, monospace';
+        
+        html += '<div class="type-ramp__item">';
+        html += '  <div class="type-ramp__meta">';
+        html += '    <div class="type-ramp__meta-label">' + esc(item.role) + '</div>';
+        html += '    <div class="type-ramp__meta-detail">' + esc(item.size) + '<br>' + esc(item.font) + ' ' + esc(item.weight) + '<br>LH ' + esc(item.lineHeight) + '</div>';
+        html += '  </div>';
+        html += '  <div class="type-ramp__sample">';
+        html += '    <div class="type-ramp__sample-text" style="font-family: ' + fontFamily + '; font-size: ' + item.size + '; font-weight: ' + item.weight + '; line-height: ' + item.lineHeight + '; letter-spacing: ' + (item.role === 'Display' || item.role === 'Headline' || item.role === 'Subhead' ? '-0.02em' : '0') + '; color: var(--ink); margin-bottom: 8px;">' + esc(item.example) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    /* ──── Utilities ──── */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(

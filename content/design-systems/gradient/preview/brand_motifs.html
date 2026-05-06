@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Gradient</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #990FFA 0%, #3b82f6 50%, #00d4ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 120px;
+      height: 3px;
+      background: linear-gradient(90deg, #990FFA, #3b82f6, #00d4ff);
+      border: none;
+      margin-top: 32px;
+      border-radius: 2px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--signal, #3b82f6);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 28px;
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+      transition: all 200ms ease;
+    }
+
+    .traits-list li:hover {
+      padding-left: 32px;
+      color: var(--signal, #3b82f6);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 24px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #990FFA, #3b82f6);
+      transition: all 200ms ease;
+    }
+
+    .traits-list li:hover::before {
+      width: 12px;
+      height: 12px;
+      left: -2px;
+      top: 21px;
+      box-shadow: 0 0 12px rgba(57, 130, 246, 0.4);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--card-radius, 8px);
+      padding: 32px;
+      transition: all 250ms ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .dd-card:hover {
+      box-shadow: 0 8px 24px rgba(57, 130, 246, 0.12);
+      border-color: var(--signal, #3b82f6);
+      transform: translateY(-2px);
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: #10b981;
+    }
+
+    .dd-card__heading--dont {
+      color: #ef4444;
+    }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: #10b981;
+    }
+
+    .dd-card__icon--dont {
+      color: #ef4444;
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Gradient Showcase ──── */
+    .gradient-showcase {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .gradient-showcase {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .gradient-box {
+      aspect-ratio: 16 / 10;
+      border-radius: var(--radius-lg, 16px);
+      border: 1px solid var(--border, #e5e5e5);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      transition: all 250ms ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .gradient-box:hover {
+      box-shadow: 0 12px 32px rgba(57, 130, 246, 0.2);
+      transform: translateY(-4px);
+      border-color: var(--signal, #3b82f6);
+    }
+
+    .gradient-box__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: white;
+      opacity: 0.9;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    /* ──── Color Harmony ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: var(--radius-lg, 16px);
+      overflow: hidden;
+      height: 140px;
+      border: 1px solid var(--border, #e5e5e5);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(0,0,0,0.05));
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.6;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      white-space: nowrap;
+      opacity: 0.85;
+      transition: opacity 0.2s ease;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      border-radius: 4px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: linear-gradient(135deg, rgba(153, 15, 250, 0.03) 0%, rgba(59, 130, 246, 0.03) 100%);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-lg, 16px);
+      padding: 48px 40px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      transition: all 250ms ease;
+    }
+
+    .type-pairing:hover {
+      box-shadow: 0 8px 24px rgba(57, 130, 246, 0.1);
+      border-color: var(--signal, #3b82f6);
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 54px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #990FFA 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--slate, #666666);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 700;
+      color: var(--ink, #111111);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Interaction States ──── */
+    .states-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .states-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .state-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--card-radius, 8px);
+      padding: 28px;
+      transition: all 250ms ease;
+    }
+
+    .state-card__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .state-button {
+      padding: var(--button-py, 10px) var(--button-px, 20px);
+      border: none;
+      border-radius: var(--button-radius, 8px);
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 200ms ease;
+      display: inline-block;
+      margin-bottom: 12px;
+      width: 100%;
+    }
+
+    .state-button--default {
+      background: linear-gradient(135deg, #990FFA 0%, #3b82f6 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(57, 130, 246, 0.3);
+    }
+
+    .state-button--default:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(57, 130, 246, 0.4);
+    }
+
+    .state-button--default:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(57, 130, 246, 0.2);
+    }
+
+    .state-button--disabled {
+      background: var(--bone, #f5f5f5);
+      color: var(--slate, #666666);
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    .state-button--outline {
+      background: transparent;
+      color: var(--signal, #3b82f6);
+      border: 2px solid var(--signal, #3b82f6);
+      box-shadow: none;
+    }
+
+    .state-button--outline:hover {
+      background: rgba(57, 130, 246, 0.08);
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: linear-gradient(135deg, rgba(153, 15, 250, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-lg, 16px);
+      padding: 40px;
+      max-width: 840px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 18px;
+      font-family: var(--font-body, 'system-ui', sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ──── Emphasis Marker ──── */
+    .emphasis {
+      background: linear-gradient(90deg, rgba(153, 15, 250, 0.15), rgba(59, 130, 246, 0.15));
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border', 'surface'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#ef4444">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">Modern Playfulness Through <span class="emphasis">Gradient</span> Surfaces</h1>';
+      html += '  <p class="header__subtitle">Smooth color transitions, subtle depth, and purposeful motion. A design system built for interfaces that feel alive.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Gradient is a modern, playful design system that celebrates smooth color transitions and gradient-rich surfaces. The canvas breathes with light, depth comes from subtle shadows and gradient overlays, and every interaction emphasizes the primary accent in motion. Rounded corners (8–16px) soften the interface while maintaining clarity. Typography is modern sans-serif, set generously for readability. Colors flow across surfaces in purposeful gradients. Every state transition—hover, focus, active—creates visual feedback without overwhelming the design.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Clean white canvas with soft, rounded corners throughout (8–16px radius)</li>';
+      html += '    <li>Gradient backgrounds on headers, buttons, and hero sections (135° flows)</li>';
+      html += '    <li>Subtle shadows (2–8px elevation) for depth without darkness</li>';
+      html += '    <li>Primary blue (#3B82F6) as the interaction and accent signal</li>';
+      html += '    <li>Modern sans-serif typography (system-ui) set at generous sizes and line heights</li>';
+      html += '    <li>Smooth transitions (150–250ms) on all interactive elements</li>';
+      html += '    <li>Monospace font for labels, kickers, and data (all-caps, 0.14em tracking)</li>';
+      html += '    <li>Playful micro-interactions: scale, shadow, color shift on hover</li>';
+      html += '    <li>Visual hierarchy through weight, size, and gradient emphasis</li>';
+      html += '    <li>Generous whitespace and breathing room between elements</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use gradient overlays from purple to blue (135°) on hero sections</li>';
+      html += '      <li>Apply 8–16px border radius to cards, buttons, and containers</li>';
+      html += '      <li>Add subtle shadows (0 2px 8px or 0 8px 24px) for elevation</li>';
+      html += '      <li>Emphasize hover states with shadow increase and slight scale (translateY -2px)</li>';
+      html += '      <li>Use the primary blue (#3B82F6) for links, buttons, and focus states</li>';
+      html += '      <li>Keep transitions smooth and purposeful (150–250ms easing)</li>';
+      html += '      <li>Pair rounded, soft UI with modern, spacious typography</li>';
+      html += '      <li>Use gradient text for hero headlines (background-clip: text)</li>';
+      html += '      <li>Add subtle gradient backgrounds to card containers</li>';
+      html += '      <li>Ensure all interactive elements have clear focus and active states</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use harsh, hard-edged corners (border-radius: 0 or sharp angles)</li>';
+      html += '      <li>Apply heavy shadows that create drowsy, over-layered appearance</li>';
+      html += '      <li>Mix gradients from conflicting color families (warm + cool without intention)</li>';
+      html += '      <li>Skip focus states or hover feedback on interactive elements</li>';
+      html += '      <li>Use serif or monospace fonts for body text or main content</li>';
+      html += '      <li>Use colors outside the defined palette for accent or signal</li>';
+      html += '      <li>Create abrupt, jarring transitions (instant or 500ms+ durations)</li>';
+      html += '      <li>Add gradients to every surface (reserve for heroes and buttons)</li>';
+      html += '      <li>Crowd elements without breathing room or generous spacing</li>';
+      html += '      <li>Ignore disabled states or loading indicators</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Gradient Showcase ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Gradient Showcase</div>';
+      html += '  <div class="gradient-showcase">';
+
+      html += '    <div class="gradient-box" style="background: linear-gradient(135deg, #990FFA 0%, #3b82f6 100%); border-color: rgba(59, 130, 246, 0.3);">';
+      html += '      <div class="gradient-box__label">Purple to Blue</div>';
+      html += '    </div>';
+
+      html += '    <div class="gradient-box" style="background: linear-gradient(135deg, #3b82f6 0%, #00d4ff 100%); border-color: rgba(0, 212, 255, 0.3);">';
+      html += '      <div class="gradient-box__label">Blue to Cyan</div>';
+      html += '    </div>';
+
+      html += '    <div class="gradient-box" style="background: linear-gradient(135deg, #fbbf24 0%, #f97316 100%); border-color: rgba(249, 115, 22, 0.3);">';
+      html += '      <div class="gradient-box__label">Amber to Orange</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = ['paper', 'signal', 'bone', 'slate', 'ink'];
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Palette</div>';
+        html += '  <div class="harmony-strip">';
+
+        const harmonyGradients = {
+          'paper': 'linear-gradient(180deg, #ffffff 0%, #f9fafb 100%)',
+          'signal': 'linear-gradient(135deg, #3b82f6 0%, #0ea5e9 100%)',
+          'bone': 'linear-gradient(180deg, #f5f5f5 0%, #e5e5e5 100%)',
+          'slate': 'linear-gradient(180deg, #666666 0%, #4b5563 100%)',
+          'ink': 'linear-gradient(180deg, #111111 0%, #1f2937 100%)'
+        };
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key] || '#ffffff';
+          const gradient = harmonyGradients[key] || 'linear-gradient(180deg, ' + hex + ', ' + hex + ')';
+          html += '<div class="harmony-strip__swatch" style="background:' + gradient + '">';
+          html += '  <span class="harmony-strip__label">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Typography Pairing ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Modern + Generous</div>';
+      html += '    <div class="type-pairing__display">Modern typography meets playful gradients</div>';
+
+      html += '    <div class="type-pairing__body">System-ui sans-serif forms the backbone of Gradient, set at generous sizes (18–72px) with open line heights (1.55–1.65). Hierarchical weight shifts (400 for body, 700 for headings) create clear structure without decorative serifs. Monospace labels provide technical precision. Gradient backgrounds on display text add visual interest while maintaining legibility through proper contrast and careful color selection.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Display Font</span>';
+      html += '        system-ui, 700 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Body Font</span>';
+      html += '        system-ui, 400–600 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Mono Font</span>';
+      html += '        ui-monospace, 600 weight';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Interaction States ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Interactive States</div>';
+      html += '  <div class="states-grid">';
+
+      html += '    <div class="state-card">';
+      html += '      <div class="state-card__label">Default State</div>';
+      html += '      <button class="state-button state-button--default">Primary Button</button>';
+      html += '      <p style="font-size: 13px; color: var(--slate); margin-top: 12px

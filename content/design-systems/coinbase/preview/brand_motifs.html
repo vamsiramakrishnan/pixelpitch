@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Coinbase</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'CoinbaseText', system-ui, sans-serif);
+      background: var(--paper, #0a0b0d);
+      color: var(--ink, #0a0b0d);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+    }
+    .header__title {
+      font-family: var(--font-display, 'CoinbaseDisplay', system-ui, sans-serif);
+      font-size: 64px;
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: 0;
+      color: #ffffff;
+      margin-bottom: 12px;
+    }
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate, #666666);
+      max-width: 600px;
+      font-weight: 400;
+    }
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 3px;
+      background: var(--signal, #0052ff);
+      border: none;
+      margin-top: 24px;
+      border-radius: 2px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 56px;
+    }
+    .section__label {
+      font-family: var(--font-body, 'CoinbaseText', system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--surface, #282b31);
+    }
+
+    /* Key characteristics */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+    .traits-list li {
+      position: relative;
+      padding: 12px 0 12px 28px;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #ffffff;
+      border-bottom: 1px solid var(--surface, #282b31);
+    }
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 18px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--signal, #0052ff);
+      opacity: 0.8;
+    }
+
+    /* Do's and Don'ts */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 640px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .dd-card {
+      background: var(--surface, #282b31);
+      border: 1px solid var(--surface, #282b31);
+      border-radius: 12px;
+      padding: 24px;
+      overflow: hidden;
+    }
+    .dd-card__heading {
+      font-family: var(--font-body, 'CoinbaseText', system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dd-card__heading--do { color: #58c373; }
+    .dd-card__heading--dont { color: #f3543f; }
+
+    .dd-card__icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .dd-card__icon--do {
+      background: rgba(88, 195, 115, 0.15);
+      color: #58c373;
+    }
+    .dd-card__icon--dont {
+      background: rgba(243, 84, 63, 0.15);
+      color: #f3543f;
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+    .dd-list li {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #ffffff;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* Color harmony strip */
+    .harmony-strip {
+      display: flex;
+      border-radius: 12px;
+      overflow: hidden;
+      height: 80px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+    }
+    .harmony-strip__swatch:hover {
+      flex: 1.8;
+    }
+    .harmony-strip__label {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 3px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* Type pairing demo */
+    .type-pairing {
+      background: var(--surface, #282b31);
+      border: 1px solid var(--surface, #282b31);
+      border-radius: 12px;
+      padding: 40px 32px;
+    }
+    .type-pairing__display {
+      font-family: var(--font-display, 'CoinbaseDisplay', system-ui, sans-serif);
+      font-size: 52px;
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: 0;
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+    .type-pairing__body {
+      font-family: var(--font-body, 'CoinbaseText', system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.56;
+      color: var(--slate, #666666);
+      max-width: 640px;
+    }
+    .type-pairing__meta {
+      display: flex;
+      gap: 24px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    /* Atmosphere card */
+    .atmosphere-card {
+      background: var(--surface, #282b31);
+      border: 1px solid var(--surface, #282b31);
+      border-radius: 12px;
+      padding: 28px 24px;
+    }
+    .atmosphere-card p {
+      font-size: 16px;
+      line-height: 1.7;
+      color: #ffffff;
+    }
+
+    /* Button demo */
+    .button-demo {
+      background: var(--surface, #282b31);
+      border: 1px solid var(--surface, #282b31);
+      border-radius: 12px;
+      padding: 40px 32px;
+    }
+    .button-demo__heading {
+      font-family: var(--font-body, 'CoinbaseText', system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .button-demo__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .btn {
+      padding: 12px 24px;
+      border-radius: var(--radius-full, 56px);
+      border: none;
+      font-family: var(--font-body, 'CoinbaseText', system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: lowercase;
+    }
+    .btn--primary {
+      background: var(--signal, #0052ff);
+      color: #ffffff;
+    }
+    .btn--primary:hover {
+      background: var(--color-hover-blue, #578bfa);
+    }
+    .btn--primary:active {
+      background: var(--signal, #0052ff);
+      opacity: 0.8;
+    }
+    .btn--secondary {
+      background: transparent;
+      color: var(--signal, #0052ff);
+      border: 2px solid var(--signal, #0052ff);
+    }
+    .btn--secondary:hover {
+      background: var(--signal, #0052ff);
+      color: #ffffff;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--surface, #282b31);
+      border-top-color: var(--signal, #0052ff);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Accent highlights */
+    .accent {
+      color: var(--signal, #0052ff);
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border', 'surface'];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#f3543f">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.name || 'Coinbase';
+      const colors = tokens.colors || {};
+      const typography = tokens.typography || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Brand Motifs</h1>';
+      html += '  <p class="header__subtitle">The DNA of Coinbase's visual identity — trust, clarity, and institutional confidence.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ---- Atmosphere / Description ---- */
+      if (meta.summary) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Atmosphere</div>';
+        html += '  <div class="atmosphere-card"><p>' + esc(meta.summary) + ' A clean, trustworthy interface that communicates financial reliability through a <span class="accent">binary palette of blue and white</span>. Every design decision reinforces confidence and transparency.</p></div>';
+        html += '</div>';
+      }
+
+      /* ---- Key Characteristics ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li><span class="accent">Coinbase Blue (#0052ff)</span> as the singular brand accent — functional, not decorative</li>';
+      html += '    <li>Four-font proprietary family: Display, Sans, Text, and Icons</li>';
+      html += '    <li>56px radius pill-shaped CTAs with blue hover transition (#578bfa)</li>';
+      html += '    <li>Alternating dark (#0a0b0d) and light sections for visual rhythm</li>';
+      html += '    <li>Ultra-tight 1.0 line-height on display headings for maximum impact</li>';
+      html += '    <li>Cool gray secondary surface (#eef0f3) with subtle blue undertone</li>';
+      html += '    <li>Lowercase button labels — distinctive and approachable</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ---- Do's and Don'ts ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '<div class="dd-card">';
+      html += '  <div class="dd-card__heading dd-card__heading--do">';
+      html += '    <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '  </div>';
+      html += '  <ul class="dd-list">';
+      html += '    <li>Use Coinbase Blue (#0052ff) for primary interactive elements</li>';
+      html += '    <li>Apply 56px radius for all CTA buttons — never sharp corners</li>';
+      html += '    <li>Use CoinbaseDisplay for hero headings only</li>';
+      html += '    <li>Alternate dark and white sections to create visual hierarchy</li>';
+      html += '    <li>Use lowercase text-transform on buttons</li>';
+      html += '    <li>Maintain generous whitespace for institutional calm</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      html += '<div class="dd-card">';
+      html += '  <div class="dd-card__heading dd-card__heading--dont">';
+      html += '    <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '  </div>';
+      html += '  <ul class="dd-list">';
+      html += '    <li>Don\'t use blue decoratively — it\'s reserved for functional interaction</li>';
+      html += '    <li>Don\'t use sharp corners on CTAs — 56px is the minimum radius</li>';
+      html += '    <li>Don\'t mix multiple accent colors — blue is the singular focal point</li>';
+      html += '    <li>Don\'t use CoinbaseDisplay for body text or UI labels</li>';
+      html += '    <li>Don\'t crowd layouts — Coinbase values breathing room</li>';
+      html += '    <li>Don\'t apply blue as background fill for large sections</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Color Harmony Strip ---- */
+      const harmonyKeys = ['signal', 'paper', 'bone', 'slate', 'surface'];
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key] || colors[key.replace(/-/g, '')] || '#000';
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.4 ? '#0a0b0d' : '#ffffff';
+          const labelBg = lum > 0.4 ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.12)';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + ';background:' + labelBg + '">' + esc(key) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ---- Typography Pairing Demo ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__display">The future of money</div>';
+
+      html += '    <div class="type-pairing__body">Coinbase's typography system combines <span class="accent">CoinbaseDisplay</span> for hero headlines — ultra-tight at 1.0 line-height — with <span class="accent">CoinbaseText</span> for body reading. This pairing creates hierarchy through restraint, letting content and clarity take center stage. Every typeface choice reinforces the brand\'s commitment to trust and transparency in the financial system.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Display:</span> CoinbaseDisplay, weight 400, line-height 1.0</div>';
+      html += '      <div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Body:</span> CoinbaseText, weight 400, line-height 1.56</div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Button System Demo ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Button System</div>';
+      html += '  <div class="button-demo">';
+      html += '    <div class="button-demo__heading">Primary & Secondary States</div>';
+      html += '    <div class="button-demo__grid">';
+      html += '      <button class="btn btn--primary">get started</button>';
+      html += '      <button class="btn btn--secondary">learn more</button>';
+      html += '      <button class="btn btn--primary" style="opacity: 0.6;">disabled</button>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    /* ---- Utilities ---- */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function relativeLuminance(hex) {
+      try {
+        const [r, g, b] = hexToRgb(hex).map(c => {
+          c /= 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      } catch { return 0.5; }
+    }
+  </script>
+</body>
+</html>

@@ -43,7 +43,7 @@ What distinguishes Spotify is its pill-and-circle geometry. Primary buttons use 
 ### Surface & Border
 - **Dark Card** (`#252525`): Elevated card surface
 - **Mid Card** (`#272727`): Alternate card surface
-- **Border Gray** (`#4d4d4d`): Button borders on dark
+- **Border Gray** (`#808080`): Button borders on dark
 - **Light Border** (`#7c7c7c`): Outlined button borders, muted links
 - **Separator** (`#b3b3b3`): Divider lines
 - **Light Surface** (`#eeeeee`): Light-mode buttons (rare)
@@ -230,7 +230,7 @@ What distinguishes Spotify is its pill-and-circle geometry. Primary buttons use 
 - Text: White (`#ffffff`)
 - Secondary text: Silver (`#b3b3b3`)
 - Accent: Spotify Green (`#1ed760`)
-- Border: `#4d4d4d`
+- Border: `#808080`
 - Error: Negative Red (`#f3727f`)
 
 ### Example Component Prompts

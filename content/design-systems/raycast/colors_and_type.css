@@ -1,0 +1,91 @@
+/* Raycast — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #07080a;
+  --ink:     #18191a;
+  --slate:   #cecece;
+  --signal:  #ff6363;
+  --bone:    #1b1c1e;
+  --border:  #434345;
+  --surface: #101111;
+
+  /* Extended palette */
+  --color-pure-white: #ffffff;
+  --color-key-start: #121212;
+  --color-key-end: #0d0d0d;
+  --color-near-white: #f9f9f9;
+  --color-silver: #c0c0c0;
+  --color-medium-gray: #9c9c9d;
+  --color-dim-gray: #6a6b6c;
+  --color-dark-border: #2f3031;
+
+  /* Semantic */
+  --danger:  #ff6363;
+  --info:    #07080a;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    GeistMono;
+
+  /* Type ramp */
+  --t-display-hero: 64px;
+  --t-section-display: 56px;
+  --t-section-heading: 24px;
+  --t-card-heading: 22px;
+  --t-sub-heading: 20px;
+  --t-body-large: 18px;
+  --t-body: 16px;
+  --t-body-tight: 16px;
+  --t-button: 16px;
+  --t-nav-link: 16px;
+  --t-caption: 14px;
+  --t-caption-bold: 14px;
+  --t-small: 12px;
+  --t-small-link: 12px;
+  --t-code: 14px;
+  --t-code-small: 12px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   8px;
+  --radius-md:   10px;
+  --radius-lg:   20px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  1px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    0px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

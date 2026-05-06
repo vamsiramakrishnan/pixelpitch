@@ -38,7 +38,7 @@ What distinguishes Wise is its green-on-white-on-black material palette. Lime Gr
 - **Bright Orange** (`#ffc091`): `--color-bright-orange`, warm accent
 
 ### Neutral
-- **Warm Dark** (`#454745`): Secondary text, borders
+- **Warm Dark** (`#797b79`): Secondary text, borders
 - **Gray** (`#868685`): Muted text, tertiary
 - **Light Surface** (`#e8ebe6`): Subtle green-tinted light surface
 

@@ -1,0 +1,103 @@
+/* Clay — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  /* ── Colors ── */
+  --paper:   #faf9f7;
+  --ink:     #fc7981;
+  --slate:   #77736b;
+  --signal:  #84e7a5;
+  --bone:    #eff1f3;
+  --border:  #dad4c8;
+  --surface: #000000;
+
+  /* Extended palette */
+  --color-pure-white: #ffffff;
+  --color-matcha-600: #078a52;
+  --color-matcha-800: #02492a;
+  --color-slushie-500: #3bd3fd;
+  --color-slushie-800: #0089ad;
+  --color-lemon-400: #f8cc65;
+  --color-lemon-500: #fbbd41;
+  --color-lemon-700: #d08a11;
+  --color-lemon-800: #9d6a09;
+  --color-ube-300: #c1b0ff;
+  --color-ube-800: #43089f;
+  --color-ube-900: #32037d;
+  --color-blueberry-800: #01418d;
+  --color-warm-charcoal: #55534e;
+  --color-dark-charcoal: #333333;
+  --color-oat-light: #eee9df;
+  --color-cool-border: #e6e8ec;
+  --color-dark-border: #929bab;
+  --color-badge-blue-bg: #f0f8ff;
+  --color-badge-blue-text: #3859f9;
+
+  /* Semantic */
+  --success: #84e7a5;
+  --warning: #d08a11;
+  --info:    #01418d;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    Space Mono;
+
+  /* Type ramp */
+  --t-display-hero: 80px;
+  --t-display-secondary: 60px;
+  --t-section-heading: 44px;
+  --t-card-heading: 32px;
+  --t-feature-title: 20px;
+  --t-sub-heading: 20px;
+  --t-body-large: 20px;
+  --t-body: 18px;
+  --t-body-standard: 16px;
+  --t-body-medium: 16px;
+  --t-button: 16px;
+  --t-button-large: 24px;
+  --t-button-small: 12.8px;
+  --t-nav-link: 15px;
+  --t-caption: 14px;
+  --t-small: 12px;
+  --t-uppercase-label: 12px;
+  --t-badge: 9.6px;
+
+  /* ── Spacing ── */
+  --s-1: 1px;
+  --s-2: 2px;
+  --s-3: 4px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   40px;
+  --radius-full: 1584px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    40px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

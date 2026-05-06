@@ -6,6 +6,7 @@
 
 import { readdir, readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
+import type { DesignSystemTokens } from '@pixelpitch/contracts';
 
 export async function listDesignSystems(root) {
   const out = [];
@@ -24,14 +25,52 @@ export async function listDesignSystems(root) {
       const raw = await readFile(designPath, 'utf8');
       const titleMatch = /^#\s+(.+?)\s*$/m.exec(raw);
       const title = cleanTitle(titleMatch?.[1] ?? entry.name);
+      const systemDir = path.join(root, entry.name);
+
+      // Check for structured tokens
+      let hasStructuredTokens = false;
+      let tokensColors = null;
+      const tokensPath = path.join(systemDir, 'tokens.json');
+      try {
+        const tokensRaw = await readFile(tokensPath, 'utf8');
+        const tokens = JSON.parse(tokensRaw);
+        if (tokens && tokens.version === 1) {
+          hasStructuredTokens = true;
+          tokensColors = tokens.colors;
+        }
+      } catch { /* no tokens.json */ }
+
+      // Scan for preview cards
+      let previews = [];
+      try {
+        const previewDir = path.join(systemDir, 'preview');
+        const previewEntries = await readdir(previewDir);
+        previews = previewEntries
+          .filter((f) => f.endsWith('.html'))
+          .sort();
+      } catch { /* no preview/ dir */ }
+
+      // When structured tokens exist, derive swatches from tokens.colors
+      // instead of regex (more reliable).
+      const swatches = tokensColors
+        ? [
+            tokensColors.paper ?? '#ffffff',
+            tokensColors.border ?? tokensColors.slate ?? '#cccccc',
+            tokensColors.ink ?? '#111111',
+            tokensColors.signal ?? '#888888',
+          ]
+        : extractSwatches(raw);
+
       out.push({
         id: entry.name,
         title,
         category: extractCategory(raw) ?? 'Uncategorized',
         summary: summarize(raw),
-        swatches: extractSwatches(raw),
+        swatches,
         surface: extractSurface(raw),
         body: raw,
+        ...(hasStructuredTokens ? { hasStructuredTokens: true } : {}),
+        ...(previews.length > 0 ? { previews } : {}),
       });
     } catch {
       // Skip.
@@ -46,6 +85,26 @@ export async function readDesignSystem(root, id) {
     return await readFile(file, 'utf8');
   } catch {
     return null;
+  }
+}
+
+export async function readDesignSystemTokens(root: string, id: string): Promise<DesignSystemTokens | null> {
+  const file = path.join(root, id, 'tokens.json');
+  try {
+    const raw = await readFile(file, 'utf8');
+    return JSON.parse(raw) as DesignSystemTokens;
+  } catch {
+    return null;
+  }
+}
+
+export async function listDesignSystemPreviews(root: string, id: string): Promise<string[]> {
+  const previewDir = path.join(root, id, 'preview');
+  try {
+    const entries = await readdir(previewDir);
+    return entries.filter((f) => f.endsWith('.html')).sort();
+  } catch {
+    return [];
   }
 }
 

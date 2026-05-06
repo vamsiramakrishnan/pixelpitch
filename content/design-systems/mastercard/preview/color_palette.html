@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Palette — Mastercard</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #f3f0ee);
+      color: var(--ink, #141413);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 72px;
+      border-bottom: 2px solid var(--ink, #141413);
+      padding-bottom: 32px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.56px;
+      text-transform: uppercase;
+      color: var(--slate, #696969);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header__kicker::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--color-signal-orange, #cf4500);
+      border-radius: 50%;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 72px;
+      font-weight: 500;
+      line-height: 0.95;
+      letter-spacing: -1.44px;
+      color: var(--ink, #141413);
+      margin-bottom: 8px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 22px;
+      line-height: 1.55;
+      color: var(--slate, #696969);
+      max-width: 720px;
+      margin-bottom: 16px;
+    }
+
+    .header__meta {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.56px;
+      color: var(--slate, #696969);
+      text-transform: uppercase;
+    }
+
+    /* Section labels */
+    .section-label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.56px;
+      text-transform: uppercase;
+      color: var(--slate, #696969);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--slate, #696969);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-label::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--color-signal-orange, #cf4500);
+      border-radius: 50%;
+    }
+
+    /* Swatch grid */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+      margin-bottom: 64px;
+    }
+
+    .swatch {
+      background: var(--paper, #f3f0ee);
+      border: 1px solid var(--slate, #696969);
+      border-radius: var(--radius-md, 64px);
+      overflow: hidden;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .swatch:hover {
+      border-color: var(--color-signal-orange, #cf4500);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .swatch__chip {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      position: relative;
+    }
+
+    .swatch__chip-contrast {
+      position: absolute;
+      bottom: 10px;
+      right: 12px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: var(--radius-full, 1000px);
+      line-height: 1.4;
+      text-transform: uppercase;
+      letter-spacing: 0.56px;
+    }
+
+    .swatch__meta {
+      padding: 18px 20px 20px;
+    }
+
+    .swatch__var {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink, #141413);
+      word-break: break-all;
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    .swatch__hex {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      color: var(--slate, #696969);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .swatch__role {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink, #141413);
+      margin-bottom: 8px;
+    }
+
+    .swatch__contrast-label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 8px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .contrast-pass { color: #1a5a3a; }
+    .contrast-fail { color: #8b2a1f; }
+    .contrast-aa-large { color: #7a5c1a; }
+
+    /* Chip contrast badge styling */
+    .chip-badge {
+      border-radius: var(--radius-full, 1000px);
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    /* Usage pattern section */
+    .usage-section {
+      margin-bottom: 64px;
+      padding: 40px;
+      background: var(--color-lifted-cream, #fcfbfa);
+      border: 1px solid var(--slate, #696969);
+      border-radius: var(--radius-md, 64px);
+    }
+
+    .usage-section h2 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.96px;
+      color: var(--ink, #141413);
+      margin-bottom: 24px;
+    }
+
+    .usage-section p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--ink, #141413);
+      margin-bottom: 24px;
+      max-width: 720px;
+      font-weight: 450;
+    }
+
+    .rule-of-one {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 32px;
+      align-items: start;
+    }
+
+    .rule-example {
+      padding: 24px;
+      background: var(--paper, #f3f0ee);
+      border: 1px solid var(--slate, #696969);
+      border-radius: var(--radius-md, 64px);
+    }
+
+    .rule-example h3 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 1.35;
+      letter-spacing: -0.56px;
+      color: var(--ink, #141413);
+      margin-bottom: 12px;
+    }
+
+    .rule-example p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--slate, #696969);
+      margin-bottom: 0;
+      font-weight: 450;
+    }
+
+    .correct {
+      border: 2px solid #1a5a3a;
+    }
+
+    .correct::before {
+      content: '✓ CORRECT';
+      display: block;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.56px;
+      color: #1a5a3a;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #1a5a3a;
+    }
+
+    .incorrect {
+      border: 2px solid #8b2a1f;
+    }
+
+    .incorrect::before {
+      content: '✗ INCORRECT';
+      display: block;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.56px;
+      color: #8b2a1f;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #8b2a1f;
+    }
+
+    .orbit-demo {
+      font-size: 16px;
+      line-height: 1.55;
+      font-weight: 450;
+    }
+
+    .orbit-demo em {
+      color: var(--color-signal-orange, #cf4500);
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    /* WCAG summary */
+    .wcag-summary {
+      margin-top: 64px;
+      padding: 40px;
+      background: var(--color-lifted-cream, #fcfbfa);
+      border: 1px solid var(--slate, #696969);
+      border-radius: var(--radius-md, 64px);
+    }
+
+    .wcag-summary h2 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.96px;
+      margin-bottom: 24px;
+      color: var(--ink, #141413);
+    }
+
+    .wcag-summary p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--slate, #696969);
+      margin-bottom: 24px;
+      font-weight: 450;
+    }
+
+    .wcag-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--slate, #696969);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 450;
+    }
+
+    .wcag-row:last-child { border-bottom: none; }
+
+    .wcag-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: var(--radius-full, 1000px);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.56px;
+      min-width: 80px;
+      text-align: center;
+    }
+
+    .wcag-badge--pass { background: var(--paper, #f3f0ee); color: #1a5a3a; border: 1px solid #1a5a3a; }
+    .wcag-badge--fail { background: var(--paper, #f3f0ee); color: #8b2a1f; border: 1px solid #8b2a1f; }
+    .wcag-badge--aa-large { background: var(--paper, #f3f0ee); color: #7a5c1a; border: 1px solid #7a5c1a; }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #696969);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 450;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 24px auto 0;
+      border: 2px solid var(--slate, #696969);
+      border-top-color: var(--color-signal-orange, #cf4500);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .page { padding: 48px 20px; }
+      .header { padding-bottom: 24px; margin-bottom: 48px; }
+      .header__title { font-size: 48px; }
+      .swatch-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+      .rule-of-one { grid-template-columns: 1fr; gap: 16px; }
+      .usage-section { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    /* ───────────────────────────────────────────────────────────── */
+    /* Contrast ratio calculation (WCAG 2.1 relative luminance)      */
+    /* ───────────────────────────────────────────────────────────── */
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function luminance([r, g, b]) {
+      const [rs, gs, bs] = [r, g, b].map(c => {
+        c /= 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    }
+
+    function contrastRatio(hex1, hex2) {
+      const l1 = luminance(hexToRgb(hex1));
+      const l2 = luminance(hexToRgb(hex2));
+      const lighter = Math.max(l1, l2);
+      const darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function wcagLevel(ratio) {
+      if (ratio >= 7) return { label: 'AAA', cls: 'pass' };
+      if (ratio >= 4.5) return { label: 'AA', cls: 'pass' };
+      if (ratio >= 3) return { label: 'AA Large', cls: 'aa-large' };
+      return { label: 'Fail', cls: 'fail' };
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Core color roles and descriptions                             */
+    /* ───────────────────────────────────────────────────────────── */
+    const CORE_ROLES = {
+      paper:  'Canvas cream. Warm putty-toned default body background.',
+      ink:    'Ink black. Primary headline and body text. Warm near-black for CTAs.',
+      slate:  'Slate gray. Muted secondary text, eyebrow labels, disabled states.',
+      signal: 'Graphite. Deep gray for inline accents and text alternates.',
+      bone:   'Soft bone. Cool-gray surface for nested component subregions.',
+    };
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Render from tokens.json                                       */
+    /* ───────────────────────────────────────────────────────────── */
+    (window.__DESIGN_TOKENS__ 
+      ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) 
+      : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:var(--color-signal-orange,#cf4500)">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Design System';
+      const summary = tokens.meta?.summary || '';
+      const rawColors = tokens.colors || {};
+      const paperHex = rawColors.paper || '#f3f0ee';
+
+      /* Flatten nested color structure */
+      const colors = {};
+      for (const [k, v] of Object.entries(rawColors)) {
+        if (typeof v === 'string') {
+          colors[k] = v;
+        } else if (v && typeof v === 'object') {
+          for (const [sk, sv] of Object.entries(v)) {
+            if (typeof sv === 'string') colors[k + '-' + sk] = sv;
+          }
+        }
+      }
+
+      /* Split core and extended */
+      const coreKeys = Object.keys(CORE_ROLES).filter(k => colors[k]);
+      const extendedKeys = Object.keys(colors).filter(k => !CORE_ROLES[k] && typeof colors[k] === 'string');
+
+      let html = '';
+
+      /* ─ Stage head header ─ */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Color System</div>';
+      html += '  <h1 class="header__title">Warm Cream<br>Orbit Palette</h1>';
+      html += '  <p class="header__subtitle">Global payments network. Five-token foundation with extended palette. Signal orange appears only as accent. Every surface is tinted, never sterile.</p>';
+      html += '  <div class="header__meta">Core Palette + Extended Values &mdash; ' + (coreKeys.length + extendedKeys.length) + ' Tokens</div>';
+      html += '</header>';
+
+      /* ─ Core Palette ─ */
+      if (coreKeys.length) {
+        html += '<div class="section-label">Core Palette</div>';
+        html += '<div class="swatch-grid">';
+        coreKeys.forEach(key => {
+          html += swatchCard(key, colors[key], paperHex, CORE_ROLES[key]);
+        });
+        html += '</div>';
+      }
+
+      /* ─ Extended Palette ─ */
+      if (extendedKeys.length) {
+        html += '<div class="section-label">Extended Palette</div>';
+        html += '<div class="swatch-grid">';
+        extendedKeys.forEach(key => {
+          const role = formatRole(key);
+          html += swatchCard(key, colors[key], paperHex, role);
+        });
+        html += '</div>';
+      }
+
+      /* ─ Orbital Constraint ─ */
+      html += orbitConstraintSection(paperHex);
+
+      /* ─ WCAG Summary ─ */
+      html += wcagSummary(colors, paperHex);
+
+      app.innerHTML = html;
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Swatch card builder                                           */
+    /* ───────────────────────────────────────────────────────────── */
+    function swatchCard(key, hex, paperHex, role) {
+      const ratio = contrastRatio(hex, paperHex);
+      const level = wcagLevel(ratio);
+      const lum = luminance(hexToRgb(hex));
+      const chipTextColor = lum > 0.4 ? '#141413' : '#f3f0ee';
+      const chipBadgeBg = lum > 0.4 ? 'rgba(20,20,19,0.15)' : 'rgba(243,240,238,0.25)';
+
+      return '' +
+        '<div class="swatch">' +
+        '  <div class="swatch__chip" style="background:' + hex + '">' +
+        '    <span class="swatch__chip-contrast chip-badge" style="color:' + chipTextColor +
+             ';background:' + chipBadgeBg + '">' + ratio.toFixed(2) + ':1</span>' +
+        '  </div>' +
+        '  <div class="swatch__meta">' +
+        '    <div class="swatch__var">--' + esc(key) + '</div>' +
+        '    <div class="swatch__hex">' + esc(hex.toUpperCase()) + '</div>' +
+        '    <div class="swatch__role">' + esc(role) + '</div>' +
+        '    <div class="swatch__contrast-label contrast-' + level.cls + '">' +
+             'WCAG ' + level.label + '</div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Orbital constraint usage pattern                              */
+    /* ───────────────────────────────────────────────────────────── */
+    function orbitConstraintSection(paperHex) {
+      let html = '<section class="usage-section">';
+      html += '<h2>The Orbit Constraint</h2>';
+      html += '<p>Signal orange is reserved for <em>one accent element per card or section</em>. It appears as a carousel active indicator, orbital arc trace, satellite-CTA glyph, or strategic emphasis — never as a fill, never multiplied. This discipline forces restraint and preserves the accent\'s signal weight across the entire network.</p>';
+
+      html += '<div class="rule-of-one">';
+
+      /* Correct example */
+      html += '<div class="rule-example correct">';
+      html += '<h3>One Signal Anchor</h3>';
+      html += '<p class="orbit-demo">';
+      html += 'The circular portrait orbits the page edge with a <em>single traced arc</em> marking its trajectory. A white satellite-CTA dock sits at 3 o\'clock on its perimeter—the only aggressive element on an otherwise neutral stage. This hierarchy is obvious.';
+      html += '</p>';
+      html += '</div>';
+
+      /* Incorrect example */
+      html += '<div class="rule-example incorrect">';
+      html += '<h3>Multiple Orange Signals</h3>';
+      html += '<p>';
+      html += 'The orbit trace is orange, the satellite CTA is orange, the icon inside is orange, and the carousel indicator is orange. Four signals on one card mean no signal at all. Restraint—not richness—creates hierarchy.';
+      html += '</p>';
+      html += '</div>';
+
+      html += '</div>';
+      html += '</section>';
+      return html;
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* WCAG compliance summary                                       */
+    /* ───────────────────────────────────────────────────────────── */
+    function wcagSummary(colors, paperHex) {
+      const keys = Object.keys(colors);
+      let passAAA = 0, passAA = 0, passAALarge = 0, fail = 0;
+
+      keys.forEach(k => {
+        const ratio = contrastRatio(colors[k], paperHex);
+        if (ratio >= 7) passAAA++;
+        else if (ratio >= 4.5) passAA++;
+        else if (ratio >= 3) passAALarge++;
+        else fail++;
+      });
+
+      let html = '<div class="wcag-summary">';
+      html += '<h2>WCAG 2.1 Compliance</h2>';
+      html += '<p>Contrast ratios measured against the canvas cream background (#F3F0EE). Mastercard prioritizes warm, readable typography on a tinted canvas. Signal orange is approved for display-only uses where sufficient context ensures legibility.</p>';
+      html += row('AAA (7:1+)', passAAA, 'pass');
+      html += row('AA (4.5:1+)', passAA, 'pass');
+      html += row('AA Large Text (3:1+)', passAALarge, 'aa-large');
+      html += row('Below threshold', fail, fail > 0 ? 'fail' : 'pass');
+      html += '</div>';
+      return html;
+
+      function row(label, count, badge) {
+        return '<div class="wcag-row">' +
+               '<span class="wcag-badge wcag-badge--' + badge + '">' + count + '</span>' +
+               '<span>' + label + '</span>' +
+               '</div>';
+      }
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Utilities                                                      */
+    /* ───────────────────────────────────────────────────────────── */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function formatRole(key) {
+      return key
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/[-_]/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase())
+        .trim();
+    }
+  </script>
+</body>
+</html>

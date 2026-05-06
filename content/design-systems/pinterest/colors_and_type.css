@@ -1,0 +1,95 @@
+/* Pinterest — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #0866ff;
+  --ink:     #211922;
+  --slate:   #62625b;
+  --signal:  #e60023;
+  --bone:    #e5e5e0;
+  --border:  #91918c;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-green-700: #103c25;
+  --color-green-700-hover: #0b2819;
+  --color-black: #000000;
+  --color-focus-blue: #435ee5;
+  --color-performance-purple: #6845ab;
+  --color-recommendation-purple: #7e238b;
+  --color-link-blue: #2b48d4;
+  --color-pressed-blue: #617bff;
+  --color-warm-light: #e0e0d9;
+  --color-fog: #f6f6f3;
+  --color-border-disabled: #c8c8c1;
+  --color-hover-gray: #bcbcb3;
+  --color-dark-surface: #33332e;
+  --color-error-red: #9e0a0a;
+
+  /* Semantic */
+  --success: #103c25;
+  --danger:  #9e0a0a;
+  --info:    #435ee5;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 70px;
+  --t-section-heading: 28px;
+  --t-body: 16px;
+  --t-caption-bold: 14px;
+  --t-caption: 12px;
+  --t-button: 12px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 6px;
+  --s-3: 7px;
+  --s-4: 8px;
+  --s-5: 10px;
+  --s-6: 11px;
+  --s-7: 12px;
+  --s-8: 16px;
+  --s-9: 18px;
+  --s-10: 20px;
+  --s-11: 22px;
+  --s-12: 24px;
+  --s-13: 32px;
+  --s-14: 80px;
+  --s-15: 100px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   6px;
+  --radius-md:   20px;
+  --radius-lg:   32px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  20px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    12px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Palette — Discord Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      background: var(--color-background-primary, #313338);
+      color: var(--color-text-normal, #dbdee1);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    .page {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 72px;
+      border-bottom: 2px solid var(--color-header-secondary, #b5bac1);
+      padding-bottom: 32px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-text-muted, #949ba4);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 64px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--paper, #5865f2);
+      margin-bottom: 12px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 20px;
+      line-height: 1.5;
+      color: var(--color-text-muted, #949ba4);
+      max-width: 720px;
+      margin-bottom: 16px;
+    }
+
+    .header__meta {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--color-channels-default, #80848e);
+      text-transform: uppercase;
+    }
+
+    /* Section labels */
+    .section-label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-text-muted, #949ba4);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--color-background-secondary, #2b2d31);
+    }
+
+    /* Swatch grid */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 64px;
+    }
+
+    .swatch {
+      background: var(--color-background-secondary, #2b2d31);
+      border: 1px solid var(--color-background-tertiary, #1e1f22);
+      border-radius: var(--radius-md, 8px);
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    .swatch:hover {
+      border-color: var(--paper, #5865f2);
+      box-shadow: 0 4px 12px rgba(88, 101, 242, 0.15);
+    }
+
+    .swatch__chip {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      position: relative;
+    }
+
+    .swatch__chip-contrast {
+      position: absolute;
+      bottom: 10px;
+      right: 12px;
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm, 4px);
+      line-height: 1.4;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .swatch__meta {
+      padding: 18px 18px 20px;
+    }
+
+    .swatch__var {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--color-text-normal, #dbdee1);
+      word-break: break-all;
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    .swatch__hex {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      color: var(--color-text-muted, #949ba4);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .swatch__role {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--color-header-secondary, #b5bac1);
+      margin-bottom: 8px;
+    }
+
+    .swatch__contrast-label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      margin-top: 8px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .contrast-pass { color: var(--color-status-online, #23a55a); }
+    .contrast-fail { color: var(--color-status-dnd, #f23f43); }
+    .contrast-aa-large { color: var(--color-status-idle, #f0b232); }
+
+    /* Chip contrast badge styling */
+    .chip-badge {
+      border-radius: var(--radius-sm, 4px);
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    /* Usage pattern section */
+    .usage-section {
+      margin-bottom: 64px;
+      padding: 40px;
+      background: var(--color-background-secondary, #2b2d31);
+      border: 1px solid var(--color-background-tertiary, #1e1f22);
+      border-radius: var(--radius-md, 8px);
+    }
+
+    .usage-section h2 {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 44px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--paper, #5865f2);
+      margin-bottom: 24px;
+    }
+
+    .usage-section p {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--color-text-normal, #dbdee1);
+      margin-bottom: 24px;
+      max-width: 720px;
+    }
+
+    .rule-of-one {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 32px;
+      align-items: start;
+    }
+
+    .rule-example {
+      padding: 24px;
+      background: var(--color-background-primary, #313338);
+      border: 2px solid var(--color-background-tertiary, #1e1f22);
+      border-radius: var(--radius-md, 8px);
+    }
+
+    .rule-example h3 {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--color-text-normal, #dbdee1);
+      margin-bottom: 12px;
+    }
+
+    .rule-example p {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--color-header-secondary, #b5bac1);
+      margin-bottom: 0;
+    }
+
+    .correct {
+      border: 2px solid var(--color-status-online, #23a55a);
+    }
+
+    .correct::before {
+      content: '✓ Correct Usage';
+      display: block;
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--color-status-online, #23a55a);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--color-status-online, #23a55a);
+    }
+
+    .incorrect {
+      border: 2px solid var(--color-status-dnd, #f23f43);
+    }
+
+    .incorrect::before {
+      content: '✗ Incorrect Usage';
+      display: block;
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--color-status-dnd, #f23f43);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--color-status-dnd, #f23f43);
+    }
+
+    .blurple-demo {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .blurple-demo em {
+      color: var(--paper, #5865f2);
+      font-style: italic;
+      font-weight: 600;
+    }
+
+    .blurple-demo .accent {
+      color: var(--paper, #5865f2);
+      font-weight: 600;
+    }
+
+    /* WCAG summary */
+    .wcag-summary {
+      margin-top: 64px;
+      padding: 40px;
+      background: var(--color-background-secondary, #2b2d31);
+      border: 1px solid var(--color-background-tertiary, #1e1f22);
+      border-radius: var(--radius-md, 8px);
+    }
+
+    .wcag-summary h2 {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 44px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      margin-bottom: 24px;
+      color: var(--paper, #5865f2);
+    }
+
+    .wcag-summary p {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--color-text-normal, #dbdee1);
+      margin-bottom: 24px;
+    }
+
+    .wcag-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--color-background-tertiary, #1e1f22);
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 15px;
+    }
+
+    .wcag-row:last-child { border-bottom: none; }
+
+    .wcag-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm, 4px);
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      min-width: 80px;
+      text-align: center;
+    }
+
+    .wcag-badge--pass { 
+      background: rgba(35, 165, 90, 0.1); 
+      color: var(--color-status-online, #23a55a); 
+      border: 1px solid var(--color-status-online, #23a55a);
+    }
+    .wcag-badge--fail { 
+      background: rgba(242, 63, 67, 0.1); 
+      color: var(--color-status-dnd, #f23f43); 
+      border: 1px solid var(--color-status-dnd, #f23f43);
+    }
+    .wcag-badge--aa-large { 
+      background: rgba(240, 178, 50, 0.1); 
+      color: var(--color-status-idle, #f0b232); 
+      border: 1px solid var(--color-status-idle, #f0b232);
+    }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--color-text-muted, #949ba4);
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 24px auto 0;
+      border: 3px solid var(--color-background-secondary, #2b2d31);
+      border-top-color: var(--paper, #5865f2);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .page { padding: 48px 20px; }
+      .header { padding-bottom: 24px; margin-bottom: 48px; }
+      .header__title { font-size: 44px; }
+      .swatch-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+      .rule-of-one { grid-template-columns: 1fr; gap: 16px; }
+      .usage-section { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    /* ───────────────────────────────────────────────────────────── */
+    /* Contrast ratio calculation (WCAG 2.1 relative luminance)      */
+    /* ───────────────────────────────────────────────────────────── */
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function luminance([r, g, b]) {
+      const [rs, gs, bs] = [r, g, b].map(c => {
+        c /= 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    }
+
+    function contrastRatio(hex1, hex2) {
+      const l1 = luminance(hexToRgb(hex1));
+      const l2 = luminance(hexToRgb(hex2));
+      const lighter = Math.max(l1, l2);
+      const darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function wcagLevel(ratio) {
+      if (ratio >= 7) return { label: 'AAA', cls: 'pass' };
+      if (ratio >= 4.5) return { label: 'AA', cls: 'pass' };
+      if (ratio >= 3) return { label: 'AA Large', cls: 'aa-large' };
+      return { label: 'Fail', cls: 'fail' };
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Core color roles and descriptions                             */
+    /* ───────────────────────────────────────────────────────────── */
+    const CORE_ROLES = {
+      'paper': 'Blurple brand primary. CTA, mentions, brand mark.',
+      'ink': 'Sky blue text links. Hyperlinks in messages.',
+      'slate': 'Warm gray for secondary text hierarchy.',
+      'signal': 'Blurple soft accent. Legacy brand color.',
+      'bone': 'Border color & subtle dividers on dark surfaces.',
+    };
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Render from tokens.json                                       */
+    /* ───────────────────────────────────────────────────────────── */
+    (window.__DESIGN_TOKENS__ 
+      ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) 
+      : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:var(--paper,#5865f2)">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Design System';
+      const summary = tokens.meta?.summary || '';
+      const rawColors = tokens.colors || {};
+      const bgHex = '#313338'; // Discord dark primary as paper reference
+
+      /* Flatten nested color structure */
+      const colors = {};
+      for (const [k, v] of Object.entries(rawColors)) {
+        if (typeof v === 'string') {
+          colors[k] = v;
+        } else if (v && typeof v === 'object') {
+          for (const [sk, sv] of Object.entries(v)) {
+            if (typeof sv === 'string') colors[k + '-' + sk] = sv;
+          }
+        }
+      }
+
+      /* Split core and extended */
+      const coreKeys = Object.keys(CORE_ROLES).filter(k => colors[k]);
+      const extendedKeys = Object.keys(colors)
+        .filter(k => !CORE_ROLES[k] && typeof colors[k] === 'string' && !k.includes('-'))
+        .sort();
+
+      let html = '';
+
+      /* ─ Stage head header ─ */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Design System</div>';
+      html += '  <h1 class="header__title">' + esc(title) + '</h1>';
+      html += '  <p class="header__subtitle">' + esc(summary) + '</p>';
+      html += '  <div class="header__meta">Color Palette &mdash; ' + (coreKeys.length + extendedKeys.length) + ' Tokens</div>';
+      html += '</header>';
+
+      /* ─ Core Palette ─ */
+      if (coreKeys.length) {
+        html += '<div class="section-label">Core Palette</div>';
+        html += '<div class="swatch-grid">';
+        coreKeys.forEach(key => {
+          html += swatchCard(key, colors[key], bgHex, CORE_ROLES[key]);
+        });
+        html += '</div>';
+      }
+
+      /* ─ Extended Palette ─ */
+      if (extendedKeys.length) {
+        html += '<div class="section-label">Extended Palette</div>';
+        html += '<div class="swatch-grid">';
+        extendedKeys.forEach(key => {
+          const role = formatRole(key);
+          html += swatchCard(key, colors[key], bgHex, role);
+        });
+        html += '</div>';
+      }
+
+      /* ─ Semantic Colors ─ */
+      const semanticKeys = Object.keys(colors).filter(k => ['success', 'danger', 'info'].includes(k));
+      if (semanticKeys.length) {
+        html += '<div class="section-label">Semantic Colors</div>';
+        html += '<div class="swatch-grid">';
+        semanticKeys.forEach(key => {
+          const roleMap = {
+            'success': 'Success. Online status, affirmative actions.',
+            'danger': 'Destructive. DND status, deletions, errors.',
+            'info': 'Information. Links, attention states.'
+          };
+          html += swatchCard(key, colors[key], bgHex, roleMap[key] || formatRole(key));
+        });
+        html += '</div>';
+      }
+
+      /* ─ Background Surfaces ─ */
+      const bgKeys = Object.keys(colors).filter(k => k.includes('background') || k.includes('light-bg'));
+      if (bgKeys.length) {
+        html += '<div class="section-label">Background Surfaces</div>';
+        html += '<div class="swatch-grid">';
+        bgKeys.forEach(key => {
+          const roleMap = {
+            'background-tertiary': 'Deepest. Server list rail, most recessed.',
+            'background-secondary': 'Secondary depth. Channel sidebar, settings.',
+            'background-primary': 'Primary canvas. Main chat surface.',
+            'background-floating': 'Floating layers. Popovers, tooltips, autocomplete.',
+            'light-bg-primary': 'Light theme chat surface.',
+            'light-bg-secondary': 'Light theme sidebar.',
+            'light-bg-tertiary': 'Light theme tertiary surface.'
+          };
+          html += swatchCard(key, colors[key], bgHex, roleMap[key] || formatRole(key));
+        });
+        html += '</div>';
+      }
+
+      /* ─ Text & Headers ─ */
+      const textKeys = Object.keys(colors).filter(k => k.includes('text-') || k.includes('header-') || k.includes('channels-'));
+      if (textKeys.length) {
+        html += '<div class="section-label">Text & Headers</div>';
+        html += '<div class="swatch-grid">';
+        textKeys.forEach(key => {
+          const roleMap = {
+            'header-secondary': 'Secondary header text. Muted headings.',
+            'text-normal': 'Primary body text. Main message content.',
+            'text-muted': 'Muted text. Timestamps, metadata, secondary info.',
+            'channels-default': 'Inactive channel names. Sidebar tertiary text.',
+          };
+          html += swatchCard(key, colors[key], bgHex, roleMap[key] || formatRole(key));
+        });
+        html += '</div>';
+      }
+
+      /* ─ Status Indicators ─ */
+      const statusKeys = Object.keys(colors).filter(k => k.includes('status-'));
+      if (statusKeys.length) {
+        html += '<div class="section-label">Status Indicators</div>';
+        html += '<div class="swatch-grid">';
+        statusKeys.forEach(key => {
+          const roleMap = {
+            'status-online': 'Online. User present and available.',
+            'status-idle': 'Idle / Away. User inactive but present.',
+            'status-dnd': 'Do Not Disturb. Unavailable, also destructive red.',
+            'status-streaming': 'Streaming. User is broadcasting.'
+          };
+          html += swatchCard(key, colors[key], bgHex, roleMap[key] || formatRole(key));
+        });
+        html += '</div>';
+      }
+
+      /* ─ Brand Variations ─ */
+      const brandKeys = Object.keys(colors).filter(k => k.includes('blurple'));
+      if (brandKeys.length) {
+        html += '<div class="section-label">Brand Variations</div>';
+        html += '<div class="swatch-grid">';
+        brandKeys.forEach(key => {
+          const roleMap = {
+            'blurple-hover': 'Blurple hover state. Darker active state.'
+          };
+          html += swatchCard(key, colors[key], bgHex, roleMap[key] || formatRole(key));
+        });
+        html += '</div>';
+      }
+
+      /* ─ Rule of One / Blurple Usage ─ */
+      html += ruleOfOneSection(bgHex);
+
+      /* ─ WCAG Summary ─ */
+      html += wcagSummary(colors, bgHex);
+
+      app.innerHTML = html;
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Swatch card builder                                           */
+    /* ───────────────────────────────────────────────────────────── */
+    function swatchCard(key, hex, bgHex, role) {
+      const ratio = contrastRatio(hex, bgHex);
+      const level = wcagLevel(ratio);
+      const lum = luminance(hexToRgb(hex));
+      const chipTextColor = lum > 0.5 ? '#000000' : '#ffffff';
+      const chipBadgeBg = lum > 0.5 ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.2)';
+
+      return '' +
+        '<div class="swatch">' +
+        '  <div class="swatch__chip" style="background:' + hex + '">' +
+        '    <span class="swatch__chip-contrast chip-badge" style="color:' + chipTextColor +
+             ';background:' + chipBadgeBg + '">' + ratio.toFixed(2) + ':1</span>' +
+        '  </div>' +
+        '  <div class="swatch__meta">' +
+        '    <div class="swatch__var">--' + esc(key) + '</div>' +
+        '    <div class="swatch__hex">' + esc(hex.toUpperCase()) + '</div>' +
+        '    <div class="swatch__role">' + esc(role) + '</div>' +
+        '    <div class="swatch__contrast-label contrast-' + level.cls + '">' +
+             'WCAG ' + level.label + '</div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Blurple usage pattern                                         */
+    /* ───────────────────────────────────────────────────────────── */
+    function ruleOfOneSection(bgHex) {
+      let html = '<section class="usage-section">';
+      html += '<h2>Blurple: The Primary Accent</h2>';
+      html += '<p>Blurple (#5865f2) is Discord\'s brand identity. It serves as the primary call-to-action, brand mark, mention highlights, and the "you" affordance in lists. Use sparingly—every interface needs restraint to let the focal point sing against the dark surfaces.</p>';
+
+      html += '<div class="rule-of-one">';
+
+      /* Correct example */
+      html += '<div class="rule-example correct">';
+      html += '<h3>Primary Button State</h3>';
+      html += '<p class="blurple-demo">';
+      html += 'A <span class="accent">Send Message</span> button in blurple stands out against the dark chat canvas. It\'s the primary action users take 100 times per session.';
+      html += '</p>';
+      html += '</div>';
+
+      /* Incorrect example */
+      html += '<div class="rule-example incorrect">';
+      html += '<h3>Overuse Dilutes Impact</h3>';
+      html += '<p class="blurple-demo">';
+      html += 'When <em>every button</em>, <em>every link</em>, and <em>every interactive element</em> is blurple, nothing feels urgent anymore. The accent becomes noise, not signal.';
+      html += '</p>';
+      html += '</div>';
+
+      html += '</div>';
+      html += '</section>';
+      return html;
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* WCAG compliance summary                                       */
+    /* ───────────────────────────────────────────────────────────── */
+    function wcagSummary(colors, bgHex) {
+      const keys = Object.keys(colors);
+      let passAAA = 0, passAA = 0, passAALarge = 0, fail = 0;
+
+      keys.forEach(k => {
+        const ratio = contrastRatio(colors[k], bgHex);
+        if (ratio >= 7) passAAA++;
+        else if (ratio >= 4.5) passAA++;
+        else if (ratio >= 3) passAALarge++;
+        else fail++;
+      });
+
+      let html = '<div class="wcag-summary">';
+      html += '<h2>WCAG 2.1 Contrast Compliance</h2>';
+      html += '<p>All contrast ratios measured against Discord\'s dark primary background (#313338). Discord\'s design prioritizes usability in low-light environments while maintaining visual hierarchy through depth and color saturation.</p>';
+      html += row('AAA (7:1+)', passAAA, 'pass');
+      html += row('AA (4.5:1+)', passAA, 'pass');
+      html += row('AA Large Text (3:1+)', passAALarge, 'aa-large');
+      html += row('Below Threshold', fail, fail > 0 ? 'fail' : 'pass');
+      html += '</div>';
+      return html;
+
+      function row(label, count, badge) {
+        return '<div class="wcag-row">' +
+               '<span class="wcag-badge wcag-badge--' + badge + '">' + count + '</span>' +
+               '<span>' + label + '</span>' +
+               '</div>';
+      }
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Utilities                                                      */
+    /* ───────────────────────────────────────────────────────────── */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function formatRole(key

@@ -1,0 +1,106 @@
+/* HashiCorp — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #15181e;
+  --ink:     #efeff1;
+  --slate:   #3b3d45;
+  --signal:  #b2b6bd;
+  --bone:    #f1f2f3;
+  --border:  #d5d7db;
+  --surface: #000000;
+
+  /* Extended palette */
+  --color-near-black: #0d0e12;
+  --color-dark-gray: #656a76;
+  --color-terraform-purple: #7b42bc;
+  --color-vault-yellow: #ffcf25;
+  --color-waypoint-teal: #14c6cb;
+  --color-waypoint-teal-hover: #12b6bb;
+  --color-vagrant-blue: #1868f2;
+  --color-purple-accent: #911ced;
+  --color-visited-purple: #a737ff;
+  --color-action-blue: #1060ff;
+  --color-link-blue: #2264d6;
+  --color-bright-blue: #2b89ff;
+  --color-amber: #bb5a00;
+  --color-amber-light: #fbeabf;
+  --color-vault-faint-yellow: #fff9cf;
+  --color-orange: #a9722e;
+  --color-red: #731e25;
+  --color-navy: #101a59;
+
+  /* Semantic */
+  --warning: #bb5a00;
+  --danger:  #731e25;
+  --info:    #1868f2;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 82px;
+  --t-section-heading: 52px;
+  --t-feature-heading: 42px;
+  --t-sub-heading: 34px;
+  --t-card-title: 26px;
+  --t-small-title: 19px;
+  --t-body-emphasis: 17px;
+  --t-body-large: 20px;
+  --t-body: 16px;
+  --t-nav-link: 15px;
+  --t-small-body: 14px;
+  --t-caption: 13px;
+  --t-uppercase-label: 13px;
+
+  /* ── Spacing ── */
+  --s-1: 2px;
+  --s-2: 3px;
+  --s-3: 4px;
+  --s-4: 6px;
+  --s-5: 7px;
+  --s-6: 8px;
+  --s-7: 9px;
+  --s-8: 11px;
+  --s-9: 12px;
+  --s-10: 16px;
+  --s-11: 20px;
+  --s-12: 24px;
+  --s-13: 32px;
+  --s-14: 40px;
+  --s-15: 48px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   3px;
+  --radius-md:   5px;
+  --radius-lg:   48px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  5px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    5px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

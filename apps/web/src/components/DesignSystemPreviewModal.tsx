@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useT } from '../i18n';
 import {
   fetchDesignSystem,
   fetchDesignSystemPreview,
+  fetchDesignSystemPreviewCard,
   fetchDesignSystemShowcase,
 } from '../providers/registry';
 import type { DesignSystemSummary } from '../types';
@@ -14,19 +15,21 @@ interface Props {
   onClose: () => void;
 }
 
-// Two-tab DS preview: a complete Showcase webpage rendered from the system's
-// tokens, and the original Tokens view (palette / typography / components +
-// rendered DESIGN.md prose). A toggleable side panel surfaces the raw
-// DESIGN.md so users can compare spec to render at the same time, mirroring
-// the styles.refero.design layout.
+const PREVIEW_CARDS = [
+  { file: 'color_palette.html', label: 'Colors' },
+  { file: 'type_specimen.html', label: 'Typography' },
+  { file: 'components.html', label: 'Components' },
+  { file: 'spacing_and_rules.html', label: 'Spacing' },
+  { file: 'brand_motifs.html', label: 'Motifs' },
+] as const;
+
 export function DesignSystemPreviewModal({ system, onClose }: Props) {
   const t = useT();
   const [showcaseHtml, setShowcaseHtml] = useState<string | null | undefined>(undefined);
   const [tokensHtml, setTokensHtml] = useState<string | null | undefined>(undefined);
   const [specBody, setSpecBody] = useState<string | null | undefined>(undefined);
+  const [cardHtmls, setCardHtmls] = useState<Record<string, string | null | undefined>>({});
 
-  // Lazy-load each view on first reveal. Both endpoints are cheap, but this
-  // keeps the network panel quiet when the user only opens one tab.
   const handleView = useCallback(
     (viewId: string) => {
       if (viewId === 'showcase' && showcaseHtml === undefined) {
@@ -37,12 +40,17 @@ export function DesignSystemPreviewModal({ system, onClose }: Props) {
         setTokensHtml(null);
         void fetchDesignSystemPreview(system.id).then((html) => setTokensHtml(html));
       }
+      const card = PREVIEW_CARDS.find((c) => c.file === viewId);
+      if (card && cardHtmls[viewId] === undefined) {
+        setCardHtmls((prev) => ({ ...prev, [viewId]: null }));
+        void fetchDesignSystemPreviewCard(system.id, card.file).then((html) =>
+          setCardHtmls((prev) => ({ ...prev, [viewId]: html })),
+        );
+      }
     },
-    [system.id, showcaseHtml, tokensHtml],
+    [system.id, showcaseHtml, tokensHtml, cardHtmls],
   );
 
-  // Fetch DESIGN.md the first time the side panel opens. Once we have it we
-  // never re-fetch unless the underlying system swaps.
   const handleSidebarToggle = useCallback(
     (open: boolean) => {
       if (!open || specBody !== undefined) return;
@@ -54,21 +62,29 @@ export function DesignSystemPreviewModal({ system, onClose }: Props) {
     [system.id, specBody],
   );
 
-  // If the system swaps under us (rare but possible), wipe all caches.
   useEffect(() => {
     setShowcaseHtml(undefined);
     setTokensHtml(undefined);
     setSpecBody(undefined);
+    setCardHtmls({});
   }, [system.id]);
+
+  const views = useMemo(() => {
+    const base = [
+      { id: 'showcase', label: t('ds.showcase'), html: showcaseHtml },
+      { id: 'tokens', label: t('ds.tokens'), html: tokensHtml },
+    ];
+    for (const card of PREVIEW_CARDS) {
+      base.push({ id: card.file, label: card.label, html: cardHtmls[card.file] });
+    }
+    return base;
+  }, [t, showcaseHtml, tokensHtml, cardHtmls]);
 
   return (
     <PreviewModal
       title={system.title}
       subtitle={system.summary || system.category}
-      views={[
-        { id: 'showcase', label: t('ds.showcase'), html: showcaseHtml },
-        { id: 'tokens', label: t('ds.tokens'), html: tokensHtml },
-      ]}
+      views={views}
       initialViewId="showcase"
       onView={handleView}
       exportTitleFor={(viewId) => `${system.title} — ${viewId}`}
@@ -77,8 +93,6 @@ export function DesignSystemPreviewModal({ system, onClose }: Props) {
         label: t('ds.specToggle'),
         defaultOpen: true,
         onToggle: handleSidebarToggle,
-        // Re-fire onToggle when the system swaps under us so the new
-        // DESIGN.md fetch starts even if the sidebar never closed.
         contentKey: system.id,
         content: (
           <DesignSpecView

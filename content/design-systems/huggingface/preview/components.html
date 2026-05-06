@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hugging Face — Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-6) var(--s-5);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--s-4);
+      margin-bottom: var(--s-7);
+      border-bottom: 1px solid var(--border);
+      border-top: 4px solid var(--signal);
+      padding-top: var(--s-4);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-mono);
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1;
+    }
+
+    .masthead__emoji {
+      font-size: 40px;
+      margin-right: var(--s-2);
+      display: inline-block;
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-5);
+      border-bottom: 3px solid var(--signal);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-mono);
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate);
+      max-width: 720px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .section__title {
+      font-family: var(--font-mono);
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: var(--s-5);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-4);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--slate);
+      margin-right: var(--s-3);
+      min-width: 140px;
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1;
+      border: 1px solid var(--border);
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      gap: var(--s-2);
+    }
+
+    .btn:hover {
+      background: var(--color-canvas-inset);
+      border-color: var(--border);
+    }
+
+    .btn--primary {
+      background: var(--color-canvas-dark);
+      color: var(--paper);
+      border-color: var(--color-canvas-dark);
+    }
+
+    .btn--primary:hover {
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+
+    .btn--yellow {
+      background: var(--signal);
+      color: var(--color-canvas-dark);
+      border-color: var(--signal);
+      font-weight: 600;
+    }
+
+    .btn--yellow:hover {
+      background: var(--color-hf-yellow-deep);
+      border-color: var(--color-hf-yellow-deep);
+    }
+
+    .btn--outline {
+      background: var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    .btn--outline:hover {
+      background: var(--bone);
+      border-color: var(--border);
+    }
+
+    .btn--sm {
+      padding: 6px 14px;
+      font-size: 12px;
+    }
+
+    .btn--lg {
+      padding: 12px 28px;
+      font-size: 15px;
+    }
+
+    /* ──── CHIPS / TAGS ──── */
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2);
+      margin-bottom: var(--s-4);
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+      border-radius: var(--radius-sm);
+      background: var(--bone);
+      color: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    .chip--nlp {
+      background: #dbeafe;
+      color: var(--color-nlp-blue);
+      border-color: var(--color-nlp-blue);
+    }
+
+    .chip--vision {
+      background: #dcfce7;
+      color: var(--color-vision-green);
+      border-color: var(--color-vision-green);
+    }
+
+    .chip--audio {
+      background: #f3e8ff;
+      color: var(--color-audio-purple);
+      border-color: var(--color-audio-purple);
+    }
+
+    .chip--multimodal {
+      background: #fbf0f8;
+      color: var(--color-multimodal-pink);
+      border-color: var(--color-multimodal-pink);
+    }
+
+    .chip--tabular {
+      background: #fed7aa;
+      color: var(--color-tabular-orange);
+      border-color: var(--color-tabular-orange);
+    }
+
+    /* ──── MODEL CARDS ──── */
+    .model-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .model-card {
+      background: var(--paper);
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      overflow: hidden;
+    }
+
+    .model-card--featured {
+      border-top: 4px solid var(--signal);
+    }
+
+    .model-card__header {
+      background: var(--color-canvas-inset);
+      padding: var(--s-3);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--s-2);
+    }
+
+    .model-card__emoji {
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .model-card__title {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      margin: 0 0 2px 0;
+    }
+
+    .model-card__subtitle {
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: var(--slate);
+      margin: 0;
+    }
+
+    .model-card__body {
+      padding: var(--s-3);
+    }
+
+    .model-card__desc {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .model-card__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: var(--s-3);
+    }
+
+    .model-card__footer {
+      display: flex;
+      gap: var(--s-2);
+      padding-top: var(--s-2);
+      border-top: 1px solid var(--border);
+      margin-top: var(--s-2);
+    }
+
+    .model-card__footer button {
+      flex: 1;
+      font-size: 12px;
+      padding: 6px 12px;
+    }
+
+    /* ──── BADGE / PILL ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2);
+      margin-bottom: var(--s-4);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+      border-radius: var(--radius-full);
+      background: var(--bone);
+      color: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    .badge--signal {
+      background: var(--color-hf-yellow-soft);
+      color: var(--color-accessible-hf-gold-text);
+      border-color: var(--signal);
+    }
+
+    .badge--success {
+      background: #dcfce7;
+      color: var(--color-vision-green);
+      border-color: var(--color-vision-green);
+    }
+
+    .badge--danger {
+      background: #fee2e2;
+      color: var(--color-error);
+      border-color: var(--color-error);
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 999px;
+    }
+
+    /* ──── INPUT FIELDS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
+    }
+
+    .input {
+      padding: 8px 12px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--ink);
+      box-shadow: 0 0 0 3px rgba(13, 17, 23, 0.1);
+    }
+
+    /* ──── PULL QUOTE ──── */
+    .pullquote {
+      background: var(--color-hf-yellow-soft);
+      border-left: 4px solid var(--signal);
+      padding: var(--s-4);
+      margin: var(--s-6) 0;
+      border-radius: var(--radius-md);
+    }
+
+    .pullquote__emoji {
+      font-size: 32px;
+      line-height: 1;
+      display: block;
+      margin-bottom: var(--s-2);
+    }
+
+    .pullquote__text {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--color-canvas-dark);
+      margin-bottom: var(--s-2);
+    }
+
+    .pullquote__attribution {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-accessible-hf-gold-text);
+    }
+
+    /* ──── TABLE ──── */
+    .component-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: var(--s-5);
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: var(--card-radius);
+      overflow: hidden;
+    }
+
+    .component-table__header {
+      background: var(--bone);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .component-table__header-cell {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: left;
+      padding: var(--s-3);
+      border-right: 1px solid var(--border);
+    }
+
+    .component-table__header-cell:last-child {
+      border-right: none;
+    }
+
+    .component-table__row {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .component-table__row:hover {
+      background: var(--bone);
+    }
+
+    .component-table__row:last-child {
+      border-bottom: none;
+    }
+
+    .component-table__cell {
+      padding: var(--s-3);
+      text-align: left;
+      border-right: 1px solid var(--border);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .component-table__cell:last-child {
+      border-right: none;
+    }
+
+    .component-table__label {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    /* ──── SUBSECTION ──── */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+      margin-top: var(--s-4);
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: var(--s-5) 0;
+    }
+
+    /* ──── FOLIO ──── */
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-3) 0;
+      margin-top: var(--s-8);
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── RESPONSIVE ──── */
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-5) var(--s-3);
+      }
+
+      .stage-head__title {
+        font-size: 36px;
+      }
+
+      .section__title {
+        font-size: 24px;
+      }
+
+      .model-cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .button-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .button-row__label {
+        min-width: auto;
+        margin-right: 0;
+        margin-bottom: var(--s-2);
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: var(--s-3);
+      }
+
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">
+        <span class="masthead__emoji">🤗</span>huggingface
+      </div>
+      <div class="masthead__tagline">
+        ML Community<br>Component System
+      </div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Component Vocabulary</h1>
+      <p class="stage-head__subtitle">
+        Hugging Face components are built for a dense, power-user community. Crisp borders, monospace headings, and sunshine-yellow accents create a system that feels technical yet warmly human.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Interactions</div>
+      <h2 class="section__title">Buttons</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary</span>
+        <button class="btn btn--primary">Use this Model</button>
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary btn--lg">Large Primary</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Yellow CTA</span>
+        <button class="btn btn--yellow">🚀 Upgrade to Pro</button>
+        <button class="btn btn--yellow btn--sm">Small</button>
+        <button class="btn btn--yellow btn--lg">Sponsor the Hub</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Outline</span>
+        <button class="btn btn--outline">View Details</button>
+        <button class="btn btn--outline btn--sm">Small</button>
+        <button class="btn btn--outline btn--lg">Outline Large</button>
+      </div>
+    </section>
+
+    <!-- Tags / Chips Section -->
+    <section class="section">
+      <div class="section__kicker">Labels</div>
+      <h2 class="section__title">Task Tags & Chips</h2>
+      <p style="font-size: 14px; line-height: 1.55; color: var(--slate); margin-bottom: var(--s-4);">
+        Category-tinted chips classify model types. Each task domain carries its own color — NLP blue, vision green, audio purple, etc.
+      </p>
+
+      <div class="subsection-label">Task Category Tags</div>
+      <div class="chip-group">
+        <span class="chip chip--nlp">NLP · Text Generation</span>
+        <span class="chip chip--vision">Vision · Image Classification</span>
+        <span class="chip chip--audio">Audio · Speech Recognition</span>
+        <span class="chip chip--multimodal">Multimodal · Vision-Language</span>
+        <span class="chip chip--tabular">Tabular · Regression</span>
+      </div>
+
+      <div class="subsection-label">Framework Tags</div>
+      <div class="chip-group">
+        <span class="chip">PyTorch</span>
+        <span class="chip">TensorFlow</span>
+        <span class="chip">JAX</span>
+        <span class="chip">ONNX</span>
+        <span class="chip">Core ML</span>
+      </div>
+    </section>
+
+    <!-- Model Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Cards</div>
+      <h2 class="section__title">Model Cards</h2>
+      <p style="font-size: 14px; line-height: 1.55; color: var(--slate); margin-bottom: var(--s-4);">
+        Model cards are compact, scannable, and action-oriented. Featured cards carry a yellow top accent and are paired with task tags.
+      </p>
+
+      <div class="model-cards-grid">
+        <div class="model-card model-card--featured">
+          <div class="model-card__header">
+            <div class="model-card__emoji">📝</div>
+            <div>
+              <h3 class="model-card__title">Llama 2 7B Chat</h3>
+              <p class="model-card__subtitle">Meta · Fine-tuned for dialogue</p>
+            </div>
+          </div>
+          <div class="model-card__body">
+            <p class="model-card__desc">A 7-billion-parameter language model trained on 2 trillion tokens of code and natural language data.</p>
+            <div class="model-card__tags">
+              <span class="chip chip--nlp">NLP</span>
+              <span class="chip">Conversation</span>
+            </div>
+            <div class="model-card__footer">
+              <button class="btn btn--primary btn--sm" style="flex: 1;">Use in API</button>
+              <button class="btn btn--outline btn--sm" style="flex: 1;">Model Card</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="model-card">
+          <div class="model-card__header">
+            <div class="model-card__emoji">🖼️</div>
+            <div>
+              <h3 class="model-card__title">CLIP ViT-B/32</h3>
+              <p class="model-card__subtitle">OpenAI · Vision-language</p>
+            </div>
+          </div>
+          <div class="model-card__body">
+            <p class="model-card__desc">Efficient visual-semantic embedding model for zero-shot image classification and search.</p>
+            <div class="model-card__tags">
+              <span class="chip chip--multimodal">Multimodal</span>
+              <span class="chip">Image Search</span>
+            </div>
+            <div class="model-card__footer">
+              <button class="btn btn--yellow btn--sm" style="flex: 1;">Try Demo</button>
+              <button class="btn btn--outline btn--sm" style="flex: 1;">Docs</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="model-card">
+          <div class="model-card__header">
+            <div class="model-card__emoji">🎵</div>
+            <div>
+              <h3 class="model-card__title">Wav2Vec 2.0</h3>
+              <p class="model-card__subtitle">Meta · Speech recognition</p>
+            </div>
+          </div>
+          <div class="model-card__body">
+            <p class="model-card__desc">Self-supervised speech model achieving state-of-the-art results on LibriSpeech without fine-tuning.</p>
+            <div class="model-card__tags">
+              <span class="chip chip--audio">Audio</span>
+              <span class="chip">ASR</span>
+            </div>
+            <div class="model-card__footer">
+              <button class="btn btn--primary btn--sm" style="flex: 1;">Use Model</button>
+              <button class="btn btn--outline btn--sm" style="flex: 1;">Repo</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="section">
+      <div class="section__kicker">Status</div>
+      <h2 class="section__title">Badges & Pills</h2>
+
+      <div class="subsection-label">Status Pills</div>
+      <div class="badge-row">
+        <span class="badge badge--signal">
+          <span class="badge__dot"></span> New
+        </span>
+        <span class="badge badge--success">
+          <span class="badge__dot"></span> Verified
+        </span>
+        <span class="badge badge--danger">
+          <span class="badge__dot"></span> Deprecated
+        </span>
+        <span class="badge">
+          <span class="badge__dot"></span> Draft
+        </span>
+      </div>
+
+      <div class="subsection-label">Update Badges</div>
+      <div class="badge-row">
+        <span class="badge badge--signal">⚡ Updated 2h ago</span>
+        <span class="badge">📊 2.3M downloads</span>
+        <span class="badge">⭐ Featured</span>
+      </div>
+    </section>
+
+    <!-- Input Fields Section -->
+    <section class="section">
+      <div class="section__kicker">Forms</div>
+      <h2 class="section__title">Input Fields</h2>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Model Name</label>
+          <input class="input" type="text" placeholder="e.g., bert-base-uncased">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Search Hub</label>
+          <input class="input" type="text" placeholder="Find a model or dataset...">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">API Token</label>
+          <input class="input" type="password" placeholder="hf_••••••••••••••••••••">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Repository URL</label>
+          <input class="input" type="url" placeholder="https://huggingface.co/...">
+        </div>
+      </div>
+    </section>
+
+    <!-- Pull Quote Section -->
+    <section class="section">
+      <div class="section__kicker">Featured</div>
+      <h2 class="section__title">Pull Quote</h2>
+
+      <div class="pullquote">
+        <span class="pullquote__emoji">🤗</span>
+        <blockquote class="pullquote__text">The future of AI is open, collaborative, and democratized.</blockquote>
+        <p class="pullquote__attribution">Hugging Face Mission</p>
+      </div>
+    </section>
+
+    <!-- Table Section -->
+    <section class="section">
+      <div class="section__kicker">Reference</div>
+      <h2 class="section__title">Component Sizing</h2>
+
+      <table class="component-table">
+        <thead class="component-table__header">
+          <tr>
+            <th class="component-table__header-cell">Component</th>
+            <th class="component-table__header-cell">Padding</th>
+            <th class="component-table__header-cell">Radius</th>
+            <th class="component-table__header-cell">Border</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="component-table__row">
+            <td class="component-table__cell">
+              <span class="component-table__label">Button Primary</span>
+            </td>
+            <td class="component-table__cell">10px 20px</td>
+            <td class="component-table__cell">8px</td>
+            <td class="component-table__cell">solid var(--canvas-dark)</td>
+          </tr>
+          <tr class="component-table__row">
+            <td class="component-table__cell">
+              <span class="component-table__label">Button Yellow</span>
+            </td>
+            <td class="component-table__cell">10px 20px</td>
+            <td class="component-table__cell">8px</td>
+            <td class="component-table__cell">solid var(--signal)</td>
+          </tr>
+          <tr class="component-table__row">
+            <td class="component-table__cell">
+              <span class="component-table__label">Input Field</span>
+            </td>
+            <td class="component-table__cell">8px 12px</td>
+            <td class="component-table__cell">6px</td>
+            <td class="component-table__cell">1px solid var(--border)</td>
+          </tr>
+          <tr class="component-table__row">
+            <td class="component-table__cell">
+              <span class="component-table__label">Model Card</span>
+            </td>

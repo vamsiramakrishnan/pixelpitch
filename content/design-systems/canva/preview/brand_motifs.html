@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs – Canva Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #0e1318);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+    }
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--ink, #0e1318);
+      margin-bottom: 12px;
+    }
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate, #666666);
+      max-width: 600px;
+      font-weight: 400;
+      line-height: 1.55;
+    }
+    .header__rule {
+      display: block;
+      width: 120px;
+      height: 4px;
+      background: linear-gradient(to right, var(--color-purple-to-blue-gradient, #7d2ae8), var(--color-canva-cyan, #00c4cc));
+      border: none;
+      margin-top: 24px;
+      border-radius: 2px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 56px;
+    }
+    .section__label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #e1e3e6);
+    }
+
+    /* Key characteristics */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+    .traits-list li {
+      position: relative;
+      padding: 12px 0 12px 28px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--ink, #0e1318);
+      border-bottom: 1px solid var(--border, #e1e3e6);
+    }
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 18px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-purple-to-blue-gradient, #7d2ae8), var(--color-canva-cyan, #00c4cc));
+    }
+
+    /* Do's and Don'ts */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 640px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: var(--card-border, 1px solid #e1e3e6);
+      border-radius: var(--card-radius, 8px);
+      padding: 24px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow, 0 2px 8px rgba(0,0,0,0.08));
+      transition: all 0.3s ease;
+    }
+    .dd-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+    .dd-card__heading {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .dd-card__heading--do { color: #00b894; }
+    .dd-card__heading--dont { color: #ff5757; }
+
+    .dd-card__icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .dd-card__icon--do {
+      background: #e8f8f3;
+      color: #00b894;
+    }
+    .dd-card__icon--dont {
+      background: #ffe8e6;
+      color: #ff5757;
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+    .dd-list li {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ink, #0e1318);
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border, #e1e3e6);
+    }
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* Atmosphere card */
+    .atmosphere-card {
+      background: linear-gradient(135deg, rgba(125, 42, 232, 0.04) 0%, rgba(0, 196, 204, 0.04) 100%);
+      border: 1px solid var(--border, #e1e3e6);
+      border-radius: var(--card-radius, 8px);
+      padding: 32px;
+    }
+    .atmosphere-card p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--ink, #0e1318);
+    }
+
+    /* Color harmony strip */
+    .harmony-strip {
+      display: flex;
+      border-radius: 12px;
+      overflow: hidden;
+      height: 100px;
+      box-shadow: var(--card-shadow, 0 2px 8px rgba(0,0,0,0.08));
+    }
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .harmony-strip__swatch:hover {
+      flex: 1.8;
+    }
+    .harmony-strip__label {
+      position: absolute;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* Type pairing demo */
+    .type-pairing {
+      background: var(--paper, #ffffff);
+      border: var(--card-border, 1px solid #e1e3e6);
+      border-radius: var(--card-radius, 8px);
+      padding: 48px 40px;
+      box-shadow: var(--card-shadow, 0 2px 8px rgba(0,0,0,0.08));
+    }
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink, #0e1318);
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #7d2ae8, #00c4cc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      max-width: 700px;
+    }
+    .type-pairing__meta {
+      display: flex;
+      gap: 24px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border, #e1e3e6);
+    }
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--ink, #0e1318);
+    }
+
+    /* Gradient showcases */
+    .gradient-showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .gradient-card {
+      border-radius: var(--card-radius, 8px);
+      padding: 24px 16px;
+      text-align: center;
+      box-shadow: var(--card-shadow, 0 2px 8px rgba(0,0,0,0.08));
+      transition: transform 0.3s ease;
+    }
+    .gradient-card:hover {
+      transform: translateY(-4px);
+    }
+    .gradient-card__name {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 12px;
+      color: var(--ink, #0e1318);
+    }
+    .gradient-card__hex {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      color: var(--slate, #666666);
+      margin-top: 4px;
+    }
+
+    /* Shape showcase */
+    .shape-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .shape-demo {
+      text-align: center;
+    }
+    .shape-demo__visual {
+      width: 100%;
+      height: 80px;
+      background: linear-gradient(135deg, #7d2ae8, #00c4cc);
+      margin-bottom: 12px;
+      box-shadow: var(--card-shadow, 0 2px 8px rgba(0,0,0,0.08));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .shape-demo__label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #0e1318);
+    }
+
+    .shape-demo__visual.radius-none { border-radius: 0; }
+    .shape-demo__visual.radius-sm { border-radius: 4px; }
+    .shape-demo__visual.radius-md { border-radius: 8px; }
+    .shape-demo__visual.radius-lg { border-radius: 24px; }
+    .shape-demo__visual.radius-full { border-radius: 999px; }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border, #e1e3e6);
+      border-top-color: var(--color-purple-to-blue-gradient, #7d2ae8);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Spacing visual */
+    .spacing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px;
+    }
+    .spacing-card {
+      background: var(--paper, #ffffff);
+      border: var(--card-border, 1px solid #e1e3e6);
+      border-radius: var(--card-radius, 8px);
+      padding: 16px;
+      text-align: center;
+    }
+    .spacing-card__visual {
+      width: 100%;
+      height: 60px;
+      background: linear-gradient(135deg, rgba(125, 42, 232, 0.1), rgba(0, 196, 204, 0.1));
+      border-radius: 4px;
+      border: 2px dashed var(--color-purple-to-blue-gradient, #7d2ae8);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--slate, #666666);
+    }
+    .spacing-card__label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #0e1318);
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border', 'surface'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#ff5757">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.name || 'Design System';
+      const colors = tokens.colors || {};
+      const fonts = tokens.typography || {};
+      const meta = tokens.meta || {};
+      const spacing = tokens.spacing?.scale || {};
+      const radii = tokens.radii || {};
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Brand Motifs</h1>';
+      html += '  <p class="header__subtitle">The DNA that makes Canva feel like Canva — friendly, spacious, and luminous.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ---- Atmosphere / Description ---- */
+      const atmosphere = meta.atmosphere || meta.description || 'Canva is the friendly face of design tools — the brand makes a point of looking inviting where Adobe looks intimidating. The visual language is built on a clean white canvas with a signature purple-to-blue gradient, generous spacing, and soft rounded geometry. Everything speaks the same shape language: filled rounded icons, 12–20px card radii, and buttons that feel welcoming, not harsh.';
+      if (atmosphere) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Atmosphere</div>';
+        html += '  <div class="atmosphere-card"><p>' + esc(atmosphere) + '</p></div>';
+        html += '</div>';
+      }
+
+      /* ---- Key Characteristics ---- */
+      const traits = meta.keyCharacteristics || [
+        'White canvas with a violet-to-cyan gradient accent (#7d2ae8 → #00c4cc)',
+        'Rounded geometric sans-serif (Canva Sans DNA) — weight contrast over color',
+        'Generous spacing and soft shadows (12–20px radii, soft cool-toned elevation)',
+        'Filled rounded iconography — never outlined or linear',
+        'Vibrant secondary palette (coral, mint, tangerine) for categories and status',
+        'Pro/Magic moments lit by static gradients — no animation'
+      ];
+      if (traits.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Key Characteristics</div>';
+        html += '  <ul class="traits-list">';
+        traits.forEach(t => {
+          html += '<li>' + esc(t) + '</li>';
+        });
+        html += '  </ul>';
+        html += '</div>';
+      }
+
+      /* ---- Do's and Don'ts ---- */
+      const dos = meta.dos || [
+        'Use the purple-to-blue gradient as an accent for Pro features and hero moments',
+        'Keep generous padding (24px+) on cards and panels — space is your friend',
+        'Apply rounded corners everywhere: 8px on cards, 12–16px on larger panels, 999px on chips',
+        'Use weight contrast (800 for display, 600 for labels, 400 for body) to build hierarchy',
+        'Make icons filled and rounded — friendly, not minimal or severe',
+        'Elevate cards on hover with a subtle shadow growth, not color change'
+      ];
+      const donts = meta.donts || [
+        'Don\'t use hard edges (0 border-radius) — softness is core to the brand',
+        'Don\'t rely on color alone to communicate; weight and spacing do the work',
+        'Don\'t outline icons — Canva icons are solid, rounded shapes',
+        'Don\'t add motion or animation to the gradient; it\'s a static accent',
+        'Don\'t compress spacing to save real estate — generosity is the point',
+        'Don\'t flatten the hierarchy with uniform font sizes across sections'
+      ];
+      if (dos.length || donts.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+        html += '  <div class="dd-grid">';
+
+        if (dos.length) {
+          html += '<div class="dd-card">';
+          html += '  <div class="dd-card__heading dd-card__heading--do">';
+          html += '    <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+          html += '  </div>';
+          html += '  <ul class="dd-list">';
+          dos.forEach(d => { html += '<li>' + esc(d) + '</li>'; });
+          html += '  </ul></div>';
+        }
+
+        if (donts.length) {
+          html += '<div class="dd-card">';
+          html += '  <div class="dd-card__heading dd-card__heading--dont">';
+          html += '    <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+          html += '  </div>';
+          html += '  <ul class="dd-list">';
+          donts.forEach(d => { html += '<li>' + esc(d) + '</li>'; });
+          html += '  </ul></div>';
+        }
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ---- Gradient Showcase ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Signature Gradient & Extended Palette</div>';
+      html += '  <div class="gradient-showcase">';
+      html += '    <div class="gradient-card" style="background:linear-gradient(135deg, #7d2ae8, #00c4cc)">';
+      html += '      <div class="gradient-card__name">Purple-to-Cyan</div>';
+      html += '      <div class="gradient-card__hex">#7d2ae8 → #00c4cc</div>';
+      html += '    </div>';
+      html += '    <div class="gradient-card" style="background:#ff7059">';
+      html += '      <div class="gradient-card__name">Coral</div>';
+      html += '      <div class="gradient-card__hex">#ff7059</div>';
+      html += '    </div>';
+      html += '    <div class="gradient-card" style="background:#48c997">';
+      html += '      <div class="gradient-card__name">Mint</div>';
+      html += '      <div class="gradient-card__hex">#48c997</div>';
+      html += '    </div>';
+      html += '    <div class="gradient-card" style="background:#ff9633">';
+      html += '      <div class="gradient-card__name">Tangerine</div>';
+      html += '      <div class="gradient-card__hex">#ff9633</div>';
+      html += '    </div>';
+      html += '    <div class="gradient-card" style="background:#3ea6ff">';
+      html += '      <div class="gradient-card__name">Sky</div>';
+      html += '      <div class="gradient-card__hex">#3ea6ff</div>';
+      html += '    </div>';
+      html += '    <div class="gradient-card" style="background:#9b87f5">';
+      html += '      <div class="gradient-card__name">Lavender</div>';
+      html += '      <div class="gradient-card__hex">#9b87f5</div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Border Radius System ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius System</div>';
+      html += '  <div class="shape-grid">';
+      html += '    <div class="shape-demo">';
+      html += '      <div class="shape-demo__visual radius-none">0</div>';
+      html += '      <div class="shape-demo__label">None</div>';
+      html += '    </div>';
+      html += '    <div class="shape-demo">';
+      html += '      <div class="shape-demo__visual radius-sm">4px</div>';
+      html += '      <div class="shape-demo__label">Small</div>';
+      html += '    </div>';
+      html += '    <div class="shape-demo">';
+      html += '      <div class="shape-demo__visual radius-md">8px</div>';
+      html += '      <div class="shape-demo__label">Default (Cards)</div>';
+      html += '    </div>';
+      html += '    <div class="shape-demo">';
+      html += '      <div class="shape-demo__visual radius-lg">24px</div>';
+      html += '      <div class="shape-demo__label">Large (Panels)</div>';
+      html += '    </div>';
+      html += '    <div class="shape-demo">';
+      html += '      <div class="shape-demo__visual radius-full">999px</div>';
+      html += '      <div class="shape-demo__label">Pill (Chips)</div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Spacing Scale ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+      html += '  <div class="spacing-grid">';
+      const spacingValues = [
+        { key: 's-1', value: '4px' },
+        { key: 's-2', value: '8px' },
+        { key: 's-3', value: '16px' },
+        { key: 's-4', value: '24px' },
+        { key: 's-5', value: '32px' },
+        { key: 's-6', value: '48px' },
+        { key: 's-7', value: '64px' },
+        { key: 's-8', value: '96px' }
+      ];
+      spacingValues.forEach(s => {
+        html += '<div class="spacing-card">';
+        html += '  <div class="spacing-card__visual" style="height:' + s.value + '">' + s.value + '</div>';
+        html += '  <div class="spacing-card__label">' + esc(s.key) + '</div>';
+        html += '</div>';
+      });
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Typography Pairing Demo ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+      html += '    <div class="type-pairing__display">Create anything</div>';
+      html += '    <div class="type-pairing__body">Canva uses a rounded geometric sans-serif (inspired by Airbnb and Asana) as the voice of every interface. Weight contrast does the heavy lifting — 800 for bold headlines, 600 for labels, 400 for body text. The letterforms share DNA with the rounded shapes throughout the design system, creating a coherent, friendly voice from icon to headline.</div>';
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Display:</span> System UI (rounded geometric)</div>';
+      html += '      <div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Body:</span> System UI (14–16px, 1.55 line-height)</div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    /* ---- Utilities ---- */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

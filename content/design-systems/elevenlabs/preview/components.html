@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElevenLabs — Component Library</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: var(--s-14) var(--s-11);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--s-11);
+      margin-bottom: var(--s-15);
+      border-bottom: 1px solid var(--border);
+      padding-top: var(--s-8);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 300;
+      letter-spacing: -0.96px;
+      line-height: 1;
+      text-transform: lowercase;
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.14px;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-15);
+      padding-bottom: var(--s-12);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-6);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 300;
+      letter-spacing: -0.96px;
+      line-height: 1.08;
+      color: var(--ink);
+      margin-bottom: var(--s-9);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.44;
+      color: var(--slate);
+      max-width: 720px;
+      letter-spacing: 0.18px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-15);
+      padding-bottom: var(--s-12);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-6);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 300;
+      letter-spacing: 0;
+      line-height: 1.17;
+      color: var(--ink);
+      margin-bottom: var(--s-9);
+    }
+
+    .section__description {
+      font-size: 16px;
+      line-height: 1.50;
+      letter-spacing: 0.16px;
+      color: var(--slate);
+      margin-bottom: var(--s-12);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--s-12);
+      margin-bottom: var(--s-12);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-9);
+      align-items: center;
+      margin-bottom: var(--s-9);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--slate);
+      margin-right: var(--s-6);
+      min-width: 140px;
+      letter-spacing: 0.14px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0;
+      line-height: 1.47;
+      border: 1px solid transparent;
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      gap: var(--s-6);
+      position: relative;
+    }
+
+    .btn:hover {
+      opacity: 0.85;
+    }
+
+    .btn--primary {
+      background: var(--ink);
+      color: var(--paper);
+      border-radius: 9999px;
+      padding: 12px 24px;
+    }
+
+    .btn--primary:hover {
+      opacity: 0.8;
+    }
+
+    .btn--secondary {
+      background: var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      padding: 12px 24px;
+      box-shadow: rgba(0,0,0,0.4) 0px 0px 1px, rgba(0,0,0,0.04) 0px 4px 4px;
+    }
+
+    .btn--secondary:hover {
+      background: var(--bone);
+    }
+
+    .btn--warm-stone {
+      background: rgba(245, 242, 239, 0.8);
+      color: var(--ink);
+      border-radius: 30px;
+      padding: 12px 20px 12px 14px;
+      box-shadow: rgba(78, 50, 23, 0.04) 0px 6px 16px;
+    }
+
+    .btn--warm-stone:hover {
+      background: rgba(245, 242, 239, 1);
+    }
+
+    .btn--uppercase {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.7px;
+      text-transform: uppercase;
+      line-height: 1.10;
+    }
+
+    .btn--sm {
+      padding: 8px 16px;
+      font-size: 13px;
+    }
+
+    .btn--lg {
+      padding: 14px 32px;
+      font-size: 16px;
+    }
+
+    /* ──── CARDS ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-12);
+      margin-bottom: var(--s-12);
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: var(--s-12);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 300;
+      line-height: 1.21;
+      color: var(--ink);
+      margin-bottom: var(--s-6);
+    }
+
+    .card__description {
+      font-size: 16px;
+      line-height: 1.50;
+      letter-spacing: 0.16px;
+      color: var(--slate);
+      margin-bottom: var(--s-9);
+    }
+
+    .card__image {
+      display: block;
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      background: linear-gradient(135deg, #f5f2ef 0%, #e5e5e5 100%);
+      margin-bottom: var(--s-9);
+      border-radius: 8px;
+    }
+
+    /* ──── INPUTS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-12);
+      margin-bottom: var(--s-12);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-6);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink);
+      letter-spacing: 0.14px;
+    }
+
+    .input {
+      padding: 12px 16px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.50;
+      letter-spacing: 0.16px;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--ink);
+      box-shadow: inset 0 0 0 2px rgba(0,0,0,0.06);
+    }
+
+    .textarea {
+      padding: 12px 16px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.50;
+      letter-spacing: 0.16px;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      outline: none;
+      min-height: 120px;
+      resize: vertical;
+      transition: all 0.15s ease;
+    }
+
+    .textarea::placeholder {
+      color: var(--slate);
+    }
+
+    .textarea:focus {
+      border-color: var(--ink);
+      box-shadow: inset 0 0 0 2px rgba(0,0,0,0.06);
+    }
+
+    /* ──── BADGES ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-6);
+      margin-bottom: var(--s-9);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0;
+      line-height: 1.38;
+      border-radius: 9999px;
+      background: var(--bone);
+      color: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    .badge--active {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    /* ──── PULL QUOTE ──── */
+    .pullquote {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: var(--s-12) 0;
+      margin: var(--s-12) 0;
+    }
+
+    .pullquote__mark {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 300;
+      line-height: 0.8;
+      color: var(--slate);
+      display: block;
+      margin-bottom: var(--s-6);
+    }
+
+    .pullquote__text {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 300;
+      letter-spacing: 0;
+      line-height: 1.13;
+      color: var(--ink);
+      margin-bottom: var(--s-9);
+    }
+
+    .pullquote__attribution {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.14px;
+      color: var(--slate);
+    }
+
+    /* ──── FEATURE BLOCK ──── */
+    .feature-block {
+      background: linear-gradient(135deg, rgba(245, 242, 239, 0.4) 0%, rgba(229, 229, 229, 0.2) 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: var(--s-14);
+      margin-bottom: var(--s-12);
+    }
+
+    .feature-block__title {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 300;
+      letter-spacing: 0;
+      line-height: 1.13;
+      color: var(--ink);
+      margin-bottom: var(--s-6);
+    }
+
+    .feature-block__description {
+      font-size: 16px;
+      line-height: 1.50;
+      letter-spacing: 0.16px;
+      color: var(--slate);
+      margin-bottom: var(--s-9);
+    }
+
+    /* ──── WAVEFORM DEMO ──── */
+    .waveform-demo {
+      background: linear-gradient(135deg, #7fffff 0%, rgba(127, 255, 255, 0.15) 100%);
+      border-radius: 12px;
+      padding: var(--s-12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 160px;
+      margin-bottom: var(--s-12);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .waveform-demo::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100"><defs><linearGradient id="wave" x1="0" y1="0" x2="0" y2="100"><stop offset="0%" style="stop-color:rgba(0,0,0,0.1);stop-opacity:1" /><stop offset="50%" style="stop-color:rgba(0,0,0,0.05);stop-opacity:1" /><stop offset="100%" style="stop-color:rgba(0,0,0,0);stop-opacity:0" /></linearGradient></defs><path d="M0,50 Q25,30 50,50 T100,50 T150,50 T200,50 T250,50 T300,50 T350,50 T400,50" stroke="url(%23wave)" stroke-width="2" fill="none"/></svg>') repeat-x;
+      opacity: 0.5;
+    }
+
+    .waveform-demo__content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .waveform-demo__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0;
+      color: var(--ink);
+      opacity: 0.6;
+    }
+
+    /* ──── NUMBERED LIST ──── */
+    .numbered-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--s-12);
+      margin-bottom: var(--s-12);
+    }
+
+    .numbered-list__item {
+      padding-bottom: var(--s-9);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .numbered-list__number {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 300;
+      letter-spacing: 0;
+      line-height: 1.17;
+      color: var(--ink);
+      display: block;
+      margin-bottom: var(--s-4);
+    }
+
+    .numbered-list__headline {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 300;
+      letter-spacing: 0;
+      line-height: 1.35;
+      color: var(--ink);
+      margin-bottom: var(--s-4);
+    }
+
+    .numbered-list__body {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.50;
+      letter-spacing: 0.16px;
+      color: var(--slate);
+    }
+
+    /* ──── STATE TABLE ──── */
+    .state-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: var(--s-12);
+    }
+
+    .state-table__header {
+      background: var(--bone);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .state-table__header-cell {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: left;
+      padding: var(--s-9) var(--s-9);
+      border-right: 1px solid var(--border);
+    }
+
+    .state-table__header-cell:last-child {
+      border-right: none;
+    }
+
+    .state-table__row {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .state-table__row:last-child {
+      border-bottom: none;
+    }
+
+    .state-table__cell {
+      padding: var(--s-9);
+      text-align: left;
+      border-right: 1px solid var(--border);
+      font-size: 14px;
+      line-height: 1.43;
+      letter-spacing: 0.14px;
+    }
+
+    .state-table__cell:last-child {
+      border-right: none;
+    }
+
+    .state-table__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink);
+      letter-spacing: 0.14px;
+    }
+
+    .state-table__description {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--slate);
+      letter-spacing: 0;
+    }
+
+    /* ──── FOLIO ──── */
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-9) 0;
+      margin-top: var(--s-15);
+      border-top: 1px solid var(--border);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0;
+      color: var(--slate);
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-11) var(--s-9);
+      }
+
+      .stage-head__title {
+        font-size: 32px;
+        letter-spacing: -0.64px;
+      }
+
+      .section__title {
+        font-size: 28px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+
+      .pullquote__text {
+        font-size: 24px;
+      }
+
+      .numbered-list {
+        grid-template-columns: 1fr;
+      }
+
+      .button-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: var(--s-6);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">elevenlabs</div>
+      <div class="masthead__tagline">
+        Voice<br>Intelligence
+      </div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Vocal Component System</h1>
+      <p class="stage-head__subtitle">
+        A unified vocabulary for voice AI interfaces. Light typography, minimal shadows, and warm-stone accents create a premium audio product aesthetic. Each component is tuned for clarity and precision in voice-focused applications.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Buttons</div>
+      <h2 class="section__title">Button States & Variants</h2>
+      <p class="section__description">
+        Buttons use three primary patterns: black pill for primary actions, white shadow-bordered pill for secondary, and warm-stone with asymmetric padding for featured CTAs. All employ smooth transitions and precise shadow stacking.
+      </p>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary (Pill)</span>
+        <button class="btn btn--primary">Get Started</button>
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary btn--lg">Explore Platform</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Secondary (Shadow)</span>
+        <button class="btn btn--secondary">Learn More</button>
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary btn--lg">View Documentation</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Warm Stone (Featured)</span>
+        <button class="btn btn--warm-stone">Discover Voices</button>
+        <button class="btn btn--warm-stone btn--sm">Explore</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Uppercase (Bold)</span>
+        <button class="btn btn--primary btn--uppercase">Try Now</button>
+        <button class="btn btn--secondary btn--uppercase">Learn</button>
+        <button class="btn btn--warm-stone btn--uppercase">Create</button>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Cards</div>
+      <h2 class="section__title">Content Containers</h2>
+      <p class="section__description">
+        Cards use a single-line border with layered shadow effects. Subtle elevation on hover. Rounded corners at 10px, generous internal padding, and light typography hierarchy guide the eye through content.
+      </p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__image"></div>
+          <h3 class="card__title">Text to Speech</h3>
+          <p class="card__description">
+            Convert written content into natural, expressive voice in 29 languages with minimal latency.
+          </p>
+          <button class="btn btn--secondary btn--sm">Explore</button>
+        </div>
+
+        <div class="card">
+          <div class="card__image"></div>
+          <h3 class="card__title">Voice Cloning</h3>
+          <p class="card__description">
+            Create a custom voice from a short audio sample. Your unique sonic identity.
+          </p>
+          <button class="btn btn--secondary btn--sm">Learn More</button>
+        </div>
+
+        <div class="card">
+          <div class="card__image"></div>
+          <h3 class="card__title">API Integration</h3>
+          <p class="card__description">
+            Seamless REST and WebSocket APIs for real-time voice synthesis in your applications.
+          </p>
+          <button class="btn btn--secondary btn--sm">View Docs</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inputs Section -->
+    <section class="section">
+      <div class="section__kicker">Forms</div>
+      <h2 class="section__title">Input Fields & Controls</h2>
+      <p class="section__description">
+        Clean input styling with single-line borders and minimal shadow focus state. Placeholders use slate color. Focus adds a subtle inset ring with low opacity.
+      </p>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Text Input</label>
+          <input type="text" class="input" placeholder="Enter your text here...">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input type="email" class="input" placeholder="you@example.com">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Voice Name</label>
+          <input type="text" class="input" placeholder="Choose a voice identity...">
+        </div>
+      </div>
+
+      <div class="input-wrap" style="max-width: 100%; margin-bottom: var(--s-9);">
+        <label class="input-label">Message</label>
+        <textarea class="textarea" placeholder="Write your message or script here. ElevenLabs will synthesize it with expressive, natural-sounding voice..."></textarea>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="section">
+      <div class="section__kicker">Status</div>
+      <h2 class="section__title">Badges & Tags</h2>
+      <p class="section__description">
+        Pill-shaped status indicators with soft backgrounds. Active state inverts color. Perfect for marking voice tones, language tags, and feature status.
+      </p>
+
+      <div class="badge-row">
+        <span class="badge"><span class="badge__dot"></span> Default</span>
+        <span class="badge"><span class="badge__dot"></span> Processing</span>
+        <span class="badge"><span class="badge__dot"></span> Idle</span>
+      </div>
+
+      <div class="badge-row">
+        <span class="badge badge--active"><span class="badge__dot"></span> Live</span>
+        <span class="badge badge--active"><span class="badge__dot"></span> Active</span>
+        <span class="badge"><span class="badge__dot"></span> Paused</span>
+      </div>
+
+      <div class="badge-row">
+        <span class="badge">English</span>
+        <span class="badge">Spanish</span>
+        <span class="badge">Mandarin</span>
+        <span class="badge">Japanese</span>
+      </div>
+
+      <div class="badge-row">
+        <span class="badge badge--active">Professional</span>
+        <span class="badge">Conversational</span>
+        <span class="badge">Expressive</span>
+      </div>
+    </section>
+
+    <!-- Waveform Demo Section -->
+    <section class="section">
+      <div class="section__kicker">Audio Visualization</div>
+      <h2 class="section__title">Waveform & Gradient Patterns</h2>
+      <p class="section__description">
+        Audio waveform sections use subtle cyan gradients and wave patterns. Perfect for showcasing voice synthesis in action. Minimal opacity creates a light, premium feel.
+      </p>
+
+      <div class="waveform-demo">
+        <div class="waveform-demo__content">
+          <p class="waveform-demo__label">Voice synthesis in progress...</p>
+        </div>
+      </div>
+
+      <div class="feature-block">
+        <h3 class="feature-block__title">Premium Voice Rendering</h3>
+        <p class="feature-block__description">
+          Stream high-fidelity audio with sub-100ms latency. Our multi-layered architecture ensures warm, natural-sounding voices across all languages and use cases. From customer service to creative content, ElevenLabs delivers sonic excellence.
+        </p>
+        <button class="btn btn--primary">Start Creating Voices</button>
+      </div>
+    </section>
+
+    <!-- Pull Quote Section -->
+    <section class="section">
+      <div class="section__kicker">Philosophy</div>
+      <h2 class="section__title">Design Principles</h2>
+
+      <div class="pullquote">
+        <span class="pullquote__mark">"</span>
+        <blockquote class="pullquote__text">Light typography and minimal shadows create a voice-first interface. Where others add visual noise, we make room for the voice itself.</blockquote>
+        <p class="pullquote__attribution">ElevenLabs Design Manifesto</p>
+      </div>
+    </section>
+
+    <!-- Numbered List Section -->
+    <section class="section">
+      <div class="section__kicker">Features</div>
+      <h2 class="section__title">Core Capabilities</h2>
+      <p class="section__description">
+        Six essential voice AI features that power intelligent applications and creative content.
+      </p>
+
+      <div class="numbered-list">
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">1</span>
+          <h4 class="numbered-list__headline">Latency Optimized</h4>
+          <p class="numbered-list__body">Sub-100

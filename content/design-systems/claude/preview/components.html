@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Component Inventory — Claude</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Georgia', serif);
+      background: var(--paper, #f5f4ed);
+      color: var(--ink, #141413);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+    }
+    .header__title {
+      font-family: var(--font-display, 'Georgia', serif);
+      font-size: 52px;
+      font-weight: 500;
+      line-height: 1.20;
+      letter-spacing: 0;
+      color: var(--ink, #141413);
+      margin-bottom: 12px;
+    }
+    .header__subtitle {
+      font-size: 17px;
+      color: var(--slate, #5e5d59);
+      font-weight: 400;
+      line-height: 1.60;
+    }
+    .header__rule {
+      display: block;
+      width: 48px;
+      height: 2px;
+      background: var(--signal, #c96442);
+      border: none;
+      margin-top: 24px;
+      border-radius: 1px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 56px;
+    }
+    .section__label {
+      font-family: var(--font-display, 'Georgia', serif);
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--slate, #5e5d59);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-cream, #f0eee6);
+    }
+
+    .component-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+
+    .component-label {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--slate, #5e5d59);
+      margin-bottom: 8px;
+      letter-spacing: 0.12px;
+    }
+
+    /* ------- BUTTONS ------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 20px;
+      font-family: var(--font-body, 'Georgia', serif);
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.25;
+      border-radius: var(--button-radius, 5px);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      border: none;
+    }
+
+    .btn--primary {
+      background: var(--signal, #c96442);
+      color: var(--bone, #faf9f5);
+      box-shadow: 0px 0px 0px 0px var(--signal, #c96442), 0px 0px 0px 1px var(--signal, #c96442);
+    }
+    .btn--primary:hover {
+      filter: brightness(1.08);
+    }
+
+    .btn--secondary {
+      background: var(--color-warm-sand, #e8e6dc);
+      color: var(--charcoal-warm, #4d4c48);
+      box-shadow: 0px 0px 0px 0px var(--color-warm-sand, #e8e6dc), 0px 0px 0px 1px var(--color-ring-warm, #d1cfc5);
+    }
+    .btn--secondary:hover {
+      background: var(--color-ring-warm, #d1cfc5);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--ink, #141413);
+      padding: 10px 8px;
+      text-decoration: underline;
+      text-decoration-color: var(--slate, #5e5d59);
+      text-underline-offset: 3px;
+      border-radius: 0;
+    }
+    .btn--ghost:hover {
+      color: var(--signal, #c96442);
+      text-decoration-color: var(--signal, #c96442);
+    }
+
+    .btn--sm {
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+    .btn--lg {
+      padding: 14px 28px;
+      font-size: 17px;
+    }
+
+    .btn--white {
+      background: var(--color-pure-white, #ffffff);
+      color: var(--ink, #141413);
+      box-shadow: 0px 0px 0px 0px var(--color-pure-white, #ffffff), 0px 0px 0px 1px var(--border, #30302e);
+    }
+    .btn--white:hover {
+      background: var(--color-warm-sand, #e8e6dc);
+    }
+
+    .btn--dark {
+      background: var(--border, #30302e);
+      color: var(--bone, #faf9f5);
+      box-shadow: 0px 0px 0px 0px var(--border, #30302e), 0px 0px 0px 1px var(--color-ring-warm, #d1cfc5);
+    }
+    .btn--dark:hover {
+      filter: brightness(1.1);
+    }
+
+    /* ------- CARDS ------- */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--surface, #faf9f5);
+      border-radius: var(--card-radius, 16px);
+      padding: 28px 24px;
+      transition: box-shadow 0.2s ease;
+      border: var(--card-border, 1px solid var(--border, #30302e));
+    }
+
+    .card--bordered {
+      border: 1px solid var(--color-border-cream, #f0eee6);
+    }
+    .card--bordered:hover {
+      border-color: var(--slate, #5e5d59);
+    }
+
+    .card--elevated {
+      border: 1px solid var(--color-border-cream, #f0eee6);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.06);
+    }
+    .card--elevated:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 12px 32px rgba(0,0,0,0.12);
+    }
+
+    .card__eyebrow {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--signal, #c96442);
+      margin-bottom: 8px;
+    }
+    .card__title {
+      font-family: var(--font-display, 'Georgia', serif);
+      font-size: 20.8px;
+      font-weight: 500;
+      line-height: 1.20;
+      color: var(--ink, #141413);
+      margin-bottom: 8px;
+    }
+    .card__body {
+      font-size: 15px;
+      line-height: 1.60;
+      color: var(--slate, #5e5d59);
+      margin-bottom: 16px;
+    }
+    .card__footer {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* ------- INPUTS ------- */
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      align-items: flex-start;
+    }
+    .input-wrap {
+      flex: 1;
+      min-width: 260px;
+    }
+    .input-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--ink, #141413);
+      margin-bottom: 6px;
+      letter-spacing: 0.12px;
+    }
+    .input {
+      display: block;
+      width: 100%;
+      padding: 1.6px 12px;
+      font-family: var(--font-body, 'Georgia', serif);
+      font-size: 15px;
+      line-height: 1.60;
+      color: var(--ink, #141413);
+      background: var(--color-pure-white, #ffffff);
+      border: 1px solid var(--border, #30302e);
+      border-radius: var(--radius-lg, 120px);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .input::placeholder {
+      color: var(--color-stone-gray, #87867f);
+    }
+    .input:focus {
+      border-color: var(--color-focus-blue, #3898ec);
+      box-shadow: 0 0 0 3px rgba(56, 152, 236, 0.10);
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      background: var(--color-pure-white, #ffffff);
+      border: 1px solid var(--border, #30302e);
+      border-radius: var(--radius-lg, 120px);
+      max-width: 480px;
+    }
+    .search-bar__icon {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      color: var(--color-stone-gray, #87867f);
+    }
+    .search-bar__input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-body, 'Georgia', serif);
+      font-size: 15px;
+      color: var(--ink, #141413);
+    }
+    .search-bar__input::placeholder {
+      color: var(--color-stone-gray, #87867f);
+    }
+
+    /* ------- BADGES & TAGS ------- */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 400;
+      border-radius: 999px;
+      line-height: 1.25;
+    }
+
+    .badge--signal {
+      background: rgba(201, 100, 66, 0.12);
+      color: var(--signal, #c96442);
+    }
+    .badge--success {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .badge--warning {
+      background: #fef9c3;
+      color: #854d0e;
+    }
+    .badge--danger {
+      background: #fee2e2;
+      color: var(--color-error-crimson, #b53333);
+    }
+    .badge--neutral {
+      background: var(--color-warm-sand, #e8e6dc);
+      color: var(--ink, #141413);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 14px;
+      font-size: 13px;
+      font-weight: 400;
+      border-radius: var(--button-radius, 5px);
+      background: var(--color-warm-sand, #e8e6dc);
+      color: var(--ink, #141413);
+      border: 1px solid var(--color-border-cream, #f0eee6);
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .tag:hover {
+      background: var(--color-ring-warm, #d1cfc5);
+    }
+    .tag--active {
+      background: var(--signal, #c96442);
+      color: var(--bone, #faf9f5);
+      border-color: var(--signal, #c96442);
+    }
+
+    /* Subsection heading */
+    .sub-heading {
+      font-family: var(--font-display, 'Georgia', serif);
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--ink, #141413);
+      margin-bottom: 12px;
+      margin-top: 4px;
+    }
+
+    /* Divider */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--color-border-cream, #f0eee6);
+      margin: 24px 0;
+    }
+
+    /* Model comparison grid */
+    .model-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 16px;
+    }
+
+    .model-card {
+      background: var(--color-pure-white, #ffffff);
+      border: 1px solid var(--color-border-cream, #f0eee6);
+      border-radius: var(--card-radius, 16px);
+      padding: 24px;
+      transition: border-color 0.2s ease;
+    }
+    .model-card:hover {
+      border-color: var(--slate, #5e5d59);
+    }
+
+    .model-card__name {
+      font-family: var(--font-display, 'Georgia', serif);
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--ink, #141413);
+      margin-bottom: 8px;
+    }
+    .model-card__desc {
+      font-size: 13px;
+      line-height: 1.60;
+      color: var(--slate, #5e5d59);
+      margin-bottom: 16px;
+    }
+    .model-card__capabilities {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    /* Capability badge */
+    .capability {
+      font-size: 11px;
+      padding: 3px 8px;
+      background: rgba(201, 100, 66, 0.08);
+      color: var(--signal, #c96442);
+      border-radius: 4px;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Header -->
+    <header class="header" id="header">
+      <h1 class="header__title">Component Vocabulary</h1>
+      <p class="header__subtitle">Interactive patterns built on warm, editorial principles.</p>
+      <hr class="header__rule">
+    </header>
+
+    <!-- Buttons -->
+    <div class="section">
+      <div class="section__label">Buttons</div>
+
+      <div class="sub-heading">Primary (Terracotta Brand)</div>
+      <div class="component-row">
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary">Default Primary</button>
+        <button class="btn btn--primary btn--lg">Large CTA</button>
+      </div>
+
+      <div class="sub-heading">Secondary (Warm Sand)</div>
+      <div class="component-row">
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary">Default Secondary</button>
+        <button class="btn btn--secondary btn--lg">Large Secondary</button>
+      </div>
+
+      <div class="sub-heading">Ghost (Text + Underline)</div>
+      <div class="component-row">
+        <a href="#" class="btn btn--ghost">Learn more</a>
+        <a href="#" class="btn btn--ghost">View documentation</a>
+        <a href="#" class="btn btn--ghost">See all features</a>
+      </div>
+
+      <div class="sub-heading">White Surface</div>
+      <div class="component-row">
+        <button class="btn btn--white btn--sm">Small</button>
+        <button class="btn btn--white">Default White</button>
+      </div>
+
+      <div class="sub-heading">Dark Charcoal</div>
+      <div class="component-row">
+        <button class="btn btn--dark btn--sm">Small</button>
+        <button class="btn btn--dark">Default Dark</button>
+        <button class="btn btn--dark btn--lg">Large Dark</button>
+      </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="section">
+      <div class="section__label">Cards &amp; Containers</div>
+
+      <div class="cards-grid">
+        <div class="card card--bordered">
+          <div class="card__eyebrow">Standard Card</div>
+          <div class="card__title">Clean Border</div>
+          <div class="card__body">
+            A standard card with warm border treatment. Useful for content grouping
+            where the visual hierarchy is subtle and editorial.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Action</button>
+            <button class="btn btn--secondary btn--sm">Cancel</button>
+          </div>
+        </div>
+
+        <div class="card card--elevated">
+          <div class="card__eyebrow">Elevated Card</div>
+          <div class="card__title">Soft Shadow Depth</div>
+          <div class="card__body">
+            An elevated card with warm, whisper-soft shadows. The layered treatment
+            creates visual hierarchy without harshness.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Action</button>
+            <a href="#" class="btn btn--ghost btn--sm">Learn more</a>
+          </div>
+        </div>
+
+        <div class="card card--bordered" style="background: var(--color-pure-white, #ffffff);">
+          <div class="card__eyebrow">White Surface</div>
+          <div class="card__title">Light Canvas</div>
+          <div class="card__body">
+            A white card for high contrast content. Still maintains the warm border
+            and editorial proportions of the system.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--white btn--sm">Light</button>
+            <button class="btn btn--dark btn--sm">Dark</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inputs -->
+    <div class="section">
+      <div class="section__label">Inputs &amp; Forms</div>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Full Name</label>
+          <input class="input" type="text" placeholder="Enter your name">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input class="input" type="email" placeholder="you@anthropic.com">
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="sub-heading">Search Bar</div>
+      <div class="search-bar">
+        <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input class="search-bar__input" type="text" placeholder="Search documentation, models, capabilities...">
+      </div>
+    </div>
+
+    <!-- Badges & Tags -->
+    <div class="section">
+      <div class="section__label">Badges &amp; Tags</div>
+
+      <div class="sub-heading">Status Pills</div>
+      <div class="badge-row" style="margin-bottom:20px">
+        <span class="badge badge--signal">Ready</span>
+        <span class="badge badge--success">Available</span>
+        <span class="badge badge--warning">In Development</span>
+        <span class="badge badge--danger">Experimental</span>
+        <span class="badge badge--neutral">Retired</span>
+      </div>
+
+      <div class="sub-heading">Category Tags</div>
+      <div class="badge-row">
+        <span class="tag tag--active">All Models</span>
+        <span class="tag">Opus</span>
+        <span class="tag">Sonnet</span>
+        <span class="tag">Haiku</span>
+        <span class="tag">Advanced Reasoning</span>
+        <span class="tag">Vision</span>
+      </div>
+    </div>
+
+    <!-- Model Comparison -->
+    <div class="section">
+      <div class="section__label">Model Comparison Cards</div>
+      <p class="sub-heading">Claude models in a comparable grid</p>
+
+      <div class="model-grid">
+        <div class="model-card">
+          <div class="model-card__name">Claude 3.7 Opus</div>
+          <div class="model-card__desc">
+            Our most capable model. Best for complex analysis and nuanced reasoning.
+          </div>
+          <div class="model-card__capabilities">
+            <span class="capability">Long context</span>
+            <span class="capability">Vision</span>
+            <span class="capability">Complex tasks</span>
+          </div>
+        </div>
+
+        <div class="model-card">
+          <div class="model-card__name">Claude 3.5 Sonnet</div>
+          <div class="model-card__desc">
+            Balanced intelligence and speed. Ideal for most applications and workflows.
+          </div>
+          <div class="model-card__capabilities">
+            <span class="capability">Fast</span>
+            <span class="capability">Vision</span>
+            <span class="capability">Versatile</span>
+          </div>
+        </div>
+
+        <div class="model-card">
+          <div class="model-card__name">Claude 3 Haiku</div>
+          <div class="model-card__desc">
+            Compact and efficient. Perfect for quick responses and lightweight tasks.
+          </div>
+          <div class="model-card__capabilities">
+            <span class="capability">Quick</span>
+            <span class="capability">Low cost</span>
+            <span class="capability">Reliable</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* Load tokens for header */
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => r.ok ? r.json() : null)
+      .then(tokens => {
+        if (!tokens) return;
+        const name = tokens.meta?.title || tokens.meta?.id || '';
+        if (name) {
+          document.getElementById('header').querySelector('.header__title').textContent = name + ' Components';
+        }
+        const gfUrl = tokens.googleFontsUrl || (tokens.fonts && tokens.fonts.googleUrl);
+        if (gfUrl) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = gfUrl;
+          document.head.appendChild(link);
+        }
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>

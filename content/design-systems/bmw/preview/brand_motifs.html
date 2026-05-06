@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — BMW</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #262626);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    /* ──── Hero Section ──── */
+    .hero {
+      background: var(--ink, #262626);
+      color: var(--paper, #ffffff);
+      padding: 120px 32px;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 600px;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(28, 105, 212, 0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero__content {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+    }
+
+    .hero__kicker {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal, #1c69d4);
+      margin-bottom: 16px;
+      opacity: 0.95;
+    }
+
+    .hero__title {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 60px;
+      font-weight: 300;
+      line-height: 1.30;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: var(--paper, #ffffff);
+      margin-bottom: 20px;
+    }
+
+    .hero__title--accent {
+      color: var(--signal, #1c69d4);
+    }
+
+    .hero__subtitle {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.30;
+      color: rgba(255, 255, 255, 0.85);
+      max-width: 700px;
+      margin-bottom: 0;
+    }
+
+    /* ──── Main Content ──── */
+    .section {
+      padding: 80px 32px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+
+    .section__label {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal, #1c69d4);
+      margin-bottom: 32px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .section__title {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 32px;
+      font-weight: 400;
+      line-height: 1.30;
+      color: var(--ink, #262626);
+      margin-bottom: 32px;
+      max-width: 900px;
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+      max-width: 900px;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 20px 0 20px 32px;
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.30;
+      color: var(--ink, #262626);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 28px;
+      width: 4px;
+      height: 4px;
+      background: var(--signal, #1c69d4);
+      border-radius: 0;
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      max-width: 1100px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 0;
+      padding: 40px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--signal, #1c69d4);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--ink, #262626);
+    }
+
+    .dd-card__icon {
+      width: 24px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .dd-card__icon--do {
+      color: var(--signal, #1c69d4);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--ink, #262626);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.30;
+      color: var(--ink, #262626);
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: 0;
+      overflow: hidden;
+      height: 140px;
+      border: 1px solid var(--border, #e5e5e5);
+      max-width: 1100px;
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 16px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.5;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      white-space: nowrap;
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+      border-radius: 0;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--bone, #f5f5f5);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 0;
+      padding: 60px 48px;
+      max-width: 1100px;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal, #1c69d4);
+      margin-bottom: 16px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 60px;
+      font-weight: 300;
+      line-height: 1.30;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: var(--ink, #262626);
+      margin-bottom: 32px;
+      max-width: 800px;
+    }
+
+    .type-pairing__display--accent {
+      color: var(--signal, #1c69d4);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.30;
+      color: var(--ink, #262626);
+      max-width: 800px;
+      margin-bottom: 40px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: var(--slate, #757575);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 900;
+      color: var(--ink, #262626);
+      display: block;
+      margin-bottom: 6px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ──── Design Principles Card ──── */
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      max-width: 1100px;
+    }
+
+    @media (max-width: 768px) {
+      .principles-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .principle-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 0;
+      padding: 32px;
+    }
+
+    .principle-card__headline {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 20px;
+      font-weight: 900;
+      line-height: 1.30;
+      text-transform: uppercase;
+      color: var(--signal, #1c69d4);
+      margin-bottom: 16px;
+    }
+
+    .principle-card__text {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.30;
+      color: var(--ink, #262626);
+    }
+
+    /* ──── Type Ramp ──── */
+    .type-ramp-item {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 32px;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+      align-items: flex-start;
+    }
+
+    .type-ramp-item:last-child {
+      border-bottom: none;
+    }
+
+    .type-ramp-item__specs {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.50;
+      color: var(--slate, #757575);
+    }
+
+    .type-ramp-item__spec-label {
+      font-weight: 700;
+      color: var(--ink, #262626);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .type-ramp-item__example {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      text-transform: uppercase;
+      color: var(--ink, #262626);
+    }
+
+    /* ──── Weight Spectrum ──── */
+    .weight-spectrum {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      max-width: 900px;
+      margin-top: 32px;
+    }
+
+    @media (max-width: 640px) {
+      .weight-spectrum {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .weight-sample {
+      background: var(--bone, #f5f5f5);
+      border: 1px solid var(--border, #e5e5e5);
+      padding: 24px;
+      border-radius: 0;
+    }
+
+    .weight-sample__label {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #757575);
+      margin-bottom: 12px;
+    }
+
+    .weight-sample__text {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 32px;
+      line-height: 1.30;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: var(--ink, #262626);
+    }
+
+    .weight-300 { font-weight: 300; }
+    .weight-400 { font-weight: 400; }
+    .weight-700 { font-weight: 700; }
+    .weight-900 { font-weight: 900; }
+
+    /* ──── Corner Treatment ──── */
+    .corner-demo {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      max-width: 900px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .corner-demo {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .corner-box {
+      border: 1px solid var(--border, #e5e5e5);
+      padding: 32px;
+      text-align: center;
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .corner-box--correct {
+      border-radius: 0;
+      background: var(--paper, #ffffff);
+    }
+
+    .corner-box--incorrect {
+      border-radius: 10px;
+      background: var(--bone, #f5f5f5);
+    }
+
+    .corner-box__label {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #757575);
+      margin-bottom: 12px;
+    }
+
+    .corner-box__value {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--ink, #262626);
+    }
+
+    .corner-box__status {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+
+    .corner-box--correct .corner-box__status {
+      color: var(--signal, #1c69d4);
+    }
+
+    .corner-box--incorrect .corner-box__status {
+      color: var(--ink, #262626);
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #757575);
+      font-size: 18px;
+      font-family: var(--font-body, 'system-ui', sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #1c69d4);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#262626">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+
+      let html = '';
+
+      /* ──── Hero Section ──── */
+      html += '<div class="hero">';
+      html += '  <div class="hero__content">';
+      html += '    <div class="hero__kicker">Engineering Precision</div>';
+      html += '    <h1 class="hero__title">German <span class="hero__title--accent">Precision</span> in Every Pixel</h1>';
+      html += '    <p class="hero__subtitle">Angular geometry, light typography, BMW Blue accents. A design system built for luxury automotive and global brand deployment.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <h2 class="section__title">The BMW Design DNA</h2>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>BMWTypeNextLatin Light (300) uppercase for display — whispered authority, not shouted</li>';
+      html += '    <li>Angular geometry everywhere — zero border-radius is non-negotiable</li>';
+      html += '    <li>BMW Blue (#1c69d4) as singular accent for interactive elements only</li>';
+      html += '    <li>Dark hero photography + white content — showroom lighting rhythm</li>';
+      html += '    <li>Extreme weight contrast: 300 display, 400 body, 700 bold, 900 navigation</li>';
+      html += '    <li>Tight line-heights throughout (1.15–1.30) — compressed, efficient engineering</li>';
+      html += '    <li>CSS variable-driven theming with --site-context-* tokens for global deployment</li>';
+      html += '    <li>Full-bleed automotive imagery as primary visual language</li>';
+      html += '    <li>Hairline rules (1px) for separation — never shadows or depth effects</li>';
+      html += '    <li>System-ui sans-serif with global fallbacks (Helvetica, Hiragino, Meiryo)</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Design Principles ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Core Principles</div>';
+      html += '  <div class="principles-grid">';
+
+      html += '  <div class="principle-card">';
+      html += '    <h3 class="principle-card__headline">Precision Over Ornament</h3>';
+      html += '    <p class="principle-card__text">Every design decision serves function. No decorative elements, no rounded corners, no gradients. The typography and photography carry everything.</p>';
+      html += '  </div>';
+
+      html += '  <div class="principle-card">';
+      html += '    <h3 class="principle-card__headline">Weight as Hierarchy</h3>';
+      html += '    <p class="principle-card__text">The system uses only five weights: 300 (display), 400 (body), 700 (bold), 900 (navigation). No medium weights. The extreme contrast defines the hierarchy.</p>';
+      html += '  </div>';
+
+      html += '  <div class="principle-card">';
+      html += '    <h3 class="principle-card__headline">Angular Geometry</h3>';
+      html += '    <p class="principle-card__text">Zero border-radius everywhere. Sharp corners, clean edges, industrial precision. This is not Apple. This is German engineering.</p>';
+      html += '  </div>';
+
+      html += '  <div class="principle-card">';
+      html += '    <h3 class="principle-card__headline">Global Theming</h3>';
+      html += '    <p class="principle-card__text">Built on CSS custom properties for multi-brand, multi-context deployment. Colors, typography, spacing — all swappable via theme variables.</p>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use weight 300 for all display headlines in uppercase</li>';
+      html += '      <li>Keep ALL corners sharp — border-radius: 0 everywhere</li>';
+      html += '      <li>Use BMW Blue (#1c69d4) only for interactive elements and focus states</li>';
+      html += '      <li>Apply weight 900 for navigation emphasis — extreme contrast is intentional</li>';
+      html += '      <li>Use full-bleed automotive photography for hero sections</li>';
+      html += '      <li>Keep line-heights tight (1.15–1.30) throughout</li>';
+      html += '      <li>Use --site-context-* CSS variables for theming</li>';
+      html += '      <li>Set display text to uppercase — it\'s part of the language</li>';
+      html += '      <li>Use hairline rules (1px borders) for separation</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Round corners — zero radius is the BMW identity</li>';
+      html += '      <li>Use BMW Blue for backgrounds or large surfaces</li>';
+      html += '      <li>Use medium font weights (500–600) — use 300, 400, 700, 900 only</li>';
+      html += '      <li>Add decorative elements — photography and type carry everything</li>';
+      html += '      <li>Use relaxed line-heights — BMW text is always compressed</li>';
+      html += '      <li>Lighten the dark hero sections — contrast IS the design</li>';
+      html += '      <li>Use gradients, blurs, or drop shadows</li>';
+      html += '      <li>Mix typefaces outside the system (Helvetica, Hiragino, Meiryo)</li>';
+      html += '      <li>Center-align body text — left-align creates engineering precision</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Corner Treatment Demo ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Geometry: The Zero-Radius Rule</div>';
+      html += '  <h2 class="section__title">Angular Design is Non-Negotiable</h2>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.30; color: var(--slate); max-width: 900px; margin-bottom: 32px;">Border-radius must be zero everywhere. Buttons, cards, inputs, containers — all sharp corners. This is what separates BMW from every other design system. Precision, not softness.</p>';
+      html += '  <div class="corner-demo">';
+
+      html += '    <div class="corner-box corner-box--correct">';
+      html += '      <div class="corner-box__label">Correct</div>';
+      html += '      <div class="corner-box__value">border-radius: 0</div>';
+      html += '      <div class="corner-box__status">✓ Angular precision</div>';
+      html += '    </div>';
+
+      html += '    <div class="corner-box corner-box--incorrect">';
+      html += '      <div class="corner-box__label">Incorrect</div>';
+      html += '      <div class="corner-box__value">border-radius: 10px</div>';
+      html += '      <div class="corner-box__status">✕ Softness breaks the system</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Weight Spectrum ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography: Weight Spectrum</div>';
+      html += '  <h2 class="section__title">Five Extreme Weights Define Hierarchy</h2>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.30; color: var(--slate); max-width: 900px; margin-bottom: 32px;">No medium weights. The system uses only 300, 400, 700, and 900. This extreme contrast is what makes hierarchy unmistakable. 300-weight display whispers authority. 900-weight navigation demands attention.</p>';
+      html += '  <div class="weight-spectrum">';
+
+      html += '    <div class="weight-sample">';
+      html += '      <div class="weight-sample__label">Weight 300</div>';
+      html += '      <div class="weight-sample__text weight-300">Display Light</div>';
+      html += '    </div>';
+
+      html += '    <div class="weight-sample">';
+      html += '      <div class="weight-sample__label">Weight 400</div>';
+      html += '      <div class="weight-sample__text weight-400">Body Regular</div>';
+      html += '    </div>';
+
+      html += '    <div class="weight-sample">';
+      html += '      <div class="weight-sample__label">Weight 700</div>';
+      html += '      <div class="weight-sample__text weight-700">Bold Emphasis</div>';
+      html += '    </div>';
+
+      html += '    <div class="weight-sample">';
+      html += '      <div class="weight-sample__label">Weight 900</div>';
+      html += '      <div class="weight-sample__text weight-900">Navigation</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <h2 class="section__title">Five Core Tokens, Infinite Applications</h2>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#262626' : '#ffffff';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div

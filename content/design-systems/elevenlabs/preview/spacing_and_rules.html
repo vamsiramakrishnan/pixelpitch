@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — ElevenLabs</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Waldenburg', sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #000000);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 64px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 96px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'Geist Mono', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--slate, #4e4e4e);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'Waldenburg', sans-serif);
+      font-size: 64px;
+      font-weight: 300;
+      line-height: 1.08;
+      letter-spacing: -0.96px;
+      color: var(--ink, #000000);
+      margin-bottom: 12px;
+      max-width: 90%;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'Waldenburg', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.44;
+      letter-spacing: 0.18px;
+      color: var(--slate, #4e4e4e);
+      max-width: 80%;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 120px;
+      height: 1px;
+      background: var(--slate, #4e4e4e);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 96px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, 'Geist Mono', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--slate, #4e4e4e);
+      margin-bottom: 48px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 100px;
+      gap: 32px;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, 'Geist Mono', monospace);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink, #000000);
+      letter-spacing: 0;
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body, 'Waldenburg', sans-serif);
+      font-size: 14px;
+      color: var(--slate, #4e4e4e);
+      margin-top: 4px;
+      font-weight: 400;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 2px;
+      background: linear-gradient(90deg, var(--slate, #4e4e4e) 0%, var(--color-warm-stone, #f5f2ef) 100%);
+      min-width: 2px;
+      transition: opacity 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.7;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, 'Geist Mono', monospace);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink, #000000);
+      text-align: right;
+    }
+
+    /* Rule weights & depths */
+    .rule-demo {
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 20px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-mono, 'Geist Mono', monospace);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink, #000000);
+    }
+
+    .rule-demo__label {
+      font-family: var(--font-body, 'Waldenburg', sans-serif);
+      font-size: 14px;
+      color: var(--slate, #4e4e4e);
+      font-weight: 400;
+      margin-bottom: 4px;
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, 'Geist Mono', monospace);
+      font-size: 12px;
+      color: var(--slate, #4e4e4e);
+      letter-spacing: 0;
+    }
+
+    .rule-demo__container {
+      width: 100%;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      padding: 0;
+      margin-bottom: 16px;
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    .rule-demo__code {
+      font-family: var(--font-mono, 'Geist Mono', monospace);
+      font-size: 12px;
+      color: var(--slate, #4e4e4e);
+      background: var(--bone, #f5f5f5);
+      padding: 8px 12px;
+      border-radius: 4px;
+      word-break: break-all;
+      line-height: 1.4;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 64px;
+      margin-bottom: 48px;
+    }
+
+    .radius-item {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 32px;
+      align-items: flex-start;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .radius-item__box {
+      width: 120px;
+      height: 120px;
+      background: var(--color-warm-stone, #f5f2ef);
+      border: 1px solid var(--border, #e5e5e5);
+      flex-shrink: 0;
+    }
+
+    .radius-item__info {
+      flex: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, 'Geist Mono', monospace);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink, #000000);
+      margin-bottom: 4px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, 'Geist Mono', monospace);
+      font-size: 12px;
+      color: var(--slate, #4e4e4e);
+      margin-bottom: 16px;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body, 'Waldenburg', sans-serif);
+      font-size: 14px;
+      line-height: 1.44;
+      letter-spacing: 0.18px;
+      color: var(--slate, #4e4e4e);
+      font-weight: 400;
+    }
+
+    /* Philosophy block */
+    .philosophy {
+      background: var(--bone, #f5f5f5);
+      padding: 48px;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 10px;
+      margin-bottom: 64px;
+    }
+
+    .philosophy__title {
+      font-family: var(--font-mono, 'Geist Mono', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--slate, #4e4e4e);
+      margin-bottom: 16px;
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body, 'Waldenburg', sans-serif);
+      font-size: 16px;
+      line-height: 1.50;
+      letter-spacing: 0.16px;
+      color: var(--ink, #000000);
+      font-weight: 400;
+    }
+
+    .philosophy__text strong {
+      font-weight: 500;
+    }
+
+    .philosophy__text em {
+      font-style: italic;
+    }
+
+    .philosophy__text code {
+      font-family: var(--font-mono, 'Geist Mono', monospace);
+      background: rgba(0,0,0,0.04);
+      padding: 2px 6px;
+      border-radius: 2px;
+      font-size: 14px;
+    }
+
+    /* Shadow visual demo */
+    .shadow-demo {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 40px;
+      margin-top: 24px;
+    }
+
+    .shadow-sample {
+      background: var(--paper, #ffffff);
+      padding: 24px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 160px;
+    }
+
+    .shadow-sample__label {
+      font-family: var(--font-mono, 'Geist Mono', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate, #4e4e4e);
+      margin-bottom: 12px;
+    }
+
+    .shadow-sample__box {
+      width: 80px;
+      height: 80px;
+      background: var(--color-warm-stone, #f5f2ef);
+      border-radius: 6px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #4e4e4e);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 2px solid rgba(0,0,0,0.15);
+      border-top-color: var(--slate, #4e4e4e);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Comparative visualization */
+    .comparative {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 40px;
+      margin-top: 24px;
+    }
+
+    .comparative-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .comparative-item__label {
+      font-family: var(--font-mono, 'Geist Mono', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate, #4e4e4e);
+      margin-bottom: 12px;
+    }
+
+    .comparative-item__visual {
+      background: var(--bone, #f5f5f5);
+      padding: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border, #e5e5e5);
+    }
+
+    .comparative-item__box {
+      width: 100%;
+      height: 80px;
+      background: var(--paper, #ffffff);
+      border-radius: 8px;
+    }
+
+    @media (max-width: 900px) {
+      .page {
+        padding: 64px 32px;
+      }
+
+      .header {
+        margin-bottom: 64px;
+      }
+
+      .header__title {
+        font-size: 48px;
+        max-width: 100%;
+      }
+
+      .header__subtitle {
+        max-width: 100%;
+      }
+
+      .section {
+        margin-bottom: 64px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 80px 1fr 80px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .radius-item {
+        grid-template-columns: 100px 1fr;
+      }
+
+      .shadow-demo,
+      .comparative {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '1px', label: 'hairline' },
+      's-2': { value: '3px', label: 'micro' },
+      's-3': { value: '4px', label: 'tiny' },
+      's-4': { value: '8px', label: 'xs' },
+      's-5': { value: '9px', label: 'xs+' },
+      's-6': { value: '10px', label: 'sm' },
+      's-7': { value: '11px', label: 'sm+' },
+      's-8': { value: '12px', label: 'md' },
+      's-9': { value: '16px', label: 'md+' },
+      's-10': { value: '18px', label: 'lg' },
+      's-11': { value: '20px', label: 'lg+' },
+      's-12': { value: '24px', label: 'xl' },
+      's-13': { value: '28px', label: 'xl+' },
+      's-14': { value: '32px', label: '2xl' },
+      's-15': { value: '40px', label: '3xl' }
+    };
+
+    const DEFAULT_RULES = {
+      'flat': { 
+        name: 'Flat', 
+        treatment: 'No shadow', 
+        use: 'Page background, text blocks',
+        css: 'none'
+      },
+      'inset-edge': { 
+        name: 'Inset Edge', 
+        treatment: 'rgba(0,0,0,0.075) 0px 0px 0px 0.5px inset',
+        use: 'Internal border definition, subtle containment',
+        css: 'rgba(0,0,0,0.075) 0px 0px 0px 0.5px inset'
+      },
+      'outline': { 
+        name: 'Outline Ring', 
+        treatment: 'rgba(0,0,0,0.06) 0px 0px 0px 1px + soft drop',
+        use: 'Shadow-as-border for cards, neutral elevation',
+        css: 'rgba(0,0,0,0.06) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 1px 2px'
+      },
+      'card': { 
+        name: 'Card', 
+        treatment: 'rgba(0,0,0,0.4) 0px 0px 1px + drop shadow',
+        use: 'Button elevation, prominent cards',
+        css: 'rgba(0,0,0,0.4) 0px 0px 1px, rgba(0,0,0,0.04) 0px 4px 4px'
+      },
+      'warm-lift': { 
+        name: 'Warm Lift', 
+        treatment: 'rgba(78,50,23,0.04) 0px 6px 16px',
+        use: 'Featured CTAs—warm-tinted shadow for emphasis',
+        css: 'rgba(78,50,23,0.04) 0px 6px 16px'
+      }
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'Flat edges—the system default' },
+      'sm': { value: '4px', use: 'Small links, inline elements, nav items' },
+      'md': { value: '10px', use: 'Medium cards, dropdowns, buttons (standard)' },
+      'lg': { value: '18px', use: 'Featured cards, code panels, large containers' },
+      'full': { value: '9999px', use: 'Pill buttons, navigation pills, full-circle badges' }
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#d94f1b">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      
+      /* Load Google Fonts */
+      const gfUrl = tokens.typography?.googleFontsUrl || tokens.googleFontsUrl;
+      if (gfUrl) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = gfUrl;
+        document.head.appendChild(link);
+      }
+
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const rules = DEFAULT_RULES;
+      const radius = DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Spacing &amp; Depth Rules</div>';
+      html += '  <h1 class="header__title">Whisper-thin surfaces.</h1>';
+      html += '  <p class="header__subtitle">ElevenLabs uses refined, sub-opacity shadows and a carefully calibrated spacing scale to create surfaces that barely exist—floating just above the page with the lightest possible touch.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Philosophy block */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Shadow Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Every shadow in ElevenLabs is <strong>sub-opacity</strong>—the darkest reach only rgba(0,0,0,0.4), and most hover below 0.08. Surfaces are often layered with <strong>both inset and outward components</strong>, creating definitions that are felt rather than seen. The half-pixel inset border (<code>0.5px inset</code>) is particularly refined—sharp enough to define an edge without making it visible. Featured CTAs use <strong>warm-tinted shadows</strong> (<code>rgba(78,50,23,...)</code>) instead of neutral black, giving them a tactile, physical quality that matches the brand\'s warm stone aesthetic. This is the most refined shadow system in modern design: not no shadows, but near-invisible ones.';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 3);
+        const label = obj.label || key;
+        
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Rule weights / Depth levels */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Elevation Levels</div>';
+
+      Object.entries(rules).forEach(([key, rule]) => {
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <div>';
+        html += '      <div class="rule-demo__name">' + esc(rule.name) + '</div>';
+        html += '      <div class="rule-demo__label">' + esc(rule.use) + '</div>';
+        html += '    </div>';
+        html += '  </div>';
+        
+        if (rule.name === 'Flat') {
+          html += '  <div class="rule-demo__container" style="background: var(--bone); border: 1px dashed var(--border);">';
+          html += '    <div style="font-family: var(--font-mono); font-size: 13px; color: var(--slate);">No shadow</div>';
+          html += '  </div>';
+        } else {
+          html += '  <div class="rule-demo__container">';
+          html += '    <div class="rule-demo__line" style="height:1px; background:var(--bone); box-shadow:' + rule.css + '"></div>';
+          html += '  </div>';
+        }
+        
+        html += '  <div class="rule-demo__code">' + esc(rule.css === 'none' ? 'box-shadow: none' : 'box-shadow: ' + rule.css) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+
+      Object.entries(radius).forEach(([key, obj]) => {
+        const radiusValue = obj.value;
+
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__demo">';
+        html += '    <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '  </div>';
+        html += '  <div class="radius-item__info">';
+        html += '    <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '    <div class="radius-item__value">' + esc(radiusValue) + '</div>';
+        html += '    <div class="radius-item__description">' + esc(obj.use) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Whitespace philosophy */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Spacing Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    <strong>Apple-like generosity</strong>: Massive vertical spacing between sections (48–96px) creates a premium, unhurried pace. Each section is an exhibit, not a scroll. <strong>Warm emptiness</strong>: The whitespace isn\'t cold. The warm stone undertones (#f5f2ef) and warm-tinted shadows (rgba(78,50,23,...)) give empty space a tactile, physical quality—like premium paper stock or a high-end audio listening room. <strong>Typography-led rhythm</strong>: Light-weight Waldenburg headings (weight 300) create visual "whispers" that draw the eye through vast white space. The spacing scale itself is deliberately imperfect—1px, 3px, 4px, 8px, 9px, 10px, 11px, 12px—honoring the machine while remaining unmeasured enough to feel human.';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Shadow comparative */
+      html += '<div class="section" style="margin-bottom: 96px;">';
+      html += '  <div class="section__label">Shadow Depth Comparison</div>';
+      html += '  <div class="philosophy" style="margin: 0; padding: 0; border: none; background: transparent;">';
+      html += '    <div class="shadow-demo">';
+
+      Object.entries(rules).forEach(([key, rule]) => {
+        if (rule.name === 'Flat') return;
+        
+        html += '    <div class="shadow-sample" style="box-shadow: ' + rule.css + '; border: 1px solid var(--border);">';
+        html += '      <div class="shadow-sample__label">' + esc(rule.name) + '</div>';
+        html += '      <div class="shadow-sample__box"></div>';
+        html += '    </div>';
+      });
+
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Component radius callout */
+      html += '<div class="philosophy" style="margin-bottom: 0;">';
+      html += '  <div class="philosophy__title">Component Specifications</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    <strong>Standard button radius:</strong> 10px (--radius-md). <strong>Button padding:</strong> 10px block / 20px inline. <strong>Card radius:</strong> 10px. <strong>Card shadow:</strong> 0 2px 8px rgba(0,0,0,0.08)—the refined outline level. Most interactive elements use the inset-edge or outline ring depths for clarity without heaviness. Pill buttons (9999px) reserve their large radius for navigation and primary CTAs only.';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

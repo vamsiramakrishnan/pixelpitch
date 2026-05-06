@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BMW — Component Vocabulary</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    .page {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* ──── HERO SECTION ──── */
+    .hero {
+      background: var(--ink);
+      color: var(--paper);
+      padding: var(--s-15) var(--s-8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+      z-index: 0;
+    }
+
+    .hero__content {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+    }
+
+    .hero__kicker {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-5);
+      opacity: 0.8;
+    }
+
+    .hero__title {
+      font-family: var(--font-body);
+      font-size: 60px;
+      font-weight: 300;
+      letter-spacing: 0;
+      line-height: 1.30;
+      color: var(--paper);
+      text-transform: uppercase;
+      margin-bottom: var(--s-8);
+    }
+
+    .hero__subtitle {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--bone);
+      max-width: 680px;
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--s-8) var(--s-8);
+      background: var(--paper);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-body);
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: 0;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── CONTENT WRAPPER ──── */
+    .content {
+      padding: var(--s-12) var(--s-8);
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-14);
+      padding-bottom: var(--s-10);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-4);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-body);
+      font-size: 48px;
+      font-weight: 300;
+      letter-spacing: 0;
+      line-height: 1.30;
+      color: var(--ink);
+      text-transform: uppercase;
+      margin-bottom: var(--s-6);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate);
+      max-width: 720px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-14);
+      padding-bottom: var(--s-10);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-4);
+    }
+
+    .section__title {
+      font-family: var(--font-body);
+      font-size: 32px;
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: 1.30;
+      color: var(--ink);
+      margin-bottom: var(--s-8);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-6);
+      align-items: center;
+      margin-bottom: var(--s-8);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-6);
+      align-items: center;
+      margin-bottom: var(--s-8);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--slate);
+      min-width: 140px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1.20;
+      border: 1px solid var(--ink);
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      gap: var(--s-3);
+    }
+
+    .btn:hover {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .btn:focus {
+      outline: 2px solid var(--signal);
+      outline-offset: 2px;
+    }
+
+    .btn--primary {
+      background: var(--signal);
+      color: var(--paper);
+      border-color: var(--signal);
+    }
+
+    .btn--primary:hover {
+      background: var(--color-bmw-focus-blue);
+      border-color: var(--color-bmw-focus-blue);
+    }
+
+    .btn--secondary {
+      background: var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--ink);
+    }
+
+    .btn--secondary:hover {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .btn--ghost {
+      border: none;
+      background: transparent;
+      color: var(--signal);
+      padding: 0;
+      text-decoration: underline;
+      text-decoration-color: var(--signal);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
+      font-weight: 400;
+    }
+
+    .btn--ghost:hover {
+      color: var(--color-bmw-focus-blue);
+      text-decoration-color: var(--color-bmw-focus-blue);
+    }
+
+    .btn--sm {
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+
+    .btn--lg {
+      padding: 14px 28px;
+      font-size: 18px;
+    }
+
+    /* ──── DARK BUTTON VARIANTS ──── */
+    .btn--dark {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--paper);
+    }
+
+    .btn--dark:hover {
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    .btn--dark-secondary {
+      background: transparent;
+      color: var(--paper);
+      border: 1px solid var(--paper);
+    }
+
+    .btn--dark-secondary:hover {
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    /* ──── CARDS ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-8);
+      margin-bottom: var(--s-8);
+    }
+
+    .card {
+      background: var(--paper);
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      padding: var(--s-8);
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--signal);
+      box-shadow: 0 4px 12px rgba(28, 105, 212, 0.08);
+    }
+
+    .card--dark {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    .card--dark:hover {
+      border-color: var(--signal);
+      box-shadow: 0 4px 12px rgba(28, 105, 212, 0.12);
+    }
+
+    .card__kicker {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+    }
+
+    .card--dark .card__kicker {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .card__title {
+      font-family: var(--font-body);
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: 1.30;
+      color: var(--ink);
+      margin-bottom: var(--s-4);
+    }
+
+    .card--dark .card__title {
+      color: var(--paper);
+    }
+
+    .card__body {
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.50;
+      color: var(--slate);
+      margin-bottom: var(--s-6);
+    }
+
+    .card--dark .card__body {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .card__action {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--signal);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-2);
+      border-bottom: 1px solid var(--signal);
+      padding-bottom: 2px;
+      transition: all 0.2s ease;
+    }
+
+    .card__action:hover {
+      color: var(--color-bmw-focus-blue);
+      border-bottom-color: var(--color-bmw-focus-blue);
+    }
+
+    .card--dark .card__action {
+      color: var(--signal);
+      border-bottom-color: var(--signal);
+    }
+
+    /* ──── INPUT FIELDS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-8);
+      margin-bottom: var(--s-8);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-3);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .input {
+      padding: 12px 14px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: var(--button-radius);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: inset 0 0 0 1px var(--signal);
+    }
+
+    /* ──── BADGES ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-4);
+      margin-bottom: var(--s-8);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      line-height: 1.4;
+      border-radius: var(--radius-full);
+      background: var(--bone);
+      color: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    .badge--signal {
+      background: rgba(28, 105, 212, 0.1);
+      color: var(--signal);
+      border-color: var(--signal);
+    }
+
+    .badge--active {
+      background: var(--signal);
+      color: var(--paper);
+      border-color: var(--signal);
+    }
+
+    .badge--muted {
+      background: var(--bone);
+      color: var(--slate);
+      border-color: var(--border);
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    /* ──── TAGS ──── */
+    .tags-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      margin-bottom: var(--s-8);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--slate);
+      background: var(--bone);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tag:hover {
+      border-color: var(--signal);
+      color: var(--signal);
+    }
+
+    .tag--active {
+      background: var(--signal);
+      color: var(--paper);
+      border-color: var(--signal);
+    }
+
+    /* ──── PULL QUOTE ──── */
+    .pullquote {
+      border-top: 2px solid var(--ink);
+      border-bottom: 1px solid var(--border);
+      padding: var(--s-10) 0;
+      margin: var(--s-12) 0;
+      max-width: 800px;
+    }
+
+    .pullquote__text {
+      font-family: var(--font-body);
+      font-size: 32px;
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: 1.30;
+      color: var(--ink);
+      margin-bottom: var(--s-6);
+    }
+
+    .pullquote__attribution {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── DARK HERO SECTION ──── */
+    .feature-section {
+      background: var(--ink);
+      color: var(--paper);
+      padding: var(--s-12) var(--s-8);
+      margin: var(--s-12) calc(-1 * var(--s-8));
+      border-radius: 0;
+    }
+
+    .feature-section__title {
+      font-family: var(--font-body);
+      font-size: 40px;
+      font-weight: 300;
+      letter-spacing: 0;
+      line-height: 1.30;
+      text-transform: uppercase;
+      color: var(--paper);
+      margin-bottom: var(--s-6);
+    }
+
+    .feature-section__body {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.85);
+      max-width: 680px;
+    }
+
+    /* ──── NUMBERED LIST ──── */
+    .numbered-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--s-8);
+      margin-bottom: var(--s-8);
+    }
+
+    .numbered-list__item {
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .numbered-list__item:nth-child(odd):last-child {
+      grid-column: 1 / -1;
+      max-width: 50%;
+    }
+
+    .numbered-list__number {
+      font-family: var(--font-body);
+      font-size: 36px;
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: 1;
+      color: var(--ink);
+      display: block;
+      margin-bottom: var(--s-3);
+    }
+
+    .numbered-list__number--signal {
+      color: var(--signal);
+    }
+
+    .numbered-list__title {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: 1.30;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .numbered-list__body {
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.50;
+      color: var(--slate);
+    }
+
+    /* ──── TABLE ──── */
+    .component-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: var(--s-8);
+    }
+
+    .component-table__header {
+      background: var(--bone);
+      border-top: 1px solid var(--border);
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .component-table__header-cell {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-align: left;
+      padding: var(--s-5) var(--s-6);
+    }
+
+    .component-table__row {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .component-table__row:last-child {
+      border-bottom: none;
+    }
+
+    .component-table__cell {
+      padding: var(--s-5) var(--s-6);
+      text-align: left;
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.50;
+    }
+
+    .component-table__code {
+      font-family: var(--font-mono);
+      color: var(--slate);
+      background: var(--bone);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* ──── SUBSECTION LABEL ──── */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--slate);
+      margin-bottom: var(--s-4);
+      margin-top: var(--s-8);
+    }
+
+    /* ──── DIVIDER ──── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: var(--s-10) 0;
+    }
+
+    /* ──── FOOTER ──── */
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-6) var(--s-8);
+      margin-top: var(--s-12);
+      border-top: 1px solid var(--border);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--slate);
+      background: var(--bone);
+    }
+
+    .folio__chapter {
+      /* left */
+    }
+
+    .folio__page {
+      /* right */
+    }
+
+    /* ──── RESPONSIVE ──── */
+    @media (max-width: 768px) {
+      .page {
+        max-width: 100%;
+      }
+
+      .hero {
+        padding: var(--s-10) var(--s-6);
+      }
+
+      .content {
+        padding: var(--s-8) var(--s-6);
+      }
+
+      .hero__title {
+        font-size: 40px;
+      }
+
+      .stage-head__title {
+        font-size: 32px;
+      }
+
+      .section__title {
+        font-size: 24px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .numbered-list {
+        grid-template-columns: 1fr;
+      }
+
+      .numbered-list__item:nth-child(odd):last-child {
+        max-width: 100%;
+      }
+
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+
+      .pullquote__text {
+        font-size: 24px;
+      }
+
+      .feature-section {
+        margin: var(--s-8) calc(-1 * var(--s-6));
+        padding: var(--s-8) var(--s-6);
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+        gap: var(--s-4);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Masthead -->
+  <div class="masthead">
+    <div class="masthead__logo">BMW</div>
+    <div class="masthead__tagline">Design System</div>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <div class="hero__content">
+      <div class="hero__kicker">Components</div>
+      <h1 class="hero__title">Precision Engineering</h1>
+      <p class="hero__subtitle">
+        The BMW component vocabulary—built on German engineering principles of precision, clarity, and performance. Every element designed for luxury automotive digital experiences.
+      </p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Editorial Vocabulary</h1>
+      <p class="stage-head__subtitle">
+        A complete system for luxury automotive experiences. Sharp-cornered, premium styling with BMW's signature blue accent for interactive elements. Zero decoration—pure function and performance.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Buttons</div>
+      <h2 class="section__title">Button States</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary</span>
+        <button class="btn btn--primary">Learn More</button>
+        <button class="btn btn--primary btn--sm">Explore</button>
+        <button class="btn btn--primary btn--lg">Get Started</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Secondary</span>
+        <button class="btn btn--secondary">Configure</button>
+        <button class="btn btn--secondary btn--sm">Details</button>
+        <button class="btn btn--secondary btn--lg">View Catalog</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Ghost (Link)</span>
+        <a href="#" class="btn btn--ghost">Discover more</a>
+        <a href="#" class="btn btn--ghost">See specs</a>
+        <a href="#" class="btn btn--ghost">Read about BMW</a>
+      </div>
+
+      <h3 class="subsection-label">Dark Background Variants</h3>
+
+      <div class="feature-section" style="margin-bottom: var(--s-8);">
+        <div class="button-row" style="margin-bottom: 0;">
+          <span class="button-row__label" style="color: rgba(255, 255, 255, 0.7);">On Dark</span>
+          <button class="btn btn--dark">Explore Models</button>
+          <button class="btn btn--dark-secondary">Configure</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Cards</div>
+      <h2 class="section__title">Card Containers</h2>
+      <p style="font-size: 15px; line-height: 1.50; color: var(--slate); margin-bottom: var(--s-8);">Premium card styling with sharp corners and precise borders. Cards support hover states that accent with BMW blue.</p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__kicker">Engineering</div>
+          <h3 class="card__title">Performance</h3>
+          <p class="card__body">Engineered for precision. Every surface calculated for aerodynamic efficiency and luxury comfort.</p>
+          <a href="#" class="card__action">Explore Performance →</a>
+        </div>
+
+        <div class="card">
+          <div class="card__kicker">Technology</div>
+          <h3 class="card__title">Innovation</h3>
+          <p class="card__body">Advanced digital interfaces designed for intuitive control. Seamless integration with your driving experience.</p>
+          <a href="#" class="card__action">See Technology →</a>
+        </div>
+
+        <div class="card">
+          <div class="card__kicker">Sustainability</div>
+          <h3 class="card__title">Future Ready</h3>
+          <p class="card__body">Electric mobility that defines the future. Precise engineering for sustainable luxury driving.</p>
+          <a href="#" class="card__action">Learn About EV →</a>
+        </div>
+      </div>
+
+      <h3 class="subsection-label">Dark Card Variants</h3>
+
+      <div class="cards-grid">
+        <div class="card card--dark">
+          <div class="card__kicker">Design</div>
+          <h3 class="card__title">Luxury Crafted</h3>
+          <p class="card__body">Every detail reflects BMW's commitment to precision engineering and timeless design excellence.</p>
+          <a href="#" class="card__action">Explore Design →</a>
+        </div>
+
+        <div class="card card--dark">
+          <div class="card__kicker">Engineering</div>
+          <h3 class="card__title">Precision Built</h3>
+          <p class="card__body">German engineering excellence. Tested for performance, refined for luxury, engineered for precision.</p>
+          <a href="#" class="card__action">View Specs →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Input Fields Section -->
+    <section class="section">
+      <div class="section__kicker">Forms</div>
+      <h2 class="section__title">Input Fields</h2>
+      <p style="font-size: 15px; line-height: 1.50; color: var(--slate); margin-bottom: var(--s-8);">Clean, sharp-cornered input fields with focus states highlighted in BMW blue for accessibility and precision interaction.</p>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Model Selection</label>
+          <input type="text" class="input" placeholder="Search models..." value="">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Configuration</label>
+          <input type="text" class="input" placeholder="Select options..." value="">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input type="email" class="input" placeholder="your@email.com" value="">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Find a Dealer</label>
+          <input type="text" class="input" placeholder="Enter location..." value="">
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges & Tags Section -->
+    <section class="section">
+      <div class="section__kicker">Status Elements</div>
+      <h2 class="section__title">Badges &amp; Tags</h2>
+
+      <h3 class="subsection-label">Status Badges</h3>
+      <div class="badge

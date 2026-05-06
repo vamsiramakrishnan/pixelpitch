@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Palette — Cyberpunk</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'ui-monospace', monospace);
+      background: #050508;
+      color: #e0e0e8;
+      line-height: 1.6;
+      padding: 0;
+      background-image: 
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 2px, transparent 2px, transparent 4px),
+        linear-gradient(90deg, rgba(0,255,159,0.02) 0%, transparent 50%, rgba(255,0,255,0.02) 100%);
+    }
+
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 88px;
+      border-bottom: 1px solid rgba(0,255,159,0.25);
+      padding-bottom: 48px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #00ff9f;
+      margin-bottom: 16px;
+      text-shadow: 0 0 8px rgba(0,255,159,0.4);
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: #e0e0e8;
+      margin-bottom: 12px;
+      text-shadow: 0 0 20px rgba(0,255,159,0.3);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 20px;
+      line-height: 1.5;
+      color: #757586;
+      max-width: 800px;
+      margin-bottom: 24px;
+      letter-spacing: 0.01em;
+    }
+
+    .header__meta {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: #757586;
+      text-transform: uppercase;
+    }
+
+    /* Section labels */
+    .section-label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #00d4ff;
+      margin-bottom: 40px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(0,212,255,0.2);
+      text-shadow: 0 0 8px rgba(0,212,255,0.3);
+    }
+
+    /* Swatch grid */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 28px;
+      margin-bottom: 80px;
+    }
+
+    .swatch {
+      background: #0a0a0f;
+      border: 1px solid rgba(0,212,255,0.15);
+      border-radius: 2px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 16px rgba(0,0,0,0.6);
+    }
+
+    .swatch:hover {
+      border-color: rgba(0,255,159,0.4);
+      box-shadow: 0 0 24px rgba(0,255,159,0.2), inset 0 0 16px rgba(0,255,159,0.05);
+    }
+
+    .swatch__chip {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .swatch__chip::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 2px);
+      pointer-events: none;
+    }
+
+    .swatch__chip-contrast {
+      position: absolute;
+      bottom: 12px;
+      right: 14px;
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 0;
+      line-height: 1.4;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: rgba(0,0,0,0.5);
+      color: #e0e0e8;
+      border: 1px solid rgba(0,255,159,0.3);
+    }
+
+    .swatch__meta {
+      padding: 24px 20px;
+      background: linear-gradient(135deg, rgba(0,255,159,0.02) 0%, transparent 100%);
+    }
+
+    .swatch__var {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      color: #00ff9f;
+      word-break: break-all;
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+      text-shadow: 0 0 8px rgba(0,255,159,0.3);
+    }
+
+    .swatch__hex {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      color: #757586;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .swatch__role {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 14px;
+      line-height: 1.5;
+      color: #e0e0e8;
+      margin-bottom: 12px;
+    }
+
+    .swatch__contrast-label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 10px;
+      font-weight: 600;
+      margin-top: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .contrast-pass { color: #00ff9f; }
+    .contrast-fail { color: #ff003c; }
+    .contrast-aa-large { color: #ffb800; }
+
+    /* Usage pattern section */
+    .usage-section {
+      margin-bottom: 80px;
+      padding: 48px;
+      background: linear-gradient(135deg, #0d0d12 0%, rgba(0,255,159,0.02) 100%);
+      border: 1px solid rgba(0,255,159,0.2);
+      border-radius: 2px;
+      box-shadow: 0 0 32px rgba(0,0,0,0.7);
+    }
+
+    .usage-section h2 {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: #e0e0e8;
+      margin-bottom: 24px;
+      text-shadow: 0 0 16px rgba(0,255,159,0.25);
+    }
+
+    .usage-section p {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      line-height: 1.7;
+      color: #e0e0e8;
+      margin-bottom: 28px;
+      max-width: 760px;
+    }
+
+    .rule-of-one {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 40px;
+      align-items: start;
+    }
+
+    .rule-example {
+      padding: 32px;
+      background: #0a0a0f;
+      border: 1px solid rgba(0,212,255,0.2);
+      border-radius: 2px;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
+    }
+
+    .rule-example h3 {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.35;
+      color: #e0e0e8;
+      margin-bottom: 16px;
+      text-shadow: 0 0 12px rgba(0,255,159,0.2);
+    }
+
+    .rule-example p {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 14px;
+      line-height: 1.65;
+      color: #757586;
+      margin-bottom: 0;
+    }
+
+    .correct {
+      border: 1px solid rgba(0,255,159,0.4) !important;
+      box-shadow: inset 0 0 20px rgba(0,255,159,0.08), 0 0 24px rgba(0,255,159,0.1) !important;
+    }
+
+    .correct::before {
+      content: '✓ CORRECT';
+      display: block;
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: #00ff9f;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(0,255,159,0.3);
+      text-shadow: 0 0 8px rgba(0,255,159,0.4);
+    }
+
+    .incorrect {
+      border: 1px solid rgba(255,0,60,0.4) !important;
+      box-shadow: inset 0 0 20px rgba(255,0,60,0.08), 0 0 24px rgba(255,0,60,0.1) !important;
+    }
+
+    .incorrect::before {
+      content: '✗ INCORRECT';
+      display: block;
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: #ff003c;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255,0,60,0.3);
+      text-shadow: 0 0 8px rgba(255,0,60,0.4);
+    }
+
+    .signal-demo {
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .signal-demo .drop-cap {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 72px;
+      font-weight: 700;
+      color: #00ff9f;
+      float: left;
+      line-height: 0.75;
+      padding-right: 8px;
+      margin-top: 2px;
+      text-shadow: 0 0 16px rgba(0,255,159,0.6);
+    }
+
+    .signal-demo em {
+      color: #00ff9f;
+      font-style: italic;
+      text-shadow: 0 0 12px rgba(0,255,159,0.4);
+    }
+
+    /* WCAG summary */
+    .wcag-summary {
+      margin-top: 80px;
+      padding: 48px;
+      background: linear-gradient(135deg, #0d0d12 0%, rgba(0,212,255,0.02) 100%);
+      border: 1px solid rgba(0,212,255,0.2);
+      border-radius: 2px;
+      box-shadow: 0 0 32px rgba(0,0,0,0.7);
+    }
+
+    .wcag-summary h2 {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      margin-bottom: 24px;
+      color: #e0e0e8;
+      text-shadow: 0 0 16px rgba(0,212,255,0.25);
+    }
+
+    .wcag-summary p {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      line-height: 1.7;
+      color: #e0e0e8;
+      margin-bottom: 28px;
+    }
+
+    .wcag-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(0,212,255,0.1);
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 14px;
+      color: #e0e0e8;
+    }
+
+    .wcag-row:last-child { border-bottom: none; }
+
+    .wcag-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 14px;
+      border-radius: 2px;
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      min-width: 100px;
+      text-align: center;
+    }
+
+    .wcag-badge--pass { 
+      background: rgba(0,255,159,0.15); 
+      color: #00ff9f; 
+      border: 1px solid rgba(0,255,159,0.3);
+      text-shadow: 0 0 8px rgba(0,255,159,0.3);
+    }
+    .wcag-badge--fail { 
+      background: rgba(255,0,60,0.15); 
+      color: #ff003c; 
+      border: 1px solid rgba(255,0,60,0.3);
+      text-shadow: 0 0 8px rgba(255,0,60,0.3);
+    }
+    .wcag-badge--aa-large { 
+      background: rgba(255,184,0,0.15); 
+      color: #ffb800; 
+      border: 1px solid rgba(255,184,0,0.3);
+      text-shadow: 0 0 8px rgba(255,184,0,0.3);
+    }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: #757586;
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 14px;
+      letter-spacing: 0.1em;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 32px auto 0;
+      border: 2px solid rgba(0,255,159,0.3);
+      border-top-color: #00ff9f;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      box-shadow: 0 0 16px rgba(0,255,159,0.4);
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .page { padding: 48px 24px; }
+      .header { padding-bottom: 32px; margin-bottom: 56px; }
+      .header__title { font-size: 48px; }
+      .swatch-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+      .rule-of-one { grid-template-columns: 1fr; gap: 24px; }
+      .usage-section, .wcag-summary { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    /* ───────────────────────────────────────────────────────────── */
+    /* Contrast ratio calculation (WCAG 2.1 relative luminance)      */
+    /* ───────────────────────────────────────────────────────────── */
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function luminance([r, g, b]) {
+      const [rs, gs, bs] = [r, g, b].map(c => {
+        c /= 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    }
+
+    function contrastRatio(hex1, hex2) {
+      const l1 = luminance(hexToRgb(hex1));
+      const l2 = luminance(hexToRgb(hex2));
+      const lighter = Math.max(l1, l2);
+      const darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function wcagLevel(ratio) {
+      if (ratio >= 7) return { label: 'AAA', cls: 'pass' };
+      if (ratio >= 4.5) return { label: 'AA', cls: 'pass' };
+      if (ratio >= 3) return { label: 'AA Large', cls: 'aa-large' };
+      return { label: 'Fail', cls: 'fail' };
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Core color roles and descriptions                             */
+    /* ───────────────────────────────────────────────────────────── */
+    const CORE_ROLES = {
+      'void': 'Full-bleed page background, deepest layer in the void.',
+      'abyss': 'Primary surface, card backgrounds. The abyss deck.',
+      'carbon': 'Elevated surfaces, modal overlays. Darker than abyss.',
+      'slate-dark': 'Secondary surfaces, sidebar backgrounds. Gunmetal blue.',
+      'gunmetal': 'Tertiary panels, hover states on dark cards.',
+      'neon-green': 'Primary action, success, active states, CTA. Signal.',
+      'magenta': 'Secondary action, warnings, highlights. Lethal neon.',
+      'cyan': 'Tertiary, links, informational, navigation. HUD cyan.',
+      'warning-amber': 'Caution states, rate limits, degraded status.',
+      'danger-red': 'Errors, destructive actions, critical alerts.',
+      'ghost-white': 'Primary readable text on dark surfaces. Not pure white.',
+      'dim-gray': 'Muted text, disabled states, metadata. Dust.',
+    };
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Cyberpunk color definitions                                   */
+    /* ───────────────────────────────────────────────────────────── */
+    const CYBERPUNK_COLORS = {
+      'void': '#050508',
+      'abyss': '#0a0a0f',
+      'carbon': '#0d0d12',
+      'slate-dark': '#1a1a2e',
+      'gunmetal': '#16213e',
+      'neon-green': '#00ff9f',
+      'magenta': '#ff00ff',
+      'cyan': '#00d4ff',
+      'warning-amber': '#ffb800',
+      'danger-red': '#ff003c',
+      'ghost-white': '#e0e0e8',
+      'dim-gray': '#757586',
+    };
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Render palette                                                */
+    /* ───────────────────────────────────────────────────────────── */
+    function render() {
+      const app = document.getElementById('app');
+      const title = 'Cyberpunk';
+      const summary = 'Neon-soaked dystopian interface. Terminal greens, glitch effects, augmented reality HUD aesthetic.';
+      const paperHex = '#050508'; // void background
+
+      /* Define core vs extended */
+      const coreKeys = ['void', 'abyss', 'carbon', 'slate-dark', 'gunmetal', 'neon-green', 'magenta', 'cyan'];
+      const extendedKeys = ['warning-amber', 'danger-red', 'ghost-white', 'dim-gray'];
+
+      let html = '';
+
+      /* ─ Stage head header ─ */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">CYBERPUNK DESIGN SYSTEM</div>';
+      html += '  <h1 class="header__title">' + esc(title) + '</h1>';
+      html += '  <p class="header__subtitle">' + esc(summary) + '</p>';
+      html += '  <div class="header__meta">Color Palette — ' + (coreKeys.length + extendedKeys.length) + ' Tokens</div>';
+      html += '</header>';
+
+      /* ─ Foundation Blacks ─ */
+      html += '<div class="section-label">Foundation Blacks</div>';
+      html += '<div class="swatch-grid">';
+      coreKeys.slice(0, 5).forEach(key => {
+        const hex = CYBERPUNK_COLORS[key];
+        html += swatchCard(key, hex, paperHex, CORE_ROLES[key]);
+      });
+      html += '</div>';
+
+      /* ─ Neon Primaries ─ */
+      html += '<div class="section-label">Neon Primaries</div>';
+      html += '<div class="swatch-grid">';
+      coreKeys.slice(5).forEach(key => {
+        const hex = CYBERPUNK_COLORS[key];
+        html += swatchCard(key, hex, paperHex, CORE_ROLES[key]);
+      });
+      html += '</div>';
+
+      /* ─ Extended Signal Colors ─ */
+      html += '<div class="section-label">Extended Signal Colors</div>';
+      html += '<div class="swatch-grid">';
+      extendedKeys.forEach(key => {
+        const hex = CYBERPUNK_COLORS[key];
+        html += swatchCard(key, hex, paperHex, CORE_ROLES[key]);
+      });
+      html += '</div>';
+
+      /* ─ Rule of One ─ */
+      html += ruleOfOneSection(paperHex);
+
+      /* ─ WCAG Summary ─ */
+      html += wcagSummary(CYBERPUNK_COLORS, paperHex);
+
+      app.innerHTML = html;
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Swatch card builder                                           */
+    /* ───────────────────────────────────────────────────────────── */
+    function swatchCard(key, hex, paperHex, role) {
+      const ratio = contrastRatio(hex, paperHex);
+      const level = wcagLevel(ratio);
+      const lum = luminance(hexToRgb(hex));
+      const chipTextColor = lum > 0.4 ? '#050508' : '#e0e0e8';
+
+      return '' +
+        '<div class="swatch">' +
+        '  <div class="swatch__chip" style="background:' + hex + '">' +
+        '    <span class="swatch__chip-contrast">' + ratio.toFixed(2) + ':1</span>' +
+        '  </div>' +
+        '  <div class="swatch__meta">' +
+        '    <div class="swatch__var">--' + esc(key) + '</div>' +
+        '    <div class="swatch__hex">' + esc(hex.toUpperCase()) + '</div>' +
+        '    <div class="swatch__role">' + esc(role) + '</div>' +
+        '    <div class="swatch__contrast-label contrast-' + level.cls + '">' +
+             'WCAG ' + level.label + '</div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Rule of One usage pattern                                     */
+    /* ───────────────────────────────────────────────────────────── */
+    function ruleOfOneSection(paperHex) {
+      let html = '<section class="usage-section">';
+      html += '<h2>The Rule of One</h2>';
+      html += '<p>Neon-green signal appears in <em>exactly one focal point per viewport</em>. A primary action button. A status indicator. A drop cap. Never multiple—the constraint forces hierarchy. The darkness makes the light count.</p>';
+
+      html += '<div class="rule-of-one">';
+
+      /* Correct example */
+      html += '<div class="rule-example correct">';
+      html += '<h3>Signal as Drop Cap</h3>';
+      html += '<p class="signal-demo">';
+      html += '<span class="drop-cap">T</span>';
+      html += 'he future is now. One bright accent in the void. The eye finds it instantly. Neon-green pulses at 00FF9F—the only light in a darkened terminal. Everything else recedes into gunmetal gray. Contrast. Intent. Signal.';
+      html += '</p>';
+      html += '</div>';
+
+      /* Incorrect example */
+      html += '<div class="rule-example incorrect">';
+      html += '<h3>Multiple Neon Colors</h3>';
+      html += '<p>';
+      html += 'When <span style="color:#00ff9f;text-shadow:0 0 8px rgba(0,255,159,0.6)">green</span> fights <span style="color:#ff00ff;text-shadow:0 0 8px rgba(255,0,255,0.6)">magenta</span> fights <span style="color:#00d4ff;text-shadow:0 0 8px rgba(0,212,255,0.6)">cyan</span>, none of them lead. The screen becomes noise. The viewer\'s eye doesn\'t know where to focus. Three signals cancel each other into silence.';
+      html += '</p>';
+      html += '</div>';
+
+      html += '</div>';
+      html += '</section>';
+      return html;
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* WCAG compliance summary                                       */
+    /* ───────────────────────────────────────────────────────────── */
+    function wcagSummary(colors, paperHex) {
+      const keys = Object.keys(colors);
+      let passAAA = 0, passAA = 0, passAALarge = 0, fail = 0;
+
+      keys.forEach(k => {
+        const ratio = contrastRatio(colors[k], paperHex);
+        if (ratio >= 7) passAAA++;
+        else if (ratio >= 4.5) passAA++;
+        else if (ratio >= 3) passAALarge++;
+        else fail++;
+      });
+
+      let html = '<div class="wcag-summary">';
+      html += '<h2>WCAG 2.1 Compliance</h2>';
+      html += '<p>Contrast ratios measured against void background (#050508). Cyberpunk prioritizes signal clarity and readability in high-saturation neon environments. Dark backgrounds amplify chromatic intensity.</p>';
+      html += row('AAA (7:1+)', passAAA, 'pass');
+      html += row('AA (4.5:1+)', passAA, 'pass');
+      html += row('AA Large Text (3:1+)', passAALarge, 'aa-large');
+      html += row('Below threshold', fail, fail > 0 ? 'fail' : 'pass');
+      html += '</div>';
+      return html;
+
+      function row(label, count, badge) {
+        return '<div class="wcag-row">' +
+               '<span class="wcag-badge wcag-badge--' + badge + '">' + count + '</span>' +
+               '<span>' + label + '</span>' +
+               '</div>';
+      }
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Utilities                                                      */
+    /* ───────────────────────────────────────────────────────────── */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Initialize                                                    */
+    /* ───────────────────────────────────────────────────────────── */
+    render();
+  </script>
+</body>
+</html>

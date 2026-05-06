@@ -1,0 +1,93 @@
+/* Wise — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #0e0f0c;
+  --ink:     #0e0f0c;
+  --slate:   #868685;
+  --signal:  #9fe870;
+  --bone:    #e8ebe6;
+  --border:  #797b79;
+  --surface: #e2f6d5;
+
+  /* Extended palette */
+  --color-dark-green: #163300;
+  --color-pastel-green: #cdffad;
+  --color-positive-green: #054d28;
+  --color-danger-red: #d03238;
+  --color-warning-yellow: #ffd11a;
+  --color-bright-orange: #ffc091;
+
+  /* Semantic */
+  --success: #054d28;
+  --warning: #ffd11a;
+  --danger:  #d03238;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: Wise Sans;
+  --font-body:    Wise Sans;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-mega: 126px;
+  --t-display-hero: 96px;
+  --t-section-heading: 64px;
+  --t-sub-heading: 40px;
+  --t-alt-heading: 78px;
+  --t-card-title: 26px;
+  --t-feature-title: 22px;
+  --t-body: 18px;
+  --t-body-semibold: 18px;
+  --t-button: 18px;
+  --t-caption: 14px;
+  --t-small: 12px;
+
+  /* ── Spacing ── */
+  --s-1: 1px;
+  --s-2: 2px;
+  --s-3: 3px;
+  --s-4: 4px;
+  --s-5: 5px;
+  --s-6: 8px;
+  --s-7: 10px;
+  --s-8: 11px;
+  --s-9: 12px;
+  --s-10: 16px;
+  --s-11: 18px;
+  --s-12: 19px;
+  --s-13: 20px;
+  --s-14: 22px;
+  --s-15: 24px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   5px;
+  --radius-md:   10px;
+  --radius-lg:   30px;
+  --radius-full: 9999px;
+
+  /* ── Components ── */
+  --button-radius:  10px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    10px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

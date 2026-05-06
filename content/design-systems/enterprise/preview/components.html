@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise — Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-8) var(--s-5);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--s-4);
+      margin-bottom: var(--s-7);
+      border-bottom: 1px solid var(--border);
+      border-top: 2px solid var(--ink);
+      padding-top: var(--s-4);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1;
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-5);
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate);
+      max-width: 720px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: var(--s-5);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-4);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate);
+      margin-right: var(--s-3);
+      min-width: 120px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 1;
+      border: 1px solid var(--border);
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      gap: var(--s-2);
+    }
+
+    .btn:hover {
+      background: var(--bone);
+      border-color: var(--slate);
+    }
+
+    .btn--primary {
+      background: var(--signal);
+      color: var(--paper);
+      border-color: var(--signal);
+    }
+
+    .btn--primary:hover {
+      background: #2563eb;
+      border-color: #2563eb;
+    }
+
+    .btn--secondary {
+      background: var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--ink);
+    }
+
+    .btn--secondary:hover {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .btn--ghost {
+      border: none;
+      background: transparent;
+      color: var(--signal);
+      padding: var(--button-py) 0;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .btn--ghost:hover {
+      color: #2563eb;
+      text-decoration: underline;
+    }
+
+    .btn--sm {
+      padding: 8px 16px;
+      font-size: 13px;
+    }
+
+    .btn--lg {
+      padding: 12px 28px;
+      font-size: 15px;
+    }
+
+    .btn--block {
+      width: 100%;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ──── INPUTS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .input {
+      padding: 10px 14px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .input:disabled {
+      background: var(--bone);
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .input--error {
+      border-color: #ef4444;
+    }
+
+    .input--error:focus {
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    /* ──── CARDS ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .card {
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      padding: var(--s-4);
+      background: var(--paper);
+      transition: all 0.15s ease;
+    }
+
+    .card:hover {
+      border-color: var(--slate);
+      box-shadow: var(--card-shadow);
+    }
+
+    .card--elevated {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border: none;
+    }
+
+    .card--elevated:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .card__header {
+      margin-bottom: var(--s-3);
+      padding-bottom: var(--s-3);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: var(--s-1);
+    }
+
+    .card__subtitle {
+      font-size: 13px;
+      color: var(--slate);
+    }
+
+    .card__body {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--slate);
+    }
+
+    /* ──── BADGES ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2);
+      margin-bottom: var(--s-4);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-1);
+      padding: 4px 12px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0;
+      text-transform: capitalize;
+      line-height: 1.4;
+      border-radius: var(--radius-full);
+      background: var(--bone);
+      color: var(--ink);
+    }
+
+    .badge--primary {
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--signal);
+    }
+
+    .badge--success {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+    }
+
+    .badge--warning {
+      background: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+    }
+
+    .badge--danger {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    /* ──── TABLES ──── */
+    .table-wrapper {
+      overflow-x: auto;
+      margin-bottom: var(--s-5);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--paper);
+    }
+
+    .table__header {
+      background: var(--bone);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table__header-cell {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: left;
+      padding: var(--s-3);
+      border-right: 1px solid var(--border);
+    }
+
+    .table__header-cell:last-child {
+      border-right: none;
+    }
+
+    .table__row {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table__row:hover {
+      background: var(--bone);
+    }
+
+    .table__row:last-child {
+      border-bottom: none;
+    }
+
+    .table__cell {
+      padding: var(--s-3);
+      text-align: left;
+      border-right: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .table__cell:last-child {
+      border-right: none;
+    }
+
+    /* ──── TOGGLES / SWITCHES ──── */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3);
+      margin-bottom: var(--s-4);
+    }
+
+    .toggle-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      min-width: 120px;
+    }
+
+    .toggle {
+      position: relative;
+      display: inline-flex;
+      width: 48px;
+      height: 28px;
+      background: var(--border);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      padding: 0;
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 24px;
+      height: 24px;
+      background: var(--paper);
+      border-radius: 50%;
+      transition: all 0.2s ease;
+    }
+
+    .toggle:checked {
+      background: var(--signal);
+    }
+
+    .toggle:checked::after {
+      left: 22px;
+    }
+
+    /* ──── MODAL / DIALOG ──── */
+    .modal-preview {
+      border: 1px solid var(--border);
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      margin-bottom: var(--s-5);
+    }
+
+    .modal-header {
+      background: var(--bone);
+      padding: var(--s-4);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: var(--slate);
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-body {
+      padding: var(--s-4);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ink);
+    }
+
+    .modal-footer {
+      padding: var(--s-4);
+      border-top: 1px solid var(--border);
+      background: var(--bone);
+      display: flex;
+      gap: var(--s-3);
+      justify-content: flex-end;
+    }
+
+    /* ──── STATUS INDICATORS ──── */
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-2);
+      padding: var(--s-2) var(--s-3);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .status-indicator__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .status-indicator--success {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+    }
+
+    .status-indicator--success .status-indicator__dot {
+      background: #22c55e;
+    }
+
+    .status-indicator--warning {
+      background: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+    }
+
+    .status-indicator--warning .status-indicator__dot {
+      background: #f59e0b;
+    }
+
+    .status-indicator--danger {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+
+    .status-indicator--danger .status-indicator__dot {
+      background: #ef4444;
+    }
+
+    .status-indicator--info {
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--signal);
+    }
+
+    .status-indicator--info .status-indicator__dot {
+      background: var(--signal);
+    }
+
+    /* ──── ALERTS ──── */
+    .alert {
+      padding: var(--s-4);
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--slate);
+      margin-bottom: var(--s-4);
+    }
+
+    .alert__title {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: var(--s-1);
+    }
+
+    .alert__body {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .alert--info {
+      background: rgba(59, 130, 246, 0.05);
+      border-left-color: var(--signal);
+      color: #1e40af;
+    }
+
+    .alert--success {
+      background: rgba(34, 197, 94, 0.05);
+      border-left-color: #22c55e;
+      color: #166534;
+    }
+
+    .alert--warning {
+      background: rgba(245, 158, 11, 0.05);
+      border-left-color: #f59e0b;
+      color: #78350f;
+    }
+
+    .alert--danger {
+      background: rgba(239, 68, 68, 0.05);
+      border-left-color: #ef4444;
+      color: #7f1d1d;
+    }
+
+    /* ──── UTILITY ──– */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+      margin-top: var(--s-4);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: var(--s-5) 0;
+    }
+
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-3) 0;
+      margin-top: var(--s-8);
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--s-3);
+      margin-bottom: var(--s-5);
+    }
+
+    .demo-item {
+      padding: var(--s-3);
+      background: var(--bone);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      text-align: center;
+      font-size: 13px;
+      color: var(--slate);
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-6) var(--s-3);
+      }
+
+      .stage-head__title {
+        font-size: 32px;
+      }
+
+      .section__title {
+        font-size: 24px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: var(--s-3);
+      }
+
+      .button-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .button-row__label {
+        margin-right: 0;
+      }
+
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">Enterprise</div>
+      <div class="masthead__tagline">
+        Design System<br>Component Guide
+      </div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Component Vocabulary</h1>
+      <p class="stage-head__subtitle">
+        A comprehensive inventory of clean, high-contrast components built for data-driven enterprise workflows. All patterns use system tokens for consistent spacing, typography, and color.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Buttons</div>
+      <h2 class="section__title">Button States & Variants</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary</span>
+        <button class="btn btn--primary">Create</button>
+        <button class="btn btn--primary btn--sm">Save</button>
+        <button class="btn btn--primary btn--lg">Launch Now</button>
+        <button class="btn btn--primary" disabled>Disabled</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Secondary</span>
+        <button class="btn btn--secondary">Cancel</button>
+        <button class="btn btn--secondary btn--sm">Edit</button>
+        <button class="btn btn--secondary btn--lg">Delete Record</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Ghost</span>
+        <a href="#" class="btn btn--ghost">Learn more</a>
+        <a href="#" class="btn btn--ghost">View docs</a>
+        <a href="#" class="btn btn--ghost">Skip</a>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Full Width</span>
+        <button class="btn btn--primary btn--block">Submit Form</button>
+      </div>
+    </section>
+
+    <!-- Input Fields Section -->
+    <section class="section">
+      <div class="section__kicker">Forms</div>
+      <h2 class="section__title">Input Fields & Form Elements</h2>
+
+      <div class="subsection-label">Text Inputs</div>
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input type="email" class="input" placeholder="name@example.com">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Organization</label>
+          <input type="text" class="input" placeholder="Your organization">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Disabled Field</label>
+          <input type="text" class="input" placeholder="Cannot edit" disabled>
+        </div>
+      </div>
+
+      <div class="subsection-label">Text Area</div>
+      <div class="input-wrap">
+        <label class="input-label">Comments</label>
+        <textarea class="input" placeholder="Enter your feedback..." style="resize: vertical; min-height: 100px;"></textarea>
+      </div>
+
+      <div class="subsection-label">Select Input</div>
+      <div class="input-wrap">
+        <label class="input-label">Priority Level</label>
+        <select class="input">
+          <option>Select an option</option>
+          <option>High</option>
+          <option>Medium</option>
+          <option>Low</option>
+        </select>
+      </div>
+
+      <div class="subsection-label">Error State</div>
+      <div class="input-wrap">
+        <label class="input-label">Username</label>
+        <input type="text" class="input input--error" placeholder="Username taken" value="john_doe">
+        <div style="font-size: 13px; color: #ef4444; margin-top: var(--s-1);">This username is already in use</div>
+      </div>
+
+      <div class="subsection-label">Toggle / Switch</div>
+      <div class="toggle-row">
+        <span class="toggle-label">Enable Notifications</span>
+        <input type="checkbox" class="toggle" checked>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Dark Mode</span>
+        <input type="checkbox" class="toggle">
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Cards</div>
+      <h2 class="section__title">Card Patterns</h2>
+
+      <div class="subsection-label">Standard Cards (Bordered)</div>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__header">
+            <div class="card__title">Monthly Revenue</div>
+            <div class="card__subtitle">Jan 2024</div>
+          </div>
+          <div class="card__body">
+            <div style="font-size: 24px; font-weight: 600; color: var(--ink); margin-bottom: var(--s-2);">$48,500</div>
+            <div style="color: #22c55e;">↑ 12% vs last month</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__header">
+            <div class="card__title">Active Users</div>
+            <div class="card__subtitle">This week</div>
+          </div>
+          <div class="card__body">
+            <div style="font-size: 24px; font-weight: 600; color: var(--ink); margin-bottom: var(--s-2);">2,847</div>
+            <div style="color: #f59e0b;">↓ 3% vs last week</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__header">
+            <div class="card__title">System Status</div>
+            <div class="card__subtitle">Current</div>
+          </div>
+          <div class="card__body">
+            <div style="display: flex; align-items: center; gap: var(--s-2);">
+              <span class="status-indicator__dot" style="background: #22c55e;"></span>
+              <span style="color: #22c55e; font-weight: 600;">All Systems Operational</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection-label">Elevated Cards (With Shadow)</div>
+      <div class="cards-grid">
+        <div class="card card--elevated">
+          <div class="card__title" style="margin-bottom: var(--s-3);">Featured Feature</div>
+          <div class="card__body">
+            <p>Real-time analytics with drag-and-drop workflow. Build custom dashboards in minutes.</p>
+          </div>
+          <div style="margin-top: var(--s-4);">
+            <button class="btn btn--primary btn--sm">Explore</button>
+          </div>
+        </div>
+
+        <div class="card card--elevated">
+          <div class="card__title" style="margin-bottom: var(--s-3);">Recommended</div>
+          <div class="card__body">
+            <p>Integrate with your existing data pipeline. 50+ connectors available out of the box.</p>
+          </div>
+          <div style="margin-top: var(--s-4);">
+            <button class="btn btn--primary btn--sm">Learn More</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="section">
+      <div class="section__kicker">Badges</div>
+      <h2 class="section__title">Status Badges & Tags</h2>
+
+      <div class="subsection-label">Default Badge</div>
+      <div class="badge-row">
+        <span class="badge">Pending</span>
+        <span class="badge">Review</span>
+        <span class="badge">Draft</span>
+      </div>
+
+      <div class="subsection-label">Primary (Signal)</div>
+      <div class="badge-row">
+        <span class="badge badge--primary">
+          <span class="badge__dot"></span>
+          In Progress
+        </span>
+        <span class="badge badge--primary">
+          <span class="badge__dot"></span>
+          Active
+        </span>
+      </div>
+
+      <div class="subsection-label">Success</div>
+      <div class="badge-row">
+        <span class="badge badge--success">
+          <span class="badge__dot"></span>
+          Deployed
+        </span>
+        <span class="badge badge--success">
+          <span class="badge__dot"></span>
+          Verified
+        </span>
+      </div>
+
+      <div class="subsection-label">Warning</div>
+      <div class="badge-row">
+        <span class="badge badge--warning">
+          <span class="badge__dot"></span>
+          Expiring Soon
+        </span>
+        <span class="badge badge--warning">
+          <span class="badge__dot"></span>
+          Action Required
+        </span>
+      </div>
+
+      <div class="subsection-label">Danger</div>
+      <div class="badge-row">
+        <span class="badge badge--danger">
+          <span class="badge__dot"></span>
+          Failed
+        </span>
+        <span class

@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — HashiCorp</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #15181e);
+      color: var(--ink, #efeff1);
+      line-height: 1.63;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--slate, #3b3d45);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 82px;
+      font-weight: 600;
+      line-height: 1.17;
+      letter-spacing: 0;
+      color: var(--ink, #efeff1);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--color-action-blue, #1060ff);
+      font-weight: 600;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.50;
+      color: var(--slate, #3b3d45);
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 1px;
+      background: var(--ink, #efeff1);
+      border: none;
+      margin-top: 32px;
+      opacity: 0.2;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--slate, #3b3d45);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--ink, #efeff1);
+      border-bottom-opacity: 0.1;
+      opacity: 0.7;
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 28px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.50;
+      color: var(--ink, #efeff1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 24px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-action-blue, #1060ff);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 5px;
+      padding: 32px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--ink, #efeff1);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--color-red, #731e25);
+    }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--ink, #efeff1);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--color-red, #731e25);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.63;
+      color: var(--ink, #efeff1);
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: 5px;
+      overflow: hidden;
+      height: 120px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.4;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 5px;
+      padding: 48px 40px;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--slate, #3b3d45);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 52px;
+      font-weight: 600;
+      line-height: 1.19;
+      letter-spacing: 0;
+      color: var(--ink, #efeff1);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--color-vagrant-blue, #1868f2);
+      font-weight: 600;
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.63;
+      color: var(--ink, #efeff1);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--slate, #3b3d45);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--ink, #efeff1);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 5px;
+      padding: 32px;
+      max-width: 840px;
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.63;
+      color: var(--ink, #efeff1);
+    }
+
+    /* ──── Multi-Product Color System ──── */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 960px) {
+      .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .product-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 5px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .product-card__color-block {
+      width: 100%;
+      height: 80px;
+      border-radius: 5px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .product-card__name {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.21;
+      color: var(--ink, #efeff1);
+    }
+
+    .product-card__hex {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--slate, #3b3d45);
+      letter-spacing: 0.05em;
+    }
+
+    /* ──── Dual-Mode Visual ──── */
+    .dualmode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dualmode-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dualmode-slide {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 5px;
+      aspect-ratio: 16 / 10;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .dualmode-slide--light {
+      background: var(--bone, #f1f2f3);
+    }
+
+    .dualmode-slide--dark {
+      background: var(--color-near-black, #0d0e12);
+    }
+
+    .dualmode-slide__kicker {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .dualmode-slide--light .dualmode-slide__kicker {
+      color: var(--slate, #3b3d45);
+    }
+
+    .dualmode-slide--dark .dualmode-slide__kicker {
+      color: var(--slate, #3b3d45);
+    }
+
+    .dualmode-slide__headline {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.19;
+      letter-spacing: -0.42px;
+      margin-bottom: 0;
+    }
+
+    .dualmode-slide--light .dualmode-slide__headline {
+      color: #000;
+    }
+
+    .dualmode-slide--dark .dualmode-slide__headline {
+      color: var(--ink, #efeff1);
+    }
+
+    .dualmode-slide__accent {
+      color: var(--color-action-blue, #1060ff);
+      font-weight: 700;
+    }
+
+    .dualmode-slide__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid;
+    }
+
+    .dualmode-slide--light .dualmode-slide__label {
+      color: var(--slate, #3b3d45);
+      border-top-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .dualmode-slide--dark .dualmode-slide__label {
+      color: var(--slate, #3b3d45);
+      border-top-color: rgba(255, 255, 255, 0.08);
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #3b3d45);
+      font-size: 18px;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-top-color: var(--color-action-blue, #1060ff);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ──── Type Ramp Section ──── */
+    .type-ramp-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .type-ramp-item {
+      padding: 28px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 32px;
+      align-items: flex-start;
+    }
+
+    .type-ramp-item:last-child {
+      border-bottom: none;
+    }
+
+    .type-ramp-item__meta {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .type-ramp-item__role {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--slate, #3b3d45);
+    }
+
+    .type-ramp-item__specs {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #3b3d45);
+      line-height: 1.5;
+    }
+
+    .type-ramp-item__example {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .type-ramp-item__example-text {
+      color: var(--ink, #efeff1);
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border', 'surface'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:var(--color-red)">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const extended = colors.extended || {};
+      const ramp = tokens.typography?.ramp || [];
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Infrastructure Automation</div>';
+      html += '  <h1 class="header__title">Enterprise <span>Infrastructure</span> Made Tangible</h1>';
+      html += '  <p class="header__subtitle">Dual-mode design, product color system, and the rule of one. Complex infrastructure, approachable design. HashiCorp's brand communicates cloud complexity through editorial restraint and multi-product chromatic identity.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere & Duality</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>HashiCorp splits between two modes: clean white sections for information architecture, dramatic dark (#15181e, #0d0e12) for heroes and product showcases. This day/night duality mirrors the developer workflow—"build in light, deploy in dark." The custom HashiCorp Sans font (600–700 weights) carries substantial authority with tight line-heights (1.17–1.19) for headings, contrasting against relaxed body text at 1.50–1.63. Every product in the portfolio (Terraform, Vault, Waypoint, Vagrant) injects its own brand color, creating a system within the system. Shadows whisper at 0.05–0.08 opacity. No sharp corners—radius caps at 3–5px. Token-driven `mds` component prefix ensures systematic consistency.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Dual-mode: clean white informational + dramatic dark (#15181e, #0d0e12) hero areas</li>';
+      html += '    <li>Custom HashiCorp Sans font with 600–700 weights and OpenType "kern" feature enabled</li>';
+      html += '    <li>Tight headings (1.17–1.19 line-height) vs. relaxed body (1.50–1.63)</li>';
+      html += '    <li>Multi-product color system via CSS custom properties (--mds-color-*)</li>';
+      html += '    <li>Product brand colors: Terraform purple (#7b42bc), Vault yellow (#ffcf25), Waypoint teal (#14c6cb), Vagrant blue (#1868f2)</li>';
+      html += '    <li>Uppercase letter-spaced captions (13px, weight 600, 1.3px letter-spacing)</li>';
+      html += '    <li>Micro-shadows: dual-layer whisper (0.05–0.08 opacity) for depth separation</li>';
+      html += '    <li>Token-driven `mds` component system with semantic variable naming</li>';
+      html += '    <li>Tight border radius: 3–5px, never pill-shaped or fully circular</li>';
+      html += '    <li>System-ui fallback stack for secondary text; monospace for code and labels</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use HashiCorp Sans for headings and brand text (17px+ sizes)</li>';
+      html += '      <li>Enable OpenType "kern" feature on all HashiCorp Sans text</li>';
+      html += '      <li>Apply product brand colors ONLY to their respective products</li>';
+      html += '      <li>Use uppercase labels at 13px weight 600 with 1.3px letter-spacing</li>';
+      html += '      <li>Keep shadows at whisper opacity (0.05–0.08 dual-layer)</li>';
+      html += '      <li>Use the --mds-color-* token system for consistent color application</li>';
+      html += '      <li>Maintain tight-heading / relaxed-body rhythm (1.17–1.21 vs 1.50–1.69)</li>';
+      html += '      <li>Use 3px solid focus outlines for accessibility on interactive elements</li>';
+      html += '      <li>Default all border-radius to 5px (md) for consistency</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use product colors outside their product context (no Terraform purple on Vault)</li>';
+      html += '      <li>Increase shadow opacity above 0.1 — whisper level is intentional</li>';
+      html += '      <li>Use pill-shaped buttons (>8px radius) — 5px is structural</li>';
+      html += '      <li>Skip the "kern" OpenType feature on headings — font requires it</li>';
+      html += '      <li>Use HashiCorp Sans for small body text (&lt;17px) — it\'s heading-only</li>';
+      html += '      <li>Mix product colors in the same component — one color per product</li>';
+      html += '      <li>Use pure black (#000) for dark backgrounds — use #15181e or #0d0e12</li>';
+      html += '      <li>Forget asymmetric button padding (9px 9px 9px 15px) — it\'s intentional</li>';
+      html += '      <li>Use gradients, blurs, or glassmorphism effects — keep it flat and structural</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Dual-Mode Visual ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Light / Dark Duality</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.63; color: var(--slate); margin-bottom: 24px; max-width: 840px;">HashiCorp\'s design splits between two modes. Light mode (#f1f2f3) hosts information-dense content with high contrast. Dark mode (#15181e, #0d0e12) showcases product heroes and infrastructure diagrams with dramatic visual impact. This duality mirrors the developer mindset—"build by day, deploy by night."</p>';
+      html += '  <div class="dualmode-grid">';
+
+      html += '    <div class="dualmode-slide dualmode-slide--light">';
+      html += '      <div class="dualmode-slide__kicker">Light Mode</div>';
+      html += '      <div class="dualmode-slide__headline">Information-Dense <span class="dualmode-slide__accent">Editorial</span></div>';
+      html += '      <div class="dualmode-slide__label">Clean, high-contrast, readable.</div>';
+      html += '    </div>';
+
+      html += '    <div class="dualmode-slide dualmode-slide--dark">';
+      html += '      <div class="dualmode-slide__kicker">Dark Mode</div>';
+      html += '      <div class="dualmode-slide__headline">Dramatic Product <span class="dualmode-slide__accent">Showcase</span></div>';
+      html += '      <div class="dualmode-slide__label">Powerful, immersive, confident.</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Multi-Product Color System ──– */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Multi-Product Color System</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.63; color: var(--slate); margin-bottom: 24px; max-width: 840px;">Each HashiCorp product has a locked brand color, applied via CSS custom properties. These colors are used ONLY within their product context. Terraform owns purple. Vault owns yellow. Waypoint owns teal. Vagrant owns blue. This chromatic segregation creates a cohesive yet differentiated portfolio system.</p>';
+      html += '  <div class="products-grid">';
+
+      const products = [
+        { name: 'Terraform', hex: extended['terraform-purple'] || '#7b42bc' },
+        { name: 'Vault', hex: extended['vault-yellow'] || '#ffcf25' },
+        { name: 'Waypoint', hex: extended['waypoint-teal'] || '#14c6cb' },
+        { name: 'Vagrant', hex: extended['vagrant-blue'] || '#1868f2' }
+      ];
+
+      products.forEach(product => {
+        if (product.hex) {
+          html += '  <div class="product-card">';
+          html += '    <div class="product-card__color-block" style="background: ' + esc(product.hex) + '"></div>';
+          html += '    <div class="product-card__name">' + esc(product.name) + '</div>';
+          html += '    <div class="product-card__hex">' + esc(product.hex.toUpperCase()) + '</div>';
+          html += '  </div>';
+        }
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Core Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#000' : '#efeff1';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Typography Pairing ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography System</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Display + Body</div>';
+      html += '    <div class="type-pairing__display">Enterprise <span>infrastructure</span> carries weight</div>';
+
+      html += '    <div class="type-pairing__body">HashiCorp Sans (600–700 weights) sets all headings with tight line

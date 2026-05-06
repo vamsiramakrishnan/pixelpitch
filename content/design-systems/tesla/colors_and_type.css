@@ -1,0 +1,78 @@
+/* Tesla — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #3e6ae1;
+  --ink:     #5c5e62;
+  --slate:   #5c5e62;
+  --signal:  #3e6ae1;
+  --bone:    #f4f4f4;
+  --border:  #eeeeee;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-carbon-dark: #171a20;
+  --color-graphite: #393c41;
+  --color-silver-fog: #8e8e8e;
+  --color-pale-silver: #d0d1d2;
+
+  /* Semantic */
+  --info:    #3e6ae1;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: Universal Sans Display;
+  --font-body:    Universal Sans Display;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-hero-title: 40px;
+  --t-product-name: 17px;
+  --t-nav-item: 14px;
+  --t-body-text: 14px;
+  --t-button-label: 14px;
+  --t-sub-link: 14px;
+  --t-promo-text: 22px;
+  --t-category-label: 16px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   16px;
+  --radius-lg:   44px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  16px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    16px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

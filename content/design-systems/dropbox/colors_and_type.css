@@ -1,0 +1,105 @@
+/* Dropbox — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #0061ff;
+  --slate:   #8c8c8c;
+  --signal:  #ff7e6b;
+  --bone:    #ffffff;
+  --border:  #f7f5f2;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-blue-hover: #0050d4;
+  --color-blue-light: #e3ecff;
+  --color-black: #1e1919;
+  --color-dark-gray: #3d3b39;
+  --color-mid-gray: #637282;
+  --color-muted: #b2b2b2;
+  --color-surface-hover: #f0edea;
+  --color-border-default: #e2e0de;
+  --color-border-subtle: #ebebeb;
+  --color-success-green: #0d7d3b;
+  --color-success-light: #e6f4ea;
+  --color-warning-amber: #e5a000;
+  --color-warning-light: #fff3cd;
+  --color-error-red: #d93025;
+  --color-error-light: #fce8e6;
+  --color-yellow: #ffd830;
+  --color-purple: #7b68ee;
+  --color-teal: #17bebb;
+
+  /* Semantic */
+  --success: #0d7d3b;
+  --warning: #e5a000;
+  --danger:  #d93025;
+  --info:    #0061ff;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: Sharp Grotesk;
+  --font-body:    Sharp Grotesk;
+  --font-mono:    SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 56px;
+  --t-display-large: 44px;
+  --t-heading-1: 36px;
+  --t-heading-2: 28px;
+  --t-heading-3: 22px;
+  --t-heading-4: 18px;
+  --t-body-large: 18px;
+  --t-body: 16px;
+  --t-body-medium: 16px;
+  --t-body-small: 14px;
+  --t-body-small-medium: 14px;
+  --t-caption: 12px;
+  --t-caption-medium: 12px;
+  --t-button-large: 16px;
+  --t-button-standard: 14px;
+  --t-button-small: 12px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 80px;
+  --s-10: 120px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   32px;
+  --radius-lg:   48px;
+  --radius-full: 180px;
+
+  /* ── Components ── */
+  --button-radius:  32px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    1px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

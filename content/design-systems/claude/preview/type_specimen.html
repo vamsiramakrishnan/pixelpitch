@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — Claude</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, Georgia, serif);
+      background: var(--paper, #f5f4ed);
+      color: var(--ink, #141413);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 60px 24px;
+      }
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 80px;
+      border-bottom: 1px solid var(--color-border-cream, #f0eee6);
+      padding-bottom: 48px;
+    }
+
+    .header__meta {
+      font-family: var(--font-mono, monospace);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--slate, #5e5d59);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, Georgia, serif);
+      font-size: 64px;
+      font-weight: 500;
+      line-height: 1.10;
+      letter-spacing: -0.01em;
+      color: var(--ink, #141413);
+      margin-bottom: 12px;
+      max-width: 800px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, Georgia, serif);
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.60;
+      color: var(--slate, #5e5d59);
+      max-width: 600px;
+    }
+
+    /* Font family cards */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-bottom: 80px;
+    }
+
+    .font-card {
+      background: var(--bone, #faf9f5);
+      border: 1px solid var(--color-border-cream, #f0eee6);
+      border-radius: 4px;
+      padding: 36px 32px;
+    }
+
+    .font-card__label {
+      font-family: var(--font-mono, monospace);
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--slate, #5e5d59);
+      margin-bottom: 12px;
+    }
+
+    .font-card__name {
+      font-family: var(--font-display, Georgia, serif);
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 1.20;
+      color: var(--ink, #141413);
+      margin-bottom: 8px;
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--slate, #5e5d59);
+      word-break: break-all;
+      line-height: 1.50;
+    }
+
+    /* Character set block */
+    .charset-block {
+      background: var(--bone, #faf9f5);
+      border: 1px solid var(--color-border-cream, #f0eee6);
+      border-radius: 4px;
+      padding: 48px 40px;
+      margin-bottom: 80px;
+    }
+
+    .charset-block__label {
+      font-family: var(--font-mono, monospace);
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--slate, #5e5d59);
+      margin-bottom: 20px;
+    }
+
+    .charset-block__row {
+      font-size: 24px;
+      line-height: 1.80;
+      letter-spacing: 0.02em;
+      color: var(--ink, #141413);
+      word-break: break-all;
+      font-weight: 500;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-mono, monospace);
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--slate, #5e5d59);
+      margin-bottom: 40px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--color-border-cream, #f0eee6);
+    }
+
+    /* Ramp section */
+    .ramp-section {
+      margin-bottom: 80px;
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 36px 0;
+      border-bottom: 1px solid var(--color-border-cream, #f0eee6);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 920px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-body, Georgia, serif);
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--ink, #141413);
+      margin-bottom: 10px;
+      line-height: 1.20;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, monospace);
+      font-size: 11px;
+      line-height: 1.70;
+      color: var(--slate, #5e5d59);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--ink, #141413);
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    /* Drop cap demo */
+    .drop-cap-section {
+      margin-top: 80px;
+      padding-top: 80px;
+      border-top: 1px solid var(--color-border-cream, #f0eee6);
+    }
+
+    .drop-cap-section__label {
+      font-family: var(--font-mono, monospace);
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--slate, #5e5d59);
+      margin-bottom: 40px;
+    }
+
+    .drop-cap-demo {
+      max-width: 600px;
+      columns: 2;
+      column-gap: 40px;
+      font-family: var(--font-body, Georgia, serif);
+      font-size: 17px;
+      line-height: 1.60;
+      color: var(--ink, #141413);
+    }
+
+    .drop-cap-demo::first-letter {
+      font-family: var(--font-display, Georgia, serif);
+      font-size: 120px;
+      font-weight: 500;
+      float: left;
+      line-height: 1.00;
+      padding-right: 8px;
+      margin-top: -3px;
+      color: var(--signal, #c96442);
+    }
+
+    @media (max-width: 768px) {
+      .drop-cap-demo {
+        columns: 1;
+      }
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #5e5d59);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--color-border-cream, #f0eee6);
+      border-top-color: var(--signal, #c96442);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Serif display font: use Georgia as fallback */
+    .serif {
+      font-family: var(--font-display, Georgia, serif);
+    }
+
+    /* Sans UI font: use system-ui as fallback */
+    .sans {
+      font-family: var(--font-body, system-ui, -apple-system, sans-serif);
+    }
+
+    /* Mono font: use monospace as fallback */
+    .mono {
+      font-family: var(--font-mono, ui-monospace, monospace);
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'The craft of writing is discovering what you have to say.',
+      'Anthropic builds AI systems that are safe, interpretable, and beneficial.',
+      'Every great design begins with an equally great idea.',
+      'The relationship between words and images is never a simple one.',
+      'Design should tell the story of a brand with precision and grace.',
+      'We believe that thoughtful design reveals clarity of thought.',
+      'Typography creates the rhythm and structure of written communication.',
+      'Language shapes how we think about technology and its role in our lives.',
+      'The most powerful designs are often the simplest ones.',
+      'Words should move the reader. Type should move the mind.',
+    ];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#b53333">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Design System';
+      const ramp = tokens.typography?.ramp || [];
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__meta">Type Specimen</div>';
+      html += '  <h1 class="header__title">Typeface &amp;<br>Hierarchy</h1>';
+      html += '  <p class="header__subtitle">Serif for authority, sans for utility. The typographic foundation of ' + esc(title) + '.</p>';
+      html += '</header>';
+
+      /* Font families */
+      const fontDisplay = tokens.typography?.fontDisplay || 'Anthropic Serif';
+      const fontBody = tokens.typography?.fontBody || 'Anthropic Serif';
+      const fontMono = tokens.typography?.fontMono || 'Anthropic Mono';
+
+      html += '<div class="font-families">';
+      html += fontCard('Display Serif', fontDisplay, 'Headlines, authority, gravitas');
+      html += fontCard('Body Serif', fontBody, 'Editorial text, serif body copy');
+      html += fontCard('Monospace', fontMono, 'Code, terminals, technical content');
+      html += '</div>';
+
+      /* Character set */
+      html += '<div class="charset-block">';
+      html += '  <div class="charset-block__label">Complete Character Set</div>';
+      html += '  <div class="charset-block__row serif">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</div>';
+      html += '  <div class="charset-block__row serif">a b c d e f g h i j k l m n o p q r s t u v w x y z</div>';
+      html += '  <div class="charset-block__row serif">0 1 2 3 4 5 6 7 8 9 &amp; &mdash; &ndash; &lsquo; &rsquo; &ldquo; &rdquo;</div>';
+      html += '</div>';
+
+      /* Type ramp */
+      if (ramp.length) {
+        html += '<div class="ramp-section">';
+        html += '<div class="section-label">Type Ramp</div>';
+        ramp.forEach((entry, i) => {
+          html += rampRow(entry, i, tokens.typography);
+        });
+        html += '</div>';
+      }
+
+      /* Drop cap demo */
+      html += '<div class="drop-cap-section">';
+      html += '  <div class="drop-cap-section__label">Display Serif in Context: Drop Cap</div>';
+      html += '  <div class="drop-cap-demo serif">Designing for AI means designing with nuance. The language we use to describe these systems shapes how people understand them. Every word choice, every visual treatment, every interaction pattern sends a message. Anthropic builds AI that is interpretable, safe, and beneficial. Our design system reflects that commitment to clarity and thoughtfulness. Typography is the primary medium through which ideas move. In this space, every font choice matters.</div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function fontCard(label, name, description) {
+      let html = '<div class="font-card">';
+      html += '  <div class="font-card__label">' + esc(label) + '</div>';
+      html += '  <div class="font-card__name serif" style="font-family: \'' + esc(name) + '\', Georgia, serif">' + esc(name) + '</div>';
+      html += '  <div class="font-card__fallback">' + esc(description) + '</div>';
+      html += '</div>';
+      return html;
+    }
+
+    function rampRow(entry, idx, typog) {
+      const role = entry.role || 'Role ' + (idx + 1);
+      const size = entry.size || '16px';
+      const weight = entry.weight || 400;
+      const lh = entry.lineHeight || '1.5';
+      const ls = entry.letterSpacing || '0';
+      const fontKey = entry.fontKey || 'display';
+
+      let fontName = '';
+      if (fontKey === 'display') fontName = typog?.fontDisplay || 'Anthropic Serif';
+      else if (fontKey === 'ui') fontName = typog?.fontBody || 'Anthropic Serif';
+      else if (fontKey === 'mono') fontName = typog?.fontMono || 'Anthropic Mono';
+
+      const sampleIdx = idx % EDITORIAL_SAMPLES.length;
+      const sample = EDITORIAL_SAMPLES[sampleIdx];
+
+      const sizeNum = parseFloat(size);
+      const displaySample = sizeNum >= 48 ? sample.split('.')[0] + '.' : sample;
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + ';';
+      fontStyle += 'font-family:\'' + esc(fontName) + '\',Georgia,serif;';
+      if (ls !== '0' && ls !== 'normal') fontStyle += 'letter-spacing:' + ls + ';';
+
+      let meta = '';
+      meta += esc(size) + ' / ' + esc(weight.toString());
+      meta += '\n' + esc(fontName);
+      meta += '\nLine Height: ' + esc(lh);
+      if (ls !== '0' && ls !== 'normal') meta += '\nLetter Spacing: ' + esc(ls);
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(displaySample) + '</div>' +
+        '</div>';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

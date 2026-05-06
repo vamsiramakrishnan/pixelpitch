@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Colorful</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 12px;
+    }
+
+    .header__title span {
+      background: linear-gradient(135deg, var(--signal, #3b82f6) 0%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 96px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--signal, #3b82f6), #8b5cf6, #ec4899);
+      border: none;
+      border-radius: 2px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 56px;
+    }
+
+    .section__label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--signal, #3b82f6);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 80px;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      color: var(--ink, #111111);
+      font-weight: 600;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      background: var(--bone, #f5f5f5);
+      border-radius: var(--radius-sm, 4px);
+      padding: 0 8px;
+      overflow: hidden;
+    }
+
+    .spacing-row__bar {
+      height: 12px;
+      background: linear-gradient(90deg, var(--signal, #3b82f6) 0%, #8b5cf6 100%);
+      border-radius: 2px;
+      min-width: 2px;
+      transition: all 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      height: 16px;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      color: var(--slate, #666666);
+      text-align: right;
+      font-weight: 500;
+    }
+
+    /* Rule weights */
+    .rule-demo {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 1px;
+      transition: all 0.2s ease;
+    }
+
+    .rule-demo:hover .rule-demo__line {
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 24px;
+    }
+
+    .radius-item {
+      text-align: center;
+    }
+
+    .radius-item__box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 140px;
+      margin: 0 auto 14px;
+      background: linear-gradient(135deg, var(--signal, #3b82f6) 0%, #8b5cf6 100%);
+      border: none;
+      opacity: 0.6;
+      transition: all 0.2s ease;
+    }
+
+    .radius-item:hover .radius-item__box {
+      opacity: 1;
+      transform: scale(1.05);
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      margin-bottom: 4px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+
+    /* Elevation demos */
+    .elevation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 24px;
+    }
+
+    .elevation-item {
+      padding: 32px 24px;
+      background: var(--paper, #ffffff);
+      border-radius: var(--radius-md, 8px);
+      text-align: center;
+      border: 1px solid var(--border, #e5e5e5);
+      transition: all 0.2s ease;
+    }
+
+    .elevation-item.level-2 {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .elevation-item:hover {
+      transform: translateY(-2px);
+    }
+
+    .elevation-item__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+
+    .elevation-item__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      color: var(--slate, #666666);
+      word-break: break-all;
+      line-height: 1.4;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        padding: 40px 16px;
+      }
+
+      .header__title {
+        font-size: 36px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 80px 1fr 60px;
+        gap: 8px;
+      }
+
+      .radius-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
+
+      .elevation-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': '4px',
+      's-2': '8px',
+      's-3': '16px',
+      's-4': '24px',
+      's-5': '32px',
+      's-6': '48px',
+      's-7': '64px',
+      's-8': '96px',
+    };
+
+    const DEFAULT_DEPTH = [
+      { level: 0, name: 'Flat', treatment: 'none' },
+      { level: 1, name: 'Border', treatment: '1px solid var(--border)' },
+      { level: 2, name: 'Elevated', treatment: '0 2px 8px rgba(0,0,0,0.08)' },
+    ];
+
+    const DEFAULT_RADIUS = {
+      none: '0',
+      sm: '4px',
+      md: '8px',
+      lg: '16px',
+      full: '999px',
+    };
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#ef4444">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const systemName = tokens.meta?.title || tokens.meta?.id || 'Design System';
+
+      const spacing = tokens.spacing?.scale || DEFAULT_SPACING;
+      const depth = tokens.depth || DEFAULT_DEPTH;
+      const radius = tokens.radii || DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Spacing &amp; <span>Rules</span></h1>';
+      html += '  <p class="header__subtitle">Visual and structural rhythm for ' + esc(systemName) + '.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ---- Spacing scale ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, v]) => parseFloat(v) || 0), 1);
+
+      spacingEntries.forEach(([key, value]) => {
+        const px = parseFloat(value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 1);
+        html += '<div class="spacing-row">';
+        html += '  <div class="spacing-row__name">--' + esc(key) + '</div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* ---- Rule weights ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Elevation &amp; Depth</div>';
+
+      depth.forEach(item => {
+        const name = item.name || 'Level ' + item.level;
+        const treatment = item.treatment || 'none';
+        let style = '';
+
+        if (treatment !== 'none') {
+          if (treatment.includes('shadow') || treatment.includes('0')) {
+            style = 'box-shadow:' + treatment + ';';
+          } else if (treatment.includes('solid')) {
+            style = 'border:' + treatment + ';';
+          }
+        }
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <span class="rule-demo__name">' + esc(name) + '</span>';
+        html += '    <span class="rule-demo__spec">' + esc(treatment.substring(0, 40)) + (treatment.length > 40 ? '…' : '') + '</span>';
+        html += '  </div>';
+        html += '  <div style="height:64px;border-radius:8px;background:linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(139,92,246,0.1) 100%);' + style + '"></div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* ---- Border radius ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+      html += '  <div class="radius-grid">';
+
+      Object.entries(radius).forEach(([key, value]) => {
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__box" style="border-radius:' + esc(value) + '"></div>';
+        html += '  <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '  <div class="radius-item__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Elevation preview ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Elevation Preview</div>';
+      html += '  <div class="elevation-grid">';
+
+      depth.forEach(item => {
+        const name = item.name || 'Level ' + item.level;
+        const treatment = item.treatment || 'none';
+        let classVal = '';
+        let inlineStyle = '';
+
+        if (item.level === 0) {
+          classVal = '';
+          inlineStyle = '';
+        } else if (item.level === 1) {
+          inlineStyle = 'border:1px solid var(--border);';
+        } else if (item.level === 2) {
+          classVal = 'level-2';
+        }
+
+        html += '<div class="elevation-item ' + classVal + '" style="' + inlineStyle + '">';
+        html += '  <div class="elevation-item__name">' + esc(name) + '</div>';
+        html += '  <div class="elevation-item__spec">' + esc(treatment.substring(0, 60)) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

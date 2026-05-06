@@ -35,7 +35,7 @@ What makes Ollama distinctive is the combination of SF Pro Rounded (Apple's roun
 ### Neutrals & Text
 - **Stone** (`#737373`): Secondary body text, footer links, and de-emphasized content. The primary "muted" tone.
 - **Mid Gray** (`#525252`): Emphasized secondary text, slightly darker than Stone.
-- **Silver** (`#a3a3a3`): Tertiary text, placeholders, and deeply de-emphasized metadata.
+- **Silver** (`#777777`): Tertiary text, placeholders, and deeply de-emphasized metadata.
 - **Button Text Dark** (`#404040`): Specific to white-surface button text.
 
 ### Semantic & Accent
@@ -115,7 +115,7 @@ What makes Ollama distinctive is the combination of SF Pro Rounded (Apple's roun
 - Border: `1px solid #e5e5e5`
 - Radius: pill-shaped (9999px) — search inputs and form fields are pill-shaped
 - Focus: Ring Blue (`#3b82f6` at 50%) ring
-- Placeholder: Silver (`#a3a3a3`)
+- Placeholder: Silver (`#777777`)
 
 ### Navigation
 - Clean horizontal nav with minimal elements
@@ -250,7 +250,7 @@ What makes Ollama distinctive is the combination of SF Pro Rounded (Apple's roun
 - Secondary Text: "Stone (#737373)"
 - Button Background: "Light Gray (#e5e5e5)"
 - Borders: "Light Gray (#e5e5e5)"
-- Muted Text: "Silver (#a3a3a3)"
+- Muted Text: "Silver (#777777)"
 - Dark Text: "Near Black (#262626)"
 - Subtle Surface: "Snow (#fafafa)"
 

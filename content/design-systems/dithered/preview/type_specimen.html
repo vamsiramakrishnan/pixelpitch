@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — Dithered</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Open Sans', sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 48px 24px;
+      }
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 96px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'Space Grotesk', sans-serif);
+      font-size: 96px;
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 24px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'Open Sans', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 96px;
+      height: 2px;
+      background: var(--ink, #111111);
+      border: none;
+      margin: 0;
+    }
+
+    /* Font families section */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      margin-bottom: 96px;
+      margin-top: 64px;
+    }
+
+    .font-card {
+      background: var(--bone, #f5f5f5);
+      border: 2px solid var(--ink, #111111);
+      border-radius: 0;
+      padding: 32px;
+    }
+
+    .font-card__label {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .font-card__name {
+      font-family: var(--font-display, 'Space Grotesk', sans-serif);
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 11px;
+      color: var(--slate, #666666);
+      word-break: break-word;
+      font-weight: 400;
+    }
+
+    /* Character set block */
+    .charmap-block {
+      background: var(--bone, #f5f5f5);
+      border: 2px solid var(--ink, #111111);
+      border-radius: 0;
+      padding: 48px;
+      margin-bottom: 96px;
+    }
+
+    .charmap-block__label {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+    }
+
+    .charmap-block__chars {
+      font-family: var(--font-display, 'Space Grotesk', sans-serif);
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.8;
+      letter-spacing: 0.02em;
+      color: var(--ink, #111111);
+      word-break: break-word;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--ink, #111111);
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 800px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-display, 'Space Grotesk', sans-serif);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 10px;
+      font-weight: 400;
+      line-height: 1.8;
+      color: var(--slate, #666666);
+      letter-spacing: 0.02em;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--ink, #111111);
+      overflow-wrap: break-word;
+      word-spacing: 0.1em;
+    }
+
+    /* Ramp section */
+    .ramp-section {
+      margin-bottom: 96px;
+    }
+
+    /* Weight showcase */
+    .weight-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      margin-bottom: 96px;
+    }
+
+    .weight-card {
+      background: var(--bone, #f5f5f5);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 0;
+      padding: 32px;
+    }
+
+    .weight-card__label {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .weight-card__sample {
+      font-family: var(--font-display, 'Space Grotesk', sans-serif);
+      font-size: 28px;
+      line-height: 1.2;
+      color: var(--ink, #111111);
+      word-break: break-word;
+    }
+
+    /* Drop cap demo */
+    .dropcap-demo {
+      margin-bottom: 96px;
+    }
+
+    .dropcap-demo__label {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--ink, #111111);
+    }
+
+    .dropcap-container {
+      background: var(--bone, #f5f5f5);
+      border: 2px solid var(--ink, #111111);
+      border-radius: 0;
+      padding: 48px;
+      max-width: 680px;
+    }
+
+    .dropcap-para {
+      font-family: var(--font-body, 'Open Sans', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--ink, #111111);
+      margin: 0;
+      text-align: left;
+    }
+
+    .dropcap {
+      float: left;
+      font-family: var(--font-display, 'Space Grotesk', sans-serif);
+      font-size: 96px;
+      font-weight: 900;
+      line-height: 0.8;
+      color: var(--signal, #3b82f6);
+      margin-right: 8px;
+      margin-top: -4px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 160px 48px;
+      color: var(--slate, #666666);
+      font-family: var(--font-body, 'Open Sans', sans-serif);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 24px auto 0;
+      border: 2px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 0%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Dithered aesthetic: high contrast, crisp edges */
+    .header__title,
+    .font-card__name,
+    .weight-card__sample {
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Pixels are the new dots. Bold and uncompromising.',
+      'Retro technology meets modern clarity.',
+      'Limited palette, unlimited impact.',
+      'High contrast design for maximum readability.',
+      'Dithering creates depth from constraint.',
+      'Simple forms, infinite expression.',
+      'Sharp lines. No apology.',
+      'Nostalgia with purpose.',
+      'Every pixel counts.',
+      'Minimal rules, maximal intent.',
+    ];
+
+    const DROPCAP_TEXT = 'Dithered design systems leverage dot-pattern rendering to simulate color and shade using a strictly limited palette. This nostalgic technique, rooted in retro printing and early digital displays, creates high-contrast visuals that demand attention. The constraint is the feature. By reducing chromatic possibility, we increase typographic hierarchy and information clarity. Space Grotesk drives display drama with its geometric sans-serif geometry. Open Sans optimizes body text legibility at every scale. IBM Plex Mono enforces metadata discipline. Together, these three typefaces form a complete system that honors retro aesthetics while serving modern usability standards. No sentiment without substance.';
+
+    fetch('../tokens.json')
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#3b82f6">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Dithered';
+      const summary = tokens.meta?.summary || '';
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Type Specimen</div>';
+      html += '  <h1 class="header__title">' + esc(title) + '</h1>';
+      html += '  <p class="header__subtitle">' + esc(summary) + '</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      const families = [
+        { label: 'Display', name: 'Space Grotesk', fallback: 'sans-serif' },
+        { label: 'Body', name: 'Open Sans', fallback: 'sans-serif' },
+        { label: 'Monospace', name: 'IBM Plex Mono', fallback: 'monospace' }
+      ];
+
+      html += '<div class="font-families">';
+      families.forEach(f => {
+        html += '<div class="font-card">';
+        html += '  <div class="font-card__label">' + esc(f.label) + '</div>';
+        html += '  <div class="font-card__name">' + esc(f.name) + '</div>';
+        html += '  <div class="font-card__fallback">' + esc(f.fallback) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      /* Character set */
+      html += '<div class="charmap-block">';
+      html += '  <div class="charmap-block__label">Character Set</div>';
+      html += '  <div class="charmap-block__chars" style="font-family:\'Space Grotesk\',sans-serif">';
+      html += '    AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>';
+      html += '    0123456789 !@#$%&amp;*()&ndash;&mdash;&lsquo;&rsquo;&ldquo;&rdquo;';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Type ramp */
+      html += '<div class="ramp-section">';
+      html += '<div class="section-label">Type Ramp</div>';
+      html += rampRow('Micro', '14px', 400, 1.5, '0', 'Open Sans', 0);
+      html += rampRow('Small', '16px', 400, 1.5, '0', 'Open Sans', 1);
+      html += rampRow('Base', '18px', 400, 1.6, '0', 'Open Sans', 2);
+      html += rampRow('Lead', '24px', 500, 1.5, '-0.01em', 'Space Grotesk', 3);
+      html += rampRow('Heading 3', '32px', 700, 1.3, '-0.02em', 'Space Grotesk', 4);
+      html += rampRow('Heading 2', '40px', 700, 1.2, '-0.02em', 'Space Grotesk', 5);
+      html += rampRow('Heading 1', '56px', 900, 1.1, '-0.03em', 'Space Grotesk', 6);
+      html += '</div>';
+
+      /* Weight showcase for Space Grotesk */
+      html += '<div class="ramp-section">';
+      html += '<div class="section-label">Space Grotesk Weight Spectrum</div>';
+      html += '<div class="weight-grid">';
+      const weights = [
+        { name: 'Light', weight: 300 },
+        { name: 'Regular', weight: 400 },
+        { name: 'Medium', weight: 500 },
+        { name: 'Semi Bold', weight: 600 },
+        { name: 'Bold', weight: 700 },
+        { name: 'Extra Bold', weight: 800 },
+        { name: 'Black', weight: 900 }
+      ];
+      weights.forEach((w, i) => {
+        const sample = ['Bold', 'Modern', 'Sharp'][i % 3] || 'Typography';
+        html += '<div class="weight-card">';
+        html += '  <div class="weight-card__label">' + esc(w.name) + ' (' + w.weight + ')</div>';
+        html += '  <div class="weight-card__sample" style="font-weight:' + w.weight + '">' + esc(sample) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+      html += '</div>';
+
+      /* Drop cap demo */
+      html += '<div class="dropcap-demo">';
+      html += '<div class="dropcap-demo__label">Drop Cap — Space Grotesk Black, Signal Blue</div>';
+      html += '<div class="dropcap-container">';
+      const firstChar = DROPCAP_TEXT.charAt(0);
+      const restText = DROPCAP_TEXT.substring(1);
+      html += '<p class="dropcap-para">';
+      html += '<span class="dropcap">' + esc(firstChar) + '</span>';
+      html += esc(restText);
+      html += '</p>';
+      html += '</div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(role, size, weight, lh, ls, fontName, sampleIdx) {
+      const sampleText = EDITORIAL_SAMPLES[sampleIdx % EDITORIAL_SAMPLES.length];
+      const sample = sampleText.split('.')[0];
+
+      let fontFamily = 'var(--font-body)';
+      if (fontName === 'Space Grotesk') fontFamily = 'var(--font-display)';
+      else if (fontName === 'IBM Plex Mono') fontFamily = 'var(--font-mono)';
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + ';';
+      fontStyle += 'font-family:' + fontFamily + ';';
+      if (ls && ls !== '0' && ls !== 'normal') fontStyle += 'letter-spacing:' + ls + ';';
+
+      let meta = esc(size) + ' / ' + esc(String(weight));
+      meta += '\n' + esc(fontName);
+      meta += '\nline-height: ' + esc(String(lh));
+      if (ls && ls !== '0' && ls !== 'normal') meta += '\nletter-spacing: ' + esc(ls);
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(sample) + '</div>' +
+        '</div>';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

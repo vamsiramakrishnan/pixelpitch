@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyberpunk — Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ──── CYBERPUNK COLOR OVERRIDES ──── */
+    :root {
+      --abyss: #0a0e27;
+      --carbon: #1a1f3a;
+      --slate-dark: #2d3650;
+      --neon-green: #00ff9f;
+      --cyan: #00d4ff;
+      --magenta: #ff00ff;
+      --danger-red: #ff0055;
+      --warning-amber: #ffa500;
+      --dim-gray: #4a5568;
+      --ghost-white: #e8e8e8;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--abyss);
+      color: var(--ghost-white);
+      line-height: 1.55;
+      overflow-x: hidden;
+    }
+
+    /* Hex grid background pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 49px,
+          rgba(0, 255, 159, 0.03) 49px,
+          rgba(0, 255, 159, 0.03) 50px
+        ),
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 49px,
+          rgba(0, 255, 159, 0.03) 49px,
+          rgba(0, 255, 159, 0.03) 50px
+        );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Scan line overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 255, 255, 0.02) 2px,
+        rgba(255, 255, 255, 0.02) 4px
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-8) var(--s-5);
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--s-4);
+      margin-bottom: var(--s-7);
+      border-bottom: 2px solid var(--neon-green);
+      border-top: 4px solid var(--neon-green);
+      padding-top: var(--s-4);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-mono);
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      line-height: 1;
+      color: var(--neon-green);
+      text-transform: uppercase;
+      text-shadow: 0 0 20px rgba(0, 255, 159, 0.5), 0 0 40px rgba(0, 255, 159, 0.2);
+      animation: glitch-logo 0.4s ease-out;
+    }
+
+    @keyframes glitch-logo {
+      0% {
+        clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+        transform: translateX(-2px);
+      }
+      50% {
+        clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+        transform: translateX(2px);
+      }
+      100% {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        transform: translateX(0);
+      }
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      text-align: right;
+      line-height: 1.4;
+      text-shadow: 0 0 12px rgba(0, 212, 255, 0.4);
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-8);
+      padding: var(--s-5);
+      background: var(--carbon);
+      border: 1px solid rgba(0, 255, 159, 0.4);
+      border-top: 3px solid var(--neon-green);
+      border-radius: var(--radius-sm);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stage-head::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 255, 255, 0.03) 2px,
+        rgba(255, 255, 255, 0.03) 4px
+      );
+      pointer-events: none;
+    }
+
+    .stage-head__content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: var(--s-2);
+      text-shadow: 0 0 8px rgba(0, 212, 255, 0.3);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-mono);
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      line-height: 0.95;
+      color: var(--neon-green);
+      margin-bottom: var(--s-3);
+      text-transform: uppercase;
+      text-shadow: 0 0 20px rgba(0, 255, 159, 0.4), 0 0 40px rgba(0, 255, 159, 0.15);
+      word-break: break-word;
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ghost-white);
+      max-width: 720px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid rgba(0, 255, 159, 0.2);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: var(--s-2);
+      text-shadow: 0 0 8px rgba(0, 212, 255, 0.2);
+    }
+
+    .section__title {
+      font-family: var(--font-mono);
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      line-height: 1.1;
+      color: var(--neon-green);
+      margin-bottom: var(--s-5);
+      text-transform: uppercase;
+      text-shadow: 0 0 15px rgba(0, 255, 159, 0.3);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row__label {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dim-gray);
+      margin-right: var(--s-3);
+      min-width: 140px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      line-height: 1;
+      border: 1px solid var(--neon-green);
+      background: transparent;
+      color: var(--neon-green);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s ease-out;
+      text-decoration: none;
+      gap: var(--s-2);
+      box-shadow: 0 0 8px rgba(0, 255, 159, 0.2);
+    }
+
+    .btn:hover {
+      background: rgba(0, 255, 159, 0.15);
+      box-shadow: 0 0 12px rgba(0, 255, 159, 0.4), 0 0 30px rgba(0, 255, 159, 0.15);
+    }
+
+    .btn--primary {
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+      box-shadow: 0 0 8px rgba(0, 255, 159, 0.2);
+    }
+
+    .btn--primary:hover {
+      background: rgba(0, 255, 159, 0.15);
+      box-shadow: 0 0 12px rgba(0, 255, 159, 0.4), 0 0 30px rgba(0, 255, 159, 0.15);
+    }
+
+    .btn--secondary {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      box-shadow: 0 0 8px rgba(0, 212, 255, 0.2);
+    }
+
+    .btn--secondary:hover {
+      background: rgba(0, 212, 255, 0.15);
+      box-shadow: 0 0 12px rgba(0, 212, 255, 0.4), 0 0 30px rgba(0, 212, 255, 0.15);
+    }
+
+    .btn--danger {
+      border-color: var(--danger-red);
+      color: var(--danger-red);
+      box-shadow: 0 0 8px rgba(255, 0, 85, 0.2);
+    }
+
+    .btn--danger:hover {
+      background: rgba(255, 0, 85, 0.15);
+      box-shadow: 0 0 12px rgba(255, 0, 85, 0.4), 0 0 30px rgba(255, 0, 85, 0.15);
+    }
+
+    .btn--disabled {
+      border-color: var(--dim-gray);
+      color: var(--dim-gray);
+      box-shadow: none;
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    .btn--disabled:hover {
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .btn--sm {
+      padding: 6px 14px;
+      font-size: 10px;
+    }
+
+    .btn--lg {
+      padding: 14px 32px;
+      font-size: 12px;
+    }
+
+    .btn--ghost {
+      border: none;
+      background: transparent;
+      color: var(--neon-green);
+      padding: 0;
+      text-decoration: underline;
+      text-decoration-color: var(--cyan);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      letter-spacing: 0;
+      text-transform: none;
+      box-shadow: none;
+    }
+
+    .btn--ghost:hover {
+      color: var(--cyan);
+      text-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
+    }
+
+    /* ──── TERMINAL CARDS ──── */
+    .terminal-card {
+      background: var(--carbon);
+      border: 1px solid rgba(0, 255, 159, 0.4);
+      border-top: 3px solid var(--neon-green);
+      border-radius: var(--radius-sm);
+      padding: var(--s-4);
+      margin-bottom: var(--s-5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .terminal-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 255, 255, 0.03) 2px,
+        rgba(255, 255, 255, 0.03) 4px
+      );
+      pointer-events: none;
+    }
+
+    .terminal-card__header {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2);
+      margin-bottom: var(--s-3);
+      padding-bottom: var(--s-3);
+      border-bottom: 1px solid rgba(0, 255, 159, 0.2);
+      position: relative;
+      z-index: 1;
+    }
+
+    .terminal-card__title {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--neon-green);
+      text-shadow: 0 0 8px rgba(0, 255, 159, 0.2);
+    }
+
+    .terminal-card__cursor {
+      display: inline-block;
+      width: 8px;
+      height: 14px;
+      background: var(--neon-green);
+      animation: blink 1s infinite;
+      box-shadow: 0 0 4px var(--neon-green);
+    }
+
+    @keyframes blink {
+      0%, 49%, 100% { opacity: 1; }
+      50%, 99% { opacity: 0; }
+    }
+
+    .terminal-card__content {
+      position: relative;
+      z-index: 1;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--neon-green);
+    }
+
+    /* ──── DATA READOUT PANELS ──── */
+    .data-panel {
+      background: var(--carbon);
+      border: 1px solid rgba(0, 255, 159, 0.3);
+      border-radius: var(--radius-sm);
+      padding: var(--s-4);
+      margin-bottom: var(--s-5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .data-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 255, 255, 0.03) 2px,
+        rgba(255, 255, 255, 0.03) 4px
+      );
+      pointer-events: none;
+    }
+
+    .data-panel::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(0, 255, 159, 0.15),
+        transparent
+      );
+      animation: data-sweep 3s infinite;
+    }
+
+    @keyframes data-sweep {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .data-readout {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: var(--s-4) var(--s-3);
+      position: relative;
+      z-index: 1;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .data-readout__key {
+      color: var(--dim-gray);
+      text-align: right;
+    }
+
+    .data-readout__value {
+      color: var(--neon-green);
+      text-shadow: 0 0 6px rgba(0, 255, 159, 0.3);
+    }
+
+    /* ──── BADGE / STATUS PILLS ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      margin-bottom: var(--s-5);
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      line-height: 1.4;
+      border-radius: var(--radius-sm);
+      background: rgba(0, 255, 159, 0.1);
+      color: var(--neon-green);
+      border: 1px solid rgba(0, 255, 159, 0.3);
+      box-shadow: 0 0 6px rgba(0, 255, 159, 0.1);
+    }
+
+    .badge--cyan {
+      background: rgba(0, 212, 255, 0.1);
+      color: var(--cyan);
+      border-color: rgba(0, 212, 255, 0.3);
+      box-shadow: 0 0 6px rgba(0, 212, 255, 0.1);
+    }
+
+    .badge--danger {
+      background: rgba(255, 0, 85, 0.1);
+      color: var(--danger-red);
+      border-color: rgba(255, 0, 85, 0.3);
+      box-shadow: 0 0 6px rgba(255, 0, 85, 0.1);
+    }
+
+    .badge--warning {
+      background: rgba(255, 165, 0, 0.1);
+      color: var(--warning-amber);
+      border-color: rgba(255, 165, 0, 0.3);
+      box-shadow: 0 0 6px rgba(255, 165, 0, 0.1);
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .badge__dot--pulse {
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
+
+    /* ──── INPUT FIELDS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .input-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ghost-white);
+      text-shadow: 0 0 4px rgba(232, 232, 232, 0.2);
+    }
+
+    .input {
+      padding: 10px 12px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--neon-green);
+      background: var(--abyss);
+      border: 1px solid var(--dim-gray);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: all 0.2s ease-out;
+      caret-color: var(--neon-green);
+    }
+
+    .input::placeholder {
+      color: var(--dim-gray);
+    }
+
+    .input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 8px rgba(0, 212, 255, 0.3), inset 0 0 0 1px rgba(0, 212, 255, 0.1);
+    }
+
+    /* ──── PROGRESS BARS ──── */
+    .progress-wrap {
+      margin-bottom: var(--s-5);
+    }
+
+    .progress-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ghost-white);
+      margin-bottom: var(--s-2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .progress-value {
+      color: var(--neon-green);
+      text-shadow: 0 0 4px rgba(0, 255, 159, 0.3);
+    }
+
+    .progress-bar {
+      position: relative;
+      width: 100%;
+      height: 8px;
+      background: var(--slate-dark);
+      border-radius: 2px;
+      overflow: hidden;
+      border: 1px solid rgba(0, 255, 159, 0.2);
+    }
+
+    .progress-bar__fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--neon-green), var(--cyan));
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-bar__fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -20px;
+      width: 20px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.4);
+      animation: pulse-bar 2s linear infinite;
+    }
+
+    @keyframes pulse-bar {
+      0% { left: -20px; }
+      100% { left: 100%; }
+    }
+
+    /* ──── STATUS INDICATORS ──── */
+    .status-row {
+      display: flex;
+      gap: var(--s-5);
+      margin-bottom: var(--s-5);
+      flex-wrap: wrap;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2);
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--neon-green);
+      box-shadow: 0 0 6px var(--neon-green);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    .status-dot--warning {
+      background: var(--warning-amber);
+      box-shadow: 0 0 6px var(--warning-amber);
+      animation: none;
+    }
+
+    .status-dot--error {
+      background: var(--danger-red);
+      box-shadow: 0 0 6px var(--danger-red);
+      animation: blink 1s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
+
+    .status-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ghost-white);
+    }
+
+    /* ──── SECTION LAYOUT ──── */
+    .subsection-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: var(--s-3);
+      margin-top: var(--s-4);
+      text-shadow: 0 0 4px rgba(0, 212, 255, 0.2);
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid rgba(0, 255, 159, 0.2);
+      margin: var(--s-5) 0;
+    }
+
+    /* ──── FOOTER ──── */
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-3) 0;
+      margin-top: var(--s-8);
+      border-top: 1px solid rgba(0, 255, 159, 0.2);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dim-gray);
+    }
+
+    /* ──── GRID LAYOUT ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-5);
+      margin-bottom: var(--s-5);
+    }
+
+    /* ──── MOBILE ──── */
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-6) var(--s-3);
+      }
+
+      .stage-head__title {
+        font-size: 40px;
+      }
+
+      .section__title {
+        font-size: 36px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .button-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .button-row__label {
+        margin-right: 0;
+        margin-bottom: var(--s-2);
+      }
+
+      .masthead {
+        flex-direction: column;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: var(--s-3);
+      }
+
+      .status-row {
+        flex-direction: column;
+        gap: var(--s-2);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">CYBERPUNK</div>
+      <div class="masthead__tagline">
+        neon-soaked<br>dystopia
+      </div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__content">
+        <div class="stage-head__kicker">Components</div>
+        <h1 class="stage-head__title">Terminal Vocabulary</h1>
+        <p class="stage-head__subtitle">
+          A neon-soaked component system for dystopian interfaces. Terminal greens, glitch effects, augmented reality HUD aesthetics. Every surface is a control panel in a megacorp server room.
+        </p>
+      </div>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Buttons</div>
+      <h2 class="section__title">Neon Button States</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary (Green)</span>
+        <button class="btn btn--primary">Execute</button>
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary btn--lg">Large Action</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Secondary (Cyan)</span>
+        <button class="btn btn--secondary">Interface</button>
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary btn--lg">Large Interface</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Danger (Red)</span>
+        <button class="btn btn--danger">Shutdown</button>
+        <button class="btn btn--danger btn--sm">Small</button>
+        <button class="btn btn--danger btn--lg">Large Shutdown</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Disabled</span>
+        <button class="btn btn--disabled" disabled>Locked</button>
+        <button class="btn btn--disabled btn--sm" disabled>Small</button>
+        <button class="btn btn--disabled btn--lg" disabled>Large Locked</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Ghost (Underlined)</span>
+        <a href="#" class="btn btn--ghost">Read datastream</a>
+        <a href="#" class="btn btn--ghost">View logs</a>
+        <a href="#" class="btn btn--ghost">Access protocols</a>
+      </div>
+    </section>
+
+    <!-- Terminal Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Containers</div>
+      <h2 class="section__title">Terminal Card Pattern</h2>
+      <p style="font-size:

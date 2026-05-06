@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corporate — Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-7, 64px) var(--s-5, 32px);
+    }
+
+    /* ── Header ── */
+    .header {
+      margin-bottom: var(--s-7, 64px);
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: var(--s-3, 16px);
+    }
+
+    .header__subtitle {
+      font-size: 16px;
+      color: var(--slate, #666666);
+      margin-bottom: var(--s-5, 32px);
+    }
+
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 2px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin-top: var(--s-4, 24px);
+      border-radius: var(--radius-sm, 4px);
+    }
+
+    /* ── Section ── */
+    .section {
+      margin-bottom: var(--s-7, 64px);
+    }
+
+    .section__label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: var(--s-4, 24px);
+      padding-bottom: var(--s-3, 16px);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .sub-heading {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      margin-bottom: var(--s-3, 16px);
+      margin-top: var(--s-2, 8px);
+    }
+
+    .component-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3, 16px);
+      align-items: flex-start;
+      margin-bottom: var(--s-4, 24px);
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--s-2, 8px);
+      padding: var(--button-py, 10px) var(--button-px, 20px);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.4;
+      border-radius: var(--button-radius, 8px);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      border: none;
+    }
+
+    .btn--primary {
+      background: var(--signal, #3b82f6);
+      color: var(--paper, #ffffff);
+    }
+
+    .btn--primary:hover {
+      filter: brightness(0.92);
+    }
+
+    .btn--primary:active {
+      transform: scale(0.98);
+    }
+
+    .btn--secondary {
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      border: 1px solid var(--border, #e5e5e5);
+    }
+
+    .btn--secondary:hover {
+      background: var(--bone, #f5f5f5);
+      border-color: var(--slate, #666666);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--signal, #3b82f6);
+      padding: 10px 8px;
+      text-decoration: none;
+      border-bottom: 1px solid var(--signal, #3b82f6);
+      border-radius: 0;
+    }
+
+    .btn--ghost:hover {
+      opacity: 0.7;
+    }
+
+    .btn--sm {
+      padding: 6px 14px;
+      font-size: 13px;
+    }
+
+    .btn--lg {
+      padding: 14px 32px;
+      font-size: 16px;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ── Cards ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-4, 24px);
+    }
+
+    .card {
+      background: var(--paper, #ffffff);
+      border-radius: var(--card-radius, 8px);
+      padding: var(--s-5, 32px) var(--s-4, 24px);
+      transition: all 0.2s ease;
+    }
+
+    .card--bordered {
+      border: var(--card-border, 1px solid var(--border));
+    }
+
+    .card--bordered:hover {
+      border-color: var(--slate, #666666);
+      background: var(--bone, #f5f5f5);
+    }
+
+    .card--elevated {
+      border: var(--card-border, 1px solid var(--border));
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .card--elevated:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .card__eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: var(--s-2, 8px);
+    }
+
+    .card__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--ink, #111111);
+      margin-bottom: var(--s-2, 8px);
+    }
+
+    .card__body {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+      margin-bottom: var(--s-4, 24px);
+    }
+
+    .card__footer {
+      display: flex;
+      gap: var(--s-2, 8px);
+      align-items: center;
+    }
+
+    /* ── Inputs ── */
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-4, 24px);
+      align-items: flex-start;
+    }
+
+    .input-wrap {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      margin-bottom: var(--s-2, 8px);
+    }
+
+    .input {
+      display: block;
+      width: 100%;
+      padding: 10px 14px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink, #111111);
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate, #666666);
+    }
+
+    .input:focus {
+      border-color: var(--signal, #3b82f6);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .input:disabled {
+      background: var(--bone, #f5f5f5);
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3, 16px);
+      padding: 10px 16px;
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-lg, 16px);
+      max-width: 480px;
+      transition: border-color 0.15s ease;
+    }
+
+    .search-bar:focus-within {
+      border-color: var(--signal, #3b82f6);
+    }
+
+    .search-bar__icon {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      color: var(--slate, #666666);
+    }
+
+    .search-bar__input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      color: var(--ink, #111111);
+    }
+
+    .search-bar__input::placeholder {
+      color: var(--slate, #666666);
+    }
+
+    /* ── Badges & Tags ── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2, 8px);
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-1, 4px);
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: var(--radius-full, 999px);
+      line-height: 1.4;
+    }
+
+    .badge--signal {
+      background: rgba(59, 130, 246, 0.12);
+      color: var(--signal, #3b82f6);
+    }
+
+    .badge--success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge--warning {
+      background: #fef9c3;
+      color: #854d0e;
+    }
+
+    .badge--danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge--neutral {
+      background: var(--bone, #f5f5f5);
+      color: var(--ink, #111111);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-1, 4px);
+      padding: 5px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: var(--radius-md, 8px);
+      background: var(--bone, #f5f5f5);
+      color: var(--ink, #111111);
+      border: 1px solid var(--border, #e5e5e5);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .tag:hover {
+      background: var(--border, #e5e5e5);
+      border-color: var(--slate, #666666);
+    }
+
+    .tag--active {
+      background: var(--signal, #3b82f6);
+      color: var(--paper, #ffffff);
+      border-color: var(--signal, #3b82f6);
+    }
+
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border, #e5e5e5);
+      margin: var(--s-4, 24px) 0;
+    }
+
+    /* ── Form Validation ── */
+    .input.input--error {
+      border-color: #dc2626;
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+    }
+
+    .input.input--success {
+      border-color: #16a34a;
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+    }
+
+    .input-hint {
+      font-size: 12px;
+      color: var(--slate, #666666);
+      margin-top: var(--s-1, 4px);
+    }
+
+    .input-hint.error {
+      color: #dc2626;
+    }
+
+    .input-hint.success {
+      color: #16a34a;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Header -->
+    <header class="header" id="header">
+      <h1 class="header__title">Component Inventory</h1>
+      <p class="header__subtitle">A structured system of enterprise UI components, styled with CSS custom properties for consistency and maintainability.</p>
+      <hr class="header__rule">
+    </header>
+
+    <!-- Buttons Section -->
+    <div class="section">
+      <div class="section__label">Buttons</div>
+
+      <div class="sub-heading">Primary Action</div>
+      <div class="component-row">
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary">Default</button>
+        <button class="btn btn--primary btn--lg">Large Primary</button>
+        <button class="btn btn--primary" disabled>Disabled</button>
+      </div>
+
+      <div class="sub-heading">Secondary Action</div>
+      <div class="component-row">
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary">Default</button>
+        <button class="btn btn--secondary btn--lg">Large Secondary</button>
+        <button class="btn btn--secondary" disabled>Disabled</button>
+      </div>
+
+      <div class="sub-heading">Ghost / Text Link</div>
+      <div class="component-row">
+        <a href="#" class="btn btn--ghost">Learn more</a>
+        <a href="#" class="btn btn--ghost">View documentation</a>
+        <a href="#" class="btn btn--ghost">See all features</a>
+      </div>
+    </div>
+
+    <!-- Cards Section -->
+    <div class="section">
+      <div class="section__label">Cards</div>
+
+      <div class="cards-grid">
+        <div class="card card--bordered">
+          <div class="card__eyebrow">Bordered Card</div>
+          <div class="card__title">Clean & Minimal</div>
+          <div class="card__body">
+            A standard card with a subtle border and minimalist design. Ideal for content grouping where elevation is not required. Hover to see the border activate.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Action</button>
+            <button class="btn btn--secondary btn--sm">Cancel</button>
+          </div>
+        </div>
+
+        <div class="card card--elevated">
+          <div class="card__eyebrow">Elevated Card</div>
+          <div class="card__title">Depth & Hierarchy</div>
+          <div class="card__body">
+            An elevated card with a subtle shadow to establish visual hierarchy. Use for featured content or interactive modules that demand attention in the layout.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Explore</button>
+            <a href="#" class="btn btn--ghost btn--sm" style="border:none;padding:6px 8px;">Learn more</a>
+          </div>
+        </div>
+
+        <div class="card card--bordered">
+          <div class="card__eyebrow">Data Card</div>
+          <div class="card__title">Information Display</div>
+          <div class="card__body">
+            Use bordered cards for displaying structured data, statistics, or key metrics. Their neutral appearance keeps focus on the content while maintaining visual harmony.
+          </div>
+          <div class="card__footer">
+            <span class="badge badge--signal">In Progress</span>
+            <span class="badge badge--success">Available</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inputs Section -->
+    <div class="section">
+      <div class="section__label">Form Inputs</div>
+
+      <div class="sub-heading">Standard Inputs</div>
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">First Name</label>
+          <input class="input" type="text" placeholder="John">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Last Name</label>
+          <input class="input" type="text" placeholder="Doe">
+        </div>
+      </div>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input class="input" type="email" placeholder="you@company.com">
+          <div class="input-hint">We'll never share your email.</div>
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Phone Number</label>
+          <input class="input" type="tel" placeholder="(555) 123-4567">
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="sub-heading">Input States</div>
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Success State</label>
+          <input class="input input--success" type="text" value="Valid input">
+          <div class="input-hint success">This looks good!</div>
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Error State</label>
+          <input class="input input--error" type="text" value="Invalid entry">
+          <div class="input-hint error">Please check this field.</div>
+        </div>
+      </div>
+
+      <div class="input-wrap" style="margin-top: var(--s-4);">
+        <label class="input-label">Disabled Input</label>
+        <input class="input" type="text" placeholder="This field is disabled" disabled>
+      </div>
+
+      <hr class="divider">
+
+      <div class="sub-heading">Search Bar</div>
+      <div class="search-bar">
+        <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input class="search-bar__input" type="text" placeholder="Search components, documentation, patterns...">
+      </div>
+    </div>
+
+    <!-- Badges & Tags Section -->
+    <div class="section">
+      <div class="section__label">Badges &amp; Tags</div>
+
+      <div class="sub-heading">Status Badges</div>
+      <div class="badge-row" style="margin-bottom: var(--s-4);">
+        <span class="badge badge--signal">Active</span>
+        <span class="badge badge--success">Shipped</span>
+        <span class="badge badge--warning">In Review</span>
+        <span class="badge badge--danger">Blocked</span>
+        <span class="badge badge--neutral">Draft</span>
+      </div>
+
+      <div class="sub-heading">Category Tags</div>
+      <div class="badge-row">
+        <span class="tag tag--active">All</span>
+        <span class="tag">Typography</span>
+        <span class="tag">Colors</span>
+        <span class="tag">Spacing</span>
+        <span class="tag">Components</span>
+        <span class="tag">Layout</span>
+        <span class="tag">Forms</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* Dynamically load system name from tokens.json */
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => r.ok ? r.json() : null)
+      .then(tokens => {
+        if (!tokens) return;
+        const name = tokens.meta?.title || tokens.meta?.name || tokens.title || 'Design System';
+        if (name) {
+          document.getElementById('header').querySelector('.header__title').textContent = name + ' — Component Inventory';
+        }
+        const gfUrl = tokens.googleFontsUrl || (tokens.fonts && tokens.fonts.googleUrl);
+        if (gfUrl) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = gfUrl;
+          document.head.appendChild(link);
+        }
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>

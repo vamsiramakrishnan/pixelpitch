@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — IBM</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #161616);
+      line-height: 1.5;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 48px 24px;
+      }
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--slate, #525252);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 60px;
+      font-weight: 300;
+      line-height: 1.17;
+      letter-spacing: -0.01em;
+      color: var(--ink, #161616);
+      margin-bottom: 16px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate, #525252);
+      max-width: 720px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 60px;
+      height: 2px;
+      background: var(--signal, #0f62fe);
+      border: none;
+      margin: 0;
+    }
+
+    /* Font families section */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      margin-bottom: 80px;
+      margin-top: 64px;
+    }
+
+    .font-card {
+      background: var(--bone, #f4f4f4);
+      border: 1px solid var(--border, #c6c6c6);
+      border-radius: 0;
+      padding: 28px;
+    }
+
+    .font-card__label {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--slate, #525252);
+      margin-bottom: 10px;
+    }
+
+    .font-card__name {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--ink, #161616);
+      margin-bottom: 6px;
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 11px;
+      color: var(--slate, #525252);
+      word-break: break-word;
+      letter-spacing: 0.16px;
+    }
+
+    /* Character set block */
+    .charmap-block {
+      background: var(--bone, #f4f4f4);
+      border: 1px solid var(--border, #c6c6c6);
+      border-radius: 0;
+      padding: 40px;
+      margin-bottom: 80px;
+    }
+
+    .charmap-block__label {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--slate, #525252);
+      margin-bottom: 20px;
+    }
+
+    .charmap-block__chars {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1.6;
+      letter-spacing: 0.04em;
+      color: var(--ink, #161616);
+      word-break: break-word;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--slate, #525252);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--signal, #0f62fe);
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--bone, #f4f4f4);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 900px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--ink, #161616);
+      margin-bottom: 6px;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 1.8;
+      color: var(--slate, #525252);
+      letter-spacing: 0.16px;
+      white-space: pre-wrap;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--ink, #161616);
+      overflow-wrap: break-word;
+      word-spacing: 0.08em;
+    }
+
+    /* Ramp section */
+    .ramp-section {
+      margin-bottom: 80px;
+    }
+
+    /* Drop cap demo */
+    .dropcap-demo {
+      margin-bottom: 80px;
+    }
+
+    .dropcap-demo__label {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--slate, #525252);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--signal, #0f62fe);
+    }
+
+    .dropcap-container {
+      background: var(--bone, #f4f4f4);
+      border: 1px solid var(--border, #c6c6c6);
+      border-radius: 0;
+      padding: 40px;
+      max-width: 720px;
+    }
+
+    .dropcap-para {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--ink, #161616);
+      margin: 0;
+      text-align: left;
+    }
+
+    .dropcap {
+      float: left;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 100px;
+      font-weight: 300;
+      line-height: 0.8;
+      color: var(--signal, #0f62fe);
+      margin-right: 6px;
+      margin-top: -4px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 160px 48px;
+      color: var(--slate, #525252);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 24px auto 0;
+      border: 2px solid var(--signal, #0f62fe);
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Enterprise technology demands precision in every pixel.',
+      'Carbon design system: methodically structured, rigorously tested.',
+      'Single accent color, infinite applications.',
+      'Light weight at display sizes creates typographic elegance.',
+      'Micro-tracking: 0.16px at 14px opens tight letterforms.',
+      'Productive vs. expressive type sets serve different contexts.',
+      'Token-driven architecture enables seamless theme switching.',
+      'Eight-pixel grid. No exceptions, no outliers.',
+      'Depth through background layering, never shadows.',
+      'Bottom-border inputs—the signature Carbon form pattern.',
+    ];
+
+    const DROPCAP_TEXT = 'Enterprise technology demands a design system as rigorous as the engineering it serves. IBM Plex Sans at weight 300 defines Carbon's expressive display type—light enough to feel modern, confident enough to command authority. At body sizes, regular weight 400 with 0.16px letter-spacing opens up the letterforms just enough for comfortable reading on screens. IBM Plex Mono handles code, data, and technical labels with geometric precision. The entire system operates within an 8px spacing grid. Every value snaps: 2px, 4px, 8px, 12px, 16px, 24px, 32px, 40px, 48px. No arbitrary decisions, no rogue pixels. Depth comes from background-color layering on Gray 10 and Gray 20, never from shadows or gradients. The single accent color—IBM Blue 60 at #0f62fe—marks every interactive element, every call to action, every moment of focus. This is not decorative thinking. This is systematic, scalable, and built for teams.';
+
+    fetch('../tokens.json')
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#da1e28">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Design System';
+      const summary = tokens.meta?.summary || '';
+
+      const ramp = tokens.typography?.ramp || [];
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Type Specimen</div>';
+      html += '  <h1 class="header__title">' + esc(title) + '</h1>';
+      html += '  <p class="header__subtitle">' + esc(summary) + '</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      const families = [
+        { label: 'Display & Body', name: 'IBM Plex Sans', fallback: 'system-ui, Helvetica Neue, Arial, sans-serif', note: 'Weights 300, 400, 600' },
+        { label: 'Monospace', name: 'IBM Plex Mono', fallback: 'Menlo, Courier, monospace', note: 'Code, data, labels' },
+        { label: 'Serif (Editorial)', name: 'IBM Plex Serif', fallback: 'Georgia, Times New Roman, serif', note: 'Limited use' },
+        { label: 'Icons', name: 'ibm_icons', fallback: 'system-ui, sans-serif', note: '20px glyphs' }
+      ];
+
+      html += '<div class="font-families">';
+      families.forEach(f => {
+        html += '<div class="font-card">';
+        html += '  <div class="font-card__label">' + esc(f.label) + '</div>';
+        html += '  <div class="font-card__name">' + esc(f.name) + '</div>';
+        html += '  <div class="font-card__fallback">' + esc(f.fallback) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      /* Character set */
+      html += '<div class="charmap-block">';
+      html += '  <div class="charmap-block__label">Character Set · IBM Plex Sans</div>';
+      html += '  <div class="charmap-block__chars" style="font-family: system-ui, sans-serif; font-weight: 400;">';
+      html += '    AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>';
+      html += '    0123456789 !@#$%&amp;*()&ndash;&mdash;&lsquo;&rsquo;&ldquo;&rdquo;';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Type ramp */
+      if (ramp.length) {
+        html += '<div class="ramp-section">';
+        html += '<div class="section-label">Type Ramp</div>';
+        ramp.forEach((entry, i) => {
+          html += rampRow(entry, i);
+        });
+        html += '</div>';
+      }
+
+      /* Drop cap demo */
+      html += '<div class="dropcap-demo">';
+      html += '<div class="dropcap-demo__label">Drop Cap — IBM Plex Sans Light Display, Signal Blue</div>';
+      html += '<div class="dropcap-container">';
+      const firstChar = DROPCAP_TEXT.charAt(0);
+      const restText = DROPCAP_TEXT.substring(1);
+      html += '<p class="dropcap-para">';
+      html += '<span class="dropcap">' + esc(firstChar) + '</span>';
+      html += esc(restText);
+      html += '</p>';
+      html += '</div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(entry, idx) {
+      const role = entry.role || 'Role ' + (idx + 1);
+      const size = entry.size || '16px';
+      const weight = entry.weight || 400;
+      const lh = entry.lineHeight || '1.5';
+      const ls = entry.letterSpacing || '0';
+
+      let fontFamily = 'var(--font-body)';
+      if (entry.fontKey === 'mono') fontFamily = 'var(--font-mono)';
+      else fontFamily = 'var(--font-body)';
+
+      const sizeNum = parseFloat(size);
+      const sampleIdx = idx % EDITORIAL_SAMPLES.length;
+      let sample = EDITORIAL_SAMPLES[sampleIdx];
+
+      /* Truncate very large samples */
+      if (sizeNum >= 48) {
+        sample = sample.split('.')[0].slice(0, 45);
+        if (!sample.endsWith('.')) sample += '.';
+      }
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + ';';
+      fontStyle += 'font-family:' + fontFamily + ';';
+      if (ls && ls !== '0' && ls !== 'normal') fontStyle += 'letter-spacing:' + ls + ';';
+
+      let weightLabel = weight === 300 ? 'Light' : weight === 400 ? 'Regular' : weight === 600 ? 'Semibold' : weight;
+      let fontLabel = entry.fontKey === 'mono' ? 'IBM Plex Mono' : 'IBM Plex Sans';
+
+      let meta = esc(size) + ' / ' + esc(String(weight));
+      meta += '\n' + esc(fontLabel);
+      meta += '\nline-height: ' + esc(String(lh));
+      if (ls && ls !== '0' && ls !== 'normal') meta += '\nletter-spacing: ' + esc(ls);
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(sample) + '</div>' +
+        '</div>';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

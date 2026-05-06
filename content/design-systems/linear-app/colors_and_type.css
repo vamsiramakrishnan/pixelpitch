@@ -1,0 +1,115 @@
+/* Linear — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #010102;
+  --ink:     #f7f8f8;
+  --slate:   #d0d6e0;
+  --signal:  #7170ff;
+  --bone:    #28282c;
+  --border:  #23252a;
+  --surface: #191a1b;
+
+  /* Extended palette */
+  --color-panel-dark: #0f1011;
+  --color-tertiary-text: #8a8f98;
+  --color-quaternary-text: #62666d;
+  --color-brand-indigo: #5e6ad2;
+  --color-accent-hover: #828fff;
+  --color-security-lavender: #7a7fad;
+  --color-green: #27a644;
+  --color-emerald: #10b981;
+  --color-border-secondary: #34343a;
+  --color-border-tertiary: #3e3e44;
+  --color-line-tint: #141516;
+  --color-line-tertiary: #18191a;
+  --color-light-surface: #f3f4f5;
+  --color-light-border-alt: #e6e6e6;
+  --color-pure-white: #ffffff;
+
+  /* Semantic */
+  --success: #27a644;
+  --info:    #010102;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    Berkeley Mono;
+
+  /* Type ramp */
+  --t-display-xl: 72px;
+  --t-display-large: 64px;
+  --t-display: 48px;
+  --t-heading-1: 32px;
+  --t-heading-2: 24px;
+  --t-heading-3: 20px;
+  --t-body-large: 18px;
+  --t-body-emphasis: 17px;
+  --t-body: 16px;
+  --t-body-medium: 16px;
+  --t-body-semibold: 16px;
+  --t-small: 15px;
+  --t-small-medium: 15px;
+  --t-small-semibold: 15px;
+  --t-small-light: 15px;
+  --t-caption-large: 14px;
+  --t-caption: 13px;
+  --t-label: 12px;
+  --t-micro: 11px;
+  --t-tiny: 10px;
+  --t-link-large: 16px;
+  --t-link-medium: 15px;
+  --t-link-small: 14px;
+  --t-link-caption: 13px;
+  --t-mono-body: 14px;
+  --t-mono-caption: 13px;
+  --t-mono-label: 12px;
+
+  /* ── Spacing ── */
+  --s-1: 1px;
+  --s-2: 4px;
+  --s-3: 7px;
+  --s-4: 8px;
+  --s-5: 11px;
+  --s-6: 12px;
+  --s-7: 16px;
+  --s-8: 19px;
+  --s-9: 20px;
+  --s-10: 22px;
+  --s-11: 24px;
+  --s-12: 28px;
+  --s-13: 32px;
+  --s-14: 35px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   7px;
+  --radius-md:   6px;
+  --radius-lg:   80px;
+  --radius-full: 9999px;
+
+  /* ── Components ── */
+  --button-radius:  6px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    6px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

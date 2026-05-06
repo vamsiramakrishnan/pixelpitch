@@ -1,0 +1,100 @@
+/* Mintlify — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #0d0d0d;
+  --slate:   #333333;
+  --signal:  #18e299;
+  --bone:    #ffffff;
+  --border:  #e5e5e5;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-accessible-mint-text: #008949;
+  --color-brand-green-light: #d4fae8;
+  --color-brand-green-deep: #0fa76e;
+  --color-warm-amber: #c37d0d;
+  --color-soft-blue: #3772cf;
+  --color-error-red: #d45656;
+  --color-gray-500: #666666;
+  --color-gray-400: #888888;
+  --color-gray-100: #f5f5f5;
+  --color-gray-50: #fafafa;
+
+  /* Semantic */
+  --success: #18e299;
+  --warning: #c37d0d;
+  --danger:  #d45656;
+  --info:    #3772cf;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    Geist Mono;
+
+  /* Type ramp */
+  --t-display-hero: 64px;
+  --t-section-heading: 40px;
+  --t-sub-heading: 24px;
+  --t-card-title: 20px;
+  --t-card-title-light: 20px;
+  --t-body-large: 18px;
+  --t-body: 16px;
+  --t-body-medium: 16px;
+  --t-button: 15px;
+  --t-link: 14px;
+  --t-caption: 14px;
+  --t-label-uppercase: 13px;
+  --t-small: 13px;
+  --t-mono-code: 12px;
+  --t-mono-badge: 12px;
+  --t-mono-micro: 10px;
+
+  /* ── Spacing ── */
+  --s-1: 2px;
+  --s-2: 4px;
+  --s-3: 5px;
+  --s-4: 6px;
+  --s-5: 7px;
+  --s-6: 8px;
+  --s-7: 10px;
+  --s-8: 12px;
+  --s-9: 16px;
+  --s-10: 24px;
+  --s-11: 32px;
+  --s-12: 48px;
+  --s-13: 64px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   16px;
+  --radius-lg:   96px;
+  --radius-full: 9999px;
+
+  /* ── Components ── */
+  --button-radius:  16px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    16px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — Artistic</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Limelight&display=swap">
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 72px;
+    }
+    .header__title {
+      font-family: 'Limelight', var(--font-display);
+      font-size: 56px;
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate);
+      max-width: 600px;
+      font-weight: 400;
+    }
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--signal);
+      border: none;
+      margin-top: 28px;
+      border-radius: 1px;
+    }
+
+    /* Font family summary */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-bottom: 72px;
+    }
+    .font-card {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px 28px;
+    }
+    .font-card__label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 12px;
+    }
+    .font-card__name {
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .font-card__fallback {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--slate);
+      word-break: break-all;
+      line-height: 1.5;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: 'Limelight', var(--font-display);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Pangram block */
+    .pangram-block {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 48px 40px;
+      margin-bottom: 72px;
+    }
+    .pangram-block__label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 20px;
+    }
+    .pangram-block__chars {
+      font-family: 'Limelight', var(--font-display);
+      font-size: 32px;
+      line-height: 1.6;
+      letter-spacing: 0.01em;
+      color: var(--ink);
+      word-break: break-all;
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 800px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: 'Limelight', var(--font-display);
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .ramp-meta__detail {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.8;
+      color: var(--slate);
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--ink);
+      overflow-wrap: break-word;
+    }
+
+    /* Ramp section container */
+    .ramp-section {
+      margin-bottom: 72px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 100px 24px;
+      color: var(--slate);
+      font-size: 16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 24px auto 0;
+      border: 3px solid var(--border);
+      border-top-color: var(--signal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Creative expression demands bold choices in typography and color.',
+      'Every typeface carries a personality that shapes how we perceive meaning.',
+      'High contrast elevates visual presence and commands attention.',
+      'Artistic systems thrive on expressive details and distinctive character.',
+      'Typography is the voice of visual design, speaking directly to the eye.',
+      'Striking interfaces balance restraint with dramatic visual impact.',
+      'The best design systems respect the craft of typography as an art form.',
+      'Color and type together create rhythm, hierarchy, and narrative.',
+    ];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Artistic';
+      const summary = tokens.meta?.summary || 'High-contrast, expressive style with creative typography and bold color choices.';
+
+      const typeRamp = [
+        { role: 'Hero', size: '72px', weight: '400', lh: '1.1', ls: '-0.02em', font: 'Limelight' },
+        { role: 'Title L', size: '56px', weight: '400', lh: '1.15', ls: '-0.01em', font: 'Limelight' },
+        { role: 'Title M', size: '42px', weight: '400', lh: '1.2', ls: '0em', font: 'Limelight' },
+        { role: 'Headline', size: '30px', weight: '400', lh: '1.3', ls: '0em', font: 'Limelight' },
+        { role: 'Subhead', size: '24px', weight: '400', lh: '1.4', ls: '0em', font: 'Limelight' },
+        { role: 'Body Large', size: '18px', weight: '400', lh: '1.6', ls: '0em', font: 'system-ui' },
+        { role: 'Body', size: '16px', weight: '400', lh: '1.6', ls: '0em', font: 'system-ui' },
+        { role: 'Body Small', size: '14px', weight: '400', lh: '1.5', ls: '0em', font: 'system-ui' },
+        { role: 'Caption', size: '12px', weight: '400', lh: '1.5', ls: '0.01em', font: 'system-ui' },
+      ];
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Limelight & System</h1>';
+      html += '  <p class="header__subtitle">Type Specimen — ' + title + '</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      html += '<div class="font-families">';
+      html += '  <div class="font-card">';
+      html += '    <div class="font-card__label">Display</div>';
+      html += '    <div class="font-card__name" style="font-family:\'Limelight\',serif">Limelight</div>';
+      html += '    <div class="font-card__fallback">Google Fonts<br>Serif, 400</div>';
+      html += '  </div>';
+      html += '  <div class="font-card">';
+      html += '    <div class="font-card__label">Body & Mono</div>';
+      html += '    <div class="font-card__name">System UI</div>';
+      html += '    <div class="font-card__fallback">system-ui, -apple-system,<br>BlinkMacSystemFont, sans-serif</div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Character set */
+      html += '<div class="pangram-block">';
+      html += '  <div class="pangram-block__label">Character Set</div>';
+      html += '  <div class="pangram-block__chars" style="font-family:\'Limelight\',serif">AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>0123456789 !@#$%&amp;*()–—''""</div>';
+      html += '</div>';
+
+      /* Type ramp */
+      html += '<div class="ramp-section">';
+      html += '  <div class="section-label">Type Ramp</div>';
+      typeRamp.forEach((entry, i) => {
+        html += rampRow(entry, i);
+      });
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(entry, idx) {
+      const role = entry.role;
+      const size = entry.size;
+      const weight = entry.weight;
+      const lh = entry.lh;
+      const ls = entry.ls;
+      const family = entry.font;
+      const sampleIdx = idx % EDITORIAL_SAMPLES.length;
+      const sample = EDITORIAL_SAMPLES[sampleIdx];
+
+      const sizeNum = parseFloat(size);
+      const displaySample = sizeNum >= 56
+        ? sample.split('.')[0] + '.'
+        : sample;
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + ';';
+      if (ls !== '0em' && ls !== 'normal') fontStyle += 'letter-spacing:' + ls + ';';
+      if (family && family !== 'system-ui') fontStyle += 'font-family:\'' + esc(family) + '\',serif;';
+
+      let meta = '';
+      meta += esc(size) + ' / ' + esc(weight);
+      if (family) meta += '\n' + esc(family);
+      meta += '\nline-height: ' + esc(lh);
+      if (ls !== '0em' && ls !== 'normal') meta += '\nletter-spacing: ' + esc(ls);
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(displaySample) + '</div>' +
+        '</div>';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

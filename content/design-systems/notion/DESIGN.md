@@ -5,7 +5,7 @@
 
 ## 1. Visual Theme & Atmosphere
 
-Notion's website embodies the philosophy of the tool itself: a blank canvas that gets out of your way. The design system is built on warm neutrals rather than cold grays, creating a distinctly approachable minimalism that feels like quality paper rather than sterile glass. The page canvas is pure white (`#ffffff`) but the text isn't pure black -- it's a warm near-black (`rgba(0,0,0,0.95)`) that softens the reading experience imperceptibly. The warm gray scale (`#f6f5f4`, `#31302e`, `#615d59`, `#a39e98`) carries subtle yellow-brown undertones, giving the interface a tactile, almost analog warmth.
+Notion's website embodies the philosophy of the tool itself: a blank canvas that gets out of your way. The design system is built on warm neutrals rather than cold grays, creating a distinctly approachable minimalism that feels like quality paper rather than sterile glass. The page canvas is pure white (`#ffffff`) but the text isn't pure black -- it's a warm near-black (`rgba(0,0,0,0.95)`) that softens the reading experience imperceptibly. The warm gray scale (`#f6f5f4`, `#31302e`, `#615d59`, `#7b7670`) carries subtle yellow-brown undertones, giving the interface a tactile, almost analog warmth.
 
 The custom NotionInter font (a modified Inter) is the backbone of the system. At display sizes (64px), it uses aggressive negative letter-spacing (-2.125px), creating headlines that feel compressed and precise. The weight range is broader than typical systems: 400 for body, 500 for UI elements, 600 for semi-bold labels, and 700 for display headings. OpenType features `"lnum"` (lining numerals) and `"locl"` (localized forms) are enabled on larger text, adding typographic sophistication that rewards close reading.
 
@@ -36,7 +36,7 @@ What makes Notion's visual language distinctive is its border philosophy. Rather
 - **Warm White** (`#f6f5f4`): Background surface tint, section alternation, subtle card fill. The yellow undertone is key.
 - **Warm Dark** (`#31302e`): Dark surface background, dark section text. Warmer than standard grays.
 - **Warm Gray 500** (`#615d59`): Secondary text, descriptions, muted labels.
-- **Warm Gray 300** (`#a39e98`): Placeholder text, disabled states, caption text.
+- **Warm Gray 300** (`#7b7670`): Placeholder text, disabled states, caption text.
 
 ### Semantic Accent Colors
 - **Teal** (`#2a9d99`): Success states, positive indicators.
@@ -144,7 +144,7 @@ What makes Notion's visual language distinctive is its border philosophy. Rather
 - Padding: 6px
 - Radius: 4px
 - Focus: blue outline ring
-- Placeholder: warm gray `#a39e98`
+- Placeholder: warm gray `#7b7670`
 
 ### Navigation
 - Clean horizontal nav on white, not sticky
@@ -272,7 +272,7 @@ What makes Notion's visual language distinctive is its border philosophy. Rather
 - **Hover**: Color shift on text, scale(1.05) on buttons, underline on links
 - **Active/Pressed**: scale(0.9) transform, darker background variant
 - **Focus**: Blue outline ring with shadow reinforcement
-- **Disabled**: Warm gray (`#a39e98`) text, reduced opacity
+- **Disabled**: Warm gray (`#7b7670`) text, reduced opacity
 
 ### Color Contrast
 - Primary text (rgba(0,0,0,0.95)) on white: ~18:1 ratio
@@ -289,7 +289,7 @@ What makes Notion's visual language distinctive is its border philosophy. Rather
 - Heading text: Near-Black (`rgba(0,0,0,0.95)`)
 - Body text: Near-Black (`rgba(0,0,0,0.95)`)
 - Secondary text: Warm Gray 500 (`#615d59`)
-- Muted text: Warm Gray 300 (`#a39e98`)
+- Muted text: Warm Gray 300 (`#7b7670`)
 - Border: `1px solid rgba(0,0,0,0.1)`
 - Link: Notion Blue (`#0075de`)
 - Focus ring: Focus Blue (`#097fe8`)
@@ -302,7 +302,7 @@ What makes Notion's visual language distinctive is its border philosophy. Rather
 - "Design an alternating section layout: white sections alternate with warm white (#f6f5f4) sections. Each section has 64-80px vertical padding, max-width 1200px centered. Section heading at 48px weight 700, line-height 1.00, letter-spacing -1.5px."
 
 ### Iteration Guide
-1. Always use warm neutrals -- Notion's grays have yellow-brown undertones (#f6f5f4, #31302e, #615d59, #a39e98), never blue-gray
+1. Always use warm neutrals -- Notion's grays have yellow-brown undertones (#f6f5f4, #31302e, #615d59, #7b7670), never blue-gray
 2. Letter-spacing scales with font size: -2.125px at 64px, -1.875px at 54px, -0.625px at 26px, normal at 16px
 3. Four weights: 400 (read), 500 (interact), 600 (emphasize), 700 (announce)
 4. Borders are whispers: 1px solid rgba(0,0,0,0.1) -- never heavier

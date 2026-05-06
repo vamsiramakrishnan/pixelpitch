@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — ClickHouse</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #000000);
+      color: var(--ink, #ffffff);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 96px 64px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 96px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--slate, #a0a0a0);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 96px;
+      font-weight: 900;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: var(--ink, #ffffff);
+      margin-bottom: 12px;
+      max-width: 90%;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #a0a0a0);
+      max-width: 70%;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 240px;
+      height: 4px;
+      background: var(--signal, #faff69);
+      border: none;
+      margin-top: 24px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 96px;
+    }
+
+    .section__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--signal, #faff69);
+      margin-bottom: 48px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--surface, #414141);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 140px 1fr 120px;
+      gap: 32px;
+      align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--signal, #faff69);
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      color: var(--slate, #a0a0a0);
+      margin-top: 4px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 3px;
+      background: var(--signal, #faff69);
+      min-width: 3px;
+      transition: opacity 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.7;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, Inconsolata);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--signal, #faff69);
+      text-align: right;
+    }
+
+    /* Rule weights / Depth levels */
+    .rule-demo {
+      padding: 40px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 24px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--signal, #faff69);
+    }
+
+    .rule-demo__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      color: var(--slate, #a0a0a0);
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, Inconsolata);
+      font-size: 12px;
+      color: var(--slate, #a0a0a0);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .rule-demo__container {
+      width: 100%;
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      padding: 0;
+      position: relative;
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    .rule-demo__visual {
+      width: 100%;
+      padding: 16px 0;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 64px;
+      margin-bottom: 48px;
+    }
+
+    .radius-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 32px;
+      align-items: flex-start;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .radius-item__box {
+      width: 120px;
+      height: 120px;
+      background: transparent;
+      border: 2px solid var(--signal, #faff69);
+      flex-shrink: 0;
+    }
+
+    .radius-item__info {
+      flex: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--signal, #faff69);
+      margin-bottom: 6px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, Inconsolata);
+      font-size: 13px;
+      color: var(--slate, #a0a0a0);
+      margin-bottom: 12px;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--slate, #a0a0a0);
+    }
+
+    /* Philosophy block */
+    .philosophy {
+      background: transparent;
+      padding: 48px;
+      border: 1px solid var(--surface, #414141);
+      margin-bottom: 64px;
+    }
+
+    .philosophy__title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--signal, #faff69);
+      margin-bottom: 20px;
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      line-height: 1.56;
+      color: var(--ink, #ffffff);
+    }
+
+    .philosophy__text strong {
+      font-weight: 600;
+      color: var(--signal, #faff69);
+    }
+
+    .philosophy__text em {
+      font-style: italic;
+      color: var(--slate, #a0a0a0);
+    }
+
+    .philosophy__text code {
+      font-family: var(--font-mono, Inconsolata);
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 6px;
+      border-radius: var(--radius-sm, 4px);
+      color: var(--signal, #faff69);
+    }
+
+    /* Depth legend */
+    .depth-legend {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 64px;
+    }
+
+    .depth-legend__item {
+      padding: 24px;
+      border: 1px solid var(--surface, #414141);
+      background: transparent;
+    }
+
+    .depth-legend__level {
+      font-family: var(--font-mono, Inconsolata);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--slate, #a0a0a0);
+      margin-bottom: 8px;
+    }
+
+    .depth-legend__name {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--signal, #faff69);
+      margin-bottom: 12px;
+    }
+
+    .depth-legend__treatment {
+      font-family: var(--font-mono, Inconsolata);
+      font-size: 11px;
+      color: var(--slate, #a0a0a0);
+      margin-bottom: 12px;
+      word-break: break-all;
+    }
+
+    .depth-legend__use {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--slate, #a0a0a0);
+    }
+
+    /* Grid demo */
+    .grid-demo {
+      background: transparent;
+      padding: 48px;
+      border: 1px solid var(--surface, #414141);
+      margin-bottom: 64px;
+    }
+
+    .grid-demo__title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--signal, #faff69);
+      margin-bottom: 24px;
+    }
+
+    .grid-demo__visual {
+      width: 100%;
+      height: 240px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+      background-image: 
+        linear-gradient(90deg, 
+          rgba(250, 255, 105, 0.08) 1px, 
+          transparent 1px);
+      background-size: calc(100% / 12) 100%;
+      padding: 20px;
+      border: 1px dashed rgba(250, 255, 105, 0.25);
+      margin-bottom: 24px;
+    }
+
+    .grid-demo__column {
+      background: rgba(250, 255, 105, 0.12);
+      border: 1px solid rgba(250, 255, 105, 0.3);
+      font-family: var(--font-mono, Inconsolata);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--signal, #faff69);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm, 4px);
+    }
+
+    .grid-demo__info {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+
+    .grid-demo__stat-label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--signal, #faff69);
+      margin-bottom: 6px;
+    }
+
+    .grid-demo__stat {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      color: var(--slate, #a0a0a0);
+      line-height: 1.5;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #a0a0a0);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 2px solid rgba(250, 255, 105, 0.2);
+      border-top-color: var(--signal, #faff69);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 1024px) {
+      .page {
+        padding: 64px 32px;
+      }
+
+      .header {
+        margin-bottom: 64px;
+      }
+
+      .header__title {
+        font-size: 72px;
+      }
+
+      .section {
+        margin-bottom: 64px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 100px 1fr 80px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .radius-item {
+        grid-template-columns: 120px 1fr;
+      }
+
+      .depth-legend {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 48px 16px;
+      }
+
+      .header__title {
+        font-size: 48px;
+      }
+
+      .header__subtitle {
+        font-size: 18px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .spacing-row__bar-wrap {
+        order: 3;
+        grid-column: 1 / -1;
+      }
+
+      .radius-item {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-demo__info {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '2px', label: 'micro' },
+      's-2': { value: '6px', label: 'xs' },
+      's-3': { value: '7px', label: 'xs-alt' },
+      's-4': { value: '8px', label: 'xs-base' },
+      's-5': { value: '10px', label: 'sm' },
+      's-6': { value: '12px', label: 'sm-lg' },
+      's-7': { value: '16px', label: 'md' },
+      's-8': { value: '20px', label: 'md-lg' },
+      's-9': { value: '24px', label: 'lg' },
+      's-10': { value: '25px', label: 'lg-alt' },
+      's-11': { value: '32px', label: 'xl' },
+      's-12': { value: '40px', label: 'xl-lg' },
+      's-13': { value: '44px', label: '2xl' },
+      's-14': { value: '48px', label: '2xl-lg' },
+      's-15': { value: '64px', label: '3xl' }
+    };
+
+    const DEFAULT_DEPTH = [
+      {
+        level: 0,
+        name: 'Flat',
+        treatment: 'none',
+        use: 'Black background, text blocks'
+      },
+      {
+        level: 1,
+        name: 'Bordered',
+        treatment: '1px solid var(--signal)',
+        use: 'Standard cards, containers'
+      },
+      {
+        level: 2,
+        name: 'Elevated',
+        treatment: '0 2px 8px rgba(0,0,0,0.08)',
+        use: 'Subtle card lift, hover states'
+      },
+      {
+        level: 3,
+        name: 'Inset / Pressed',
+        treatment: '0 4px 25px rgba(0,0,0,0.14) inset',
+        use: 'Active/pressed elements — sunk into surface'
+      },
+      {
+        level: 4,
+        name: 'Neon Highlight',
+        treatment: '2px solid var(--signal)',
+        use: 'Featured/selected cards, maximum emphasis'
+      }
+    ];
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'Sharp edges — body text, baseline elements' },
+      'sm': { value: '4px', use: 'Buttons, badges, small elements, code blocks' },
+      'md': { value: '8px', use: 'Cards, containers, input fields, dividers' },
+      'lg': { value: '64px', use: 'Large feature cards (reserved)' },
+      'full': { value: '9999px', use: 'Toggle buttons, status indicators, pills' }
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#faff69">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const depth = tokens.depth || DEFAULT_DEPTH;
+      const radius = DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Spacing &amp; Depth Rules</div>';
+      html += '  <h1 class="header__title">Neon<br>on void.</h1>';
+      html += '  <p class="header__subtitle">The spacing scale, depth system, and border radius tokens for ClickHouse — a high-performance analytics cockpit rendered in pure black with neon yellow-green accents.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Depth Philosophy block */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Depth Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    ClickHouse uses <strong>five distinct depth levels</strong> to communicate hierarchy on a pure black canvas. Shadows are subtle and barely visible against darkness — they exist for dimensionality, not drama. The most distinctive depth mechanism is the <strong>inset shadow</strong> (Level 3), which creates a "pressed into the surface" effect unique to this system. The <strong>neon highlight border</strong> (Level 4) is the primary attention-getter, mimicking the highlighter pen on a dark console. Every depth level earns its place: flat for baseline text, bordered for standard containers, elevated for interactive states, inset for active/pressed, and neon for maximum emphasis.';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Depth legend */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth Levels</div>';
+      html += '  <div class="depth-legend">';
+
+      depth.forEach(d => {
+        html += '  <div class="depth-legend__item">';
+        html += '    <div class="depth-legend__level">Level ' + d.level + '</div>';
+        html += '    <div class="depth-legend__name">' + esc(d.name) + '</div>';
+        html += '    <div class="depth-legend__treatment">' + esc(d.treatment) + '</div>';
+        html += '    <div class="depth-legend__use">' + esc(d.use) + '</div>';
+        html += '  </div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 3);
+        const label = obj.label || key;
+
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Rule weights / Visual depth demo */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth Visual Demo</div>';
+
+      depth.forEach(d => {
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <div>';
+        html += '      <div class="rule-demo__name">Level ' + d.level + ': ' + esc(d.name) + '</div>';
+        html += '      <div class="rule-demo__label">' + esc(d.use) + '</div>';
+        html += '    </div>';
+        html += '    <div class="rule-demo__spec">' + esc(d.treatment) + '</div>';
+        html += '  </div>';
+
+        html += '  <div class="rule-demo__container">';
+        html += '    <div class="rule-demo__visual" style="';
+
+        if (d.treatment === 'none') {
+          html += 'background: transparent;';
+        } else if (d.treatment.includes('1px solid var(--signal)')) {
+          html += 'border: 1px solid var(--signal);';
+        } else if (d.treatment.includes('0 2px 8px')) {
+          html += 'background: rgba(255,255,255,0.04); box-shadow: 0 2px 8px rgba(0,0,0,0.08);';
+        } else if (d.treatment.includes('inset')) {
+          html += 'background: rgba(255,255,255,0.02); box-shadow: 0 4px 25px rgba(0,0,0,0.14) inset;';
+        } else if (d.treatment.includes('2px solid var(--signal)')) {
+          html += 'border: 2px solid var(--signal);';
+        }
+
+        html += '">';
+        html += '      <span style="font-family: var(--font-mono); font-size: 12px; color: var(--slate);">' + esc(d.treatment) + '</span>';
+        html += '    </div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius Scale</div>';
+      html += '  <div class="radius-grid">';
+
+      Object.entries(radius).forEach(([key, obj]) => {
+        const radiusValue = obj.value;
+
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__demo">';
+        html += '    <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '  </div>';
+        html += '  <div class="radius-item__info">';
+        html += '    <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '    <div class="radius-item__value">' + esc(radiusValue) + '</div>';
+        html += '    <div class="radius-item__description">' + esc(obj.use) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* Grid visualization */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Responsive Grid System</div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__title">12-Column Layout Grid</div>';
+      html += '    <div class="grid-demo__visual">';
+      for (let i = 1; i <= 12; i++) {
+        html += '      <div class="grid-demo__column">' + i + '</div>';
+      }
+      html += '    </div>';
+      html += '    <div class="grid-demo__info">';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Max Container Width</div>';
+      html += '        <div class="grid-demo__stat">2200px (extra-wide, responsive scaling)</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Gutters &amp; Margins</div>';
+      html += '        <div class="grid-demo__stat">32px gutters, 64px outer margins</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Feature Cards</div>';
+      html += '        <div class="grid-demo__stat">Multi-column grids with dark borders</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Section Spacing</div>';
+      html += '        <div class="grid-demo__stat">48–64px vertical between major blocks</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Whitespace philosophy */
+      html += '<div class="philosophy" style="margin-bottom: 0;">';
+      html += '  <div class="philosophy__title">Whitespace &amp; Scale Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    <strong>Dark void as canvas</strong>: The pure black background (#000000) provides infinite depth — every element floats in darkness. <strong>Dense information blocks</strong>: Feature cards and stats are packed with data, reflecting ClickHouse\'s role as a high-performance database. Text is tight, grids are tight, but the space between sections is vast. <strong>Neon as wayfinding</strong>: Yellow-green accents (#faff69) guide the eye through the dark interface like runway lights. The 8px base unit scales to 2px (micro), 12px (small), 24px (medium), 48px (large), and 64px (dramatic). <strong>No subtlety</strong>: Everything is aggressive. Heavy type (weight 900 for headlines), high contrast, maximum visibility. The spacing reinforces this: tight typography, then huge voids, then another information block. The eye never rests.';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

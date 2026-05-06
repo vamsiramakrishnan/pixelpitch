@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Dropbox Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Sharp Grotesk', sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--color-black, #1e1919);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 48px 24px;
+      }
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 96px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-body, sans-serif);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--slate, #8c8c8c);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'Sharp Grotesk', sans-serif);
+      font-size: 56px;
+      font-weight: 600;
+      line-height: 1.07;
+      letter-spacing: -0.8px;
+      color: var(--color-black, #1e1919);
+      margin-bottom: 20px;
+    }
+
+    .header__title span {
+      color: var(--ink, #0061ff);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.56;
+      color: var(--color-mid-gray, #637282);
+      max-width: 760px;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 120px;
+      height: 1px;
+      background: var(--color-border-default, #e2e0de);
+      border: none;
+      margin-top: 40px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 96px;
+    }
+
+    .section__label {
+      font-family: var(--font-body, sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #8c8c8c);
+      margin-bottom: 32px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--color-border-subtle, #ebebeb);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 20px 0 20px 32px;
+      font-family: var(--font-body, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.50;
+      color: var(--color-black, #1e1919);
+      border-bottom: 1px solid var(--color-border-subtle, #ebebeb);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 28px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--ink, #0061ff);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--color-border-default, #e2e0de);
+      border-radius: 8px;
+      padding: 40px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-body, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--color-success-green, #0d7d3b);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--color-error-red, #d93025);
+    }
+
+    .dd-card__icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--color-success-green, #0d7d3b);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--color-error-red, #d93025);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, sans-serif);
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.53;
+      color: var(--color-black, #1e1919);
+      padding: 14px 0;
+      border-bottom: 1px solid var(--color-border-subtle, #ebebeb);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Whitespace Principle ──── */
+    .whitespace-demo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .whitespace-demo {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .whitespace-card {
+      border: 1px solid var(--color-border-default, #e2e0de);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .whitespace-card__label {
+      background: var(--border, #f7f5f2);
+      padding: 12px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate, #8c8c8c);
+      border-bottom: 1px solid var(--color-border-default, #e2e0de);
+    }
+
+    .whitespace-card__demo {
+      padding: 40px;
+      background: var(--paper, #ffffff);
+    }
+
+    .whitespace-card__demo--generous {
+      padding: 60px 40px;
+    }
+
+    .whitespace-item {
+      width: 100%;
+      height: 60px;
+      background: var(--ink, #0061ff);
+      border-radius: 8px;
+      margin-bottom: 24px;
+    }
+
+    .whitespace-item:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 140px;
+      border: 1px solid var(--color-border-default, #e2e0de);
+      box-shadow: var(--card-shadow);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 16px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.5;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-body, sans-serif);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      white-space: nowrap;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+      color: var(--color-black, #1e1919);
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    .harmony-strip__swatch--dark .harmony-strip__label {
+      color: var(--paper, #ffffff);
+    }
+
+    .harmony-strip__swatch--dark:hover .harmony-strip__label {
+      color: var(--paper, #ffffff);
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--color-border-default, #e2e0de);
+      border-radius: 8px;
+      padding: 56px 48px;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-body, sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--slate, #8c8c8c);
+      margin-bottom: 16px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, 'Sharp Grotesk', sans-serif);
+      font-size: 44px;
+      font-weight: 600;
+      line-height: 1.09;
+      letter-spacing: -0.6px;
+      color: var(--color-black, #1e1919);
+      margin-bottom: 24px;
+    }
+
+    .type-pairing__display span {
+      color: var(--ink, #0061ff);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.56;
+      color: var(--color-black, #1e1919);
+      max-width: 800px;
+      margin-bottom: 40px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--color-border-subtle, #ebebeb);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-body, sans-serif);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: var(--slate, #8c8c8c);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--color-black, #1e1919);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Illustration Philosophy ──── */
+    .illustration-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .illustration-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .illustration-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--color-border-default, #e2e0de);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .illustration-card__demo {
+      width: 100%;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      background: linear-gradient(135deg, #f0f4f8 0%, #e8f0f7 100%);
+    }
+
+    .illustration-card__demo--warm {
+      background: linear-gradient(135deg, #fff8f0 0%, #ffe8e0 100%);
+    }
+
+    .illustration-card__demo--playful {
+      background: linear-gradient(135deg, #f0f8ff 0%, #e8f0ff 100%);
+    }
+
+    .illustration-card__content {
+      padding: 24px;
+    }
+
+    .illustration-card__label {
+      font-family: var(--font-body, sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--slate, #8c8c8c);
+      margin-bottom: 8px;
+    }
+
+    .illustration-card__text {
+      font-family: var(--font-body, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.43;
+      color: var(--color-black, #1e1919);
+    }
+
+    /* ──── Type Ramp ──── */
+    .type-ramp {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--color-border-default, #e2e0de);
+      border-radius: 8px;
+      padding: 40px;
+    }
+
+    .ramp-item {
+      margin-bottom: 32px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--color-border-subtle, #ebebeb);
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+    }
+
+    .ramp-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .ramp-item__meta {
+      flex: 0 0 180px;
+    }
+
+    .ramp-item__role {
+      font-family: var(--font-body, sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--slate, #8c8c8c);
+      margin-bottom: 8px;
+    }
+
+    .ramp-item__specs {
+      font-family: var(--font-body, sans-serif);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.67;
+      color: var(--color-mid-gray, #637282);
+    }
+
+    .ramp-item__example {
+      flex: 1;
+    }
+
+    /* ──── Accent Color Philosophy ──── */
+    .accent-philosophy {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--color-border-default, #e2e0de);
+      border-radius: 8px;
+      padding: 48px;
+    }
+
+    .accent-philosophy__text {
+      font-family: var(--font-body, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.50;
+      color: var(--color-black, #1e1919);
+      margin-bottom: 32px;
+    }
+
+    .accent-demo {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .accent-button {
+      padding: 12px 28px;
+      border: none;
+      border-radius: 32px;
+      font-family: var(--font-body, sans-serif);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: default;
+      transition: all 0.2s ease;
+    }
+
+    .accent-button--primary {
+      background: var(--ink, #0061ff);
+      color: var(--paper, #ffffff);
+    }
+
+    .accent-button--secondary {
+      background: var(--color-blue-light, #e3ecff);
+      color: var(--ink, #0061ff);
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 160px 24px;
+      color: var(--slate, #8c8c8c);
+      font-size: 16px;
+      font-family: var(--font-body, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 24px auto 0;
+      border: 3px solid var(--color-border-subtle, #ebebeb);
+      border-top-color: var(--ink, #0061ff);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal'];
+    const EXTENDED_COLORS = {
+      'blue-hover': '#0050d4',
+      'blue-light': '#e3ecff',
+      'success-green': '#0d7d3b',
+      'warning-amber': '#e5a000',
+      'error-red': '#d93025'
+    };
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#d93025">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const extended = colors.extended || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">Expansive, <span>Approachable</span>, Illustration-Forward</h1>';
+      html += '  <p class="header__subtitle">Dropbox uses generous whitespace as a luxury, Dropbox Blue as a singular accent, and hand-drawn illustrations as a core communication system. Clean typography, confident interaction, and breathing room.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Expansive whitespace communicates trust and clarity — space is the luxury</li>';
+      html += '    <li>Dropbox Blue (#0061ff) as the singular accent for all interactive elements</li>';
+      html += '    <li>Sharp Grotesk for headlines and display (28px and up), warm and geometric</li>';
+      html += '    <li>Sharp Grotesk for body text and UI labels — a unified sans-serif system</li>';
+      html += '    <li>Consistent 8px border-radius on cards and containers — rounded but not bubbly</li>';
+      html += '    <li>Flat-first elevation: borders and subtle shadows on interaction only</li>';
+      html += '    <li>Illustration-forward communication: hand-drawn, playful, warm color palette</li>';
+      html += '    <li>Extended palette for illustrations (coral, yellow, purple, teal) — not for UI</li>';
+      html += '    <li>Warm near-black (#1e1919) for headings instead of pure black</li>';
+      html += '    <li>File-centric UI patterns: cards, thumbnails, breadcrumbs, activity feeds</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use #0061ff as the only accent in UI chrome — all interactive elements derive from this</li>';
+      html += '      <li>Pair Sharp Grotesk headlines with Sharp Grotesk body — consistent geometric voice</li>';
+      html += '      <li>Allocate generous whitespace around all elements — breathing room is part of the brand</li>';
+      html += '      <li>Use #f7f5f2 warm off-white for secondary surfaces and hover states</li>';
+      html += '      <li>Apply consistent 8px border-radius on cards, buttons, and containers</li>';
+      html += '      <li>Use illustrations for empty states, onboarding, and feature marketing</li>';
+      html += '      <li>Apply #1e1919 warm black for headings and primary text</li>';
+      html += '      <li>Use avatar stacks (overlapping -8px) to show shared collaborators</li>';
+      html += '      <li>Show file-type icons at appropriate scales: 32px lists, 48px+ grids</li>';
+      html += '      <li>Apply flat design with borders; use shadows only on elevated interaction states</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use multiple accent colors in UI chrome — #0061ff is the only interactive color</li>';
+      html += '      <li>Apply heavy shadows to resting elements — the system is flat-first</li>';
+      html += '      <li>Use border-radius larger than 8px on containers — rounded but not bubbly</li>';
+      html += '      <li>Mix Sharp Grotesk into body text below 16px — use it only at heading scales</li>';
+      html += '      <li>Create dense, cluttered layouts — whitespace is the primary differentiator</li>';
+      html += '      <li>Neglect empty states — they require illustrations and helpful copy, never blank</li>';
+      html += '      <li>Use the extended illustration palette (coral, yellow, purple) for UI elements</li>';
+      html += '      <li>Apply colored backgrounds to page sections — stay on white/off-white in UI chrome</li>';
+      html += '      <li>Use underlines for links in body text — use #0061ff color alone</li>';
+      html += '      <li>Skip breadcrumbs in nested views — spatial orientation is critical for file management</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Whitespace Principle ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Whitespace as Luxury</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.50; color: var(--color-black); margin-bottom: 32px; max-width: 840px;">Dropbox differentiates itself through restraint and breathing room. Where competitors crowd the interface, Dropbox opens it. Generous margins, tall line heights, and separated content blocks communicate trust and clarity. Every element gets space to be understood.</p>';
+      html += '  <div class="whitespace-demo">';
+
+      html += '    <div class="whitespace-card">';
+      html += '      <div class="whitespace-card__label">Correct — Generous Breathing</div>';
+      html += '      <div class="whitespace-card__demo whitespace-card__demo--generous">';
+      html += '        <div class="whitespace-item"></div>';
+      html += '        <div class="whitespace-item"></div>';
+      html += '        <div class="whitespace-item"></div>';
+      html += '      </div>';
+      html += '    </div>';
+
+      html += '    <div class="whitespace-card">';
+      html += '      <div class="whitespace-card__label">Incorrect — Cramped Layout</div>';
+      html += '      <div class="whitespace-card__demo" style="padding: 16px 20px;">';
+      html += '        <div class="whitespace-item" style="height: 40px; margin-bottom: 8px;"></div>';
+      html += '        <div class="whitespace-item" style="height: 40px; margin-bottom: 8px;"></div>';
+      html += '        <div class="whitespace-item" style="height: 40px;"></div>';
+      html += '      </div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Core Color Palette</div>';
+      html += '  <div class="harmony-strip">';
+
+      const harmonyColors = [
+        { key: 'Paper', hex: colors.paper || '#ffffff', isDark: false },
+        { key: 'Ink (Dropbox Blue)', hex: colors.ink || '#0061ff', isDark: true },
+        { key: 'Slate', hex: colors.slate || '#8c8c8c', isDark: false },
+        { key: 'Signal', hex: colors.signal || '#ff7e6b', isDark: false },
+        { key: 'Border', hex: colors.border || '#f7f5f2', isDark: false }
+      ];
+
+      harmonyColors.forEach(color => {
+        const swatchClass = color.isDark ? 'harmony-strip__swatch--dark' : '';
+        html += '<div class="harmony-strip__swatch ' + swatchClass + '" style="background:' + esc(color.hex) + '">';
+        html += '  <span class="harmony-strip__label">' + esc(color.key) + '</span>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Typography Pairing ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography System</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Display + Body</div>';
+      html += '    <div class="type-pairing__display">One font, <span>multiple weights</span>, clear hierarchy</div>';
+
+      html += '    <div class="type-pairing__body">Sharp Grotesk powers all headlines from 28px and up with distinctive character and geometric precision. The same font family at body sizes (16–18px) creates typographic unity. The hierarchy emerges from scale, weight, and leading rather than typeface switching. This unified approach feels modern and cohesive while maintaining clear separation between display and reading text.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Display Font</span>';
+      html += '        Sharp Grotesk, 600 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Body Font</span>';
+      html += '        Sharp Grotesk, 400–500 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Mono Font</span>';
+      html += '        SFMono / Menlo for code and edge cases';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Type Ramp ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Type Ramp & Roles</div>';
+      html += '  <div class="type-ramp">';
+
+      const typeRamp = [
+        { role: 'Display Hero', size: '56px', weight: '600', lineHeight: '1.07', example: 'Bringing teams together to work better' },
+        { role: 'Display Large', size: '44px', weight: '600', lineHeight: '1.09', example: 'Everything in one place' },
+        { role: 'Heading 1', size: '36px', weight: '600', lineHeight: '1.11', example: 'Collaborate on any project' },
+        { role: 'Heading 2', size: '28px', weight: '600', lineHeight: '1.14', example: 'File sharing made simple' },
+        { role: 'Heading 3', size: '22px', weight: '600', lineHeight: '1.27', example: 'Organize your work' },
+        { role: 'Heading 4', size: '18px', weight: '600', lineHeight: '1.33', example: 'Section heading label' },
+        { role: 'Body Large', size: '18px', weight: '400',

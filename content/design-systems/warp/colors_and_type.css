@@ -1,0 +1,83 @@
+/* Warp — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #353534;
+  --ink:     #faf9f6;
+  --slate:   #868584;
+  --signal:  #868584;
+  --bone:    #666469;
+  --border:  #454545;
+  --surface: #faf9f6;
+
+  /* Extended palette */
+  --color-ash-gray: #afaeac;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 80px;
+  --t-section-display: 56px;
+  --t-section-heading: 48px;
+  --t-feature-heading: 40px;
+  --t-sub-heading-large: 36px;
+  --t-card-display: 42px;
+  --t-sub-heading: 32px;
+  --t-body-heading: 24px;
+  --t-card-title: 22px;
+  --t-body-large: 20px;
+  --t-body: 18px;
+  --t-nav-ui: 16px;
+  --t-button-text: 16px;
+  --t-caption: 14px;
+  --t-small-label: 12px;
+  --t-micro: 11px;
+  --t-code-ui: 16px;
+  --t-code-body: 16px;
+  --t-ui-supplement: 16px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   5px;
+  --radius-md:   10px;
+  --radius-lg:   18px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  10px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    10px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

@@ -1,0 +1,98 @@
+/* Nike — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #111111;
+  --ink:     #111111;
+  --slate:   #707072;
+  --signal:  #ff5000;
+  --bone:    #ffffff;
+  --border:  #cacacb;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-snow: #fafafa;
+  --color-light-gray: #f5f5f5;
+  --color-hover-gray: #e5e5e5;
+  --color-dark-surface: #28282a;
+  --color-deep-charcoal: #1f1f21;
+  --color-dark-hover: #39393b;
+  --color-disabled-text: #9e9ea0;
+  --color-disabled-inverse: #4b4b4d;
+  --color-nike-red: #d30005;
+  --color-bright-red: #ee0005;
+  --color-nike-orange-badge: #d33918;
+  --color-success-green: #007d48;
+  --color-success-inverse: #1eaa52;
+  --color-link-blue: #1151ff;
+  --color-info-inverse: #1190ff;
+  --color-warning-yellow: #fedf35;
+
+  /* Semantic */
+  --success: #007d48;
+  --warning: #fedf35;
+  --danger:  #d30005;
+  --info:    #1151ff;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display: 96px;
+  --t-heading-1: 32px;
+  --t-heading-2: 24px;
+  --t-heading-3: 16px;
+  --t-body: 16px;
+  --t-body-medium: 16px;
+  --t-link: 16px;
+  --t-link-small: 14px;
+  --t-button: 16px;
+  --t-button-small: 14px;
+  --t-caption: 14px;
+  --t-small: 12px;
+  --t-tiny: 12px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   8px;
+  --radius-md:   1440px;
+  --radius-lg:   80px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  1440px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    12px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

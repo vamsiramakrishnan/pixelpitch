@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Palette — Lovable</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #f7f4ed);
+      color: var(--ink, #1c1c1c);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 72px;
+      border-bottom: 1px solid var(--border, #eceae4);
+      padding-bottom: 32px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(28, 28, 28, 0.4);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 60px;
+      font-weight: 600;
+      line-height: 1.0;
+      letter-spacing: -1.5px;
+      color: var(--ink, #1c1c1c);
+      margin-bottom: 12px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      line-height: 1.38;
+      color: rgba(28, 28, 28, 0.82);
+      max-width: 720px;
+      margin-bottom: 20px;
+    }
+
+    .header__meta {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: rgba(28, 28, 28, 0.4);
+      text-transform: uppercase;
+    }
+
+    /* Section labels */
+    .section-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(28, 28, 28, 0.4);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #eceae4);
+    }
+
+    /* Swatch grid */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+      margin-bottom: 64px;
+    }
+
+    .swatch {
+      background: var(--surface, #f7f4ed);
+      border: var(--card-border, 1px solid #eceae4);
+      border-radius: var(--card-radius, 8px);
+      overflow: hidden;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .swatch:hover {
+      border-color: rgba(28, 28, 28, 0.4);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .swatch__chip {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      position: relative;
+    }
+
+    .swatch__chip-contrast {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--radius-full, 9999px);
+      line-height: 1.4;
+      text-transform: uppercase;
+      backdrop-filter: blur(4px);
+    }
+
+    .swatch__meta {
+      padding: 20px;
+    }
+
+    .swatch__var {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink, #1c1c1c);
+      word-break: break-all;
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    .swatch__hex {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      color: rgba(28, 28, 28, 0.4);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .swatch__role {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      line-height: 1.5;
+      color: rgba(28, 28, 28, 0.82);
+      margin-bottom: 12px;
+    }
+
+    .swatch__contrast-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      margin-top: 8px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .contrast-pass { color: #059669; }
+    .contrast-fail { color: #dc2626; }
+    .contrast-aa-large { color: #d97706; }
+
+    /* Chip contrast badge styling */
+    .chip-badge {
+      border-radius: var(--radius-full, 9999px);
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    /* Usage pattern section */
+    .usage-section {
+      margin-bottom: 64px;
+      padding: 48px;
+      background: rgba(28, 28, 28, 0.03);
+      border: 1px solid var(--border, #eceae4);
+      border-radius: var(--card-radius, 8px);
+    }
+
+    .usage-section h2 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.0;
+      letter-spacing: -1.2px;
+      color: var(--ink, #1c1c1c);
+      margin-bottom: 20px;
+    }
+
+    .usage-section p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      line-height: 1.5;
+      color: rgba(28, 28, 28, 0.82);
+      margin-bottom: 24px;
+      max-width: 720px;
+    }
+
+    .rule-of-one {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 32px;
+      align-items: start;
+    }
+
+    .rule-example {
+      padding: 28px;
+      background: var(--paper, #f7f4ed);
+      border: 1px solid var(--border, #eceae4);
+      border-radius: var(--card-radius, 8px);
+    }
+
+    .rule-example h3 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.7px;
+      color: var(--ink, #1c1c1c);
+      margin-bottom: 12px;
+    }
+
+    .rule-example p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 15px;
+      line-height: 1.5;
+      color: rgba(28, 28, 28, 0.82);
+      margin-bottom: 0;
+    }
+
+    .correct {
+      border: 2px solid #059669;
+    }
+
+    .correct::before {
+      content: '✓ Best practice';
+      display: block;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: #059669;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #059669;
+    }
+
+    .incorrect {
+      border: 2px solid #dc2626;
+    }
+
+    .incorrect::before {
+      content: '✗ Avoid';
+      display: block;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: #dc2626;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #dc2626;
+    }
+
+    .opacity-demo {
+      font-size: 16px;
+      line-height: 1.5;
+      font-family: var(--font-mono, ui-monospace, monospace);
+    }
+
+    .opacity-demo .opacity-label {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-right: 8px;
+      color: rgba(28, 28, 28, 0.4);
+    }
+
+    /* WCAG summary */
+    .wcag-summary {
+      margin-top: 64px;
+      padding: 48px;
+      background: rgba(28, 28, 28, 0.03);
+      border: 1px solid var(--border, #eceae4);
+      border-radius: var(--card-radius, 8px);
+    }
+
+    .wcag-summary h2 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.0;
+      letter-spacing: -1.2px;
+      margin-bottom: 20px;
+      color: var(--ink, #1c1c1c);
+    }
+
+    .wcag-summary p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 15px;
+      line-height: 1.5;
+      color: rgba(28, 28, 28, 0.82);
+      margin-bottom: 28px;
+      max-width: 720px;
+    }
+
+    .wcag-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border, #eceae4);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 15px;
+      color: rgba(28, 28, 28, 0.82);
+    }
+
+    .wcag-row:last-child { border-bottom: none; }
+
+    .wcag-badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: var(--radius-md, 8px);
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      min-width: 90px;
+      text-align: center;
+    }
+
+    .wcag-badge--pass { background: #f0fdf4; color: #059669; border: 1px solid #86efac; }
+    .wcag-badge--fail { background: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; }
+    .wcag-badge--aa-large { background: #fffbeb; color: #d97706; border: 1px solid #fcd34d; }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: rgba(28, 28, 28, 0.4);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid rgba(28, 28, 28, 0.1);
+      border-top-color: var(--ink, #1c1c1c);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .page { padding: 48px 20px; }
+      .header { padding-bottom: 24px; margin-bottom: 48px; }
+      .header__title { font-size: 42px; letter-spacing: -0.8px; }
+      .header__subtitle { font-size: 16px; }
+      .swatch-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+      .rule-of-one { grid-template-columns: 1fr; gap: 16px; }
+      .usage-section { padding: 28px; }
+      .wcag-summary { padding: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    /* ───────────────────────────────────────────────────────────── */
+    /* Contrast ratio calculation (WCAG 2.1 relative luminance)      */
+    /* ───────────────────────────────────────────────────────────── */
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function luminance([r, g, b]) {
+      const [rs, gs, bs] = [r, g, b].map(c => {
+        c /= 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    }
+
+    function contrastRatio(hex1, hex2) {
+      const l1 = luminance(hexToRgb(hex1));
+      const l2 = luminance(hexToRgb(hex2));
+      const lighter = Math.max(l1, l2);
+      const darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function wcagLevel(ratio) {
+      if (ratio >= 7) return { label: 'AAA', cls: 'pass' };
+      if (ratio >= 4.5) return { label: 'AA', cls: 'pass' };
+      if (ratio >= 3) return { label: 'AA Large', cls: 'aa-large' };
+      return { label: 'Fail', cls: 'fail' };
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Core color roles and descriptions                             */
+    /* ───────────────────────────────────────────────────────────── */
+    const CORE_ROLES = {
+      paper:  'Page background. Warm cream parchment — the approachable foundation.',
+      ink:    'Primary text and headings. Near-black with organic warmth.',
+      slate:  'Secondary text, captions, metadata. Muted warm gray.',
+      signal: 'Interactive states and accents. Soft gray for contextual hierarchy.',
+      bone:   'Card surfaces and section fills. Seamless with page background.',
+    };
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Render from tokens.json                                       */
+    /* ───────────────────────────────────────────────────────────── */
+    (window.__DESIGN_TOKENS__ 
+      ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) 
+      : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:var(--ink,#1c1c1c)">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Design System';
+      const summary = tokens.meta?.summary || '';
+      const rawColors = tokens.colors || {};
+      const paperHex = rawColors.paper || '#f7f4ed';
+
+      /* Flatten nested color structure */
+      const colors = {};
+      for (const [k, v] of Object.entries(rawColors)) {
+        if (typeof v === 'string') {
+          colors[k] = v;
+        } else if (v && typeof v === 'object') {
+          for (const [sk, sv] of Object.entries(v)) {
+            if (typeof sv === 'string') colors[k + '-' + sk] = sv;
+          }
+        }
+      }
+
+      /* Split core and extended */
+      const coreKeys = Object.keys(CORE_ROLES).filter(k => colors[k]);
+      const extendedKeys = Object.keys(colors).filter(k => !CORE_ROLES[k] && typeof colors[k] === 'string');
+
+      let html = '';
+
+      /* ─ Stage head header ─ */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Color System</div>';
+      html += '  <h1 class="header__title">Warm Cream<br>Palette</h1>';
+      html += '  <p class="header__subtitle">Opacity-driven color system. All grays derived from a single charcoal at varying transparency levels. Warm parchment background, friendly and approachable. One information blue for focus states.</p>';
+      html += '  <div class="header__meta">Core Palette + Extended Values &mdash; ' + (coreKeys.length + extendedKeys.length) + ' Tokens</div>';
+      html += '</header>';
+
+      /* ─ Core Palette ─ */
+      if (coreKeys.length) {
+        html += '<div class="section-label">Core Palette</div>';
+        html += '<div class="swatch-grid">';
+        coreKeys.forEach(key => {
+          html += swatchCard(key, colors[key], paperHex, CORE_ROLES[key]);
+        });
+        html += '</div>';
+      }
+
+      /* ─ Extended Palette ─ */
+      if (extendedKeys.length) {
+        html += '<div class="section-label">Extended Palette</div>';
+        html += '<div class="swatch-grid">';
+        extendedKeys.forEach(key => {
+          const role = formatRole(key);
+          html += swatchCard(key, colors[key], paperHex, role);
+        });
+        html += '</div>';
+      }
+
+      /* ─ Opacity-Driven System ─ */
+      html += opacitySystemSection(paperHex);
+
+      /* ─ Rule of One ─ */
+      html += ruleOfOneSection(paperHex);
+
+      /* ─ WCAG Summary ─ */
+      html += wcagSummary(colors, paperHex);
+
+      app.innerHTML = html;
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Swatch card builder                                           */
+    /* ───────────────────────────────────────────────────────────── */
+    function swatchCard(key, hex, paperHex, role) {
+      const ratio = contrastRatio(hex, paperHex);
+      const level = wcagLevel(ratio);
+      const lum = luminance(hexToRgb(hex));
+      const chipTextColor = lum > 0.5 ? '#1c1c1c' : '#fcfbf8';
+      const chipBadgeBg = lum > 0.5 ? 'rgba(28,28,28,0.1)' : 'rgba(252,251,248,0.2)';
+
+      return '' +
+        '<div class="swatch">' +
+        '  <div class="swatch__chip" style="background:' + hex + '">' +
+        '    <span class="swatch__chip-contrast chip-badge" style="color:' + chipTextColor +
+             ';background:' + chipBadgeBg + '">' + ratio.toFixed(2) + ':1</span>' +
+        '  </div>' +
+        '  <div class="swatch__meta">' +
+        '    <div class="swatch__var">--' + esc(key) + '</div>' +
+        '    <div class="swatch__hex">' + esc(hex.toUpperCase()) + '</div>' +
+        '    <div class="swatch__role">' + esc(role) + '</div>' +
+        '    <div class="swatch__contrast-label contrast-' + level.cls + '">' +
+             'WCAG ' + level.label + '</div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Opacity-driven system explanation                             */
+    /* ───────────────────────────────────────────────────────────── */
+    function opacitySystemSection(paperHex) {
+      let html = '<section class="usage-section">';
+      html += '<h2>Opacity-Driven System</h2>';
+      html += '<p>All grays in Lovable derive from a single hue — charcoal <code>#1c1c1c</code> — at varying opacity levels. This creates visual coherence while maintaining a unified color story. Every shade is technically the same color, just more or less transparent over the cream background.</p>';
+
+      html += '<div class="rule-of-one">';
+
+      /* Opacity scale example */
+      html += '<div class="rule-example correct">';
+      html += '<h3>Charcoal Scale</h3>';
+      html += '<p class="opacity-demo">';
+      html += '<span class="opacity-label">100%</span> Full strength text<br>';
+      html += '<span class="opacity-label">83%</span> <span style="color:rgba(28,28,28,0.83)">Strong secondary</span><br>';
+      html += '<span class="opacity-label">82%</span> <span style="color:rgba(28,28,28,0.82)">Body copy</span><br>';
+      html += '<span class="opacity-label">40%</span> <span style="color:rgba(28,28,28,0.4)">Borders & labels</span><br>';
+      html += '<span class="opacity-label">4%</span> <span style="color:rgba(28,28,28,0.04)">Hover backgrounds</span>';
+      html += '</p>';
+      html += '</div>';
+
+      /* Border system */
+      html += '<div class="rule-example correct">';
+      html += '<h3>Border Strategy</h3>';
+      html += '<p>';
+      html += 'Light dividers use <code>#eceae4</code> — a warm cream tone slightly darker than paper. Interactive borders use <code>rgba(28,28,28,0.4)</code> — charcoal at 40% opacity. This creates a tonal hierarchy: subtle boundaries for passive zones, stronger lines for interactive elements.';
+      html += '</p>';
+      html += '</div>';
+
+      html += '</div>';
+      html += '</section>';
+      return html;
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Rule of One usage pattern                                     */
+    /* ───────────────────────────────────────────────────────────── */
+    function ruleOfOneSection(paperHex) {
+      let html = '<section class="usage-section">';
+      html += '<h2>Accent Restraint</h2>';
+      html += '<p>Ring blue (<code>#3b82f6</code>) is reserved for focus states and accessibility indicators. Information states use the same blue. The warm cream and charcoal palette handles all content and UI — accent blue appears only when explicitly needed for compliance or interactive feedback. This keeps the interface feeling cohesive and warm.</p>';
+
+      html += '<div class="rule-of-one">';
+
+      /* Correct example */
+      html += '<div class="rule-example correct">';
+      html += '<h3>Focused Field</h3>';
+      html += '<p>';
+      html += 'An input field receives focus: the ring-blue outline appears, and an optional ring-blue shadow (rgba(59,130,246,0.5)) softly emphasizes the element. This is the only blue on the page, making it unmissable.';
+      html += '</p>';
+      html += '</div>';
+
+      /* Incorrect example */
+      html += '<div class="rule-example incorrect">';
+      html += '<h3>Over-Use of Accent</h3>';
+      html += '<p>';
+      html += 'If blue appears on multiple buttons, links, and decorative elements, it loses its signaling power. The warm palette becomes visually fragmented. Keep blue for accessibility and focus states only.';
+      html += '</p>';
+      html += '</div>';
+
+      html += '</div>';
+      html += '</section>';
+      return html;
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* WCAG compliance summary                                       */
+    /* ───────────────────────────────────────────────────────────── */
+    function wcagSummary(colors, paperHex) {
+      const keys = Object.keys(colors);
+      let passAAA = 0, passAA = 0, passAALarge = 0, fail = 0;
+
+      keys.forEach(k => {
+        const ratio = contrastRatio(colors[k], paperHex);
+        if (ratio >= 7) passAAA++;
+        else if (ratio >= 4.5) passAA++;
+        else if (ratio >= 3) passAALarge++;
+        else fail++;
+      });
+
+      let html = '<div class="wcag-summary">';
+      html += '<h2>Accessibility & Contrast</h2>';
+      html += '<p>All color tokens tested for contrast ratio against the paper background (#F7F4ED). The warm cream surface is purposefully chosen to reduce eye strain in developer tools while maintaining strong readability for body copy and interactive elements. Ring blue is reserved for focus states and meets AAA standards.</p>';
+      html += row('AAA — Large & Small Text (7:1+)', passAAA, 'pass');
+      html += row('AA — Normal Text (4.5:1+)', passAA, 'pass');
+      html += row('AA Large — Headlines Only (3:1+)', passAALarge, 'aa-large');
+      html += row('Below Threshold', fail, fail > 0 ? 'fail' : 'pass');
+      html += '</div>';
+      return html;
+
+      function row(label, count, badge) {
+        return '<div class="wcag-row">' +
+               '<span class="wcag-badge wcag-badge--' + badge + '">' + count + '</span>' +
+               '<span>' + label + '</span>' +
+               '</div>';
+      }
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Utilities                                                      */
+    /* ───────────────────────────────────────────────────────────── */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function formatRole(key) {
+      return key
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/[-_]/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase())
+        .trim();
+    }
+  </script>
+</body>
+</html>

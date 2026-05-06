@@ -1,0 +1,92 @@
+/* Apple — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #1d1d1f;
+  --slate:   #666666;
+  --signal:  #0071e3;
+  --bone:    #d2d2d7;
+  --border:  #d2d2d7;
+  --surface: #272729;
+
+  /* Extended palette */
+  --color-absolute-black: #000000;
+  --color-pale-apple-gray: #f5f5f7;
+  --color-body-link-blue: #0066cc;
+  --color-high-luminance-link-blue: #2997ff;
+  --color-graphite-surface-b: #262629;
+  --color-graphite-surface-c: #28282b;
+  --color-graphite-surface-d: #2a2a2c;
+  --color-secondary-neutral-gray: #6e6e73;
+  --color-mid-border-gray: #86868b;
+  --color-utility-dark-gray: #424245;
+
+  /* Semantic */
+  --danger:  #2997ff;
+  --info:    #0071e3;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-hero-display-xl: 80px;
+  --t-hero-display-l: 56px;
+  --t-section-display: 48px;
+  --t-product-heading: 40px;
+  --t-feature-display: 38px;
+  --t-promo-display: 32px;
+  --t-card-product-title: 28px;
+  --t-utility-heading: 24px;
+  --t-link-action-heading: 21px;
+  --t-subhead: 19px;
+  --t-body-primary: 17px;
+  --t-body-emphasis: 17px;
+  --t-control-label: 14px;
+  --t-micro-ui: 12px;
+  --t-legal-meta: 10px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   20px;
+  --radius-lg:   18px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  20px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    20px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

@@ -1,0 +1,83 @@
+/* Uber — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #4b4b4b;
+  --slate:   #4b4b4b;
+  --signal:  #000000;
+  --bone:    #ffffff;
+  --border:  #e5e5e5;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-hover-gray: #e2e2e2;
+  --color-hover-light: #f3f3f3;
+  --color-chip-gray: #efefef;
+  --color-muted-gray: #777777;
+  --color-default-link-blue: #0000ee;
+
+  /* Semantic */
+  --info:    #0000ee;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 52px;
+  --t-section-heading: 36px;
+  --t-card-title: 32px;
+  --t-sub-heading: 24px;
+  --t-small-heading: 20px;
+  --t-nav-ui-large: 18px;
+  --t-body-button: 16px;
+  --t-caption: 14px;
+  --t-micro: 12px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 6px;
+  --s-3: 8px;
+  --s-4: 10px;
+  --s-5: 12px;
+  --s-6: 14px;
+  --s-7: 16px;
+  --s-8: 18px;
+  --s-9: 20px;
+  --s-10: 24px;
+  --s-11: 32px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   0px;
+  --radius-md:   12px;
+  --radius-lg:   96px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  12px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    12px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

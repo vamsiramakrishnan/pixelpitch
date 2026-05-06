@@ -31,7 +31,7 @@ What makes BMW distinctive is its CSS variable-driven theming system. Context-aw
 ### Neutral Scale
 - **Near Black** (`#262626`): Primary text on light surfaces, dark link text
 - **Meta Gray** (`#757575`): `--site-context-metainfo-color`, secondary text, metadata
-- **Silver** (`#bbbbbb`): Tertiary text, muted links, footer elements
+- **Silver** (`#777777`): Tertiary text, muted links, footer elements
 
 ### Interactive States
 - All links hover to white (`#ffffff`) — suggesting primarily dark-surface navigation
@@ -167,7 +167,7 @@ What makes BMW distinctive is its CSS variable-driven theming system. Context-aw
 - Secondary text: Meta Gray (`#757575`)
 - Accent: BMW Blue (`#1c69d4`)
 - Focus: BMW Focus Blue (`#0653b6`)
-- Muted: Silver (`#bbbbbb`)
+- Muted: Silver (`#777777`)
 
 ### Example Component Prompts
 - "Create a hero: full-width dark automotive photography background. Heading at 60px BMWTypeNextLatin Light weight 300, uppercase, line-height 1.30, white text. No border-radius anywhere."

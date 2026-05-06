@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Corporate Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+    }
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 12px;
+    }
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate, #666666);
+      max-width: 600px;
+    }
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 3px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin-top: 24px;
+      border-radius: 2px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 56px;
+    }
+    .section__label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* Key characteristics */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+    .traits-list li {
+      position: relative;
+      padding: 12px 0 12px 28px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--ink, #111111);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 18px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--signal, #3b82f6);
+      opacity: 0.6;
+    }
+
+    /* Do's and Don'ts */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 640px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      padding: 24px;
+      overflow: hidden;
+    }
+    .dd-card__heading {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dd-card__heading--do { color: #059669; }
+    .dd-card__heading--dont { color: #dc2626; }
+
+    .dd-card__icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .dd-card__icon--do {
+      background: #d1fae5;
+      color: #059669;
+    }
+    .dd-card__icon--dont {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+    .dd-list li {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ink, #111111);
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* Color harmony strip */
+    .harmony-strip {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 80px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+    }
+    .harmony-strip__swatch:hover {
+      flex: 1.8;
+    }
+    .harmony-strip__label {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 3px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* Type pairing demo */
+    .type-pairing {
+      background: var(--bone, #f5f5f5);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      padding: 40px 32px;
+    }
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 36px;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 16px;
+    }
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--slate, #666666);
+      max-width: 640px;
+    }
+    .type-pairing__meta {
+      display: flex;
+      gap: 24px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--ink, #111111);
+    }
+
+    /* Atmosphere card */
+    .atmosphere-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      padding: 28px 24px;
+    }
+    .atmosphere-card p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--ink, #111111);
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border', 'surface'];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.meta?.id || 'Design System';
+      const colors = tokens.colors || {};
+      const typography = tokens.typography || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Brand Motifs &amp; DNA</h1>';
+      html += '  <p class="header__subtitle">The essential characteristics, patterns, and voice that define the ' + esc(name) + ' design system.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ---- Atmosphere / Description ---- */
+      const atmosphere = meta.summary || 'Professional, brand-aligned design with structured grids, minimalist layouts, and consistent enterprise patterns.';
+      html += '<div class="section">';
+      html += '  <div class="section__label">System Atmosphere</div>';
+      html += '  <div class="atmosphere-card"><p>' + esc(atmosphere) + '</p></div>';
+      html += '</div>';
+
+      /* ---- Key Characteristics ---- */
+      const traits = [
+        'Enterprise-grade polish with clean typography and generous whitespace',
+        'Primary blue accent (#3B82F6) anchors all interactive elements and hierarchy',
+        'Minimalist palette: white paper, near-black ink, warm grays, and semantic colors',
+        'Consistent border radius (8px) and predictable spacing scale create recognition',
+        'System UI fonts ensure platform-native rendering and accessibility',
+        'Subtle elevation through borders and soft shadows, never overwhelming',
+        'Motion is purposeful—150–250ms transitions emphasize interaction states'
+      ];
+
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      traits.forEach(t => {
+        html += '<li>' + esc(t) + '</li>';
+      });
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ---- Do's and Don'ts ---- */
+      const dos = [
+        'Use Primary Blue (#3B82F6) for all clickable elements and focus states',
+        'Maintain consistent 8px spacing grid across layouts—grid harmony is paramount',
+        'Apply semantic colors (success, warning, danger) with intention and restraint',
+        'Leverage 8px border radius on cards, inputs, and buttons for consistency',
+        'Use subtle shadows (0 2px 8px) for elevation; avoid heavy drop shadows',
+        'Prefer borders over shadows to create hierarchy and define regions'
+      ];
+
+      const donts = [
+        'Never override Primary Blue with accent colors in interactive components',
+        'Avoid decorative imagery or complex patterns—simplicity is a feature',
+        'Don\'t mix serif and sans-serif fonts; stick to system-ui stack',
+        'Never use sharp corners (0 radius) unless explicitly breaking grid',
+        'Avoid saturated semantic colors; always use restrained, professional tones',
+        'Don\'t create hover states that feel jerky—ensure 150–250ms smooth transitions'
+      ];
+
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '<div class="dd-card">';
+      html += '  <div class="dd-card__heading dd-card__heading--do">';
+      html += '    <span class="dd-card__icon dd-card__icon--do">&#10003;</span> Do';
+      html += '  </div>';
+      html += '  <ul class="dd-list">';
+      dos.forEach(d => { html += '<li>' + esc(d) + '</li>'; });
+      html += '  </ul></div>';
+
+      html += '<div class="dd-card">';
+      html += '  <div class="dd-card__heading dd-card__heading--dont">';
+      html += '    <span class="dd-card__icon dd-card__icon--dont">&#10007;</span> Don\'t';
+      html += '  </div>';
+      html += '  <ul class="dd-list">';
+      donts.forEach(d => { html += '<li>' + esc(d) + '</li>'; });
+      html += '  </ul></div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Color Harmony Strip ---- */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.4 ? '#111111' : '#ffffff';
+          const labelBg = lum > 0.4 ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.2)';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + ';background:' + labelBg + '">' + esc(key) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ---- Typography Pairing Demo ---- */
+      const displayFont = typography.fontDisplay || 'system-ui, sans-serif';
+      const bodyFont = typography.fontBody || 'system-ui, sans-serif';
+
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__display" style="font-family:\'' + esc(displayFont) + '\'">';
+      html += 'Precision in motion and form';
+      html += '</div>';
+
+      html += '    <div class="type-pairing__body" style="font-family:\'' + esc(bodyFont) + '\'">';
+      html += 'Corporate design demands clarity without compromise. Every surface—from navigation to data tables—must earn its space through function, not decoration. ' +
+              'A unified system-ui font stack ensures platform-native rendering, accessibility, and the professional weight that enterprise users expect. ' +
+              'Generous line-height and purposeful color contrast establish readable hierarchies that guide attention and action.';
+      html += '</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '<div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Display:</span> ' + esc(displayFont) + '</div>';
+      html += '<div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Body:</span> ' + esc(bodyFont) + '</div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    /* ---- Utilities ---- */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function relativeLuminance(hex) {
+      try {
+        const [r, g, b] = hexToRgb(hex).map(c => {
+          c /= 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      } catch { return 0.5; }
+    }
+  </script>
+</body>
+</html>

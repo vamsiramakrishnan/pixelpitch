@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cosmic — Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-8) var(--s-5);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--s-4);
+      margin-bottom: var(--s-7);
+      border-bottom: 1px solid var(--border);
+      border-top: 4px solid var(--signal);
+      padding-top: var(--s-4);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .masthead__accent {
+      color: var(--signal);
+      font-style: italic;
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-5);
+      border-bottom: 3px solid var(--signal);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 72px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 0.95;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate);
+      max-width: 720px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 54px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: var(--s-5);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-4);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--slate);
+      margin-right: var(--s-3);
+      min-width: 140px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      line-height: 1;
+      border: 2px solid var(--ink);
+      background: transparent;
+      color: var(--ink);
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      gap: var(--s-2);
+    }
+
+    .btn:hover {
+      background: var(--ink);
+      color: var(--paper);
+      transform: translateY(-2px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn--primary {
+      background: var(--signal);
+      color: var(--paper);
+      border-color: var(--signal);
+    }
+
+    .btn--primary:hover {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--paper);
+    }
+
+    .btn--secondary {
+      border-color: var(--signal);
+      color: var(--signal);
+    }
+
+    .btn--secondary:hover {
+      background: var(--signal);
+      color: var(--paper);
+    }
+
+    .btn--ghost {
+      border: none;
+      background: transparent;
+      color: var(--signal);
+      padding: 0;
+      text-decoration: underline;
+      text-decoration-color: var(--signal);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .btn--ghost:hover {
+      opacity: 0.75;
+    }
+
+    .btn--sm {
+      padding: 6px 14px;
+      font-size: 12px;
+    }
+
+    .btn--lg {
+      padding: 14px 32px;
+      font-size: 15px;
+    }
+
+    /* ──── CARDS ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: var(--s-5);
+      margin-bottom: var(--s-5);
+    }
+
+    .card {
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      padding: var(--s-4);
+      background: var(--paper);
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--signal);
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+    }
+
+    .card--elevated {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .card__header {
+      margin-bottom: var(--s-3);
+    }
+
+    .card__icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      background: var(--signal);
+      color: var(--paper);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--s-3);
+      font-weight: 600;
+      font-size: 24px;
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .card__body {
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--slate);
+    }
+
+    /* ──── INPUT FIELDS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .input {
+      padding: 10px 14px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    /* ──── BADGES ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      margin-bottom: var(--s-4);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      line-height: 1.4;
+      border-radius: var(--radius-full);
+      background: var(--bone);
+      color: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    .badge--signal {
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--signal);
+      border-color: var(--signal);
+    }
+
+    .badge--success {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+      border-color: #22c55e;
+    }
+
+    .badge--warning {
+      background: rgba(251, 146, 60, 0.1);
+      color: #fb923c;
+      border-color: #fb923c;
+    }
+
+    .badge--danger {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border-color: #ef4444;
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: currentColor;
+      border-radius: var(--radius-full);
+    }
+
+    /* ──── TAGS ──── */
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2);
+      margin-bottom: var(--s-4);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    /* ──── PULL QUOTE ──── */
+    .pullquote {
+      border-left: 4px solid var(--signal);
+      padding: var(--s-4) 0 var(--s-4) var(--s-5);
+      margin: var(--s-6) 0;
+    }
+
+    .pullquote__mark {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 700;
+      line-height: 0.8;
+      color: var(--signal);
+      display: block;
+      margin-bottom: var(--s-2);
+    }
+
+    .pullquote__text {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.25;
+      color: var(--ink);
+      margin-bottom: var(--s-4);
+    }
+
+    .pullquote__attribution {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── NUMBERED LIST ──── */
+    .numbered-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--s-4);
+    }
+
+    .numbered-list__item {
+      padding: var(--s-4);
+      border: 1px solid var(--border);
+      border-radius: var(--card-radius);
+      background: var(--paper);
+    }
+
+    .numbered-list__number {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 0.85;
+      color: var(--signal);
+      display: block;
+      margin-bottom: var(--s-2);
+    }
+
+    .numbered-list__headline {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .numbered-list__body {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate);
+    }
+
+    /* ──── STATUS TABLE ──── */
+    .status-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: var(--s-5);
+    }
+
+    .status-table__header {
+      background: var(--surface);
+      border-bottom: 2px solid var(--border);
+    }
+
+    .status-table__header-cell {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: left;
+      padding: var(--s-3);
+      border-right: 1px solid var(--border);
+    }
+
+    .status-table__header-cell:last-child {
+      border-right: none;
+    }
+
+    .status-table__row {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .status-table__row:last-child {
+      border-bottom: none;
+    }
+
+    .status-table__cell {
+      padding: var(--s-3);
+      text-align: left;
+      border-right: 1px solid var(--border);
+    }
+
+    .status-table__cell:last-child {
+      border-right: none;
+    }
+
+    .status-table__label {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .status-table__description {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate);
+    }
+
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-indicator--active {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+    }
+
+    .status-indicator--pending {
+      background: rgba(251, 146, 60, 0.1);
+      color: #fb923c;
+    }
+
+    .status-indicator--inactive {
+      background: var(--bone);
+      color: var(--slate);
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: var(--radius-full);
+      background: currentColor;
+    }
+
+    /* ──── SUBSECTION LABEL ──── */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+      margin-top: var(--s-4);
+    }
+
+    /* ──── FOOTER ──── */
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-3) 0;
+      margin-top: var(--s-8);
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-6) var(--s-3);
+      }
+
+      .stage-head__title {
+        font-size: 48px;
+      }
+
+      .section__title {
+        font-size: 36px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .numbered-list {
+        grid-template-columns: 1fr;
+      }
+
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+
+      .pullquote__text {
+        font-size: 24px;
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: var(--s-3);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">
+        Cosmic
+      </div>
+      <div class="masthead__tagline">
+        Component<br>Library
+      </div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Interactive Vocabulary</h1>
+      <p class="stage-head__subtitle">
+        A futuristic, neon-infused component system built for creative experiences. Each pattern balances premium aesthetics with functional clarity, optimized for responsive digital interfaces.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Buttons</div>
+      <h2 class="section__title">Button Variants</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Default</span>
+        <button class="btn">Explore</button>
+        <button class="btn btn--sm">Small</button>
+        <button class="btn btn--lg">Large Button</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary</span>
+        <button class="btn btn--primary">Launch</button>
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary btn--lg">Primary Action</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Secondary</span>
+        <button class="btn btn--secondary">Discover</button>
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary btn--lg">Learn More</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Ghost</span>
+        <a href="#" class="btn btn--ghost">Explore the system</a>
+        <a href="#" class="btn btn--ghost">View documentation</a>
+        <a href="#" class="btn btn--ghost">Get started</a>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Cards</div>
+      <h2 class="section__title">Card Components</h2>
+      <p style="font-size: 17px; line-height: 1.55; color: var(--slate); margin-bottom: var(--s-5);">Cards are versatile containers with icon headers, titles, and descriptive content. Hover states reveal signal blue accents and subtle elevation.</p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__header">
+            <div class="card__icon">🚀</div>
+            <h3 class="card__title">Velocity</h3>
+          </div>
+          <p class="card__body">Experience lightning-fast interactions with our optimized component architecture. Every millisecond matters.</p>
+        </div>
+
+        <div class="card">
+          <div class="card__header">
+            <div class="card__icon">✨</div>
+            <h3 class="card__title">Elegance</h3>
+          </div>
+          <p class="card__body">Minimalist design principles meet premium aesthetics. Every pixel serves a purpose.</p>
+        </div>
+
+        <div class="card">
+          <div class="card__header">
+            <div class="card__icon">🌌</div>
+            <h3 class="card__title">Immersion</h3>
+          </div>
+          <p class="card__body">Dive into an immersive digital experience with spatial depth and responsive feedback.</p>
+        </div>
+      </div>
+
+      <div class="subsection-label">Elevated Variant (with Shadow)</div>
+      <div class="cards-grid">
+        <div class="card card--elevated">
+          <div class="card__header">
+            <div class="card__icon">⚡</div>
+            <h3 class="card__title">Performance</h3>
+          </div>
+          <p class="card__body">Built for speed. Optimized for every device. Delivering on the promise of next-gen web.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Input Fields Section -->
+    <section class="section">
+      <div class="section__kicker">Forms</div>
+      <h2 class="section__title">Input Fields</h2>
+      <p style="font-size: 17px; line-height: 1.55; color: var(--slate); margin-bottom: var(--s-5);">Text inputs with focus ring treatment. Clean borders transition to signal blue on interaction, with protective shadow for accessibility.</p>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Project Name</label>
+          <input type="text" class="input" placeholder="Enter project name">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input type="email" class="input" placeholder="you@example.com">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Search Query</label>
+          <input type="search" class="input" placeholder="Search components...">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Description</label>
+          <textarea class="input" placeholder="Tell us more..." rows="3"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="section">
+      <div class="section__kicker">Status</div>
+      <h2 class="section__title">Badges & Tags</h2>
+
+      <div class="subsection-label">Status Badges</div>
+      <div class="badge-row">
+        <span class="badge badge--signal"><span class="badge__dot"></span>Active</span>
+        <span class="badge badge--success"><span class="badge__dot"></span>Verified</span>
+        <span class="badge badge--warning"><span class="badge__dot"></span>Pending</span>
+        <span class="badge badge--danger"><span class="badge__dot"></span>Blocked</span>
+      </div>
+
+      <div class="subsection-label">Categorical Tags</div>
+      <div class="tag-row">
+        <span class="tag">Design</span>
+        <span class="tag">Components</span>
+        <span class="tag">Accessibility</span>
+        <span class="tag">Mobile-First</span>
+        <span class="tag">Open Source</span>
+        <span class="tag">Responsive</span>
+      </div>
+    </section>
+
+    <!-- Pull Quote Section -->
+    <section class="section">
+      <div class="section__kicker">Featured</div>
+      <h2 class="section__title">Design Philosophy</h2>
+
+      <div class="pullquote">
+        <span class="pullquote__mark">"</span>
+        <blockquote class="pullquote__text">Premium aesthetics meet functional clarity. Every interaction tells a story.</blockquote>
+        <p class="pullquote__attribution">Cosmic Design System</p>
+      </div>
+    </section>
+
+    <!-- Numbered List Section -->
+    <section class="section">
+      <div class="section__kicker">Features</div>
+      <h2 class="section__title">Core Capabilities</h2>
+      <p style="font-size: 17px; line-height: 1.55; color: var(--slate); margin-bottom: var(--s-5);">Six essential features for building modern interfaces. Signal blue numerals highlight the system's primary characteristics.</p>
+
+      <div class="numbered-list">
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">1</span>
+          <h4 class="numbered-list__headline">Responsive Design</h4>
+          <p class="numbered-list__body">Mobile-first approach ensures pixel-perfect rendering across all screen sizes and devices.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">2</span>
+          <h4 class="numbered-list__headline">Accessibility First</h4>
+          <p class="numbered-list__body">WCAG compliance built into every component. Focus rings, color contrast, semantic HTML.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">3</span>
+          <h4 class="numbered-list__headline">Token-Based</h4>
+          <p class="numbered-list__body">CSS custom properties power the entire system. Change themes instantly with variable swaps.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">4</span>
+          <h4 class="numbered-list__headline">Zero Dependencies</h4>
+          <p class="numbered-list__body">Pure HTML and CSS. No JavaScript required. Ship faster, smaller, and with fewer security concerns.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">5</span>
+          <h4 class="numbered-list__headline">Dark Mode Ready</h4>
+          <p class="numbered-list__body">Seamless theme switching with prefers-color-scheme support. Respect user preferences.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">6</span>
+          <h4 class="numbered-list__headline">Extensible</h4>
+          <p class="numbered-list__body">Built on a spacing scale and modular component structure. Easy to customize and extend.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Status Table Section -->
+    <section class="section">
+      <div class="section__kicker">Inventory</div>
+      <h2 class="section__title">Component Status</h2>
+      <p style="font-size: 17px; line-height: 1.55; color: var(--slate); margin-bottom: var(--s-5);">Current release status of core components. Status indicators show production-readiness and development stage.</p>
+
+      <table class="status-table">
+        <thead class="status-table__header">
+          <tr>
+            <th class="status-table__header-cell">Component</th>
+            <th class="status-table__header-cell">Description</th>
+            <th class="status-table__header-cell" style="width: 140px;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="status-table__row">
+            <td class="status-table__cell"><span class="status-table__label">Button</span></td>
+            <td class="status-table__cell"><span class="status-table__description">Primary, secondary, ghost variants with sizes</span></td>
+            <td class="status-table__cell">
+              <span class="status-indicator status-indicator--active">
+                <span class="status-dot"></span>Active
+              </span>
+            </td>
+          </tr>
+          <tr class="status-table__row">
+            <td class="status-table__cell"><span class="status-table__label">Card</span></td>
+            <td class="status-table__cell"><span class="status-table__description">Standard and elevated containers with hover states</span></td>
+            <td class="status-table__cell">
+              <span class="status-indicator status-indicator--active">

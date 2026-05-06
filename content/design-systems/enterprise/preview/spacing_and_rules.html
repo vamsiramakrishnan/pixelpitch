@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Enterprise</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 96px 64px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 96px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 64px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 12px;
+      max-width: 85%;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+      max-width: 75%;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 120px;
+      height: 4px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin-top: 24px;
+      border-radius: 2px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 96px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 48px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 100px;
+      gap: 24px;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      margin-top: 6px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 3px;
+      background: var(--signal, #3b82f6);
+      min-width: 3px;
+      border-radius: 1px;
+      transition: opacity 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.7;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      text-align: right;
+    }
+
+    /* Rule weights */
+    .rule-demo {
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 20px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+    }
+
+    .rule-demo__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+
+    .rule-demo__container {
+      width: 100%;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      padding: 0;
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 64px;
+      margin-bottom: 48px;
+    }
+
+    .radius-item {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .radius-item__box {
+      width: 120px;
+      height: 120px;
+      background: var(--bone, #f5f5f5);
+      border: 1px solid var(--border, #e5e5e5);
+      flex-shrink: 0;
+    }
+
+    .radius-item__info {
+      flex: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      margin-bottom: 6px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+    }
+
+    /* Philosophy block */
+    .philosophy {
+      background: var(--bone, #f5f5f5);
+      padding: 48px;
+      border: 1px solid var(--border, #e5e5e5);
+      margin-bottom: 64px;
+      border-radius: 8px;
+    }
+
+    .philosophy__title {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--ink, #111111);
+    }
+
+    .philosophy__text strong {
+      font-weight: 600;
+    }
+
+    .philosophy__text em {
+      font-style: italic;
+    }
+
+    .philosophy__text code {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      background: rgba(59, 130, 246, 0.08);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.95em;
+    }
+
+    /* Grid demo */
+    .grid-demo {
+      background: var(--bone, #f5f5f5);
+      padding: 48px;
+      border: 1px solid var(--border, #e5e5e5);
+      margin-bottom: 64px;
+      border-radius: 8px;
+    }
+
+    .grid-demo__title {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+    }
+
+    .grid-demo__visual {
+      width: 100%;
+      height: 240px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+      background-image: linear-gradient(90deg, rgba(59, 130, 246, 0.06) 1px, transparent 1px);
+      background-size: calc(100% / 12) 100%;
+      padding: 24px;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+    }
+
+    .grid-demo__column {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 4px;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--signal, #3b82f6);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 8px;
+    }
+
+    .grid-demo__info {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .grid-demo__stat {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      color: var(--ink, #111111);
+      font-weight: 500;
+    }
+
+    .grid-demo__stat-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 6px;
+    }
+
+    /* Intro text */
+    .intro-text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--slate, #666666);
+      max-width: 80%;
+      margin-bottom: 48px;
+    }
+
+    .intro-text strong {
+      color: var(--ink, #111111);
+      font-weight: 600;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 2px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 1024px) {
+      .page {
+        padding: 64px 40px;
+      }
+
+      .header {
+        margin-bottom: 64px;
+      }
+
+      .header__title {
+        font-size: 48px;
+      }
+
+      .section {
+        margin-bottom: 64px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 100px 1fr 80px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .radius-item {
+        grid-template-columns: 120px 1fr;
+      }
+
+      .grid-demo__info {
+        grid-template-columns: 1fr;
+      }
+
+      .intro-text {
+        max-width: 100%;
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 48px 24px;
+      }
+
+      .header__title {
+        font-size: 40px;
+        max-width: 100%;
+      }
+
+      .header__subtitle {
+        font-size: 18px;
+        max-width: 100%;
+      }
+
+      .spacing-row {
+        grid-template-columns: 80px 1fr 70px;
+        gap: 12px;
+        padding: 16px 0;
+      }
+
+      .philosophy {
+        padding: 32px;
+      }
+
+      .grid-demo {
+        padding: 32px;
+      }
+
+      .grid-demo__visual {
+        height: 180px;
+        gap: 8px;
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '4px', label: 'xs' },
+      's-2': { value: '8px', label: 'sm' },
+      's-3': { value: '16px', label: 'md' },
+      's-4': { value: '24px', label: 'lg' },
+      's-5': { value: '32px', label: 'xl' },
+      's-6': { value: '48px', label: '2xl' },
+      's-7': { value: '64px', label: '3xl' },
+      's-8': { value: '96px', label: '4xl' }
+    };
+
+    const DEFAULT_RULES = {
+      'flat': { name: 'Flat', weight: 'none', color: 'transparent', use: 'Default surface, no separation' },
+      'border': { name: 'Border', weight: '1px', color: '#e5e5e5', use: 'Card boundaries, input fields, section dividers' },
+      'elevated': { name: 'Elevated', weight: 'shadow', color: '0 2px 8px rgba(0,0,0,0.08)', use: 'Floating panels, tooltips, popovers' }
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'Not used in this system — reserved for future' },
+      'sm': { value: '4px', use: 'Small controls and visual details' },
+      'md': { value: '8px', label: 'Standard', use: 'Buttons, inputs, cards, default component radius' },
+      'lg': { value: '16px', use: 'Large containers, panels, expanded UI regions' },
+      'full': { value: '999px', use: 'Badges, pills, and inline tags only' }
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const rules = DEFAULT_RULES;
+      const radius = DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">SPACING &amp; RULES</div>';
+      html += '  <h1 class="header__title">Structure<br>Through Spacing</h1>';
+      html += '  <p class="header__subtitle">A modular spacing scale and depth system designed for clarity and hierarchy in data-driven enterprise interfaces.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Philosophy block */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Spacing Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    This system uses <strong>consistent 8px base increments</strong> to create predictable, structured layouts. Each spacing token (s-1 through s-8) represents a multiple of 8, enabling precise alignment across all layouts and components. <strong>Whitespace is functional</strong>: it separates concerns, guides focus, and creates visual hierarchy without relying on excessive borders or shadows. A 1px border and strategic spacing is more effective than layered shadows in enterprise workflows where clarity and legibility are paramount.';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        const label = obj.label || key;
+        
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Depth & Rule weights */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth &amp; Rules</div>';
+
+      Object.entries(rules).forEach(([key, rule]) => {
+        const weight = rule.weight;
+        const color = rule.color;
+        const weightNum = parseFloat(weight) || 0;
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <div>';
+        html += '      <div class="rule-demo__name">' + esc(rule.name) + '</div>';
+        html += '      <div class="rule-demo__label">' + esc(rule.use) + '</div>';
+        html += '    </div>';
+        html += '    <div class="rule-demo__spec">' + esc(weight) + '</div>';
+        html += '  </div>';
+        
+        if (weight === 'none') {
+          html += '  <div class="rule-demo__container" style="background: var(--paper); border: 1px dashed var(--border);">';
+          html += '    <div style="font-family: var(--font-mono); font-size: 12px; color: var(--slate);">No border, shadow, or visual treatment</div>';
+          html += '  </div>';
+        } else if (weight === 'shadow') {
+          html += '  <div class="rule-demo__container">';
+          html += '    <div class="rule-demo__line" style="height: 48px; background: var(--paper); border: 1px solid var(--border); box-shadow: ' + color + '; border-radius: 4px;"></div>';
+          html += '  </div>';
+        } else {
+          html += '  <div class="rule-demo__container">';
+          html += '    <div class="rule-demo__line" style="height:' + weightNum + 'px; background:' + color + '"></div>';
+          html += '  </div>';
+        }
+        
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+      html += '  <p class="intro-text">This system standardizes on <strong>8px (md) as the default radius</strong> for all components: buttons, inputs, cards, and panels. Smaller and larger radii are reserved for specific use cases.</p>';
+
+      html += '  <div class="radius-grid">';
+
+      const radiusEntries = Object.entries(radius);
+      radiusEntries.forEach(([key, obj]) => {
+        const radiusValue = obj.value;
+
+        html += '  <div class="radius-item">';
+        html += '    <div class="radius-item__demo">';
+        html += '      <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '    </div>';
+        html += '    <div class="radius-item__info">';
+        html += '      <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '      <div class="radius-item__value">' + esc(radiusValue) + '</div>';
+        html += '      <div class="radius-item__description">' + esc(obj.use) + '</div>';
+        html += '    </div>';
+        html += '  </div>';
+      });
+
+      html += '  </div>';
+
+      html += '</div>';
+
+      /* Grid visualization */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Layout Grid</div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__title">12-Column Responsive Grid</div>';
+      html += '    <div class="grid-demo__visual">';
+      for (let i = 1; i <= 12; i++) {
+        html += '      <div class="grid-demo__column">' + i + '</div>';
+      }
+      html += '    </div>';
+      html += '    <div class="grid-demo__info">';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Base Unit</div>';
+      html += '        <div class="grid-demo__stat">8px increments</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Gutter</div>';
+      html += '        <div class="grid-demo__stat">16px (s-3) between columns</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Outer Padding</div>';
+      html += '        <div class="grid-demo__stat">24px (s-4) minimum margins</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Design principles */
+      html += '<div class="philosophy" style="margin-top: 96px; margin-bottom: 0;">';
+      html += '  <div class="philosophy__title">Layout Principles</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    <strong>1. Eight-pixel harmony:</strong> Every dimension is a multiple of 8px. This ensures components align predictably across responsive breakpoints and simplifies math in development. <strong>2. Whitespace over decoration:</strong> Separation happens through spacing and subtle 1px borders, not through layered shadows or excessive visual weight. <strong>3. Hierarchy through proximity:</strong> Group related information with tight spacing (s-2, s-3); separate unrelated blocks with generous whitespace (s-6, s-7). <strong>4. Consistency builds trust:</strong> In enterprise workflows, predictable spacing and clear structure reduce cognitive load and support rapid data scanning.';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

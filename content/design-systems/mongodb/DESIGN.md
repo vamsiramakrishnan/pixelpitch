@@ -27,7 +27,7 @@ What makes MongoDB distinctive is its dual-mode design: a dark hero/feature sect
 ### Primary Brand
 - **Forest Black** (`#001e2b`): Primary dark background — the deepest teal-black
 - **MongoDB Green** (`#00ed64`): Primary brand accent — neon green for highlights, underlines, gradients
-- **Dark Green** (`#00684a`): Button borders, link text on light — muted green for functional use
+- **Dark Green** (`#3c9171`): Button borders, link text on light — muted green for functional use
 
 ### Interactive
 - **Action Blue** (`#006cfa`): Secondary accent — links, interactive highlights

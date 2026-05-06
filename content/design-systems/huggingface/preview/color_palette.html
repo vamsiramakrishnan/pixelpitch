@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Palette — Hugging Face</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #374151);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 72px;
+      border-bottom: 2px solid var(--ink, #374151);
+      padding-bottom: 32px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 56px;
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink, #374151);
+      margin-bottom: 8px;
+    }
+
+    .header__emoji {
+      display: inline-block;
+      font-size: 56px;
+      margin-right: 12px;
+      vertical-align: -0.15em;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+      max-width: 720px;
+      margin-bottom: 16px;
+    }
+
+    .header__meta {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      color: var(--slate, #666666);
+      text-transform: uppercase;
+    }
+
+    /* Section labels */
+    .section-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #e5e7eb);
+    }
+
+    /* Swatch grid */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+      margin-bottom: 64px;
+    }
+
+    .swatch {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    .swatch:hover {
+      border-color: var(--signal, #ffd21e);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .swatch__chip {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      position: relative;
+    }
+
+    .swatch__chip-contrast {
+      position: absolute;
+      bottom: 10px;
+      right: 12px;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 4px;
+      line-height: 1.4;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+    }
+
+    .swatch__meta {
+      padding: 18px 20px 20px;
+    }
+
+    .swatch__var {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink, #374151);
+      word-break: break-all;
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    .swatch__hex {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      color: var(--slate, #666666);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .swatch__role {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink, #374151);
+      margin-bottom: 8px;
+    }
+
+    .swatch__contrast-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      margin-top: 8px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .contrast-pass { color: #16a34a; }
+    .contrast-fail { color: #dc2626; }
+    .contrast-aa-large { color: #ea580c; }
+
+    /* Usage pattern section */
+    .usage-section {
+      margin-bottom: 64px;
+      padding: 40px;
+      background: var(--bone, #fafafa);
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: 8px;
+    }
+
+    .usage-section h2 {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--ink, #374151);
+      margin-bottom: 24px;
+    }
+
+    .usage-section p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--ink, #374151);
+      margin-bottom: 24px;
+      max-width: 720px;
+    }
+
+    .rule-of-one {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 32px;
+      align-items: start;
+    }
+
+    .rule-example {
+      padding: 24px;
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: 8px;
+    }
+
+    .rule-example h3 {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--ink, #374151);
+      margin-bottom: 12px;
+    }
+
+    .rule-example p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      margin-bottom: 0;
+    }
+
+    .correct {
+      border: 2px solid #16a34a;
+    }
+
+    .correct::before {
+      content: '✓ CORRECT';
+      display: block;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: #16a34a;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #16a34a;
+    }
+
+    .incorrect {
+      border: 2px solid #dc2626;
+    }
+
+    .incorrect::before {
+      content: '✗ INCORRECT';
+      display: block;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: #dc2626;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #dc2626;
+    }
+
+    .signal-demo {
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .signal-accent {
+      color: var(--signal, #ffd21e);
+      background: linear-gradient(to right, var(--signal, #ffd21e), var(--signal, #ffd21e));
+      background-position: 0 1.2em;
+      background-size: 100% 2px;
+      background-repeat: repeat-x;
+      padding-bottom: 2px;
+    }
+
+    .signal-badge {
+      display: inline-block;
+      background: var(--signal, #ffd21e);
+      color: #333333;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+
+    /* WCAG summary */
+    .wcag-summary {
+      margin-top: 64px;
+      padding: 40px;
+      background: var(--bone, #fafafa);
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: 8px;
+    }
+
+    .wcag-summary h2 {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      margin-bottom: 24px;
+      color: var(--ink, #374151);
+    }
+
+    .wcag-summary p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+    }
+
+    .wcag-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #e5e7eb);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 15px;
+    }
+
+    .wcag-row:last-child { border-bottom: none; }
+
+    .wcag-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      min-width: 100px;
+      text-align: center;
+      border: 1px solid;
+    }
+
+    .wcag-badge--pass { background: #f0fdf4; color: #16a34a; border-color: #16a34a; }
+    .wcag-badge--fail { background: #fef2f2; color: #dc2626; border-color: #dc2626; }
+    .wcag-badge--aa-large { background: #fffbeb; color: #ea580c; border-color: #ea580c; }
+
+    /* Category accent showcase */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 32px;
+    }
+
+    .category-card {
+      padding: 20px;
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .category-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: white;
+      margin-bottom: 12px;
+    }
+
+    .category-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--slate, #666666);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #666666);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 15px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 24px auto 0;
+      border: 2px solid var(--slate, #666666);
+      border-top-color: var(--signal, #ffd21e);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .page { padding: 48px 20px; }
+      .header { padding-bottom: 24px; margin-bottom: 48px; }
+      .header__title { font-size: 40px; }
+      .header__emoji { font-size: 40px; }
+      .swatch-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+      .rule-of-one { grid-template-columns: 1fr; gap: 16px; }
+      .usage-section { padding: 24px; }
+      .category-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    /* ───────────────────────────────────────────────────────────── */
+    /* Contrast ratio calculation (WCAG 2.1 relative luminance)      */
+    /* ───────────────────────────────────────────────────────────── */
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function luminance([r, g, b]) {
+      const [rs, gs, bs] = [r, g, b].map(c => {
+        c /= 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    }
+
+    function contrastRatio(hex1, hex2) {
+      const l1 = luminance(hexToRgb(hex1));
+      const l2 = luminance(hexToRgb(hex2));
+      const lighter = Math.max(l1, l2);
+      const darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function wcagLevel(ratio) {
+      if (ratio >= 7) return { label: 'AAA', cls: 'pass' };
+      if (ratio >= 4.5) return { label: 'AA', cls: 'pass' };
+      if (ratio >= 3) return { label: 'AA Large', cls: 'aa-large' };
+      return { label: 'Fail', cls: 'fail' };
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Core color roles and descriptions                             */
+    /* ───────────────────────────────────────────────────────────── */
+    const CORE_ROLES = {
+      paper:  'Canvas background. White for primary pages.',
+      ink:    'Primary text and headings. Deep slate gray.',
+      slate:  'Secondary text, captions, metadata.',
+      signal: 'Brand accent. Sunshine yellow for badges and highlights.',
+      bone:   'Alternate background. Subtle off-white for sections.',
+      border: 'Hairline dividers and card borders.'
+    };
+
+    const EXTENDED_CATEGORIES = {
+      'accessible-hf-gold-text': { role: 'Text on light. WCAG AA compliant yellow variant.', group: 'Text' },
+      'hf-yellow-deep': { role: 'Hover/active state for signal yellow.', group: 'Interactive' },
+      'hf-yellow-soft': { role: 'Background tint for yellow callouts.', group: 'Surface' },
+      'canvas-inset': { role: 'Code blocks and table hover states.', group: 'Surface' },
+      'canvas-dark': { role: 'Dark theme background. Near black.', group: 'Surface' },
+      'ink-muted': { role: 'Tertiary text. File paths, authors.', group: 'Text' },
+      'ink-inverse': { role: 'Text on dark surfaces.', group: 'Text' },
+      'nlp-blue': { role: 'NLP/Text task badge. Model category.', group: 'Category' },
+      'vision-green': { role: 'Computer Vision task badge.', group: 'Category' },
+      'audio-purple': { role: 'Audio/Speech task badge.', group: 'Category' },
+      'multimodal-pink': { role: 'Multimodal/Diffusion task badge.', group: 'Category' },
+      'tabular-orange': { role: 'Tabular/Structured task badge.', group: 'Category' },
+      'error': { role: 'Error states and destructive actions.', group: 'Semantic' },
+      'border-strong': { role: 'Emphasized border on hover/active.', group: 'Border' }
+    };
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Render from tokens.json                                       */
+    /* ───────────────────────────────────────────────────────────── */
+    (window.__DESIGN_TOKENS__ 
+      ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) 
+      : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:var(--signal,#ffd21e)">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const rawColors = tokens.colors || {};
+      const paperHex = rawColors.paper || '#ffffff';
+
+      /* Flatten nested color structure */
+      const colors = {};
+      const extended = {};
+      for (const [k, v] of Object.entries(rawColors)) {
+        if (typeof v === 'string') {
+          colors[k] = v;
+        } else if (v && typeof v === 'object' && k !== 'semantic') {
+          for (const [sk, sv] of Object.entries(v)) {
+            if (typeof sv === 'string') extended[k + '-' + sk] = sv;
+          }
+        } else if (k === 'semantic' && v && typeof v === 'object') {
+          for (const [sk, sv] of Object.entries(v)) {
+            if (typeof sv === 'string') colors[sk] = sv;
+          }
+        }
+      }
+
+      /* Merge extended into flat structure */
+      Object.assign(colors, extended);
+
+      /* Split core and extended */
+      const coreKeys = Object.keys(CORE_ROLES).filter(k => colors[k]);
+      const extendedKeys = Object.keys(colors).filter(k => !CORE_ROLES[k] && typeof colors[k] === 'string');
+
+      let html = '';
+
+      /* ─ Stage head header ─ */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Color System</div>';
+      html += '  <h1 class="header__title"><span class="header__emoji">🤗</span>Community Sunshine</h1>';
+      html += '  <p class="header__subtitle">One saturated yellow accent. Category badges in blue, green, purple, pink, orange. Crisp borders and dense tables built for power users and model researchers.</p>';
+      html += '  <div class="header__meta">Core Palette + Extended Values &mdash; ' + (coreKeys.length + extendedKeys.length) + ' Tokens</div>';
+      html += '</header>';
+
+      /* ─ Core Palette ─ */
+      if (coreKeys.length) {
+        html += '<div class="section-label">Core Palette</div>';
+        html += '<div class="swatch-grid">';
+        coreKeys.forEach(key => {
+          html += swatchCard(key, colors[key], paperHex, CORE_ROLES[key]);
+        });
+        html += '</div>';
+      }
+
+      /* ─ Extended Palette ─ */
+      if (extendedKeys.length) {
+        html += '<div class="section-label">Extended Palette</div>';
+        html += '<div class="swatch-grid">';
+        extendedKeys.forEach(key => {
+          const desc = EXTENDED_CATEGORIES[key];
+          const role = desc ? desc.role : formatRole(key);
+          html += swatchCard(key, colors[key], paperHex, role);
+        });
+        html += '</div>';
+      }
+
+      /* ─ Category Accents ─ */
+      const categoryKeys = ['nlp-blue', 'vision-green', 'audio-purple', 'multimodal-pink', 'tabular-orange'];
+      const availableCategories = categoryKeys.filter(k => colors[k]);
+      if (availableCategories.length) {
+        html += '<div class="section-label">Task Category Badges</div>';
+        html += '<p style="font-size:15px;line-height:1.55;color:var(--slate,#666666);margin-bottom:24px;max-width:720px;">Model cards and task filters use these vibrant accent colors to denote domain (NLP, Vision, Audio, Multimodal, Tabular). Each is saturated enough to stand alone but never competes with the primary yellow signal.</p>';
+        html += '<div class="category-grid">';
+        const categoryMap = {
+          'nlp-blue': 'NLP',
+          'vision-green': 'Vision',
+          'audio-purple': 'Audio',
+          'multimodal-pink': 'Multimodal',
+          'tabular-orange': 'Tabular'
+        };
+        availableCategories.forEach(key => {
+          const hex = colors[key];
+          const label = categoryMap[key] || formatRole(key);
+          html += '<div class="category-card">';
+          html += '<div class="category-badge" style="background:' + hex + '">' + label + '</div>';
+          html += '<div class="category-label">' + hex.toUpperCase() + '</div>';
+          html += '</div>';
+        });
+        html += '</div>';
+      }
+
+      /* ─ Rule of One ─ */
+      html += ruleOfOneSection(paperHex);
+
+      /* ─ WCAG Summary ─ */
+      html += wcagSummary(colors, paperHex);
+
+      app.innerHTML = html;
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Swatch card builder                                           */
+    /* ───────────────────────────────────────────────────────────── */
+    function swatchCard(key, hex, paperHex, role) {
+      const ratio = contrastRatio(hex, paperHex);
+      const level = wcagLevel(ratio);
+      const lum = luminance(hexToRgb(hex));
+      const chipTextColor = lum > 0.5 ? '#0d1117' : '#ffffff';
+      const chipBadgeBg = lum > 0.5 ? 'rgba(13,17,23,0.15)' : 'rgba(255,255,255,0.25)';
+
+      return '' +
+        '<div class="swatch">' +
+        '  <div class="swatch__chip" style="background:' + hex + '">' +
+        '    <span class="swatch__chip-contrast" style="color:' + chipTextColor +
+             ';background:' + chipBadgeBg + '">' + ratio.toFixed(2) + ':1</span>' +
+        '  </div>' +
+        '  <div class="swatch__meta">' +
+        '    <div class="swatch__var">--' + esc(key) + '</div>' +
+        '    <div class="swatch__hex">' + esc(hex.toUpperCase()) + '</div>' +
+        '    <div class="swatch__role">' + esc(role) + '</div>' +
+        '    <div class="swatch__contrast-label contrast-' + level.cls + '">' +
+             'WCAG ' + level.label + '</div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Rule of One usage pattern                                     */
+    /* ───────────────────────────────────────────────────────────── */
+    function ruleOfOneSection(paperHex) {
+      let html = '<section class="usage-section">';
+      html += '<h2>One Accent Per Surface</h2>';
+      html += '<p>Signal yellow 🤗 appears as a <em>focal accent</em> — badges, new pills, highlighted quotes, underlines — but never as multiple competing elements on one card or model page. The yellow is punctuation, not wallpaper. Category badges (blue, green, purple, pink, orange) are secondary and complement the primary signal, never dominate it.</p>';
+
+      html += '<div class="rule-of-one">';
+
+      /* Correct example */
+      html += '<div class="rule-example correct">';
+      html += '<h3>Strategic Yellow</h3>';
+      html += '<p class="signal-demo">';
+      html += '<span class="signal-badge">NEW</span>';
+      html += 'A model card with a single <span class="signal-accent">yellow highlight</span> draws the eye to what matters. The accent guides, doesn\'t overwhelm. One focal point per surface.';
+      html += '</p>';
+      html += '</div>';
+
+      /* Incorrect example */
+      html += '<div class="rule-example incorrect">';
+      html += '<h3>Yellow Everywhere</h3>';
+      html += '<p>';
+      html += '<span class="signal-badge">NEW</span> <span class="signal-badge">FEATURED</span> <span class="signal-badge">TRENDING</span>';
+      html += ' Model title in <span style="color:var(--signal,#ffd21e);">yellow</span>, description underlined in <span style="color:var(--signal,#ffd21e);">yellow</span>. Multiple signals cancel each other. Restraint creates hierarchy.';
+      html += '</p>';
+      html += '</div>';
+
+      html += '</div>';
+      html += '</section>';
+      return html;
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* WCAG compliance summary                                       */
+    /* ───────────────────────────────────────────────────────────── */
+    function wcagSummary(colors, paperHex) {
+      const keys = Object.keys(colors);
+      let passAAA = 0, passAA = 0, passAALarge = 0, fail = 0;
+
+      keys.forEach(k => {
+        const ratio = contrastRatio(colors[k], paperHex);
+        if (ratio >= 7) passAAA++;
+        else if (ratio >= 4.5) passAA++;
+        else if (ratio >= 3) passAALarge++;
+        else fail++;
+      });
+
+      let html = '<div class="wcag-summary">';
+      html += '<h2>WCAG 2.1 Compliance</h2>';
+      html += '<p>Contrast ratios measured against the paper background (#FFFFFF). Hugging Face prioritizes text accessibility and readable code blocks. Signal yellow is reserved for UI highlights and badges where sufficient context ensures legibility. The community-friendly <code style="background:var(--color-canvas-inset,#f3f4f6);padding:2px 6px;border-radius:4px;font-size:12px;">accessible-hf-gold-text</code> (#917300) provides an AA-compliant dark variant for body text on light surfaces.</p>';
+      html += row('AAA (7:1+)', passAAA, 'pass');
+      html += row('AA (4.5:1+)', passAA, 'pass');
+      html += row('AA Large Text (3:1+)', passAALarge, 'aa-large');
+      html += row('Below threshold', fail, fail > 0 ? 'fail' : 'pass');
+      html += '</div>';
+      return html;
+
+      function row(label, count, badge) {
+        return '<div class="wcag-row">' +
+               '<span class="wcag-badge wcag-badge--' + badge + '">' + count + '</span>' +
+               '<span>' + label + '</span>' +
+               '</div>';
+      }
+    }
+
+    /* ───────────────────────────────────

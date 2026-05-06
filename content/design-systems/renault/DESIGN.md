@@ -32,7 +32,7 @@ Typography is unified under NouvelR — a proprietary geometric sans-serif desig
 ### Secondary & Accent
 - **Soft Yellow** (`#F8EB4C`): Lighter, warmer variant of Renault Yellow — used for hover/pressed states on yellow CTAs and secondary accent contexts
 - **Renault Blue** (`#1883FD`): Link hover color across all link variants — a bright, confident blue that signals interactivity without competing with the yellow brand accent
-- **Warm Gray** (`#D9D9D6`): Subtle warm neutral used for disabled states, inactive UI elements, and soft borders — carries a slight warmth that distinguishes it from cold grays
+- **Warm Gray** (`#777774`): Subtle warm neutral used for disabled states, inactive UI elements, and soft borders — carries a slight warmth that distinguishes it from cold grays
 
 ### Surface & Background
 - **Pure White** (`#FFFFFF`): Page background, light editorial sections, navigation bar, and footer
@@ -43,7 +43,7 @@ Typography is unified under NouvelR — a proprietary geometric sans-serif desig
 ### Neutrals & Text
 - **Absolute Black** (`#000000`): Primary heading and body text on light surfaces — Renault uses true black rather than near-black
 - **Pure White** (`#FFFFFF`): Primary text on dark surfaces — hero headlines, dark-section headings, and inverted button labels
-- **Warm Gray** (`#D9D9D6`): Tertiary text, metadata, and subdued labels
+- **Warm Gray** (`#777774`): Tertiary text, metadata, and subdued labels
 - **Border Gray** (`#D1D1D1`): Input field borders and subtle separators
 
 ### Semantic & Accent

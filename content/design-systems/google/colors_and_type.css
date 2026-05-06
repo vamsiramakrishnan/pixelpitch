@@ -1,0 +1,103 @@
+/* Google (Material You) — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #fef7ff;
+  --ink:     #1c1b1f;
+  --slate:   #49454f;
+  --signal:  #ea4335;
+  --bone:    #cac4d0;
+  --border:  #79747e;
+  --surface: #d3e3fd;
+
+  /* Extended palette */
+  --color-primary: #1a73e8;
+  --color-blue-light-dark-mode: #5a95ff;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #041e49;
+  --color-secondary: #34a853;
+  --color-secondary-container: #c4eed0;
+  --color-on-secondary-container: #0d3919;
+  --color-tertiary-container: #ffd2cc;
+  --color-on-tertiary-container: #5c1008;
+  --color-surface-dim: #ded8e0;
+  --color-surface-container-low: #f8f1fa;
+  --color-surface-container: #f2ecf4;
+  --color-surface-container-high: #ece6ee;
+  --color-surface-container-highest: #e6e0e9;
+  --color-inverse-surface: #313033;
+  --color-inverse-on-surface: #f4eff4;
+  --color-error: #b3261e;
+  --color-error-container: #f9dedc;
+  --color-on-error-container: #410e0b;
+  --color-google-yellow: #fbbc04;
+
+  /* Semantic */
+  --warning: #fbbc04;
+  --danger:  #b3261e;
+  --info:    #5a95ff;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-large: 57px;
+  --t-display-medium: 45px;
+  --t-display-small: 36px;
+  --t-headline-large: 32px;
+  --t-headline-medium: 28px;
+  --t-headline-small: 24px;
+  --t-title-large: 22px;
+  --t-title-medium: 16px;
+  --t-title-small: 14px;
+  --t-body-large: 16px;
+  --t-body-medium: 14px;
+  --t-body-small: 12px;
+  --t-label-large: 14px;
+  --t-label-medium: 12px;
+  --t-label-small: 11px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   24px;
+  --radius-lg:   12px;
+  --radius-full: 1200px;
+
+  /* ── Components ── */
+  --button-radius:  40px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    1px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

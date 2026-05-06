@@ -25,6 +25,7 @@ What makes Binance.US distinctive is the tension between warmth and precision. T
 ### Primary
 
 - **Binance Yellow** (`#F0B90B`): The signature — primary CTA backgrounds, brand accent, active states, link color. The single most important color in the system
+- **Accessible Binance Gold Text** (`#9a7000`): Darker variant of Binance Yellow for text on white/light surfaces. Passes WCAG AA (4.48:1).
 - **Binance Gold** (`#FFD000`): Lighter gold variant used for pill button borders, secondary CTA fills, and golden gradient highlights
 - **Light Gold** (`#F8D12F`): Soft gold for gradient endpoints and hover-adjacent states
 
@@ -258,10 +259,12 @@ Binance.US uses a whisper-light shadow system. Card shadows are barely perceptib
 - Maintain 12px radius on content cards for a polished but not overly rounded feel
 - Show real-time data prominently (prices, percentages, stats) — numbers build trust
 - Use Slate (`#848E9C`) for all secondary/metadata text — the universal quiet voice
+- Use Accessible Binance Gold (#9a7000) for yellow/gold text on light backgrounds
 - Keep shadows at 5% opacity or less — barely there but present
 
 ### Don't
 
+- Don't use Binance Yellow (#F0B90B) as text on white — it fails WCAG AA. Reserve it for filled buttons, icons, and badges.
 - Don't introduce additional brand colors — Binance Yellow is the only accent; all other color is data-driven (green up, red down)
 - Don't use rounded corners above 12px on content cards — only CTAs and video containers go higher
 - Don't add heavy shadows or hover lift effects — this is a restrained financial platform

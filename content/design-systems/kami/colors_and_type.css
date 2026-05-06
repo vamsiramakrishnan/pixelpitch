@@ -1,0 +1,85 @@
+/* kami (紙 / 纸) — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #f5f4ed;
+  --ink:     #1b365d;
+  --slate:   #30302e;
+  --signal:  #1b365d;
+  --bone:    #faf9f5;
+  --border:  #e5e3d8;
+  --surface: #faf9f5;
+
+  /* Extended palette */
+  --color-ink-light: #2d5a8a;
+  --color-warm-sand: #e8e6dc;
+  --color-deep-dark: #141413;
+  --color-dark-warm: #3d3d3a;
+  --color-olive: #504e49;
+  --color-stone: #6b6a64;
+
+  /* Semantic */
+  --info:    #1b365d;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-hero-display: 106px;
+  --t-display-cn-ja: 64px;
+  --t-section-title: 32px;
+  --t-h2: 22px;
+  --t-h3: 18px;
+  --t-manifesto-pull-quote: 20px;
+  --t-lede: 16px;
+  --t-body: 14px;
+  --t-body-dense: 14px;
+  --t-caption: 12px;
+  --t-eyebrow-overline: 12px;
+  --t-label: 12px;
+  --t-mono-spec: 13px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   120px;
+  --radius-md:   64px;
+  --radius-lg:   16px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  64px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    12px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

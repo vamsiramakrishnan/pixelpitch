@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claymorphism — Components</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-8) var(--s-5);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--s-4);
+      margin-bottom: var(--s-7);
+      border-bottom: 2px solid var(--ink);
+      border-top: 4px solid var(--ink);
+      padding-top: var(--s-4);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-display);
+      font-size: 56px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--signal) 0%, #d946ef 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-5);
+      border-bottom: 3px solid var(--ink);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate);
+      max-width: 720px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: var(--s-5);
+    }
+
+    .section__desc {
+      font-size: 17px;
+      line-height: 1.5;
+      color: var(--slate);
+      margin-bottom: var(--s-5);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--s-5);
+      margin-bottom: var(--s-5);
+    }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-4);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate);
+      margin-right: var(--s-3);
+      min-width: 120px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      line-height: 1;
+      border: none;
+      background: var(--signal);
+      color: white;
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      gap: var(--s-2);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+      border-radius: inherit;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn--secondary {
+      background: var(--bone);
+      color: var(--ink);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .btn--secondary:hover {
+      background: var(--border);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--signal);
+      box-shadow: none;
+      border: 2px solid var(--signal);
+    }
+
+    .btn--ghost:hover {
+      background: rgba(59, 130, 246, 0.08);
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+    }
+
+    .btn--ghost::before {
+      display: none;
+    }
+
+    .btn--sm {
+      padding: 6px 14px;
+      font-size: 13px;
+    }
+
+    .btn--lg {
+      padding: 14px 32px;
+      font-size: 16px;
+    }
+
+    /* ──── CARDS ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-5);
+      margin-bottom: var(--s-5);
+    }
+
+    .card {
+      background: var(--paper);
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      padding: var(--s-4);
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      border-color: var(--signal);
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+      transform: translateY(-4px);
+    }
+
+    .card__icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--s-3);
+      font-size: 24px;
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .card__desc {
+      font-size: 15px;
+      color: var(--slate);
+      line-height: 1.5;
+      flex-grow: 1;
+      margin-bottom: var(--s-3);
+    }
+
+    .card__cta {
+      color: var(--signal);
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-2);
+      transition: gap 0.2s ease;
+    }
+
+    .card__cta:hover {
+      gap: var(--s-3);
+    }
+
+    /* ──── INPUTS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .input {
+      padding: 10px 14px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      background: rgba(59, 130, 246, 0.02);
+    }
+
+    /* ──── BADGES ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      margin-bottom: var(--s-4);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      line-height: 1.4;
+      border-radius: var(--radius-full);
+      background: var(--signal);
+      color: white;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: white;
+      border-radius: var(--radius-full);
+      opacity: 0.8;
+    }
+
+    .badge--secondary {
+      background: var(--bone);
+      color: var(--ink);
+      box-shadow: none;
+    }
+
+    .badge--secondary .badge__dot {
+      background: var(--ink);
+      opacity: 0.4;
+    }
+
+    .badge--success {
+      background: #10b981;
+      color: white;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+
+    .badge--warning {
+      background: #f59e0b;
+      color: white;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+    }
+
+    .badge--danger {
+      background: #ef4444;
+      color: white;
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+    }
+
+    /* ──── CLAY SHAPES ──── */
+    .clay-showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--s-5);
+      margin-bottom: var(--s-5);
+    }
+
+    .clay-shape {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 1;
+      border-radius: 45%;
+      font-weight: 700;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), inset -2px -2px 8px rgba(0, 0, 0, 0.1), inset 2px 2px 8px rgba(255, 255, 255, 0.4);
+    }
+
+    .clay-shape::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), transparent 50%);
+      border-radius: 50%;
+    }
+
+    .clay-shape__label {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .clay-shape--primary {
+      background: linear-gradient(135deg, var(--signal) 0%, #1d4ed8 100%);
+    }
+
+    .clay-shape--success {
+      background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+    }
+
+    .clay-shape--warning {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    }
+
+    .clay-shape--danger {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    }
+
+    .clay-shape--secondary {
+      background: linear-gradient(135deg, var(--bone) 0%, var(--border) 100%);
+      color: var(--ink);
+    }
+
+    /* ──── STATUS INDICATORS ──── */
+    .indicator-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .indicator {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3);
+    }
+
+    .indicator__dot {
+      width: 12px;
+      height: 12px;
+      border-radius: var(--radius-full);
+      box-shadow: 0 0 0 2px var(--paper), 0 0 8px currentColor;
+    }
+
+    .indicator__text {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .indicator--success .indicator__dot {
+      background: #10b981;
+      color: #10b981;
+    }
+
+    .indicator--warning .indicator__dot {
+      background: #f59e0b;
+      color: #f59e0b;
+    }
+
+    .indicator--danger .indicator__dot {
+      background: #ef4444;
+      color: #ef4444;
+    }
+
+    .indicator--active .indicator__dot {
+      background: var(--signal);
+      color: var(--signal);
+    }
+
+    .indicator--inactive .indicator__dot {
+      background: var(--slate);
+      color: var(--slate);
+    }
+
+    /* ──── TOGGLE SWITCHES ──– */
+    .toggle-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-5);
+      margin-bottom: var(--s-5);
+    }
+
+    .toggle-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .toggle-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate);
+    }
+
+    .toggle {
+      appearance: none;
+      width: 48px;
+      height: 28px;
+      border-radius: var(--radius-full);
+      border: none;
+      background: var(--border);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-full);
+      background: white;
+      top: 2px;
+      left: 2px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .toggle:checked {
+      background: var(--signal);
+      box-shadow: inset 0 2px 4px rgba(59, 130, 246, 0.3);
+    }
+
+    .toggle:checked::after {
+      left: 22px;
+    }
+
+    /* ──── PULL QUOTE ──── */
+    .pullquote {
+      border-top: 3px solid var(--signal);
+      border-bottom: 3px solid var(--signal);
+      padding: var(--s-5) 0;
+      margin: var(--s-6) 0;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0.02) 100%);
+      border-radius: var(--radius-lg);
+      padding: var(--s-5);
+    }
+
+    .pullquote__mark {
+      font-family: var(--font-display);
+      font-size: 80px;
+      font-weight: 700;
+      line-height: 0.8;
+      color: var(--signal);
+      display: block;
+      margin-bottom: var(--s-2);
+    }
+
+    .pullquote__text {
+      font-family: var(--font-display);
+      font-size: 42px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: var(--s-4);
+    }
+
+    .pullquote__attribution {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── UTILITIES ──– */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+      margin-top: var(--s-4);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .divider {
+      border: none;
+      border-top: 2px solid var(--border);
+      margin: var(--s-5) 0;
+    }
+
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-3) 0;
+      margin-top: var(--s-8);
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-6) var(--s-3);
+      }
+
+      .stage-head__title {
+        font-size: 42px;
+      }
+
+      .section__title {
+        font-size: 32px;
+      }
+
+      .cards-grid,
+      .clay-showcase {
+        grid-template-columns: 1fr;
+      }
+
+      .pullquote__text {
+        font-size: 28px;
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: var(--s-3);
+      }
+
+      .button-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">Clay</div>
+      <div class="masthead__tagline">
+        Morphism<br>Components
+      </div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Playful Clay Vocabulary</h1>
+      <p class="stage-head__subtitle">
+        Soft, rounded shapes mimicking malleable clay. Every component features generous radius, smooth shadows, and tactile interactions that feel responsive and joyful.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Buttons</div>
+      <h2 class="section__title">Button States</h2>
+      <p class="section__desc">Buttons come in three styles: primary (filled), secondary (soft background), and ghost (outline). All feature smooth shadows and hover lift.</p>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary</span>
+        <button class="btn">Primary Action</button>
+        <button class="btn btn--sm">Small</button>
+        <button class="btn btn--lg">Large Button</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Secondary</span>
+        <button class="btn btn--secondary">Secondary</button>
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary btn--lg">Large Secondary</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Ghost</span>
+        <button class="btn btn--ghost">Ghost Button</button>
+        <button class="btn btn--ghost btn--sm">Small</button>
+        <button class="btn btn--ghost btn--lg">Large Ghost</button>
+      </div>
+    </section>
+
+    <!-- Clay Shapes Section -->
+    <section class="section">
+      <div class="section__kicker">Clay Forms</div>
+      <h2 class="section__title">Three-Dimensional Shapes</h2>
+      <p class="section__desc">Core visual vocabulary. Soft, puffy spheres with dimensional shadows and specular highlights, available in signal blue, success green, warning amber, and danger red.</p>
+
+      <div class="clay-showcase">
+        <div class="clay-shape clay-shape--primary">
+          <div class="clay-shape__label">Primary</div>
+        </div>
+        <div class="clay-shape clay-shape--success">
+          <div class="clay-shape__label">Success</div>
+        </div>
+        <div class="clay-shape clay-shape--warning">
+          <div class="clay-shape__label">Warning</div>
+        </div>
+        <div class="clay-shape clay-shape--danger">
+          <div class="clay-shape__label">Danger</div>
+        </div>
+        <div class="clay-shape clay-shape--secondary">
+          <div class="clay-shape__label">Secondary</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Cards</div>
+      <h2 class="section__title">Story Cards</h2>
+      <p class="section__desc">Bordered cards with soft shadows and hover lift. Icons in gradient backgrounds provide visual hierarchy and instant recognition.</p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__icon">🎨</div>
+          <h3 class="card__title">Design</h3>
+          <p class="card__desc">Create beautiful interfaces with our comprehensive component library and design tokens.</p>
+          <a href="#" class="card__cta">Explore →</a>
+        </div>
+
+        <div class="card">
+          <div class="card__icon">⚙️</div>
+          <h3 class="card__title">Build</h3>
+          <p class="card__desc">Copy component code directly into your project. Works with all modern frameworks.</p>
+          <a href="#" class="card__cta">Learn more →</a>
+        </div>
+
+        <div class="card">
+          <div class="card__icon">✨</div>
+          <h3 class="card__title">Iterate</h3>
+          <p class="card__desc">Update tokens once. All components refresh automatically across your entire product.</p>
+          <a href="#" class="card__cta">Documentation →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="section">
+      <div class="section__kicker">Status</div>
+      <h2 class="section__title">Badges & Indicators</h2>
+      <p class="section__desc">Compact status indicators for alerts, tags, and metadata. Available in semantic colors with optional dot indicator.</p>
+
+      <div class="subsection-label">Badge Variants</div>
+      <div class="badge-row">
+        <span class="badge"><span class="badge__dot"></span>Primary</span>
+        <span class="badge badge--secondary"><span class="badge__dot"></span>Secondary</span>
+        <span class="badge badge--success"><span class="badge__dot"></span>Success</span>
+        <span class="badge badge--warning"><span class="badge__dot"></span>Warning</span>
+        <span class="badge badge--danger"><span class="badge__dot"></span>Danger</span>
+      </div>
+
+      <div class="subsection-label">Status Indicators</div>
+      <div class="indicator-row">
+        <div class="indicator indicator--active">
+          <div class="indicator__dot"></div>
+          <div class="indicator__text">Active</div>
+        </div>
+        <div class="indicator indicator--success">
+          <div class="indicator__dot"></div>
+          <div class="indicator__text">Success</div>
+        </div>
+        <div class="indicator indicator--warning">
+          <div class="indicator__dot"></div>
+          <div class="indicator__text">Warning</div>
+        </div>
+        <div class="indicator indicator--danger">
+          <div class="indicator__dot"></div>
+          <div class="indicator__text">Danger</div>
+        </div>
+        <div class="indicator indicator--inactive">
+          <div class="indicator__dot"></div>
+          <div class="indicator__text">Inactive</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Input Fields Section -->
+    <section class="section">
+      <div class="section__kicker">Forms</div>
+      <h2 class="section__title">Input Fields</h2>
+      <p class="section__desc">Clean input fields with focus ring animation. Border transitions to signal blue with subtle background tint on focus.</p>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input type="email" class="input" placeholder="name@example.com">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Full Name</label>
+          <input type="text" class="input" placeholder="Jane Doe">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Message</label>
+          <input type="text" class="input" placeholder="Type your message...">
+        </div>
+      </div>
+    </section>
+
+    <!-- Toggle Switches Section -->
+    <section class="section">
+      <div class="section__kicker">Controls</div>
+      <h2 class="section__title">Toggle Switches</h2>
+      <p class="section__desc">Smooth toggle switches with soft shadows and responsive animations. Off-state uses neutral gray, on-state uses signal blue.</p>
+
+      <div class="toggle-group">
+        <div class="toggle-wrap">
+          <label class="toggle-label">Off State</label>
+          <input type="checkbox" class="toggle">
+        </div>
+
+        <div class="toggle-wrap">
+          <label class="toggle-label">On State</label>
+          <input type="checkbox" class="toggle" checked>
+        </div>
+
+        <div class="toggle-wrap">
+          <label class="toggle-label">Disabled</label>
+          <input type="checkbox" class="toggle" disabled>
+        </div>
+
+        <div class="toggle-wrap">
+          <label class="toggle-label">Disabled On</label>
+          <input type="checkbox" class="toggle" disabled checked>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pull Quote Section -->
+    <section class="section">
+      <div class="section__kicker">Featured</div>
+      <h2 class="section__title">Pull Quote</h2>
+
+      <div class="pullquote">
+        <span class="pullquote__mark">"</span>
+        <blockquote class="pullqu

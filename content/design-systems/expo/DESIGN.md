@@ -41,10 +41,10 @@ What makes Expo distinctive is its pill-shaped geometry. Buttons, tabs, video co
 ### Neutrals & Text
 - **Slate Gray** (`#60646c`): The workhorse secondary text color (305 instances). A cool blue-gray that's authoritative without being heavy.
 - **Mid Slate** (`#555860`): Slightly darker than Slate, used for emphasized secondary text.
-- **Silver** (`#b0b4ba`): Tertiary text, placeholders, and de-emphasized metadata. Comfortably readable but clearly receded.
+- **Silver** (`#6a6e74`): Tertiary text, placeholders, and de-emphasized metadata. Comfortably readable but clearly receded.
 - **Pewter** (`#999999`): Accordion icons and deeply de-emphasized UI elements in dark contexts.
 - **Light Silver** (`#cccccc`): Arrow icons and decorative elements in dark contexts.
-- **Dark Slate** (`#363a3f`): Borders on dark surfaces, switch tracks, and emphasized containment.
+- **Dark Slate** (`#7e8288`): Borders on dark surfaces, switch tracks, and emphasized containment.
 - **Charcoal** (`#333333`): Dark mode switch backgrounds and deep secondary surfaces.
 
 ### Semantic & Accent
@@ -265,7 +265,7 @@ What makes Expo distinctive is its pill-shaped geometry. Buttons, tabs, video co
 - Secondary Text: "Slate Gray (#60646c)"
 - Borders: "Border Lavender (#e0e1e6)"
 - Links: "Link Cobalt (#0d74ce)"
-- Tertiary Text: "Silver (#b0b4ba)"
+- Tertiary Text: "Silver (#6a6e74)"
 
 ### Example Component Prompts
 - "Create a hero section on Cloud Gray (#f0f0f3) with a massive headline at 64px Inter weight 700, line-height 1.10, letter-spacing -3px. Text in Expo Black (#000000). Below, add a subtitle in Slate Gray (#60646c) at 18px. Place a black pill-shaped CTA button (9999px radius) beneath."

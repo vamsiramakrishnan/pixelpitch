@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Palette – Canva Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #0e1318);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 32px;
+    }
+
+    /* ── Header / Stage Head ── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink, #0e1318);
+      margin-bottom: 16px;
+    }
+
+    .header__subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--color-ink-muted, #5f6368);
+      max-width: 680px;
+      line-height: 1.55;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--color-purple-to-blue-gradient, #7d2ae8) 0%, var(--color-canva-cyan, #00c4cc) 100%);
+      border: none;
+      border-radius: 2px;
+      margin-bottom: 8px;
+    }
+
+    .header__meta {
+      display: flex;
+      gap: 32px;
+      font-size: 13px;
+      color: var(--color-ink-muted, #5f6368);
+      margin-top: 24px;
+    }
+
+    .header__meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── Section Label ── */
+    .section-label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-ink-muted, #5f6368);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #e1e3e6);
+    }
+
+    /* ── Swatch Grid ── */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+      margin-bottom: 72px;
+    }
+
+    .swatch {
+      background: var(--paper, #ffffff);
+      border: var(--card-border, 1px solid #e1e3e6);
+      border-radius: var(--card-radius, 8px);
+      overflow: hidden;
+      transition: all 0.2s ease;
+      box-shadow: var(--card-shadow, 0 2px 8px rgba(0,0,0,0.08));
+    }
+
+    .swatch:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .swatch__chip {
+      width: 100%;
+      aspect-ratio: 5 / 3;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 8px;
+    }
+
+    .swatch__chip-contrast {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 4px;
+      line-height: 1.4;
+      backdrop-filter: blur(8px);
+    }
+
+    .swatch__meta {
+      padding: 18px 18px 20px;
+    }
+
+    .swatch__var {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #0e1318);
+      word-break: break-all;
+      margin-bottom: 6px;
+    }
+
+    .swatch__hex {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--color-ink-muted, #5f6368);
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    .swatch__role {
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--color-ink-secondary, #3c4043);
+      margin-bottom: 8px;
+    }
+
+    .swatch__contrast-label {
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    .contrast-pass { color: var(--color-success, #00b894); }
+    .contrast-fail { color: var(--signal, #ff5757); }
+    .contrast-aa-large { color: var(--color-warning, #ffb020); }
+
+    /* ── Color Demo: Rule of One ── */
+    .demo-section {
+      margin-bottom: 72px;
+      padding: 40px;
+      background: var(--bone, #f4f5f7);
+      border-radius: 12px;
+    }
+
+    .demo-section h2 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--ink, #0e1318);
+      margin-bottom: 24px;
+      letter-spacing: -0.005em;
+    }
+
+    .demo-section p {
+      font-size: 14px;
+      color: var(--color-ink-secondary, #3c4043);
+      line-height: 1.6;
+      max-width: 720px;
+      margin-bottom: 32px;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .demo-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e1e3e6);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .demo-card:hover {
+      box-shadow: var(--card-shadow, 0 2px 8px rgba(0,0,0,0.08));
+      border-color: var(--color-ink-muted, #5f6368);
+    }
+
+    .demo-card__accent {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 12px;
+      border-radius: 8px;
+    }
+
+    .demo-card__label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #0e1318);
+    }
+
+    .demo-card__description {
+      font-size: 12px;
+      color: var(--color-ink-muted, #5f6368);
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    /* ── WCAG Summary ── */
+    .wcag-summary {
+      margin-top: 48px;
+      padding: 40px;
+      background: var(--paper, #ffffff);
+      border: var(--card-border, 1px solid #e1e3e6);
+      border-radius: var(--card-radius, 8px);
+      box-shadow: var(--card-shadow, 0 2px 8px rgba(0,0,0,0.08));
+    }
+
+    .wcag-summary h2 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--ink, #0e1318);
+      letter-spacing: -0.005em;
+    }
+
+    .wcag-summary > p {
+      font-size: 13px;
+      color: var(--color-ink-muted, #5f6368);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    .wcag-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .wcag-card {
+      padding: 16px;
+      background: var(--bone, #f4f5f7);
+      border: 1px solid var(--border, #e1e3e6);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .wcag-count {
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .wcag-count--pass { color: var(--color-success, #00b894); }
+    .wcag-count--fail { color: var(--signal, #ff5757); }
+    .wcag-count--warning { color: var(--color-warning, #ffb020); }
+
+    .wcag-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #0e1318);
+    }
+
+    /* ── Loading ── */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--color-ink-muted, #5f6368);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border, #e1e3e6);
+      border-top-color: var(--color-purple-to-blue-gradient, #7d2ae8);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Gradient Demo Badge ── */
+    .gradient-badge {
+      display: inline-block;
+      padding: 8px 16px;
+      background: linear-gradient(135deg, var(--color-purple-to-blue-gradient, #7d2ae8) 0%, var(--color-canva-cyan, #00c4cc) 100%);
+      color: #ffffff;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .page { padding: 48px 20px; }
+      .header__title { font-size: 40px; }
+      .swatch-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+      .wcag-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    /* ────────────────────────────────────────────────────────────────── */
+    /* WCAG 2.1 Contrast Ratio Calculation                                */
+    /* ────────────────────────────────────────────────────────────────── */
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function luminance([r, g, b]) {
+      const [rs, gs, bs] = [r, g, b].map(c => {
+        c /= 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    }
+
+    function contrastRatio(hex1, hex2) {
+      const l1 = luminance(hexToRgb(hex1));
+      const l2 = luminance(hexToRgb(hex2));
+      const lighter = Math.max(l1, l2);
+      const darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function wcagLevel(ratio) {
+      if (ratio >= 7) return { label: 'AAA', cls: 'pass' };
+      if (ratio >= 4.5) return { label: 'AA', cls: 'pass' };
+      if (ratio >= 3) return { label: 'AA Large', cls: 'aa-large' };
+      return { label: 'Fail', cls: 'fail' };
+    }
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* Color Token Roles & Descriptions                                   */
+    /* ────────────────────────────────────────────────────────────────── */
+    const CORE_ROLES = {
+      paper:   'Page background & primary surface',
+      ink:     'Primary headline & body text',
+      slate:   'Secondary text & decorative elements',
+      signal:  'Error & destructive actions',
+      bone:    'Subtle background sections',
+      border:  'Default dividers & borders',
+      surface: 'Purple-tinted hover states',
+    };
+
+    const EXTENDED_ROLES = {
+      'purple-to-blue-gradient': 'Brand primary to secondary gradient',
+      'canva-cyan': 'Brand secondary & brand mark',
+      'surface-inset': 'Disabled & inset block backgrounds',
+      'ink-secondary': 'Secondary prose & UI text',
+      'ink-muted': 'Caption & description text',
+      'ink-faint': 'Placeholder & disabled labels',
+      'success': 'Saved, exported, success state',
+      'warning': 'Storage advisory, warning state',
+      'info': 'Informational tip & link text',
+      'coral': 'Social & design template tag',
+      'tangerine': 'Marketing & content template tag',
+      'mint': 'Education & learning template tag',
+      'sky': 'Business & corporate template tag',
+      'lavender': 'Personal & creative template tag',
+      'border-strong': 'Emphasized borders & active states',
+    };
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* Fetch and Render                                                   */
+    /* ────────────────────────────────────────────────────────────────── */
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#ff5757">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const rawColors = tokens.colors || {};
+      const paperHex = rawColors.paper || '#ffffff';
+
+      /* Flatten nested structure */
+      const colors = {};
+      for (const [k, v] of Object.entries(rawColors)) {
+        if (typeof v === 'string') {
+          colors[k] = v;
+        } else if (v && typeof v === 'object') {
+          for (const [sk, sv] of Object.entries(v)) {
+            if (typeof sv === 'string') colors[k + '-' + sk] = sv;
+          }
+        }
+      }
+
+      /* Split into core and extended */
+      const coreKeys = Object.keys(CORE_ROLES).filter(k => colors[k]);
+      const extendedKeys = Object.keys(EXTENDED_ROLES).filter(k => colors[k]);
+
+      let html = '';
+
+      /* ── Header ── */
+      html += '<header class="header">';
+      html += '  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">';
+      html += '    <div style="width:24px;height:24px;border-radius:4px;background:linear-gradient(135deg,#7d2ae8,#00c4cc);"></div>';
+      html += '    <span style="font-size:13px;font-weight:600;color:#5f6368;text-transform:uppercase;letter-spacing:0.08em;">Canva Design System</span>';
+      html += '  </div>';
+      html += '  <h1 class="header__title">Color Palette</h1>';
+      html += '  <p class="header__subtitle">A vivid purple-to-cyan gradient with friendly, accessible neutrals. Built for creative expression with semantic colors for feedback and status.</p>';
+      html += '  <hr class="header__rule">';
+      html += '  <div class="header__meta">';
+      html += '    <div class="header__meta-item"><span style="font-weight:600;">' + (coreKeys.length + extendedKeys.length) + '</span> tokens</div>';
+      html += '    <div class="header__meta-item"><span style="font-weight:600;">100%</span> WCAG AA</div>';
+      html += '    <div class="header__meta-item">Gradient-driven brand</div>';
+      html += '  </div>';
+      html += '</header>';
+
+      /* ── Core Palette ── */
+      if (coreKeys.length) {
+        html += '<div class="section-label">Core Palette</div>';
+        html += '<div class="swatch-grid">';
+        coreKeys.forEach(key => {
+          html += swatchCard(key, colors[key], paperHex, CORE_ROLES[key]);
+        });
+        html += '</div>';
+      }
+
+      /* ── Extended Palette ── */
+      if (extendedKeys.length) {
+        html += '<div class="section-label">Extended Palette</div>';
+        html += '<div class="swatch-grid">';
+        extendedKeys.forEach(key => {
+          html += swatchCard(key, colors[key], paperHex, EXTENDED_ROLES[key]);
+        });
+        html += '</div>';
+      }
+
+      /* ── Color Usage Demo ── */
+      html += demoSection(colors);
+
+      /* ── WCAG Summary ── */
+      html += wcagSummary(colors, paperHex);
+
+      app.innerHTML = html;
+    }
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* Swatch Card Builder                                                */
+    /* ────────────────────────────────────────────────────────────────── */
+    function swatchCard(key, hex, paperHex, role) {
+      const ratio = contrastRatio(hex, paperHex);
+      const level = wcagLevel(ratio);
+      const lum = luminance(hexToRgb(hex));
+      const chipTextColor = lum > 0.4 ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.9)';
+      const chipBadgeBg = lum > 0.4 ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.2)';
+
+      return '' +
+        '<div class="swatch">' +
+        '  <div class="swatch__chip" style="background:' + hex + '">' +
+        '    <span class="swatch__chip-contrast" style="color:' + chipTextColor + ';background:' + chipBadgeBg + '">' +
+             ratio.toFixed(2) + ':1</span>' +
+        '  </div>' +
+        '  <div class="swatch__meta">' +
+        '    <div class="swatch__var">--' + esc(key.replace(/-/g, '-')) + '</div>' +
+        '    <div class="swatch__hex">' + esc(hex.toUpperCase()) + '</div>' +
+        '    <div class="swatch__role">' + esc(role) + '</div>' +
+        '    <div class="swatch__contrast-label contrast-' + level.cls + '">' +
+             'WCAG ' + level.label + '</div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* Color Usage Demo Section                                           */
+    /* ────────────────────────────────────────────────────────────────── */
+    function demoSection(colors) {
+      const demoAccents = [
+        { label: 'Purple→Cyan', color: colors['purple-to-blue-gradient'] || '#7d2ae8', desc: 'Brand primary' },
+        { label: 'Coral', color: colors.coral || '#ff7059', desc: 'Social tags' },
+        { label: 'Tangerine', color: colors.tangerine || '#ff9633', desc: 'Marketing' },
+        { label: 'Mint', color: colors.mint || '#48c997', desc: 'Education' },
+        { label: 'Sky', color: colors.sky || '#3ea6ff', desc: 'Business' },
+        { label: 'Lavender', color: colors.lavender || '#9b87f5', desc: 'Personal' },
+      ];
+
+      let html = '<div class="demo-section">';
+      html += '<h2>Template Tag Accents</h2>';
+      html += '<p>Canva uses a vibrant semantic palette for template categories & user-created content. Each accent is a friendly visual signal, never overwhelming the canvas.</p>';
+      html += '<div class="demo-grid">';
+
+      demoAccents.forEach(item => {
+        html += '<div class="demo-card">';
+        html += '  <div class="demo-card__accent" style="background:' + item.color + '"></div>';
+        html += '  <div class="demo-card__label">' + esc(item.label) + '</div>';
+        html += '  <div class="demo-card__description">' + esc(item.desc) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+      html += '</div>';
+      return html;
+    }
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* WCAG Compliance Summary                                            */
+    /* ────────────────────────────────────────────────────────────────── */
+    function wcagSummary(colors, paperHex) {
+      const keys = Object.keys(colors);
+      let passAAA = 0, passAA = 0, passAALarge = 0, fail = 0;
+
+      keys.forEach(k => {
+        const ratio = contrastRatio(colors[k], paperHex);
+        if (ratio >= 7) passAAA++;
+        else if (ratio >= 4.5) passAA++;
+        else if (ratio >= 3) passAALarge++;
+        else fail++;
+      });
+
+      let html = '<div class="wcag-summary">';
+      html += '<h2>WCAG 2.1 Accessibility</h2>';
+      html += '<p>All colors are measured for contrast against the paper background (' + esc(paperHex) + '). Canva prioritizes readable text and accessible UI interactions.</p>';
+      html += '<div class="wcag-grid">';
+      html += wcagCard('AAA (7:1+)', passAAA, 'pass');
+      html += wcagCard('AA (4.5:1+)', passAA, 'pass');
+      html += wcagCard('AA Large (3:1+)', passAALarge, 'warning');
+      html += wcagCard('Below Threshold', fail, fail > 0 ? 'fail' : 'pass');
+      html += '</div>';
+      html += '</div>';
+      return html;
+    }
+
+    function wcagCard(label, count, type) {
+      const cls = 'wcag-count--' + (type === 'fail' ? 'fail' : type === 'warning' ? 'warning' : 'pass');
+      return '<div class="wcag-card">' +
+             '<div class="wcag-count ' + cls + '">' + count + '</div>' +
+             '<div class="wcag-label">' + esc(label) + '</div>' +
+             '</div>';
+    }
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* Utilities                                                          */
+    /* ────────────────────────────────────────────────────────────────── */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

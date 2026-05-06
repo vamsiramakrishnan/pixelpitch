@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Component Inventory — Airtable Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-7) var(--s-4);
+    }
+
+    /* ── Header ── */
+    .header {
+      margin-bottom: var(--s-8);
+      position: relative;
+    }
+
+    .header__title {
+      font-family: var(--font-display);
+      font-size: var(--t-display-hero);
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: 0;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .header__title--accent {
+      color: var(--color-airtable-blue);
+    }
+
+    .header__subtitle {
+      font-size: var(--t-body);
+      letter-spacing: 0.18px;
+      color: var(--slate);
+      line-height: 1.35;
+      max-width: 600px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 120px;
+      height: 2px;
+      background: var(--color-airtable-blue);
+      border: none;
+      margin-top: var(--s-4);
+      border-radius: 0;
+    }
+
+    /* ── Section ── */
+    .section {
+      margin-bottom: var(--s-8);
+    }
+
+    .section__label {
+      font-family: var(--font-body);
+      font-size: var(--t-caption);
+      font-weight: 500;
+      letter-spacing: 0.28px;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+      padding-bottom: var(--s-2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section__divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: var(--s-5) 0;
+    }
+
+    /* ── Sub-heading ── */
+    .sub-heading {
+      font-family: var(--font-body);
+      font-size: var(--t-body-medium);
+      font-weight: 500;
+      letter-spacing: 0.16px;
+      color: var(--ink);
+      margin-top: var(--s-4);
+      margin-bottom: var(--s-3);
+    }
+
+    .sub-heading:first-child {
+      margin-top: 0;
+    }
+
+    /* ── Component Row ── */
+    .component-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-4);
+    }
+
+    .component-label {
+      font-size: var(--t-caption);
+      font-weight: 400;
+      letter-spacing: 0.28px;
+      color: var(--slate);
+      margin-bottom: var(--s-1);
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--s-2);
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: var(--t-button);
+      font-weight: 500;
+      line-height: 1.25;
+      letter-spacing: 0.08px;
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      border: none;
+      white-space: nowrap;
+    }
+
+    .btn--primary {
+      background: var(--color-airtable-blue);
+      color: var(--paper);
+    }
+
+    .btn--primary:hover {
+      background: #1550a8;
+      filter: brightness(0.95);
+    }
+
+    .btn--primary:active {
+      transform: translateY(1px);
+    }
+
+    .btn--secondary {
+      background: var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    .btn--secondary:hover {
+      background: var(--bone);
+      border-color: var(--slate);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--color-airtable-blue);
+      padding: var(--button-py) 0;
+      text-decoration: underline;
+      border: none;
+      border-radius: 0;
+    }
+
+    .btn--ghost:hover {
+      opacity: 0.8;
+      text-decoration-thickness: 2px;
+    }
+
+    .btn--sm {
+      padding: 8px 16px;
+      font-size: 14px;
+      letter-spacing: 0.08px;
+    }
+
+    .btn--lg {
+      padding: 14px 32px;
+      font-size: 18px;
+      letter-spacing: 0.18px;
+    }
+
+    /* ── CARDS ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-5);
+    }
+
+    .card {
+      background: var(--paper);
+      border-radius: var(--card-radius);
+      padding: var(--s-4);
+      border: var(--card-border);
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--slate);
+    }
+
+    .card__eyebrow {
+      font-size: var(--t-caption);
+      font-weight: 500;
+      letter-spacing: 0.28px;
+      text-transform: uppercase;
+      color: var(--color-airtable-blue);
+      margin-bottom: var(--s-2);
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: var(--t-card-title);
+      font-weight: 400;
+      line-height: 1.2;
+      letter-spacing: 0.12px;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .card__body {
+      font-size: 16px;
+      line-height: 1.3;
+      letter-spacing: 0.16px;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+    }
+
+    .card__footer {
+      display: flex;
+      gap: var(--s-2);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* ── INPUTS ── */
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-5);
+      align-items: flex-start;
+    }
+
+    .input-wrap {
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: var(--t-body-medium);
+      font-weight: 500;
+      letter-spacing: 0.16px;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .input {
+      display: block;
+      width: 100%;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: var(--t-body-medium);
+      line-height: 1.3;
+      letter-spacing: 0.16px;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: var(--button-radius);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+      opacity: 0.7;
+    }
+
+    .input:focus {
+      border-color: var(--color-airtable-blue);
+      box-shadow: 0 0 0 3px rgba(27, 97, 201, 0.08);
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2);
+      padding: var(--button-py) var(--button-px);
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: var(--button-radius);
+      max-width: 520px;
+      transition: border-color 0.15s ease;
+    }
+
+    .search-bar:focus-within {
+      border-color: var(--color-airtable-blue);
+    }
+
+    .search-bar__icon {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      color: var(--slate);
+    }
+
+    .search-bar__input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-body);
+      font-size: var(--t-body-medium);
+      letter-spacing: 0.16px;
+      color: var(--ink);
+    }
+
+    .search-bar__input::placeholder {
+      color: var(--slate);
+      opacity: 0.7;
+    }
+
+    /* ── BADGES & TAGS ── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2);
+      align-items: center;
+      margin-bottom: var(--s-4);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-1);
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08px;
+      border-radius: var(--radius-full);
+      line-height: 1.4;
+      white-space: nowrap;
+    }
+
+    .badge--primary {
+      background: rgba(27, 97, 201, 0.15);
+      color: var(--color-airtable-blue);
+    }
+
+    .badge--success {
+      background: rgba(0, 100, 0, 0.12);
+      color: var(--color-success-green);
+    }
+
+    .badge--warning {
+      background: rgba(204, 102, 0, 0.12);
+      color: #cc6600;
+    }
+
+    .badge--danger {
+      background: rgba(200, 0, 0, 0.12);
+      color: #c80000;
+    }
+
+    .badge--neutral {
+      background: var(--bone);
+      color: var(--slate);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-1);
+      padding: 8px 16px;
+      font-size: var(--t-body-medium);
+      font-weight: 500;
+      letter-spacing: 0.16px;
+      border-radius: var(--button-radius);
+      background: var(--bone);
+      color: var(--ink);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .tag:hover {
+      background: var(--border);
+      border-color: var(--slate);
+    }
+
+    .tag--active {
+      background: var(--color-airtable-blue);
+      color: var(--paper);
+      border-color: var(--color-airtable-blue);
+    }
+
+    .tag--active:hover {
+      background: #1550a8;
+      border-color: #1550a8;
+    }
+
+    /* ── Helpers ── */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--s-5);
+    }
+
+    .code-block {
+      background: var(--bone);
+      border: 1px solid var(--border);
+      border-radius: var(--button-radius);
+      padding: var(--s-3);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--slate);
+      overflow-x: auto;
+      margin-bottom: var(--s-4);
+    }
+
+    .responsive-demo {
+      background: var(--bone);
+      border: 1px solid var(--border);
+      border-radius: var(--button-radius);
+      padding: var(--s-4);
+      margin-bottom: var(--s-4);
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Header -->
+    <header class="header">
+      <h1 class="header__title">Component <span class="header__title--accent">Inventory</span></h1>
+      <p class="header__subtitle">A comprehensive collection of interactive components styled with the Airtable design system's CSS custom properties. Clean, precise, and ready for any spreadsheet-powered application.</p>
+      <hr class="header__rule">
+    </header>
+
+    <!-- Buttons Section -->
+    <div class="section">
+      <div class="section__label">Buttons</div>
+
+      <div class="sub-heading">Primary Button</div>
+      <div class="component-row">
+        <button class="btn btn--primary btn--sm">Small Primary</button>
+        <button class="btn btn--primary">Default Primary</button>
+        <button class="btn btn--primary btn--lg">Large Primary</button>
+      </div>
+
+      <div class="sub-heading">Secondary Button</div>
+      <div class="component-row">
+        <button class="btn btn--secondary btn--sm">Small Secondary</button>
+        <button class="btn btn--secondary">Default Secondary</button>
+        <button class="btn btn--secondary btn--lg">Large Secondary</button>
+      </div>
+
+      <div class="sub-heading">Ghost Button</div>
+      <div class="component-row">
+        <a href="#" class="btn btn--ghost">Learn more</a>
+        <a href="#" class="btn btn--ghost">Explore features</a>
+        <a href="#" class="btn btn--ghost">View documentation</a>
+      </div>
+    </div>
+
+    <hr class="section__divider">
+
+    <!-- Cards Section -->
+    <div class="section">
+      <div class="section__label">Cards</div>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__eyebrow">Bordered Card</div>
+          <div class="card__title">Standard Container</div>
+          <div class="card__body">
+            A clean, bordered card with subtle hover states. Ideal for content grouping and information architecture in your interface.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Action</button>
+            <button class="btn btn--secondary btn--sm">Cancel</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__eyebrow">Interactive Card</div>
+          <div class="card__title">Hover Detection</div>
+          <div class="card__body">
+            Cards respond to user interaction with refined border transitions. Hover to see the subtle darkening effect that indicates clickability.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Explore</button>
+            <a href="#" class="btn btn--ghost btn--sm" style="padding: 8px 0;">More info</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__eyebrow">Data Container</div>
+          <div class="card__title">Structured Layout</div>
+          <div class="card__body">
+            Perfect for displaying tabular data, database records, or any organized information. Maintains visual hierarchy with typography scale.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--secondary btn--sm">Edit</button>
+            <button class="btn btn--secondary btn--sm">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section__divider">
+
+    <!-- Inputs Section -->
+    <div class="section">
+      <div class="section__label">Form Inputs</div>
+
+      <div class="sub-heading">Text Input</div>
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Full Name</label>
+          <input class="input" type="text" placeholder="Enter your full name">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input class="input" type="email" placeholder="you@example.com">
+        </div>
+      </div>
+
+      <div class="responsive-demo">
+        <input class="input" type="text" placeholder="Focus this input to see the blue ring effect" style="width: 100%; max-width: 400px;">
+      </div>
+
+      <div class="sub-heading">Search Bar</div>
+      <div class="search-bar">
+        <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input class="search-bar__input" type="text" placeholder="Search records, fields, views, and collaborators...">
+      </div>
+    </div>
+
+    <hr class="section__divider">
+
+    <!-- Badges & Tags Section -->
+    <div class="section">
+      <div class="section__label">Badges &amp; Tags</div>
+
+      <div class="sub-heading">Status Badges</div>
+      <div class="badge-row">
+        <span class="badge badge--primary">Active</span>
+        <span class="badge badge--success">Shipped</span>
+        <span class="badge badge--warning">In Progress</span>
+        <span class="badge badge--danger">Blocked</span>
+        <span class="badge badge--neutral">Draft</span>
+      </div>
+
+      <div class="sub-heading">Category Tags</div>
+      <div class="badge-row">
+        <span class="tag tag--active">All Views</span>
+        <span class="tag">Grid</span>
+        <span class="tag">Calendar</span>
+        <span class="tag">Kanban</span>
+        <span class="tag">Gallery</span>
+        <span class="tag">Form</span>
+      </div>
+
+      <div class="sub-heading">Field Type Tags</div>
+      <div class="badge-row">
+        <span class="tag">Text</span>
+        <span class="tag">Number</span>
+        <span class="tag">Date</span>
+        <span class="tag">Checkbox</span>
+        <span class="tag">Select</span>
+        <span class="tag">Attachment</span>
+        <span class="tag">Lookup</span>
+      </div>
+    </div>
+
+    <hr class="section__divider">
+
+    <!-- Typography Sizes Section -->
+    <div class="section">
+      <div class="section__label">Typography Scale</div>
+
+      <div class="sub-heading">Display Sizes</div>
+      <div style="font-size: var(--t-display-hero); font-weight: 400; line-height: 1.15; margin-bottom: var(--s-4); color: var(--ink);">
+        Display Hero — 48px, Weight 400
+      </div>
+
+      <div class="sub-heading">Heading Sizes</div>
+      <div style="font-size: var(--t-section-heading); font-weight: 400; line-height: 1.25; margin-bottom: var(--s-3); letter-spacing: 0; color: var(--ink);">
+        Section Heading — 40px, Weight 400
+      </div>
+      <div style="font-size: var(--t-sub-heading); font-weight: 400; line-height: 1.15; margin-bottom: var(--s-4); letter-spacing: 0; color: var(--ink);">
+        Sub-heading — 32px, Weight 400
+      </div>
+
+      <div class="sub-heading">Body Text</div>
+      <div style="font-size: var(--t-body); line-height: 1.35; letter-spacing: 0.18px; margin-bottom: var(--s-3); color: var(--slate);">
+        Body text at 18px with letter-spacing 0.18px for optimal readability across the platform.
+      </div>
+      <div style="font-size: var(--t-body-medium); font-weight: 500; line-height: 1.3; letter-spacing: 0.16px; margin-bottom: var(--s-4); color: var(--ink);">
+        Body Medium — 16px, Weight 500, Letter-spacing 0.16px
+      </div>
+
+      <div class="sub-heading">Caption Text</div>
+      <div style="font-size: var(--t-caption); font-weight: 400; line-height: 1.25; letter-spacing: 0.28px; color: var(--slate); text-transform: uppercase; margin-bottom: var(--s-4);">
+        Caption — 14px, Weight 400, Letter-spacing 0.28px
+      </div>
+    </div>
+
+    <hr class="section__divider">
+
+    <!-- Color Palette Section -->
+    <div class="section">
+      <div class="section__label">Color Palette</div>
+
+      <div class="grid-2">
+        <div style="border: 1px solid var(--border); border-radius: var(--button-radius); overflow: hidden;">
+          <div style="background: var(--paper); height: 80px; border-bottom: 1px solid var(--border);"></div>
+          <div style="padding: var(--s-3);">
+            <div style="font-weight: 500; color: var(--ink); margin-bottom: var(--s-1);">Paper</div>
+            <div style="font-family: var(--font-mono); font-size: 13px; color: var(--slate);">#ffffff</div>
+          </div>
+        </div>
+
+        <div style="border: 1px solid var(--border); border-radius: var(--button-radius); overflow: hidden;">
+          <div style="background: var(--ink); height: 80px;"></div>
+          <div style="padding: var(--s-3);">
+            <div style="font-weight: 500; color: var(--ink); margin-bottom: var(--s-1);">Ink</div>
+            <div style="font-family: var(--font-mono); font-size: 13px; color: var(--slate);">#181d26</div>
+          </div>
+        </div>
+
+        <div style="border: 1px solid var(--border); border-radius: var(--button-radius); overflow: hidden;">
+          <div style="background: var(--color-airtable-blue); height: 80px;"></div>
+          <div style="padding: var(--s-3);">
+            <div style="font-weight: 500; color: var(--ink); margin-bottom: var(--s-1);">Airtable Blue</div>
+            <div style="font-family: var(--font-mono); font-size: 13px; color: var(--slate);">#1b61c9</div>
+          </div>
+        </div>
+
+        <div style="border: 1px solid var(--border); border-radius: var(--button-radius); overflow: hidden;">
+          <div style="background: var(--color-success-green); height: 80px;"></div>
+          <div style="padding: var(--s-3);">
+            <div style="font-weight: 500; color: var(--ink); margin-bottom: var(--s-1);">Success Green</div>
+            <div style="font-family: var(--font-mono); font-size: 13px; color: var(--slate);">#006400</div>
+          </div>
+        </div>
+
+        <div style="border: 1px solid var(--border); border-radius: var(--button-radius); overflow: hidden;">
+          <div style="background: var(--slate); height: 80px;"></div>
+          <div style="padding: var(--s-3);">
+            <div style="font-weight: 500; color: var(--ink); margin-bottom: var(--s-1);">Slate</div>
+            <div style="font-family: var(--font-mono); font-size: 13px; color: var(--slate);">#333333</div>
+          </div>
+        </div>
+
+        <div style="border: 1px solid var(--border); border-radius: var(--button-radius); overflow: hidden;">
+          <div style="background: var(--bone); height: 80px; border-bottom: 1px solid var(--border);"></div>
+          <div style="padding: var(--s-3);">
+            <div style="font-weight: 500; color: var(--ink); margin-bottom: var(--s-1);">Bone</div>
+            <div style="font-family: var(--font-mono); font-size: 13px; color: var(--slate);">#f8fafc</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section__divider">
+
+    <!-- Spacing Scale Section -->
+    <div class="section">
+      <div class="section__label">Spacing Scale</div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--s-3);">
+        <div style="border: 1px solid var(--border); border-radius: var(--button-radius); padding: var(--s-2);">
+          <div style="background: var(--color-airtable-blue); height: 20px; width: var(--s-1); margin-bottom: var(--s-2); border-radius: 2px;"></div>
+          <div style="font-weight: 500; font-size: 13px; color: var(--ink);">s-1</div>
+          <div style="font-family: var(--font-mono); font-size: 12px; color: var(--slate);">4px</div>
+        </div>
+        <div style="border: 1px solid var(--border); border-radius: var(--button-radius); padding: var(--s-2);">
+          <div style="background: var(--color-airtable-blue); height: 20px; width: var(--s-2); margin-bottom: var(--s-2); border-radius: 2px;"></div>
+          <div style="font-weight: 500; font-size: 13px; color: var(--ink);">s-2</div>
+          <div style="font-family: var(--font-mono); font-size: 12px; color: var(--slate);">8px</div>
+        </div>
+        <div style="border: 1px solid var(--border); border-radius: var(--button-radius); padding: var(--s-2);">
+          <div style="background: var(--color-airtable-blue); height: 20px; width: var(--s-3); margin-bottom: var(--s-2); border-radius: 2px;"></div>
+          <div style="font-weight: 500; font-size: 13px; color: var(--ink);">s-3</div>
+          <div style="font-family: var(--font-mono); font-size: 12px; color: var(--slate);">16px</div>
+        </div>
+        <div style="border: 1px solid var(--border); border-radius: var(--button-radius); padding: var(--s-2);">
+          <div style="background: var(--color-airtable-blue); height: 20px; width: var(--s-4); margin-bottom: var(--s-2); border-radius: 2px;"></div>
+          <div style="font-weight: 500; font-size: 13px; color: var(--ink);">s-4</div>
+          <div style="font-family: var(--font-mono); font-size: 12px; color: var(--slate);">24px</div>
+        </div>
+        <div style="border: 1px solid var(--border); border-radius: var(--button-radius); padding: var(--s-2);">
+          <div style="background: var(--color-airtable-blue); height: 20px; width: var(--s-5); margin-bottom: var(--s-2); border-radius: 2px;"></div>
+          <div style="font-weight: 500; font-size: 13px; color: var(--ink);">s-5</div>
+          <div style="font-family: var(--font-mono); font-size: 12px; color: var(--slate);">32px</div>
+        </div>
+        <div style="border: 1px solid var(--border); border-radius: var(--button-radius); padding: var(--s-2);">
+          <div style="background: var(--color-airtable-blue); height: 20px; width: var(--s-6); margin-bottom: var(--s-2); border-radius: 2px;"></div>
+          <div style="font-weight: 500; font-size: 13px; color: var(--ink);">s-6</div>
+          <div style="font-family: var(--font-mono); font-size: 12px; color: var(--slate);">48px</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* Load system metadata from tokens.json */
+    fetch('../tokens.json')
+      .then(r => r.ok ? r.json() : null)
+      .catch(() => null)
+      .then(tokens => {
+        if (!tokens) return;
+        const title = tokens.meta?.title || tokens.title || 'Design System

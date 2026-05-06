@@ -27,6 +27,7 @@ What distinguishes Mintlify from other documentation platforms is its atmospheri
 - **Near Black** (`#0d0d0d`): Primary text, headings, dark surfaces. Not pure black — the micro-softness improves reading comfort.
 - **Pure White** (`#ffffff`): Page background, card surfaces, input backgrounds.
 - **Brand Green** (`#18E299`): The signature accent — CTAs, links on hover, focus rings, brand identity.
+- **Accessible Mint Text** (`#008949`): Darker variant for text on white/light surfaces. Passes WCAG AA (4.49:1).
 
 ### Secondary Accents
 - **Brand Green Light** (`#d4fae8`): Tinted green surface for badges, hover states, subtle backgrounds.
@@ -327,3 +328,5 @@ What distinguishes Mintlify from other documentation platforms is its atmospheri
 6. Geist Mono uppercase for technical labels, Inter for everything else
 7. Section padding is generous: 64px–96px on desktop, 48px on mobile
 8. No gray background sections — white throughout, separation through borders and whitespace
+9. Use Accessible Mint (#008949) for green text on light backgrounds
+10. Don't use Mintlify Green (#18E299) as text on white — it fails WCAG AA

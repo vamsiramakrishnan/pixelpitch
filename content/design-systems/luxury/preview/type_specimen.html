@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — Luxury</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 48px 24px;
+      }
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 96px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: 'Oswald', var(--font-display, 'system-ui', sans-serif);
+      font-size: 112px;
+      font-weight: 700;
+      line-height: 0.92;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 24px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+      max-width: 720px;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 120px;
+      height: 2px;
+      background: var(--ink, #111111);
+      border: none;
+      margin: 0;
+    }
+
+    /* Font families section */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-bottom: 96px;
+      margin-top: 64px;
+    }
+
+    .font-card {
+      background: transparent;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 0;
+      padding: 40px;
+    }
+
+    .font-card__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .font-card__name {
+      font-family: 'Oswald', var(--font-display, 'system-ui', sans-serif);
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      word-break: break-word;
+    }
+
+    /* Character set block */
+    .charmap-block {
+      background: transparent;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 0;
+      padding: 48px;
+      margin-bottom: 96px;
+    }
+
+    .charmap-block__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 28px;
+    }
+
+    .charmap-block__chars {
+      font-family: 'Oswald', var(--font-display, 'system-ui', sans-serif);
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.8;
+      letter-spacing: 0.02em;
+      color: var(--ink, #111111);
+      word-break: break-word;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--ink, #111111);
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 800px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: 'Oswald', var(--font-display, 'system-ui', sans-serif);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.8;
+      color: var(--slate, #666666);
+      letter-spacing: 0.02em;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--ink, #111111);
+      overflow-wrap: break-word;
+      word-spacing: 0.1em;
+    }
+
+    /* Ramp section */
+    .ramp-section {
+      margin-bottom: 96px;
+    }
+
+    /* Drop cap demo */
+    .dropcap-demo {
+      margin-bottom: 96px;
+    }
+
+    .dropcap-demo__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--ink, #111111);
+    }
+
+    .dropcap-container {
+      background: transparent;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 0;
+      padding: 48px;
+      max-width: 720px;
+    }
+
+    .dropcap-para {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--ink, #111111);
+      margin: 0;
+      text-align: left;
+    }
+
+    .dropcap {
+      float: left;
+      font-family: 'Oswald', var(--font-display, 'system-ui', sans-serif);
+      font-size: 144px;
+      font-weight: 900;
+      line-height: 0.8;
+      color: var(--signal, #3b82f6);
+      margin-right: 8px;
+      margin-top: -8px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 160px 48px;
+      color: var(--slate, #666666);
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 24px auto 0;
+      border: 2px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Luxury demands restraint and precision.',
+      'Bold typography commands attention.',
+      'Monochromatic elegance transcends trends.',
+      'Every detail reflects premium intention.',
+      'Oswald carries the brand identity forward.',
+      'Hierarchy emerges through weight variation.',
+      'Darkness exudes confidence and sophistication.',
+      'Minimalism speaks louder than decoration.',
+      'Scale hierarchy builds natural breathing room.',
+      'Typography is the voice of the brand.'
+    ];
+
+    const DROPCAP_TEXT = 'Luxury is not about excess—it\'s about precision and intention. In a world saturated with noise, restraint becomes the ultimate luxury. This design system embodies that philosophy through bold, commanding typography paired with a sophisticated monochromatic palette. Oswald, a geometric sans-serif with extraordinary weight range from 100 to 900, serves as the singular voice across all typographic scales. From delicate 100-weight whispers in footnotes to thunderous 900-weight headlines that demand presence, every weight carries purpose. The dark aesthetic creates psychological depth—white paper anchors legibility while the interplay of ink and air creates rhythm. There are no decorative shadows or gradients here, only the pure geometry of letterforms and the precision of spacing. Each size in the type ramp compounds intentionally, creating natural breath between hierarchy levels. Oswald\'s high contrast and distinctive letterforms ensure recognition at any scale. The system scales through weight, never through distortion. This is typography as architecture: functional, beautiful, and utterly confident.';
+
+    fetch('../tokens.json')
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#3b82f6">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Design System';
+      const summary = tokens.meta?.summary || '';
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Type Specimen</div>';
+      html += '  <h1 class="header__title">' + esc(title) + '</h1>';
+      html += '  <p class="header__subtitle">' + esc(summary) + '</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      const families = [
+        { label: 'Display & Headlines', name: 'Oswald', fallback: 'system-ui, -apple-system, sans-serif', note: 'Weights 100–900 for full range' },
+        { label: 'Body Text', name: 'System UI', fallback: 'system-ui, -apple-system, Helvetica Neue, sans-serif', note: 'Optimized for scanning' },
+        { label: 'Monospace', name: 'JetBrains Mono', fallback: 'ui-monospace, Menlo, IBM Plex Mono, monospace', note: 'Metadata, code, kickers' }
+      ];
+
+      html += '<div class="font-families">';
+      families.forEach(f => {
+        html += '<div class="font-card">';
+        html += '  <div class="font-card__label">' + esc(f.label) + '</div>';
+        html += '  <div class="font-card__name">' + esc(f.name) + '</div>';
+        html += '  <div class="font-card__fallback">' + esc(f.fallback) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      /* Character set */
+      html += '<div class="charmap-block">';
+      html += '  <div class="charmap-block__label">Character Set · Oswald</div>';
+      html += '  <div class="charmap-block__chars" style="font-family:\'Oswald\',sans-serif;font-weight:700">';
+      html += '    AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>';
+      html += '    0123456789 !@#$%&amp;*()&ndash;&mdash;&lsquo;&rsquo;&ldquo;&rdquo;';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Type ramp */
+      const typeRamp = [
+        { role: 'Hero', size: '96px', weight: 700, lineHeight: 0.92, fontFamily: 'display', letterSpacing: '-0.02em' },
+        { role: 'Display 1', size: '72px', weight: 700, lineHeight: 0.95, fontFamily: 'display', letterSpacing: '-0.01em' },
+        { role: 'Display 2', size: '56px', weight: 700, lineHeight: 1.0, fontFamily: 'display', letterSpacing: '-0.01em' },
+        { role: 'Heading 1', size: '48px', weight: 700, lineHeight: 1.1, fontFamily: 'display', letterSpacing: '0' },
+        { role: 'Heading 2', size: '36px', weight: 700, lineHeight: 1.2, fontFamily: 'display', letterSpacing: '0' },
+        { role: 'Heading 3', size: '28px', weight: 600, lineHeight: 1.3, fontFamily: 'display', letterSpacing: '0.01em' },
+        { role: 'Subheading', size: '20px', weight: 600, lineHeight: 1.4, fontFamily: 'display', letterSpacing: '0.02em' },
+        { role: 'Body Large', size: '18px', weight: 400, lineHeight: 1.7, fontFamily: 'body', letterSpacing: '0' },
+        { role: 'Body Regular', size: '16px', weight: 400, lineHeight: 1.6, fontFamily: 'body', letterSpacing: '0' },
+        { role: 'Body Small', size: '14px', weight: 400, lineHeight: 1.6, fontFamily: 'body', letterSpacing: '0' },
+        { role: 'Label', size: '13px', weight: 500, lineHeight: 1.5, fontFamily: 'body', letterSpacing: '0.01em' },
+        { role: 'Caption', size: '12px', weight: 400, lineHeight: 1.5, fontFamily: 'body', letterSpacing: '0.01em' }
+      ];
+
+      if (typeRamp.length) {
+        html += '<div class="ramp-section">';
+        html += '<div class="section-label">Type Ramp</div>';
+        typeRamp.forEach((entry, i) => {
+          html += rampRow(entry, i);
+        });
+        html += '</div>';
+      }
+
+      /* Drop cap demo */
+      html += '<div class="dropcap-demo">';
+      html += '<div class="dropcap-demo__label">Drop Cap — 144px Oswald 900, Signal Blue</div>';
+      html += '<div class="dropcap-container">';
+      const firstChar = DROPCAP_TEXT.charAt(0);
+      const restText = DROPCAP_TEXT.substring(1);
+      html += '<p class="dropcap-para">';
+      html += '<span class="dropcap">' + esc(firstChar) + '</span>';
+      html += esc(restText);
+      html += '</p>';
+      html += '</div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(entry, idx) {
+      const role = entry.role || 'Role ' + (idx + 1);
+      const size = entry.size || '16px';
+      const weight = entry.weight || 400;
+      const lh = entry.lineHeight || 1.5;
+      const ls = entry.letterSpacing || '0';
+
+      let fontFamily = 'var(--font-body)';
+      if (entry.fontFamily === 'display') fontFamily = '"Oswald", var(--font-display)';
+      else if (entry.fontFamily === 'mono') fontFamily = 'var(--font-mono)';
+
+      const sizeNum = parseFloat(size);
+      const sampleIdx = idx % EDITORIAL_SAMPLES.length;
+      let sample = EDITORIAL_SAMPLES[sampleIdx];
+
+      if (sizeNum >= 72) {
+        sample = sample.split('.')[0].slice(0, 40);
+        if (!sample.endsWith('.')) sample += '.';
+      }
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + ';';
+      fontStyle += 'font-family:' + fontFamily + ';';
+      if (ls && ls !== '0' && ls !== 'normal') fontStyle += 'letter-spacing:' + ls + ';';
+
+      let meta = esc(size) + ' / ' + esc(String(weight));
+      meta += '\n' + fontFamilyLabel(entry.fontFamily);
+      meta += '\nline-height: ' + esc(String(lh));
+      if (ls && ls !== '0' && ls !== 'normal') meta += '\nletter-spacing: ' + esc(ls);
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(sample) + '</div>' +
+        '</div>';
+    }
+
+    function fontFamilyLabel(key) {
+      const map = {
+        'display': 'Oswald',
+        'body': 'System UI',
+        'mono': 'JetBrains Mono'
+      };
+      return map[key] || 'Unknown';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

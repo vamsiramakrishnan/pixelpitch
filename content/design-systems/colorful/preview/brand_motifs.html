@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Colorful</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      background: var(--paper, #fafafa);
+      color: var(--ink, #111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+    }
+    .header__title {
+      font-family: var(--font-display, var(--font-body, 'Inter', system-ui, sans-serif));
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111);
+      margin-bottom: 12px;
+    }
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate, #6b6b6b);
+      max-width: 600px;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--signal, #3b82f6) 0%, var(--signal, #3b82f6) 100%);
+      border: none;
+      margin-top: 24px;
+      border-radius: 2px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 56px;
+    }
+    .section__label {
+      font-family: var(--font-display, var(--font-body, 'Inter', system-ui, sans-serif));
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate, #6b6b6b);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* Key characteristics */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+    .traits-list li {
+      position: relative;
+      padding: 14px 0 14px 28px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--ink, #111);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--signal, #3b82f6);
+      opacity: 0.8;
+    }
+
+    /* Do's and Don'ts */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 640px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .dd-card {
+      background: var(--surface, #fff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 12px;
+      padding: 28px;
+      overflow: hidden;
+    }
+    .dd-card__heading {
+      font-family: var(--font-display, var(--font-body, 'Inter', system-ui, sans-serif));
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .dd-card__heading--do { color: #059669; }
+    .dd-card__heading--dont { color: #dc2626; }
+
+    .dd-card__icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .dd-card__icon--do {
+      background: #d1fae5;
+      color: #059669;
+    }
+    .dd-card__icon--dont {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+    .dd-list li {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ink, #111);
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* Color harmony strip */
+    .harmony-strip {
+      display: flex;
+      border-radius: 12px;
+      overflow: hidden;
+      height: 100px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+    }
+    .harmony-strip__swatch:hover {
+      flex: 1.6;
+    }
+    .harmony-strip__label {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 3px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      letter-spacing: 0.02em;
+    }
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* Type pairing demo */
+    .type-pairing {
+      background: var(--surface, #fff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 12px;
+      padding: 48px 40px;
+    }
+    .type-pairing__display {
+      font-family: var(--font-display, var(--font-body, 'Inter', system-ui, sans-serif));
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111);
+      margin-bottom: 20px;
+    }
+    .type-pairing__body {
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--slate, #6b6b6b);
+      max-width: 640px;
+    }
+    .type-pairing__meta {
+      display: flex;
+      gap: 24px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #6b6b6b);
+    }
+    .type-pairing__meta-label {
+      font-weight: 700;
+      color: var(--ink, #111);
+    }
+
+    /* Atmosphere card */
+    .atmosphere-card {
+      background: var(--surface, #fff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 12px;
+      padding: 32px;
+    }
+    .atmosphere-card p {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--ink, #111);
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #6b6b6b);
+      font-size: 16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border', 'surface'];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.meta?.name || 'Colorful';
+      const category = tokens.meta?.category || 'Bold & Expressive';
+      const summary = tokens.meta?.summary || 'Vibrant, high-contrast palettes and gradients for engaging, memorable, and modern user experiences.';
+      const colors = tokens.colors || {};
+      const typography = tokens.typography || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">' + esc(name) + '<br>Brand Motifs</h1>';
+      html += '  <p class="header__subtitle">' + esc(summary) + '</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ---- Atmosphere / Description ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Visual Identity</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>' + esc(summary) + ' This design system emphasizes <strong>vibrant color combinations, high contrast, and playful premium aesthetics</strong> that feel modern and engaging. Every component is designed to celebrate color while maintaining excellent readability and accessibility.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Key Characteristics ---- */
+      const traits = [
+        'Vibrant, high-contrast color palette that commands attention',
+        'Bold typography with strong hierarchy and visual presence',
+        'Playful yet professional visual language',
+        'Premium aesthetics with modern, clean execution',
+        'Primary blue (#3B82F6) as the signal color for interaction',
+        'Generous whitespace and breathing room in layouts',
+        'Consistent rounded corners (8px default) for a friendly feel',
+        'Subtle, purposeful motion (150–250ms) emphasizing clarity'
+      ];
+      
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      traits.forEach(t => {
+        html += '<li>' + esc(t) + '</li>';
+      });
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ---- Do's and Don'ts ---- */
+      const dos = [
+        'Use vibrant, high-contrast color combinations',
+        'Prioritize readability with sufficient color contrast',
+        'Apply blue (#3B82F6) as the primary interaction signal',
+        'Embrace whitespace for breathing room and clarity',
+        'Use rounded corners (8px) throughout components',
+        'Keep transitions short and purposeful (150–250ms)',
+        'Pair bold display fonts with clean, readable body text'
+      ];
+      const donts = [
+        'Use muddy, desaturated color combinations',
+        'Sacrifice contrast or readability for aesthetics',
+        'Overuse motion or employ long, slow transitions',
+        'Crowd layouts—whitespace is a design feature',
+        'Mix sharp corners with rounded corners inconsistently',
+        'Use dull neutrals without the supporting color system',
+        'Apply high-contrast colors to text under 14px without testing'
+      ];
+
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '<div class="dd-card">';
+      html += '  <div class="dd-card__heading dd-card__heading--do">';
+      html += '    <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '  </div>';
+      html += '  <ul class="dd-list">';
+      dos.forEach(d => { html += '<li>' + esc(d) + '</li>'; });
+      html += '  </ul></div>';
+
+      html += '<div class="dd-card">';
+      html += '  <div class="dd-card__heading dd-card__heading--dont">';
+      html += '    <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '  </div>';
+      html += '  <ul class="dd-list">';
+      donts.forEach(d => { html += '<li>' + esc(d) + '</li>'; });
+      html += '  </ul></div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Color Harmony Strip ---- */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Core Color Palette</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.4 ? '#111' : '#fff';
+          const labelBg = lum > 0.4 ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.16)';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + ';background:' + labelBg + '">' + esc(key) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ---- Typography Pairing Demo ---- */
+      const displayFont = typography.fontDisplay || meta.displayFont || 'system-ui, sans-serif';
+      const bodyFont = typography.fontBody || meta.bodyFont || 'system-ui, sans-serif';
+
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography System</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__display"';
+      if (displayFont && displayFont !== 'system-ui, sans-serif') {
+        html += ' style="font-family:\'' + esc(displayFont) + '\',var(--font-display,sans-serif)"';
+      }
+      html += '>Bold. Vibrant. Engaging.</div>';
+
+      html += '    <div class="type-pairing__body"';
+      if (bodyFont && bodyFont !== 'system-ui, sans-serif') {
+        html += ' style="font-family:\'' + esc(bodyFont) + '\',var(--font-body,sans-serif)"';
+      }
+      html += '>The Colorful design system pairs strong display typography with clean, readable body text. This hierarchy creates immediate visual interest while maintaining accessibility and clarity across every interface. Vibrant colors amplify the boldness of the type system, making every message feel present and alive.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '<div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Display:</span> ' + esc(displayFont) + '</div>';
+      html += '<div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Body:</span> ' + esc(bodyFont) + '</div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    /* ---- Utilities ---- */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function relativeLuminance(hex) {
+      try {
+        const [r, g, b] = hexToRgb(hex).map(c => {
+          c /= 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      } catch { return 0.5; }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coinbase Type Specimen</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'CoinbaseText', system-ui, sans-serif);
+      background: var(--paper, #0a0b0d);
+      color: var(--ink, #0a0b0d);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 48px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'CoinbaseDisplay', system-ui, sans-serif);
+      font-size: 72px;
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: -0.01em;
+      color: var(--color-pure-white, #ffffff);
+      margin-bottom: 16px;
+    }
+
+    .header__subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--slate, #666666);
+      max-width: 700px;
+      line-height: 1.56;
+    }
+
+    .header__rule {
+      display: block;
+      width: 48px;
+      height: 3px;
+      background: var(--signal, #0052ff);
+      border: none;
+      margin-top: 32px;
+      border-radius: 0;
+    }
+
+    /* Font families card grid */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 72px;
+    }
+
+    .font-card {
+      background: var(--surface, #282b31);
+      border: 1px solid var(--signal, #0052ff);
+      border-radius: var(--radius-md, 12px);
+      padding: 32px 28px;
+    }
+
+    .font-card__label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .font-card__name {
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 8px;
+      color: var(--color-pure-white, #ffffff);
+    }
+
+    .font-card__desc {
+      font-size: 14px;
+      color: var(--slate, #666666);
+      line-height: 1.5;
+      margin-top: 12px;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-display, 'CoinbaseDisplay', system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--color-pure-white, #ffffff);
+      margin-bottom: 40px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--surface, #282b31);
+    }
+
+    /* Character set block */
+    .pangram-block {
+      background: var(--surface, #282b31);
+      border: 1px solid var(--surface, #282b31);
+      border-radius: var(--radius-md, 12px);
+      padding: 48px 40px;
+      margin-bottom: 72px;
+    }
+
+    .pangram-block__label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+    }
+
+    .pangram-block__chars {
+      font-size: 32px;
+      line-height: 1.8;
+      letter-spacing: 0.01em;
+      color: var(--color-pure-white, #ffffff);
+      word-break: break-all;
+      font-family: var(--font-display, 'CoinbaseDisplay', system-ui, sans-serif);
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--surface, #282b31);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 900px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-display, 'CoinbaseDisplay', system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-pure-white, #ffffff);
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--slate, #666666);
+      font-weight: 400;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--color-pure-white, #ffffff);
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+    }
+
+    /* Ramp section container */
+    .ramp-section {
+      margin-bottom: 72px;
+    }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      padding: 120px 48px;
+      color: var(--slate, #666666);
+      font-size: 18px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 24px auto 0;
+      border: 3px solid var(--surface, #282b31);
+      border-top-color: var(--signal, #0052ff);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Drop cap demo */
+    .dropcap-section {
+      margin-bottom: 72px;
+    }
+
+    .dropcap-demo {
+      background: var(--surface, #282b31);
+      border-radius: var(--radius-md, 12px);
+      padding: 48px 40px;
+      max-width: 700px;
+    }
+
+    .dropcap-demo__label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+    }
+
+    .dropcap-demo__text {
+      font-family: var(--font-body, 'CoinbaseText', system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.56;
+      color: var(--color-pure-white, #ffffff);
+    }
+
+    .dropcap-demo__text::first-letter {
+      font-size: 3.2em;
+      font-weight: 400;
+      line-height: 0.8;
+      float: left;
+      margin-right: 8px;
+      color: var(--signal, #0052ff);
+      font-family: var(--font-display, 'CoinbaseDisplay', system-ui, sans-serif);
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Secure your assets with institutional-grade custody.',
+      'The future of finance is built on transparency and trust.',
+      'Convert between crypto and currencies instantly.',
+      'Your private keys, your crypto. Always in control.',
+      'Earn rewards by staking your crypto holdings.',
+      'Trade with confidence on a regulated exchange.',
+      'Send money anywhere in the world within minutes.',
+      'Own your financial future with crypto.',
+    ];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.meta?.name || 'Coinbase';
+      const category = tokens.meta?.category || 'Design System';
+
+      const fonts = {
+        display: 'CoinbaseDisplay',
+        ui: 'CoinbaseSans',
+        body: 'CoinbaseText',
+        mono: 'ui-monospace, monospace'
+      };
+
+      const ramp = tokens.typography?.ramp || [];
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">' + esc(name) + '</h1>';
+      html += '  <p class="header__subtitle">Type Specimen — ' + category + '. Four typefaces, one mission: clarity and trust.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      html += '<div class="font-families">';
+
+      const fontEntries = [
+        { label: 'Display', name: 'CoinbaseDisplay', desc: 'Hero headlines & maximum impact' },
+        { label: 'UI / Sans', name: 'CoinbaseSans', desc: 'Buttons, headings & navigation' },
+        { label: 'Body', name: 'CoinbaseText', desc: 'Reading text & body copy' },
+        { label: 'Icons', name: 'CoinbaseIcons', desc: 'Icon font & symbolic marks' }
+      ];
+
+      fontEntries.forEach(f => {
+        html += '<div class="font-card">';
+        html += '  <div class="font-card__label">' + esc(f.label) + '</div>';
+        html += '  <div class="font-card__name">' + esc(f.name) + '</div>';
+        html += '  <div class="font-card__desc">' + esc(f.desc) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Character set blocks */
+      html += '<div class="pangram-block">';
+      html += '  <div class="pangram-block__label">CoinbaseDisplay Character Set</div>';
+      html += '  <div class="pangram-block__chars" style="font-family:\'CoinbaseDisplay\',sans-serif">AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>0123456789 !@#$%&amp;*()–—''""</div>';
+      html += '</div>';
+
+      html += '<div class="pangram-block">';
+      html += '  <div class="pangram-block__label">CoinbaseText Character Set</div>';
+      html += '  <div class="pangram-block__chars" style="font-family:\'CoinbaseText\',sans-serif">AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>0123456789 !@#$%&amp;*()–—''""</div>';
+      html += '</div>';
+
+      /* Type ramp */
+      if (ramp.length) {
+        html += '<div class="ramp-section">';
+        html += '<div class="section-label">Type Ramp</div>';
+        ramp.forEach((entry, i) => {
+          html += rampRow(entry, i, fonts);
+        });
+        html += '</div>';
+      }
+
+      /* Drop cap demo */
+      html += '<div class="dropcap-section">';
+      html += '<div class="section-label">Reading Sample</div>';
+      html += '<div class="dropcap-demo">';
+      html += '  <div class="dropcap-demo__label">CoinbaseText + Drop Cap</div>';
+      html += '  <p class="dropcap-demo__text">Coinbase is a secure online platform for buying, selling, transferring, and storing cryptocurrency. We believe that everyone should be able to participate in the global economy and that all economic activity should be accessible, intuitive, and fair.</p>';
+      html += '</div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(entry, idx, fonts) {
+      const role = entry.role || 'Role ' + (idx + 1);
+      const size = entry.size || '16px';
+      const weight = entry.weight || 400;
+      const lineHeight = entry.lineHeight || '1.5';
+      const letterSpacing = entry.letterSpacing || '0';
+      const fontKey = entry.fontKey || 'body';
+
+      const fontFamilies = {
+        display: fonts.display || 'CoinbaseDisplay',
+        ui: fonts.ui || 'CoinbaseSans',
+        body: fonts.body || 'CoinbaseText',
+        mono: fonts.mono || 'ui-monospace, monospace'
+      };
+
+      const fontFamily = fontFamilies[fontKey] || fontFamilies.body;
+      const sampleIdx = idx % EDITORIAL_SAMPLES.length;
+      const sample = EDITORIAL_SAMPLES[sampleIdx];
+
+      const sizeNum = parseFloat(size);
+      const displaySample = sizeNum >= 60
+        ? sample.split('.')[0] + '.'
+        : sample;
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lineHeight + ';';
+      if (letterSpacing && letterSpacing !== '0') fontStyle += 'letter-spacing:' + letterSpacing + ';';
+      fontStyle += 'font-family:\'' + esc(fontFamily) + '\',var(--font-body,sans-serif);';
+
+      let meta = '';
+      meta += esc(size) + ' / ' + esc(String(weight));
+      if (fontKey === 'display') meta += '\nCoinbaseDisplay';
+      else if (fontKey === 'ui') meta += '\nCoinbaseSans';
+      else meta += '\nCoinbaseText';
+      meta += '\nline-height: ' + esc(String(lineHeight));
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(displaySample) + '</div>' +
+        '</div>';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

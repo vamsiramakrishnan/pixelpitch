@@ -1,0 +1,83 @@
+/* OpenCode — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #201d1d;
+  --ink:     #fdfcfc;
+  --slate:   #9a9898;
+  --signal:  #007aff;
+  --bone:    #201d1d;
+  --border:  #646262;
+  --surface: #fdfcfc;
+
+  /* Extended palette */
+  --color-dark-surface: #302c2c;
+  --color-light-surface: #f1eeee;
+  --color-accent-blue-hover: #0056b3;
+  --color-accent-blue-active: #004085;
+  --color-danger-red: #ff3b30;
+  --color-danger-hover: #d70015;
+  --color-danger-active: #a50011;
+  --color-success-green: #30d158;
+  --color-warning-orange: #ff9f0a;
+  --color-warning-hover: #cc7f08;
+  --color-warning-active: #995f06;
+  --color-text-muted: #6e6e73;
+  --color-text-secondary: #424245;
+
+  /* Semantic */
+  --success: #30d158;
+  --warning: #ff9f0a;
+  --danger:  #ff3b30;
+  --info:    #007aff;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-heading-1: 38px;
+  --t-heading-2: 16px;
+  --t-body: 16px;
+  --t-body-medium: 16px;
+  --t-body-tight: 16px;
+  --t-caption: 14px;
+
+  /* ── Spacing ── */
+  --s-1: 1px;
+  --s-2: 2px;
+  --s-3: 4px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   8px;
+  --radius-md:   8px;
+  --radius-lg:   96px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    8px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

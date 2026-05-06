@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — IBM</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #161616);
+      line-height: 1.5;
+    }
+
+    .page {
+      max-width: 1584px;
+      margin: 0 auto;
+      padding: 80px 32px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 80px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.32px;
+      text-transform: uppercase;
+      color: var(--slate, #525252);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 60px;
+      font-weight: 300;
+      line-height: 1.17;
+      letter-spacing: 0;
+      color: var(--ink, #161616);
+      margin-bottom: 12px;
+      max-width: 85%;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate, #525252);
+      max-width: 70%;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 2px;
+      background: var(--signal, #0f62fe);
+      border: none;
+      margin-top: 24px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.32px;
+      text-transform: uppercase;
+      color: var(--slate, #525252);
+      margin-bottom: 40px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #c6c6c6);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 80px;
+      gap: 24px;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(22, 22, 22, 0.12);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--signal, #0f62fe);
+      letter-spacing: 0.16px;
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      color: var(--slate, #525252);
+      margin-top: 4px;
+      letter-spacing: 0.32px;
+      text-transform: uppercase;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 2px;
+      background: var(--signal, #0f62fe);
+      min-width: 2px;
+      transition: opacity 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.7;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink, #161616);
+      text-align: right;
+      letter-spacing: 0.16px;
+    }
+
+    /* Rule weights */
+    .rule-demo {
+      padding: 32px 0;
+      border-bottom: 1px solid rgba(22, 22, 22, 0.12);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 20px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--signal, #0f62fe);
+      letter-spacing: 0.16px;
+    }
+
+    .rule-demo__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      color: var(--slate, #525252);
+      letter-spacing: 0.32px;
+      text-transform: uppercase;
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 12px;
+      color: var(--slate, #525252);
+      letter-spacing: 0.32px;
+      text-transform: uppercase;
+    }
+
+    .rule-demo__container {
+      width: 100%;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 0;
+      background: var(--bone, #f4f4f4);
+      border: 1px solid var(--border, #c6c6c6);
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 64px;
+      margin-bottom: 48px;
+    }
+
+    .radius-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .radius-item__box {
+      width: 120px;
+      height: 120px;
+      background: var(--bone, #f4f4f4);
+      border: 1px solid var(--border, #c6c6c6);
+      flex-shrink: 0;
+    }
+
+    .radius-item__info {
+      flex: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--signal, #0f62fe);
+      margin-bottom: 4px;
+      letter-spacing: 0.16px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 12px;
+      color: var(--slate, #525252);
+      margin-bottom: 12px;
+      letter-spacing: 0.32px;
+      text-transform: uppercase;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--slate, #525252);
+    }
+
+    /* Philosophy blocks */
+    .philosophy {
+      background: var(--bone, #f4f4f4);
+      padding: 40px;
+      border: 1px solid var(--border, #c6c6c6);
+      margin-bottom: 64px;
+    }
+
+    .philosophy__title {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.32px;
+      text-transform: uppercase;
+      color: var(--slate, #525252);
+      margin-bottom: 16px;
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--ink, #161616);
+    }
+
+    .philosophy__text strong {
+      font-weight: 600;
+    }
+
+    .philosophy__text em {
+      font-style: italic;
+    }
+
+    .philosophy__text code {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      background: rgba(22, 22, 22, 0.08);
+      padding: 2px 6px;
+      font-size: 0.95em;
+      letter-spacing: 0.16px;
+    }
+
+    /* Grid demo */
+    .grid-demo {
+      background: var(--bone, #f4f4f4);
+      padding: 40px;
+      border: 1px solid var(--border, #c6c6c6);
+      margin-bottom: 64px;
+    }
+
+    .grid-demo__title {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.32px;
+      text-transform: uppercase;
+      color: var(--slate, #525252);
+      margin-bottom: 24px;
+    }
+
+    .grid-demo__visual {
+      width: 100%;
+      height: 200px;
+      display: grid;
+      grid-template-columns: repeat(16, 1fr);
+      gap: 12px;
+      background-image: linear-gradient(90deg, rgba(15, 98, 254, 0.08) 1px, transparent 1px);
+      background-size: calc(100% / 16) 100%;
+      padding: 24px;
+      border: 1px dashed var(--signal, #0f62fe);
+    }
+
+    .grid-demo__column {
+      background: rgba(15, 98, 254, 0.12);
+      border: 1px solid var(--signal, #0f62fe);
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--signal, #0f62fe);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 6px;
+      letter-spacing: 0.16px;
+    }
+
+    .grid-demo__info {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .grid-demo__stat {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      color: var(--ink, #161616);
+      line-height: 1.5;
+    }
+
+    .grid-demo__stat-label {
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.32px;
+      text-transform: uppercase;
+      color: var(--slate, #525252);
+      margin-bottom: 4px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #525252);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 2px solid rgba(22, 22, 22, 0.2);
+      border-top-color: var(--signal, #0f62fe);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 1024px) {
+      .page {
+        padding: 64px 24px;
+      }
+
+      .header {
+        margin-bottom: 64px;
+      }
+
+      .header__title {
+        font-size: 48px;
+      }
+
+      .section {
+        margin-bottom: 64px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 90px 1fr 70px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .radius-item {
+        grid-template-columns: 120px 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 48px 16px;
+      }
+
+      .header__title {
+        font-size: 42px;
+        max-width: 100%;
+      }
+
+      .header__subtitle {
+        max-width: 100%;
+      }
+
+      .grid-demo__info {
+        grid-template-columns: 1fr;
+      }
+
+      .radius-item {
+        grid-template-columns: 100px 1fr;
+        gap: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '2px', label: 'mini' },
+      's-2': { value: '4px', label: 'xs' },
+      's-3': { value: '8px', label: 'sm' },
+      's-4': { value: '12px', label: 'xs-md' },
+      's-5': { value: '16px', label: 'md' },
+      's-6': { value: '24px', label: 'lg' },
+      's-7': { value: '32px', label: 'xl' },
+      's-8': { value: '40px', label: '2xl' },
+      's-9': { value: '48px', label: '3xl' }
+    };
+
+    const DEFAULT_RULES = {
+      'flat': { name: 'Flat', weight: 'none', color: 'transparent', use: 'Default page background, #ffffff' },
+      'layer-01': { name: 'Layer 01', weight: 'none', color: '#f4f4f4', use: 'Cards, tiles, alternating sections' },
+      'layer-02': { name: 'Layer 02', weight: 'none', color: '#e0e0e0', use: 'Elevated panels within Layer 01' },
+      'raised': { name: 'Raised', weight: '2px / 6px', color: 'rgba(0,0,0,0.3)', use: 'Dropdowns, tooltips, overflow menus' },
+      'overlay': { name: 'Overlay', weight: '2px / 6px', color: 'rgba(0,0,0,0.3)', use: 'Modal dialogs, side panels with dark scrim' },
+      'focus': { name: 'Focus', weight: '2px inset', color: '#0f62fe', use: 'Keyboard focus ring on interactive elements' },
+      'border-bottom': { name: 'Bottom-border', weight: '2px', color: '#161616', use: 'Active input, active tab indicator' }
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'Primary buttons, inputs, tiles, cards — the dominant treatment. Carbon is fundamentally rectangular.' },
+      'sm': { value: '8px', use: 'Secondary elements, radio buttons, checkboxes' },
+      'md': { value: '12px', use: 'Buttons, cards, containers. Default rounded treatment.' },
+      'lg': { value: '24px', use: 'Tags, labels, and pill-shaped interactive elements.' },
+      'full': { value: '999px', use: 'Avatar circles, icon containers, and fully rounded elements.' }
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#da1e28">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      
+      const gfUrl = tokens.typography?.googleFontsUrl || tokens.googleFontsUrl;
+      if (gfUrl) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = gfUrl;
+        document.head.appendChild(link);
+      }
+
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const rules = DEFAULT_RULES;
+      const radius = DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Spacing &amp; Rules</div>';
+      html += '  <h1 class="header__title">8px grid.<br>Functional density.</h1>';
+      html += '  <p class="header__subtitle">The spacing and depth system for IBM Carbon — a structured 2x grid where every value aligns to 2px intervals, and depth is communicated through background-color layering, not shadows.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Philosophy block */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Spacing Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Carbon favors <strong>productive density</strong> over expansive whitespace. This reflects IBM\'s enterprise DNA — information-dense layouts where every pixel serves a function. Sections are tightly packed, with visual separation achieved through <strong>background-color zoning</strong> (white → gray 10 → white) rather than massive padding. Major section transitions use a <strong>48px rhythm</strong>, with hero sections occupying 80–96px of vertical space. The 2x grid ensures everything aligns to 2px intervals: <code>s-1</code> (2px), <code>s-2</code> (4px), <code>s-3</code> (8px), etc. Component padding is typically <code>16px</code> (s-5), while gaps between cards alternate between <code>1px</code> (hairline) and <code>16px</code> (standard). This is not whitespace maximalism — it is precision engineering at a typographic scale.';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 3);
+        const label = obj.label || key;
+        
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Grid visualization */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Grid System</div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__title">16-Column Grid (1584px max-width)</div>';
+      html += '    <div class="grid-demo__visual">';
+      for (let i = 1; i <= 16; i++) {
+        html += '      <div class="grid-demo__column">' + i + '</div>';
+      }
+      html += '    </div>';
+      html += '    <div class="grid-demo__info">';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Max content width</div>';
+      html += '        <div class="grid-demo__stat">1584px (Carbon system standard)</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Column gutters</div>';
+      html += '        <div class="grid-demo__stat">32px (desktop), 16px (mobile)</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Margin / Padding</div>';
+      html += '        <div class="grid-demo__stat">32px (tablet+), 16px (mobile)</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Body copy span</div>';
+      html += '        <div class="grid-demo__stat">8–12 columns for readable line length</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Rule weights */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth &amp; Elevation</div>';
+
+      Object.entries(rules).forEach(([key, rule]) => {
+        const weight = rule.weight;
+        const color = rule.color;
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <div>';
+        html += '      <div class="rule-demo__name">' + esc(rule.name) + '</div>';
+        html += '      <div class="rule-demo__label">' + esc(rule.use) + '</div>';
+        html += '    </div>';
+        html += '    <div class="rule-demo__spec">' + esc(weight) + '</div>';
+        html += '  </div>';
+        
+        if (weight === 'none') {
+          html += '  <div class="rule-demo__container" style="background: ' + esc(color) + '; border: 1px solid var(--border, #c6c6c6);">';
+          html += '  </div>';
+        } else if (weight.includes('inset')) {
+          html += '  <div class="rule-demo__container" style="border: 2px inset ' + esc(color) + '; background: var(--paper, #ffffff);">';
+          html += '  </div>';
+        } else if (weight.includes('/')) {
+          html += '  <div class="rule-demo__container" style="box-shadow: 0 2px 6px ' + esc(color) + '; background: var(--paper, #ffffff); border: none;">';
+          html += '  </div>';
+        } else {
+          const weightNum = parseFloat(weight) || 2;
+          html += '  <div class="rule-demo__container" style="border-bottom: ' + weightNum + 'px solid ' + esc(color) + '; border-top: none; border-left: none; border-right: none; background: var(--paper, #ffffff);">';
+          html += '  </div>';
+        }
+        
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+
+      Object.entries(radius).forEach(([key, obj]) => {
+        const radiusValue = obj.value;
+
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__demo">';
+        html += '    <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '  </div>';
+        html += '  <div class="radius-item__info">';
+        html += '    <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '    <div class="radius-item__value">' + esc(radiusValue) + '</div>';
+        html += '    <div class="radius-item__description">' + esc(obj.use) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Depth philosophy */
+      html += '<div class="philosophy" style="margin-bottom: 0;">';
+      html += '  <div class="philosophy__title">Elevation Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Carbon is <strong>deliberately shadow-averse</strong>. Depth is communicated primarily through <strong>background-color layering</strong> — stacking surfaces of progressively darker grays (Layer 01: #f4f4f4, Layer 02: #e0e0e0) rather than box-shadows. This creates a flat, print-inspired aesthetic where hierarchy is communicated through color value, not simulated light. Shadows are reserved exclusively for floating elements (dropdowns, tooltips, modals) where the element genuinely overlaps content: <code>0 2px 6px rgba(0,0,0,0.3)</code>. The focus ring uses a bold <code>2px inset #0f62fe</code> border to mark keyboard interaction, paired with a <code>1px white</code> outer ring for contrast. This restraint gives the rare shadow meaningful impact — when something floats in Carbon, it matters.';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

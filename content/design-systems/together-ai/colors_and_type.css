@@ -1,0 +1,84 @@
+/* Together AI — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #000000;
+  --slate:   #666666;
+  --signal:  #ef2cc1;
+  --bone:    #bdbbff;
+  --border:  #e5e5e5;
+  --surface: #010120;
+
+  /* Extended palette */
+  --color-brand-orange: #fc4c02;
+
+  /* Semantic */
+  --info:    #010120;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 64px;
+  --t-section-heading: 40px;
+  --t-sub-heading: 28px;
+  --t-feature-title: 22px;
+  --t-body-large: 18px;
+  --t-body-button: 16px;
+  --t-caption: 14px;
+  --t-mono-label: 16px;
+  --t-mono-small: 11px;
+  --t-mono-micro: 10px;
+
+  /* ── Spacing ── */
+  --s-1: 1px;
+  --s-2: 2px;
+  --s-3: 4px;
+  --s-4: 8px;
+  --s-5: 10px;
+  --s-6: 12px;
+  --s-7: 16px;
+  --s-8: 20px;
+  --s-9: 24px;
+  --s-10: 32px;
+  --s-11: 44px;
+  --s-12: 48px;
+  --s-13: 80px;
+  --s-14: 100px;
+  --s-15: 120px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   120px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    8px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

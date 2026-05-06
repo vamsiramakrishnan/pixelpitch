@@ -1,0 +1,81 @@
+/* Kraken — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #101114;
+  --slate:   #9497a9;
+  --signal:  #7132f5;
+  --bone:    #dedee5;
+  --border:  #5741d8;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-purple-deep: #5b1ecf;
+  --color-cool-gray: #686b82;
+  --color-green: #149e61;
+  --color-green-dark: #026b3f;
+
+  /* Semantic */
+  --success: #149e61;
+  --info:    #9497a9;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: Kraken-Brand;
+  --font-body:    Kraken-Brand;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 48px;
+  --t-section-heading: 36px;
+  --t-sub-heading: 28px;
+  --t-feature-title: 22px;
+  --t-body: 16px;
+  --t-body-medium: 16px;
+  --t-button: 16px;
+  --t-caption: 14px;
+  --t-small: 12px;
+  --t-micro: 7px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   5px;
+  --radius-md:   10px;
+  --radius-lg:   20px;
+  --radius-full: 9px;
+
+  /* ── Components ── */
+  --button-radius:  10px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    10px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

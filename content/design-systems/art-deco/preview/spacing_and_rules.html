@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Art Deco</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      background: #0a0a0a;
+      color: #e8d4b8;
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 96px;
+      text-align: center;
+      border-bottom: 2px solid #b8860b;
+      padding-bottom: 48px;
+      position: relative;
+    }
+
+    .header::before {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 32px;
+      background: linear-gradient(135deg, #b8860b 25%, transparent 25%) -10px 0,
+                  linear-gradient(225deg, #b8860b 25%, transparent 25%) -10px 0,
+                  linear-gradient(315deg, #b8860b 25%, transparent 25%),
+                  linear-gradient(45deg, #b8860b 25%, transparent 25%);
+      background-size: 20px 20px;
+      background-color: #1a1a1a;
+      border: 2px solid #b8860b;
+      opacity: 0.6;
+    }
+
+    .header__title {
+      font-family: var(--font-display, var(--font-body, 'Inter', system-ui, sans-serif));
+      font-size: 56px;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: 0.04em;
+      color: #ffd700;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+
+    .header__subtitle {
+      font-size: 18px;
+      color: #a0826d;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-display, var(--font-body, 'Inter', system-ui, sans-serif));
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #b8860b;
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #b8860b;
+      border-bottom-style: dashed;
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 100px;
+      gap: 24px;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid #2a2a2a;
+    }
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+    .spacing-row:hover {
+      background: rgba(184, 134, 11, 0.04);
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace);
+      font-size: 14px;
+      color: #ffd700;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      font-size: 12px;
+      color: #a0826d;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      background: rgba(26, 26, 26, 0.5);
+      border: 1px solid #2a2a2a;
+      border-radius: 2px;
+      padding-left: 8px;
+    }
+    .spacing-row__bar {
+      height: 100%;
+      background: linear-gradient(90deg, #b8860b, #ffd700);
+      border-radius: 1px;
+      min-width: 2px;
+      transition: all 0.2s ease;
+      box-shadow: inset 0 1px 0 rgba(255, 215, 0, 0.3);
+    }
+    .spacing-row:hover .spacing-row__bar {
+      box-shadow: inset 0 1px 0 rgba(255, 215, 0, 0.5), 0 0 12px rgba(184, 134, 11, 0.4);
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace);
+      font-size: 14px;
+      color: #e8d4b8;
+      text-align: right;
+      font-weight: 400;
+    }
+
+    /* Rule weights */
+    .rule-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 64px;
+    }
+
+    .rule-column {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .rule-demo {
+      border-left: 2px solid #b8860b;
+      padding-left: 20px;
+    }
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+    }
+    .rule-demo__name {
+      font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 400;
+      color: #ffd700;
+      letter-spacing: 0.05em;
+    }
+    .rule-demo__spec {
+      font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace);
+      font-size: 12px;
+      color: #a0826d;
+      letter-spacing: 0.02em;
+    }
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 1px;
+      opacity: 0.85;
+      transition: opacity 0.2s ease, box-shadow 0.2s ease;
+    }
+    .rule-demo:hover .rule-demo__line {
+      opacity: 1;
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 32px;
+    }
+    .radius-item {
+      text-align: center;
+    }
+    .radius-item__box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 140px;
+      margin: 0 auto 16px;
+      background: linear-gradient(135deg, rgba(184, 134, 11, 0.08), rgba(255, 215, 0, 0.04));
+      border: 2px solid #b8860b;
+      opacity: 0.6;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .radius-item__box::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top-left, rgba(255, 215, 0, 0.1), transparent);
+      border-radius: inherit;
+    }
+    .radius-item:hover .radius-item__box {
+      opacity: 1;
+      border-color: #ffd700;
+      box-shadow: 0 0 16px rgba(184, 134, 11, 0.3);
+    }
+    .radius-item__name {
+      font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 400;
+      color: #ffd700;
+      margin-bottom: 4px;
+      letter-spacing: 0.05em;
+    }
+    .radius-item__value {
+      font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace);
+      font-size: 12px;
+      color: #a0826d;
+      letter-spacing: 0.02em;
+    }
+
+    /* Elevation/depth demos */
+    .depth-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 32px;
+    }
+    .depth-item {
+      padding: 32px 24px;
+      background: linear-gradient(180deg, #1a1a1a, #0f0f0f);
+      border: 2px solid #b8860b;
+      border-radius: 2px;
+      text-align: center;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .depth-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at top-left, rgba(255, 215, 0, 0.08), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .depth-item:hover {
+      border-color: #ffd700;
+      box-shadow: 0 8px 32px rgba(184, 134, 11, 0.25);
+      transform: translateY(-4px);
+    }
+    .depth-item__name {
+      font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 400;
+      color: #ffd700;
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+      position: relative;
+      z-index: 1;
+    }
+    .depth-item__spec {
+      font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace);
+      font-size: 11px;
+      color: #a0826d;
+      word-break: break-all;
+      letter-spacing: 0.02em;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Decorative divider */
+    .divider {
+      width: 60px;
+      height: 3px;
+      margin: 48px auto;
+      background: linear-gradient(90deg, transparent, #b8860b, transparent);
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: #a0826d;
+      font-size: 16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 24px auto 0;
+      border: 3px solid #b8860b;
+      border-top-color: #ffd700;
+      border-radius: 50%;
+      animation: spin 1.2s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 32px;
+      }
+      .header {
+        margin-bottom: 64px;
+      }
+      .header__title {
+        font-size: 42px;
+      }
+      .spacing-row {
+        grid-template-columns: 100px 1fr 80px;
+        gap: 16px;
+      }
+      .rule-section {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      .radius-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': '4px',
+      's-2': '8px',
+      's-3': '16px',
+      's-4': '24px',
+      's-5': '32px',
+      's-6': '48px',
+      's-7': '64px',
+      's-8': '96px',
+    };
+
+    const DEFAULT_DEPTH = {
+      'quiet': { weight: '1px', color: '#a0826d' },
+      'hairline': { weight: '1px', color: '#e8d4b8' },
+      'bold': { weight: '2px', color: '#b8860b' },
+      'display': { weight: '4px', color: '#ffd700' },
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': '0px',
+      'sm': '96px',
+      'md': '8px',
+      'lg': '16px',
+      'full': '1200px',
+    };
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.meta?.name || tokens.name || 'Art Deco';
+      
+      const gfUrl = tokens.googleFontsUrl || (tokens.fonts && tokens.fonts.googleUrl);
+      if (gfUrl) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = gfUrl;
+        document.head.appendChild(link);
+      }
+
+      const spacing = tokens.spacing?.scale || DEFAULT_SPACING;
+      const depth = tokens.depth || DEFAULT_DEPTH;
+      const radius = tokens.radii || DEFAULT_RADIUS;
+      const shadows = tokens.shadows || tokens.elevation || null;
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">' + esc(name) + '</h1>';
+      html += '  <p class="header__subtitle">Spacing, Rules & Depth</p>';
+      html += '</header>';
+
+      /* ---- Spacing scale ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, v]) => parseFloat(v) || 0), 1);
+
+      spacingEntries.forEach(([key, value]) => {
+        const px = parseFloat(value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <span class="spacing-row__name">' + esc(key) + '</span>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      html += '<div class="divider"></div>';
+
+      /* ---- Rule weights ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Rule Weights</div>';
+      html += '  <div class="rule-section">';
+
+      const depthEntries = Object.entries(depth);
+      let col = 0;
+      let currentColumn = '';
+
+      depthEntries.forEach(([key, val], idx) => {
+        if (idx > 0 && idx % Math.ceil(depthEntries.length / 2) === 0) {
+          currentColumn += '  </div>';
+          html += '    <div class="rule-column">' + currentColumn + '</div>';
+          currentColumn = '';
+        }
+
+        const weight = (typeof val === 'object' ? val.weight : val) || '1px';
+        const color = (typeof val === 'object' ? val.color : null) || '#b8860b';
+        const weightNum = parseFloat(weight) || 1;
+
+        currentColumn += '<div class="rule-demo">';
+        currentColumn += '  <div class="rule-demo__header">';
+        currentColumn += '    <span class="rule-demo__name">' + esc(key) + '</span>';
+        currentColumn += '    <span class="rule-demo__spec">' + esc(weight) + '</span>';
+        currentColumn += '  </div>';
+        currentColumn += '  <hr class="rule-demo__line" style="height:' + weightNum + 'px;background:' + color + ';border:none">';
+        currentColumn += '</div>';
+      });
+
+      if (currentColumn) {
+        currentColumn += '  </div>';
+        html += '    <div class="rule-column">' + currentColumn + '</div>';
+      }
+
+      html += '  </div>';
+      html += '</div>';
+
+      html += '<div class="divider"></div>';
+
+      /* ---- Border radius ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+      html += '  <div class="radius-grid">';
+
+      Object.entries(radius).forEach(([key, value]) => {
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__box" style="border-radius:' + esc(value) + '"></div>';
+        html += '  <div class="radius-item__name">' + esc(key) + '</div>';
+        html += '  <div class="radius-item__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      if (shadows) {
+        html += '<div class="divider"></div>';
+        html += '<div class="section">';
+        html += '  <div class="section__label">Elevation &amp; Shadows</div>';
+        html += '  <div class="depth-grid">';
+
+        Object.entries(shadows).forEach(([key, value]) => {
+          const shadowVal = typeof value === 'object' ? value.value || value.shadow : value;
+          html += '<div class="depth-item" style="box-shadow:' + shadowVal + '">';
+          html += '  <div class="depth-item__name">' + esc(key) + '</div>';
+          html += '  <div class="depth-item__spec">' + esc(String(shadowVal).substring(0, 60)) + (String(shadowVal).length > 60 ? '…' : '') + '</div>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

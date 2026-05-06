@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Cal.com</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--bone, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 80px;
+    }
+    .header__title {
+      font-family: 'Cal Sans', var(--font-display, system-ui), serif;
+      font-size: 64px;
+      font-weight: 600;
+      line-height: 1.10;
+      letter-spacing: 0;
+      color: var(--bone, #111111);
+      margin-bottom: 12px;
+    }
+    .header__subtitle {
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--slate, #898989);
+      max-width: 640px;
+      letter-spacing: -0.2px;
+      line-height: 1.30;
+    }
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--bone, #111111);
+      border: none;
+      margin-top: 32px;
+      border-radius: 1px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 80px;
+    }
+    .section__label {
+      font-family: var(--font-display, 'Cal Sans', system-ui);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: var(--slate, #898989);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* Key characteristics */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+    .traits-list li {
+      position: relative;
+      padding: 14px 0 14px 28px;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.50;
+      color: var(--bone, #111111);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 20px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--bone, #111111);
+      opacity: 0.4;
+    }
+
+    /* Do's and Don'ts */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    @media (max-width: 640px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .dd-card {
+      background: var(--surface, #ffffff);
+      border: var(--card-border, 1px solid #e5e5e5);
+      border-radius: var(--card-radius, 12px);
+      padding: 32px;
+      overflow: hidden;
+    }
+    .dd-card__heading {
+      font-family: var(--font-display, 'Cal Sans', system-ui);
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--bone, #111111);
+    }
+    .dd-card__heading--do { color: #166534; }
+    .dd-card__heading--dont { color: #991b1b; }
+
+    .dd-card__icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .dd-card__icon--do {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .dd-card__icon--dont {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+    .dd-list li {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.50;
+      color: var(--bone, #111111);
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* Color harmony strip */
+    .harmony-strip {
+      display: flex;
+      border-radius: var(--card-radius, 12px);
+      overflow: hidden;
+      height: 100px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border: var(--card-border, 1px solid #e5e5e5);
+    }
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+    .harmony-strip__swatch:hover {
+      flex: 1.5;
+    }
+    .harmony-strip__label {
+      font-family: var(--font-mono, 'Roboto Mono', monospace);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 3px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      background: rgba(0,0,0,0.08);
+      color: inherit;
+      pointer-events: none;
+    }
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* Type pairing demo */
+    .type-pairing {
+      background: var(--surface, #ffffff);
+      border: var(--card-border, 1px solid #e5e5e5);
+      border-radius: var(--card-radius, 12px);
+      padding: 48px 40px;
+    }
+    .type-pairing__display {
+      font-family: 'Cal Sans', var(--font-display, system-ui);
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.10;
+      letter-spacing: 0;
+      color: var(--bone, #111111);
+      margin-bottom: 24px;
+    }
+    .type-pairing__body {
+      font-family: var(--font-body, 'Inter', system-ui);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.50;
+      color: var(--bone, #111111);
+      max-width: 680px;
+      margin-bottom: 28px;
+    }
+    .type-pairing__meta {
+      display: flex;
+      gap: 32px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border, #e5e5e5);
+      flex-wrap: wrap;
+    }
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, 'Roboto Mono', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--slate, #898989);
+    }
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--bone, #111111);
+    }
+
+    /* Atmosphere card */
+    .atmosphere-card {
+      background: var(--surface, #ffffff);
+      border: var(--card-border, 1px solid #e5e5e5);
+      border-radius: var(--card-radius, 12px);
+      padding: 32px;
+    }
+    .atmosphere-card p {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.60;
+      color: var(--bone, #111111);
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #898989);
+      font-size: 16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 2px solid var(--border, #e5e5e5);
+      border-top-color: var(--bone, #111111);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Color grid demo */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px;
+    }
+    .color-item {
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--card-radius, 12px);
+      overflow: hidden;
+      text-align: center;
+    }
+    .color-item__swatch {
+      height: 80px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-family: var(--font-mono, monospace);
+      font-weight: 600;
+      color: rgba(0,0,0,0.3);
+    }
+    .color-item__label {
+      padding: 12px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--bone, #111111);
+      background: #f9f9f9;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border', 'surface'];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const fonts = tokens.typography || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Brand Motifs</h1>';
+      html += '  <p class="header__subtitle">The visual DNA of Cal.com — monochromatic boldness through typography and restraint.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ---- Atmosphere / Description ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Cal.com\'s visual language is a masterclass in monochromatic confidence. Inspired by Uber\'s minimal aesthetic, the palette is deliberately stripped of hue—near-black headings, mid-gray secondary text, and pure white surfaces. Color is treated as a foreign substance. When it appears (a rare blue accent, a green trust badge), it feels like a controlled statement in an otherwise black-and-white photograph. Boldness comes not from color but from the sheer weight of typography and the confidence of dense, architectural Cal Sans headlines set at weight 600 with a tight 1.10 line-height.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Key Characteristics ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Purely grayscale palette — no brand colors, boldness through monochrome contrast</li>';
+      html += '    <li>Cal Sans custom geometric display font with extremely tight letter-spacing at large sizes</li>';
+      html += '    <li>Cal Sans for headings (24px+), Inter for all body and UI text — clear typographic hierarchy</li>';
+      html += '    <li>Multi-layered shadow system (ring borders + diffused shadows) for sophisticated depth</li>';
+      html += '    <li>White canvas with near-black (#242424) text — maximum contrast, zero decoration</li>';
+      html += '    <li>Wide border-radius scale from 6px to full pill (9px) — geometric precision with soft edges</li>';
+      html += '    <li>Product screenshots and UI as primary visual content — the product sells itself</li>';
+      html += '    <li>Generous section spacing (80–96px) — breathing room essential to the premium feel</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ---- Do's and Don'ts ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '<div class="dd-card">';
+      html += '  <div class="dd-card__heading dd-card__heading--do">';
+      html += '    <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '  </div>';
+      html += '  <ul class="dd-list">';
+      html += '    <li>Use Cal Sans exclusively for headings 24px and larger</li>';
+      html += '    <li>Apply +0.2px letter-spacing when Cal Sans falls below 24px</li>';
+      html += '    <li>Maintain the grayscale palette — boldness comes from contrast</li>';
+      html += '    <li>Use the multi-layered shadow system for card elevation</li>';
+      html += '    <li>Keep backgrounds pure white — the monochrome philosophy requires it</li>';
+      html += '    <li>Use Inter weight 300–600 for all body and UI text</li>';
+      html += '    <li>Let product screenshots be the visual content — no illustrations</li>';
+      html += '    <li>Apply generous section spacing (80–96px) for breathing room</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      html += '<div class="dd-card">';
+      html += '  <div class="dd-card__heading dd-card__heading--dont">';
+      html += '    <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '  </div>';
+      html += '  <ul class="dd-list">';
+      html += '    <li>Use Cal Sans for body text or text below 16px</li>';
+      html += '    <li>Add brand colors — Cal.com is intentionally grayscale</li>';
+      html += '    <li>Use CSS borders when shadows achieve better containment</li>';
+      html += '    <li>Apply negative letter-spacing to Cal Sans at small sizes</li>';
+      html += '    <li>Create heavy, dark shadows — keep them subtle (5% opacity)</li>';
+      html += '    <li>Use illustrations, graphics, or decorative elements</li>';
+      html += '    <li>Mix Cal Sans weights — the font is designed for weight 600 only</li>';
+      html += '    <li>Reduce section spacing below 48px — generous whitespace is core</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Color Harmony Strip ---- */
+      const harmonyKeys = ['paper', 'border', 'slate', 'bone'];
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key] || '#ffffff';
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#000' : '#fff';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* Extended colors grid */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Extended Palette</div>';
+      html += '  <div class="color-grid">';
+
+      const extendedColors = [
+        { name: 'Charcoal', hex: '#242424' },
+        { name: 'Focus Ring', hex: '#3b82f6' },
+        { name: 'Pure Black', hex: '#000000' },
+        { name: 'Info Blue', hex: '#0099ff' }
+      ];
+
+      extendedColors.forEach(c => {
+        const lum = relativeLuminance(c.hex);
+        const labelColor = lum > 0.5 ? '#000' : '#fff';
+        html += '<div class="color-item">';
+        html += '  <div class="color-item__swatch" style="background:' + esc(c.hex) + ';color:' + labelColor + '">' + esc(c.hex) + '</div>';
+        html += '  <div class="color-item__label">' + esc(c.name) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Typography Pairing Demo ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__display" style="font-family:\'Cal Sans\',system-ui,serif">Building great scheduling takes less time</div>';
+
+      html += '    <div class="type-pairing__body" style="font-family:\'Inter\',system-ui,sans-serif">Typography is the craft of endowing human language with durable visual form. Cal Sans speaks with architectural confidence—geometric, compressed, dense. Inter listens with rock-solid readability. Together they create a clear hierarchy: display says what matters, body explains why it matters. The pairing works because both fonts share a modern simplicity while serving completely different voices.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Display:</span> Cal Sans, 600 weight, 1.10 line-height</div>';
+      html += '      <div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Body:</span> Inter, 400 weight, 1.50 line-height</div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Type Specimens ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Scale</div>';
+      html += '  <div style="space:24px">';
+
+      const specimens = [
+        { size: '64px', weight: 600, lh: 1.10, font: 'Cal Sans', label: 'Display Hero', text: 'The quick brown fox' },
+        { size: '48px', weight: 600, lh: 1.10, font: 'Cal Sans', label: 'Section Heading', text: 'The quick brown fox' },
+        { size: '24px', weight: 600, lh: 1.30, font: 'Cal Sans', label: 'Feature Heading', text: 'The quick brown fox jumps over the lazy dog' },
+        { size: '18px', weight: 300, lh: 1.30, font: 'Cal Sans', label: 'Body Light', text: 'The quick brown fox jumps over the lazy dog. It leaps with precision.' },
+        { size: '16px', weight: 400, lh: 1.50, font: 'Inter', label: 'Body Matter', text: 'The quick brown fox jumps over the lazy dog. It leaps with grace and purpose across the field.' }
+      ];
+
+      specimens.forEach(s => {
+        html += '<div style="margin-bottom:40px;padding-bottom:24px;border-bottom:1px solid var(--border)">';
+        html += '  <div style="font-family:\'' + s.font + '\',system-ui;font-size:' + s.size + ';font-weight:' + s.weight + ';line-height:' + s.lh + ';color:var(--bone);margin-bottom:12px">' + esc(s.text) + '</div>';
+        html += '  <div style="font-size:11px;color:var(--slate);font-family:var(--font-mono);font-weight:500">';
+        html += '    <span>' + esc(s.label) + '</span> — ';
+        html += '    <span>' + esc(s.font) + ' ' + s.weight + '</span>, ';
+        html += '    <span>' + s.size + '</span>, ';
+        html += '    <span>LH ' + s.lh + '</span>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    /* ---- Utilities ---- */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function relativeLuminance(hex) {
+      try {
+        const [r, g, b] = hexToRgb(hex).map(c => {
+          c /= 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      } catch { return 0.5; }
+    }
+  </script>
+</body>
+</html>

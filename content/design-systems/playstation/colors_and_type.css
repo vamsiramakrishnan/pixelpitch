@@ -1,0 +1,100 @@
+/* PlayStation — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #1eaedb;
+  --ink:     #0070cc;
+  --slate:   #6b6b6b;
+  --signal:  #d53b00;
+  --bone:    #f5f7fa;
+  --border:  #1eaedb;
+  --surface: #0070cc;
+
+  /* Extended palette */
+  --color-console-black: #000000;
+  --color-link-hover-blue: #1883fd;
+  --color-dark-link-blue: #0068bd;
+  --color-paper-white: #ffffff;
+  --color-divider-tint: #f3f3f3;
+  --color-shadow-black: #121314;
+  --color-deep-charcoal: #1f1f1f;
+  --color-mute-gray: #cccccc;
+  --color-commerce-orange-active: #aa2f00;
+  --color-warning-red: #c81b3a;
+
+  /* Semantic */
+  --warning: #c81b3a;
+  --danger:  #c81b3a;
+  --info:    #0070cc;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-hero-display-xl: 54px;
+  --t-hero-display-l: 44px;
+  --t-large-display: 35px;
+  --t-mid-display: 28px;
+  --t-compact-display: 22px;
+  --t-playstation-sst-sub: 22.5px;
+  --t-ui-heading-small: 18px;
+  --t-button-cta: 18px;
+  --t-button-emphasized: 18px;
+  --t-button-serif: 18px;
+  --t-body-relaxed: 18px;
+  --t-link-body: 18px;
+  --t-compact-button: 14px;
+  --t-utility-caption: 14px;
+  --t-caption-body: 14px;
+  --t-playstation-caption-bold: 14px;
+  --t-playstation-caption-mid: 14px;
+  --t-playstation-button: 14.4px;
+  --t-playstation-tab: 14px;
+  --t-playstation-compact-caption: 12.8px;
+  --t-micro-caption: 12px;
+  --t-compact-caption-bold: 12.06px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   12px;
+  --radius-md:   96px;
+  --radius-lg:   48px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  96px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    96px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

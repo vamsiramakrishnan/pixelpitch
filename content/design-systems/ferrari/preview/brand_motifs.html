@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Ferrari</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #181818);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 72px;
+      font-weight: 500;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--ink, #181818);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--signal, #da291c);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 1px;
+      background: var(--ink, #181818);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--ink, #181818);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 28px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #181818);
+      border-bottom: 1px solid var(--border, #d2d2d2);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 24px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--signal, #da291c);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--ink, #181818);
+      border-radius: 0;
+      padding: 32px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--ink, #181818);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--signal, #da291c);
+    }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--ink, #181818);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--signal, #da291c);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #181818);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #d2d2d2);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: 0;
+      overflow: hidden;
+      height: 120px;
+      border: 1px solid var(--ink, #181818);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.4;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--ink, #181818);
+      border-radius: 0;
+      padding: 48px 40px;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 54px;
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink, #181818);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #da291c);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #181818);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--ink, #181818);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--slate, #666666);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 700;
+      color: var(--ink, #181818);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--ink, #181818);
+      border-radius: 0;
+      padding: 32px;
+      max-width: 840px;
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #181818);
+    }
+
+    /* ──── Chiaroscuro Visual ──── */
+    .chiaroscuro-demo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 2px solid var(--ink, #181818);
+      overflow: hidden;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .chiaroscuro-demo {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .chiaroscuro-demo__dark {
+      background: #000000;
+      padding: 60px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      aspect-ratio: 16 / 10;
+    }
+
+    .chiaroscuro-demo__dark-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--color-dark-surface, #303030);
+      margin-bottom: 20px;
+      align-self: flex-start;
+    }
+
+    .chiaroscuro-demo__dark-prancing-horse {
+      font-size: 72px;
+      color: var(--paper, #ffffff);
+      margin-bottom: 20px;
+    }
+
+    .chiaroscuro-demo__dark-text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--color-mid-gray, #8f8f8f);
+      text-align: center;
+      max-width: 200px;
+    }
+
+    .chiaroscuro-demo__light {
+      background: var(--paper, #ffffff);
+      padding: 60px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-left: 2px solid var(--ink, #181818);
+    }
+
+    .chiaroscuro-demo__light-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 20px;
+    }
+
+    .chiaroscuro-demo__light-headline {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 36px;
+      font-weight: 500;
+      line-height: 1.2;
+      color: var(--ink, #181818);
+      margin-bottom: 16px;
+    }
+
+    .chiaroscuro-demo__light-headline span {
+      color: var(--signal, #da291c);
+    }
+
+    .chiaroscuro-demo__light-text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+    }
+
+    /* ──── Red Restraint Visual ──── */
+    .red-restraint {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .red-restraint {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .red-restraint__card {
+      border: 1px solid var(--ink, #181818);
+      border-radius: 0;
+      padding: 32px;
+      background: var(--paper, #ffffff);
+    }
+
+    .red-restraint__card-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .red-restraint__card-button {
+      display: inline-block;
+      background: var(--signal, #da291c);
+      color: var(--paper, #ffffff);
+      padding: 10px 20px;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 0;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .red-restraint__card-button:hover {
+      background: var(--color-dark-red, #b01e0a);
+    }
+
+    /* ──── Type Ramp ──── */
+    .type-ramp {
+      border: 1px solid var(--ink, #181818);
+      border-radius: 0;
+      padding: 32px;
+      background: var(--paper, #ffffff);
+    }
+
+    .type-ramp-item {
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border, #d2d2d2);
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .type-ramp-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .type-ramp-item__meta {
+      flex: 0 0 160px;
+    }
+
+    .type-ramp-item__role {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .type-ramp-item__specs {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      line-height: 1.5;
+    }
+
+    .type-ramp-item__example {
+      flex: 1;
+    }
+
+    .type-ramp-item__text {
+      margin-bottom: 8px;
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 18px;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--border, #d2d2d2);
+      border-top-color: var(--signal, #da291c);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#da291c">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const extended = colors.extended || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">The <span>Chiaroscuro</span> of Ferrari</h1>';
+      html += '  <p class="header__subtitle">Cinematic black, surgical precision, and the power of restraint. Every pixel honors the Prancing Horse.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Ferrari's visual language reads like a curated museum catalog of speed and precision. The interface alternates between cinematic void-black sections and crisp white editorial panels—a chiaroscuro rhythm that feels like paging through a yearbook, not scrolling commerce. Ferrari Red (#DA291C) is held in reserve, appearing only for primary calls-to-action and critical brand moments. Its power comes entirely from restraint. The monastic color palette—black, white, grays—is broken only by this single passionate accent and heritage yellows (#FFF200, #F6E500) reserved for racing contexts. Every photograph is art-directed studio quality. Every heading speaks with the weight of precision engineering. Typography alternates between FerrariSans at medium weight (500–700) for narrative authority and uppercase utility labels with 1px letter-spacing for structural annotation. Border-radius stays at 8px maximum, reflecting the razor-sharp precision of Italian coachwork. This is not a consumer interface. This is the digital equivalent of sitting in a showroom and being handed a hardcover book.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Chiaroscuro layout alternating between absolute black sections and clean white editorial panels</li>';
+      html += '    <li>Ferrari Red (#DA291C) reserved exclusively for primary CTAs and brand-critical moments</li>';
+      html += '    <li>Prancing Horse emblem as isolated hero element on void-black field, never crowded</li>';
+      html += '    <li>FerrariSans proprietary typeface at weight 500–700 for display and UI headings</li>';
+      html += '    <li>Uppercase utility labels with 1px letter-spacing for editorial annotation</li>';
+      html += '    <li>Border-radius capped at 8px reflecting precision engineering aesthetics</li>';
+      html += '    <li>Photography as primary emotional vehicle—every image studio-quality and art-directed</li>';
+      html += '    <li>Two yellows in system for heritage/racing contexts only (not primary UI)</li>';
+      html += '    <li>#181818 (Near Black) for body text instead of pure #000000 for readability warmth</li>';
+      html += '    <li>No box-shadows, no gradients, no atmospheric effects—depth via color contrast only</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use Ferrari Red (#DA291C) sparingly—only for primary CTAs and brand moments</li>';
+      html += '      <li>Alternate black cinematic sections with white editorial sections for rhythm</li>';
+      html += '      <li>Use FerrariSans weight 500 as default heading voice</li>';
+      html += '      <li>Apply uppercase labels with 1px letter-spacing for all tags and annotations</li>';
+      html += '      <li>Keep border-radius at 8px maximum—razor precision is non-negotiable</li>';
+      html += '      <li>Let photography carry emotional weight—every image studio quality</li>';
+      html += '      <li>Use #181818 (Near Black) for body text instead of pure #000000</li>';
+      html += '      <li>Display Prancing Horse as standalone hero on black—never adjacent clutter</li>';
+      html += '      <li>Reserve yellow accents strictly for motorsport and racing heritage</li>';
+      html += '      <li>Use 12px/10px button padding ratio—compact, purposeful, minimal</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Scatter Ferrari Red as decoration—it\'s a CTA signal, not a theme color</li>';
+      html += '      <li>Use rounded-pill buttons or large border-radii—8px is the limit</li>';
+      html += '      <li>Add box-shadows to cards or containers—depth via color contrast only</li>';
+      html += '      <li>Mix FerrariSans and utility fonts in same text block—separate hierarchies</li>';
+      html += '      <li>Use colorful backgrounds (blue, green, purple)—palette is black/white/gray</li>';
+      html += '      <li>Apply text-transform to FerrariSans—uppercase reserved for utility labels</li>';
+      html += '      <li>Display low-quality or user-generated imagery—all photos must be editorial</li>';
+      html += '      <li>Use brand colors for semantic warnings/info—#F13A2C warning is intentionally different</li>';
+      html += '      <li>Create busy layouts with competing focal points—one story per section</li>';
+      html += '      <li>Use Link Hover Blue (#3860BE) anywhere but interactive hover states</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Chiaroscuro Visual ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Chiaroscuro Rhythm</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.65; color: var(--slate); margin-bottom: 24px; max-width: 840px;">The signature visual movement is the alternation between absolute black cinematic sections and bright white editorial panels. This rhythm mirrors the experience of paging through a printed luxury magazine. The Prancing Horse floats alone in its void; content emerges into light below.</p>';
+      html += '  <div class="chiaroscuro-demo">';
+
+      html += '    <div class="chiaroscuro-demo__dark">';
+      html += '      <div class="chiaroscuro-demo__dark-label">Cinematic Black Section</div>';
+      html += '      <div class="chiaroscuro-demo__dark-prancing-horse">🐴</div>';
+      html += '      <div class="chiaroscuro-demo__dark-text">Prancing Horse isolated on void. Restraint is the signal.</div>';
+      html += '    </div>';
+
+      html += '    <div class="chiaroscuro-demo__light">';
+      html += '      <div class="chiaroscuro-demo__light-label">White Editorial Section</div>';
+      html += '      <div class="chiaroscuro-demo__light-headline">Precision <span>Engineering</span></div>';
+      html += '      <div class="chiaroscuro-demo__light-text">Content emerges into crisp light. Typography and photography carry the story.</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Red Restraint Visual ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">The Power of Red Restraint</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.65; color: var(--slate); margin-bottom: 24px; max-width: 840px;">Ferrari Red appears exactly once per interface—for primary calls-to-action. Its surgical sparseness makes it devastating. When the subscribe button glows Ferrari Red in a sea of white, it commands without shouting.</p>';
+      html += '  <div class="red-restraint">';
+
+      html += '    <div class="red-restraint__card">';
+      html += '      <div class="red-restraint__card-label">Overuse (Incorrect)</div>';
+      html += '      <div style="display: flex; flex-wrap: wrap; gap: 8px;">';
+      html += '        <button class="red-restraint__card-button" style="opacity: 0.6; margin-right: 4px;">Primary</button>';
+      html += '        <button class="red-restraint__card-button" style="opacity: 0.6;">Secondary</button>';
+      html += '        <button class="red-restraint__card-button" style="opacity: 0.6;">Tertiary</button>';
+      html += '      </div>';
+      html += '      <div style="font-family: var(--font-body); font-size: 12px; color: var(--slate); margin-top: 12px;">Scattered red dilutes power. All signals become noise.</div>';
+      html += '    </div>';
+
+      html += '    <div class="red-restraint__card">';
+      html += '      <div class="red-restraint__card-label">Correct (One Red)</div>';
+      html += '      <button class="red-restraint__card-button">Subscribe</button>';
+      html += '      <div style="font-family: var(--font-body); font-size: 12px; color: var(--slate); margin-top: 12px;">One Ferrari Red button. Commanding. Unmissable. Purposeful.</div>';
+      html += '    </div>';
+
+      html += '    <div class="red-restraint__card">';
+      html += '      <div class="red-restraint__card-label">Semantic Alternative</div>';
+      html += '      <button style="display: inline-block; background: ' + esc(extended['warning-red'] || '#f13a2c') + '; color: var(--paper); padding: 10px 20px; font-family: var(--font-mono); font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; border: none; border-radius: 0; cursor: pointer;">Warning</button>';
+      html += '      <div style="font-family: var(--font-body); font-size: 12px; color: var(--slate); margin-top: 12px;">Warning red (#F13A2C) is intentionally different from brand red.</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#181818' : '#ffffff';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '

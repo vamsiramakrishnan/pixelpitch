@@ -1,0 +1,94 @@
+/* Lamborghini — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #000000;
+  --ink:     #ffffff;
+  --slate:   #7d7d7d;
+  --signal:  #ffc000;
+  --bone:    #181818;
+  --border:  #e5e5e5;
+  --surface: #202020;
+
+  /* Extended palette */
+  --color-dark-gold: #917300;
+  --color-gold-text: #ffce3e;
+  --color-cyan-pulse: #29abe2;
+  --color-link-blue: #3860be;
+  --color-near-white: #f8f8f8;
+  --color-mist: #e6e6e6;
+  --color-smoke: #f5f5f5;
+  --color-graphite: #494949;
+  --color-steel: #969696;
+  --color-slate: #666666;
+  --color-iron: #555555;
+  --color-shadow: #313131;
+  --color-teal-action: #1eaedb;
+
+  /* Semantic */
+  --warning: #ffc000;
+  --info:    #29abe2;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-hero-display: 120px;
+  --t-display-2: 80px;
+  --t-section-title: 54px;
+  --t-sub-section: 40px;
+  --t-feature-heading: 27px;
+  --t-card-title: 24px;
+  --t-body-large: 18px;
+  --t-body-ui: 16px;
+  --t-button-large: 16px;
+  --t-button-standard: 14.4px;
+  --t-button-small: 13px;
+  --t-caption: 14px;
+  --t-label: 12px;
+  --t-micro: 10px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   5px;
+  --radius-md:   10px;
+  --radius-lg:   20px;
+  --radius-full: 2px;
+
+  /* ── Components ── */
+  --button-radius:  10px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    10px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

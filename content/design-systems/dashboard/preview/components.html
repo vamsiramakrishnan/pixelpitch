@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-6) var(--s-5);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--s-4);
+      margin-bottom: var(--s-7);
+      border-bottom: 1px solid var(--border);
+      border-top: 3px solid var(--ink);
+      padding-top: var(--s-4);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1;
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-5);
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 56px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate);
+      max-width: 720px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 42px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: var(--s-5);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate);
+      margin-right: var(--s-3);
+      min-width: 140px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1;
+      border: 1px solid var(--signal);
+      background: transparent;
+      color: var(--signal);
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      gap: var(--s-2);
+    }
+
+    .btn:hover {
+      background: var(--signal);
+      color: var(--paper);
+    }
+
+    .btn--primary {
+      background: var(--signal);
+      color: var(--paper);
+      border-color: var(--signal);
+    }
+
+    .btn--primary:hover {
+      background: #2563eb;
+      border-color: #2563eb;
+    }
+
+    .btn--secondary {
+      background: var(--bone);
+      color: var(--ink);
+      border-color: var(--border);
+    }
+
+    .btn--secondary:hover {
+      background: #e8e8e8;
+    }
+
+    .btn--ghost {
+      border: none;
+      background: transparent;
+      color: var(--signal);
+      padding: 0;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .btn--ghost:hover {
+      opacity: 0.8;
+    }
+
+    .btn--sm {
+      padding: 8px 14px;
+      font-size: 12px;
+    }
+
+    .btn--lg {
+      padding: 12px 28px;
+      font-size: 15px;
+    }
+
+    /* ──── BADGES ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      margin-bottom: var(--s-5);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      line-height: 1.4;
+      border-radius: var(--radius-sm);
+      background: var(--bone);
+      color: var(--ink);
+    }
+
+    .badge--primary {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .badge--success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge--warning {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    .badge--danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: var(--radius-full);
+    }
+
+    /* ──── CARDS ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .card {
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      background: var(--paper);
+      padding: var(--s-4);
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--signal);
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+    }
+
+    .card__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: var(--s-3);
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.2;
+      color: var(--ink);
+    }
+
+    .card__subtitle {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.4;
+      color: var(--slate);
+      margin-top: var(--s-1);
+    }
+
+    .card__content {
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .card__footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: var(--s-3);
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--slate);
+    }
+
+    /* ──── INPUTS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .input-help {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--slate);
+      margin-top: var(--s-1);
+    }
+
+    .input {
+      padding: var(--s-2) var(--s-3);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .input:disabled {
+      background: var(--bone);
+      color: var(--slate);
+      cursor: not-allowed;
+    }
+
+    /* ──── SELECT / DROPDOWN ──── */
+    .select {
+      padding: var(--s-2) var(--s-3);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      outline: none;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .select:focus {
+      border-color: var(--signal);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    /* ──── CHECKBOX & RADIO ──── */
+    .checkbox-group,
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-3);
+    }
+
+    .checkbox-item,
+    .radio-item {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2);
+      cursor: pointer;
+    }
+
+    .checkbox,
+    .radio {
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--paper);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+      appearance: none;
+    }
+
+    .radio {
+      border-radius: var(--radius-full);
+    }
+
+    .checkbox:checked {
+      background: var(--signal);
+      border-color: var(--signal);
+    }
+
+    .radio:checked {
+      background: var(--signal);
+      border-color: var(--signal);
+    }
+
+    .checkbox-label,
+    .radio-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    /* ──── DATA TABLE ──── */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+      margin-top: var(--s-4);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-bottom: var(--s-5);
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .data-table__header {
+      background: var(--bone);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .data-table__header-cell {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: left;
+      padding: var(--s-3);
+      border-right: 1px solid var(--border);
+    }
+
+    .data-table__header-cell:last-child {
+      border-right: none;
+    }
+
+    .data-table__row {
+      border-bottom: 1px solid var(--border);
+      transition: background-color 0.15s ease;
+    }
+
+    .data-table__row:hover {
+      background: var(--bone);
+    }
+
+    .data-table__row:last-child {
+      border-bottom: none;
+    }
+
+    .data-table__cell {
+      padding: var(--s-3);
+      text-align: left;
+      border-right: 1px solid var(--border);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .data-table__cell:last-child {
+      border-right: none;
+    }
+
+    .data-table__label {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .data-table__value {
+      color: var(--slate);
+    }
+
+    /* ──── MODALS / DIALOGS ──── */
+    .modal-demo {
+      position: relative;
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      background: var(--paper);
+      padding: var(--s-5);
+      max-width: 500px;
+      margin-bottom: var(--s-5);
+    }
+
+    .modal__header {
+      margin-bottom: var(--s-4);
+      padding-bottom: var(--s-3);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal__title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .modal__body {
+      margin-bottom: var(--s-4);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ink);
+    }
+
+    .modal__footer {
+      display: flex;
+      gap: var(--s-3);
+      justify-content: flex-end;
+      padding-top: var(--s-3);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ──── ALERTS ──── */
+    .alert {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--s-3);
+      padding: var(--s-3) var(--s-4);
+      border-radius: var(--card-radius);
+      border-left: 4px solid;
+      margin-bottom: var(--s-3);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .alert--info {
+      background: #dbeafe;
+      border-left-color: #3b82f6;
+      color: #1e40af;
+    }
+
+    .alert--success {
+      background: #dcfce7;
+      border-left-color: #22c55e;
+      color: #166534;
+    }
+
+    .alert--warning {
+      background: #fef3c7;
+      border-left-color: #eab308;
+      color: #b45309;
+    }
+
+    .alert--danger {
+      background: #fee2e2;
+      border-left-color: #ef4444;
+      color: #991b1b;
+    }
+
+    .alert__icon {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+    }
+
+    .alert__content {
+      flex: 1;
+    }
+
+    /* ──── PROGRESS BAR ──── */
+    .progress-item {
+      margin-bottom: var(--s-4);
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: var(--s-2);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .progress-label__title {
+      color: var(--ink);
+    }
+
+    .progress-label__value {
+      color: var(--slate);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--bone);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .progress-bar__fill {
+      height: 100%;
+      background: var(--signal);
+      border-radius: var(--radius-full);
+      transition: width 0.3s ease;
+    }
+
+    /* ──── STATS GRID ──── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .stat-card {
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      background: var(--paper);
+      padding: var(--s-4);
+    }
+
+    .stat-card__label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .stat-card__value {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .stat-card__change {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: #22c55e;
+    }
+
+    .stat-card__change--down {
+      color: #ef4444;
+    }
+
+    /* ──── CODE BLOCK ──── */
+    .code-block {
+      background: var(--bone);
+      border: 1px solid var(--border);
+      border-radius: var(--card-radius);
+      padding: var(--s-4);
+      margin-bottom: var(--s-5);
+      overflow-x: auto;
+    }
+
+    .code-block code {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--ink);
+    }
+
+    /* ──── BREADCRUMB ──── */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2);
+      margin-bottom: var(--s-5);
+      font-size: 14px;
+    }
+
+    .breadcrumb__item {
+      color: var(--slate);
+    }
+
+    .breadcrumb__item--active {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .breadcrumb__separator {
+      color: var(--border);
+    }
+
+    /* ──── FOLIO ──── */
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-3) 0;
+      margin-top: var(--s-8);
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── UTILITIES ──– */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: var(--s-5) 0;
+    }
+
+    .text-muted {
+      color: var(--slate);
+    }
+
+    .text-accent {
+      color: var(--signal);
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-5) var(--s-3);
+      }
+
+      .stage-head__title {
+        font-size: 36px;
+      }
+
+      .section__title {
+        font-size: 28px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: var(--s-3);
+      }
+
+      .modal__footer {
+        flex-direction: column-reverse;
+      }
+
+      .modal__footer .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">Dashboard</div>
+      <div class="masthead__tagline">
+        Cloud Platform<br>Component Kit
+      </div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Interactive Vocabulary</h1>
+      <p class="stage-head__subtitle">
+        A comprehensive inventory of production-ready components designed for cloud-platform dashboards. Each element is built on the 8px baseline grid with consistent spacing, rounded corners, and subtle depth.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Buttons</div>
+      <h2 class="section__title">Button States & Sizes</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary</span>
+        <button class="btn btn--primary">Primary Action</button>
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary btn--lg">Large Button</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Secondary</span>
+        <button class="btn btn--secondary">Secondary</button>
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary btn--lg">Large Button</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Outline</span>
+        <button class="btn">Outline Action</button>
+        <button class="btn btn--sm">Small</button>
+        <button class="btn btn--lg">Large Button</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Ghost</span>
+        <a href="#" class="btn btn--ghost">Learn more</a>
+        <a href="#" class="btn btn--ghost">View docs</a>
+        <a href="#" class="btn btn--ghost">Read guide</a>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="section">
+      <div class="section__kicker">Status Indicators</div>
+      <h2 class="section__title">Badge Patterns</h2>
+
+      <div class="subsection-label">Default Badge</div>
+      <div class="badge-row">
+        <span class="badge">Default</span>
+        <span class="badge">Idle</span>
+        <span class="badge">Pending</span>
+      </div>
+
+      <div class="subsection-label">Semantic Variants</div>
+      <div class="badge-row">
+        <span class="badge badge--primary">
+          <span class="badge__dot"></span>
+          Active
+        </span>
+        <span class="badge badge--success">
+          <span class="badge__dot"></span>
+          Success
+        </span>
+        <span class="badge badge--warning">
+          <span class="badge__dot"></span>
+          Warning
+        </span>
+        <span class="badge badge--danger">
+          <span class="badge__dot"></span>
+          Error
+        </span>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Containers</div>
+      <h2 class="section__title">Card Patterns</h2>
+      <p style="font-size: 15px; line-height: 1.6; color: var(--slate); margin-bottom: var(--s-5);">Cards are the primary containers for dashboard content. They feature a 1px border, 8px rounded corners, and a subtle hover state that elevates the card with a shadow and signal-blue border accent.</p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__header">
+            <div>
+              <h3 class="card__title">API Requests</h3>
+              <p class="card__subtitle">Last 24 hours</p>
+            </div>
+          </div>
+          <div class="card__content">
+            <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px;">
+              <span style="font-size: 28px; font-weight: 700; color: var(--ink);">2.4M</span>
+              <span style="font-size: 14px; color: #22c55e;">↑ 12%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-bar__fill" style="width: 78%;"></div>
+            </div>
+          </div>
+          <div class="card__footer">
+            <span>Requests / sec</span>
+            <span style="font-weight: 600;">1,240</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__header">
+            <div>
+              <h3 class="card__title">Error Rate</h3>
+              <p class="card__subtitle">Real-time monitoring</p>
+            </div>
+          </div>
+          <div class="card__content">
+            <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px;">
+              <span style="font-size: 28px; font-weight: 700; color: var(--ink);">0.08%</span>
+              <span style="font-size: 14px; color: #22c55e;">↓ 0.03%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-bar__fill" style="width: 8%; background: #22c55e;"></div>
+            </div>
+          </div>
+          <div class="card__footer">
+            <span>Status</span>
+            <span style="font-weight: 600; color: #22c55e;">Healthy</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__header">
+            <div>
+              <h3 class="card__title">Deployments</h3>
+              <p class="card__subtitle">This week</p>
+            </div>
+          </div>
+          <div class="card__content">
+            <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px;">
+              <span style="font-size: 28px; font-weight: 700; color: var(--ink);">14</span>
+              <span style="font-size: 14px; color: #22c55e;">↑ 2</span>
+            </div>
+            <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+              <span class="badge badge--success" style="margin-bottom: 4px;"><span class="badge__dot"></span>Prod</span>
+              <span class="badge badge--primary" style="margin-bottom: 4px;"><span class="badge__dot"></span>Staging</span>
+            </div>
+          </div>
+          <div class="card__footer">
+            <span>Latest</span>
+            <span style="font-weight: 600;">v2.1.4</span>
+          </div>
+        </div>
+      </div>
+    </section>

@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Dithered</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 64px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 96px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 64px;
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+      max-width: 90%;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      max-width: 75%;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin-top: 24px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 96px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 48px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 80px;
+      gap: 24px;
+      align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      margin-top: 4px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 2px;
+      background: var(--signal, #3b82f6);
+      min-width: 2px;
+      transition: opacity 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.6;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      text-align: right;
+    }
+
+    /* Rule weights */
+    .rule-demo {
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+    }
+
+    .rule-demo__label {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+
+    .rule-demo__container {
+      width: 100%;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 0;
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 64px;
+      margin-bottom: 48px;
+    }
+
+    .radius-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .radius-item__box {
+      width: 120px;
+      height: 120px;
+      background: var(--bone, #f5f5f5);
+      border: 1px solid var(--border, #e5e5e5);
+      flex-shrink: 0;
+    }
+
+    .radius-item__info {
+      flex: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      margin-bottom: 4px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+    }
+
+    /* Depth philosophy block */
+    .philosophy {
+      background: var(--bone, #f5f5f5);
+      padding: 48px;
+      border: 1px solid var(--border, #e5e5e5);
+      margin-bottom: 64px;
+    }
+
+    .philosophy__title {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+    }
+
+    .philosophy__text strong {
+      font-weight: 600;
+    }
+
+    .philosophy__text em {
+      font-style: italic;
+    }
+
+    .philosophy__text code {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      background: rgba(59, 130, 246, 0.08);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 14px;
+    }
+
+    /* Grid demo */
+    .grid-demo {
+      background: var(--bone, #f5f5f5);
+      padding: 48px;
+      border: 1px solid var(--border, #e5e5e5);
+      margin-bottom: 64px;
+    }
+
+    .grid-demo__title {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+    }
+
+    .grid-demo__visual {
+      width: 100%;
+      height: 180px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+      background-image: linear-gradient(90deg, rgba(59, 130, 246, 0.06) 1px, transparent 1px);
+      background-size: calc(100% / 12) 100%;
+      padding: 24px;
+      border: 1px solid var(--border, #e5e5e5);
+    }
+
+    .grid-demo__column {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid var(--signal, #3b82f6);
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--signal, #3b82f6);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 8px;
+    }
+
+    .grid-demo__info {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .grid-demo__stat {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 13px;
+      color: var(--ink, #111111);
+    }
+
+    .grid-demo__stat-label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 6px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 2px solid rgba(59, 130, 246, 0.2);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 900px) {
+      .page {
+        padding: 64px 32px;
+      }
+
+      .header {
+        margin-bottom: 64px;
+      }
+
+      .header__title {
+        font-size: 48px;
+      }
+
+      .section {
+        margin-bottom: 64px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 90px 1fr 70px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .radius-item {
+        grid-template-columns: 120px 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '4px', label: 'xs' },
+      's-2': { value: '8px', label: 'sm' },
+      's-3': { value: '16px', label: 'md' },
+      's-4': { value: '24px', label: 'lg' },
+      's-5': { value: '32px', label: 'xl' },
+      's-6': { value: '48px', label: '2xl' },
+      's-7': { value: '64px', label: '3xl' },
+      's-8': { value: '96px', label: '4xl' }
+    };
+
+    const DEFAULT_RULES = {
+      'flat': { name: 'Flat', weight: 'none', color: 'transparent', use: 'Default canvas, body backgrounds' },
+      'border': { name: 'Border', weight: '1px solid', color: '#e5e5e5', use: 'Cards, inputs, panels' },
+      'elevated': { name: 'Elevated', weight: '0 2px 8px', color: 'rgba(0,0,0,0.08)', use: 'Floating elements, modals' }
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'Rare — only for perfectly square elements' },
+      'sm': { value: '4px', use: 'Small interactive elements, badges' },
+      'md': { value: '8px', use: 'Default for buttons, inputs, cards' },
+      'lg': { value: '16px', use: 'Large containers, modals' },
+      'full': { value: '999px', use: 'Pills, circular avatars' }
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+
+      const spacing = {};
+      if (tokens.spacing && tokens.spacing.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const rules = DEFAULT_RULES;
+      const radius = DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Spacing &amp; Rules</div>';
+      html += '  <h1 class="header__title">Grid-based<br>rhythm.</h1>';
+      html += '  <p class="header__subtitle">The modular spacing system for Dithered — built on an 8px base with clean, predictable rules for borders and elevation.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Philosophy block */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Depth &amp; Elevation</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Dithered uses a three-level depth system: <strong>flat</strong> (default, no treatment), <strong>border</strong> (1px solid divider for containers), and <strong>elevated</strong> (soft shadow for floating elements). No excessive shadows or gradients. The dithered aesthetic relies on <strong>clarity through contrast</strong> — not depth through blur. Every element is rendered with clean, minimal treatment. Prefer borders over shadows. Prefer whitespace over blur.';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        const label = obj.label || key;
+        
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Grid visualization */
+      html += '<div class="section">';
+      html += '  <div class="section__label">12-Column Grid</div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__title">Standard Layout Grid</div>';
+      html += '    <div class="grid-demo__visual">';
+      for (let i = 1; i <= 12; i++) {
+        html += '      <div class="grid-demo__column">' + i + '</div>';
+      }
+      html += '    </div>';
+      html += '    <div class="grid-demo__info">';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Columns</div>';
+      html += '        <div class="grid-demo__stat">12 equal columns with 12px gutters</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Default gutter</div>';
+      html += '        <div class="grid-demo__stat">12px (1.5 × s-2)</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Max body width</div>';
+      html += '        <div class="grid-demo__stat">1200px canvas, 960px content</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Responsive</div>';
+      html += '        <div class="grid-demo__stat">Columns collapse below 768px</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Rule weights */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth Levels</div>';
+
+      Object.entries(rules).forEach(([key, rule]) => {
+        const weight = rule.weight;
+        const color = rule.color;
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <div>';
+        html += '      <div class="rule-demo__name">' + esc(rule.name) + '</div>';
+        html += '      <div class="rule-demo__label">' + esc(rule.use) + '</div>';
+        html += '    </div>';
+        html += '    <div class="rule-demo__spec">' + esc(weight) + '</div>';
+        html += '  </div>';
+        
+        if (weight === 'none') {
+          html += '  <div class="rule-demo__container" style="background: white; border: 1px dashed var(--border);">';
+          html += '    <div style="font-family: var(--font-mono); font-size: 12px; color: var(--slate);">Default canvas — no treatment</div>';
+          html += '  </div>';
+        } else if (weight === '1px solid') {
+          html += '  <div class="rule-demo__container">';
+          html += '    <div class="rule-demo__line" style="height: 1px; background: ' + color + '; border-top: 1px solid ' + color + '"></div>';
+          html += '  </div>';
+        } else if (weight === '0 2px 8px') {
+          html += '  <div class="rule-demo__container">';
+          html += '    <div class="rule-demo__line" style="height: 48px; background: white; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);"></div>';
+          html += '  </div>';
+        } else {
+          html += '  <div class="rule-demo__container">';
+          html += '    <div class="rule-demo__line" style="height: 1px; background: ' + color + '"></div>';
+          html += '  </div>';
+        }
+        
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+
+      Object.entries(radius).forEach(([key, obj]) => {
+        const radiusValue = obj.value;
+
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__demo">';
+        html += '    <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '  </div>';
+        html += '  <div class="radius-item__info">';
+        html += '    <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '    <div class="radius-item__value">' + esc(radiusValue) + '</div>';
+        html += '    <div class="radius-item__description">' + esc(obj.use) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Whitespace philosophy */
+      html += '<div class="philosophy" style="margin-top: 96px; margin-bottom: 0;">';
+      html += '  <div class="philosophy__title">Whitespace Strategy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    <strong>8px is the base unit</strong> — every spacing value is a multiple of 8, making layouts predictable and grid-friendly. <strong>Generous internal padding</strong>: Cards use s-4 (24px) padding; inputs use s-3 (16px). <strong>Section separation</strong>: Use s-7 (64px) or s-8 (96px) to separate major content blocks. Whitespace is the primary way we structure information — borders are secondary. Always prefer spacing over visual dividers when possible.';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

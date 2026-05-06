@@ -1,0 +1,92 @@
+/* Sanity — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #55beff;
+  --ink:     #0052ef;
+  --slate:   #b9b9b9;
+  --signal:  #f36458;
+  --bone:    #212121;
+  --border:  #000000;
+  --surface: #212121;
+
+  /* Extended palette */
+  --color-sanity-black: #0b0b0b;
+  --color-medium-dark: #353535;
+  --color-pure-white: #ffffff;
+  --color-light-gray: #ededed;
+  --color-medium-gray: #797979;
+  --color-error-red: #dd0000;
+  --color-gpc-green: #37cd84;
+
+  /* Semantic */
+  --success: #37cd84;
+  --warning: #dd0000;
+  --danger:  #dd0000;
+  --info:    #0052ef;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 112px;
+  --t-hero-secondary: 72px;
+  --t-section-heading: 48px;
+  --t-heading-large: 38px;
+  --t-heading-medium: 32px;
+  --t-heading-small: 24px;
+  --t-subheading: 20px;
+  --t-body-large: 18px;
+  --t-body: 16px;
+  --t-body-small: 15px;
+  --t-caption: 13px;
+  --t-small-caption: 12px;
+  --t-micro-label: 11px;
+  --t-code-body: 15px;
+  --t-code-caption: 13px;
+  --t-code-micro: 12px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   16px;
+  --radius-full: 99999px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    8px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

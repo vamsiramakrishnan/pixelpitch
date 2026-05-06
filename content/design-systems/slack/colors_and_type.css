@@ -1,0 +1,96 @@
+/* Slack — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #4a154b;
+  --ink:     #1d1c1d;
+  --slate:   #868686;
+  --signal:  #611f69;
+  --bone:    #f8f8f8;
+  --border:  #dddddd;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-aubergine-deepest: #1a0421;
+  --color-slack-blue: #36c5f0;
+  --color-slack-green: #2eb67d;
+  --color-slack-yellow: #ecb22e;
+  --color-slack-red: #e01e5a;
+  --color-light-gray: #f4ede4;
+  --color-secondary-text: #616061;
+  --color-divider: #e8e8e8;
+  --color-accessible-cyan-text: #0080a8;
+  --color-link-blue: #1264a3;
+  --color-mention-highlight: #fff3c4;
+  --color-code-background: #f4f4f4;
+  --color-reaction-pill-bg: #f0f0f0;
+  --color-reaction-pill-active: #e0eefa;
+
+  /* Semantic */
+  --success: #2eb67d;
+  --warning: #ecb22e;
+  --danger:  #e01e5a;
+  --info:    #36c5f0;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-marketing-hero: 56px;
+  --t-marketing-sub: 24px;
+  --t-page-heading: 28px;
+  --t-section-heading: 22px;
+  --t-channel-name: 15px;
+  --t-message-body: 15px;
+  --t-username: 15px;
+  --t-timestamp: 12px;
+  --t-sidebar-channel: 15px;
+  --t-sidebar-section: 15px;
+  --t-code-inline: 12px;
+  --t-code-block: 13px;
+  --t-caption-meta: 13px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   12px;
+  --radius-lg:   20px;
+  --radius-full: 9999px;
+
+  /* ── Components ── */
+  --button-radius:  12px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    12px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

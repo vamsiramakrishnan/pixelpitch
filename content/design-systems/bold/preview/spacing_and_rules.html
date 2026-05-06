@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Bold</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 96px 64px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 96px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 64px;
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 12px;
+      max-width: 90%;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--slate, #666666);
+      max-width: 75%;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin-top: 24px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 96px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 48px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--signal, #3b82f6);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 140px 1fr 100px;
+      gap: 24px;
+      align-items: center;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink, #111111);
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--slate, #666666);
+      margin-top: 4px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 36px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 3px;
+      background: var(--signal, #3b82f6);
+      min-width: 3px;
+      transition: opacity 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.7;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink, #111111);
+      text-align: right;
+    }
+
+    /* Rule weights */
+    .rule-demo {
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 20px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink, #111111);
+    }
+
+    .rule-demo__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--slate, #666666);
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--signal, #3b82f6);
+    }
+
+    .rule-demo__container {
+      width: 100%;
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      padding: 0;
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 64px;
+      margin-bottom: 48px;
+    }
+
+    .radius-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .radius-item__box {
+      width: 120px;
+      height: 120px;
+      background: var(--bone, #f5f5f5);
+      border: 2px solid var(--ink, #111111);
+      flex-shrink: 0;
+    }
+
+    .radius-item__info {
+      flex: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink, #111111);
+      margin-bottom: 4px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 12px;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--slate, #666666);
+    }
+
+    /* Philosophy block */
+    .philosophy {
+      background: var(--bone, #f5f5f5);
+      padding: 48px;
+      border: 2px solid var(--signal, #3b82f6);
+      margin-bottom: 64px;
+    }
+
+    .philosophy__title {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 16px;
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ink, #111111);
+    }
+
+    .philosophy__text strong {
+      font-weight: 700;
+    }
+
+    .philosophy__text em {
+      font-style: italic;
+    }
+
+    /* Grid demo */
+    .grid-demo {
+      background: var(--bone, #f5f5f5);
+      padding: 48px;
+      border: 2px solid var(--signal, #3b82f6);
+      margin-bottom: 64px;
+    }
+
+    .grid-demo__title {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 24px;
+    }
+
+    .grid-demo__visual {
+      width: 100%;
+      height: 240px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+      background-image: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+      background-size: calc(100% / 12) 100%;
+      padding: 24px;
+      border: 2px dashed var(--signal, #3b82f6);
+    }
+
+    .grid-demo__column {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid var(--signal, #3b82f6);
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--signal, #3b82f6);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 8px;
+    }
+
+    .grid-demo__info {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .grid-demo__stat {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      color: var(--slate, #666666);
+    }
+
+    .grid-demo__stat-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 6px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 900px) {
+      .page {
+        padding: 64px 32px;
+      }
+
+      .header {
+        margin-bottom: 64px;
+      }
+
+      .header__title {
+        font-size: 48px;
+      }
+
+      .section {
+        margin-bottom: 64px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 120px 1fr 80px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .radius-item {
+        grid-template-columns: 120px 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '4px', label: 'xs' },
+      's-2': { value: '8px', label: 'sm' },
+      's-3': { value: '16px', label: 'md' },
+      's-4': { value: '24px', label: 'lg' },
+      's-5': { value: '32px', label: 'xl' },
+      's-6': { value: '48px', label: '2xl' },
+      's-7': { value: '64px', label: '3xl' },
+      's-8': { value: '96px', label: '4xl' }
+    };
+
+    const DEFAULT_RULES = {
+      'flat': { name: 'Flat', weight: 'none', color: 'transparent', use: 'Default canvas' },
+      'border': { name: 'Border', weight: '1px', color: '#e5e5e5', use: 'Card edges, dividers' },
+      'bold': { name: 'Bold', weight: '2px', color: '#3b82f6', use: 'Section separators' },
+      'display': { name: 'Display', weight: '4px', color: '#3b82f6', use: 'Primary emphasis rule' }
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'Large content blocks' },
+      'sm': { value: '4px', use: 'Small UI elements' },
+      'md': { value: '8px', use: 'Buttons, inputs, cards' },
+      'lg': { value: '16px', use: 'Large containers' },
+      'full': { value: '999px', use: 'Pill-shaped elements' }
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const rules = DEFAULT_RULES;
+      const radius = DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Spacing &amp; Rules</div>';
+      html += '  <h1 class="header__title">Strong Space.<br>Clear Rules.</h1>';
+      html += '  <p class="header__subtitle">A bold spacing and depth system with decisive rules and uncompromising hierarchy. Built for commanding layouts that don\'t whisper.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Philosophy block */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Design Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    This system uses <strong>bold, visible rules</strong> and <strong>decisive spacing</strong> to create layouts with maximum clarity. There are three depth levels: flat (no border), border (1px for subtle separation), and bold (2px for emphasis). The 4px display rule is reserved for primary visual anchors only. Every spacing interval is intentional. Whitespace is not decoration — it\'s part of the grid. <strong>Be bold. Be clear. Be consistent.</strong>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 3);
+        const label = obj.label || key;
+        
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Grid visualization */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Layout Grid</div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__title">12-Column Responsive Grid</div>';
+      html += '    <div class="grid-demo__visual">';
+      for (let i = 1; i <= 12; i++) {
+        html += '      <div class="grid-demo__column">' + i + '</div>';
+      }
+      html += '    </div>';
+      html += '    <div class="grid-demo__info">';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Base Unit</div>';
+      html += '        <div class="grid-demo__stat">8px grid system</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Column Gutters</div>';
+      html += '        <div class="grid-demo__stat">16px gutter spacing</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Margins</div>';
+      html += '        <div class="grid-demo__stat">32px outer margins</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Breakpoints</div>';
+      html += '        <div class="grid-demo__stat">Mobile, tablet, desktop</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Rule weights */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Rule Weights</div>';
+
+      Object.entries(rules).forEach(([key, rule]) => {
+        const weight = rule.weight;
+        const color = rule.color;
+        const weightNum = parseFloat(weight) || 0;
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <div>';
+        html += '      <div class="rule-demo__name">' + esc(rule.name) + '</div>';
+        html += '      <div class="rule-demo__label">' + esc(rule.use) + '</div>';
+        html += '    </div>';
+        html += '    <div class="rule-demo__spec">' + esc(weight) + '</div>';
+        html += '  </div>';
+        
+        if (weight === 'none') {
+          html += '  <div class="rule-demo__container" style="background: var(--paper); border: 2px dashed var(--border);">';
+          html += '    <div style="font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: var(--signal);">No rule or shadow applied</div>';
+          html += '  </div>';
+        } else {
+          html += '  <div class="rule-demo__container">';
+          html += '    <div class="rule-demo__line" style="height:' + weightNum + 'px; background:' + color + '"></div>';
+          html += '  </div>';
+        }
+        
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+
+      Object.entries(radius).forEach(([key, obj]) => {
+        const radiusValue = obj.value;
+
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__demo">';
+        html += '    <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '  </div>';
+        html += '  <div class="radius-item__info">';
+        html += '    <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '    <div class="radius-item__value">' + esc(radiusValue) + '</div>';
+        html += '    <div class="radius-item__description">' + esc(obj.use) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Closing philosophy */
+      html += '<div class="philosophy" style="margin-top: 96px; margin-bottom: 0;">';
+      html += '  <div class="philosophy__title">Implementation</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Use consistent spacing to build rhythm. Apply rules decisively—each rule serves a purpose. Never combine rules with shadows. Prioritize clarity over subtlety. When in doubt, use more whitespace. The grid is your foundation; respect it. <strong>Strong typography + clear spacing + bold rules = commanding design.</strong>';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

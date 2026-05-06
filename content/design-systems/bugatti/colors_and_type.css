@@ -1,0 +1,84 @@
+/* Bugatti — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #000000;
+  --ink:     #111111;
+  --slate:   #666666;
+  --signal:  #ffffff;
+  --bone:    #f5f5f5;
+  --border:  #ffffff;
+  --surface: #000000;
+
+  /* Extended palette */
+  --color-silver-mist: #999999;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-hero-display-monumental: 288px;
+  --t-mid-display-feature: 60px;
+  --t-mid-display-subfeature: 60px;
+  --t-section-heading: 36px;
+  --t-monumental-mono-headline: 60px;
+  --t-body-small-display: 16px;
+  --t-lead-body: 20px;
+  --t-body-regular: 16px;
+  --t-body-compact: 14px;
+  --t-ui-link-caps: 14px;
+  --t-ui-link-mono-plain: 14px;
+  --t-button-label-caps: 14px;
+  --t-button-label-compact: 12px;
+  --t-button-label-unstyled: 12px;
+  --t-caption-caps-wide: 14px;
+  --t-caption-plain-wide: 14px;
+  --t-caption-plain: 14px;
+  --t-caption-micro-text: 14px;
+  --t-caption-micro-caps: 12px;
+  --t-caption-micro-plain: 12px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   20px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-full: 9px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    8px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

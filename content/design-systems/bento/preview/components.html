@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bento — Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-6) var(--s-5);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: var(--s-4) 0;
+      margin-bottom: var(--s-7);
+      border-bottom: 1px solid var(--border);
+      border-top: 2px solid var(--ink);
+      padding-top: var(--s-4);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1;
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 2px solid var(--border);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate);
+      max-width: 720px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 40px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: var(--s-5);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate);
+      margin-right: var(--s-4);
+      min-width: 140px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.4;
+      border: 1px solid var(--border);
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      gap: var(--s-2);
+    }
+
+    .btn:hover {
+      border-color: var(--ink);
+      background: var(--bone);
+    }
+
+    .btn:active {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    .btn--primary {
+      background: var(--signal);
+      color: var(--paper);
+      border-color: var(--signal);
+    }
+
+    .btn--primary:hover {
+      opacity: 0.9;
+    }
+
+    .btn--primary:active {
+      background: #2563eb;
+      border-color: #2563eb;
+    }
+
+    .btn--ghost {
+      border: none;
+      background: transparent;
+      color: var(--signal);
+      padding: 0;
+      text-decoration: underline;
+      text-decoration-color: var(--signal);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+      font-family: var(--font-body);
+      font-size: 14px;
+    }
+
+    .btn--ghost:hover {
+      opacity: 0.8;
+    }
+
+    .btn--sm {
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+
+    .btn--lg {
+      padding: 12px 28px;
+      font-size: 15px;
+    }
+
+    .btn--danger {
+      background: #ef4444;
+      color: var(--paper);
+      border-color: #ef4444;
+    }
+
+    .btn--danger:hover {
+      opacity: 0.9;
+    }
+
+    .btn--success {
+      background: #10b981;
+      color: var(--paper);
+      border-color: #10b981;
+    }
+
+    .btn--success:hover {
+      opacity: 0.9;
+    }
+
+    /* ──── CARDS ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .card {
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      padding: var(--s-4);
+      background: var(--paper);
+      transition: all 0.15s ease;
+    }
+
+    .card:hover {
+      border-color: var(--signal);
+      box-shadow: var(--card-shadow) !important;
+    }
+
+    .card--elevated {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .card--featured {
+      border-color: var(--signal);
+    }
+
+    .card__kicker {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .card__body {
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+    }
+
+    .card__footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: var(--s-3);
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--slate);
+    }
+
+    /* ──── INPUTS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .input {
+      padding: 10px 12px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .input:disabled {
+      background: var(--bone);
+      color: var(--slate);
+      cursor: not-allowed;
+    }
+
+    .textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    /* ──── BADGES / TAGS ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2);
+      margin-bottom: var(--s-4);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      line-height: 1.4;
+      border-radius: var(--radius-full);
+      background: var(--bone);
+      color: var(--ink);
+    }
+
+    .badge--primary {
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--signal);
+    }
+
+    .badge--success {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+    }
+
+    .badge--warning {
+      background: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+    }
+
+    .badge--danger {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+
+    .badge--inactive {
+      background: var(--bone);
+      color: var(--slate);
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: var(--radius-full);
+    }
+
+    /* ──── STATUS INDICATORS ──── */
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3);
+      padding: var(--s-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--paper);
+    }
+
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: var(--radius-full);
+      flex-shrink: 0;
+    }
+
+    .status-dot--success {
+      background: #10b981;
+    }
+
+    .status-dot--warning {
+      background: #f59e0b;
+    }
+
+    .status-dot--danger {
+      background: #ef4444;
+    }
+
+    .status-dot--info {
+      background: var(--signal);
+    }
+
+    .status-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .status-text__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .status-text__detail {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--slate);
+    }
+
+    /* ──── GRID SHOWCASE ──── */
+    .grid-demo {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: var(--s-3);
+      margin-bottom: var(--s-5);
+    }
+
+    .grid-cell {
+      aspect-ratio: 1;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bone);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--slate);
+      font-weight: 500;
+    }
+
+    /* ──── FORM SECTIONS ──── */
+    .form-section {
+      border: 1px solid var(--border);
+      border-radius: var(--card-radius);
+      padding: var(--s-4);
+      margin-bottom: var(--s-4);
+    }
+
+    .form-section__title {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+      padding-bottom: var(--s-3);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ──── UTILITY ──── */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+      margin-top: var(--s-5);
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: var(--s-5) 0;
+    }
+
+    .description {
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--slate);
+      margin-bottom: var(--s-4);
+    }
+
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-4) 0;
+      margin-top: var(--s-8);
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── DEMO BOX ──── */
+    .demo-box {
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--s-4);
+      background: var(--bone);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--slate);
+      text-align: center;
+    }
+
+    /* ──── RESPONSIVE ──── */
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-5) var(--s-3);
+      }
+
+      .stage-head__title {
+        font-size: 40px;
+      }
+
+      .section__title {
+        font-size: 32px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-demo {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: var(--s-3);
+      }
+
+      .button-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .button-row__label {
+        margin-right: 0;
+        margin-bottom: var(--s-2);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">Bento</div>
+      <div class="masthead__tagline">
+        Modular<br>Grid System
+      </div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Component Vocabulary</h1>
+      <p class="stage-head__subtitle">
+        The Bento system comprises modular, grid-aligned components designed for clean, scannable interfaces. Each pattern respects the spacing scale and visual hierarchy while maintaining soft, organized contrast across the interface.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Interactions</div>
+      <h2 class="section__title">Buttons & Actions</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Default</span>
+        <button class="btn">Label</button>
+        <button class="btn btn--sm">Small</button>
+        <button class="btn btn--lg">Large Button</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary (Signal)</span>
+        <button class="btn btn--primary">Create Item</button>
+        <button class="btn btn--primary btn--sm">Submit</button>
+        <button class="btn btn--primary btn--lg">Primary Action</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Semantic</span>
+        <button class="btn btn--success">Approve</button>
+        <button class="btn btn--warning" style="background: #f59e0b; border-color: #f59e0b; color: var(--paper);">Warning</button>
+        <button class="btn btn--danger">Delete</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Ghost (Link-style)</span>
+        <a href="#" class="btn btn--ghost">Learn more</a>
+        <a href="#" class="btn btn--ghost">View docs</a>
+        <a href="#" class="btn btn--ghost">Explore</a>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Containers</div>
+      <h2 class="section__title">Card Patterns</h2>
+      <p class="description">Cards are the fundamental container unit in Bento. They align to the spacing grid, use consistent padding, and maintain clear visual hierarchy through borders, shadows, and typography.</p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__kicker">Standard</div>
+          <h3 class="card__title">Default Card</h3>
+          <p class="card__body">Bordered container with consistent padding and clear information hierarchy. Use for primary content areas.</p>
+          <div class="card__footer">
+            <span>Card with border</span>
+            <a href="#" class="btn btn--ghost" style="padding: 0; text-decoration: none; font-size: 12px;">→</a>
+          </div>
+        </div>
+
+        <div class="card card--elevated">
+          <div class="card__kicker">Elevated</div>
+          <h3 class="card__title">Shadow Card</h3>
+          <p class="card__body">Subtle shadow elevation for visual separation. Use for featured or interactive content that needs prominence.</p>
+          <div class="card__footer">
+            <span>Card with shadow</span>
+            <a href="#" class="btn btn--ghost" style="padding: 0; text-decoration: none; font-size: 12px;">→</a>
+          </div>
+        </div>
+
+        <div class="card card--featured">
+          <div class="card__kicker">Featured</div>
+          <h3 class="card__title">Signal Border</h3>
+          <p class="card__body">Signal-colored border for highlighting key actions or important information. One per section recommended.</p>
+          <div class="card__footer">
+            <span>Card with signal</span>
+            <a href="#" class="btn btn--ghost" style="padding: 0; text-decoration: none; font-size: 12px;">→</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Input Fields Section -->
+    <section class="section">
+      <div class="section__kicker">Forms</div>
+      <h2 class="section__title">Input Fields & Controls</h2>
+      <p class="description">Form controls maintain the Bento aesthetic: clean borders, predictable focus states, and clear labeling that guides users through data entry.</p>
+
+      <div class="form-section">
+        <div class="form-section__title">Basic Inputs</div>
+        <div class="input-group">
+          <div class="input-wrap">
+            <label class="input-label">Text Input</label>
+            <input class="input" type="text" placeholder="Enter text here...">
+          </div>
+
+          <div class="input-wrap">
+            <label class="input-label">Email</label>
+            <input class="input" type="email" placeholder="user@example.com">
+          </div>
+
+          <div class="input-wrap">
+            <label class="input-label">Password</label>
+            <input class="input" type="password" placeholder="••••••••">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section__title">Textarea & Select</div>
+        <div class="input-group">
+          <div class="input-wrap">
+            <label class="input-label">Message</label>
+            <textarea class="input textarea" placeholder="Enter your message..."></textarea>
+          </div>
+
+          <div class="input-wrap">
+            <label class="input-label">Select an option</label>
+            <select class="input">
+              <option>Choose one...</option>
+              <option>Option A</option>
+              <option>Option B</option>
+              <option>Option C</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section__title">Disabled & Readonly</div>
+        <div class="input-group">
+          <div class="input-wrap">
+            <label class="input-label">Disabled input</label>
+            <input class="input" type="text" placeholder="Disabled..." disabled>
+          </div>
+
+          <div class="input-wrap">
+            <label class="input-label">Readonly input</label>
+            <input class="input" type="text" value="Read-only content" readonly>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges & Tags Section -->
+    <section class="section">
+      <div class="section__kicker">Status</div>
+      <h2 class="section__title">Badges & Tags</h2>
+      <p class="description">Compact indicators for status, categories, and state. Use color semantically to communicate status at a glance.</p>
+
+      <div class="subsection-label">Basic Badges</div>
+      <div class="badge-row">
+        <span class="badge">Default</span>
+        <span class="badge badge--primary">Primary</span>
+        <span class="badge badge--success">Success</span>
+        <span class="badge badge--warning">Warning</span>
+        <span class="badge badge--danger">Danger</span>
+        <span class="badge badge--inactive">Inactive</span>
+      </div>
+
+      <div class="subsection-label">Badges with Indicators</div>
+      <div class="badge-row">
+        <span class="badge badge--primary">
+          <span class="badge__dot"></span>
+          Active
+        </span>
+        <span class="badge badge--success">
+          <span class="badge__dot"></span>
+          Complete
+        </span>
+        <span class="badge badge--warning">
+          <span class="badge__dot"></span>
+          Pending
+        </span>
+        <span class="badge badge--danger">
+          <span class="badge__dot"></span>
+          Error
+        </span>
+      </div>
+
+      <div class="subsection-label">Status Items</div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--s-3);">
+        <div class="status-item">
+          <div class="status-dot status-dot--success"></div>
+          <div class="status-text">
+            <span class="status-text__label">All Systems</span>
+            <span class="status-text__detail">Operational · Now</span>
+          </div>
+        </div>
+
+        <div class="status-item">
+          <div class="status-dot status-dot--warning"></div>
+          <div class="status-text">
+            <span class="status-text__label">Performance</span>
+            <span class="status-text__detail">Degraded · 2m ago</span>
+          </div>
+        </div>
+
+        <div class="status-item">
+          <div class="status-dot status-dot--danger"></div>
+          <div class="status-text">
+            <span class="status-text__label">Database</span>
+            <span class="status-text__detail">Down · 5m ago</span>
+          </div>
+        </div>
+
+        <div class="status-item">
+          <div class="status-dot status-dot--info"></div>
+          <div class="status-text">
+            <span class="status-text__label">Maintenance</span>
+            <span class="status-text__detail">Scheduled · 2024-02-28</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Grid & Spacing Section -->
+    <section class="section">
+      <div class="section__kicker">Layout</div>
+      <h2 class="section__title">Modular Grid System</h2>
+      <p class="description">The Bento grid foundation uses an 8px base unit. All spacing, padding, and gaps align to the scale: 4, 8, 12, 16, 24, 32, 48, 64, 96px. This ensures consistency and rhythm across all layouts.</p>
+
+      <div class="subsection-label">Grid Template (4-column adaptive)</div>
+      <div class="grid-demo">
+        <div class="grid-cell">1</div>
+        <div class="grid-cell">2</div>
+        <div class="grid-cell">3</div>
+        <div class="grid-cell">4</div>
+        <div class="grid-cell">5</div>
+        <div class="grid-cell">6</div>
+        <div class="grid-cell">7</div>
+        <div class="grid-cell">8</div>
+      </div>
+
+      <div class="subsection-label">Spacing Scale Reference</div>
+      <div style="display: grid; gap: var(--s-4); margin-bottom: var(--s-4);">
+        <div style="display: flex; align-items: center; gap: var(--s-3);">
+          <div style="width: 120px; font-family: var(--font-mono); font-size: 12px; color: var(--slate); font-weight: 500;">S-1 (4px)</div>
+          <div style="width: 4px; height: 20px; background: var(--signal);"></div>
+        </div>
+        <div style="display: flex; align-items: center; gap: var(--s-3);">
+          <div style="width: 120px; font-family: var(--font-mono); font-size: 12px; color: var(--slate); font-weight: 500;">S-2 (8px)</div>
+          <div style="width: 8px; height: 20px; background: var(--signal);"></div>
+        </div>
+        <div style="display: flex; align-items: center; gap: var(--s-3);">
+          <div style="width: 120px; font-family: var(--font-mono); font-size: 12px; color: var(--slate); font-weight: 500;">S-3 (16px)</div>
+          <div style="width: 16px; height: 20px; background: var(--signal);"></div>
+        </div>
+        <div style="display: flex; align-items: center; gap: var(--s-3);">
+          <div style="width: 120px; font-family: var(--font-mono); font-size: 12px; color: var(--slate); font-weight: 500;">S-4 (24px)</div>
+          <div style="width: 24px; height: 20px; background: var(--signal);"></div>
+        </div>
+        <div style="display: flex; align-items: center; gap: var(--s-3

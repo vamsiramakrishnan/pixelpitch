@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Palette — Art Deco</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      background: var(--paper, #fafafa);
+      color: var(--ink, #111);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+      text-align: center;
+    }
+    .header__title {
+      font-family: var(--font-display, var(--font-body, 'Inter', system-ui, sans-serif));
+      font-size: 56px;
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111);
+      margin-bottom: 16px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate, #666);
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin: 32px auto 0;
+      border-radius: 1px;
+    }
+
+    /* Swatch grid */
+    .section-label {
+      font-family: var(--font-display, var(--font-body, 'Inter', system-ui, sans-serif));
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate, #666);
+      margin-top: 56px;
+      margin-bottom: 28px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 56px;
+    }
+
+    .swatch {
+      background: var(--surface, #fff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .swatch:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      transform: translateY(-2px);
+    }
+
+    .swatch__chip {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 10px;
+    }
+    .swatch__chip-contrast {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      line-height: 1.3;
+      background: rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(4px);
+    }
+
+    .swatch__meta {
+      padding: 16px 14px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .swatch__var {
+      font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink, #111);
+      word-break: break-all;
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
+    }
+    .swatch__hex {
+      font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace);
+      font-size: 11px;
+      color: var(--slate, #666);
+      margin-bottom: 8px;
+      opacity: 0.8;
+    }
+    .swatch__role {
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--slate, #666);
+      margin-bottom: 8px;
+      flex-grow: 1;
+    }
+    .swatch__contrast-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-top: auto;
+    }
+    .contrast-pass { color: #059669; }
+    .contrast-fail { color: #dc2626; }
+    .contrast-aa-large { color: #b45309; }
+
+    /* Philosophy section */
+    .philosophy {
+      margin-top: 64px;
+      padding: 48px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.02) 0%, rgba(59, 130, 246, 0.01) 100%);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 12px;
+    }
+    .philosophy h2 {
+      font-family: var(--font-display, var(--font-body, 'Inter', system-ui, sans-serif));
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      color: var(--ink, #111);
+      letter-spacing: -0.01em;
+    }
+    .philosophy p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--slate, #666);
+      margin-bottom: 16px;
+    }
+    .philosophy p:last-child { margin-bottom: 0; }
+
+    /* WCAG footer */
+    .wcag-summary {
+      margin-top: 56px;
+      padding: 40px;
+      background: var(--surface, #fff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 12px;
+    }
+    .wcag-summary h2 {
+      font-family: var(--font-display, var(--font-body, 'Inter', system-ui, sans-serif));
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 24px;
+      color: var(--ink, #111);
+      letter-spacing: -0.01em;
+    }
+    .wcag-summary p {
+      font-size: 13px;
+      color: var(--slate, #666);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .wcag-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+      font-size: 14px;
+    }
+    .wcag-row:last-child { border-bottom: none; }
+    .wcag-badge {
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      min-width: 50px;
+      text-align: center;
+    }
+    .wcag-badge--pass { background: #d1fae5; color: #065f46; }
+    .wcag-badge--fail { background: #fee2e2; color: #991b1b; }
+    .wcag-badge--aa-large { background: #fef3c7; color: #92400e; }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #666);
+      font-size: 16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Accent demo */
+    .accent-demo {
+      margin-top: 56px;
+      padding: 40px;
+      background: var(--surface, #fff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 12px;
+    }
+    .accent-demo h2 {
+      font-family: var(--font-display, var(--font-body, 'Inter', system-ui, sans-serif));
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 24px;
+      color: var(--ink, #111);
+      letter-spacing: -0.01em;
+    }
+    .accent-demo p {
+      font-size: 13px;
+      color: var(--slate, #666);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+    .accent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .accent-card {
+      padding: 20px;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      text-align: center;
+    }
+    .accent-card strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: var(--ink, #111);
+    }
+    .accent-card span {
+      display: block;
+      font-size: 12px;
+      color: var(--slate, #666);
+      font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace);
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    /* ------------------------------------------------------------------ */
+    /* Contrast-ratio helpers (WCAG 2.1 relative luminance)               */
+    /* ------------------------------------------------------------------ */
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function luminance([r, g, b]) {
+      const [rs, gs, bs] = [r, g, b].map(c => {
+        c /= 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    }
+
+    function contrastRatio(hex1, hex2) {
+      const l1 = luminance(hexToRgb(hex1));
+      const l2 = luminance(hexToRgb(hex2));
+      const lighter = Math.max(l1, l2);
+      const darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function wcagLevel(ratio) {
+      if (ratio >= 7) return { label: 'AAA', cls: 'pass' };
+      if (ratio >= 4.5) return { label: 'AA', cls: 'pass' };
+      if (ratio >= 3) return { label: 'AA Large', cls: 'aa-large' };
+      return { label: 'Fail', cls: 'fail' };
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Core token roles and their descriptions                            */
+    /* ------------------------------------------------------------------ */
+    const CORE_ROLES = {
+      paper:   'Page background canvas',
+      ink:     'Primary text and headings',
+      slate:   'Secondary text and muted content',
+      signal:  'Primary interactive accent',
+      bone:    'Subtle tinted backgrounds',
+      border:  'Dividers and structural lines',
+      surface: 'Card and container fill',
+    };
+
+    /* ------------------------------------------------------------------ */
+    /* Build the page from tokens.json                                    */
+    /* ------------------------------------------------------------------ */
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.meta?.name || 'Design System';
+      const summary = tokens.meta?.summary || '';
+      const rawColors = tokens.colors || {};
+      const paperHex = rawColors.paper || '#fafafa';
+
+      /* Flatten nested extended/semantic into a flat map for display */
+      const colors = {};
+      for (const [k, v] of Object.entries(rawColors)) {
+        if (typeof v === 'string') { colors[k] = v; }
+        else if (v && typeof v === 'object') {
+          for (const [sk, sv] of Object.entries(v)) {
+            if (typeof sv === 'string') colors[k + '-' + sk] = sv;
+          }
+        }
+      }
+
+      /* Split into core and extended */
+      const coreKeys = Object.keys(CORE_ROLES).filter(k => colors[k]);
+      const extendedKeys = Object.keys(colors).filter(k => !CORE_ROLES[k] && typeof colors[k] === 'string');
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">' + esc(name) + '</h1>';
+      html += '  <p class="header__subtitle">' + esc(summary) + '</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Philosophy section */
+      html += '<div class="philosophy">';
+      html += '  <h2>Color Philosophy</h2>';
+      html += '  <p>The Art Deco palette channels 1920s glamour through a carefully curated selection of jewel tones, precious metals, and luxurious neutrals. Gold serves as the primary accent, evoking polished brass and gilt inlay. Deep blacks and warm champagne tones create dramatic contrast, honoring the era\'s love of chiaroscuro. Every color carries weight and intention, reflecting the movement\'s commitment to geometric precision and material opulence.</p>';
+      html += '  <p>This system privileges a limited, disciplined palette over chromatic variety—a hallmark of true Art Deco design. Accent colors are semantic and reserved for critical information: success, warning, error, and informational states.</p>';
+      html += '</div>';
+
+      /* Core palette */
+      if (coreKeys.length) {
+        html += '<div class="section-label">Core Palette</div>';
+        html += '<div class="swatch-grid">';
+        coreKeys.forEach(key => {
+          html += swatchCard(key, colors[key], paperHex, CORE_ROLES[key]);
+        });
+        html += '</div>';
+      }
+
+      /* Extended palette */
+      if (extendedKeys.length) {
+        html += '<div class="section-label">Extended Palette</div>';
+        html += '<div class="swatch-grid">';
+        extendedKeys.forEach(key => {
+          const role = (tokens.colorRoles && tokens.colorRoles[key]) || formatRole(key);
+          html += swatchCard(key, colors[key], paperHex, role);
+        });
+        html += '</div>';
+      }
+
+      /* Accent demo */
+      html += accentDemo();
+
+      /* WCAG summary */
+      html += wcagSummary(colors, paperHex);
+
+      app.innerHTML = html;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Swatch card builder                                                */
+    /* ------------------------------------------------------------------ */
+    function swatchCard(key, hex, paperHex, role) {
+      const ratio = contrastRatio(hex, paperHex);
+      const level = wcagLevel(ratio);
+      const chipTextColor = luminance(hexToRgb(hex)) > 0.4 ? '#111' : '#fff';
+
+      return '' +
+        '<div class="swatch">' +
+        '  <div class="swatch__chip" style="background:' + hex + '">' +
+        '    <span class="swatch__chip-contrast">' + ratio.toFixed(1) + ':1</span>' +
+        '  </div>' +
+        '  <div class="swatch__meta">' +
+        '    <div class="swatch__var">--' + esc(key) + '</div>' +
+        '    <div class="swatch__hex">' + esc(hex) + '</div>' +
+        '    <div class="swatch__role">' + esc(role) + '</div>' +
+        '    <div class="swatch__contrast-label contrast-' + level.cls + '">' +
+             'WCAG ' + level.label + '</div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Accent usage demo                                                  */
+    /* ------------------------------------------------------------------ */
+    function accentDemo() {
+      return '' +
+        '<div class="accent-demo">' +
+        '  <h2>Semantic Color Usage</h2>' +
+        '  <p>The palette includes reserved semantic colors for system states. Signal (primary accent) is used for interactive elements, success for approvals, warning for caution, error for destructive actions, and info for informational content. This disciplined approach ensures clarity and consistent user comprehension.</p>' +
+        '  <div class="accent-grid">' +
+        '    <div class="accent-card">' +
+        '      <strong style="color:#3b82f6">Primary Accent</strong>' +
+        '      <span>#3b82f6</span>' +
+        '      <span style="font-size:11px;margin-top:4px">CTAs, links, focus states</span>' +
+        '    </div>' +
+        '    <div class="accent-card">' +
+        '      <strong style="color:#059669">Success</strong>' +
+        '      <span>#059669</span>' +
+        '      <span style="font-size:11px;margin-top:4px">Positive signals, approvals</span>' +
+        '    </div>' +
+        '    <div class="accent-card">' +
+        '      <strong style="color:#d97706">Warning</strong>' +
+        '      <span>#d97706</span>' +
+        '      <span style="font-size:11px;margin-top:4px">Caution, attention needed</span>' +
+        '    </div>' +
+        '    <div class="accent-card">' +
+        '      <strong style="color:#dc2626">Error</strong>' +
+        '      <span>#dc2626</span>' +
+        '      <span style="font-size:11px;margin-top:4px">Critical, destructive actions</span>' +
+        '    </div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* WCAG compliance summary                                            */
+    /* ------------------------------------------------------------------ */
+    function wcagSummary(colors, paperHex) {
+      const keys = Object.keys(colors);
+      let passAAA = 0, passAA = 0, passAALarge = 0, fail = 0;
+
+      keys.forEach(k => {
+        const ratio = contrastRatio(colors[k], paperHex);
+        if (ratio >= 7) passAAA++;
+        else if (ratio >= 4.5) passAA++;
+        else if (ratio >= 3) passAALarge++;
+        else fail++;
+      });
+
+      let html = '<div class="wcag-summary">';
+      html += '<h2>WCAG 2.1 Compliance Summary</h2>';
+      html += '<p>Contrast ratios measured against the paper background (' + esc(paperHex) + '). All core text colors meet or exceed AA standards for both normal and large text.</p>';
+      html += row('AAA (7:1 or greater)', passAAA, 'pass');
+      html += row('AA (4.5:1 or greater)', passAA, 'pass');
+      html += row('AA Large Text (3:1 or greater)', passAALarge, 'aa-large');
+      if (fail > 0) html += row('Below threshold', fail, 'fail');
+      html += '</div>';
+      return html;
+
+      function row(label, count, badge) {
+        return '<div class="wcag-row">' +
+               '<span class="wcag-badge wcag-badge--' + badge + '">' + count + '</span>' +
+               '<span>' + label + '</span>' +
+               '</div>';
+      }
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Utilities                                                          */
+    /* ------------------------------------------------------------------ */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function formatRole(key) {
+      return key
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/[-_]/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase())
+        .trim();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contemporary – Type Specimen</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@100;200;300;400;500;600;700;800;900&family=Overpass+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Jost', system-ui, sans-serif);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: var(--s-7) var(--s-5);
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: var(--s-7);
+    }
+
+    .header__title {
+      font-family: 'Jost', var(--font-display, system-ui, sans-serif);
+      font-size: 56px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .header__subtitle {
+      font-family: 'Jost', var(--font-display, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--slate);
+      max-width: 600px;
+      line-height: 1.5;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--signal);
+      border: none;
+      margin-top: var(--s-5);
+      border-radius: var(--radius-sm);
+    }
+
+    /* Font families */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-7);
+    }
+
+    .font-card {
+      background: var(--bone);
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      padding: var(--s-5) var(--s-4);
+    }
+
+    .font-card__label {
+      font-family: 'Overpass Mono', var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .font-card__name {
+      font-family: 'Jost', system-ui, sans-serif;
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: var(--s-1);
+      color: var(--ink);
+    }
+
+    .font-card__fallback {
+      font-family: 'Overpass Mono', var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate);
+      word-break: break-all;
+      line-height: 1.4;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: 'Jost', var(--font-display, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-4);
+      padding-bottom: var(--s-2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: var(--s-6);
+      align-items: baseline;
+      padding: var(--s-5) 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 768px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: var(--s-3);
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: 'Jost', var(--font-display, system-ui, sans-serif);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .ramp-meta__detail {
+      font-family: 'Overpass Mono', var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      line-height: 1.6;
+      color: var(--slate);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--ink);
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    /* Ramp section container */
+    .ramp-section {
+      margin-bottom: var(--s-7);
+    }
+
+    /* Pangram block */
+    .pangram-block {
+      background: var(--bone);
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      padding: var(--s-6) var(--s-5);
+      margin-bottom: var(--s-7);
+    }
+
+    .pangram-block__label {
+      font-family: 'Overpass Mono', var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+    }
+
+    .pangram-block__chars {
+      font-family: 'Jost', system-ui, sans-serif;
+      font-size: 32px;
+      font-weight: 500;
+      line-height: 1.6;
+      letter-spacing: 0.01em;
+      color: var(--ink);
+      word-break: break-all;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: var(--s-8) var(--s-4);
+      color: var(--slate);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: var(--s-4) auto 0;
+      border: 3px solid var(--border);
+      border-top-color: var(--signal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Minimalism is not a style, it\'s an attitude.',
+      'Contemporary design favors clarity over decoration.',
+      'Whitespace is the breath between thoughts on a page.',
+      'Bold typography commands attention and establishes hierarchy.',
+      'Every element must earn its place in the composition.',
+      'Simplicity is the ultimate sophistication.',
+      'The best design is invisible—it solves problems without announcing itself.',
+      'Playfulness and precision can coexist in the same system.',
+      'Constraints breed creativity and focused expression.',
+      'A bento grid celebrates modularity and rhythm.',
+    ];
+
+    const DEFAULT_RAMP = [
+      { role: 'Hero', size: '96px', weight: 700, family: 'Jost', lh: 0.95, ls: '-0.02em' },
+      { role: 'Display Large', size: '72px', weight: 700, family: 'Jost', lh: 1.0, ls: '-0.01em' },
+      { role: 'Display', size: '56px', weight: 700, family: 'Jost', lh: 1.1, ls: '-0.01em' },
+      { role: 'Headline 1', size: '48px', weight: 700, family: 'Jost', lh: 1.15, ls: '-0.005em' },
+      { role: 'Headline 2', size: '40px', weight: 600, family: 'Jost', lh: 1.2, ls: 'normal' },
+      { role: 'Headline 3', size: '32px', weight: 600, family: 'Jost', lh: 1.25, ls: 'normal' },
+      { role: 'Headline 4', size: '28px', weight: 600, family: 'Jost', lh: 1.3, ls: 'normal' },
+      { role: 'Headline 5', size: '24px', weight: 600, family: 'Jost', lh: 1.35, ls: 'normal' },
+      { role: 'Subheading', size: '20px', weight: 500, family: 'Jost', lh: 1.4, ls: 'normal' },
+      { role: 'Body Large', size: '18px', weight: 400, family: 'Jost', lh: 1.6, ls: 'normal' },
+      { role: 'Body', size: '16px', weight: 400, family: 'Jost', lh: 1.6, ls: 'normal' },
+      { role: 'Body Small', size: '14px', weight: 400, family: 'Jost', lh: 1.5, ls: 'normal' },
+      { role: 'Label', size: '13px', weight: 600, family: 'Jost', lh: 1.4, ls: '0.04em' },
+      { role: 'Caption', size: '12px', weight: 400, family: 'Jost', lh: 1.4, ls: 'normal' },
+      { role: 'Mono Code', size: '13px', weight: 400, family: 'Overpass Mono', lh: 1.5, ls: 'normal' },
+    ];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Contemporary';
+      const category = tokens.meta?.category || 'Modern & Minimal';
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">One family.<br>Every voice.</h1>';
+      html += '  <p class="header__subtitle">Type Specimen — ' + title + ' Design System</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      html += '<div class="font-families">';
+      html += '<div class="font-card">';
+      html += '  <div class="font-card__label">Primary & Display</div>';
+      html += '  <div class="font-card__name" style="font-family:\'Jost\',system-ui,sans-serif">Jost*</div>';
+      html += '  <div class="font-card__fallback">100–900 weights · Geometric sans · Contemporary & playful</div>';
+      html += '</div>';
+      html += '<div class="font-card">';
+      html += '  <div class="font-card__label">Monospace</div>';
+      html += '  <div class="font-card__name" style="font-family:\'Overpass Mono\',ui-monospace,monospace">Overpass Mono</div>';
+      html += '  <div class="font-card__fallback">300–700 weights · Code & technical · Clear & compact</div>';
+      html += '</div>';
+      html += '</div>';
+
+      /* Character set block */
+      html += '<div class="pangram-block">';
+      html += '  <div class="pangram-block__label">Complete Character Set</div>';
+      html += '  <div class="pangram-block__chars" style="font-family:\'Jost\',system-ui,sans-serif">AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>0123456789 !@#$%&amp;*()–—''"″′""«»<br>ÄäÖöÜüß ¢£€¥¶§©®™</div>';
+      html += '</div>';
+
+      /* Type ramp */
+      html += '<div class="ramp-section">';
+      html += '<div class="section-label">Type Ramp — Jost Family</div>';
+      DEFAULT_RAMP.forEach((entry, i) => {
+        html += rampRow(entry, i);
+      });
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(entry, idx) {
+      const role = entry.role || 'Role ' + (idx + 1);
+      const size = entry.size || '16px';
+      const weight = entry.weight || 400;
+      const lh = entry.lh || 1.5;
+      const ls = entry.ls || 'normal';
+      const family = entry.family || 'Jost';
+      const sampleIdx = idx % EDITORIAL_SAMPLES.length;
+      const sample = EDITORIAL_SAMPLES[sampleIdx];
+
+      const sizeNum = parseFloat(size);
+      const displaySample = sizeNum >= 56
+        ? sample.split('.')[0].split('—')[0].trim() + '.'
+        : sample;
+
+      let fontStyle = 'font-family:\'' + esc(family) + '\',system-ui,sans-serif;';
+      fontStyle += 'font-size:' + size + ';';
+      fontStyle += 'font-weight:' + weight + ';';
+      fontStyle += 'line-height:' + lh + ';';
+      if (ls !== 'normal') fontStyle += 'letter-spacing:' + ls + ';';
+
+      let meta = '';
+      meta += esc(size) + ' / ' + esc(String(weight));
+      meta += '\n' + esc(family);
+      meta += '\nline-height: ' + esc(String(lh));
+      if (ls !== 'normal') meta += '\nletter-spacing: ' + esc(ls);
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(displaySample) + '</div>' +
+        '</div>';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

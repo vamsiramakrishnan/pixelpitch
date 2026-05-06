@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canva Components</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #0e1318);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-7, 64px) var(--s-5, 32px);
+    }
+
+    /* Header / Stage Head */
+    .header {
+      margin-bottom: var(--s-7, 64px);
+    }
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--ink, #0e1318);
+      margin-bottom: var(--s-2, 8px);
+    }
+    .header__subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--slate, #666666);
+      margin-bottom: var(--s-4, 24px);
+    }
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(135deg, var(--color-purple-to-blue-gradient, #7d2ae8), var(--color-canva-cyan, #00c4cc));
+      border: none;
+      border-radius: 2px;
+      margin-top: var(--s-4, 24px);
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: var(--s-6, 48px);
+    }
+    .section__label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: var(--s-3, 16px);
+      padding-bottom: var(--s-2, 8px);
+      border-bottom: 1px solid var(--border, #e1e3e6);
+    }
+
+    .sub-heading {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #0e1318);
+      margin-bottom: var(--s-3, 16px);
+      margin-top: var(--s-4, 24px);
+    }
+    .sub-heading:first-child {
+      margin-top: 0;
+    }
+
+    .component-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3, 16px);
+      align-items: center;
+      margin-bottom: var(--s-4, 24px);
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border, #e1e3e6);
+      margin: var(--s-4, 24px) 0;
+    }
+
+    /* ------- BUTTONS ------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--s-2, 8px);
+      padding: var(--button-py, 10px) var(--button-px, 20px);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.2;
+      border-radius: var(--button-radius, 8px);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      border: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn--primary-gradient {
+      background: linear-gradient(135deg, var(--color-purple-to-blue-gradient, #7d2ae8), var(--color-canva-cyan, #00c4cc));
+      color: var(--paper, #ffffff);
+      box-shadow: 0 2px 8px rgba(125, 42, 232, 0.2);
+    }
+    .btn--primary-gradient:hover {
+      box-shadow: 0 4px 14px rgba(125, 42, 232, 0.3);
+    }
+
+    .btn--primary {
+      background: var(--color-purple-to-blue-gradient, #7d2ae8);
+      color: var(--paper, #ffffff);
+      box-shadow: 0 2px 8px rgba(125, 42, 232, 0.15);
+    }
+    .btn--primary:hover {
+      background: #6815d4;
+      box-shadow: 0 4px 12px rgba(125, 42, 232, 0.25);
+    }
+
+    .btn--secondary {
+      background: var(--paper, #ffffff);
+      color: var(--ink, #0e1318);
+      border: 1px solid var(--border, #e1e3e6);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+    .btn--secondary:hover {
+      background: var(--bone, #f4f5f7);
+      border-color: var(--color-border-strong, #c7cdd3);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .btn--tertiary {
+      background: rgba(125, 42, 232, 0.08);
+      color: var(--color-purple-to-blue-gradient, #7d2ae8);
+      box-shadow: none;
+    }
+    .btn--tertiary:hover {
+      background: rgba(125, 42, 232, 0.14);
+    }
+
+    .btn--sm {
+      padding: 8px 14px;
+      font-size: 12px;
+    }
+    .btn--lg {
+      padding: 14px 28px;
+      font-size: 16px;
+    }
+
+    /* ------- CARDS ------- */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-4, 24px);
+    }
+
+    .card {
+      background: var(--paper, #ffffff);
+      border: var(--card-border, 1px solid #e1e3e6);
+      border-radius: var(--card-radius, 8px);
+      padding: var(--s-4, 24px);
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+    .card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+      border-color: var(--color-border-strong, #c7cdd3);
+    }
+
+    .card__badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 8px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: linear-gradient(135deg, var(--color-purple-to-blue-gradient, #7d2ae8), #ff5757);
+      color: var(--paper, #ffffff);
+      border-radius: var(--radius-full, 999px);
+      margin-bottom: var(--s-2, 8px);
+    }
+
+    .card__eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--color-purple-to-blue-gradient, #7d2ae8);
+      margin-bottom: var(--s-2, 8px);
+    }
+
+    .card__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--ink, #0e1318);
+      margin-bottom: var(--s-2, 8px);
+    }
+
+    .card__body {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--slate, #666666);
+      margin-bottom: var(--s-3, 16px);
+    }
+
+    .card__footer {
+      display: flex;
+      gap: var(--s-2, 8px);
+      align-items: center;
+    }
+
+    .card__thumbnail {
+      width: 100%;
+      height: 180px;
+      background: linear-gradient(135deg, rgba(125, 42, 232, 0.1), rgba(0, 196, 204, 0.1));
+      border-radius: var(--radius-md, 8px);
+      margin-bottom: var(--s-3, 16px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+
+    /* ------- INPUTS ------- */
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-4, 24px);
+      align-items: flex-start;
+    }
+
+    .input-wrap {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #0e1318);
+      margin-bottom: var(--s-2, 8px);
+    }
+
+    .input {
+      display: block;
+      width: 100%;
+      padding: 10px 14px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink, #0e1318);
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e1e3e6);
+      border-radius: var(--radius-md, 8px);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .input::placeholder {
+      color: var(--color-ink-faint, #9aa0a6);
+    }
+    .input:focus {
+      border-color: var(--color-purple-to-blue-gradient, #7d2ae8);
+      box-shadow: 0 0 0 3px rgba(125, 42, 232, 0.16);
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3, 16px);
+      padding: 10px 16px;
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e1e3e6);
+      border-radius: var(--radius-lg, 24px);
+      max-width: 480px;
+      transition: all 0.2s ease;
+    }
+    .search-bar:focus-within {
+      border-color: var(--color-purple-to-blue-gradient, #7d2ae8);
+      box-shadow: 0 0 0 3px rgba(125, 42, 232, 0.12);
+    }
+
+    .search-bar__icon {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      color: var(--color-ink-faint, #9aa0a6);
+    }
+
+    .search-bar__input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      color: var(--ink, #0e1318);
+    }
+    .search-bar__input::placeholder {
+      color: var(--color-ink-faint, #9aa0a6);
+    }
+
+    /* ------- BADGES & TAGS ------- */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2, 8px);
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: var(--radius-full, 999px);
+      line-height: 1.4;
+    }
+
+    .badge--success {
+      background: rgba(0, 184, 148, 0.12);
+      color: var(--color-success, #00b894);
+    }
+
+    .badge--warning {
+      background: rgba(255, 176, 32, 0.12);
+      color: var(--color-warning, #ffb020);
+    }
+
+    .badge--info {
+      background: rgba(13, 153, 255, 0.12);
+      color: var(--color-info, #0d99ff);
+    }
+
+    .badge--signal {
+      background: rgba(255, 87, 87, 0.12);
+      color: var(--signal, #ff5757);
+    }
+
+    .badge--neutral {
+      background: var(--bone, #f4f5f7);
+      color: var(--ink, #0e1318);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-1, 4px);
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border-radius: var(--radius-full, 999px);
+      background: var(--bone, #f4f5f7);
+      color: var(--ink, #0e1318);
+      border: 1px solid var(--border, #e1e3e6);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .tag:hover {
+      background: var(--color-surface-inset, #e8eaed);
+      border-color: var(--color-border-strong, #c7cdd3);
+    }
+
+    .tag--coral {
+      background: rgba(255, 112, 89, 0.1);
+      color: var(--color-coral, #ff7059);
+      border-color: var(--color-coral, #ff7059);
+    }
+    .tag--coral:hover {
+      background: rgba(255, 112, 89, 0.16);
+    }
+
+    .tag--mint {
+      background: rgba(72, 201, 151, 0.1);
+      color: var(--color-mint, #48c997);
+      border-color: var(--color-mint, #48c997);
+    }
+    .tag--mint:hover {
+      background: rgba(72, 201, 151, 0.16);
+    }
+
+    .tag--tangerine {
+      background: rgba(255, 150, 51, 0.1);
+      color: var(--color-tangerine, #ff9633);
+      border-color: var(--color-tangerine, #ff9633);
+    }
+    .tag--tangerine:hover {
+      background: rgba(255, 150, 51, 0.16);
+    }
+
+    .tag--sky {
+      background: rgba(62, 166, 255, 0.1);
+      color: var(--color-sky, #3ea6ff);
+      border-color: var(--color-sky, #3ea6ff);
+    }
+    .tag--sky:hover {
+      background: rgba(62, 166, 255, 0.16);
+    }
+
+    .tag--lavender {
+      background: rgba(155, 135, 245, 0.1);
+      color: var(--color-lavender, #9b87f5);
+      border-color: var(--color-lavender, #9b87f5);
+    }
+    .tag--lavender:hover {
+      background: rgba(155, 135, 245, 0.16);
+    }
+
+    .tag--active {
+      background: var(--color-purple-to-blue-gradient, #7d2ae8);
+      color: var(--paper, #ffffff);
+      border-color: var(--color-purple-to-blue-gradient, #7d2ae8);
+    }
+    .tag--active:hover {
+      background: #6815d4;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-1, 4px);
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border-radius: var(--radius-full, 999px);
+      background: var(--bone, #f4f5f7);
+      color: var(--slate, #666666);
+    }
+
+    /* Layout helpers */
+    .showcase {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3, 16px);
+      align-items: flex-start;
+    }
+
+    .col-3 {
+      flex: 0 1 calc(33.333% - 11px);
+      min-width: 280px;
+    }
+
+    @media (max-width: 768px) {
+      .col-3 {
+        flex: 1 1 calc(50% - 8px);
+        min-width: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Header -->
+    <header class="header" id="header">
+      <h1 class="header__title">Canva Components</h1>
+      <p class="header__subtitle">Interactive elements styled with Canva's generous spacing, soft geometry, and gradient accent.</p>
+      <hr class="header__rule">
+    </header>
+
+    <!-- Buttons -->
+    <div class="section">
+      <div class="section__label">Buttons</div>
+
+      <div class="sub-heading">Primary Gradient</div>
+      <div class="component-row">
+        <button class="btn btn--primary-gradient btn--sm">Try Canva</button>
+        <button class="btn btn--primary-gradient">Create Design</button>
+        <button class="btn btn--primary-gradient btn--lg">Upgrade to Pro</button>
+      </div>
+
+      <div class="sub-heading">Primary Solid</div>
+      <div class="component-row">
+        <button class="btn btn--primary btn--sm">Save</button>
+        <button class="btn btn--primary">Share Project</button>
+        <button class="btn btn--primary btn--lg">Start Free Trial</button>
+      </div>
+
+      <div class="sub-heading">Secondary</div>
+      <div class="component-row">
+        <button class="btn btn--secondary btn--sm">Cancel</button>
+        <button class="btn btn--secondary">Learn More</button>
+        <button class="btn btn--secondary btn--lg">View Templates</button>
+      </div>
+
+      <div class="sub-heading">Subtle / Tertiary</div>
+      <div class="component-row">
+        <button class="btn btn--tertiary btn--sm">Edit</button>
+        <button class="btn btn--tertiary">Duplicate</button>
+        <button class="btn btn--tertiary btn--lg">View More Options</button>
+      </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="section">
+      <div class="section__label">Cards & Templates</div>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__thumbnail">Template Thumbnail</div>
+          <div class="card__eyebrow">Social Media</div>
+          <div class="card__title">Instagram Post</div>
+          <div class="card__body">
+            A clean, modern template for Instagram posts. Easily customize colors, fonts, and imagery.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Use Template</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__badge">Pro</div>
+          <div class="card__eyebrow">Magic</div>
+          <div class="card__title">Magic Write</div>
+          <div class="card__body">
+            AI-powered copywriting. Let magic fill your designs with intelligent, on-brand text suggestions.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--tertiary btn--sm">Learn More</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__eyebrow">Design Essentials</div>
+          <div class="card__title">Brand Kit</div>
+          <div class="card__body">
+            Keep your brand consistent. Store logos, fonts, and colors in one centralized kit.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--secondary btn--sm">Create Kit</button>
+            <button class="btn btn--tertiary btn--sm">Explore</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inputs -->
+    <div class="section">
+      <div class="section__label">Inputs & Forms</div>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Design Title</label>
+          <input class="input" type="text" placeholder="Enter your design name">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input class="input" type="email" placeholder="you@example.com">
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="sub-heading">Search Bar (Rounded Pills)</div>
+      <div class="search-bar">
+        <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <input class="search-bar__input" type="text" placeholder="Search templates, designs, elements...">
+      </div>
+    </div>
+
+    <!-- Badges -->
+    <div class="section">
+      <div class="section__label">Status Badges</div>
+
+      <div class="badge-row" style="margin-bottom: var(--s-4, 24px)">
+        <span class="badge badge--success">Published</span>
+        <span class="badge badge--warning">In Progress</span>
+        <span class="badge badge--info">Shared</span>
+        <span class="badge badge--signal">Archived</span>
+        <span class="badge badge--neutral">Draft</span>
+      </div>
+    </div>
+
+    <!-- Tags / Category Chips -->
+    <div class="section">
+      <div class="section__label">Category Tags & Chips</div>
+
+      <div class="sub-heading">Colored Category Tags</div>
+      <div class="badge-row" style="margin-bottom: var(--s-4, 24px)">
+        <span class="tag tag--active">All Designs</span>
+        <span class="tag tag--coral">Social Media</span>
+        <span class="tag tag--mint">Marketing</span>
+        <span class="tag tag--tangerine">Presentations</span>
+        <span class="tag tag--sky">Documents</span>
+        <span class="tag tag--lavender">Video</span>
+      </div>
+
+      <div class="sub-heading">Monochrome Chips</div>
+      <div class="badge-row">
+        <span class="chip">Recently Used</span>
+        <span class="chip">Saved Templates</span>
+        <span class="chip">My Brand Kit</span>
+        <span class="chip">Collaborations</span>
+      </div>
+    </div>
+
+    <!-- Sizing Variants -->
+    <div class="section">
+      <div class="section__label">Sizing & Spacing</div>
+
+      <div class="sub-heading">Button Sizes with Generous Spacing</div>
+      <div class="component-row">
+        <button class="btn btn--primary btn--sm">Small (12px)</button>
+        <button class="btn btn--primary">Default (14px)</button>
+        <button class="btn btn--primary btn--lg">Large (16px)</button>
+      </div>
+
+      <div class="sub-heading">Card Layouts with Rounded Corners</div>
+      <div class="cards-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))">
+        <div class="card">
+          <div style="font-size: 12px; color: var(--color-ink-muted, #5f6368); margin-bottom: var(--s-3, 16px)">radius: 8px (card-radius)</div>
+          <div class="card__title">Standard Rounded</div>
+          <p style="font-size: 14px; color: var(--slate, #666666); margin-bottom: var(--s-2, 8px)">12px radius on template cards and panels.</p>
+        </div>
+
+        <div class="card" style="border-radius: var(--radius-lg, 24px)">
+          <div style="font-size: 12px; color: var(--color-ink-muted, #5f6368); margin-bottom: var(--s-3, 16px)">radius: 24px (radius-lg)</div>
+          <div class="card__title">Large Radius</div>
+          <p style="font-size: 14px; color: var(--slate, #666666); margin-bottom: var(--s-2, 8px)">Used for larger panels and grouped elements.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* Load tokens.json for dynamic header title */
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => r.ok ? r.json() : null)
+      .then(tokens => {
+        if (!tokens) return;
+        const name = tokens.meta?.title || tokens.meta?.name || '';
+        if (name) {
+          document.getElementById('header').querySelector('.header__title').textContent = name + ' Components';
+        }
+        /* Load Google Fonts if specified */
+        const gfUrl = tokens.googleFontsUrl || (tokens.fonts && tokens.fonts.googleUrl);
+        if (gfUrl) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = gfUrl;
+          document.head.appendChild(link);
+        }
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>

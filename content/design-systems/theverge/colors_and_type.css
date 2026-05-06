@@ -1,0 +1,99 @@
+/* The Verge — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #3cffd0;
+  --ink:     #3cffd0;
+  --slate:   #e9e9e9;
+  --signal:  #ffffff;
+  --bone:    #ffffff;
+  --border:  #ffffff;
+  --surface: #309875;
+
+  /* Extended palette */
+  --color-verge-ultraviolet: #5200ff;
+  --color-deep-link-blue: #3860be;
+  --color-focus-cyan: #1eaedb;
+  --color-purple-rule: #3d00bf;
+  --color-canvas-black: #131313;
+  --color-surface-slate: #2d2d2d;
+  --color-image-frame: #313131;
+  --color-absolute-black: #000000;
+  --color-secondary-text: #949494;
+  --color-dim-gray: #8c8c8c;
+
+  /* Semantic */
+  --warning: #ffffff;
+  --danger:  #ffffff;
+  --info:    #3860be;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-hero-wordmark-display: 107px;
+  --t-secondary-display: 90px;
+  --t-tertiary-display: 60px;
+  --t-large-headline: 34px;
+  --t-heading-wide: 32px;
+  --t-heading-medium: 24px;
+  --t-heading-small: 20px;
+  --t-light-capitalized-label: 19px;
+  --t-all-caps-label-xl: 18px;
+  --t-bold-body: 16px;
+  --t-body-relaxed: 16px;
+  --t-inline-label: 15px;
+  --t-body-compact: 13px;
+  --t-eyebrow-all-caps: 12px;
+  --t-tag-label: 12px;
+  --t-caption-micro: 11px;
+  --t-meta-nano: 10px;
+  --t-mono-button-label: 12px;
+  --t-mono-timestamp: 11px;
+  --t-serif-body: 16px;
+  --t-serif-caption: 20px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   16px;
+  --radius-md:   8px;
+  --radius-lg:   16px;
+  --radius-full: 40px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    8px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

@@ -1,0 +1,90 @@
+/* Coinbase — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #0a0b0d;
+  --ink:     #0a0b0d;
+  --slate:   #666666;
+  --signal:  #0052ff;
+  --bone:    #eef0f3;
+  --border:  #0052ff;
+  --surface: #282b31;
+
+  /* Extended palette */
+  --color-pure-white: #ffffff;
+  --color-hover-blue: #578bfa;
+  --color-link-blue: #0667d0;
+  --color-muted-blue: #5b616e;
+
+  /* Semantic */
+  --info:    #0052ff;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: CoinbaseDisplay;
+  --font-body:    CoinbaseText;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 80px;
+  --t-display-secondary: 64px;
+  --t-display-third: 52px;
+  --t-section-heading: 36px;
+  --t-card-title: 32px;
+  --t-feature-title: 18px;
+  --t-body-bold: 16px;
+  --t-body-semibold: 16px;
+  --t-body: 18px;
+  --t-body-small: 16px;
+  --t-button: 16px;
+  --t-caption: 14px;
+  --t-small: 13px;
+
+  /* ── Spacing ── */
+  --s-1: 1px;
+  --s-2: 3px;
+  --s-3: 4px;
+  --s-4: 5px;
+  --s-5: 6px;
+  --s-6: 8px;
+  --s-7: 10px;
+  --s-8: 12px;
+  --s-9: 15px;
+  --s-10: 16px;
+  --s-11: 20px;
+  --s-12: 24px;
+  --s-13: 25px;
+  --s-14: 32px;
+  --s-15: 48px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   12px;
+  --radius-lg:   24px;
+  --radius-full: 56px;
+
+  /* ── Components ── */
+  --button-radius:  12px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    12px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

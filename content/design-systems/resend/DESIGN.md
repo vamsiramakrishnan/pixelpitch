@@ -48,7 +48,7 @@ What makes Resend distinctive is its icy, blue-tinted border system. Instead of 
 
 ### Neutral Scale
 - **Silver** (`#a1a4a5`): Secondary text, muted links, descriptions
-- **Dark Gray** (`#464a4d`): Tertiary text, de-emphasized content
+- **Dark Gray** (`#707578`): Tertiary text, de-emphasized content
 - **Mid Gray** (`#5c5c5c`): Hover states, subtle emphasis
 - **Medium Gray** (`#494949`): Quaternary text
 - **Light Gray** (`#f8f8f8`): Light mode surface (if applicable)

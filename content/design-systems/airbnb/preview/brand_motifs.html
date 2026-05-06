@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Airbnb</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--color-ink-black, #222222);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+    }
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--color-ink-black, #222222);
+      margin-bottom: 12px;
+    }
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate, #666666);
+      max-width: 600px;
+    }
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 3px;
+      background: var(--signal, #ff385c);
+      border: none;
+      margin-top: 24px;
+      border-radius: 2px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 56px;
+    }
+    .section__label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #dddddd);
+    }
+
+    /* Key characteristics */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+    .traits-list li {
+      position: relative;
+      padding: 12px 0 12px 28px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--color-ink-black, #222222);
+      border-bottom: 1px solid var(--border, #dddddd);
+    }
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 18px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--signal, #ff385c);
+      opacity: 0.8;
+    }
+
+    /* Do's and Don'ts */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 640px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .dd-card {
+      background: var(--surface, #ffffff);
+      border: 1px solid var(--border, #dddddd);
+      border-radius: 12px;
+      padding: 24px;
+      overflow: hidden;
+    }
+    .dd-card__heading {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dd-card__heading--do { color: #166534; }
+    .dd-card__heading--dont { color: #991b1b; }
+
+    .dd-card__icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .dd-card__icon--do {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .dd-card__icon--dont {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+    .dd-list li {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--color-ink-black, #222222);
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border, #dddddd);
+    }
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* Color harmony strip */
+    .harmony-strip {
+      display: flex;
+      border-radius: 12px;
+      overflow: hidden;
+      height: 80px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+    }
+    .harmony-strip__swatch:hover {
+      flex: 1.8;
+    }
+    .harmony-strip__label {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 3px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* Type pairing demo */
+    .type-pairing {
+      background: var(--surface, #ffffff);
+      border: 1px solid var(--border, #dddddd);
+      border-radius: 12px;
+      padding: 40px 32px;
+    }
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--color-ink-black, #222222);
+      margin-bottom: 16px;
+    }
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.65;
+      color: var(--slate, #666666);
+      max-width: 640px;
+    }
+    .type-pairing__meta {
+      display: flex;
+      gap: 24px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #dddddd);
+    }
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--color-ink-black, #222222);
+    }
+
+    /* Atmosphere card */
+    .atmosphere-card {
+      background: var(--surface, #ffffff);
+      border: 1px solid var(--border, #dddddd);
+      border-radius: 12px;
+      padding: 28px 24px;
+    }
+    .atmosphere-card p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--color-ink-black, #222222);
+    }
+
+    /* Product tier color demo */
+    .tier-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .tier-card {
+      background: var(--surface, #ffffff);
+      border: 1px solid var(--border, #dddddd);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .tier-card__swatch {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      margin: 0 auto 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .tier-card__name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-ink-black, #222222);
+      margin-bottom: 4px;
+    }
+    .tier-card__hex {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      color: var(--slate, #666666);
+    }
+
+    /* Photo treatment demo */
+    .photo-demo {
+      background: var(--surface, #ffffff);
+      border: 1px solid var(--border, #dddddd);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .photo-demo__grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .photo-demo__item {
+      aspect-ratio: 4 / 3;
+      background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--slate, #666666);
+      font-size: 12px;
+      font-weight: 500;
+      text-align: center;
+      padding: 12px;
+    }
+    .photo-demo__caption {
+      font-size: 12px;
+      color: var(--slate, #666666);
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border, #dddddd);
+      border-top-color: var(--signal, #ff385c);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'signal', 'bone', 'border', 'surface'];
+    const EXTENDED_COLORS = {
+      'Rausch Coral': '#ff385c',
+      'Deep Rausch': '#e00b41',
+      'Plus Magenta': '#92174d',
+      'Luxe Purple': '#460479',
+      'Info Blue': '#428bff',
+      'Ink Black': '#222222',
+      'Charcoal': '#3f3f3f',
+      'Ash Gray': '#6a6a6a'
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#c13515">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.meta?.name || 'Airbnb';
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Brand DNA</h1>';
+      html += '  <p class="header__subtitle">Photography, coral accents, and disciplined typography define the Airbnb experience.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ---- Atmosphere ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Airbnb\'s 2026 design is a travel magazine that happens to be an app. Pristine white canvases give way to full-bleed photography, and the interface itself disappears so listings can breathe. The signature Rausch coral-pink (#ff385c) is reserved for primary CTAs, the search button, and active tab indicators—never decorative. Every label, from 8px legal footnote to 28px heading, uses Airbnb Cereal VF in a single-family system, creating rhythm and hierarchy across all surfaces.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Key Characteristics ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Rausch coral-pink (#ff385c) as single-accent color—primary CTAs and active states only</li>';
+      html += '    <li>Full-bleed photography at 4:3 and 16:9 with gentle corner rounding (14–20px)</li>';
+      html += '    <li>3D rendered category icons paired with flat typographic tabs</li>';
+      html += '    <li>Circular 50% icon buttons (back, share, favorite, carousel arrows)</li>';
+      html += '    <li>Airbnb Cereal VF single-family typography system (no secondary display face)</li>';
+      html += '    <li>Product-tier color coding: Plus (magenta #92174d), Luxe (purple #460479)</li>';
+      html += '    <li>Ink Black #222222 for every text layer—never true #000000</li>';
+      html += '    <li>Sticky booking panel with price → dates → guests stack on desktop</li>';
+      html += '    <li>Hairline Gray #dddddd 1px borders for card-to-card dividers</li>';
+      html += '    <li>Guest Favorite award lockup—centered giant rating between laurel wreaths</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ---- Do's and Don'ts ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '    <div class="dd-card">';
+      html += '      <div class="dd-card__heading dd-card__heading--do">';
+      html += '        <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '      </div>';
+      html += '      <ul class="dd-list">';
+      html += '        <li>Reserve Rausch #ff385c for primary actions and active-tab indicators</li>';
+      html += '        <li>Let photography breathe—4:3 crops with 14–20px rounded corners</li>';
+      html += '        <li>Use Ink Black #222222 for every text layer below Rausch</li>';
+      html += '        <li>Pair 3D category icons with flat typography—no mixed illustration styles</li>';
+      html += '        <li>Stack three low-opacity shadows (~2%, 4%, 10%) for booking-panel elevation</li>';
+      html += '        <li>Use Hairline Gray #dddddd 1px borders for dividers</li>';
+      html += '        <li>Treat booking panel as sticky on desktop, anchored bar on mobile</li>';
+      html += '        <li>Use 4–8px spacing within metadata, 24px between cards</li>';
+      html += '      </ul>';
+      html += '    </div>';
+
+      html += '    <div class="dd-card">';
+      html += '      <div class="dd-card__heading dd-card__heading--dont">';
+      html += '        <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '      </div>';
+      html += '      <ul class="dd-list">';
+      html += '        <li>Don\'t introduce secondary accents outside Rausch / Plus Magenta / Luxe Purple</li>';
+      html += '        <li>Don\'t place text inside photographs—captions sit below, never overlaid</li>';
+      html += '        <li>Don\'t use all-caps labels except the single 8px superscript role</li>';
+      html += '        <li>Don\'t round icon buttons to anything other than 50%</li>';
+      html += '        <li>Don\'t add drop shadows to listing cards—sit on white canvas with no elevation</li>';
+      html += '        <li>Don\'t use gradient backgrounds in the interface</li>';
+      html += '        <li>Don\'t use 400-regular font weight—body weight is 500</li>';
+      html += '        <li>Don\'t override Airbnb Cereal VF with a different display face</li>';
+      html += '      </ul>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Product Tier Colors ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Product Tier Palette</div>';
+      html += '  <div class="tier-grid">';
+
+      const tiers = [
+        { name: 'Airbnb', hex: '#ff385c', desc: 'Rausch Coral' },
+        { name: 'Airbnb Plus', hex: '#92174d', desc: 'Plus Magenta' },
+        { name: 'Airbnb Luxe', hex: '#460479', desc: 'Luxe Purple' },
+        { name: 'Info & Help', hex: '#428bff', desc: 'Info Blue' }
+      ];
+
+      tiers.forEach(tier => {
+        html += '<div class="tier-card">';
+        html += '  <div class="tier-card__swatch" style="background:' + esc(tier.hex) + '"></div>';
+        html += '  <div class="tier-card__name">' + esc(tier.name) + '</div>';
+        html += '  <div class="tier-card__hex">' + esc(tier.hex) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Color Harmony ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Core Color Palette</div>';
+      html += '  <div class="harmony-strip">';
+
+      const coreColors = [
+        { name: 'Paper', hex: '#ffffff' },
+        { name: 'Signal', hex: '#ff385c' },
+        { name: 'Bone', hex: '#f7f7f7' },
+        { name: 'Border', hex: '#dddddd' },
+        { name: 'Slate', hex: '#666666' },
+        { name: 'Ink Black', hex: '#222222' }
+      ];
+
+      coreColors.forEach(color => {
+        const lum = relativeLuminance(color.hex);
+        const labelColor = lum > 0.4 ? '#222222' : '#ffffff';
+        const labelBg = lum > 0.4 ? 'rgba(0,0,0,0.06)' : 'rgba(0,0,0,0.18)';
+        html += '<div class="harmony-strip__swatch" style="background:' + esc(color.hex) + '">';
+        html += '  <span class="harmony-strip__label" style="color:' + labelColor + ';background:' + labelBg + '">' + esc(color.name) + '</span>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Photography Treatment ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Photography Treatment</div>';
+      html += '  <div class="photo-demo">';
+      html += '    <div class="photo-demo__grid">';
+      html += '      <div>';
+      html += '        <div class="photo-demo__item" style="border-radius:16px">4:3 Crop<br>with 16px radius</div>';
+      html += '        <div class="photo-demo__caption">Listing card image</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="photo-demo__item" style="border-radius:20px">Hero Image<br>with 20px radius</div>';
+      html += '        <div class="photo-demo__caption">Full-bleed photo hero</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="photo-demo__item" style="border-radius:14px">Thumbnail<br>with 14px radius</div>';
+      html += '        <div class="photo-demo__caption">Gallery thumbnail</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="photo-demo__item" style="border-radius:999px">Circular<br>Profile Image</div>';
+      html += '        <div class="photo-demo__caption">Host avatar (50%)</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Typography Pairing ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography System</div>';
+      html += '  <div class="type-pairing">';
+      html += '    <div class="type-pairing__display">Entire homes & experiences</div>';
+      html += '    <div class="type-pairing__body">Airbnb Cereal VF is a single typeface family that carries every label, from 8px legal footnotes to 28px section headings. The system uses a 500-weight body font (never 400), maintaining consistent typographic presence across the interface. This disciplined single-family approach reinforces brand coherence while remaining invisible to users—the design serves the content, not the typeface.</div>';
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Display & Body:</span> Airbnb Cereal VF</div>';
+      html += '      <div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Mono:</span> System monospace</div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function relativeLuminance(hex) {
+      try {
+        const [r, g, b] = hexToRgb(hex).map(c => {
+          c /= 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      } catch { return 0.5; }
+    }
+  </script>
+</body>
+</html>

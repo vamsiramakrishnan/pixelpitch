@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Hugging Face Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 96px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 16px;
+    }
+
+    .header__emoji {
+      display: inline-block;
+      font-size: 48px;
+      margin-right: 12px;
+      vertical-align: middle;
+      line-height: 1;
+    }
+
+    .header__title {
+      font-family: var(--font-mono);
+      font-size: 56px;
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 16px;
+      max-width: 90%;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate);
+      max-width: 80%;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 120px;
+      height: 4px;
+      background: var(--signal);
+      border: none;
+      margin-top: 24px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 96px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 48px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Philosophy block */
+    .philosophy {
+      background: var(--bone);
+      padding: 48px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 64px;
+    }
+
+    .philosophy__title {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 16px;
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ink);
+    }
+
+    .philosophy__text strong {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .philosophy__text em {
+      font-style: italic;
+      color: var(--color-ink-muted);
+    }
+
+    .philosophy__text code {
+      font-family: var(--font-mono);
+      background: var(--color-canvas-inset);
+      padding: 2px 6px;
+      font-size: 0.95em;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 140px 1fr 100px;
+      gap: 24px;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--slate);
+      margin-top: 4px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 2px;
+      background: var(--ink);
+      min-width: 2px;
+      transition: all 200ms ease-out;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      background: var(--signal);
+      height: 3px;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      text-align: right;
+    }
+
+    /* Rule weights */
+    .rule-demo {
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 20px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .rule-demo__label {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--slate);
+      max-width: 60%;
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--slate);
+      font-weight: 500;
+    }
+
+    .rule-demo__container {
+      width: 100%;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      padding: 0;
+      background: var(--bone);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0 16px;
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    .rule-demo__flat-note {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--slate);
+      font-weight: 500;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 64px;
+      margin-bottom: 48px;
+    }
+
+    .radius-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .radius-item__box {
+      width: 120px;
+      height: 120px;
+      background: var(--bone);
+      border: 2px solid var(--ink);
+      flex-shrink: 0;
+      transition: transform 120ms ease-out;
+    }
+
+    .radius-item:hover .radius-item__box {
+      transform: scale(1.05);
+    }
+
+    .radius-item__info {
+      flex: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--slate);
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body);
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--slate);
+    }
+
+    /* Grid demo */
+    .grid-demo {
+      background: var(--bone);
+      padding: 48px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 64px;
+    }
+
+    .grid-demo__title {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 24px;
+    }
+
+    .grid-demo__visual {
+      width: 100%;
+      height: 200px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+      background: var(--paper);
+      padding: 24px;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-sm);
+    }
+
+    .grid-demo__column {
+      background: rgba(255, 210, 30, 0.1);
+      border: 1px solid rgba(255, 210, 30, 0.3);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--signal);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 8px;
+      border-radius: var(--radius-sm);
+    }
+
+    .grid-demo__info {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .grid-demo__stat {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--slate);
+    }
+
+    .grid-demo__stat-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 6px;
+    }
+
+    /* Container demo */
+    .container-demo {
+      background: var(--bone);
+      padding: 48px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 64px;
+    }
+
+    .container-demo__title {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 24px;
+    }
+
+    .container-demo__visual {
+      width: 100%;
+      height: 240px;
+      background: var(--paper);
+      border: 2px dashed var(--color-nlp-blue);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .container-demo__inner {
+      width: 100%;
+      max-width: 1280px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(37, 99, 235, 0.05);
+      border: 1px dashed var(--color-nlp-blue);
+      border-radius: var(--radius-sm);
+      position: relative;
+      margin: 0 auto;
+    }
+
+    .container-demo__label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-nlp-blue);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .container-demo__specs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .container-demo__spec {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--slate);
+    }
+
+    .container-demo__spec-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 6px;
+    }
+
+    /* Motion demo */
+    .motion-demo {
+      background: var(--bone);
+      padding: 48px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 64px;
+    }
+
+    .motion-demo__title {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 32px;
+    }
+
+    .motion-demo__row {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 32px;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .motion-demo__row:last-child {
+      margin-bottom: 0;
+    }
+
+    .motion-demo__label {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .motion-demo__sublabel {
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: var(--slate);
+      margin-top: 4px;
+    }
+
+    .motion-demo__box {
+      width: 100px;
+      height: 100px;
+      background: var(--signal);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .motion-demo__box.hover-scale {
+      transition: transform 120ms ease-out;
+    }
+
+    .motion-demo__box.hover-scale:hover {
+      transform: scale(1.05);
+    }
+
+    .motion-demo__box.menu-open {
+      transition: all 200ms ease-out;
+    }
+
+    .motion-demo__box.menu-open:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    .motion-demo__spec {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--slate);
+      font-weight: 500;
+    }
+
+    /* Depth philosophy block */
+    .depth-philosophy {
+      background: linear-gradient(135deg, rgba(255, 210, 30, 0.05) 0%, rgba(255, 210, 30, 0.02) 100%);
+      padding: 48px;
+      border: 2px solid var(--signal);
+      border-radius: var(--radius-sm);
+      margin-bottom: 64px;
+    }
+
+    .depth-philosophy__title {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 16px;
+    }
+
+    .depth-philosophy__text {
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ink);
+    }
+
+    .depth-philosophy__text strong {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .depth-philosophy__text em {
+      font-style: italic;
+      color: var(--color-ink-muted);
+    }
+
+    .depth-philosophy__text code {
+      font-family: var(--font-mono);
+      background: rgba(0, 0, 0, 0.05);
+      padding: 2px 6px;
+      font-size: 0.95em;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 2px solid rgba(0, 0, 0, 0.1);
+      border-top-color: var(--signal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 1000px) {
+      .page {
+        padding: 64px 32px;
+      }
+
+      .header {
+        margin-bottom: 64px;
+      }
+
+      .header__title {
+        font-size: 42px;
+        max-width: 100%;
+      }
+
+      .header__subtitle {
+        max-width: 100%;
+      }
+
+      .section {
+        margin-bottom: 64px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 100px 1fr 80px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .radius-item {
+        grid-template-columns: 120px 1fr;
+      }
+
+      .grid-demo__info,
+      .container-demo__specs {
+        grid-template-columns: 1fr;
+      }
+
+      .motion-demo__row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '4px', label: 'xs' },
+      's-2': { value: '8px', label: 'sm' },
+      's-3': { value: '16px', label: 'md' },
+      's-4': { value: '24px', label: 'lg' },
+      's-5': { value: '32px', label: 'xl' },
+      's-6': { value: '48px', label: '2xl' },
+      's-7': { value: '64px', label: '3xl' },
+      's-8': { value: '96px', label: '4xl' }
+    };
+
+    const DEFAULT_RULES = {
+      'flat': { name: 'Flat', weight: 'none', color: 'transparent', use: 'Default canvas, primary surfaces' },
+      'border': { name: 'Border', weight: '1px', color: 'var(--border)', use: 'Card edges, section dividers, input fields' },
+      'elevated': { name: 'Elevated', weight: '0 2px 8px', color: 'rgba(0,0,0,0.08)', use: 'Dropdown menus, tooltips, floating panels' }
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'Never used — all shapes have at least 4px radius' },
+      'sm': { value: '4px', use: 'Small UI elements: tags, badges, button corners, rule borders' },
+      'md': { value: '8px', use: 'Cards, inputs, buttons, select dropdowns, code blocks' },
+      'lg': { value: '16px', use: 'Large content cards, modal dialogs, model-card panels' },
+      'full': { value: '999px', use: 'Avatar circles, badge pills with extreme aspect ratios' }
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const rules = DEFAULT_RULES;
+      const radius = DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Spacing &amp; Rules</div>';
+      html += '  <h1 class="header__title"><span class="header__emoji">🤗</span> Four-pixel grid.<br>Yellow everywhere.</h1>';
+      html += '  <p class="header__subtitle">The spacing and depth system for Hugging Face — a cheerful, monospace-forward design where every pixel is accounted for and sunshine yellow acts as the only saturated accent.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Depth philosophy block */
+      html += '<div class="depth-philosophy">';
+      html += '  <div class="depth-philosophy__title">Design Philosophy</div>';
+      html += '  <div class="depth-philosophy__text">';
+      html += '    Hugging Face is unseriously serious. The brand uses <strong>monospace headings</strong> to channel "config file energy," crisp 4–8px radii instead of soft curves, and a <strong>single saturated accent</strong> — sunshine yellow <code>#ffd21e</code> — deployed sparingly as punctuation, never as a dominant surface. Shadows are minimal and functional. Tables are dense. The hugging-face emoji 🤗 appears unironically throughout. Every pixel serves the community hub: power users, not novices.';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        const label = obj.label || key;
+
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Philosophy block */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Spacing Strategy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    <strong>Base unit: 4px.</strong> All spacing derives from multiples of four. Major rhythm jumps at <code>--s-6</code> (48px) and <code>--s-8</code> (96px) — the gaps between sections feel generous, while internal padding stays snug. <strong>Dense content, breathing space.</strong> Table rows are compact (8px gutters), but the space between card sections is 24–32px. The system favors information density within bounds, then buys breathing room around those bounds.';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Grid & container demo */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Grid &amp; Container</div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__title">12-Column Grid (1280px max container)</div>';
+      html += '    <div class="grid-demo__visual">';
+      for (let i = 1; i <= 12; i++) {
+        html += '      <div class="grid-demo__column">' + i + '</div>';
+      }
+      html += '    </div>';
+      html += '    <div class="grid-demo__info">';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Max container width</div>';
+      html += '        <div class="grid-demo__stat">1280px (optimized for model browser + content layout)</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Gutter</div>';
+      html += '        <div class="grid-demo__stat">24px (12px per side, allowing room for dense UI)</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Sidebar width</div>';
+      html += '        <div class="grid-demo__stat">280px (model browser, filters, navigation)</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Content area</div>';
+      html += '        <div class="grid-demo__stat">calc(100% - 280px - 24px) at full width</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+
+      html += '  <div class="container-demo">';
+      html += '    <div class="container-demo__title">Container Visualization</div>';
+      html += '    <div class="container-demo__visual">';
+      html += '      <div class="container-demo__inner">';
+      html += '        <div class="container-demo__label">1280px max-width</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '    <div class="container-demo__specs">';
+      html += '      <div>';
+      html += '        <div class="container-demo__spec-label">Desktop (1280px+)</div>';
+      html += '        <div class="container-demo__spec">Full container with 24px side margins</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="container-demo__spec-label">Tablet (&lt;1280px)</div>';
+      html += '        <div class="container-demo__spec">Flexible, sidebar may collapse</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Rule weights / Depth levels */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth &amp; Borders</div>';
+
+      Object.entries(rules).forEach(([key, rule]) => {
+        const weight = rule.weight;
+        const color = rule.color;
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <div>';
+        html += '      <div class="rule-demo__name">' + esc(rule.name) + '</div>';
+        html += '      <div class="rule-demo__label">' + esc(rule.use) + '</div>';
+        html += '    </div>';
+        html += '    <div class="rule-demo__spec">' + esc(weight) + '</div>';
+        html += '  </div>';
+
+        if (weight === 'none') {
+          html += '  <div class="rule-demo__container" style="background: var(--paper); border: 1px dashed var(--border);">';
+          html += '    <div class="rule-demo__flat-note">No border or shadow applied</div>';
+          html += '  </div>';
+        } else if (weight.includes('px')) {
+          const weightNum = parseFloat(weight) || 1;
+          html += '  <div class="rule-demo__container" style="border-width: ' + weightNum + 'px; border-style: solid; border-color: ' + color + ';">';
+          html += '    <div class="rule-demo__flat-note">' + esc(weight) + ' solid border</div>';
+          html += '  </div>';
+        } else {
+          html += '  <div class="rule-demo__container" style="box-shadow: ' + color + ';">';
+          html += '    <div class="rule-demo__flat-note">Shadow: ' + esc(weight) + '</div>';
+          html += '  </div>';
+        }
+
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+
+      Object.entries(radius).forEach(([key, obj]) => {
+        const radiusValue = obj.value;
+
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__demo">';
+        html += '    <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '  </div>';
+        html += '

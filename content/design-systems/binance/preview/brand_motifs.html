@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Binance.US</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: #ffffff;
+      color: var(--color-ink, #1e2026);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid var(--color-border-light, #e6e8ea);
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--color-muted, #777e90);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 60px;
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: 0;
+      color: var(--color-ink, #1e2026);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--paper, #f0b90b);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--color-secondary-text, #32313a);
+      max-width: 720px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--color-muted, #777e90);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--color-border-light, #e6e8ea);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+      background: #ffffff;
+      border: 1px solid var(--color-border-light, #e6e8ea);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 16px 16px 40px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--color-ink, #1e2026);
+      border-bottom: 1px solid var(--color-border-light, #e6e8ea);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--paper, #f0b90b);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: #ffffff;
+      border: 1px solid var(--color-border-light, #e6e8ea);
+      border-radius: 8px;
+      padding: 32px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--color-ink, #1e2026);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--color-crypto-red, #f6465d);
+    }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--paper, #f0b90b);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--color-crypto-red, #f6465d);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--color-ink, #1e2026);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--color-border-light, #e6e8ea);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 140px;
+      border: 1px solid var(--color-border-light, #e6e8ea);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 12px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.3;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    .harmony-strip__hex {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      padding: 2px 6px;
+      opacity: 0.6;
+      margin-top: 4px;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: #ffffff;
+      border: 1px solid var(--color-border-light, #e6e8ea);
+      border-radius: 8px;
+      padding: 48px 40px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--color-muted, #777e90);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 52px;
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: 0;
+      color: var(--color-ink, #1e2026);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--paper, #f0b90b);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.6;
+      color: var(--color-secondary-text, #32313a);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--color-border-light, #e6e8ea);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--color-muted, #777e90);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 700;
+      color: var(--color-ink, #1e2026);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: #ffffff;
+      border: 1px solid var(--color-border-light, #e6e8ea);
+      border-radius: 8px;
+      padding: 32px;
+      max-width: 840px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.6;
+      color: var(--color-secondary-text, #32313a);
+    }
+
+    /* ──── Two-Tone Rhythm Visual ──── */
+    .rhythm-visual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--color-border-light, #e6e8ea);
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .rhythm-visual {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .rhythm-slide {
+      aspect-ratio: 16 / 10;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+    }
+
+    .rhythm-slide--light {
+      background: #ffffff;
+      color: var(--color-ink, #1e2026);
+    }
+
+    .rhythm-slide--dark {
+      background: var(--color-binance-dark, #222126);
+      color: #ffffff;
+    }
+
+    .rhythm-slide__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      opacity: 0.7;
+    }
+
+    .rhythm-slide__headline {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: 0;
+      margin-bottom: 0;
+    }
+
+    .rhythm-slide__accent {
+      color: var(--paper, #f0b90b);
+    }
+
+    /* ──── Button Styles Visual ──── */
+    .buttons-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      background: #ffffff;
+      border: 1px solid var(--color-border-light, #e6e8ea);
+      border-radius: 8px;
+      padding: 32px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .buttons-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .button-demo {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .button-demo__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-muted, #777e90);
+      margin-bottom: 4px;
+    }
+
+    .button-demo__button {
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.16px;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+      transition: all 200ms ease;
+    }
+
+    .button-demo__button--primary {
+      background: var(--paper, #f0b90b);
+      color: var(--color-ink, #1e2026);
+    }
+
+    .button-demo__button--primary:hover {
+      background: var(--color-active-yellow, #d0980b);
+    }
+
+    .button-demo__button--secondary {
+      background: transparent;
+      color: var(--color-ink, #1e2026);
+      border: 1px solid var(--color-border-light, #e6e8ea);
+    }
+
+    .button-demo__button--secondary:hover {
+      background: var(--color-snow, #f5f5f5);
+      border-color: var(--color-ink, #1e2026);
+    }
+
+    .button-demo__button--dark {
+      background: var(--color-binance-dark, #222126);
+      color: #ffffff;
+    }
+
+    .button-demo__button--dark:hover {
+      background: var(--color-hover-dark, #1a1a1a);
+    }
+
+    /* ──── Type Ramp ──── */
+    .type-ramp {
+      background: #ffffff;
+      border: 1px solid var(--color-border-light, #e6e8ea);
+      border-radius: 8px;
+      padding: 32px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .type-ramp__item {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--color-border-light, #e6e8ea);
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .type-ramp__item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .type-ramp__meta {
+      flex-shrink: 0;
+    }
+
+    .type-ramp__meta-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-muted, #777e90);
+      margin-bottom: 6px;
+    }
+
+    .type-ramp__meta-details {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--color-muted, #777e90);
+      line-height: 1.5;
+    }
+
+    .type-ramp__example {
+      flex: 1;
+    }
+
+    .type-ramp__display-hero {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 60px;
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .type-ramp__display-secondary {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .type-ramp__h1 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .type-ramp__h2 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .type-ramp__h3 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .type-ramp__h4 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .type-ramp__body-large {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    .type-ramp__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    .type-ramp__caption {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.43;
+      letter-spacing: 0;
+    }
+
+    .type-ramp__button {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: 0.16px;
+    }
+
+    .type-ramp__small {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--color-muted, #777e90);
+      font-size: 18px;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--color-border-light, #e6e8ea);
+      border-top-color: var(--paper, #f0b90b);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'bone', 'slate', 'signal', 'border'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#f6465d">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const extended = colors.extended || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">The <span>DNA</span> of Binance.US</h1>';
+      html += '  <p class="header__subtitle">Trading-floor precision. Binance Yellow cuts through a monochrome canvas — two-tone rhythm, pill-shaped CTAs, and data-first hierarchy. Every element drives action or informs position.</p>';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Binance.US radiates the polished urgency of a digital trading floor. White surfaces inspire trust; the dark panel (#222126) adds depth and authority. Binance Yellow (#F0B90B) is the singular accent — unmistakable, optimistic, engineered to guide every eye toward the next trade. The system speaks fintech with BinancePlex typography, restrained shadows (5% opacity maximum), and pill-shaped primary buttons (50px radius). No decorative illustrations. No gradients. No rounded corners above 12px except on CTAs and video containers. Real-time data and price tickers dominate — numbers build trust faster than prose.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Two-tone light/dark section alternation — white surfaces for trust, dark panels for depth</li>';
+      html += '    <li>Binance Yellow (#F0B90B) as the singular accent color driving all primary actions</li>';
+      html += '    <li>BinancePlex custom typeface at weight 500+ for all interactive elements</li>';
+      html += '    <li>Pill-shaped CTA buttons (50px radius) that demand attention and action</li>';
+      html += '    <li>12px radius on content cards for a polished but not overly rounded feel</li>';
+      html += '    <li>Real-time data prominently displayed — prices, percentages, statistics build trust</li>';
+      html += '    <li>Slate (#848E9C) as the universal quiet voice for secondary and metadata text</li>';
+      html += '    <li>Shadows at 5% opacity or less — barely there but present for elevation</li>';
+      html += '    <li>No decorative illustrations — imagery must be product screenshots or data visualizations</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use Binance Yellow (#F0B90B) exclusively for primary CTAs and brand accents</li>';
+      html += '      <li>Keep light and dark sections strictly alternating for visual rhythm</li>';
+      html += '      <li>Use BinancePlex weight 500+ for all interactive elements and headings</li>';
+      html += '      <li>Apply 50px radius to all primary CTA pill buttons — the signature shape</li>';
+      html += '      <li>Maintain 12px radius on content cards for polish without excess roundness</li>';
+      html += '      <li>Show real-time data prominently — prices, percentages, stats build trust</li>';
+      html += '      <li>Use Slate (#848E9C) for secondary and metadata text — the quiet voice</li>';
+      html += '      <li>Use Accessible Binance Gold (#9a7000) for yellow/gold text on light backgrounds</li>';
+      html += '      <li>Keep shadows at 5% opacity maximum — barely visible but present</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Don\'t use Binance Yellow as text on white — it fails WCAG AA contrast</li>';
+      html += '      <li>Don\'t introduce additional brand colors — Yellow is the only accent</li>';
+      html += '      <li>Don\'t use rounded corners above 12px except on CTAs and video</li>';
+      html += '      <li>Don\'t add heavy shadows or hover lift effects — stability over motion</li>';
+      html += '      <li>Don\'t use BinancePlex below weight 500 for headings — undermines authority</li>';
+      html += '      <li>Don\'t place yellow text on yellow backgrounds — ensure high contrast always</li>';
+      html += '      <li>Don\'t mix pill (50px) and square (6px) button styles in the same row</li>';
+      html += '      <li>Don\'t soften the dark sections — #222126 must feel authoritative</li>';
+      html += '      <li>Don\'t use decorative illustrations — only product or data visualization</li>';
+      html += '      <li>Don\'t use colored backgrounds for semantic states — use text color instead</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Two-Tone Rhythm Visual ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Two-Tone Rhythm</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 14px; line-height: 1.5; color: var(--color-muted); margin-bottom: 24px; max-width: 840px;">Light and dark sections alternate throughout the trading interface, creating visual rhythm that mirrors the bull-and-bear duality of crypto markets. Binance Yellow cuts through both surfaces with equal authority — the single accent that anchors every interaction.</p>';
+      html += '  <div class="rhythm-visual">';
+
+      html += '    <div class="rhythm-slide rhythm-slide--light">';
+      html += '      <div class="rhythm-slide__label">Light Surface</div>';
+      html += '      <div class="rhythm-slide__headline">Trust through <span class="rhythm-slide__accent">clarity</span></div>';
+      html += '    </div>';
+
+      html += '    <div class="rhythm-slide rhythm-slide--dark">';
+      html += '      <div class="rhythm-slide__label">Dark Panel</div>';
+      html += '      <div class="rhythm-slide__headline">Authority through <span class="rhythm-slide__accent">depth</span></div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = ['paper', 'bone', 'color-binance-dark', 'slate', 'color-crypto-green', 'color-crypto-red'];
+      const harmonyColors = {
+        'paper': colors.paper,
+        'bone': colors.bone,
+        'color-binance-dark': extended['binance-dark'],
+        'slate': colors.slate,
+        'color-crypto-green': extended['crypto-green'],
+        'color-crypto-red': extended['crypto-red']
+      };
+
+      html += '<div class="section">';
+      html += '  <div class="section__label">Color Harmony</div>';
+      html += '  <div class="harmony-strip">';
+
+      Object.keys(harmonyColors).forEach(key => {
+        const hex = harmonyColors[key];
+        if (!hex) return;
+        const lum = relativeLuminance(hex);
+        const labelColor = lum > 0.5 ? '#1e2026' : '#ffffff';
+        const cleanKey

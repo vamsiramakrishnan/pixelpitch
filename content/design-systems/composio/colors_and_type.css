@@ -1,0 +1,102 @@
+/* Composio — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  /* ── Colors ── */
+  --paper:   #0f0f0f;
+  --ink:     #111111;
+  --slate:   #666666;
+  --signal:  #00ffff;
+  --bone:    #000000;
+  --border:  #0089ff;
+  --surface: #00ffff;
+
+  /* Extended palette */
+  --color-composio-cobalt: #0007cd;
+  --color-accessible-brand-blue: #8859ff;
+  --color-ocean-blue: #0096ff;
+  --color-charcoal: #2c2c2c;
+  --color-pure-white: #ffffff;
+  --color-muted-smoke: #7b7b7b;
+  --color-light-border: #e0e0e0;
+
+  /* Semantic */
+  --danger:  #0f0f0f;
+  --info:    #0007cd;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    JetBrains Mono;
+
+  /* Type ramp */
+  --t-display-hero: 64px;
+  --t-section-heading: 48px;
+  --t-sub-heading-large: 40px;
+  --t-sub-heading: 28px;
+  --t-card-title: 24px;
+  --t-feature-label: 20px;
+  --t-body-large: 18px;
+  --t-body-button: 16px;
+  --t-body-small: 15px;
+  --t-caption: 14px;
+  --t-label: 13px;
+  --t-tag-overline: 12px;
+  --t-micro: 12px;
+  --t-code-body: 16px;
+  --t-code-small: 14px;
+  --t-code-caption: 12px;
+  --t-code-overline: 14px;
+  --t-code-micro: 11px;
+  --t-code-nano: 10px;
+
+  /* ── Spacing ── */
+  --s-1: 1px;
+  --s-2: 2px;
+  --s-3: 4px;
+  --s-4: 6px;
+  --s-5: 8px;
+  --s-6: 10px;
+  --s-7: 12px;
+  --s-8: 14px;
+  --s-9: 16px;
+  --s-10: 18px;
+  --s-11: 20px;
+  --s-12: 24px;
+  --s-13: 30px;
+  --s-14: 32px;
+  --s-15: 40px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   120px;
+  --radius-full: 37px;
+
+  /* ── Components ── */
+  --button-radius:  10px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    10px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

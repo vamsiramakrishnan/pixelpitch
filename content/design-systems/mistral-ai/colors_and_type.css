@@ -1,0 +1,93 @@
+/* Mistral AI — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #fffaeb;
+  --ink:     #111111;
+  --slate:   #666666;
+  --signal:  #ff8a00;
+  --bone:    #fffaeb;
+  --border:  #e5e5e5;
+  --surface: #fff0c2;
+
+  /* Extended palette */
+  --color-mistral-orange: #fa520f;
+  --color-mistral-flame: #fb6424;
+  --color-block-orange: #ff8105;
+  --color-sunshine-700: #ffa110;
+  --color-sunshine-500: #ffb83e;
+  --color-sunshine-300: #ffd06a;
+  --color-block-gold: #ffe295;
+  --color-bright-yellow: #ffd900;
+  --color-pure-white: #ffffff;
+  --color-mistral-black: #1f1f1f;
+
+  /* Semantic */
+  --warning: #ff8a00;
+  --danger:  #fa520f;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 82px;
+  --t-section-heading: 56px;
+  --t-sub-heading-large: 48px;
+  --t-sub-heading: 32px;
+  --t-card-title: 30px;
+  --t-feature-title: 24px;
+  --t-body-button: 16px;
+  --t-button-uppercase: 16px;
+  --t-caption-link: 14px;
+
+  /* ── Spacing ── */
+  --s-1: 2px;
+  --s-2: 4px;
+  --s-3: 8px;
+  --s-4: 10px;
+  --s-5: 12px;
+  --s-6: 16px;
+  --s-7: 20px;
+  --s-8: 24px;
+  --s-9: 32px;
+  --s-10: 40px;
+  --s-11: 48px;
+  --s-12: 64px;
+  --s-13: 80px;
+  --s-14: 98px;
+  --s-15: 100px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   8px;
+  --radius-md:   10px;
+  --radius-lg:   80px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  10px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    10px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

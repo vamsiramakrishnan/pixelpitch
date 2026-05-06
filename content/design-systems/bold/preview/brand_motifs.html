@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Bold</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 84px;
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--slate, #666666);
+      max-width: 800px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 120px;
+      height: 3px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 3px solid var(--signal, #3b82f6);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 18px 0 18px 32px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      border-bottom: 2px solid var(--border, #e5e5e5);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 26px;
+      width: 8px;
+      height: 8px;
+      border-radius: 0;
+      background: var(--signal, #3b82f6);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 2px solid var(--ink, #111111);
+      border-radius: var(--radius-md, 8px);
+      padding: 40px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--border, #e5e5e5);
+    }
+
+    .dd-card__heading--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-card__icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 14px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.6;
+      color: var(--ink, #111111);
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: var(--radius-md, 8px);
+      overflow: hidden;
+      height: 140px;
+      border: 2px solid var(--ink, #111111);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 16px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.5;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      white-space: nowrap;
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--paper, #ffffff);
+      border: 2px solid var(--ink, #111111);
+      border-radius: var(--radius-md, 8px);
+      padding: 56px 48px;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 64px;
+      font-weight: 900;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 24px;
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 1.7;
+      color: var(--ink, #111111);
+      max-width: 800px;
+      margin-bottom: 32px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      padding-top: 20px;
+      border-top: 2px solid var(--border, #e5e5e5);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 700;
+      color: var(--signal, #3b82f6);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--paper, #ffffff);
+      border: 2px solid var(--ink, #111111);
+      border-radius: var(--radius-md, 8px);
+      padding: 40px;
+      max-width: 900px;
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 1.7;
+      color: var(--ink, #111111);
+    }
+
+    /* ──── Bold Contrast Visual ──── */
+    .contrast-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .contrast-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .contrast-slide {
+      border: 2px solid var(--ink, #111111);
+      border-radius: var(--radius-md, 8px);
+      aspect-ratio: 16 / 10;
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .contrast-slide--correct {
+      background: var(--paper, #ffffff);
+    }
+
+    .contrast-slide--incorrect {
+      background: var(--paper, #ffffff);
+    }
+
+    .contrast-slide__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 16px;
+    }
+
+    .contrast-slide__headline {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 900;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 0;
+    }
+
+    .contrast-slide__accent {
+      color: var(--signal, #3b82f6);
+    }
+
+    .contrast-slide__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 18px;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 36px;
+      height: 36px;
+      margin: 20px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#3b82f6">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">The <span>Bold</span> Foundation</h1>';
+      html += '  <p class="header__subtitle">Heavyweight typography, commanding high-contrast layouts, and purposeful signal blue. Built for impact.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Bold speaks in strong voices and clear contrasts. The canvas is pure white. Typefaces are sans-serif and weighted heavy — 600 for labels, 700 for body emphasis, 900 for headlines. Every element has definite edges: 2px borders, square corners or subtle 8px radii, no shadows or gradients. One signal blue (#3b82f6) anchors interactive states and accents. Spacing is generous: s-4 (24px) between components, s-7 (64px) between sections. The voice is direct, decisive, and commanding. No ambiguity. No visual whispers.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Pure white canvas (#FFFFFF) with crisp, high-contrast typography</li>';
+      html += '    <li>Heavyweight sans-serif display type: 900 weight on headlines</li>';
+      html += '    <li>Signal blue (#3b82f6) as the sole interactive and accent color</li>';
+      html += '    <li>Defined borders: 2px or 3px strokes on major elements</li>';
+      html += '    <li>Consistent radii: 0 for sharp edges, 8px for soft components</li>';
+      html += '    <li>Generous spacing: s-4 and s-5 create breathing room</li>';
+      html += '    <li>No shadows or gradients — depth from borders and weight only</li>';
+      html += '    <li>Uppercase mono labels (600 weight) precede all major sections</li>';
+      html += '    <li>Direct, imperative voice: sentences that command, not suggest</li>';
+      html += '    <li>Stark contrast between foreground and background for accessibility</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use 900-weight sans-serif for all hero and display headlines</li>';
+      html += '      <li>Set body type at 500–600 weight for bold readability</li>';
+      html += '      <li>Apply 2px borders to cards, modals, and primary containers</li>';
+      html += '      <li>Use #3b82f6 signal blue for all interactive states and accents</li>';
+      html += '      <li>Precede sections with uppercase mono labels in signal blue</li>';
+      html += '      <li>Use 8px border-radius on soft UI components (buttons, cards)</li>';
+      html += '      <li>Maintain white background (#FFFFFF) as the default canvas</li>';
+      html += '      <li>Stack spacing in multiples of 8px (s-2, s-3, s-4, s-5, etc.)</li>';
+      html += '      <li>Keep contrast ratios above 7:1 for all text on white</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use gray or muted colors for primary typography</li>';
+      html += '      <li>Apply box-shadow effects — use borders instead</li>';
+      html += '      <li>Use rounded corners larger than 8px on standard components</li>';
+      html += '      <li>Mix accent colors — signal blue is the only one</li>';
+      html += '      <li>Set headlines below 700 weight or body text below 500</li>';
+      html += '      <li>Use gradients, blurs, or glassmorphic effects</li>';
+      html += '      <li>Deploy serif typefaces for body or accent text</li>';
+      html += '      <li>Reduce contrast with subtle color overlays or screens</li>';
+      html += '      <li>Space elements randomly — always use the spacing scale</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Contrast Demo ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Contrast & Weight</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 18px; line-height: 1.65; color: var(--slate); margin-bottom: 24px; max-width: 900px;">Bold thrives on stark contrast. Heavy typography against white. Signal blue against neutral. Every element is decisive, with no middle ground. Weight choices signal hierarchy immediately.</p>';
+      html += '  <div class="contrast-grid">';
+
+      html += '    <div class="contrast-slide contrast-slide--correct">';
+      html += '      <div class="contrast-slide__kicker">Correct</div>';
+      html += '      <div class="contrast-slide__headline">900 weight <span class="contrast-slide__accent">commands</span> attention</div>';
+      html += '      <div class="contrast-slide__label">Maximum contrast. Clear hierarchy.</div>';
+      html += '    </div>';
+
+      html += '    <div class="contrast-slide contrast-slide--incorrect">';
+      html += '      <div class="contrast-slide__kicker">Incorrect</div>';
+      html += '      <div style="font-size: 20px; font-family: var(--font-body); font-weight: 400; color: var(--slate); margin-bottom: 16px;">Light weight looks timid</div>';
+      html += '      <div class="contrast-slide__headline" style="font-weight: 400; color: var(--slate);">400-weight dilutes impact</div>';
+      html += '      <div class="contrast-slide__label">Lack of visual authority.</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#111111' : '#ffffff';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Typography Pairing ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Display + Body</div>';
+      html += '    <div class="type-pairing__display">Heavy sans-serif <span>commands</span></div>';
+
+      html += '    <div class="type-pairing__body">Bold uses system-ui sans-serif exclusively. All headlines weight 900 with tight 1.0 line height. Body text sits at 500–600 weight with 1.6–1.7 line height for clear readability. The weight delta between display and body creates instantaneous hierarchy without relying on size alone. Bold means you can see it from across the room.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Display</span>';
+      html += '        System-UI, 900 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Body</span>';
+      html += '        System-UI, 500–600 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Mono</span>';
+      html += '        UI Monospace, 600 weight';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Type Ramp Section ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Type Ramp & Roles</div>';
+      html += '  <div style="border: 2px solid var(--ink); border-radius: 8px; padding: 40px; background: var(--paper);">';
+
+      const ramp = [
+        { role: 'Hero', size: '84px', weight: '900', lineHeight: '0.95', font: 'System-UI', example: 'Commanding presence' },
+        { role: 'Display', size: '64px', weight: '900', lineHeight: '1.00', font: 'System-UI', example: 'Major headline' },
+        { role: 'Headline', size: '48px', weight: '900', lineHeight: '1.10', font: 'System-UI', example: 'Section heading' },
+        { role: 'Subhead', size: '32px', weight: '700', lineHeight: '1.20', font: 'System-UI', example: 'Sub-section title' },
+        { role: 'Lead', size: '24px', weight: '700', lineHeight: '1.35', font: 'System-UI', example: 'Lead paragraph' },
+        { role: 'Body', size: '20px', weight: '500', lineHeight: '1.70', font: 'System-UI', example: 'Standard paragraph text for reading' },
+        { role: 'Caption', size: '16px', weight: '500', lineHeight: '1.50', font: 'System-UI', example: 'Image caption or small label' },
+        { role: 'Label', size: '13px', weight: '600', lineHeight: '1.00', font: 'UI Monospace', example: 'SECTION LABEL' },
+        { role: 'Meta', size: '12px', weight: '600', lineHeight: '1.00', font: 'UI Monospace', example: 'META · DATE · COUNT' }
+      ];
+
+      ramp.forEach((item, i) => {
+        const fontFamily = item.font === 'System-UI' ? 'var(--font-display)' : 'var(--font-mono)';
+        
+        html += '<div style="margin-bottom: 32px; padding-bottom: 28px; border-bottom: 2px solid var(--border); display: flex; gap: 32px; align-items: flex-start;">';
+        html += '  <div style="flex: 0 0 180px;">';
+        html += '    <div style="font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--signal); font-weight: 600; margin-bottom: 6px;">' + esc(item.role) + '</div>';
+        html += '    <div style="font-family: var(--font-mono); font-size: 13px; color: var(--slate); line-height: 1.6; font-weight: 500;">' + esc(item.size) + '<br>' + esc(item.font) + '<br>Weight ' + esc(item.weight) + '<br>LH ' + esc(item.lineHeight) + '</div>';
+        html += '  </div>';
+        html += '  <div style="flex: 1;">';
+        html += '    <div style="font-family: ' + fontFamily + '; font-size: ' + item.size + '; font-weight: ' + item.weight + '; line-height: ' + item.lineHeight + '; letter-spacing: ' + (item.role === 'Hero' || item.role === 'Display' || item.role === 'Headline' ? '-0.02em' : '0') + '; color: var(--ink); margin-bottom: 8px;">' + esc(item.example) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    /* ──── Utilities ──── */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function relativeLuminance(hex) {
+      try {
+        const [r, g, b] = hexToRgb(hex).map(c => {
+          c /= 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      } catch { return 0.5; }
+    }
+  </script>
+</body>
+</html>

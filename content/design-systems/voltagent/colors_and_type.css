@@ -1,0 +1,100 @@
+/* VoltAgent — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #10b981;
+  --ink:     #f2f2f2;
+  --slate:   #b8b3b0;
+  --signal:  #00d992;
+  --bone:    #10b981;
+  --border:  #00d992;
+  --surface: #101010;
+
+  /* Extended palette */
+  --color-voltagent-mint: #2fd6a1;
+  --color-soft-purple: #818cf8;
+  --color-cobalt-primary: #306cce;
+  --color-deep-cobalt: #2554a0;
+  --color-ring-blue: #3b82f6;
+  --color-abyss-black: #050507;
+  --color-warm-charcoal-border: #3d3a39;
+  --color-pure-white: #ffffff;
+  --color-steel-slate: #8b949e;
+  --color-fog-gray: #bdbdbd;
+  --color-mist-gray: #dcdcdc;
+  --color-near-white: #eeeeee;
+  --color-success-emerald: #008b00;
+  --color-success-light: #80d280;
+  --color-warning-amber: #ffba00;
+  --color-warning-pale: #ffdd80;
+  --color-danger-coral: #fb565b;
+  --color-danger-rose: #fd9c9f;
+  --color-info-teal: #4cb3d4;
+  --color-dashed-border-slate: #4f5d75;
+
+  /* Semantic */
+  --success: #008b00;
+  --warning: #ffba00;
+  --danger:  #fb565b;
+  --info:    #4cb3d4;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 60px;
+  --t-section-heading: 36px;
+  --t-sub-heading: 24px;
+  --t-sub-heading-light: 24px;
+  --t-overline: 20px;
+  --t-feature-title: 20px;
+  --t-overline-small: 18px;
+  --t-body-button: 16px;
+  --t-nav-link: 14.45px;
+  --t-caption-label: 14px;
+  --t-tag-overline-tiny: 14px;
+  --t-micro: 12px;
+  --t-code-body: 14px;
+  --t-code-small: 12px;
+  --t-code-button: 13px;
+
+  /* ── Spacing ── */
+  --s-1: 2px;
+  --s-2: 4px;
+  --s-3: 5px;
+  --s-4: 6px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   5px;
+  --radius-md:   8px;
+  --radius-lg:   96px;
+  --radius-full: 9999px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    6px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

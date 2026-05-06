@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — LinkedIn Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #f4f2ee);
+      color: var(--ink, #0a66c2);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1128px;
+      margin: 0 auto;
+      padding: 96px 64px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 96px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: var(--ink, #0a66c2);
+      margin-bottom: 16px;
+      max-width: 85%;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate, #666666);
+      max-width: 75%;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--signal, #0a66c2);
+      border: none;
+      margin-top: 24px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 96px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 48px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #e0deda);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 80px;
+      gap: 24px;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border, #e0deda);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #0a66c2);
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      margin-top: 4px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 28px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 2px;
+      background: var(--ink, #0a66c2);
+      min-width: 2px;
+      transition: opacity 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.6;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #0a66c2);
+      text-align: right;
+    }
+
+    /* Rule weights */
+    .rule-demo {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border, #e0deda);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #0a66c2);
+    }
+
+    .rule-demo__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+
+    .rule-demo__container {
+      width: 100%;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      padding: 0;
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    .rule-demo__description {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      color: var(--slate, #666666);
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .radius-item {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 32px;
+      align-items: flex-start;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .radius-item__box {
+      width: 100px;
+      height: 100px;
+      background: var(--surface, #ffffff);
+      border: 1px solid var(--border, #e0deda);
+      flex-shrink: 0;
+    }
+
+    .radius-item__info {
+      flex: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #0a66c2);
+      margin-bottom: 4px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--slate, #666666);
+    }
+
+    /* Philosophy block */
+    .philosophy {
+      background: var(--surface, #ffffff);
+      padding: 48px;
+      border: var(--card-border, 1px solid #e0deda);
+      border-radius: var(--radius-sm, 8px);
+      margin-bottom: 64px;
+    }
+
+    .philosophy__title {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--ink, #0a66c2);
+    }
+
+    .philosophy__text strong {
+      font-weight: 600;
+    }
+
+    .philosophy__text em {
+      font-style: italic;
+    }
+
+    .philosophy__text code {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      background: rgba(10, 102, 194, 0.08);
+      padding: 2px 6px;
+      font-size: 0.95em;
+      border-radius: 3px;
+    }
+
+    /* Grid demo */
+    .grid-demo {
+      background: var(--surface, #ffffff);
+      padding: 48px;
+      border: var(--card-border, 1px solid #e0deda);
+      border-radius: var(--radius-sm, 8px);
+      margin-bottom: 64px;
+    }
+
+    .grid-demo__title {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+    }
+
+    .grid-demo__visual {
+      width: 100%;
+      height: 200px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+      background-image: linear-gradient(90deg, rgba(10, 102, 194, 0.06) 1px, transparent 1px);
+      background-size: calc(100% / 12) 100%;
+      padding: 20px;
+      border: 1px dashed rgba(10, 102, 194, 0.2);
+      border-radius: var(--radius-sm, 8px);
+    }
+
+    .grid-demo__column {
+      background: rgba(10, 102, 194, 0.1);
+      border: 1px solid rgba(10, 102, 194, 0.2);
+      border-radius: 4px;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink, #0a66c2);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 8px;
+    }
+
+    .grid-demo__info {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+
+    .grid-demo__stat {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      color: var(--slate, #666666);
+    }
+
+    .grid-demo__stat-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 4px;
+    }
+
+    /* Depth system */
+    .depth-demo {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border, #e0deda);
+    }
+
+    .depth-demo:last-child {
+      border-bottom: none;
+    }
+
+    .depth-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+    }
+
+    .depth-demo__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #0a66c2);
+    }
+
+    .depth-demo__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+
+    .depth-demo__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+
+    .depth-demo__card {
+      background: var(--surface, #ffffff);
+      padding: 32px;
+      border-radius: var(--radius-sm, 8px);
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--slate, #666666);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+    }
+
+    .depth-demo__description {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      color: var(--slate, #666666);
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 2px solid rgba(10, 102, 194, 0.2);
+      border-top-color: var(--signal, #0a66c2);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 900px) {
+      .page {
+        padding: 64px 32px;
+      }
+
+      .header {
+        margin-bottom: 64px;
+      }
+
+      .header__title {
+        font-size: 36px;
+      }
+
+      .section {
+        margin-bottom: 64px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 80px 1fr 70px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        gap: 32px;
+      }
+
+      .radius-item {
+        grid-template-columns: 100px 1fr;
+        gap: 24px;
+      }
+
+      .grid-demo__info {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '4px', label: 'xs' },
+      's-2': { value: '8px', label: 'sm' },
+      's-3': { value: '12px', label: 'md' },
+      's-4': { value: '16px', label: 'lg' },
+      's-5': { value: '24px', label: 'xl' },
+      's-6': { value: '32px', label: '2xl' },
+      's-7': { value: '48px', label: '3xl' }
+    };
+
+    const DEFAULT_RULES = [
+      { name: 'Flat', level: 0, treatment: 'none', spec: 'No border', use: 'Default canvas and backgrounds' },
+      { name: 'Border', level: 1, treatment: '1px solid #e0deda', spec: '1px solid', use: 'Feed cards, profile sections, standard containers' },
+      { name: 'Elevated', level: 2, treatment: '0 2px 8px rgba(0,0,0,0.08)', spec: '0 2px 8px', use: 'Dropdown menus, reaction picker, tooltips' }
+    ];
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'Crisp edges where professionalism demands precision.' },
+      'sm': { value: '8px', use: 'Cards, containers, input fields, dropdown menus — the workhorse radius.' },
+      'md': { value: '16px', use: 'Pill buttons ("Connect", "Follow"), skill tags, badge containers.' },
+      'lg': { value: '24px', use: 'Reserved for future expansion or large modal containers.' },
+      'full': { value: '20px', use: 'Message input field, search bar — subtly softer than lg.' }
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#cc1016">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const rules = DEFAULT_RULES;
+      const radius = DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Spacing &amp; Rules</div>';
+      html += '  <h1 class="header__title">Eight pixels.<br>One feed.</h1>';
+      html += '  <p class="header__subtitle">The spacing and depth system for LinkedIn — a card-based architecture where every post, profile, and interaction lives in a uniform, scannable unit. Density through consistency, breathing room through simplicity.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Philosophy block */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Spacing Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    LinkedIn's spacing system prioritizes <strong>density over delight</strong>. Cards have 16px padding, not 24px or 32px. Text runs at 14px, not 16px. This is by design — professionals scan feed content rapidly, and a tight, consistent rhythm makes long scrolls effortless. The warm off-white canvas (<code>#f4f2ee</code>) breathes around white cards with only 8px gaps, creating visual separation without wasting vertical space. Every container uses the same padding, border, and radius treatment, establishing a metronomic visual rhythm that reinforces trust: <em>every element behaves the same way.</em>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 3);
+        const label = obj.label || key;
+        
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Grid visualization */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Desktop Layout Grid</div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__title">Three-Column Architecture (1128px max-width)</div>';
+      html += '    <div class="grid-demo__visual">';
+      for (let i = 1; i <= 12; i++) {
+        html += '      <div class="grid-demo__column">' + i + '</div>';
+      }
+      html += '    </div>';
+      html += '    <div class="grid-demo__info">';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Left Sidebar</div>';
+      html += '        <div class="grid-demo__stat">225px + 24px gutter (3 columns)</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Center Feed</div>';
+      html += '        <div class="grid-demo__stat">540px (6 columns) — primary content area</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Right Sidebar</div>';
+      html += '        <div class="grid-demo__stat">300px + 24px gutter (3 columns)</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Responsive Behavior</div>';
+      html += '        <div class="grid-demo__stat">Left sidebar hides on tablet; full-width cards on mobile with 8px margins</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Rule / Depth system */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth System</div>';
+
+      rules.forEach((rule, idx) => {
+        html += '<div class="depth-demo">';
+        html += '  <div class="depth-demo__header">';
+        html += '    <div>';
+        html += '      <div class="depth-demo__name">' + esc(rule.name) + '</div>';
+        html += '      <div class="depth-demo__label">' + esc(rule.use) + '</div>';
+        html += '    </div>';
+        html += '    <div class="depth-demo__spec">' + esc(rule.spec) + '</div>';
+        html += '  </div>';
+        
+        html += '  <div class="depth-demo__card" style="';
+        if (rule.treatment === 'none') {
+          html += 'border: 1px dashed rgba(10,102,194,0.2); background: transparent;';
+        } else if (rule.treatment.startsWith('0 ')) {
+          html += 'box-shadow: ' + rule.treatment + '; border: 1px solid var(--border, #e0deda);';
+        } else if (rule.treatment.includes('solid')) {
+          html += 'border: ' + rule.treatment + ';';
+        }
+        html += '">';
+        html += rule.treatment === 'none' ? 'No shadow or border' : 'Example card';
+        html += '</div>';
+        
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 14px; color: var(--slate); line-height: 1.5; margin-bottom: 48px;">LinkedIn uses a restrained radius scale — soft enough to feel modern, sharp enough to communicate professionalism. Circles (50%) are reserved for avatars and notification indicators.</p>';
+
+      const radiusEntries = Object.entries(radius);
+      radiusEntries.forEach(([key, obj]) => {
+        const radiusValue = obj.value;
+
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__demo">';
+        html += '    <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '  </div>';
+        html += '  <div class="radius-item__info">';
+        html += '    <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '    <div class="radius-item__value">' + esc(radiusValue) + '</div>';
+        html += '    <div class="radius-item__description">' + esc(obj.use) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Whitespace & density philosophy */
+      html += '<div class="philosophy" style="margin-top: 96px; margin-bottom: 0;">';
+      html += '  <div class="philosophy__title">Density &amp; Rhythm</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    <strong>Tight but rhythmic</strong>: LinkedIn's feed is information-dense by necessity — a recruiter scrolls dozens of job posts, a salesperson reviews hundreds of connection requests. Cards use 16px internal padding and 8px external gaps, creating a metronomic beat. Larger spacing (24–48px) appears only between major sections (nav, feed, sidebar). <strong>The border is the separator</strong>: Most depth comes from the 1px solid #e0deda border, not shadows. This keeps feed cards grounded and scannable. Shadows (<code>0 2px 8px rgba(0,0,0,0.08)</code>) appear only for floating UI — dropdowns, tooltips, modals — signaling that those elements sit *above* the canvas, not *on* it. <strong>System font stack for native feel</strong>: No custom typefaces. The system uses native system fonts (San Francisco, Segoe UI, Roboto) ensuring LinkedIn feels native to every operating system, reinforcing the professional-network tone.';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Dramatic</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 96px 64px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 96px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 12px;
+      max-width: 85%;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate);
+      max-width: 75%;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: var(--signal);
+      border: none;
+      margin-top: 24px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 96px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 48px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--signal);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 100px;
+      gap: 24px;
+      align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--slate);
+      margin-top: 4px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 3px;
+      background: var(--signal);
+      min-width: 3px;
+      border-radius: 2px;
+      transition: all 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      height: 4px;
+      background: var(--ink);
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      text-align: right;
+    }
+
+    /* Rule weights */
+    .rule-demo {
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 20px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .rule-demo__label {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--slate);
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--slate);
+    }
+
+    .rule-demo__container {
+      width: 100%;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 0;
+      background: var(--bone);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 64px;
+      margin-bottom: 48px;
+    }
+
+    .radius-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 32px;
+      align-items: flex-start;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .radius-item__box {
+      width: 120px;
+      height: 120px;
+      background: var(--bone);
+      border: 2px solid var(--signal);
+      flex-shrink: 0;
+    }
+
+    .radius-item__info {
+      flex: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--slate);
+      margin-bottom: 12px;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--slate);
+    }
+
+    /* Philosophy block */
+    .philosophy {
+      background: var(--bone);
+      padding: 48px;
+      border: 2px solid var(--signal);
+      border-radius: var(--radius-lg);
+      margin-bottom: 64px;
+    }
+
+    .philosophy__title {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: 16px;
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--ink);
+    }
+
+    .philosophy__text strong {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .philosophy__text em {
+      font-style: italic;
+      color: var(--slate);
+    }
+
+    .philosophy__text code {
+      font-family: var(--font-mono);
+      background: rgba(59, 130, 246, 0.1);
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      color: var(--signal);
+      font-size: 0.9em;
+    }
+
+    /* Grid demo */
+    .grid-demo {
+      background: var(--bone);
+      padding: 48px;
+      border: 2px solid var(--signal);
+      border-radius: var(--radius-lg);
+      margin-bottom: 64px;
+    }
+
+    .grid-demo__title {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: 24px;
+    }
+
+    .grid-demo__visual {
+      width: 100%;
+      height: 240px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+      background: var(--paper);
+      padding: 24px;
+      border: 2px dashed var(--signal);
+      border-radius: var(--radius-md);
+      margin-bottom: 24px;
+    }
+
+    .grid-demo__column {
+      background: rgba(59, 130, 246, 0.15);
+      border: 2px solid var(--signal);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--signal);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 8px;
+    }
+
+    .grid-demo__info {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .grid-demo__stat {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--ink);
+    }
+
+    .grid-demo__stat-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 6px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid rgba(59, 130, 246, 0.2);
+      border-top-color: var(--signal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 900px) {
+      .page {
+        padding: 64px 32px;
+      }
+
+      .header {
+        margin-bottom: 64px;
+      }
+
+      .header__title {
+        font-size: 48px;
+        max-width: 100%;
+      }
+
+      .header__subtitle {
+        max-width: 100%;
+      }
+
+      .section {
+        margin-bottom: 64px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 100px 1fr 80px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .radius-item {
+        grid-template-columns: 120px 1fr;
+      }
+
+      .grid-demo__visual {
+        height: 200px;
+      }
+
+      .grid-demo__info {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '4px', label: 'xs' },
+      's-2': { value: '8px', label: 'sm' },
+      's-3': { value: '16px', label: 'md' },
+      's-4': { value: '24px', label: 'lg' },
+      's-5': { value: '32px', label: 'xl' },
+      's-6': { value: '48px', label: '2xl' },
+      's-7': { value: '64px', label: '3xl' },
+      's-8': { value: '96px', label: '4xl' }
+    };
+
+    const DEFAULT_RULES = {
+      'flat': { name: 'Flat', weight: 'none', color: 'transparent', use: 'Default canvas, no separation' },
+      'border': { name: 'Border', weight: '1px solid', color: 'var(--border)', use: 'Card & section dividers' },
+      'elevated': { name: 'Elevated', weight: '0 2px 8px', color: 'rgba(0,0,0,0.08)', use: 'Interactive & hover states' }
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'Sharp corners for high-contrast layouts' },
+      'sm': { value: '4px', use: 'Micro-interactions, small UI elements' },
+      'md': { value: '8px', use: 'Default — buttons, inputs, small cards' },
+      'lg': { value: '16px', use: 'Large cards, major containers' },
+      'full': { value: '999px', use: 'Pill-shaped buttons & badges' }
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const rules = DEFAULT_RULES;
+      const radius = DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Spacing &amp; Rules</div>';
+      html += '  <h1 class="header__title">Bold Intervals.<br>Clear Hierarchy.</h1>';
+      html += '  <p class="header__subtitle">The spacing and depth system for Dramatic — high-contrast foundations that command attention through decisive rules, generous intervals, and theatrical precision.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Philosophy block */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Depth Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Depth in Dramatic is <strong>intentional and minimal</strong>. We use three levels: <strong>Flat</strong> (no treatment) for primary content, <strong>Border</strong> (1px solid) for clear sectioning and visual separation, and <strong>Elevated</strong> (subtle shadow) for interactive states and hover feedback. Every rule, every shadow, every spacing decision must <em>earn its place</em> through high contrast and clear intention. When in doubt: add whitespace before adding a border or shadow.';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 3);
+        const label = obj.label || key;
+        
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Grid visualization */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Content Grid</div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__title">12-Column Responsive Grid</div>';
+      html += '    <div class="grid-demo__visual">';
+      for (let i = 1; i <= 12; i++) {
+        html += '      <div class="grid-demo__column">' + i + '</div>';
+      }
+      html += '    </div>';
+      html += '    <div class="grid-demo__info">';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Grid System</div>';
+      html += '        <div class="grid-demo__stat">12 columns, 12px gutters, responsive breakpoints</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Edge Margins</div>';
+      html += '        <div class="grid-demo__stat">32px mobile, 64px tablet, 96px desktop</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Content Measure</div>';
+      html += '        <div class="grid-demo__stat">6–8 columns for body text, 70 characters max</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Layout Principle</div>';
+      html += '        <div class="grid-demo__stat">Asymmetrical yet balanced — bold and intentional</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Rule weights */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth Levels</div>';
+
+      Object.entries(rules).forEach(([key, rule]) => {
+        const weight = rule.weight;
+        const color = rule.color;
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <div>';
+        html += '      <div class="rule-demo__name">' + esc(rule.name) + '</div>';
+        html += '      <div class="rule-demo__label">' + esc(rule.use) + '</div>';
+        html += '    </div>';
+        html += '    <div class="rule-demo__spec">' + esc(weight) + '</div>';
+        html += '  </div>';
+        
+        if (weight === 'none') {
+          html += '  <div class="rule-demo__container" style="background: var(--paper); border: 2px dashed var(--slate); box-shadow: none;">';
+          html += '    <div style="font-family: var(--font-mono); font-size: 13px; color: var(--slate); font-weight: 500;">No border or shadow</div>';
+          html += '  </div>';
+        } else if (weight === '1px solid') {
+          html += '  <div class="rule-demo__container" style="background: var(--paper); border: 1px solid ' + color + '; box-shadow: none;">';
+          html += '  </div>';
+        } else {
+          html += '  <div class="rule-demo__container" style="background: var(--paper); border: none; box-shadow: ' + weight + ' ' + color + ';">';
+          html += '  </div>';
+        }
+        
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 15px; color: var(--slate); line-height: 1.7; margin-bottom: 48px;">Radius choices are deliberate: sharp corners for maximum contrast, subtle rounding for interactive elements, and full rounding for badges and pill-shaped buttons only.</p>';
+
+      Object.entries(radius).forEach(([key, obj]) => {
+        const radiusValue = obj.value;
+
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__demo">';
+        html += '    <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '  </div>';
+        html += '  <div class="radius-item__info">';
+        html += '    <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '    <div class="radius-item__value">' + esc(radiusValue) + '</div>';
+        html += '    <div class="radius-item__description">' + esc(obj.use) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Whitespace philosophy */
+      html += '<div class="philosophy" style="margin-top: 96px; margin-bottom: 0;">';
+      html += '  <div class="philosophy__title">Whitespace Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    <strong>Breathing room before borders</strong>: In Dramatic, whitespace is the primary separator. Use the spacing scale deliberately — generous 48px to 96px gaps between major sections before adding any visual rules. <strong>Hierarchy through contrast</strong>: Pair tight, dense content blocks with expansive whitespace. Headlines get breathing room. Bodies get clarity. Actions get prominence. <strong>Dramatic means decisive</strong>: Every spacing choice should have a reason. Every border should have purpose. Inconsistency that reads as intentionality is preferred over consistency that reads as indecision.';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

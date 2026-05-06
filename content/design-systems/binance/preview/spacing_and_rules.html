@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Binance.US</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--bone, #ffffff);
+      color: var(--color-ink, #1e2026);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 96px 32px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 96px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #848e9c);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 60px;
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: 0;
+      color: var(--color-ink, #1e2026);
+      margin-bottom: 12px;
+      max-width: 85%;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--slate, #848e9c);
+      max-width: 75%;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: var(--signal, #f0b90b);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 96px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #848e9c);
+      margin-bottom: 48px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--color-border-light, #e6e8ea);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 100px;
+      gap: 24px;
+      align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--color-border-light, #e6e8ea);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-ink, #1e2026);
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      color: var(--slate, #848e9c);
+      margin-top: 4px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 3px;
+      background: var(--signal, #f0b90b);
+      min-width: 3px;
+      transition: opacity 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.7;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-ink, #1e2026);
+      text-align: right;
+    }
+
+    /* Rule weights */
+    .rule-demo {
+      padding: 32px 0;
+      border-bottom: 1px solid var(--color-border-light, #e6e8ea);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-ink, #1e2026);
+    }
+
+    .rule-demo__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      color: var(--slate, #848e9c);
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      color: var(--slate, #848e9c);
+    }
+
+    .rule-demo__container {
+      width: 100%;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 0;
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 64px;
+      margin-bottom: 48px;
+    }
+
+    .radius-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .radius-item__box {
+      width: 120px;
+      height: 120px;
+      background: var(--color-snow, #f5f5f5);
+      border: 2px solid var(--signal, #f0b90b);
+      flex-shrink: 0;
+    }
+
+    .radius-item__info {
+      flex: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-ink, #1e2026);
+      margin-bottom: 4px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      color: var(--slate, #848e9c);
+      margin-bottom: 12px;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--slate, #848e9c);
+    }
+
+    /* Philosophy block */
+    .philosophy {
+      background: var(--color-snow, #f5f5f5);
+      padding: 48px;
+      border: 1px solid var(--color-border-light, #e6e8ea);
+      margin-bottom: 64px;
+    }
+
+    .philosophy__title {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #848e9c);
+      margin-bottom: 16px;
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      line-height: 1.55;
+      color: var(--color-ink, #1e2026);
+    }
+
+    .philosophy__text strong {
+      font-weight: 700;
+    }
+
+    .philosophy__text em {
+      font-style: italic;
+    }
+
+    /* Grid demo */
+    .grid-demo {
+      background: var(--color-snow, #f5f5f5);
+      padding: 48px;
+      border: 1px solid var(--color-border-light, #e6e8ea);
+      margin-bottom: 64px;
+    }
+
+    .grid-demo__title {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #848e9c);
+      margin-bottom: 24px;
+    }
+
+    .grid-demo__visual {
+      width: 100%;
+      height: 200px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+      background-image: linear-gradient(90deg, rgba(240, 185, 11, 0.08) 1px, transparent 1px);
+      background-size: calc(100% / 12) 100%;
+      padding: 24px;
+      border: 1px dashed var(--color-border-light, #e6e8ea);
+    }
+
+    .grid-demo__column {
+      background: rgba(240, 185, 11, 0.12);
+      border: 1px solid rgba(240, 185, 11, 0.25);
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--signal, #f0b90b);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 8px;
+    }
+
+    .grid-demo__info {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .grid-demo__stat {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      color: var(--color-ink, #1e2026);
+    }
+
+    .grid-demo__stat-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #848e9c);
+      margin-bottom: 4px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #848e9c);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 2px solid rgba(30, 32, 38, 0.2);
+      border-top-color: var(--signal, #f0b90b);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 900px) {
+      .page {
+        padding: 64px 16px;
+      }
+
+      .header {
+        margin-bottom: 64px;
+      }
+
+      .header__title {
+        font-size: 48px;
+        max-width: 100%;
+      }
+
+      .header__subtitle {
+        max-width: 100%;
+      }
+
+      .section {
+        margin-bottom: 64px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 100px 1fr 80px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .radius-item {
+        grid-template-columns: 120px 1fr;
+      }
+
+      .grid-demo__info {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '4px', label: 'xs' },
+      's-2': { value: '8px', label: 'sm' },
+      's-3': { value: '16px', label: 'md' },
+      's-4': { value: '24px', label: 'lg' },
+      's-5': { value: '32px', label: 'xl' },
+      's-6': { value: '48px', label: '2xl' },
+      's-7': { value: '64px', label: '3xl' },
+      's-8': { value: '96px', label: '4xl' }
+    };
+
+    const DEFAULT_RULES = {
+      'flat': { name: 'Flat', weight: 'none', color: 'transparent', use: 'Default canvas, inline elements' },
+      'subtle': { name: 'Subtle', weight: '3px', color: 'rgba(32, 32, 37, 0.05)', use: 'Content cards, resting state' },
+      'medium': { name: 'Medium', weight: '5px', color: 'rgba(8, 8, 8, 0.05)', use: 'Hovered cards, elevated containers' },
+      'pill': { name: 'Pill Shadow', weight: '10px', color: 'rgb(153,153,153)', use: 'CTA buttons, floating actions' },
+      'heavy': { name: 'Heavy', weight: '37px', color: 'rgba(0,0,0)', use: 'Modal overlays, dropdown menus' }
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'Hard edges, grid boundaries' },
+      'sm': { value: '4px', use: 'Close buttons, micro-interactive elements' },
+      'md': { value: '8px', use: 'Form inputs, data cards, image containers, primary buttons' },
+      'lg': { value: '16px', use: 'Content cards, feature containers, video elements' },
+      'full': { value: '999px', use: 'Pill buttons (CTA), search inputs, avatar badges' }
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#f6465d">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const rules = DEFAULT_RULES;
+      const radius = DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Spacing &amp; Rules</div>';
+      html += '  <h1 class="header__title">Trading floor precision.<br>Golden accent clarity.</h1>';
+      html += '  <p class="header__subtitle">The spacing and depth system for Binance.US — engineered for fintech trust, where every pixel of whitespace carries weight and every shadow signals depth with restraint.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Philosophy block */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Spacing Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Binance.US uses whitespace as a <strong>trust signal</strong>. Generous padding around the hero section and between content blocks creates a sense of spaciousness that counters the information density typical of crypto exchanges. Light sections breathe — wide margins around headlines, ample spacing between cards. Dark sections compress, packing features into tighter grids to convey capability and operational depth. The rhythm alternates between <strong>inviting entry</strong> (light, spacious) and <strong>deep functionality</strong> (dark, dense). Every spacing increment earns its place: 4px for icon padding, 8px for the base unit, 24px for standard padding, and 96px for the hero section\'s commanding presence. <em>Calm confidence. Never chaotic.</em>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        const label = obj.label || key;
+        
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Grid visualization */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Container Grid</div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__title">12-Column Layout (1200px max, centered)</div>';
+      html += '    <div class="grid-demo__visual">';
+      for (let i = 1; i <= 12; i++) {
+        html += '      <div class="grid-demo__column">' + i + '</div>';
+      }
+      html += '    </div>';
+      html += '    <div class="grid-demo__info">';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Max container width</div>';
+      html += '        <div class="grid-demo__stat">1200px (centered with flex margins)</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Horizontal padding</div>';
+      html += '        <div class="grid-demo__stat">32px desktop, 16px mobile</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Feature grid</div>';
+      html += '        <div class="grid-demo__stat">3-column on desktop, single on mobile</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Gap between cards</div>';
+      html += '        <div class="grid-demo__stat">24px (consistent across breakpoints)</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Rule weights / Depth */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth &amp; Elevation</div>';
+
+      Object.entries(rules).forEach(([key, rule]) => {
+        const weight = rule.weight;
+        const color = rule.color;
+        const weightNum = parseFloat(weight) || 0;
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <div>';
+        html += '      <div class="rule-demo__name">' + esc(rule.name) + '</div>';
+        html += '      <div class="rule-demo__label">' + esc(rule.use) + '</div>';
+        html += '    </div>';
+        html += '    <div class="rule-demo__spec">' + esc(weight) + '</div>';
+        html += '  </div>';
+        
+        if (weight === 'none') {
+          html += '  <div class="rule-demo__container" style="background: var(--bone); border: 1px dashed var(--color-border-light);">';
+          html += '    <div style="font-family: var(--font-mono); font-size: 12px; color: var(--slate);">No shadow or border</div>';
+          html += '  </div>';
+        } else if (key === 'pill') {
+          html += '  <div class="rule-demo__container" style="background: var(--bone);">';
+          html += '    <div class="rule-demo__line" style="width: 240px; height: 48px; background: var(--signal); border-radius: 50px; box-shadow: ' + color + ' 0px 2px 10px -3px;"></div>';
+          html += '  </div>';
+        } else if (key === 'subtle' || key === 'medium') {
+          html += '  <div class="rule-demo__container" style="background: var(--bone);">';
+          html += '    <div class="rule-demo__line" style="width: 300px; height: 60px; background: var(--bone); border: 1px solid var(--color-border-light); box-shadow: ' + color + ' 0px 3px 5px;"></div>';
+          html += '  </div>';
+        } else if (key === 'heavy') {
+          html += '  <div class="rule-demo__container" style="background: var(--bone);">';
+          html += '    <div class="rule-demo__line" style="width: 300px; height: 100px; background: var(--bone); border: 1px solid var(--color-border-light); box-shadow: ' + color + ' 0px 32px 37px;"></div>';
+          html += '  </div>';
+        } else {
+          html += '  <div class="rule-demo__container">';
+          html += '    <div class="rule-demo__line" style="height:' + weightNum + 'px; background:' + color + '"></div>';
+          html += '  </div>';
+        }
+        
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 18px; color: var(--color-secondary-text); line-height: 1.55; margin-bottom: 48px;">Binance.US uses <strong>minimal rounding</strong> — sharp edges for fintech precision, softened only where interaction invites touch. Pill buttons (50px) are the only full-round exception, reserved for primary CTAs that demand clicks.</p>';
+
+      Object.entries(radius).forEach(([key, obj]) => {
+        const radiusValue = obj.value;
+
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__demo">';
+        html += '    <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '  </div>';
+        html += '  <div class="radius-item__info">';
+        html += '    <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '    <div class="radius-item__value">' + esc(radiusValue) + '</div>';
+        html += '    <div class="radius-item__description">' + esc(obj.use) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Depth philosophy */
+      html += '<div class="philosophy" style="margin-top: 96px; margin-bottom: 0;">';
+      html += '  <div class="philosophy__title">Elevation & Shadow Strategy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    <strong>Whisper-light shadows</strong> — Card shadows live at 5% opacity, barely perceptible ground cues that prevent cards from feeling pasted onto the surface. <strong>The pill button exception</strong>: CTA pill buttons carry slightly more visible shadow (<code style="font-family: var(--font-mono); background: rgba(30, 32, 38, 0.08); padding: 2px 6px;">rgb(153,153,153) 0px 2px 10px -3px</code>) to communicate a floating, clickable quality. <strong>No depth drama</strong> — In financial contexts, heavy shadows feel frivolous; no shadows feel untrusted. The 5% shadow hits the pragmatic sweet spot. <strong>Golden elevation</strong>: Device mockups float on golden gradient backgrounds (radial glow centered on product), creating product showcase separation without theatrical depth. The philosophy: <em>Clarity through restraint.</em>';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

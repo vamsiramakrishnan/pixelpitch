@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — BMW</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #262626);
+      line-height: 1.5;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 48px 24px;
+      }
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 96px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #757575);
+      margin-bottom: 16px;
+      line-height: 1.3;
+    }
+
+    .header__title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 80px;
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink, #262626);
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate, #757575);
+      max-width: 720px;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--ink, #262626);
+      border: none;
+      margin: 0;
+    }
+
+    /* Font families section */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 48px;
+      margin-bottom: 96px;
+      margin-top: 80px;
+    }
+
+    .font-card {
+      background: transparent;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 0;
+      padding: 32px;
+    }
+
+    .font-card__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #757575);
+      margin-bottom: 16px;
+      line-height: 1.3;
+    }
+
+    .font-card__name {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 32px;
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--ink, #262626);
+      margin-bottom: 8px;
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      color: var(--slate, #757575);
+      word-break: break-word;
+      line-height: 1.5;
+    }
+
+    /* Character set block */
+    .charmap-block {
+      background: var(--bone, #f5f5f5);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 0;
+      padding: 48px;
+      margin-bottom: 96px;
+    }
+
+    .charmap-block__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #757575);
+      margin-bottom: 24px;
+      line-height: 1.3;
+    }
+
+    .charmap-block__chars {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1.8;
+      letter-spacing: 0.04em;
+      color: var(--ink, #262626);
+      word-break: break-word;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #757575);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--ink, #262626);
+      line-height: 1.3;
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 800px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--ink, #262626);
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 1.8;
+      color: var(--slate, #757575);
+      letter-spacing: 0.02em;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--ink, #262626);
+      overflow-wrap: break-word;
+      word-spacing: 0.1em;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .ramp-sample--uppercase {
+      text-transform: uppercase;
+    }
+
+    /* Ramp section */
+    .ramp-section {
+      margin-bottom: 96px;
+    }
+
+    /* Weight contrast demo */
+    .weight-demo {
+      margin-bottom: 96px;
+    }
+
+    .weight-demo__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #757575);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--ink, #262626);
+      line-height: 1.3;
+    }
+
+    .weight-demo-container {
+      background: transparent;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 0;
+      padding: 48px;
+    }
+
+    .weight-demo-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .weight-demo-row:last-child {
+      border-bottom: none;
+    }
+
+    .weight-demo-item {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 48px;
+      text-transform: uppercase;
+      line-height: 1.2;
+      color: var(--ink, #262626);
+      letter-spacing: -0.01em;
+    }
+
+    .weight-demo-item--light {
+      font-weight: 300;
+    }
+
+    .weight-demo-item--heavy {
+      font-weight: 900;
+    }
+
+    .weight-demo-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      color: var(--slate, #757575);
+      margin-top: 12px;
+      letter-spacing: 0.04em;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 160px 48px;
+      color: var(--slate, #757575);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 24px auto 0;
+      border: 2px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #1c69d4);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Engineering precision meets automotive ambition.',
+      'Every detail whispers authority without shouting.',
+      'German efficiency distilled into motion.',
+      'Performance is measured in milliseconds and intention.',
+      'Clarity through constraint. Power through simplicity.',
+      'The machine becomes invisible. The experience remains.',
+      'Luxury is not decoration. It is engineering excellence.',
+      'Tight lines. Sharp corners. No compromise.',
+      'Innovation delivered through uncompromising design.',
+      'Where form follows function, function becomes art.',
+    ];
+
+    const WEIGHT_DEMO_TEXT = 'ENGINEERING';
+
+    fetch('../tokens.json')
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#1c69d4">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Design System';
+      const summary = tokens.meta?.summary || '';
+      const ramp = tokens.typography?.ramp || [];
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Type Specimen</div>';
+      html += '  <h1 class="header__title">' + esc(title) + '</h1>';
+      html += '  <p class="header__subtitle">' + esc(summary) + '</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      html += '<div class="font-families">';
+      html += '<div class="font-card">';
+      html += '  <div class="font-card__label">Primary Typeface</div>';
+      html += '  <div class="font-card__name">BMWTypeNextLatin</div>';
+      html += '  <div class="font-card__fallback">System-UI, Helvetica, Arial, Hiragino Kaku Gothic ProN, Hiragino Sans, Meiryo</div>';
+      html += '</div>';
+      html += '<div class="font-card">';
+      html += '  <div class="font-card__label">Display Variant</div>';
+      html += '  <div class="font-card__name">BMWTypeNextLatin Light</div>';
+      html += '  <div class="font-card__fallback">Weight 300 — Whispered authority for 60px hero headlines</div>';
+      html += '</div>';
+      html += '</div>';
+
+      /* Character set */
+      html += '<div class="charmap-block">';
+      html += '  <div class="charmap-block__label">Character Set — Uppercase Display</div>';
+      html += '  <div class="charmap-block__chars">';
+      html += '    ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>';
+      html += '    0123456789<br>';
+      html += '    ! @ # $ % &amp; * ( ) – — . , : ; \'\" ? / \\ [ ] { }';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Weight contrast demonstration */
+      html += '<div class="weight-demo">';
+      html += '<div class="weight-demo__label">Weight Contrast — 300 vs 900</div>';
+      html += '<div class="weight-demo-container">';
+      html += '<div class="weight-demo-row">';
+      html += '  <div>';
+      html += '    <div class="weight-demo-item weight-demo-item--light">' + esc(WEIGHT_DEMO_TEXT) + '</div>';
+      html += '    <div class="weight-demo-label">WEIGHT 300<br>Display Hero — Whispered Elegance</div>';
+      html += '  </div>';
+      html += '  <div>';
+      html += '    <div class="weight-demo-item weight-demo-item--heavy">' + esc(WEIGHT_DEMO_TEXT) + '</div>';
+      html += '    <div class="weight-demo-label">WEIGHT 900<br>Navigation — Stark Authority</div>';
+      html += '  </div>';
+      html += '</div>';
+      html += '</div>';
+      html += '</div>';
+
+      /* Type ramp */
+      if (ramp.length) {
+        html += '<div class="ramp-section">';
+        html += '<div class="section-label">Type Ramp — Every Weight, Every Size</div>';
+        ramp.forEach((entry, i) => {
+          html += rampRow(entry, i);
+        });
+        html += '</div>';
+      }
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(entry, idx) {
+      const role = entry.role || 'Role ' + (idx + 1);
+      const size = entry.size || '16px';
+      const weight = entry.weight || 400;
+      const lh = entry.lineHeight || '1.5';
+      const ls = entry.letterSpacing || '0';
+
+      const fontFamily = 'var(--font-body, system-ui, sans-serif)';
+
+      const sizeNum = parseFloat(size);
+      const sampleIdx = idx % EDITORIAL_SAMPLES.length;
+      let sample = EDITORIAL_SAMPLES[sampleIdx];
+
+      /* Truncate very large samples */
+      if (sizeNum >= 48) {
+        sample = sample.split('.')[0].slice(0, 35);
+        if (!sample.endsWith('.')) sample += '.';
+      }
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + ';';
+      fontStyle += 'font-family:' + fontFamily + ';';
+      if (ls && ls !== '0' && ls !== 'normal') fontStyle += 'letter-spacing:' + ls + ';';
+
+      let isDisplay = role.includes('Display');
+      let isNav = role.includes('Nav');
+      let isSection = role.includes('Section');
+
+      let meta = esc(size) + ' / ' + esc(String(weight));
+      meta += '\nBMWTypeNextLatin';
+      if (weight === 300) meta += ' Light';
+      meta += '\nline-height: ' + esc(String(lh));
+      if (ls && ls !== '0' && ls !== 'normal') meta += '\nletter-spacing: ' + esc(ls);
+
+      let sampleClass = 'ramp-sample';
+      if (isDisplay || isNav || isSection) {
+        sampleClass += ' ramp-sample--uppercase';
+      }
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="' + sampleClass + '" style="' + fontStyle + '">' + esc(sample) + '</div>' +
+        '</div>';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Claude Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Anthropic Serif', serif);
+      background: var(--paper, #f5f4ed);
+      color: var(--ink, #141413);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+
+    /* ── Header / Stage Head ── */
+    .header {
+      margin-bottom: 96px;
+    }
+
+    .header__meta {
+      font-family: var(--font-body, 'Anthropic Serif', serif);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--slate, #5e5d59);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'Anthropic Serif', serif);
+      font-size: 64px;
+      font-weight: 500;
+      line-height: 1.10;
+      letter-spacing: -0.01em;
+      color: var(--ink, #141413);
+      margin-bottom: 8px;
+      max-width: 900px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'Anthropic Serif', serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.40;
+      color: var(--slate, #5e5d59);
+      max-width: 700px;
+      margin-bottom: 40px;
+    }
+
+    .header__divider {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--signal, #c96442);
+      border: none;
+      border-radius: 1px;
+    }
+
+    /* ── Section ── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-body, 'Anthropic Serif', serif);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--slate, #5e5d59);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--color-border-cream, #f0eee6);
+    }
+
+    /* ── Spacing Scale ── */
+    .spacing-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 100px;
+      gap: 24px;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--color-border-cream, #f0eee6);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__token {
+      font-family: var(--font-mono, 'Anthropic Mono', monospace);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink, #141413);
+    }
+
+    .spacing-row__bar-container {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      background: var(--bone, #faf9f5);
+      border-radius: 4px;
+      padding: 0 12px;
+      border: 1px solid var(--color-border-cream, #f0eee6);
+    }
+
+    .spacing-row__bar {
+      height: 3px;
+      background: var(--signal, #c96442);
+      border-radius: 2px;
+      transition: background-color 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      background: var(--color-coral-accent, #d97757);
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, 'Anthropic Mono', monospace);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--slate, #5e5d59);
+      text-align: right;
+    }
+
+    /* ── Rules / Depth ── */
+    .depth-demos {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .depth-demo {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--color-border-cream, #f0eee6);
+    }
+
+    .depth-demo:last-child {
+      border-bottom: none;
+    }
+
+    .depth-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+      gap: 16px;
+    }
+
+    .depth-demo__name {
+      font-family: var(--font-mono, 'Anthropic Mono', monospace);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink, #141413);
+    }
+
+    .depth-demo__spec {
+      font-family: var(--font-mono, 'Anthropic Mono', monospace);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--slate, #5e5d59);
+      text-align: right;
+    }
+
+    .depth-demo__box {
+      width: 100%;
+      height: 80px;
+      border-radius: 8px;
+      background: var(--bone, #faf9f5);
+      transition: transform 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono, 'Anthropic Mono', monospace);
+      font-size: 12px;
+      color: var(--slate, #5e5d59);
+    }
+
+    .depth-demo:hover .depth-demo__box {
+      transform: translateY(-2px);
+    }
+
+    /* ── Border Radius ── */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 40px;
+      margin-top: 24px;
+    }
+
+    .radius-item {
+      text-align: center;
+    }
+
+    .radius-item__box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 140px;
+      margin: 0 auto 16px;
+      background: var(--bone, #faf9f5);
+      border: 2px solid var(--signal, #c96442);
+      opacity: 0.65;
+      transition: opacity 0.15s ease;
+    }
+
+    .radius-item:hover .radius-item__box {
+      opacity: 1;
+    }
+
+    .radius-item__token {
+      font-family: var(--font-mono, 'Anthropic Mono', monospace);
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--ink, #141413);
+      margin-bottom: 4px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, 'Anthropic Mono', monospace);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--slate, #5e5d59);
+    }
+
+    /* ── Grid Section ── */
+    .grid-demo {
+      margin-top: 32px;
+      padding: 48px;
+      background: var(--bone, #faf9f5);
+      border: 1px solid var(--color-border-cream, #f0eee6);
+      border-radius: 8px;
+    }
+
+    .grid-demo__label {
+      font-family: var(--font-body, 'Anthropic Serif', serif);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--slate, #5e5d59);
+      margin-bottom: 16px;
+    }
+
+    .grid-demo__grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+
+    .grid-demo__column {
+      grid-column: span 1;
+      height: 40px;
+      background: var(--signal, #c96442);
+      opacity: 0.2;
+      border-radius: 4px;
+      border: 1px solid var(--signal, #c96442);
+    }
+
+    /* ── Loading State ── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #5e5d59);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 20px auto 0;
+      border: 3px solid var(--color-border-cream, #f0eee6);
+      border-top-color: var(--signal, #c96442);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 24px;
+      }
+
+      .header {
+        margin-bottom: 64px;
+      }
+
+      .header__title {
+        font-size: 48px;
+        margin-bottom: 12px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 100px 1fr 80px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 32px;
+      }
+
+      .grid-demo {
+        padding: 32px 24px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 48px 16px;
+      }
+
+      .header__title {
+        font-size: 36px;
+      }
+
+      .header__subtitle {
+        font-size: 18px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 90px 1fr 70px;
+        gap: 12px;
+      }
+
+      .radius-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 24px;
+      }
+
+      .grid-demo__grid {
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': '3px',
+      's-2': '4px',
+      's-3': '6px',
+      's-4': '8px',
+      's-5': '10px',
+      's-6': '12px',
+      's-7': '16px',
+      's-8': '20px',
+      's-9': '24px',
+      's-10': '30px',
+    };
+
+    const DEFAULT_RADII = {
+      'none': '0',
+      'sm': '4px',
+      'md': '5px',
+      'lg': '120px',
+      'full': '32px',
+    };
+
+    const DEFAULT_DEPTH = [
+      { level: 0, name: 'Flat', treatment: 'none' },
+      { level: 1, name: 'Border', treatment: '1px solid var(--border)' },
+      { level: 2, name: 'Elevated', treatment: '0 2px 8px rgba(0,0,0,0.08)' },
+    ];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#b53333">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.title || 'Design System';
+      const spacing = tokens.spacing?.scale || DEFAULT_SPACING;
+      const radii = tokens.radii || DEFAULT_RADII;
+      const depth = tokens.depth || DEFAULT_DEPTH;
+
+      let html = '';
+
+      /* ── Header ── */
+      html += '<header class="header">';
+      html += '  <p class="header__meta">Spacing, Rules & Depth</p>';
+      html += '  <h1 class="header__title">Eight pixels.<br>One philosophy.</h1>';
+      html += '  <p class="header__subtitle">The spacing and depth system defines rhythm, emphasis, and visual hierarchy across all surfaces.</p>';
+      html += '  <hr class="header__divider">';
+      html += '</header>';
+
+      /* ── Spacing Scale ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+      html += '  <div class="spacing-rows">';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, v]) => parseFloat(v) || 0), 1);
+
+      spacingEntries.forEach(([token, value]) => {
+        const px = parseFloat(value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        html += '<div class="spacing-row">';
+        html += '  <div class="spacing-row__token">' + esc(token) + '</div>';
+        html += '  <div class="spacing-row__bar-container">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ── Depth / Rules ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth Levels</div>';
+      html += '  <div class="depth-demos">';
+
+      depth.forEach(d => {
+        const treatment = d.treatment || 'none';
+        const displayTreatment = treatment === 'none' ? 'No shadow, no border' : treatment;
+        let boxStyle = '';
+
+        if (treatment.includes('1px solid')) {
+          boxStyle = 'border: ' + treatment + ';';
+        } else if (treatment.includes('0 2px 8px')) {
+          boxStyle = 'box-shadow: ' + treatment + ';';
+        }
+
+        html += '<div class="depth-demo">';
+        html += '  <div class="depth-demo__header">';
+        html += '    <span class="depth-demo__name">' + esc(d.name) + '</span>';
+        html += '    <span class="depth-demo__spec">' + esc(displayTreatment) + '</span>';
+        html += '  </div>';
+        html += '  <div class="depth-demo__box" style="' + boxStyle + '">';
+        html += '    Level ' + d.level;
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ── Border Radius ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+      html += '  <div class="radius-grid">';
+
+      Object.entries(radii).forEach(([token, value]) => {
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__box" style="border-radius:' + esc(value) + '"></div>';
+        html += '  <div class="radius-item__token">' + esc(token) + '</div>';
+        html += '  <div class="radius-item__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ── Grid System ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">12-Column Grid</div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__label">Max width: 1100px / Gap: 16px</div>';
+      html += '    <div class="grid-demo__grid">';
+
+      for (let i = 0; i < 12; i++) {
+        html += '<div class="grid-demo__column"></div>';
+      }
+
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

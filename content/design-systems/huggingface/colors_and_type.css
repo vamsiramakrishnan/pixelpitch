@@ -1,0 +1,92 @@
+/* Hugging Face — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #374151;
+  --slate:   #666666;
+  --signal:  #ffd21e;
+  --bone:    #fafafa;
+  --border:  #e5e7eb;
+  --surface: #ffd21e;
+
+  /* Extended palette */
+  --color-accessible-hf-gold-text: #917300;
+  --color-hf-yellow-deep: #f59e0b;
+  --color-hf-yellow-soft: #fff4cc;
+  --color-canvas-inset: #f3f4f6;
+  --color-canvas-dark: #0d1117;
+  --color-ink-muted: #6b7280;
+  --color-ink-inverse: #f9fafb;
+  --color-nlp-blue: #2563eb;
+  --color-vision-green: #16a34a;
+  --color-audio-purple: #9333ea;
+  --color-multimodal-pink: #db2777;
+  --color-tabular-orange: #ea580c;
+  --color-error: #dc2626;
+  --color-border-strong: #d1d5db;
+
+  /* Semantic */
+  --success: #16a34a;
+  --warning: #ffd21e;
+  --danger:  #dc2626;
+  --info:    #2563eb;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display: 48px;
+  --t-h1: 32px;
+  --t-h2: 24px;
+  --t-h3: 18px;
+  --t-body-large: 18px;
+  --t-body: 15px;
+  --t-caption: 13px;
+  --t-tag-badge: 12px;
+  --t-code: 14px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   16px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    8px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

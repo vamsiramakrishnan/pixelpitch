@@ -1,0 +1,98 @@
+/* Spotify — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #121212;
+  --ink:     #ffffff;
+  --slate:   #b3b3b3;
+  --signal:  #1ed760;
+  --bone:    #252525;
+  --border:  #808080;
+  --surface: #181818;
+
+  /* Extended palette */
+  --color-mid-dark: #1f1f1f;
+  --color-near-white: #cbcbcb;
+  --color-light: #fdfdfd;
+  --color-negative-red: #f3727f;
+  --color-warning-orange: #ffa42b;
+  --color-announcement-blue: #539df5;
+  --color-mid-card: #272727;
+  --color-light-border: #7c7c7c;
+  --color-light-surface: #eeeeee;
+  --color-spotify-green-border: #1db954;
+
+  /* Semantic */
+  --success: #1ed760;
+  --warning: #ffa42b;
+  --danger:  #f3727f;
+  --info:    #539df5;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-section-title: 24px;
+  --t-feature-heading: 18px;
+  --t-body-bold: 16px;
+  --t-body: 16px;
+  --t-button-uppercase: 14px;
+  --t-button: 14px;
+  --t-nav-link-bold: 14px;
+  --t-nav-link: 14px;
+  --t-caption-bold: 14px;
+  --t-caption: 14px;
+  --t-small-bold: 12px;
+  --t-small: 12px;
+  --t-badge: 10.5px;
+  --t-micro: 10px;
+
+  /* ── Spacing ── */
+  --s-1: 1px;
+  --s-2: 2px;
+  --s-3: 3px;
+  --s-4: 4px;
+  --s-5: 5px;
+  --s-6: 6px;
+  --s-7: 8px;
+  --s-8: 10px;
+  --s-9: 12px;
+  --s-10: 14px;
+  --s-11: 15px;
+  --s-12: 16px;
+  --s-13: 20px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   100px;
+  --radius-full: 500px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    8px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

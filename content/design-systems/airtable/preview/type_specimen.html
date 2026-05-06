@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — Airtable</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Haas Groot Disp', system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #181d26);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'Haas Groot Disp', system-ui, sans-serif);
+      font-size: 56px;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink, #181d26);
+      margin-bottom: 16px;
+    }
+
+    .header__subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--slate, #333333);
+      max-width: 600px;
+      letter-spacing: 0.18px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 2px;
+      background: var(--signal, #254fad);
+      border: none;
+      margin-top: 32px;
+      border-radius: 1px;
+    }
+
+    /* Font family summary */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 56px;
+    }
+
+    .font-card {
+      background: var(--bone, #f8fafc);
+      border: 1px solid var(--border, #e0e2e6);
+      border-radius: 8px;
+      padding: 28px 24px;
+    }
+
+    .font-card__label {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.28px;
+      text-transform: uppercase;
+      color: var(--slate, #333333);
+      margin-bottom: 12px;
+    }
+
+    .font-card__name {
+      font-family: var(--font-display, 'Haas Groot Disp', system-ui, sans-serif);
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1.3;
+      margin-bottom: 8px;
+      color: var(--ink, #181d26);
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      color: var(--slate, #333333);
+      word-break: break-all;
+      line-height: 1.5;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-body, 'Haas Groot Disp', system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.28px;
+      text-transform: uppercase;
+      color: var(--slate, #333333);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #e0e2e6);
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 40px;
+      align-items: baseline;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border, #e0e2e6);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 720px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-body, 'Haas Groot Disp', system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--ink, #181d26);
+      margin-bottom: 12px;
+      letter-spacing: 0.16px;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      line-height: 1.8;
+      color: var(--slate, #333333);
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--ink, #181d26);
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    /* Ramp section container */
+    .ramp-section {
+      margin-bottom: 56px;
+    }
+
+    /* Character set block */
+    .charset-block {
+      background: var(--bone, #f8fafc);
+      border: 1px solid var(--border, #e0e2e6);
+      border-radius: 8px;
+      padding: 48px 40px;
+      margin-bottom: 56px;
+    }
+
+    .charset-block__label {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.28px;
+      text-transform: uppercase;
+      color: var(--slate, #333333);
+      margin-bottom: 20px;
+    }
+
+    .charset-block__chars {
+      font-family: var(--font-body, 'Haas Groot Disp', system-ui, sans-serif);
+      font-size: 32px;
+      line-height: 1.6;
+      letter-spacing: 0.04em;
+      color: var(--ink, #181d26);
+      word-break: break-all;
+      font-weight: 400;
+    }
+
+    /* Drop cap section */
+    .dropcap-block {
+      background: var(--bone, #f8fafc);
+      border: 1px solid var(--border, #e0e2e6);
+      border-radius: 8px;
+      padding: 48px 40px;
+      margin-bottom: 56px;
+    }
+
+    .dropcap-block__label {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.28px;
+      text-transform: uppercase;
+      color: var(--slate, #333333);
+      margin-bottom: 24px;
+    }
+
+    .dropcap-block__text {
+      font-family: var(--font-display, 'Haas Groot Disp', system-ui, sans-serif);
+      font-size: 20px;
+      line-height: 1.6;
+      color: var(--ink, #181d26);
+      max-width: 650px;
+      letter-spacing: 0.1px;
+    }
+
+    .dropcap-block__text::first-letter {
+      font-size: 3.5em;
+      font-weight: 900;
+      float: left;
+      line-height: 1;
+      padding-right: 8px;
+      padding-top: 3px;
+      color: var(--signal, #254fad);
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #333333);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border, #e0e2e6);
+      border-top-color: var(--signal, #254fad);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Airtable transforms how teams organize and act on their information.',
+      'A single source of truth for every kind of work. Connected, visual, and collaborative.',
+      'Build faster without coding. Create the exact workflow you need.',
+      'Your data lives here. Structured. Secure. Infinitely flexible.',
+      'From chaos to clarity. From spreadsheets to smart systems.',
+      'Empower your team to work at the speed of thought.',
+      'Enterprise-grade infrastructure. Startup-friendly interface.',
+      'Your database. Your way. Your business rules, automated.',
+      'Where structured data meets human creativity.',
+      'Make better decisions with information organized exactly how you think.',
+    ];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Design System';
+
+      const fonts = tokens.typography || {};
+      const ramp = tokens.typography?.ramp || [];
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Type Specimen</h1>';
+      html += '  <p class="header__subtitle">' + esc(title) + ' &mdash; ' + ramp.length + ' type roles</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      const families = [];
+      if (fonts.fontDisplay) {
+        families.push({
+          label: 'Display',
+          name: fonts.fontDisplay,
+          fallback: 'Haas, -apple-system, system-ui, Segoe UI, Roboto'
+        });
+      }
+      if (fonts.fontBody && fonts.fontBody !== fonts.fontDisplay) {
+        families.push({
+          label: 'Body',
+          name: fonts.fontBody,
+          fallback: 'Haas, -apple-system, system-ui, Segoe UI, Roboto'
+        });
+      } else if (fonts.fontBody) {
+        families[0].fallback = 'Haas, -apple-system, system-ui, Segoe UI, Roboto';
+      }
+
+      if (families.length) {
+        html += '<div class="font-families">';
+        families.forEach(f => {
+          html += '<div class="font-card">';
+          html += '  <div class="font-card__label">' + esc(f.label) + ' Font</div>';
+          html += '  <div class="font-card__name" style="font-family:\'' + esc(f.name) + '\',system-ui,sans-serif">' + esc(f.name) + '</div>';
+          html += '  <div class="font-card__fallback">' + esc(f.fallback) + '</div>';
+          html += '</div>';
+        });
+        html += '</div>';
+      }
+
+      /* Character set */
+      html += '<div class="charset-block">';
+      html += '  <div class="charset-block__label">Character Set</div>';
+      html += '  <div class="charset-block__chars" style="font-family:\'' + esc(fonts.fontBody || 'Haas Groot Disp') + '\',system-ui,sans-serif">';
+      html += '    AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>';
+      html += '    0123456789 !@#$%&amp;*()&ndash;&mdash;&lsquo;&rsquo;&ldquo;&rdquo;';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Type ramp */
+      if (ramp.length) {
+        html += '<div class="ramp-section">';
+        html += '<div class="section-label">Type Ramp</div>';
+        ramp.forEach((entry, i) => {
+          html += rampRow(entry, i, fonts);
+        });
+        html += '</div>';
+      }
+
+      /* Drop cap demo */
+      html += '<div class="dropcap-block">';
+      html += '  <div class="dropcap-block__label">Display Font in Context</div>';
+      html += '  <div class="dropcap-block__text" style="font-family:\'' + esc(fonts.fontDisplay || 'Haas Groot Disp') + '\',system-ui,sans-serif">';
+      html += '    Airtable combines the familiarity of a spreadsheet with the power of a database. Every field is a carefully designed interface for a specific type of information—from single select dropdowns to linked records that connect your data across tables.';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(entry, idx, fonts) {
+      const role = entry.role || 'Role ' + (idx + 1);
+      const size = entry.size || '16px';
+      const weight = entry.weight || 400;
+      const lh = entry.lineHeight || '1.5';
+      const ls = entry.letterSpacing || '0';
+      const fontKey = entry.fontKey || 'body';
+      const family = fontKey === 'display' ? fonts.fontDisplay : fonts.fontBody;
+
+      const sampleIdx = idx % EDITORIAL_SAMPLES.length;
+      const sample = EDITORIAL_SAMPLES[sampleIdx];
+
+      const sizeNum = parseFloat(size);
+      /* Truncate very large samples */
+      const displaySample = sizeNum >= 40
+        ? sample.split('.')[0] + '.'
+        : sample;
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + ';';
+      if (ls !== '0' && ls !== 'normal') fontStyle += 'letter-spacing:' + ls + ';';
+      if (family) fontStyle += 'font-family:\'' + esc(family) + '\',system-ui,sans-serif;';
+
+      let meta = '';
+      meta += esc(role) + '\n';
+      meta += esc(size) + ' / ' + weight;
+      if (family) meta += '\n' + esc(family);
+      meta += '\nlh: ' + lh;
+      if (ls !== '0' && ls !== 'normal') meta += '\nls: ' + esc(ls);
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(displaySample) + '</div>' +
+        '</div>';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

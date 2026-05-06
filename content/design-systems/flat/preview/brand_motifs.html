@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Flat</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin-top: 32px;
+      border-radius: 1px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--signal, #3b82f6);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 28px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--ink, #111111);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 24px;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background: var(--signal, #3b82f6);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--bone, #f5f5f5);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      padding: 32px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .dd-card__icon--do {
+      background: #10b981;
+      color: white;
+    }
+
+    .dd-card__icon--dont {
+      background: #ef4444;
+      color: white;
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--ink, #111111);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: var(--radius-md, 8px);
+      overflow: hidden;
+      height: 120px;
+      border: 1px solid var(--border, #e5e5e5);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.4;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--bone, #f5f5f5);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      padding: 48px 40px;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 52px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--ink, #111111);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--slate, #666666);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 700;
+      color: var(--ink, #111111);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--bone, #f5f5f5);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      padding: 32px;
+      max-width: 840px;
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--ink, #111111);
+    }
+
+    /* ──── Minimalism Principle Visual ──── */
+    .minimalism-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .minimalism-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .principle-slide {
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      aspect-ratio: 16 / 10;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background: var(--paper, #ffffff);
+    }
+
+    .principle-slide--correct {
+      border: 2px solid #10b981;
+    }
+
+    .principle-slide--incorrect {
+      border: 2px solid #ef4444;
+    }
+
+    .principle-slide__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .principle-slide__headline {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 40px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 0;
+    }
+
+    .principle-slide__accent {
+      color: var(--signal, #3b82f6);
+    }
+
+    .principle-slide__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* ──── Grid system example ──── */
+    .grid-demo {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--s-3, 16px);
+      margin-bottom: 32px;
+    }
+
+    .grid-cell {
+      background: var(--signal, #3b82f6);
+      border-radius: var(--radius-md, 8px);
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+      opacity: 0.9;
+    }
+
+    .grid-cell:nth-child(2) {
+      background: var(--signal, #3b82f6);
+      opacity: 0.7;
+    }
+
+    .grid-cell:nth-child(3) {
+      background: var(--signal, #3b82f6);
+      opacity: 0.5;
+    }
+
+    .grid-cell:nth-child(4) {
+      background: var(--signal, #3b82f6);
+      opacity: 0.3;
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 18px;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border', 'surface'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#ef4444">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">The <span>Flat</span> Design Principle</h1>';
+      html += '  <p class="header__subtitle">Two-dimensional minimalism meets modern interfaces. Clean geometry, vibrant signal colors, and purposeful whitespace create interfaces that are fast, clear, and delightfully direct.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Flat design strips away the skeuomorphic and the ornamental. Every pixel earns its place. The palette is deliberately limited—paper white, ink black, slate gray, and a single signal blue that anchors all interaction. Borders replace shadows. Soft radii (8px) soften geometry without compromising clarity. Typography breathes freely in generous whitespace. Transitions are subtle (150–250ms) and purposeful, emphasizing the signal color as the interaction voice. No depth illusions, no gradients, no unnecessary texture. Just clarity, speed, and restraint.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Paper white canvas (#FFFFFF) as the default, neutral foundation</li>';
+      html += '    <li>Single signal blue (#3B82F6) as the sole accent and interaction indicator</li>';
+      html += '    <li>Two-dimensional geometry: no shadows, no gradients, no 3D effects</li>';
+      html += '    <li>Soft radii (8px standard) on buttons, cards, and input fields</li>';
+      html += '    <li>Borders over shadows for depth separation and visual hierarchy</li>';
+      html += '    <li>System typefaces (system-ui) for fast rendering and native feel</li>';
+      html += '    <li>Subtle transitions (150–250ms) emphasizing signal blue as interaction feedback</li>';
+      html += '    <li>Generous whitespace and breathing room—never cramped</li>';
+      html += '    <li>Explicit state indicators: hover, focus, active, disabled, loading</li>';
+      html += '    <li>Recognizable icon language supporting the minimal aesthetic</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use signal blue (#3B82F6) for all interactive elements</li>';
+      html += '      <li>Apply 8px border-radius to buttons, cards, and modals</li>';
+      html += '      <li>Separate elements with 1px borders, not shadows</li>';
+      html += '      <li>Keep backgrounds clean: paper white or bone light gray</li>';
+      html += '      <li>Use system fonts for native performance and consistency</li>';
+      html += '      <li>Provide clear focus states (outline or background change)</li>';
+      html += '      <li>Use transitions to emphasize interaction (150–250ms)</li>';
+      html += '      <li>Show disabled state clearly: reduced opacity or muted colors</li>';
+      html += '      <li>Provide visual feedback for loading: spinners or progress bars</li>';
+      html += '      <li>Maintain generous whitespace and breathing room throughout</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Add drop shadows or layering to create false depth</li>';
+      html += '      <li>Use gradients or texture to "elevate" the design</li>';
+      html += '      <li>Apply rounded corners beyond the standard 8px</li>';
+      html += '      <li>Introduce additional accent colors beyond signal blue</li>';
+      html += '      <li>Use non-system fonts without clear performance justification</li>';
+      html += '      <li>Animate without purpose or exceed 250ms duration</li>';
+      html += '      <li>Crowd elements together—let whitespace do the work</li>';
+      html += '      <li>Use skeuomorphic design or ornamental details</li>';
+      html += '      <li>Assume the user will understand unlabeled states</li>';
+      html += '      <li>Treat disabled, loading, or error states as afterthoughts</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Minimalism Principle Visual ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">The Minimalism Principle</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 15px; line-height: 1.7; color: var(--slate); margin-bottom: 24px; max-width: 840px;">Flat design is not about stripping away beauty—it\'s about letting clarity shine. Every element must serve a purpose. Borders replace shadows, system fonts replace custom faces, and signal blue appears where interaction happens. Whitespace is not empty space; it\'s a fundamental design tool that improves readability, focus, and user confidence.</p>';
+      html += '  <div class="minimalism-grid">';
+
+      html += '    <div class="principle-slide principle-slide--correct">';
+      html += '      <div class="principle-slide__kicker">Correct</div>';
+      html += '      <div class="principle-slide__headline">One <span class="principle-slide__accent">signal</span> color</div>';
+      html += '      <div class="principle-slide__label">Signal blue only. Pure. Direct.</div>';
+      html += '    </div>';
+
+      html += '    <div class="principle-slide principle-slide--incorrect">';
+      html += '      <div class="principle-slide__kicker">Incorrect</div>';
+      html += '      <div style="font-size: 24px; font-family: var(--font-display); color: #10b981; margin-bottom: 12px;">Multiple colors</div>';
+      html += '      <div class="principle-slide__headline">Create visual <span class="principle-slide__accent">confusion</span></div>';
+      html += '      <div class="principle-slide__label">Extra colors dilute the interface clarity.</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#111111' : '#ffffff';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Spacing & Grid System ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing System</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 15px; line-height: 1.7; color: var(--slate); margin-bottom: 24px; max-width: 840px;">The spacing scale uses an 8px base unit, creating predictable rhythm and alignment across all components. Every margin, padding, and gap is a multiple of 8, ensuring visual harmony and developer clarity.</p>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-cell">S-1<br>4px</div>';
+      html += '    <div class="grid-cell">S-2<br>8px</div>';
+      html += '    <div class="grid-cell">S-3<br>16px</div>';
+      html += '    <div class="grid-cell">S-4<br>24px</div>';
+      html += '  </div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-cell">S-5<br>32px</div>';
+      html += '    <div class="grid-cell">S-6<br>48px</div>';
+      html += '    <div class="grid-cell">S-7<br>64px</div>';
+      html += '    <div class="grid-cell">S-8<br>96px</div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Typography Pairing ──– */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Display + Body</div>';
+      html += '    <div class="type-pairing__display">System typefaces, <span>native speed</span></div>';
+
+      html += '    <div class="type-pairing__body">Typography in Flat design prioritizes legibility and performance. System typefaces render natively on every platform, ensuring consistency and zero render-blocking requests. Bold weights (600–700) anchor headlines, while 400-weight body text maintains openness and breathing room. The same sans-serif family serves all roles, creating visual coherence without complexity.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Display Font</span>';
+      html += '        system-ui, 700 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Body Font</span>';
+      html += '        system-ui, 400 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Mono Font</span>';
+      html += '        ui-monospace, 600 weight';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Type Ramp Section ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Type Ramp & Roles</div>';
+      html += '  <div style="border: 1px solid var(--border); border-radius: var(--radius-md); padding: 32px; background: var(--bone);">';
+
+      const ramp = [
+        { role: 'Hero', size: '56px', weight: '700', lineHeight: '1.1', font: 'system-ui', example: 'Page headline' },
+        { role: 'Display', size: '48px', weight: '700', lineHeight: '1.15', font: 'system-ui', example: 'Section title' },
+        { role: 'Headline', size: '32px', weight: '700', lineHeight: '1.2', font: 'system-ui', example: 'Card heading' },
+        { role: 'Subhead', size: '24px', weight: '700', lineHeight: '1.3', font: 'system-ui', example: 'List item title' },
+        { role: 'Lead', size: '20px', weight: '600', lineHeight: '1.4', font: 'system-ui', example: 'Intro paragraph' },
+        { role: 'Body', size: '16px', weight: '400', lineHeight: '1.65', font: 'system-ui', example: 'Main paragraph text for reading' },
+        { role: 'Small', size: '14px', weight: '400', lineHeight: '1.5', font: 'system-ui', example: 'Secondary text, caption' },
+        { role: 'Meta', size: '12px', weight: '600', lineHeight: '1.4', font: 'ui-monospace', example: 'LABEL · TIMESTAMP · TAG' }
+      ];
+
+      ramp.forEach((item, i) => {
+        const fontFamily = item.font === 'system-ui' ? 'var(--font-display)' : 'var(--font-mono)';
+        
+        html += '<div style="margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--border); display: flex; gap: 24px; align-items: flex-start;">';
+        html += '  <div style="flex: 0 0 160px;">';
+        html += '    <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--slate); font-weight: 600; margin-bottom: 4px;">' + esc(item.role) + '</div>';
+        html += '    <div style="font-family: var(--font-mono); font-size: 12px; color: var(--slate); line-height: 1.5; font-weight: 400;">' + esc(item.size) + '<br>' + esc(item.font) + ' ' + esc(item.weight) + '<br>LH ' + esc(item.lineHeight) + '</div>';
+        html += '  </div>';
+        html += '  <div style="flex: 1;">';
+        html += '    <div style="font-family: ' + fontFamily + '; font-size: ' + item.size + '; font-weight: ' + item.weight + ';

@@ -1,0 +1,95 @@
+/* Sentry — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #1f1633;
+  --ink:     #ffffff;
+  --slate:   #e5e7eb;
+  --signal:  #c2ef4e;
+  --bone:    #362d59;
+  --border:  #362d59;
+  --surface: #422082;
+
+  /* Extended palette */
+  --color-darker-purple: #150f23;
+  --color-sentry-purple: #6a5fc1;
+  --color-muted-purple: #79628c;
+  --color-coral: #ffb287;
+  --color-pink: #fa7faa;
+  --color-code-yellow: #dcdcaa;
+  --color-input-border: #cfcfdb;
+
+  /* Semantic */
+  --success: #c2ef4e;
+  --warning: #dcdcaa;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: Dammit Sans;
+  --font-body:    Dammit Sans;
+  --font-mono:    Monaco;
+
+  /* Type ramp */
+  --t-display-hero: 88px;
+  --t-display-secondary: 60px;
+  --t-section-heading: 30px;
+  --t-sub-heading: 27px;
+  --t-card-title: 24px;
+  --t-feature-title: 20px;
+  --t-body: 16px;
+  --t-body-emphasis: 16px;
+  --t-nav-label: 15px;
+  --t-uppercase-label: 15px;
+  --t-button-text: 14px;
+  --t-caption: 14px;
+  --t-small-caption: 12px;
+  --t-micro-label: 10px;
+  --t-code: 16px;
+
+  /* ── Spacing ── */
+  --s-1: 1px;
+  --s-2: 2px;
+  --s-3: 4px;
+  --s-4: 5px;
+  --s-5: 6px;
+  --s-6: 8px;
+  --s-7: 12px;
+  --s-8: 16px;
+  --s-9: 24px;
+  --s-10: 32px;
+  --s-11: 40px;
+  --s-12: 44px;
+  --s-13: 45px;
+  --s-14: 47px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   640px;
+  --radius-md:   10px;
+  --radius-lg:   64px;
+  --radius-full: 18px;
+
+  /* ── Components ── */
+  --button-radius:  10px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    10px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

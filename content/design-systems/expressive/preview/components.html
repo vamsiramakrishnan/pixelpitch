@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expressive — Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-8) var(--s-5);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--s-4);
+      margin-bottom: var(--s-7);
+      border-bottom: 3px solid var(--signal);
+      padding-top: var(--s-4);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-display);
+      font-size: 56px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--signal) 0%, #2563eb 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-5);
+      border-bottom: 2px solid var(--signal);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate);
+      max-width: 720px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: var(--s-5);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-4);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-5);
+      padding: var(--s-4);
+      background: var(--bone);
+      border-radius: var(--radius-lg);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate);
+      margin-right: var(--s-3);
+      min-width: 140px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      border: none;
+      background: var(--signal);
+      color: white;
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      gap: var(--s-2);
+    }
+
+    .btn:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+    }
+
+    .btn--secondary {
+      background: transparent;
+      color: var(--ink);
+      border: 2px solid var(--ink);
+    }
+
+    .btn--secondary:hover {
+      background: var(--ink);
+      color: white;
+      box-shadow: 0 4px 12px rgba(17, 17, 17, 0.2);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--signal);
+      border: none;
+      padding: var(--s-2) 0;
+      text-decoration: underline;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    .btn--ghost:hover {
+      color: #2563eb;
+      text-decoration: underline;
+    }
+
+    .btn--sm {
+      padding: 6px 16px;
+      font-size: 13px;
+    }
+
+    .btn--lg {
+      padding: 14px 28px;
+      font-size: 15px;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ──── CARDS ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-5);
+      margin-bottom: var(--s-5);
+    }
+
+    .card {
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      padding: var(--s-4);
+      background: var(--paper);
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--signal);
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.1);
+    }
+
+    .card__header {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3);
+      margin-bottom: var(--s-3);
+    }
+
+    .card__icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--signal) 0%, #2563eb 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .card__body {
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--slate);
+    }
+
+    /* ──── ELEVATED CARD ──── */
+    .card--elevated {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border-color: transparent;
+    }
+
+    .card--elevated:hover {
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+    }
+
+    /* ──── BADGES ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      margin-bottom: var(--s-5);
+      padding: var(--s-4);
+      background: var(--bone);
+      border-radius: var(--radius-lg);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-1);
+      padding: 6px 12px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      line-height: 1.4;
+      border-radius: var(--radius-full);
+      background: var(--signal);
+      color: white;
+    }
+
+    .badge--secondary {
+      background: var(--slate);
+      color: white;
+    }
+
+    .badge--success {
+      background: #10b981;
+      color: white;
+    }
+
+    .badge--warning {
+      background: #f59e0b;
+      color: white;
+    }
+
+    .badge--danger {
+      background: #ef4444;
+      color: white;
+    }
+
+    .badge--outline {
+      background: transparent;
+      border: 1px solid var(--signal);
+      color: var(--signal);
+    }
+
+    /* ──── INPUTS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+      padding: var(--s-4);
+      background: var(--bone);
+      border-radius: var(--radius-lg);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .input {
+      padding: 10px 14px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    /* ──── COLOR PALETTE ──── */
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .palette__swatch {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .palette__color {
+      width: 100%;
+      height: 120px;
+    }
+
+    .palette__label {
+      padding: var(--s-3);
+      background: var(--bone);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      border-top: 1px solid var(--border);
+    }
+
+    .palette__value {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--slate);
+      margin-top: var(--s-1);
+    }
+
+    /* ──── PULL QUOTE ──── */
+    .pullquote {
+      border-left: 4px solid var(--signal);
+      padding: var(--s-4) var(--s-4) var(--s-4) var(--s-5);
+      margin: var(--s-6) 0;
+      background: var(--bone);
+      border-radius: var(--radius-lg);
+    }
+
+    .pullquote__text {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.4;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .pullquote__attribution {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── GRID PATTERN ──── */
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: var(--s-2);
+      margin-bottom: var(--s-5);
+      padding: var(--s-4);
+      background: var(--bone);
+      border-radius: var(--radius-lg);
+    }
+
+    .pattern-cell {
+      aspect-ratio: 1;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--paper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--slate);
+      transition: all 0.2s ease;
+    }
+
+    .pattern-cell:hover {
+      border-color: var(--signal);
+      background: var(--signal);
+      color: white;
+    }
+
+    /* ──── STATES ──── */
+    .state-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .state-box {
+      padding: var(--s-4);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      text-align: center;
+    }
+
+    .state-box__label {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .state-box__example {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    /* ──── TYPOGRAPHY SAMPLES ──── */
+    .type-sample {
+      margin-bottom: var(--s-4);
+      padding: var(--s-4);
+      border-left: 3px solid var(--signal);
+      background: var(--bone);
+      border-radius: var(--radius-lg);
+    }
+
+    .type-sample__label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .type-sample__text {
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--ink);
+    }
+
+    /* ──── UTILITY ──– */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--signal);
+      margin-bottom: var(--s-3);
+      margin-top: var(--s-5);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: var(--s-5) 0;
+    }
+
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-3) 0;
+      margin-top: var(--s-8);
+      border-top: 1px solid var(--border);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-6) var(--s-3);
+      }
+
+      .stage-head__title {
+        font-size: 36px;
+      }
+
+      .section__title {
+        font-size: 32px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .button-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .button-row__label {
+        min-width: 100%;
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: var(--s-3);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">Expressive</div>
+      <div class="masthead__tagline">Bold & Dynamic<br>Component Library</div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Interactive Patterns</h1>
+      <p class="stage-head__subtitle">
+        The Expressive system embraces vibrant colors, playful interactions, and confident typography. Each component is designed to feel alive, responsive, and personality-driven while maintaining clear structure and usability.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Buttons</div>
+      <h2 class="section__title">Button States & Variants</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary</span>
+        <button class="btn">Primary Action</button>
+        <button class="btn btn--sm">Small</button>
+        <button class="btn btn--lg">Large Button</button>
+        <button class="btn" disabled>Disabled</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Secondary</span>
+        <button class="btn btn--secondary">Secondary</button>
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary btn--lg">Large</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Ghost</span>
+        <a href="#" class="btn btn--ghost">Learn more</a>
+        <a href="#" class="btn btn--ghost">Explore docs</a>
+        <a href="#" class="btn btn--ghost">Get started</a>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Cards</div>
+      <h2 class="section__title">Card Patterns</h2>
+      <p style="font-size: 16px; line-height: 1.6; color: var(--slate); margin-bottom: var(--s-5);">Cards use border or shadow depth treatment. Hover states reveal interaction potential with color and shadow lift.</p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__header">
+            <div class="card__icon">✓</div>
+            <div>
+              <h3 class="card__title">Bordered Card</h3>
+            </div>
+          </div>
+          <p class="card__body">Straightforward design with a clean border treatment. Perfect for catalogs, lists, and information hierarchies.</p>
+        </div>
+
+        <div class="card card--elevated">
+          <div class="card__header">
+            <div class="card__icon">⚡</div>
+            <div>
+              <h3 class="card__title">Elevated Card</h3>
+            </div>
+          </div>
+          <p class="card__body">Lifted with subtle shadow to create depth and hierarchy. Great for featured content and call-to-action zones.</p>
+        </div>
+
+        <div class="card">
+          <div class="card__header">
+            <div class="card__icon">◆</div>
+            <div>
+              <h3 class="card__title">Interactive Card</h3>
+            </div>
+          </div>
+          <p class="card__body">Responds to interaction with color and shadow changes. Communicates that it's clickable and engaging.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="section">
+      <div class="section__kicker">Badges & Tags</div>
+      <h2 class="section__title">Status Pills</h2>
+      <p style="font-size: 16px; line-height: 1.6; color: var(--slate); margin-bottom: var(--s-4);">Semantic color coding with rounded pill shape for maximum visibility and quick scanning.</p>
+
+      <div class="subsection-label">Solid Variants</div>
+      <div class="badge-row">
+        <span class="badge">Default</span>
+        <span class="badge badge--secondary">Secondary</span>
+        <span class="badge badge--success">Success</span>
+        <span class="badge badge--warning">Warning</span>
+        <span class="badge badge--danger">Error</span>
+      </div>
+
+      <div class="subsection-label">Outline Variant</div>
+      <div class="badge-row">
+        <span class="badge badge--outline">Accent</span>
+        <span class="badge badge--outline" style="border-color: var(--slate); color: var(--slate);">Secondary</span>
+      </div>
+    </section>
+
+    <!-- Inputs Section -->
+    <section class="section">
+      <div class="section__kicker">Form Fields</div>
+      <h2 class="section__title">Input States</h2>
+      <p style="font-size: 16px; line-height: 1.6; color: var(--slate); margin-bottom: var(--s-4);">Clear focus states with colored ring treatment. Labels communicate intent; placeholders guide completion.</p>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input class="input" type="email" placeholder="you@example.com">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Full Name</label>
+          <input class="input" type="text" placeholder="Jane Doe" value="Jane Doe">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Focus State</label>
+          <input class="input" type="text" placeholder="Click to see focus ring" autofocus>
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Message</label>
+          <textarea class="input" placeholder="Write your message here..." rows="4"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- Color Palette Section -->
+    <section class="section">
+      <div class="section__kicker">Colors</div>
+      <h2 class="section__title">Semantic Palette</h2>
+      <p style="font-size: 16px; line-height: 1.6; color: var(--slate); margin-bottom: var(--s-5);">A curated set of semantic colors that scale across all interface states. Primary blue provides the system's personality.</p>
+
+      <div class="palette">
+        <div class="palette__swatch">
+          <div class="palette__color" style="background: #ffffff; border: 2px solid #e5e5e5;"></div>
+          <div class="palette__label">
+            Paper
+            <div class="palette__value">#ffffff</div>
+          </div>
+        </div>
+        <div class="palette__swatch">
+          <div class="palette__color" style="background: #111111;"></div>
+          <div class="palette__label">
+            Ink
+            <div class="palette__value">#111111</div>
+          </div>
+        </div>
+        <div class="palette__swatch">
+          <div class="palette__color" style="background: #666666;"></div>
+          <div class="palette__label">
+            Slate
+            <div class="palette__value">#666666</div>
+          </div>
+        </div>
+        <div class="palette__swatch">
+          <div class="palette__color" style="background: #3b82f6;"></div>
+          <div class="palette__label">
+            Signal
+            <div class="palette__value">#3b82f6</div>
+          </div>
+        </div>
+        <div class="palette__swatch">
+          <div class="palette__color" style="background: #f5f5f5; border: 1px solid #e5e5e5;"></div>
+          <div class="palette__label">
+            Bone
+            <div class="palette__value">#f5f5f5</div>
+          </div>
+        </div>
+        <div class="palette__swatch">
+          <div class="palette__color" style="background: #e5e5e5;"></div>
+          <div class="palette__label">
+            Border
+            <div class="palette__value">#e5e5e5</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pull Quote Section -->
+    <section class="section">
+      <div class="section__kicker">Testimonial</div>
+      <h2 class="section__title">Featured Message</h2>
+
+      <div class="pullquote">
+        <blockquote class="pullquote__text">Design should spark joy and communicate clearly. Expressive proves they're not mutually exclusive.</blockquote>
+        <p class="pullquote__attribution">— Design Philosophy</p>
+      </div>
+    </section>
+
+    <!-- Typography Section -->
+    <section class="section">
+      <div class="section__kicker">Typography</div>
+      <h2 class="section__title">Type Scales</h2>
+      <p style="font-size: 16px; line-height: 1.6; color: var(--slate); margin-bottom: var(--s-5);">System-default sans-serif maintains clarity while supporting all weights from light to bold. Consistent line-height ensures readable rhythm.</p>
+
+      <div class="type-sample">
+        <div class="type-sample__label">Display (64px, 700)</div>
+        <div class="type-sample__text" style="font-size: 64px; font-weight: 700; letter-spacing: -0.02em;">Heading One</div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-sample__label">Section (48px, 700)</div>
+        <div class="type-sample__text" style="font-size: 48px; font-weight: 700; letter-spacing: -0.02em;">Heading Two</div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-sample__label">Body (16px, 400)</div>
+        <div class="type-sample__text" style="font-size: 16px; font-weight: 400;">The quick brown fox jumps over the lazy dog. This system embraces vibrant color and confident voice while keeping content scannable and accessible.</div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-sample__label">Label (14px, 600)</div>
+        <div class="type-sample__text" style="font-size: 14px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;">Form labels and UI labels</div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-sample__label">Code (13px, 400)</div>
+        <div class="type-sample__text" style="font-family: var(--font-mono); font-size: 13px;">const expressive = { personality: true, structure: true }</div>
+      </div>
+    </section>
+
+    <!-- Spacing Section -->
+    <section class="section">
+      <div class="section__kicker">Spacing</div>
+      <h2 class="section__title">Scale & Rhythm</h2>
+      <p style="font-size: 16px; line-height: 1.6; color: var(--slate); margin-bottom: var(--s-4);">An 8px base scale with multipliers ensures predictable layouts and consistent breathing room.</p>
+
+      <div class="pattern-grid">
+        <div class="pattern-cell">4px (s-1)</div>
+        <div class="pattern-cell">8px (s-2)</div>
+        <div class="pattern-cell">16px (s-3)</div>
+        <div class="pattern-cell">24px (s-4)</div>
+        <div class="pattern-cell">32px (s-5)</div>
+        <div

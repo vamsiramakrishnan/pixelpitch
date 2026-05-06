@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Airtable Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Haas Groot Disp', system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #181d26);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+    }
+    .header__title {
+      font-family: var(--font-display, 'Haas Groot Disp', system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: 0;
+      color: var(--ink, #181d26);
+      margin-bottom: 12px;
+    }
+    .header__subtitle {
+      font-size: 18px;
+      letter-spacing: 0.18px;
+      color: var(--slate, #333333);
+      max-width: 600px;
+    }
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 3px;
+      background: var(--signal, #254fad);
+      border: none;
+      margin-top: 24px;
+      border-radius: 2px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 56px;
+    }
+    .section__label {
+      font-family: var(--font-display, 'Haas Groot Disp', system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.28px;
+      text-transform: uppercase;
+      color: var(--slate, #333333);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #e0e2e6);
+    }
+
+    /* Key characteristics */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+    .traits-list li {
+      position: relative;
+      padding: 12px 0 12px 28px;
+      font-size: 18px;
+      letter-spacing: 0.18px;
+      line-height: 1.35;
+      color: var(--ink, #181d26);
+      border-bottom: 1px solid var(--border, #e0e2e6);
+    }
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 22px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--signal, #254fad);
+      opacity: 0.7;
+    }
+
+    /* Do's and Don'ts */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 640px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e0e2e6);
+      border-radius: 8px;
+      padding: 24px;
+      overflow: hidden;
+    }
+    .dd-card__heading {
+      font-family: var(--font-display, 'Haas Groot Disp', system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: 0.1px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dd-card__heading--do { color: #006400; }
+    .dd-card__heading--dont { color: #991b1b; }
+
+    .dd-card__icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .dd-card__icon--do {
+      background: #dcfce7;
+      color: #006400;
+    }
+    .dd-card__icon--dont {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+    .dd-list li {
+      font-size: 16px;
+      letter-spacing: 0.16px;
+      line-height: 1.30;
+      color: var(--ink, #181d26);
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border, #e0e2e6);
+    }
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* Color harmony strip */
+    .harmony-strip {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 80px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+    }
+    .harmony-strip__swatch:hover {
+      flex: 1.8;
+    }
+    .harmony-strip__label {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 3px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      letter-spacing: 0.05px;
+    }
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* Type pairing demo */
+    .type-pairing {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e0e2e6);
+      border-radius: 8px;
+      padding: 40px 32px;
+    }
+    .type-pairing__display {
+      font-family: var(--font-display, 'Haas Groot Disp', system-ui, sans-serif);
+      font-size: 40px;
+      font-weight: 400;
+      line-height: 1.25;
+      letter-spacing: 0;
+      color: var(--ink, #181d26);
+      margin-bottom: 16px;
+    }
+    .type-pairing__body {
+      font-family: var(--font-body, 'Haas Groot Disp', system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.35;
+      letter-spacing: 0.18px;
+      color: var(--slate, #333333);
+      max-width: 640px;
+    }
+    .type-pairing__meta {
+      display: flex;
+      gap: 24px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #e0e2e6);
+    }
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #333333);
+      letter-spacing: 0.1px;
+    }
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--ink, #181d26);
+    }
+
+    /* Atmosphere card */
+    .atmosphere-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e0e2e6);
+      border-radius: 8px;
+      padding: 28px 24px;
+    }
+    .atmosphere-card p {
+      font-size: 18px;
+      letter-spacing: 0.18px;
+      line-height: 1.35;
+      color: var(--ink, #181d26);
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #333333);
+      font-size: 16px;
+      letter-spacing: 0.16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border, #e0e2e6);
+      border-top-color: var(--signal, #254fad);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border', 'surface'];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.meta?.name || 'Airtable';
+      const colors = tokens.colors || {};
+      const fonts = tokens.typography || tokens.fonts || {};
+      const meta = tokens.meta || {};
+
+      /* Load Google Fonts */
+      const gfUrl = tokens.googleFontsUrl || (fonts.googleUrl);
+      if (gfUrl) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = gfUrl;
+        document.head.appendChild(link);
+      }
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Brand Motifs & DNA</h1>';
+      html += '  <p class="header__subtitle">Sophisticated simplicity meets structured data. White canvas, deep navy text, and Airtable Blue accents define the visual identity.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ---- Atmosphere / Description ---- */
+      const atmosphere = 'Airtable\'s brand embodies the intersection of spreadsheet simplicity and database power. The visual language is clean, inviting, and methodical—a Swiss-precision design system that speaks to both technical sophistication and everyday usability. Deep navy text on a pristine white canvas creates high legibility and professional confidence. Airtable Blue (#1b61c9) punctuates interactive moments, drawing the eye to calls-to-action and essential links. Positive letter-spacing throughout the typography system (0.08px–0.28px) adds breathing room and signals premium craftsmanship.';
+      html += '<div class="section">';
+      html += '  <div class="section__label">System Atmosphere</div>';
+      html += '  <div class="atmosphere-card"><p>' + esc(atmosphere) + '</p></div>';
+      html += '</div>';
+
+      /* ---- Key Characteristics ---- */
+      const traits = [
+        'White canvas with deep navy (#181d26) primary text',
+        'Airtable Blue (#1b61c9) as the interactive accent for CTAs and links',
+        'Haas Groot Disp typeface for both display and body hierarchy',
+        'Positive letter-spacing (0.08px–0.28px) on all type sizes for premium feel',
+        '8px–12px border-radius on buttons and cards for soft modularity',
+        'Multi-layer blue-tinted shadow: rgba(45,127,249,0.28) for subtle depth',
+        'Semantic color tokens (--success, --info) for consistent feedback'
+      ];
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      traits.forEach(t => {
+        html += '<li>' + esc(t) + '</li>';
+      });
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ---- Do's and Don'ts ---- */
+      const dos = [
+        'Use Airtable Blue (#1b61c9) for primary CTAs and link states',
+        'Apply positive letter-spacing to all body and caption text sizes',
+        'Use 12px radius for buttons; 8px for smaller UI elements',
+        'Leverage the Haas typeface hierarchy: weight variations over size alone',
+        'Combine white canvas with navy text for maximum legibility contrast',
+        'Use semantic tokens (--success, --info) for status and feedback states'
+      ];
+      const donts = [
+        'Skip letter-spacing—it\'s essential to the premium aesthetic',
+        'Use heavy drop shadows; keep depth subtle (0.08–0.12 opacity)',
+        'Mix fonts; Haas Groot Disp handles both display and body roles',
+        'Reduce contrast below WCAG AA (4.5:1) on text elements',
+        'Apply rounded corners over 24px on core UI—keep it structured',
+        'Use Airtable Blue casually; reserve it for interactive states'
+      ];
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '<div class="dd-card">';
+      html += '  <div class="dd-card__heading dd-card__heading--do">';
+      html += '    <span class="dd-card__icon dd-card__icon--do">&#10003;</span> Do';
+      html += '  </div>';
+      html += '  <ul class="dd-list">';
+      dos.forEach(d => { html += '<li>' + esc(d) + '</li>'; });
+      html += '  </ul></div>';
+
+      html += '<div class="dd-card">';
+      html += '  <div class="dd-card__heading dd-card__heading--dont">';
+      html += '    <span class="dd-card__icon dd-card__icon--dont">&#10007;</span> Don\'t';
+      html += '  </div>';
+      html += '  <ul class="dd-list">';
+      donts.forEach(d => { html += '<li>' + esc(d) + '</li>'; });
+      html += '  </ul></div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Color Harmony Strip ---- */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.4 ? '#181d26' : '#ffffff';
+          const labelBg = lum > 0.4 ? 'rgba(0,0,0,0.06)' : 'rgba(0,0,0,0.24)';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + ';background:' + labelBg + '">' + esc(key) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ---- Typography Pairing Demo ---- */
+      const displayFont = fonts.fontDisplay || 'Haas Groot Disp';
+      const bodyFont = fonts.fontBody || 'Haas Groot Disp';
+
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography System</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__display"';
+      if (displayFont) html += ' style="font-family:\'' + esc(displayFont) + '\',var(--font-display,serif)"';
+      html += '>Structured data, organized beautifully</div>';
+
+      html += '    <div class="type-pairing__body"';
+      if (bodyFont) html += ' style="font-family:\'' + esc(bodyFont) + '\',var(--font-body,sans-serif)"';
+      html += '>The Haas typeface family anchors Airtable\'s visual identity across every surface. Positive letter-spacing throughout creates rhythm and sophistication—from the smallest caption (0.28px tracking) to the largest display heading. This breathing room signals premium craftsmanship and makes content feel carefully considered, never cramped or hurried.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      if (displayFont) {
+        html += '<div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Display:</span> ' + esc(displayFont) + '</div>';
+      }
+      if (bodyFont) {
+        html += '<div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Body:</span> ' + esc(bodyFont) + '</div>';
+      }
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    /* ---- Utilities ---- */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function relativeLuminance(hex) {
+      try {
+        const [r, g, b] = hexToRgb(hex).map(c => {
+          c /= 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      } catch { return 0.5; }
+    }
+  </script>
+</body>
+</html>

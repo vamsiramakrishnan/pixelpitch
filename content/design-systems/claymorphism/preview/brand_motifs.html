@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Claymorphism</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin-top: 32px;
+      border-radius: var(--radius-full, 999px);
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--signal, #3b82f6);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 20px 0 20px 40px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+      transition: padding-left 0.2s ease;
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li:hover {
+      padding-left: 48px;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 28px;
+      width: 16px;
+      height: 16px;
+      border-radius: var(--radius-lg, 16px);
+      background: var(--signal, #3b82f6);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .traits-list li:hover::before {
+      width: 20px;
+      height: 20px;
+      top: 26px;
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 2px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-lg, 16px);
+      padding: 32px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: all 0.25s ease;
+    }
+
+    .dd-card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      transform: translateY(-4px);
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-card__heading--dont {
+      color: #ef4444;
+    }
+
+    .dd-card__icon {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-lg, 16px);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+      background: currentColor;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: var(--radius-lg, 16px);
+      overflow: hidden;
+      height: 140px;
+      border: 2px solid var(--border, #e5e5e5);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease, box-shadow 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 16px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.5;
+      box-shadow: inset 0 -4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 10px;
+      white-space: nowrap;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+      color: inherit;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--bone, #f5f5f5);
+      border: 2px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-lg, 16px);
+      padding: 48px 40px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 54px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 24px;
+      border-top: 2px solid var(--signal, #3b82f6);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--slate, #666666);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 700;
+      color: var(--ink, #111111);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--bone, #f5f5f5);
+      border: 2px solid var(--signal, #3b82f6);
+      border-radius: var(--radius-lg, 16px);
+      padding: 40px;
+      max-width: 840px;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+    }
+
+    /* ──── Rule of One Visual ──── */
+    .rule-of-one {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .rule-of-one {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .rule-slide {
+      border: 2px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-lg, 16px);
+      aspect-ratio: 16 / 10;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+
+    .rule-slide:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .rule-slide--correct {
+      background: linear-gradient(135deg, var(--paper, #ffffff) 0%, var(--bone, #f5f5f5) 100%);
+    }
+
+    .rule-slide--incorrect {
+      background: linear-gradient(135deg, var(--paper, #ffffff) 0%, var(--bone, #f5f5f5) 100%);
+    }
+
+    .rule-slide__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .rule-slide__headline {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 40px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 0;
+    }
+
+    .rule-slide__accent {
+      color: var(--signal, #3b82f6);
+    }
+
+    .rule-slide__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 2px solid var(--signal, #3b82f6);
+    }
+
+    /* ──── Claymorphic Showcase ──── */
+    .clay-showcase {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 1024px) {
+      .clay-showcase {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .clay-showcase {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .clay-element {
+      border-radius: var(--radius-lg, 16px);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+      border: 2px solid var(--border, #e5e5e5);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      background: var(--paper, #ffffff);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .clay-element:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 12px 28px rgba(59, 130, 246, 0.2);
+    }
+
+    .clay-element::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), transparent 50%);
+      pointer-events: none;
+    }
+
+    .clay-element__icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      z-index: 1;
+    }
+
+    .clay-element__name {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 700;
+      text-align: center;
+      color: var(--ink, #111111);
+      z-index: 1;
+    }
+
+    .clay-element__desc {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      color: var(--slate, #666666);
+      text-align: center;
+      margin-top: 8px;
+      z-index: 1;
+    }
+
+    /* ──── Principle Cards ──── */
+    .principles-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .principles-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .principle-card {
+      background: var(--paper, #ffffff);
+      border: 2px solid var(--signal, #3b82f6);
+      border-radius: var(--radius-lg, 16px);
+      padding: 32px;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08);
+      transition: all 0.25s ease;
+    }
+
+    .principle-card:hover {
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .principle-card__number {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 8px;
+    }
+
+    .principle-card__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink, #111111);
+      margin-bottom: 12px;
+    }
+
+    .principle-card__text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 18px;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 20px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: var(--radius-full, 999px);
+      animation: spin 0.8s linear infinite;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ──── Smooth transitions ──── */
+    * {
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border', 'surface'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#ef4444">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">The <span>Playful</span> DNA of Claymorphism</h1>';
+      html += '  <p class="header__subtitle">Soft rounded shapes, 3D-like depth, and puffy surfaces that feel handcrafted. Every interaction breathes with subtle motion and visual warmth.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Claymorphism brings a playful, tactile warmth to digital interfaces. Rounded corners (16px default), generous shadows, and soft depth create shapes that appear sculpted and moldable. The core accent is Primary Blue (#3B82F6), appearing with restraint and purpose. Surfaces feel puffed and soft, never harsh or geometric. Every element is approachable, inviting interaction. Transitions are smooth and purposeful (150–250ms), emphasizing the Primary blue as the signal for change. This is design that feels handmade, not machined.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Soft border-radius (16px default) on all major elements</li>';
+      html += '    <li>Subtle depth via shadows (0 2px 8px, 0 4px 12px, 0 8px 24px) not gradients</li>';
+      html += '    <li>Playful 3D effect through consistent shadow language and scale transforms</li>';
+      html += '    <li>Primary Blue (#3B82F6) as the sole accent color for interaction and signal</li>';
+      html += '    <li>Generous whitespace and breathing room between elements</li>';
+      html += '    <li>Smooth transitions (150–250ms) on hover, focus, active states</li>';
+      html += '    <li>Light optical illusions (radial gradients) to suggest soft surfaces</li>';
+      html += '    <li>Hover states use transform (translateY, scale) for tactile feedback</li>';
+      html += '    <li>High-contrast typography (system-ui sans-serif for legibility)</li>';
+      html += '    <li>Explicit states: hover, focus-visible, active, disabled, loading</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use rounded corners (16px or higher) on card, button, input elements</li>';
+      html += '      <li>Layer shadows to create perceived depth and lift</li>';
+      html += '      <li>Apply subtle scale and translateY transforms on hover</li>';
+      html += '      <li>Use Primary Blue (#3B82F6) for interactive elements only</li>';
+      html += '      <li>Keep transitions short (150–250ms) and smooth (ease)</li>';
+      html += '      <li>Add radial gradient overlays to suggest soft, lit surfaces</li>';
+      html += '      <li>Make state changes explicit (hover, focus, active, disabled)</li>';
+      html += '      <li>Use generous padding (20–40px) on major containers</li>';
+      html += '      <li>Employ box-shadow on interactive elements for tactile feedback</li>';
+      html += '      <li>Keep colors in the five-token palette (paper, ink, slate, signal, bone)</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use sharp corners (border-radius: 0) on interactive elements</li>';
+      html += '      <li>Stack multiple shadow layers without purpose</li>';
+      html += '      <li>Apply harsh or jarring transitions (>300ms or cubic-bezier)</li>';
+      html += '      <li>Use accent colors outside the primary blue palette</li>';
+      html += '      <li>Create depth via gradients alone (always pair with shadow)</li>';
+      html += '      <li>Disable hover states or make them invisible</li>';
+      html += '      <li>Use glass-morphism or excessive blur effects</li>';
+      html += '      <li>Crowd elements without breathing room</li>';
+      html += '      <li>Mix serif and sans-serif fonts across major sections</li>';
+      html += '      <li>Use neumorphism or flat design patterns</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Principles Section ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Core Principles</div>';
+      html += '  <div class="principles-grid">';
+
+      html += '  <div class="principle-card">';
+      html += '    <div class="principle-card__number">01</div>';
+      html += '    <div class="principle-card__title">Soft Geometry</div>';
+      html += '    <div class="principle-card__text">Round, generous borders create shapes that feel inviting and approachable. Never sharp. Never rigid. Every corner whispers "touch me".</div>';
+      html += '  </div>';
+
+      html += '  <div class="principle-card">';
+      html += '    <div class="principle-card__number">02</div>';
+      html += '    <div class="principle-card__title">Perceived Depth</div>';
+      html += '    <div class="principle-card__text">Shadows and subtle highlights create a 3D effect. Elements appear to float or sit on a soft surface. Depth comes from light, not grades.</div>';
+      html += '  </div>';
+
+      html += '  <div class="principle-card">';
+      html += '    <div class="principle-card__number">03</div>';
+      html += '    <div class="principle-card__title">Playful Motion</div>';
+      html += '    <div class="principle-card__text">Smooth, purposeful transitions (150–250ms) make interactions feel alive. Scale, translate, and fade in harmony with user intent.</div>';
+      html += '  </div>';
+
+      html += '  <div class="principle-card">';
+      html += '    <div class="principle-card__number">04</div>';
+      html += '    <div class="principle-card__title">Tactile Feedback</div>';
+      html += '    <div class="principle-card__text">Hover, focus, and active states are explicit and inviting. Users feel the button before they click it. Every interaction is a conversation.</div>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Claymorphic Elements ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Signature Elements</div>';
+      html += '  <div class="clay-showcase">';
+
+      const elements = [
+        { icon: '⚫', name: 'Soft Button', desc: 'Rounded, shadowed, interactive' },
+        { icon: '▭', name: 'Puffy Card', desc: 'Lifted with subtle depth effect' },
+        { icon: '◉', name: 'Glow Ring', desc: 'Blue accent with halo shadow' }
+      ];
+
+      elements.forEach((el, i) => {
+        html += '  <div class="clay-element">';
+        html += '    <div class="clay-element__icon">' + esc(el.icon) + '</div>';
+        html += '    <div class="clay-element__name">' + esc(el.name) + '</div>';
+        html += '    <div class="clay-element__desc">' + esc(el.desc) + '</div>';
+        html += '  </div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#111111' : '#ffffff';
+          html +=

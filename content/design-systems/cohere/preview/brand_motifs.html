@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Cohere</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'CohereText', serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #212121);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+    }
+    .header__title {
+      font-family: var(--font-display, 'CohereText', serif);
+      font-size: 48px;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.48px;
+      color: var(--ink, #212121);
+      margin-bottom: 12px;
+    }
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate, #93939f);
+      max-width: 600px;
+      font-weight: 400;
+    }
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 2px;
+      background: var(--signal, #1863dc);
+      border: none;
+      margin-top: 24px;
+      border-radius: 2px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 56px;
+    }
+    .section__label {
+      font-family: var(--font-mono, 'CohereMono', monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.24px;
+      text-transform: uppercase;
+      color: var(--slate, #93939f);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--color-border-light, #e5e7eb);
+    }
+
+    /* Key characteristics */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+    .traits-list li {
+      position: relative;
+      padding: 14px 0 14px 28px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ink, #212121);
+      border-bottom: 1px solid var(--color-border-light, #e5e7eb);
+      font-weight: 400;
+    }
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 20px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--signal, #1863dc);
+      opacity: 0.7;
+    }
+
+    /* Do's and Don'ts */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--color-border-light, #e5e7eb);
+      border-radius: 8px;
+      padding: 28px;
+      overflow: hidden;
+    }
+    .dd-card__heading {
+      font-family: var(--font-body, 'CohereText', serif);
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .dd-card__heading--do { color: #166534; }
+    .dd-card__heading--dont { color: #991b1b; }
+
+    .dd-card__icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+    .dd-card__icon--do {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .dd-card__icon--dont {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+    .dd-list li {
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--ink, #212121);
+      padding: 8px 0;
+      border-bottom: 1px solid var(--color-border-light, #e5e7eb);
+      font-weight: 400;
+    }
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* Color harmony strip */
+    .harmony-strip {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 80px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+    }
+    .harmony-strip__swatch:hover {
+      flex: 1.8;
+    }
+    .harmony-strip__label {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-mono, 'CohereMono', monospace);
+      font-size: 10px;
+      font-weight: 400;
+      padding: 3px 8px;
+      border-radius: 3px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      letter-spacing: 0.4px;
+    }
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* Type pairing demo */
+    .type-pairing {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--color-border-light, #e5e7eb);
+      border-radius: 8px;
+      padding: 48px 40px;
+    }
+    .type-pairing__display {
+      font-family: var(--font-display, 'CohereText', serif);
+      font-size: 42px;
+      font-weight: 400;
+      line-height: 1.2;
+      letter-spacing: -0.42px;
+      color: var(--ink, #212121);
+      margin-bottom: 20px;
+    }
+    .type-pairing__body {
+      font-family: var(--font-body, 'CohereText', serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #212121);
+      max-width: 680px;
+    }
+    .type-pairing__meta {
+      display: flex;
+      gap: 32px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--color-border-light, #e5e7eb);
+    }
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, 'CohereMono', monospace);
+      font-size: 12px;
+      color: var(--slate, #93939f);
+      font-weight: 400;
+    }
+    .type-pairing__meta-label {
+      font-weight: 500;
+      color: var(--ink, #212121);
+      letter-spacing: 0.24px;
+      text-transform: uppercase;
+    }
+
+    /* Atmosphere card */
+    .atmosphere-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--color-border-light, #e5e7eb);
+      border-radius: 8px;
+      padding: 32px;
+    }
+    .atmosphere-card p {
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--ink, #212121);
+      font-weight: 400;
+    }
+
+    /* Signature trait card */
+    .signature-section {
+      background: linear-gradient(135deg, #17171c 0%, #2a2a35 100%);
+      border-radius: 8px;
+      padding: 48px 40px;
+      margin-bottom: 56px;
+      color: #ffffff;
+    }
+    .signature-section__title {
+      font-family: var(--font-display, 'CohereText', serif);
+      font-size: 36px;
+      font-weight: 400;
+      line-height: 1.2;
+      letter-spacing: -0.36px;
+      margin-bottom: 16px;
+    }
+    .signature-section__text {
+      font-size: 16px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 700px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #93939f);
+      font-size: 16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--color-border-light, #e5e7eb);
+      border-top-color: var(--signal, #1863dc);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone'];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Brand Motifs</h1>';
+      html += '  <p class="header__subtitle">Enterprise command deck. Confident, clean, intelligent.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Signature Section */
+      html += '<div class="signature-section">';
+      html += '  <div class="signature-section__title">The Cohere Personality</div>';
+      html += '  <p class="signature-section__text">A polished enterprise interface that makes AI feel like serious infrastructure. Professional without coldness, sophisticated without intimidation. Every design decision — from the 22px card radius to the serif/sans typeface pairing — reinforces the message that Cohere is engineering-grade intelligence.</p>';
+      html += '</div>';
+
+      /* Atmosphere / Description */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Cohere's visual system is built on extreme chromatic restraint. A bright white canvas, cool gray borders (<code>#d9d9dd</code>, <code>#e5e7eb</code>), black typography, and a single interaction blue (<code>#1863dc</code>). Purple-violet appears only in photographic hero sections and full-width dramatic breaks. This discipline means that when color appears, it carries maximum impact. The signature 22px border-radius on all primary cards creates an organic, cloud-like containment language that softens the technical nature of enterprise software.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Key Characteristics */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Bright white canvas with cool gray containment borders — the clean slate of an enterprise command deck</li>';
+      html += '    <li>22px signature border-radius on all primary cards — the distinctive "Cohere card" roundness that signals sophistication</li>';
+      html += '    <li>Dual custom typeface: CohereText (display serif) with tight tracking + Unica77 (body sans) with geometric precision</li>';
+      html += '    <li>Enterprise-grade chromatic restraint: black text, white backgrounds, cool grays, minimal blue-purple accents</li>';
+      html += '    <li>Deep purple/violet full-width hero sections providing dramatic visual contrast and product showcase stages</li>';
+      html += '    <li>Interaction blue (#1863dc) reserved exclusively for hover, focus, and interactive state signaling</li>';
+      html += '    <li>Ghost/transparent buttons that shift to blue on hover — the default button voice</li>';
+      html += '    <li>CohereMono for code, technical labels, and uppercase section headers with letter-spacing</li>';
+      html += '    <li>Generous 40px+ section spacing throughout — enterprise layouts demand room to breathe</li>';
+      html += '    <li>Enterprise photography featuring diverse, real-world applications of AI</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* Do's and Don'ts */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '    <div class="dd-card">';
+      html += '      <div class="dd-card__heading dd-card__heading--do">';
+      html += '        <span class="dd-card__icon dd-card__icon--do">&#10003;</span> Do';
+      html += '      </div>';
+      html += '      <ul class="dd-list">';
+      html += '        <li>Use 22px border-radius on all primary cards — it\'s the visual signature</li>';
+      html += '        <li>Use CohereText serif for display headings (72px, 60px, 48px) with negative letter-spacing</li>';
+      html += '        <li>Use Unica77 body sans for all body and UI text at weight 400–500</li>';
+      html += '        <li>Keep the palette black-and-white with cool gray borders (#d9d9dd, #e5e7eb)</li>';
+      html += '        <li>Use Interaction Blue (#1863dc) only for hover, focus, and active states</li>';
+      html += '        <li>Use deep purple sections for dramatic visual breaks and product showcases</li>';
+      html += '        <li>Apply uppercase + letter-spacing on CohereMono for section labels</li>';
+      html += '        <li>Maintain 40px+ section spacing throughout — enterprise needs breathing room</li>';
+      html += '      </ul>';
+      html += '    </div>';
+
+      html += '    <div class="dd-card">';
+      html += '      <div class="dd-card__heading dd-card__heading--dont">';
+      html += '        <span class="dd-card__icon dd-card__icon--dont">&#10007;</span> Don\'t';
+      html += '      </div>';
+      html += '      <ul class="dd-list">';
+      html += '        <li>Don\'t use border-radius other than 22px on primary cards — the signature radius matters</li>';
+      html += '        <li>Don\'t introduce warm colors — the palette is strictly cool-toned</li>';
+      html += '        <li>Don\'t use heavy shadows — depth comes from color contrast and borders</li>';
+      html += '        <li>Don\'t use bold (700+) weight on body text — 400–500 is the professional range</li>';
+      html += '        <li>Don\'t skip the serif/sans hierarchy — CohereText for headlines, Unica77 for body</li>';
+      html += '        <li>Don\'t use purple as a surface color for cards — purple is reserved for full-width sections</li>';
+      html += '        <li>Don\'t reduce section spacing below 40px — enterprise layouts need generosity</li>';
+      html += '        <li>Don\'t use heavy decoration on buttons — ghost/transparent is the base state</li>';
+      html += '      </ul>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* Color Harmony Strip */
+      const colors = tokens.colors || {};
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.4 ? '#212121' : '#ffffff';
+          const labelBg = lum > 0.4 ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.18)';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + ';background:' + labelBg + '">' + esc(key) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* Typography Pairing Demo */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography System</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__display">Enterprise command infrastructure</div>';
+
+      html += '    <div class="type-pairing__body">The Cohere typeface system bridges two worlds: CohereText serif gives headlines the gravitas of a technology manifesto with tight tracking, while Unica77 body sans handles all body and UI text with geometric Swiss precision. This serif/sans pairing creates "confident authority meets engineering clarity" — the perfect voice for an enterprise AI platform.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Display:</span> CohereText (Serif)</div>';
+      html += '      <div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Body:</span> Unica77 Cohere Web (Sans)</div>';
+      html += '      <div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Mono:</span> CohereMono (Code)</div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    /* ---- Utilities ---- */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function relativeLuminance(hex) {
+      try {
+        const [r, g, b] = hexToRgb(hex).map(c => {
+          c /= 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      } catch { return 0.5; }
+    }
+  </script>
+</body>
+</html>

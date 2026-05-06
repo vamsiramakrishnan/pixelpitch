@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — BMW</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #262626);
+      line-height: 1.15;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 60px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 80px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #757575);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 60px;
+      font-weight: 300;
+      line-height: 1.30;
+      letter-spacing: 0;
+      color: var(--ink, #262626);
+      margin-bottom: 12px;
+      max-width: 95%;
+      text-transform: uppercase;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.30;
+      color: var(--slate, #757575);
+      max-width: 80%;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 60px;
+      height: 1px;
+      background: var(--ink, #262626);
+      border: none;
+      margin-top: 24px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #757575);
+      margin-bottom: 40px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 80px;
+      gap: 20px;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--ink, #262626);
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      color: var(--slate, #757575);
+      margin-top: 3px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 28px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 1px;
+      background: var(--ink, #262626);
+      min-width: 1px;
+      transition: opacity 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.6;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--ink, #262626);
+      text-align: right;
+    }
+
+    /* Rule weights */
+    .rule-demo {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--ink, #262626);
+      text-transform: uppercase;
+    }
+
+    .rule-demo__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      color: var(--slate, #757575);
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #757575);
+    }
+
+    .rule-demo__container {
+      width: 100%;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      padding: 0;
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 60px;
+      margin-bottom: 40px;
+    }
+
+    .radius-item {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 28px;
+      align-items: flex-start;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .radius-item__box {
+      width: 100px;
+      height: 100px;
+      background: var(--bone, #f5f5f5);
+      border: 1px solid var(--border, #e5e5e5);
+      flex-shrink: 0;
+    }
+
+    .radius-item__info {
+      flex: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--ink, #262626);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #757575);
+      margin-bottom: 10px;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      line-height: 1.30;
+      color: var(--slate, #757575);
+    }
+
+    /* Philosophy block */
+    .philosophy {
+      background: var(--bone, #f5f5f5);
+      padding: 40px;
+      border: 1px solid var(--border, #e5e5e5);
+      margin-bottom: 60px;
+    }
+
+    .philosophy__title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #757575);
+      margin-bottom: 14px;
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      line-height: 1.30;
+      color: var(--ink, #262626);
+    }
+
+    .philosophy__text strong {
+      font-weight: 700;
+    }
+
+    .philosophy__text em {
+      font-style: italic;
+    }
+
+    .philosophy__text code {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      background: rgba(38, 38, 38, 0.08);
+      padding: 2px 5px;
+      font-size: 14px;
+    }
+
+    /* Grid demo */
+    .grid-demo {
+      background: var(--bone, #f5f5f5);
+      padding: 40px;
+      border: 1px solid var(--border, #e5e5e5);
+      margin-bottom: 60px;
+    }
+
+    .grid-demo__title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #757575);
+      margin-bottom: 20px;
+    }
+
+    .grid-demo__visual {
+      width: 100%;
+      height: 180px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+      background-image: linear-gradient(90deg, rgba(28, 105, 212, 0.06) 1px, transparent 1px);
+      background-size: calc(100% / 12) 100%;
+      padding: 20px;
+      border: 1px solid var(--border, #e5e5e5);
+    }
+
+    .grid-demo__column {
+      background: rgba(28, 105, 212, 0.08);
+      border: 1px solid rgba(28, 105, 212, 0.15);
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--signal, #1c69d4);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 6px;
+    }
+
+    .grid-demo__info {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .grid-demo__stat {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      color: var(--slate, #757575);
+      line-height: 1.30;
+    }
+
+    .grid-demo__stat-label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #757575);
+      margin-bottom: 3px;
+    }
+
+    /* Context block */
+    .context-block {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      padding: 40px;
+      margin-bottom: 60px;
+    }
+
+    .context-block__title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #757575);
+      margin-bottom: 14px;
+    }
+
+    .context-block__text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      line-height: 1.30;
+      color: var(--ink, #262626);
+    }
+
+    .context-block__text strong {
+      font-weight: 700;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #757575);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 1px solid rgba(38, 38, 38, 0.15);
+      border-top-color: var(--signal, #1c69d4);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 900px) {
+      .page {
+        padding: 60px 32px;
+      }
+
+      .header {
+        margin-bottom: 60px;
+      }
+
+      .header__title {
+        font-size: 48px;
+      }
+
+      .section {
+        margin-bottom: 60px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 90px 1fr 70px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .radius-item {
+        grid-template-columns: 120px 1fr;
+      }
+
+      .grid-demo__info {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '1px', label: 'hairline' },
+      's-2': { value: '5px', label: 'micro' },
+      's-3': { value: '8px', label: 'xs' },
+      's-4': { value: '10px', label: 'sm' },
+      's-5': { value: '12px', label: 'sm+' },
+      's-6': { value: '15px', label: 'md-' },
+      's-7': { value: '16px', label: 'md' },
+      's-8': { value: '20px', label: 'md+' },
+      's-9': { value: '24px', label: 'lg' },
+      's-10': { value: '30px', label: 'lg+' },
+      's-11': { value: '32px', label: 'xl' },
+      's-12': { value: '40px', label: 'xl+' },
+      's-13': { value: '45px', label: '2xl' },
+      's-14': { value: '56px', label: '2xl+' },
+      's-15': { value: '60px', label: '3xl' }
+    };
+
+    const DEFAULT_RULES = {
+      'border': { name: 'Border', weight: '1px', color: '#e5e5e5', use: 'Card edges, subtle separation' },
+      'hairline': { name: 'Hairline', weight: '1px', color: '#262626', use: 'Section dividers, structural rules' },
+      'accent': { name: 'Accent (BMW Blue)', weight: '2px', color: '#1c69d4', use: 'Focus states, interactive highlights' },
+      'none': { name: 'None', weight: 'none', color: 'transparent', use: 'Flat surfaces, no depth' }
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'All primary elements — containers, cards, body text areas' },
+      'md': { value: '10px', use: 'Buttons, small interactive elements' },
+      'sm': { value: '30px', use: 'Badges and pill-shaped controls' },
+      'lg': { value: '20px', use: 'Reserved for component library extensions' },
+      'full': { value: '999px', use: 'Circular avatars, decorative accent elements' }
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#262626">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const rules = DEFAULT_RULES;
+      const radius = DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Spacing &amp; Rules</div>';
+      html += '  <h1 class="header__title">Eight pixels.<br>Precision engineered.</h1>';
+      html += '  <p class="header__subtitle">The spacing and depth system for BMW — a modular scale that communicates the precision of German engineering through careful rhythm and restraint.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Spacing philosophy */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Showroom Pacing Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    BMW\'s spacing system mirrors the <strong>automotive showroom experience</strong>: dark hero photography sections with generous padding create the feeling of spotlit vehicles in individual spaces. Content areas are <strong>information-dense and compressed</strong> — no waste, no excess. Body text uses tight line-height (1.15) and a modular 8px base scale. The rhythm alternates between dark dramatic sections and clean white content zones, creating cinematic pacing. <strong>Depth is created through contrast, not shadows</strong> — the interplay between dark and light does all the elevation work. Zero border-radius design means every element is a sharp, precise rectangle, reflecting industrial German engineering geometry.';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 3);
+        const label = obj.label || key;
+        
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Grid visualization */
+      html += '<div class="section">';
+      html += '  <div class="section__label">12-Column Grid System</div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__title">Responsive Full-Width Grid</div>';
+      html += '    <div class="grid-demo__visual">';
+      for (let i = 1; i <= 12; i++) {
+        html += '      <div class="grid-demo__column">' + i + '</div>';
+      }
+      html += '    </div>';
+      html += '    <div class="grid-demo__info">';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Base Unit</div>';
+      html += '        <div class="grid-demo__stat">8 pixels — the foundation of all spacing rhythm</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Grid Columns</div>';
+      html += '        <div class="grid-demo__stat">12 columns, fully responsive. Hero sections go full-bleed.</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Content Measure</div>';
+      html += '        <div class="grid-demo__stat">6–8 columns for body text, capped at 75–80 characters for optimal reading</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Margins &amp; Gutters</div>';
+      html += '        <div class="grid-demo__stat">Responsive: 20px (mobile), 40px (tablet), 60px (desktop)</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Rule weights */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Rule Weights &amp; Depth</div>';
+
+      Object.entries(rules).forEach(([key, rule]) => {
+        const weight = rule.weight;
+        const color = rule.color;
+        const weightNum = parseFloat(weight) || 0;
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <div>';
+        html += '      <div class="rule-demo__name">' + esc(rule.name) + '</div>';
+        html += '      <div class="rule-demo__label">' + esc(rule.use) + '</div>';
+        html += '    </div>';
+        html += '    <div class="rule-demo__spec">' + esc(weight) + '</div>';
+        html += '  </div>';
+        
+        if (weight === 'none') {
+          html += '  <div class="rule-demo__container" style="background: transparent; border: 1px dashed #e5e5e5; padding: 0 20px;">';
+          html += '    <div style="font-family: var(--font-body); font-size: 12px; color: var(--slate);">No border or shadow applied</div>';
+          html += '  </div>';
+        } else {
+          html += '  <div class="rule-demo__container">';
+          html += '    <div class="rule-demo__line" style="height:' + weightNum + 'px; background:' + color + '"></div>';
+          html += '  </div>';
+        }
+        
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; color: var(--slate); line-height: 1.30; margin-bottom: 40px;">BMW\'s design system enforces <strong>sharp corners (0 radius) as the default</strong>. This reflects the precision of German industrial design. Only five radius values exist for edge cases:</p>';
+
+      Object.entries(radius).forEach(([key, obj]) => {
+        const radiusValue = obj.value;
+
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__demo">';
+        html += '    <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '  </div>';
+        html += '  <div class="radius-item__info">';
+        html += '    <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '    <div class="radius-item__value">' + esc(radiusValue) + '</div>';
+        html += '    <div class="radius-item__description">' + esc(obj.use) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Context variables philosophy */
+      html += '<div class="context-block">';
+      html += '  <div class="context-block__title">CSS Context-Aware Theming</div>';
+      html += '  <div class="context-block__text">';
+      html += '    BMW\'s tokens are designed around <strong>context-driven variables</strong>: <code>--site-context-highlight-color</code> (#1c69d4), <code>--site-context-focus-color</code> (#0653b6), and <code>--site-context-metainfo-color</code> (#757575). This enables <strong>global brand flexibility</strong> — the same design system can be deployed across multiple BMW brand contexts (BMW, Mini, Rolls-Royce) by simply swapping token values. The blue accent (#1c69d4) is BMW\'s signature — used <em>only</em> for interactive states and focus indicators, never decoratively.';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Engineering philosophy */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Engineering Precision</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Every spacing value, every rule weight, every radius is <strong>intentional and earned</strong>. There are no shadows — depth comes from photographic contrast and rule weights. Typography weights jump from 300 (Display Hero — whispered authority) to 900 (Nav Emphasis — extreme contrast). Line-heights are tight (1.15–1.30), reflecting the efficiency of German engineering. The spacing scale runs 1px to 60px, with intermediate values that follow a logical progression. <strong>This is a system built for clarity and precision, not decoration.</strong>';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

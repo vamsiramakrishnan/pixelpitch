@@ -1,0 +1,81 @@
+/* BMW — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #262626;
+  --slate:   #757575;
+  --signal:  #1c69d4;
+  --bone:    #f5f5f5;
+  --border:  #e5e5e5;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-bmw-focus-blue: #0653b6;
+  --color-silver: #777777;
+
+  /* Semantic */
+  --info:    #757575;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 60px;
+  --t-section-heading: 32px;
+  --t-nav-emphasis: 18px;
+  --t-body: 16px;
+  --t-button-bold: 16px;
+  --t-button: 16px;
+
+  /* ── Spacing ── */
+  --s-1: 1px;
+  --s-2: 5px;
+  --s-3: 8px;
+  --s-4: 10px;
+  --s-5: 12px;
+  --s-6: 15px;
+  --s-7: 16px;
+  --s-8: 20px;
+  --s-9: 24px;
+  --s-10: 30px;
+  --s-11: 32px;
+  --s-12: 40px;
+  --s-13: 45px;
+  --s-14: 56px;
+  --s-15: 60px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   30px;
+  --radius-md:   10px;
+  --radius-lg:   20px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  10px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    10px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Duolingo</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #3c3c3c);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--signal, #58cc02);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 72px;
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--ink, #3c3c3c);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--signal, #58cc02);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 1.55;
+      color: var(--slate, #777777);
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 120px;
+      height: 4px;
+      background: var(--signal, #58cc02);
+      border: none;
+      margin-top: 32px;
+      border-radius: var(--radius-sm, 4px);
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--signal, #58cc02);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 3px solid var(--signal, #58cc02);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 28px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.55;
+      color: var(--ink, #3c3c3c);
+      border-bottom: 2px solid var(--bone, #f7f7f7);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 24px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--signal, #58cc02);
+      box-shadow: 0 4px 0 rgba(88, 204, 2, 0.3);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 3px solid var(--ink, #3c3c3c);
+      border-radius: var(--radius-lg, 16px);
+      padding: 32px;
+      box-shadow: 0 8px 0 rgba(88, 204, 2, 0.2);
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--signal, #58cc02);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--surface, #ff4b4b);
+    }
+
+    .dd-card__icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      flex-shrink: 0;
+      border: 3px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--signal, #58cc02);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--surface, #ff4b4b);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.55;
+      color: var(--ink, #3c3c3c);
+      padding: 12px 0;
+      border-bottom: 2px solid var(--bone, #f7f7f7);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: var(--radius-lg, 16px);
+      overflow: hidden;
+      height: 140px;
+      border: 3px solid var(--ink, #3c3c3c);
+      box-shadow: 0 8px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.4;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+      color: rgba(255, 255, 255, 0.9);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--bone, #f7f7f7);
+      border: 3px solid var(--ink, #3c3c3c);
+      border-radius: var(--radius-lg, 16px);
+      padding: 48px 40px;
+      box-shadow: 0 8px 0 rgba(88, 204, 2, 0.2);
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--signal, #58cc02);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 54px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink, #3c3c3c);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #58cc02);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.65;
+      color: var(--ink, #3c3c3c);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 3px solid var(--signal, #58cc02);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--slate, #777777);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 800;
+      color: var(--signal, #58cc02);
+      display: block;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--bone, #f7f7f7);
+      border: 3px solid var(--ink, #3c3c3c);
+      border-radius: var(--radius-lg, 16px);
+      padding: 32px;
+      max-width: 840px;
+      box-shadow: 0 8px 0 rgba(88, 204, 2, 0.15);
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.65;
+      color: var(--ink, #3c3c3c);
+    }
+
+    /* ──── Tactile Press Visual ──── */
+    .tactile-demo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .tactile-demo {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .tactile-slide {
+      border: 3px solid var(--ink, #3c3c3c);
+      border-radius: var(--radius-lg, 16px);
+      aspect-ratio: 16 / 10;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+    }
+
+    .tactile-slide--correct {
+      background: var(--bone, #f7f7f7);
+      box-shadow: 0 8px 0 var(--signal, #58cc02);
+    }
+
+    .tactile-slide--incorrect {
+      background: var(--bone, #f7f7f7);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .tactile-slide__kicker {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--signal, #58cc02);
+      margin-bottom: 12px;
+    }
+
+    .tactile-slide__headline {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 40px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink, #3c3c3c);
+      margin-bottom: 0;
+    }
+
+    .tactile-slide__accent {
+      color: var(--signal, #58cc02);
+    }
+
+    .tactile-slide__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #777777);
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 2px solid var(--bone, #f7f7f7);
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #777777);
+      font-size: 18px;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 4px solid var(--bone, #f7f7f7);
+      border-top-color: var(--signal, #58cc02);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ──── Color Grid ──── */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+    }
+
+    .color-swatch {
+      border: 3px solid var(--ink, #3c3c3c);
+      border-radius: var(--radius-lg, 16px);
+      padding: 0;
+      overflow: hidden;
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.08);
+    }
+
+    .color-swatch__color {
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 12px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .color-swatch__label {
+      padding: 12px;
+      background: var(--paper, #ffffff);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--slate, #777777);
+      line-height: 1.3;
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'surface'];
+    const EXTENDED_COLORS = {
+      'owl-green-deep': '#58a700',
+      'owl-green-light': '#89e219',
+      'streak-orange': '#ff9600',
+      'gem-pink': '#ce82ff',
+      'eel-blue': '#1cb0f6',
+      'bee-yellow': '#ffc800'
+    };
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#ff4b4b">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">Gamified <span>Joy</span> as Visual Language</h1>';
+      html += '  <p class="header__subtitle">Owl green dominates. Chunky shadows press down. Every button begs to be tapped. Duolingo turns learning into a tactile, joyful experience.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Duolingo is visual gamification. Owl green (#58cc02) occupies 30%+ of every surface. Every interactive element casts a chunky 4px bottom shadow — the tactile "press down" affordance that screams "tap me." Cards live behind 3px borders in deep gray, not hairlines. Type runs bold (weight 700–800) and confident, starting at 48px for displays. Duo, the green owl mascot, appears as an active character — winking in errors, celebrating streaks, coaching through onboarding. Shape language is generous: 16–20px radii on cards, 12px on buttons, 9999px on chips. Streak orange and gem pink amplify the secondary palette. The entire system reads like iOS 2015 reborn as a modern learning platform.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Owl green (#58cc02) as the dominant color — 30%+ of chrome and chrome alternatives</li>';
+      html += '    <li>Chunky 4px bottom-shadow on every button (the tactile "press" affordance)</li>';
+      html += '    <li>3px solid borders in deep gray, never 1px hairlines</li>';
+      html += '    <li>Bold type: display 800, body 500–700 weights standard</li>';
+      html += '    <li>Display sizes start at 48px and climb confidently</li>';
+      html += '    <li>Generous radii: 16–20px on cards, 12px on buttons, 9999px on chips</li>';
+      html += '    <li>Mascot-as-character: Duo the owl in onboarding, errors, streaks, milestones</li>';
+      html += '    <li>Streak orange (#ff9600) and gem pink (#ce82ff) as secondary brand colors</li>';
+      html += '    <li>Color-coded skill icons — each lesson pair has a unique color identity</li>';
+      html += '    <li>White canvas with strategic green/orange/pink accents, never grayed</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use owl green on at least 25% of interactive chrome</li>';
+      html += '      <li>Add 4px bottom-shadow to every button (0 4px 0 rgba(88,204,2,0.3))</li>';
+      html += '      <li>Use 3px borders on cards, modals, and contained sections</li>';
+      html += '      <li>Set headline weight to 700–800 minimum</li>';
+      html += '      <li>Include Duo the owl in onboarding and error states</li>';
+      html += '      <li>Use 16–20px border-radius on cards, 9999px on chips</li>';
+      html += '      <li>Color-code skill cards by lesson type (vocabulary, grammar, etc.)</li>';
+      html += '      <li>Underline streaks and milestones with streak orange</li>';
+      html += '      <li>Keep backgrounds white or pale (#f7f7f7) — never dark</li>';
+      html += '      <li>Use chunky checkmarks and filled icons in display sizes</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use hairline (1px) borders — minimum 2px, ideally 3px</li>';
+      html += '      <li>Add box-shadow without a chunky bottom-drop counterpart</li>';
+      html += '      <li>Use thin or light typefaces — 400 weight minimum</li>';
+      html += '      <li>Display headline sizes below 32px</li>';
+      html += '      <li>Use rounded corners below 8px (except inline buttons at 4px)</li>';
+      html += '      <li>Apply owl green to more than 35% of a slide (it loses power)</li>';
+      html += '      <li>Use blue, purple, or grayscale as primary accent</li>';
+      html += '      <li>Hide or minimize Duo — make the mascot visible and playful</li>';
+      html += '      <li>Use subtle animations — keep motion chunky and obvious</li>';
+      html += '      <li>Deploy emoji, Lucide, or outline-style icons</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Tactile Press Visual ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Tactile Press Affordance</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.65; color: var(--slate); margin-bottom: 24px; max-width: 840px;">The 4px bottom-shadow is Duolingo\'s tactile fingerprint. It says "tap me" without words. Applied to buttons, cards, and modals, it creates a 3D press-down effect that begs interaction. Hover should lift the shadow slightly; press should flatten it.</p>';
+      html += '  <div class="tactile-demo">';
+
+      html += '    <div class="tactile-slide tactile-slide--correct">';
+      html += '      <div class="tactile-slide__kicker">Correct</div>';
+      html += '      <div class="tactile-slide__headline">Chunky shadow says <span class="tactile-slide__accent">tap</span></div>';
+      html += '      <div class="tactile-slide__label">4px bottom-drop: (0 4px 0 rgba(88,204,2,0.3))</div>';
+      html += '    </div>';
+
+      html += '    <div class="tactile-slide tactile-slide--incorrect">';
+      html += '      <div class="tactile-slide__kicker">Incorrect</div>';
+      html += '      <div class="tactile-slide__headline">Subtle shadow <span class="tactile-slide__accent">disappears</span></div>';
+      html += '      <div class="tactile-slide__label">Soft shadows (0 2px 8px) lack impact and clarity.</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Core Color Palette</div>';
+      html += '  <div class="harmony-strip">';
+
+      const coreColors = [
+        { key: 'paper', label: 'Paper', hex: '#ffffff' },
+        { key: 'signal', label: 'Owl Green', hex: '#58cc02' },
+        { key: 'surface', label: 'Error Red', hex: '#ff4b4b' },
+        { key: 'ink', label: 'Ink', hex: '#3c3c3c' },
+        { key: 'bone', label: 'Bone', hex: '#f7f7f7' }
+      ];
+
+      coreColors.forEach(color => {
+        const hex = color.hex;
+        const lum = relativeLuminance(hex);
+        const labelColor = lum > 0.5 ? '#3c3c3c' : '#ffffff';
+        html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+        html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(color.label.toUpperCase()) + '</span>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Extended Color Grid ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Extended Palette</div>';
+      html += '  <div class="color-grid">';
+
+      const extendedColors = [
+        { name: 'Owl Green Light', hex: '#89e219' },
+        { name: 'Owl Green Deep', hex: '#58a700' },
+        { name: 'Streak Orange', hex: '#ff9600' },
+        { name: 'Gem Pink', hex: '#ce82ff' },
+        { name: 'Eel Blue', hex: '#1cb0f6' },
+        { name: 'Bee Yellow', hex: '#ffc800' },
+        { name: 'Swan', hex: '#e5e5e5' },
+        { name: 'Hare', hex: '#afafaf' }
+      ];
+
+      extendedColors.forEach(color => {
+        const lum = relativeLuminance(color.hex);
+        const textColor = lum > 0.6 ? '#3c3c3c' : '#ffffff';
+        html += '<div class="color-swatch">';
+        html += '  <div class="color-swatch__color" style="background:' + esc(color.hex) + '; color:' + textColor + '">' + esc(color.hex) + '</div>';
+        html += '  <div class="color-swatch__label">' + esc(color.name) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Typography Pairing ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography System</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Display + Body Pairing</div>';
+      html += '    <div class="type-pairing__display">Bold and <span>Confident</span> Type</div>';
+
+      html += '    <div class="type-pairing__body">Duolingo typography is bold by default. Display font (system-ui) runs at weights 700–800, setting a confident tone across all headlines. Body text (also system-ui) steps down to 400–500 weight, providing reading contrast. The type ramp starts at 56px for hero, dropping through 32px (H1) → 24px (H2) → 18px (H3) for hierarchy. Buttons and CTAs punch at 800 weight, 16px, making every call-to-action unmistakable. No serif fonts. No thin weights. No light variants. The system is blocky, accessible, and unapologetically bold.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Display Font</span>';
+      html += '        system-ui, 700–800 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Body Font</span>';
+      html += '        system-ui, 400–500 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Button Font</span>';
+      html += '        system-ui, 800 weight';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Type Ramp Section ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Complete Type Ramp</div>';
+      html += '  <div style="border: 3px solid var(--ink); border-radius: var(--radius-lg); padding:

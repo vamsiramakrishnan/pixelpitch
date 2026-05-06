@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — LinkedIn</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #f4f2ee);
+      color: var(--ink, #0a66c2);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 48px 24px;
+      }
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 96px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: rgba(0, 0, 0, 0.9);
+      margin-bottom: 24px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 1px;
+      background: var(--ink, #0a66c2);
+      border: none;
+      margin: 0;
+    }
+
+    /* Font families section */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+      margin-bottom: 96px;
+      margin-top: 64px;
+    }
+
+    .font-card {
+      background: var(--bone, #ffffff);
+      border: var(--card-border, 1px solid #e0deda);
+      border-radius: var(--radius-sm, 8px);
+      padding: 32px;
+    }
+
+    .font-card__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .font-card__name {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1.25;
+      color: rgba(0, 0, 0, 0.9);
+      margin-bottom: 8px;
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      color: var(--slate, #666666);
+      word-break: break-word;
+      line-height: 1.4;
+    }
+
+    /* Character set block */
+    .charmap-block {
+      background: var(--bone, #ffffff);
+      border: var(--card-border, 1px solid #e0deda);
+      border-radius: var(--radius-sm, 8px);
+      padding: 48px;
+      margin-bottom: 96px;
+    }
+
+    .charmap-block__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+    }
+
+    .charmap-block__chars {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.6;
+      letter-spacing: 0;
+      color: rgba(0, 0, 0, 0.9);
+      word-break: break-word;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #e0deda);
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border, #e0deda);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 800px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.9);
+      margin-bottom: 8px;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 10px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+      letter-spacing: 0;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: rgba(0, 0, 0, 0.9);
+      overflow-wrap: break-word;
+      word-spacing: 0.05em;
+    }
+
+    /* Ramp section */
+    .ramp-section {
+      margin-bottom: 96px;
+    }
+
+    /* Feed card demo */
+    .feed-demo {
+      margin-bottom: 96px;
+    }
+
+    .feed-demo__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #e0deda);
+    }
+
+    .feed-card {
+      background: var(--bone, #ffffff);
+      border: var(--card-border, 1px solid #e0deda);
+      border-radius: var(--radius-sm, 8px);
+      padding: 16px;
+    }
+
+    .feed-card__header {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      align-items: flex-start;
+    }
+
+    .feed-card__avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--color-blue-tint, #d0e8ff);
+      flex-shrink: 0;
+    }
+
+    .feed-card__author-block {
+      flex: 1;
+    }
+
+    .feed-card__author-name {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.43;
+      color: rgba(0, 0, 0, 0.9);
+      margin: 0 0 4px 0;
+    }
+
+    .feed-card__author-title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.33;
+      color: var(--slate, #666666);
+      margin: 0;
+    }
+
+    .feed-card__timestamp {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.33;
+      color: var(--slate, #666666);
+      letter-spacing: 0.1px;
+    }
+
+    .feed-card__content {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.43;
+      color: rgba(0, 0, 0, 0.9);
+      margin-bottom: 12px;
+    }
+
+    .feed-card__actions {
+      display: flex;
+      gap: 8px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border, #e0deda);
+    }
+
+    .feed-card__action {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.43;
+      color: var(--slate, #666666);
+      background: transparent;
+      border: none;
+      padding: 8px 0;
+      cursor: pointer;
+      flex: 1;
+      text-align: center;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 160px 48px;
+      color: var(--slate, #666666);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 24px auto 0;
+      border: 2px solid var(--border, #e0deda);
+      border-top-color: var(--ink, #0a66c2);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Excited to announce I\'m now a Product Designer at LinkedIn.',
+      'Just completed a certification in UX research and design thinking.',
+      'The future of work is flexible. Companies investing in culture are winning.',
+      'Grateful for the opportunity to lead design across three continents.',
+      'What skills are most valuable for product managers in 2024?',
+      'Thank you to my network for the incredible support this year.',
+      'Thrilled to join the founding team at a new AI-powered startup.',
+      'Design systems aren\'t just about components—they\'re about people.',
+      'Six months into my new role and couldn\'t be more energized by the team.',
+      'If you\'re hiring product designers, let\'s connect and talk.',
+    ];
+
+    const FEED_SAMPLES = [
+      {
+        author: 'Sarah Chen',
+        title: 'Director of Product Design at LinkedIn',
+        content: 'The most impactful design work I\'ve done started with listening. Not surveys, not wireframes—just listening to people solve real problems. That\'s where I begin every project now.',
+        timestamp: '2h'
+      },
+      {
+        author: 'Marcus Rivera',
+        title: 'Senior UX Researcher',
+        content: 'Professional networks aren\'t about vanity metrics. They\'re about trust, credibility, and real human connection. Design systems that support this mission are worth the investment.',
+        timestamp: '4h'
+      }
+    ];
+
+    fetch('../tokens.json')
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:var(--color-error-red)">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Design System';
+      const summary = tokens.meta?.summary || '';
+      const category = tokens.meta?.category || '';
+
+      const ramp = tokens.typography?.ramp || [];
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Type Specimen</div>';
+      html += '  <h1 class="header__title">' + esc(title) + '</h1>';
+      html += '  <p class="header__subtitle">' + esc(summary) + '</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      const families = [
+        { label: 'Display & Body', name: 'System Font Stack', fallback: '-apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', note: 'Native platform rendering' },
+        { label: 'Monospace', name: 'Monospace Stack', fallback: 'ui-monospace, "SF Mono", Monaco, "Cascadia Code", monospace', note: 'Metadata & captions' }
+      ];
+
+      html += '<div class="font-families">';
+      families.forEach(f => {
+        html += '<div class="font-card">';
+        html += '  <div class="font-card__label">' + esc(f.label) + '</div>';
+        html += '  <div class="font-card__name">' + esc(f.name) + '</div>';
+        html += '  <div class="font-card__fallback">' + esc(f.fallback) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      /* Character set */
+      html += '<div class="charmap-block">';
+      html += '  <div class="charmap-block__label">Character Set · System Font (Regular & Semibold)</div>';
+      html += '  <div class="charmap-block__chars">';
+      html += '    AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>';
+      html += '    0123456789 !@#$%&amp;*()&ndash;&mdash;&lsquo;&rsquo;&ldquo;&rdquo;.,:;?';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Type ramp */
+      if (ramp.length) {
+        html += '<div class="ramp-section">';
+        html += '<div class="section-label">Type Ramp — All Roles & Weights</div>';
+        ramp.forEach((entry, i) => {
+          html += rampRow(entry, i);
+        });
+        html += '</div>';
+      }
+
+      /* Feed card demo */
+      html += '<div class="feed-demo">';
+      html += '<div class="feed-demo__label">Feed Card Example · Professional Network Context</div>';
+      FEED_SAMPLES.slice(0, 1).forEach(sample => {
+        html += '<div class="feed-card">';
+        html += '  <div class="feed-card__header">';
+        html += '    <div class="feed-card__avatar"></div>';
+        html += '    <div class="feed-card__author-block">';
+        html += '      <p class="feed-card__author-name">' + esc(sample.author) + '</p>';
+        html += '      <p class="feed-card__author-title">' + esc(sample.title) + '</p>';
+        html += '      <div class="feed-card__timestamp">' + esc(sample.timestamp) + ' ago</div>';
+        html += '    </div>';
+        html += '  </div>';
+        html += '  <div class="feed-card__content">' + esc(sample.content) + '</div>';
+        html += '  <div class="feed-card__actions">';
+        html += '    <button class="feed-card__action">Like</button>';
+        html += '    <button class="feed-card__action">Comment</button>';
+        html += '    <button class="feed-card__action">Share</button>';
+        html += '  </div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(entry, idx) {
+      const role = entry.role || 'Role ' + (idx + 1);
+      const size = entry.size || '14px';
+      const weight = entry.weight || 400;
+      const lh = entry.lineHeight || '1.43';
+      const ls = entry.letterSpacing || '0';
+
+      let fontFamily = 'var(--font-body)';
+      if (entry.fontKey === 'display') fontFamily = 'var(--font-display)';
+      else if (entry.fontKey === 'mono') fontFamily = 'var(--font-mono)';
+      else if (entry.fontKey === 'ui') fontFamily = 'var(--font-body)';
+
+      const sizeNum = parseFloat(size);
+      const sampleIdx = idx % EDITORIAL_SAMPLES.length;
+      let sample = EDITORIAL_SAMPLES[sampleIdx];
+
+      /* Truncate very large samples */
+      if (sizeNum >= 20) {
+        sample = sample.split('.')[0].slice(0, 50);
+        if (!sample.endsWith('.')) sample += '.';
+      }
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + ';';
+      fontStyle += 'font-family:' + fontFamily + ';';
+      if (ls && ls !== '0' && ls !== 'normal') fontStyle += 'letter-spacing:' + ls + ';';
+
+      let meta = esc(size) + ' · Weight ' + esc(String(weight));
+      meta += '\n' + fontFamilyLabel(entry.fontKey);
+      meta += '\nLine-height: ' + esc(String(lh));
+      if (ls && ls !== '0' && ls !== 'normal') meta += '\nLetter-spacing: ' + esc(ls);
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(sample) + '</div>' +
+        '</div>';
+    }
+
+    function fontFamilyLabel(key) {
+      const map = {
+        'display': 'System Font',
+        'body': 'System Font',
+        'mono': 'Monospace',
+        'ui': 'System Font'
+      };
+      return map[key] || 'Unknown';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+/* ElevenLabs — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #000000;
+  --slate:   #4e4e4e;
+  --signal:  #4e4e4e;
+  --bone:    #f5f5f5;
+  --border:  #e5e5e5;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-warm-stone: #f5f2ef;
+  --color-warm-gray: #777169;
+  --color-near-white: #f6f6f6;
+  --color-grid-cyan: #7fffff;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: Waldenburg;
+  --font-body:    Waldenburg;
+  --font-mono:    Geist Mono;
+
+  /* Type ramp */
+  --t-display-hero: 48px;
+  --t-section-heading: 36px;
+  --t-card-heading: 32px;
+  --t-body-large: 20px;
+  --t-body: 18px;
+  --t-body-standard: 16px;
+  --t-body-medium: 16px;
+  --t-nav-ui: 15px;
+  --t-button: 15px;
+  --t-button-uppercase: 14px;
+  --t-caption: 14px;
+  --t-small: 13px;
+  --t-code: 13px;
+  --t-micro: 12px;
+  --t-tiny: 10px;
+
+  /* ── Spacing ── */
+  --s-1: 1px;
+  --s-2: 3px;
+  --s-3: 4px;
+  --s-4: 8px;
+  --s-5: 9px;
+  --s-6: 10px;
+  --s-7: 11px;
+  --s-8: 12px;
+  --s-9: 16px;
+  --s-10: 18px;
+  --s-11: 20px;
+  --s-12: 24px;
+  --s-13: 28px;
+  --s-14: 32px;
+  --s-15: 40px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   10px;
+  --radius-lg:   18px;
+  --radius-full: 9999px;
+
+  /* ── Components ── */
+  --button-radius:  10px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    10px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

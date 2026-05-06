@@ -1,0 +1,79 @@
+/* Airtable — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #181d26;
+  --slate:   #333333;
+  --signal:  #254fad;
+  --bone:    #f8fafc;
+  --border:  #e0e2e6;
+  --surface: #e0e2e6;
+
+  /* Extended palette */
+  --color-airtable-blue: #1b61c9;
+  --color-success-green: #006400;
+
+  /* Semantic */
+  --success: #006400;
+  --info:    #1b61c9;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: Haas Groot Disp;
+  --font-body:    Haas Groot Disp;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 48px;
+  --t-display-bold: 48px;
+  --t-section-heading: 40px;
+  --t-sub-heading: 32px;
+  --t-card-title: 24px;
+  --t-feature: 20px;
+  --t-body: 18px;
+  --t-body-medium: 16px;
+  --t-button: 16px;
+  --t-caption: 14px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   12px;
+  --radius-md:   8px;
+  --radius-lg:   24px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    8px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

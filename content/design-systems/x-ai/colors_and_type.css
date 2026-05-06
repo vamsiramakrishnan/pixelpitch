@@ -1,0 +1,66 @@
+/* xAI — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #ffffff;
+  --slate:   #666666;
+  --signal:  #3b82f6;
+  --bone:    #1f2228;
+  --border:  #e5e5e5;
+  --surface: #1f2228;
+
+  /* Semantic */
+  --info:    #1f2228;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 320px;
+  --t-section-heading: 30px;
+  --t-body: 16px;
+  --t-button: 14px;
+  --t-label-caption: 14px;
+  --t-small-meta: 12px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 24px;
+  --s-4: 48px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   0px;
+  --radius-md:   24px;
+  --radius-lg:   48px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  24px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    24px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

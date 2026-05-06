@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Arc Browser Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: linear-gradient(135deg, var(--paper) 0%, var(--bone) 100%);
+      color: var(--ink);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+
+    /* ── Header ── */
+    .header {
+      margin-bottom: 80px;
+      position: relative;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      left: -40px;
+      right: -40px;
+      height: 200px;
+      background: linear-gradient(135deg, var(--color-twilight-start), var(--color-twilight-end));
+      opacity: 0.04;
+      border-radius: var(--radius-lg);
+      z-index: -1;
+    }
+
+    .header__tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: 16px;
+      padding: 6px 12px;
+      background: rgba(183, 148, 244, 0.08);
+      border-radius: var(--radius-full);
+    }
+
+    .header__title {
+      font-family: var(--font-display);
+      font-size: 56px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 12px;
+      max-width: 900px;
+    }
+
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate);
+      line-height: 1.5;
+      max-width: 700px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--signal), var(--color-arc-coral));
+      border: none;
+      border-radius: 2px;
+      margin-top: 28px;
+    }
+
+    /* ── Section ── */
+    .section {
+      margin-bottom: 72px;
+    }
+
+    .section__label {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section__label::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 4px;
+      background: var(--signal);
+      border-radius: 50%;
+    }
+
+    .section__description {
+      font-size: 15px;
+      color: var(--slate);
+      line-height: 1.5;
+      margin-bottom: 32px;
+      max-width: 700px;
+    }
+
+    /* ── Spacing scale ── */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 110px 1fr 90px;
+      gap: 20px;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s ease;
+    }
+
+    .spacing-row:hover {
+      background: rgba(183, 148, 244, 0.03);
+      padding: 16px 16px;
+      margin: 0 -16px;
+      border-radius: 8px;
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 0.02em;
+    }
+
+    .spacing-row__role {
+      font-size: 12px;
+      color: var(--slate);
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      background: rgba(229, 229, 229, 0.5);
+      border-radius: 6px;
+      padding: 0 8px;
+      overflow: hidden;
+    }
+
+    .spacing-row__bar {
+      height: 24px;
+      background: linear-gradient(90deg, var(--signal), var(--color-arc-coral));
+      border-radius: 4px;
+      min-width: 2px;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .spacing-row__bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.4), transparent);
+      border-radius: 4px;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      filter: brightness(1.15);
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      text-align: right;
+    }
+
+    /* ── Rule weights ── */
+    .rule-demo {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s ease;
+    }
+
+    .rule-demo:hover {
+      background: rgba(183, 148, 244, 0.03);
+      padding: 28px 16px;
+      margin: 0 -16px;
+      border-radius: 8px;
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 0.02em;
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--slate);
+      font-weight: 500;
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 2px;
+      display: block;
+    }
+
+    /* ── Border radius ── */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 32px;
+    }
+
+    .radius-item {
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    .radius-item:hover {
+      transform: translateY(-4px);
+    }
+
+    .radius-item__box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 140px;
+      margin: 0 auto 16px;
+      background: linear-gradient(135deg, rgba(183, 148, 244, 0.1), rgba(255, 95, 95, 0.05));
+      border: 2px solid var(--signal);
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .radius-item__box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.5), transparent);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .radius-item:hover .radius-item__box {
+      border-color: var(--color-arc-coral);
+      box-shadow: 0 4px 16px rgba(183, 148, 244, 0.15);
+    }
+
+    .radius-item:hover .radius-item__box::before {
+      opacity: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--slate);
+      font-weight: 500;
+    }
+
+    /* ── Depth demo ── */
+    .depth-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 24px;
+    }
+
+    .depth-item {
+      padding: 28px 20px;
+      background: var(--paper);
+      border-radius: var(--radius-lg);
+      text-align: center;
+      transition: all 0.2s ease;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .depth-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(183, 148, 244, 0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .depth-item:hover {
+      transform: translateY(-6px);
+      border-color: var(--signal);
+    }
+
+    .depth-item:hover::before {
+      opacity: 1;
+    }
+
+    .depth-item__name {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .depth-item__spec {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--slate);
+      word-break: break-all;
+      line-height: 1.4;
+      position: relative;
+      z-index: 1;
+      max-height: 60px;
+      overflow: hidden;
+    }
+
+    /* ── Grid visualization ── */
+    .grid-demo {
+      background: var(--paper);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .grid-demo__container {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+
+    .grid-demo__col {
+      aspect-ratio: 1 / 1;
+      background: linear-gradient(135deg, var(--color-twilight-start), var(--color-twilight-end));
+      border-radius: 8px;
+      opacity: 0.15;
+      transition: opacity 0.2s ease;
+    }
+
+    .grid-demo:hover .grid-demo__col {
+      opacity: 0.08;
+    }
+
+    .grid-demo__col:hover {
+      opacity: 0.3;
+    }
+
+    .grid-demo__label {
+      position: absolute;
+      top: 12px;
+      left: 32px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--slate);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── Loading ── */
+    .loading {
+      text-align: center;
+      padding: 120px 40px;
+      color: var(--slate);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 20px auto 0;
+      border: 3px solid var(--border);
+      border-top-color: var(--signal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .page {
+        padding: 60px 24px;
+      }
+
+      .header__title {
+        font-size: 40px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 90px 1fr 70px;
+        gap: 12px;
+      }
+
+      .radius-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .depth-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-demo__container {
+        grid-template-columns: repeat(6, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 48px 16px;
+      }
+
+      .header__title {
+        font-size: 32px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 80px 1fr 60px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-demo__container {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const SPACING_ROLES = {
+      's-1': 'Hairline. Tags, dividers.',
+      's-2': 'Micro. Component padding.',
+      's-3': 'Tight. Compact spacing.',
+      's-4': 'Base. Default pane padding.',
+      's-5': 'Generous. Sidebar margin.',
+      's-6': 'Expansive. Section gaps.',
+      's-7': 'Landscape. Page top margin.',
+      's-8': 'Breathing room. Max section width.'
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#f56565">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+
+      const spacing = tokens.spacing?.scale || {
+        's-1': '4px',
+        's-2': '8px',
+        's-3': '16px',
+        's-4': '24px',
+        's-5': '32px',
+        's-6': '48px',
+        's-7': '64px',
+        's-8': '96px'
+      };
+
+      const radii = tokens.radii || {
+        'none': '0',
+        'sm': '4px',
+        'md': '8px',
+        'lg': '16px',
+        'full': '999px'
+      };
+
+      const depth = tokens.depth || [
+        { level: 0, name: 'Flat', treatment: 'none' },
+        { level: 1, name: 'Border', treatment: '1px solid var(--border)' },
+        { level: 2, name: 'Elevated', treatment: '0 2px 8px rgba(0,0,0,0.08)' }
+      ];
+
+      let html = '';
+
+      /* ── Header ── */
+      html += '<header class="header">';
+      html += '  <span class="header__tag">Spacing &amp; Rules</span>';
+      html += '  <h1 class="header__title">Eight pixels.<br>One ruler.</h1>';
+      html += '  <p class="header__subtitle">Arc\'s spacing system starts at 4px and grows in doubling steps — from hairline tags to landscape-scale sections. Every gap is intentional.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ── Spacing Scale ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+      html += '  <p class="section__description">Base unit: 4px. The scale drives every margin, padding, and gap in the system — from microscopic component breathing to expansive section margins.</p>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, v]) => parseFloat(v) || 0), 1);
+
+      spacingEntries.forEach(([key, value]) => {
+        const px = parseFloat(value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 1);
+        const role = SPACING_ROLES[key] || '';
+
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__role">' + esc(role) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* ── Rule Weights ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Rule Weights</div>';
+      html += '  <p class="section__description">Subtle elevation through depth. Arc avoids heavy borders in favor of soft shadows and translucent tints, but when a boundary is needed, the weight communicates hierarchy.</p>';
+
+      depth.forEach((d, idx) => {
+        const treatment = d.treatment || d.shadow || 'none';
+        let style = '';
+
+        if (treatment.includes('px solid')) {
+          const match = treatment.match(/(\d+)px/);
+          const weight = match ? match[1] : '1';
+          style = 'height:' + weight + 'px;background:var(--ink)';
+        } else if (treatment.includes('rgba')) {
+          style = 'height:2px;background:var(--ink);box-shadow:' + treatment;
+        } else {
+          style = 'height:1px;background:var(--border)';
+        }
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <span class="rule-demo__name">' + esc(d.name) + '</span>';
+        html += '    <span class="rule-demo__spec">' + esc(treatment.substring(0, 45)) + '</span>';
+        html += '  </div>';
+        html += '  <hr class="rule-demo__line" style="' + style + '">';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* ── Border Radius ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+      html += '  <p class="section__description">Squircle-soft everywhere. Cards breathe at 16px, buttons nestle at 8px, pills bloom at full. No sharp corners — Arc dissolves into the backdrop.</p>';
+      html += '  <div class="radius-grid">';
+
+      Object.entries(radii).forEach(([key, value]) => {
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__box" style="border-radius:' + esc(value) + '"></div>';
+        html += '  <div class="radius-item__name">' + esc(key) + '</div>';
+        html += '  <div class="radius-item__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ── Grid System ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Sidebar &amp; Grid</div>';
+      html += '  <p class="section__description">Arc is sidebar-first. The 240px sidebar (collapsible to 56px) anchors the left edge; the main content flows in a 12-column grid with 16px gutters. Panes inside use 24px padding.</p>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__label">12-column, 16px gutters</div>';
+      html += '    <div class="grid-demo__container">';
+
+      for (let i = 0; i < 12; i++) {
+        html += '<div class="grid-demo__col"></div>';
+      }
+
+      html += '    </div>';
+      html += '  </div>';
+
+      const gridMetrics = [
+        { label: 'Sidebar width (expanded)', value: '240px' },
+        { label: 'Sidebar width (collapsed)', value: '56px' },
+        { label: 'Pane padding', value: '24px (s-4)' },
+        { label: 'Column gutter', value: '16px (s-3)' },
+        { label: 'Tab bar height', value: '44px' },
+        { label: 'Window radius (macOS)', value: '12px' }
+      ];
+
+      html += '  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 24px;">';
+
+      gridMetrics.forEach(m => {
+        html += '<div style="padding: 16px; background: rgba(183, 148, 244, 0.04); border: 1px solid var(--border); border-radius: var(--radius-md);">';
+        html += '  <div style="font-family: var(--font-mono); font-size: 11px; color: var(--slate); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; margin-bottom: 8px;">' + esc(m.label) + '</div>';
+        html += '  <div style="font-family: var(--font-mono); font-size: 16px; font-weight: 700; color: var(--ink);">' + esc(m.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

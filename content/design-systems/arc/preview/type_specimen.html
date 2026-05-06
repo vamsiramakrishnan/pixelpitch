@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arc Browser — Type Specimen</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: linear-gradient(135deg, var(--paper) 0%, var(--bone) 100%);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__overline {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 56px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 16px;
+      max-width: 800px;
+    }
+
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate);
+      max-width: 700px;
+      line-height: 1.6;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--color-twilight-start), var(--color-twilight-end));
+      border: none;
+      margin-top: 32px;
+      border-radius: 1px;
+    }
+
+    /* Intro prose */
+    .intro {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 40px;
+      margin-bottom: 80px;
+      max-width: 720px;
+    }
+
+    .intro__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 12px;
+    }
+
+    .intro__text {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--ink);
+    }
+
+    .intro__text + .intro__text {
+      margin-top: 16px;
+    }
+
+    /* Font families grid */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 80px;
+    }
+
+    .font-card {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px 28px;
+    }
+
+    .font-card__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 12px;
+    }
+
+    .font-card__name {
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 1.3;
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+
+    .font-card__stack {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      color: var(--slate);
+      word-break: break-all;
+      line-height: 1.6;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 32px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Pangram block */
+    .pangram-block {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 48px 40px;
+      margin-bottom: 80px;
+    }
+
+    .pangram-block__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 20px;
+    }
+
+    .pangram-block__chars {
+      font-size: 26px;
+      line-height: 1.8;
+      letter-spacing: 0.02em;
+      color: var(--ink);
+      word-break: break-all;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    /* Ramp section */
+    .ramp-section {
+      margin-bottom: 80px;
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 960px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* Ramp meta (left column) */
+    .ramp-meta__role {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      line-height: 1.8;
+      color: var(--slate);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Ramp sample (right column) */
+    .ramp-sample {
+      color: var(--ink);
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    /* Drop cap */
+    .drop-cap {
+      margin-bottom: 80px;
+    }
+
+    .drop-cap__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 24px;
+    }
+
+    .drop-cap__text {
+      position: relative;
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--ink);
+      max-width: 600px;
+    }
+
+    .drop-cap__initial {
+      float: left;
+      font-size: 80px;
+      font-weight: 400;
+      line-height: 0.8;
+      padding-right: 8px;
+      padding-top: 3px;
+      color: var(--color-twilight-start);
+    }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 20px auto 0;
+      border: 3px solid var(--border);
+      border-top-color: var(--signal);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 48px 24px;
+      }
+      .header__title {
+        font-size: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading typography tokens…</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'The browser that browses for you — Arc dissolves the boundary between chrome and the page.',
+      'Translucent surfaces, gradient warmth, and a sidebar-first layout redefine the browsing experience.',
+      'Where others frame the browser as a container, Arc treats it as scenery itself.',
+      'Frosted glass surfaces hover over saturated gradients, setting the emotional temperature.',
+      'Squircle-soft shapes and subtle shadows create a sense of depth and warmth.',
+      'Typography speaks two languages: sans-serif for product, serif for the editorial voice.',
+      'Precision in the details—tabs at 13px remain scannable even with thirty open.',
+      'The color picker becomes a brand surface: every theme is user-driven, never imposed.',
+    ];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#f56565">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const ramp = tokens.typography?.ramp || [];
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__overline">Type Specimen</div>';
+      html += '  <h1 class="header__title">Eight roles. One voice.</h1>';
+      html += '  <p class="header__subtitle">Arc\'s typography system balances precision with warmth—sans-serif for the product, serif for the editorial moments that make browsing feel human.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Intro prose */
+      html += '<div class="intro">';
+      html += '  <div class="intro__label">About Arc\'s Typography</div>';
+      html += '  <p class="intro__text">Arc uses <strong>Inter</strong> as its primary voice—a geometric sans with tight tracking that feels contemporary without coldness. For marketing and editorial moments, <strong>Argent CF</strong> (a custom serif) brings humanity and authority. Code uses <strong>Berkeley Mono</strong>, carefully sized to remain legible in the URL bar and devtools.</p>';
+      html += '  <p class="intro__text">The hierarchy is deliberately compact: even at the largest size (72px), letter-spacing pulls inward to -0.03em, creating a sense of density and impact. Tab titles remain small (13px) so thirty open tabs stay scannable. Body text at 15px with 1.55 line-height feels spacious and breathing.</p>';
+      html += '</div>';
+
+      /* Font families */
+      html += '<div class="font-families">';
+      html += '<div class="font-card">';
+      html += '  <div class="font-card__label">Product & UI</div>';
+      html += '  <div class="font-card__name">Inter</div>';
+      html += '  <div class="font-card__stack">system-ui, -apple-system,<br>BlinkMacSystemFont, sans-serif</div>';
+      html += '</div>';
+      html += '<div class="font-card">';
+      html += '  <div class="font-card__label">Marketing & Editorial</div>';
+      html += '  <div class="font-card__name">Argent CF</div>';
+      html += '  <div class="font-card__stack">\'Source Serif Pro\',<br>Georgia, serif</div>';
+      html += '</div>';
+      html += '<div class="font-card">';
+      html += '  <div class="font-card__label">Code & Monospace</div>';
+      html += '  <div class="font-card__name">Berkeley Mono</div>';
+      html += '  <div class="font-card__stack">ui-monospace, Menlo,<br>Consolas, monospace</div>';
+      html += '</div>';
+      html += '</div>';
+
+      /* Character set */
+      html += '<div class="pangram-block">';
+      html += '  <div class="pangram-block__label">Character Set & Punctuation</div>';
+      html += '  <div class="pangram-block__chars">AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>0123456789 !@#$%&amp;*()–—''""<br>https:// &lt;/&gt; { } [ ] · × ÷ ±</div>';
+      html += '</div>';
+
+      /* Type ramp */
+      if (ramp.length) {
+        html += '<div class="ramp-section">';
+        html += '<div class="section-label">Type Ramp</div>';
+        ramp.forEach((entry, i) => {
+          html += rampRow(entry, i);
+        });
+        html += '</div>';
+      }
+
+      /* Drop cap showcase */
+      html += '<div class="drop-cap">';
+      html += '  <div class="drop-cap__label">Drop Cap (Editorial Moment)</div>';
+      html += '  <p class="drop-cap__text">';
+      html += '    <span class="drop-cap__initial">T</span>';
+      html += '    he browser that browses for you dissolves the boundary between the chrome and the page. Where Chrome and Safari treat the browser frame as a container for the web, Arc treats it as scenery—a backdrop that fades into the system wallpaper. The sidebar carries gradient warmth, translucency blooms everywhere, and a single saturated gradient sets the emotional temperature. This is not a browser. This is a new kind of window into the web.';
+      html += '  </p>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(entry, idx) {
+      const role = entry.role || 'Role ' + (idx + 1);
+      const size = entry.size || '16px';
+      const weight = entry.weight || 400;
+      const lh = entry.lineHeight || '1.5';
+      const ls = entry.letterSpacing || '0';
+      const sampleIdx = idx % EDITORIAL_SAMPLES.length;
+      const sample = EDITORIAL_SAMPLES[sampleIdx];
+
+      const sizeNum = parseFloat(size);
+      const displaySample = sizeNum >= 40
+        ? sample.substring(0, sample.indexOf('.') + 1)
+        : sample;
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + ';';
+      if (ls !== '0' && ls !== 'normal') fontStyle += 'letter-spacing:' + ls + ';';
+      fontStyle += 'font-family:var(--font-body,system-ui,sans-serif);';
+
+      let meta = '';
+      meta += size + ' / ' + weight;
+      meta += '\nLine height: ' + lh;
+      meta += '\nLetter spacing: ' + (ls === '0' || ls === 'normal' ? 'normal' : ls);
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + esc(meta) + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(displaySample) + '</div>' +
+        '</div>';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

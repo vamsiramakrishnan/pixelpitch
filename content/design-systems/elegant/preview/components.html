@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elegant — Component Vocabulary</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-6) var(--s-5);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--s-4);
+      margin-bottom: var(--s-7);
+      border-bottom: 1px solid var(--border);
+      border-top: 2px solid var(--ink);
+      padding-top: var(--s-4);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      line-height: 1;
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-5);
+      border-bottom: 2px solid var(--border);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 400;
+      letter-spacing: -0.015em;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate);
+      max-width: 760px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: var(--s-5);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-4);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate);
+      margin-right: var(--s-3);
+      min-width: 140px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      line-height: 1.4;
+      border: 1px solid var(--border);
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      gap: var(--s-2);
+    }
+
+    .btn:hover {
+      border-color: var(--ink);
+      background: var(--bone);
+    }
+
+    .btn--primary {
+      background: var(--signal);
+      color: var(--paper);
+      border-color: var(--signal);
+    }
+
+    .btn--primary:hover {
+      background: #2563eb;
+      border-color: #2563eb;
+    }
+
+    .btn--secondary {
+      background: var(--paper);
+      color: var(--ink);
+      border-color: var(--ink);
+    }
+
+    .btn--secondary:hover {
+      background: var(--bone);
+    }
+
+    .btn--ghost {
+      border: none;
+      background: transparent;
+      color: var(--signal);
+      padding: 0;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      text-decoration-thickness: 1px;
+      font-weight: 400;
+    }
+
+    .btn--ghost:hover {
+      color: #2563eb;
+    }
+
+    .btn--sm {
+      padding: 8px 16px;
+      font-size: 13px;
+    }
+
+    .btn--lg {
+      padding: 14px 28px;
+      font-size: 16px;
+    }
+
+    /* ──── CARDS ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-5);
+      margin-bottom: var(--s-5);
+    }
+
+    .card {
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      padding: var(--s-4);
+      background: var(--paper);
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--signal);
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.08);
+    }
+
+    .card__header {
+      margin-bottom: var(--s-3);
+    }
+
+    .card__label {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-1);
+      display: block;
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      color: var(--ink);
+    }
+
+    .card__body {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+    }
+
+    .card__footer {
+      padding-top: var(--s-3);
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--slate);
+    }
+
+    .card--elevated {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border-color: transparent;
+    }
+
+    /* ──── INPUT FIELDS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .input {
+      padding: 10px 12px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .input:disabled {
+      background: var(--bone);
+      color: var(--slate);
+      cursor: not-allowed;
+    }
+
+    /* ──── BADGES & PILLS ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2);
+      margin-bottom: var(--s-4);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      line-height: 1.4;
+      border-radius: var(--radius-full);
+      background: var(--bone);
+      color: var(--ink);
+    }
+
+    .badge--signal {
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--signal);
+    }
+
+    .badge--success {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+    }
+
+    .badge--warning {
+      background: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+    }
+
+    .badge--danger {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    /* ──── DEMO CONTENT ──── */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+      margin-top: var(--s-4);
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: var(--s-5) 0;
+    }
+
+    .description {
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--slate);
+      margin-bottom: var(--s-5);
+    }
+
+    /* ──── FOLIO ──── */
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-3) 0;
+      margin-top: var(--s-8);
+      border-top: 1px solid var(--border);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      color: var(--slate);
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-4) var(--s-3);
+      }
+
+      .stage-head__title {
+        font-size: 40px;
+      }
+
+      .section__title {
+        font-size: 32px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: var(--s-2);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">Elegant</div>
+      <div class="masthead__tagline">
+        Component<br>Vocabulary
+      </div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Graceful Interface Patterns</h1>
+      <p class="stage-head__subtitle">
+        A refined collection of interface components built on the Elegant design system. Each pattern emphasizes clarity, delicate typography, and sophisticated restraint—designed for professional applications that value precision and polish.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Buttons</div>
+      <h2 class="section__title">Button States & Variants</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary</span>
+        <button class="btn btn--primary">Save Changes</button>
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary btn--lg">Large Primary</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Secondary</span>
+        <button class="btn btn--secondary">Cancel</button>
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary btn--lg">Large Secondary</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Default</span>
+        <button class="btn">Action</button>
+        <button class="btn btn--sm">Small</button>
+        <button class="btn btn--lg">Large Default</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Ghost</span>
+        <a href="#" class="btn btn--ghost">Learn more</a>
+        <a href="#" class="btn btn--ghost">View details</a>
+        <a href="#" class="btn btn--ghost">Explore</a>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Cards</div>
+      <h2 class="section__title">Card Patterns</h2>
+      <p class="description">Standard bordered cards and elevated variants. Cards provide contained spaces for related content with consistent padding and refined border treatment.</p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__header">
+            <span class="card__label">Foundation</span>
+            <h3 class="card__title">Design Tokens</h3>
+          </div>
+          <p class="card__body">A complete system of spacing, color, typography, and radius tokens. Use these as the foundation for all component styling.</p>
+          <div class="card__footer">Version 1.0</div>
+        </div>
+
+        <div class="card">
+          <div class="card__header">
+            <span class="card__label">Components</span>
+            <h3 class="card__title">Button System</h3>
+          </div>
+          <p class="card__body">Primary, secondary, ghost, and default button variants. Each size and state carefully tuned for visual hierarchy.</p>
+          <div class="card__footer">12 Variants</div>
+        </div>
+
+        <div class="card">
+          <div class="card__header">
+            <span class="card__label">Interaction</span>
+            <h3 class="card__title">Focus States</h3>
+          </div>
+          <p class="card__body">Delicate focus rings and hover states throughout. Every interactive element provides subtle visual feedback.</p>
+          <div class="card__footer">Accessibility Ready</div>
+        </div>
+      </div>
+
+      <div class="subsection-label">Elevated Cards</div>
+      <div class="cards-grid">
+        <div class="card card--elevated">
+          <div class="card__header">
+            <span class="card__label">Premium</span>
+            <h3 class="card__title">Elevated Surface</h3>
+          </div>
+          <p class="card__body">Use elevation for cards that deserve emphasis. Subtle shadow creates depth without visual noise.</p>
+          <div class="card__footer">Shadow: 0 2px 8px rgba(0,0,0,0.08)</div>
+        </div>
+
+        <div class="card card--elevated">
+          <div class="card__header">
+            <span class="card__label">Interactive</span>
+            <h3 class="card__title">Hover Elevation</h3>
+          </div>
+          <p class="card__body">Cards lift on hover, inviting interaction. Focus states add signal color for keyboard navigation.</p>
+          <div class="card__footer">Hover: Enhanced elevation</div>
+        </div>
+
+        <div class="card card--elevated">
+          <div class="card__header">
+            <span class="card__label">Content</span>
+            <h3 class="card__title">Organized Layout</h3>
+          </div>
+          <p class="card__body">Consistent padding and footer borders create visual rhythm. Perfect for dashboards and galleries.</p>
+          <div class="card__footer">Responsive Grid</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Input Fields Section -->
+    <section class="section">
+      <div class="section__kicker">Forms</div>
+      <h2 class="section__title">Input Field States</h2>
+      <p class="description">Text inputs with focus ring demonstration. Each field includes clear labeling and accessible focus states with signal color accent.</p>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input type="email" class="input" placeholder="name@example.com" value="alice@company.com">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Project Name</label>
+          <input type="text" class="input" placeholder="Enter project name">
+        </div>
+      </div>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Search</label>
+          <input type="text" class="input" placeholder="Type to search...">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Disabled Input</label>
+          <input type="text" class="input" placeholder="Cannot edit" disabled>
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="section">
+      <div class="section__kicker">Status</div>
+      <h2 class="section__title">Badges & Status Pills</h2>
+      <p class="description">Status indicators with semantic colors. Use badges to communicate state at a glance across lists, cards, and forms.</p>
+
+      <div class="subsection-label">Default</div>
+      <div class="badge-row">
+        <span class="badge">Draft</span>
+        <span class="badge">Review</span>
+        <span class="badge">Archived</span>
+        <span class="badge">Inactive</span>
+      </div>
+
+      <div class="subsection-label">Signal (Primary Accent)</div>
+      <div class="badge-row">
+        <span class="badge badge--signal"><span class="badge__dot"></span>Active</span>
+        <span class="badge badge--signal"><span class="badge__dot"></span>Online</span>
+        <span class="badge badge--signal"><span class="badge__dot"></span>Featured</span>
+      </div>
+
+      <div class="subsection-label">Semantic Colors</div>
+      <div class="badge-row">
+        <span class="badge badge--success"><span class="badge__dot"></span>Complete</span>
+        <span class="badge badge--warning"><span class="badge__dot"></span>Pending</span>
+        <span class="badge badge--danger"><span class="badge__dot"></span>Error</span>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <div class="folio">
+      <span class="folio__chapter">Elegant Design System</span>
+      <span class="folio__page">Components / Page 1</span>
+    </div>
+  </div>
+</body>
+</html>

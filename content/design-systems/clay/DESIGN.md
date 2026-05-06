@@ -57,7 +57,7 @@ What makes Clay truly distinctive is its hover micro-animations: buttons on hove
 - **Blueberry 800** (`#01418d`): `--_swatches---color--blueberry-800`, deep navy
 
 ### Neutral Scale (Warm)
-- **Warm Silver** (`#9f9b93`): Secondary/muted text, footer links
+- **Warm Silver** (`#77736b`): Secondary/muted text, footer links
 - **Warm Charcoal** (`#55534e`): Tertiary text, dark muted links
 - **Dark Charcoal** (`#333333`): Link text on light backgrounds
 
@@ -65,7 +65,7 @@ What makes Clay truly distinctive is its hover micro-animations: buttons on hove
 - **Oat Border** (`#dad4c8`): Primary border — warm, cream-toned structural lines
 - **Oat Light** (`#eee9df`): Secondary lighter border
 - **Cool Border** (`#e6e8ec`): Cool-toned border for contrast sections
-- **Dark Border** (`#525a69`): Border on dark sections
+- **Dark Border** (`#929bab`): Border on dark sections
 - **Light Frost** (`#eff1f3`): Subtle button background (at 0% opacity on hover)
 
 ### Badges
@@ -282,7 +282,7 @@ What makes Clay truly distinctive is its hover micro-animations: buttons on hove
 ### Quick Color Reference
 - Background: Warm Cream (`#faf9f7`)
 - Text: Clay Black (`#000000`)
-- Secondary text: Warm Silver (`#9f9b93`)
+- Secondary text: Warm Silver (`#77736b`)
 - Border: Oat Border (`#dad4c8`)
 - Green accent: Matcha 600 (`#078a52`)
 - Cyan accent: Slushie 500 (`#3bd3fd`)
@@ -291,7 +291,7 @@ What makes Clay truly distinctive is its hover micro-animations: buttons on hove
 - Pink accent: Pomegranate 400 (`#fc7981`)
 
 ### Example Component Prompts
-- "Create a hero on warm cream (#faf9f7) background. Headline at 80px Roobert weight 600, line-height 1.00, letter-spacing -3.2px, OpenType 'ss01 ss03 ss10 ss11 ss12', black text. Subtitle at 20px weight 400, line-height 1.40, #9f9b93 text. Two buttons: white solid pill (12px radius) and ghost outlined (4px radius, 1px solid #717989)."
+- "Create a hero on warm cream (#faf9f7) background. Headline at 80px Roobert weight 600, line-height 1.00, letter-spacing -3.2px, OpenType 'ss01 ss03 ss10 ss11 ss12', black text. Subtitle at 20px weight 400, line-height 1.40, #77736b text. Two buttons: white solid pill (12px radius) and ghost outlined (4px radius, 1px solid #717989)."
 - "Design a colorful section with Matcha 800 (#02492a) background. Heading at 44px Roobert weight 600, letter-spacing -1.32px, white text. Body at 18px weight 400, line-height 1.60, #84e7a5 text. White card inset with oat border (#dad4c8), 24px radius."
 - "Build a button with playful hover: default transparent background, black text, 16px Roobert weight 500. On hover: background #434346, text white, transform rotateZ(-8deg) translateY(-80%), hard shadow rgb(0,0,0) -7px 7px."
 - "Create a card: white background, 1px solid #dad4c8 border, 24px radius. Shadow: rgba(0,0,0,0.1) 0px 1px 1px, rgba(0,0,0,0.04) 0px -1px 1px inset. Title at 32px Roobert weight 600, letter-spacing -0.64px."

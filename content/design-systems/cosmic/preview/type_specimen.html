@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — Cosmic</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 48px 24px;
+      }
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 96px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 96px;
+      font-weight: 400;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 24px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 96px;
+      height: 1px;
+      background: var(--ink, #111111);
+      border: none;
+      margin: 0;
+    }
+
+    /* Font families section */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+      margin-bottom: 96px;
+      margin-top: 64px;
+    }
+
+    .font-card {
+      background: transparent;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 0;
+      padding: 32px;
+    }
+
+    .font-card__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .font-card__name {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 36px;
+      font-weight: 400;
+      line-height: 1.1;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      word-break: break-word;
+    }
+
+    /* Character set block */
+    .charmap-block {
+      background: transparent;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 0;
+      padding: 48px;
+      margin-bottom: 96px;
+    }
+
+    .charmap-block__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+    }
+
+    .charmap-block__chars {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 32px;
+      font-weight: 400;
+      line-height: 1.8;
+      letter-spacing: 0.02em;
+      color: var(--ink, #111111);
+      word-break: break-word;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--ink, #111111);
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 800px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 1.8;
+      color: var(--slate, #666666);
+      letter-spacing: 0.02em;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--ink, #111111);
+      overflow-wrap: break-word;
+      word-spacing: 0.1em;
+    }
+
+    /* Ramp section */
+    .ramp-section {
+      margin-bottom: 96px;
+    }
+
+    /* Neon demo section */
+    .neon-demo {
+      margin-bottom: 96px;
+    }
+
+    .neon-demo__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--ink, #111111);
+    }
+
+    .neon-container {
+      background: #0a0e27;
+      border: 1px solid var(--signal, #3b82f6);
+      border-radius: 0;
+      padding: 48px;
+      max-width: 680px;
+    }
+
+    .neon-text {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 64px;
+      font-weight: 400;
+      line-height: 1.2;
+      color: #00ff88;
+      text-shadow: 0 0 10px #00ff88, 0 0 20px rgba(0, 255, 136, 0.5);
+      margin: 0;
+      letter-spacing: 0.03em;
+    }
+
+    .neon-subtext {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #00ffff;
+      text-shadow: 0 0 8px #00ffff, 0 0 16px rgba(0, 255, 255, 0.4);
+      margin-top: 16px;
+      letter-spacing: 0.01em;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 160px 48px;
+      color: var(--slate, #666666);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 24px auto 0;
+      border: 2px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Push beyond the visible spectrum.',
+      'Digital horizons demand bold typefaces.',
+      'Audiowide carries cosmic intent.',
+      'Immersive interfaces require precision.',
+      'Neon accents pierce the darkness.',
+      'Futuristic vision demands clarity.',
+      'Every letterform tells a story.',
+      'System design transcends convention.',
+      'Color coordinates with typography.',
+      'The future is written now.',
+    ];
+
+    const NEON_HEADLINE = 'Cosmic.';
+    const NEON_SUBTEXT = 'Futuristic sci-fi aesthetic with dark themes, vibrant neon accents, and immersive spatial elements.';
+
+    fetch('../tokens.json')
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#3b82f6">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Cosmic';
+      const summary = tokens.meta?.summary || '';
+
+      const fonts = tokens.typography || {};
+      const ramp = tokens.typography?.ramp || [];
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Type Specimen</div>';
+      html += '  <h1 class="header__title">' + esc(title) + '</h1>';
+      html += '  <p class="header__subtitle">' + esc(summary) + '</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      const families = [
+        { label: 'Display', name: 'Audiowide', fallback: 'system-ui, sans-serif' },
+        { label: 'Body', name: 'System UI', fallback: 'system-ui, -apple-system, Helvetica Neue, sans-serif' },
+        { label: 'Monospace', name: 'JetBrains Mono', fallback: 'ui-monospace, IBM Plex Mono, Menlo, monospace' }
+      ];
+
+      html += '<div class="font-families">';
+      families.forEach(f => {
+        html += '<div class="font-card">';
+        html += '  <div class="font-card__label">' + esc(f.label) + '</div>';
+        html += '  <div class="font-card__name">' + esc(f.name) + '</div>';
+        html += '  <div class="font-card__fallback">' + esc(f.fallback) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      /* Character set */
+      html += '<div class="charmap-block">';
+      html += '  <div class="charmap-block__label">Character Set — Audiowide</div>';
+      html += '  <div class="charmap-block__chars" style="font-family:\'Audiowide\',system-ui,sans-serif">';
+      html += '    AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>';
+      html += '    0123456789 !@#$%&amp;*()&ndash;&mdash;&lsquo;&rsquo;&ldquo;&rdquo;';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Type ramp */
+      html += buildTypeRamp();
+
+      /* Neon demo */
+      html += '<div class="neon-demo">';
+      html += '<div class="neon-demo__label">Neon Expression — Dark Background with Cyan & Green Glow</div>';
+      html += '<div class="neon-container">';
+      html += '<p class="neon-text">' + esc(NEON_HEADLINE) + '</p>';
+      html += '<p class="neon-subtext">' + esc(NEON_SUBTEXT) + '</p>';
+      html += '</div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function buildTypeRamp() {
+      const rampData = [
+        { role: 'Display · Hero', size: '96px', weight: 400, lineHeight: '0.95', fontKey: 'display' },
+        { role: 'Display · L', size: '64px', weight: 400, lineHeight: '1.1', fontKey: 'display' },
+        { role: 'Display · M', size: '48px', weight: 400, lineHeight: '1.2', fontKey: 'display' },
+        { role: 'Heading · XL', size: '32px', weight: 400, lineHeight: '1.3', fontKey: 'display' },
+        { role: 'Heading · L', size: '24px', weight: 400, lineHeight: '1.4', fontKey: 'display' },
+        { role: 'Body · Large', size: '20px', weight: 400, lineHeight: '1.5', fontKey: 'body' },
+        { role: 'Body · Regular', size: '16px', weight: 400, lineHeight: '1.6', fontKey: 'body' },
+        { role: 'Body · Small', size: '14px', weight: 400, lineHeight: '1.5', fontKey: 'body' },
+        { role: 'Caption', size: '12px', weight: 400, lineHeight: '1.4', fontKey: 'body' },
+        { role: 'Code · Monospace', size: '14px', weight: 400, lineHeight: '1.6', fontKey: 'mono' }
+      ];
+
+      let html = '<div class="ramp-section">';
+      html += '<div class="section-label">Type Ramp — Single Family, Unified Voice</div>';
+      rampData.forEach((entry, i) => {
+        html += rampRow(entry, i);
+      });
+      html += '</div>';
+      return html;
+    }
+
+    function rampRow(entry, idx) {
+      const role = entry.role || 'Role ' + (idx + 1);
+      const size = entry.size || '16px';
+      const weight = entry.weight || 400;
+      const lh = entry.lineHeight || '1.5';
+      const ls = entry.letterSpacing || '0';
+
+      let fontFamily = 'var(--font-body)';
+      if (entry.fontKey === 'display') fontFamily = 'var(--font-display)';
+      else if (entry.fontKey === 'mono') fontFamily = 'var(--font-mono)';
+
+      const sizeNum = parseFloat(size);
+      const sampleIdx = idx % EDITORIAL_SAMPLES.length;
+      let sample = EDITORIAL_SAMPLES[sampleIdx];
+
+      /* Truncate very large samples */
+      if (sizeNum >= 72) {
+        sample = sample.split('.')[0].slice(0, 40);
+        if (!sample.endsWith('.')) sample += '.';
+      }
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + ';';
+      fontStyle += 'font-family:' + fontFamily + ';';
+      if (ls && ls !== '0' && ls !== 'normal') fontStyle += 'letter-spacing:' + ls + ';';
+
+      let meta = esc(size) + ' / ' + esc(String(weight));
+      meta += '\n' + fontFamilyLabel(entry.fontKey);
+      meta += '\nline-height: ' + esc(String(lh));
+      if (ls && ls !== '0' && ls !== 'normal') meta += '\nletter-spacing: ' + esc(ls);
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(sample) + '</div>' +
+        '</div>';
+    }
+
+    function fontFamilyLabel(key) {
+      const map = {
+        'display': 'Audiowide',
+        'body': 'System UI',
+        'mono': 'JetBrains Mono'
+      };
+      return map[key] || 'Unknown';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

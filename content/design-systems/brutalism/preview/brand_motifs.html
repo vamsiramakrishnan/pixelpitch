@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Brutalism</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+    }
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 12px;
+    }
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate, #666666);
+      max-width: 600px;
+    }
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 4px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin-top: 24px;
+      border-radius: 0;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 56px;
+    }
+    .section__label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--ink, #111111);
+    }
+
+    /* Key characteristics */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 24px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--ink, #111111);
+      border-left: 3px solid var(--signal, #3b82f6);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* Do's and Don'ts */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 640px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 2px solid var(--ink, #111111);
+      border-radius: 0;
+      padding: 28px;
+      overflow: hidden;
+    }
+    .dd-card__heading {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .dd-card__heading--do { color: #111111; }
+    .dd-card__heading--dont { color: #111111; }
+
+    .dd-card__icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+    .dd-card__icon--do {
+      border-color: #111111;
+      color: #111111;
+    }
+    .dd-card__icon--dont {
+      border-color: #111111;
+      color: #111111;
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+    .dd-list li {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--ink, #111111);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* Color harmony strip */
+    .harmony-strip {
+      display: flex;
+      border: 2px solid var(--ink, #111111);
+      border-radius: 0;
+      overflow: hidden;
+      height: 100px;
+      box-shadow: none;
+    }
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      border-right: 2px solid var(--ink, #111111);
+    }
+    .harmony-strip__swatch:last-child {
+      border-right: none;
+    }
+    .harmony-strip__swatch:hover {
+      flex: 1.8;
+    }
+    .harmony-strip__label {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 0;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid var(--ink, #111111);
+      color: var(--ink, #111111);
+    }
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* Type pairing demo */
+    .type-pairing {
+      background: var(--paper, #ffffff);
+      border: 2px solid var(--ink, #111111);
+      border-radius: 0;
+      padding: 48px;
+    }
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 24px;
+    }
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.8;
+      color: var(--ink, #111111);
+      max-width: 640px;
+    }
+    .type-pairing__meta {
+      display: flex;
+      gap: 28px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+    .type-pairing__meta-label {
+      font-weight: 700;
+      color: var(--ink, #111111);
+    }
+
+    /* Atmosphere card */
+    .atmosphere-card {
+      background: var(--bone, #f5f5f5);
+      border: 2px solid var(--ink, #111111);
+      border-radius: 0;
+      padding: 32px;
+    }
+    .atmosphere-card p {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--ink, #111111);
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 0;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border', 'surface'];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.meta?.name || tokens.name || 'Brutalism';
+      const colors = tokens.colors || {};
+      const fonts = tokens.typography || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">' + esc(name) + '</h1>';
+      html += '  <p class="header__subtitle">Raw aesthetic rooted in unadorned form, jarring layouts, and unapologetic structure.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ---- Atmosphere / Description ---- */
+      const atmosphere = 'Brutalism strips away ornament. Thick borders, heavy typography, stark contrasts, and geometric austerity define the visual language. No gradients. No rounded softness. Pure structural clarity.';
+      if (atmosphere) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Atmosphere</div>';
+        html += '  <div class="atmosphere-card"><p>' + esc(atmosphere) + '</p></div>';
+        html += '</div>';
+      }
+
+      /* ---- Key Characteristics ---- */
+      const traits = [
+        'Heavy strokes and bold typography create visual weight and presence',
+        'Stark color contrasts and minimal palette emphasize functional design',
+        'Geometric forms with sharp angles and zero-radius corners dominate',
+        'Hierarchy through scale and weight, never decoration',
+        'Raw, unfinished aesthetic that rejects ornamental refinement',
+        'Asymmetrical layouts create visual tension and engagement'
+      ];
+      if (traits.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Key Characteristics</div>';
+        html += '  <ul class="traits-list">';
+        traits.forEach(t => {
+          html += '<li>' + esc(t) + '</li>';
+        });
+        html += '  </ul>';
+        html += '</div>';
+      }
+
+      /* ---- Do's and Don'ts ---- */
+      const dos = [
+        'Use thick borders (2px minimum) for all elements',
+        'Apply heavy font weights for emphasis and hierarchy',
+        'Embrace sharp corners and zero-radius geometry',
+        'Build visual hierarchy through scale and weight alone',
+        'Use stark black and white contrast whenever possible',
+        'Let negative space work as a structural element'
+      ];
+      const donts = [
+        'Add rounded corners or smooth edges to components',
+        'Layer shadows or apply gradient effects',
+        'Use light, delicate typography without emphasis',
+        'Introduce decorative elements or flourishes',
+        'Center everything—embrace asymmetry and tension',
+        'Apologize for bold or jarring visual choices'
+      ];
+      if (dos.length || donts.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+        html += '  <div class="dd-grid">';
+
+        if (dos.length) {
+          html += '<div class="dd-card">';
+          html += '  <div class="dd-card__heading dd-card__heading--do">';
+          html += '    <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+          html += '  </div>';
+          html += '  <ul class="dd-list">';
+          dos.forEach(d => { html += '<li>' + esc(d) + '</li>'; });
+          html += '  </ul></div>';
+        }
+
+        if (donts.length) {
+          html += '<div class="dd-card">';
+          html += '  <div class="dd-card__heading dd-card__heading--dont">';
+          html += '    <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+          html += '  </div>';
+          html += '  <ul class="dd-list">';
+          donts.forEach(d => { html += '<li>' + esc(d) + '</li>'; });
+          html += '  </ul></div>';
+        }
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ---- Color Harmony Strip ---- */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.4 ? '#111111' : '#ffffff';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label">' + esc(key) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ---- Typography Pairing Demo ---- */
+      const displayFont = fonts.fontDisplay || 'system-ui, sans-serif';
+      const bodyFont = fonts.fontBody || 'system-ui, sans-serif';
+
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__display" style="font-family:' + esc(displayFont) + '">' +
+              'Unadorned and unapologetic</div>';
+
+      html += '    <div class="type-pairing__body" style="font-family:' + esc(bodyFont) + '">' +
+              'Brutalist design rejects decoration in favor of structural clarity. Heavy weight, stark contrast, and geometric precision create visual impact through form alone. No ornament. No apology. Pure substance.' +
+              '</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '<div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Display:</span> ' + esc(displayFont) + '</div>';
+      html += '<div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Body:</span> ' + esc(bodyFont) + '</div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    /* ---- Utilities ---- */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function relativeLuminance(hex) {
+      try {
+        const [r, g, b] = hexToRgb(hex).map(c => {
+          c /= 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      } catch { return 0.5; }
+    }
+  </script>
+</body>
+</html>

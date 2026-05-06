@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dropbox — Component Library</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--color-black);
+      line-height: 1.5;
+    }
+
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: var(--s-8) var(--s-6);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--s-4);
+      margin-bottom: var(--s-8);
+      border-bottom: 1px solid var(--color-border-default);
+      border-top: 2px solid var(--ink);
+      padding-top: var(--s-4);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      line-height: 1;
+      color: var(--color-black);
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      line-height: 1.07;
+      color: var(--color-black);
+      margin-bottom: var(--s-3);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.56;
+      color: var(--color-mid-gray);
+      max-width: 800px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid var(--color-border-default);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 44px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      line-height: 1.09;
+      color: var(--color-black);
+      margin-bottom: var(--s-5);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-4);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate);
+      margin-right: var(--s-4);
+      min-width: 160px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1;
+      border: 1px solid transparent;
+      background: var(--ink);
+      color: var(--paper);
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      gap: var(--s-2);
+    }
+
+    .btn:hover {
+      background: var(--color-blue-hover);
+    }
+
+    .btn:active {
+      background: #003fa3;
+    }
+
+    .btn--secondary {
+      background: var(--paper);
+      color: var(--color-black);
+      border: 1px solid var(--color-border-default);
+    }
+
+    .btn--secondary:hover {
+      background: var(--border);
+    }
+
+    .btn--tertiary {
+      background: transparent;
+      color: var(--ink);
+      border: none;
+      padding: var(--s-2) var(--s-3);
+    }
+
+    .btn--tertiary:hover {
+      background: var(--color-blue-light);
+    }
+
+    .btn--destructive {
+      background: var(--color-error-red);
+      color: var(--paper);
+    }
+
+    .btn--destructive:hover {
+      background: #b7271d;
+    }
+
+    .btn--sm {
+      padding: 8px 16px;
+      font-size: 12px;
+    }
+
+    .btn--lg {
+      padding: 12px 28px;
+      font-size: 16px;
+    }
+
+    /* ──── FILE CARDS ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--s-5);
+      margin-bottom: var(--s-5);
+    }
+
+    .file-card {
+      background: var(--paper);
+      border: 1px solid var(--color-border-default);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.15s ease;
+    }
+
+    .file-card:hover {
+      border-color: var(--ink);
+      box-shadow: 0 0 0 2px var(--color-blue-light);
+    }
+
+    .file-card--selected {
+      border: 2px solid var(--ink);
+      background: var(--color-blue-light);
+    }
+
+    .file-card__thumbnail {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: linear-gradient(135deg, #f0edea 0%, #e8e4df 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--slate);
+      font-size: 48px;
+      position: relative;
+    }
+
+    .file-card__checkbox {
+      position: absolute;
+      top: var(--s-3);
+      left: var(--s-3);
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--color-border-default);
+      border-radius: 4px;
+      background: var(--paper);
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+
+    .file-card:hover .file-card__checkbox {
+      opacity: 1;
+    }
+
+    .file-card--selected .file-card__checkbox {
+      opacity: 1;
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+
+    .file-card__content {
+      padding: var(--s-4);
+    }
+
+    .file-card__name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-black);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: var(--s-2);
+    }
+
+    .file-card__meta {
+      font-size: 12px;
+      color: var(--slate);
+      line-height: 1.33;
+    }
+
+    /* ──── LIST VIEW ──── */
+    .list-view {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--color-border-subtle);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: var(--s-5);
+    }
+
+    .list-view__row {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 0 var(--s-4);
+      border-bottom: 1px solid var(--color-border-subtle);
+      transition: background 0.15s ease;
+    }
+
+    .list-view__row:last-child {
+      border-bottom: none;
+    }
+
+    .list-view__row:hover {
+      background: var(--border);
+    }
+
+    .list-view__row--selected {
+      background: var(--color-blue-light);
+    }
+
+    .list-view__checkbox {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--color-border-default);
+      border-radius: 4px;
+      background: var(--paper);
+      cursor: pointer;
+      margin-right: var(--s-4);
+      flex-shrink: 0;
+    }
+
+    .list-view__row--selected .list-view__checkbox {
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+
+    .list-view__icon {
+      width: 32px;
+      height: 32px;
+      margin-right: var(--s-4);
+      flex-shrink: 0;
+      background: var(--border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--slate);
+      font-size: 18px;
+    }
+
+    .list-view__name {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--color-black);
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .list-view__meta {
+      font-size: 14px;
+      color: var(--color-mid-gray);
+      margin-right: var(--s-6);
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .list-view__size {
+      font-size: 14px;
+      color: var(--color-mid-gray);
+      margin-right: var(--s-6);
+      white-space: nowrap;
+      flex: 0 0 120px;
+      text-align: right;
+    }
+
+    .list-view__avatars {
+      display: flex;
+      gap: -8px;
+      margin-right: var(--s-4);
+      flex-shrink: 0;
+    }
+
+    .avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0061ff 0%, #0050d4 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--paper);
+      font-size: 10px;
+      font-weight: 600;
+      margin-left: -8px;
+      border: 2px solid var(--paper);
+    }
+
+    .avatar:first-child {
+      margin-left: 0;
+    }
+
+    /* ──── BREADCRUMB ──── */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2);
+      padding: var(--s-3) 0;
+      margin-bottom: var(--s-5);
+      font-size: 14px;
+      color: var(--color-mid-gray);
+    }
+
+    .breadcrumb__item {
+      color: var(--color-mid-gray);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .breadcrumb__item:hover {
+      color: var(--ink);
+      text-decoration: underline;
+    }
+
+    .breadcrumb__current {
+      color: var(--color-black);
+      font-weight: 500;
+    }
+
+    .breadcrumb__separator {
+      color: var(--color-muted);
+      margin: 0 var(--s-2);
+    }
+
+    /* ──── INPUT FIELDS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-black);
+    }
+
+    .input {
+      padding: 10px 12px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.43;
+      color: var(--color-black);
+      background: var(--paper);
+      border: 1px solid var(--color-border-default);
+      border-radius: 8px;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--ink);
+      box-shadow: inset 0 0 0 2px var(--color-blue-light);
+    }
+
+    .input-hint {
+      font-size: 12px;
+      color: var(--slate);
+      margin-top: var(--s-1);
+    }
+
+    /* ──── BADGES ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      margin-bottom: var(--s-4);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-2);
+      padding: 4px 12px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      line-height: 1.33;
+      border-radius: 12px;
+      background: var(--color-surface-hover);
+      color: var(--color-black);
+    }
+
+    .badge--success {
+      background: var(--color-success-light);
+      color: var(--color-success-green);
+    }
+
+    .badge--warning {
+      background: var(--color-warning-light);
+      color: var(--color-warning-amber);
+    }
+
+    .badge--danger {
+      background: var(--color-error-light);
+      color: var(--color-error-red);
+    }
+
+    .badge--info {
+      background: var(--color-blue-light);
+      color: var(--ink);
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    /* ──── SHARING MODAL ──── */
+    .modal-container {
+      position: relative;
+      margin-bottom: var(--s-5);
+      border: 1px dashed var(--color-border-default);
+      border-radius: 8px;
+      padding: var(--s-4);
+      background: rgba(0, 97, 255, 0.02);
+    }
+
+    .modal {
+      background: var(--paper);
+      border: 1px solid var(--color-border-default);
+      border-radius: 8px;
+      box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.12);
+      max-width: 560px;
+      overflow: hidden;
+    }
+
+    .modal__header {
+      padding: var(--s-4);
+      border-bottom: 1px solid var(--color-border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal__title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-black);
+    }
+
+    .modal__close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: var(--slate);
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: background 0.15s ease;
+    }
+
+    .modal__close:hover {
+      background: var(--border);
+    }
+
+    .modal__body {
+      padding: var(--s-4);
+    }
+
+    .modal__section {
+      margin-bottom: var(--s-4);
+    }
+
+    .modal__section:last-child {
+      margin-bottom: 0;
+    }
+
+    .modal__label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+      display: block;
+    }
+
+    .share-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .share-item {
+      display: flex;
+      align-items: center;
+      padding: var(--s-3);
+      background: var(--border);
+      border-radius: 6px;
+      justify-content: space-between;
+    }
+
+    .share-item__info {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3);
+    }
+
+    .share-item__avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0061ff 0%, #7b68ee 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--paper);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .share-item__details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .share-item__name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-black);
+    }
+
+    .share-item__email {
+      font-size: 12px;
+      color: var(--slate);
+    }
+
+    .share-item__role {
+      font-size: 12px;
+      padding: 4px 8px;
+      background: var(--paper);
+      border: 1px solid var(--color-border-default);
+      border-radius: 4px;
+      color: var(--color-black);
+    }
+
+    /* ──── PULL QUOTE ──── */
+    .pullquote {
+      border-top: 2px solid var(--ink);
+      border-bottom: 1px solid var(--color-border-default);
+      padding: var(--s-5) 0;
+      margin: var(--s-6) 0;
+    }
+
+    .pullquote__mark {
+      font-family: var(--font-display);
+      font-size: 72px;
+      font-weight: 600;
+      line-height: 0.8;
+      color: var(--ink);
+      display: block;
+      margin-bottom: var(--s-2);
+    }
+
+    .pullquote__text {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      line-height: 1.11;
+      color: var(--color-black);
+      margin-bottom: var(--s-4);
+    }
+
+    .pullquote__attribution {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate);
+    }
+
+    /* ──── FEATURE LIST ──── */
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--s-5);
+      margin-bottom: var(--s-5);
+    }
+
+    .feature-item {
+      padding-bottom: var(--s-4);
+      border-bottom: 1px solid var(--color-border-default);
+    }
+
+    .feature-item__icon {
+      font-size: 40px;
+      margin-bottom: var(--s-3);
+    }
+
+    .feature-item__title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.33;
+      color: var(--color-black);
+      margin-bottom: var(--s-2);
+    }
+
+    .feature-item__description {
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.43;
+      color: var(--color-mid-gray);
+    }
+
+    /* ──── UTILITY ──── */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+      margin-top: var(--s-4);
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--color-border-default);
+      margin: var(--s-5) 0;
+    }
+
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-4) 0;
+      margin-top: var(--s-8);
+      border-top: 1px solid var(--color-border-default);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-6) var(--s-4);
+      }
+
+      .stage-head__title {
+        font-size: 36px;
+      }
+
+      .section__title {
+        font-size: 28px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-list {
+        grid-template-columns: 1fr;
+      }
+
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+
+      .pullquote__text {
+        font-size: 24px;
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: var(--s-3);
+      }
+
+      .button-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .button-row__label {
+        margin-right: 0;
+        margin-bottom: var(--s-2);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">Dropbox</div>
+      <div class="masthead__tagline">Component<br>Library</div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Interaction Patterns</h1>
+      <p class="stage-head__subtitle">
+        A complete inventory of Dropbox's UI components—from file management cards to sharing modals. Each pattern embraces spacious whitespace, confident Dropbox Blue, and illustration-ready moments.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Buttons</div>
+      <h2 class="section__title">Button States & Variants</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary</span>
+        <button class="btn">Upload Files</button>
+        <button class="btn btn--sm">Small</button>
+        <button class="btn btn--lg">Large Action</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Secondary</span>
+        <button class="btn btn--secondary">Cancel</button>
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary btn--lg">Secondary Large</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Tertiary</span>
+        <button class="btn btn--tertiary">Learn more</button>
+        <button class="btn btn--tertiary">View all</button>
+        <button class="btn btn--tertiary">Help center</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Destructive</span>
+        <button class="btn btn--destructive">Delete</button>
+        <button class="btn btn--destructive btn--sm">Remove</button>
+      </div>
+    </section>
+
+    <!-- File Cards Section -->
+    <section class="section">
+      <div class="section__kicker">File Cards</div>
+      <h2 class="section__title">Grid View Cards</h2>
+      <p style="font-size: 16px; line-height: 1.5; color: var(--color-mid-gray); margin-bottom: var(--s-5);">Cards display file thumbnails with title, metadata, and hover states. Selection adds a blue border and light background tint.</p>
+
+      <div class="cards-grid">
+        <div class="file-card">
+          <div class="file-card__thumbnail">
+            <input type="checkbox" class="file-card__checkbox">
+            📄
+          </div>
+          <div class="file-card__content">
+            <div class="file-card__name">Proposal_2024.docx</div>
+            <div class="file-card__meta">1.2 MB<br>Modified today</div>
+          </div>
+        </div>
+
+        <div class="file-card">
+          <div class="file-card__thumbnail">
+            <input type="checkbox" class="file-card__checkbox">
+            📊
+          </div>
+          <div class="file-card__content">
+            <div class="file-card__name">Q4_Analytics.xlsx</div>
+            <div class="file-card__meta">3.5 MB<br>Modified 2 days ago</div>
+          </div>
+        </div>
+
+        <div class="file-card file-card--selected">
+          <div class="file-card__thumbnail">
+            <input type="checkbox" class="file-card__checkbox" checked>
+            🎨
+          </div>
+          <div class="file-card__content">
+            <div class="file-card__name">Design_System.psd</div>
+            <div class="file-card__meta">24.8 MB<br>Modified 1 week ago</div>
+          </div>
+        </div>
+
+        <div class="file-card">
+          <div class="file-card__thumbnail">
+            <input type="checkbox" class="file-card__checkbox">
+            📁
+          </div>
+          <div class="file-card__content">
+            <div class="file-card__name">Archive_2023</div>
+            <div class="file-card__meta">412 items<br>Modified 3 weeks ago</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- List View Section -->
+    <section class="section">
+      <div class="section__kicker">File Lists</div>
+      <h2 class="section__title">List View Format</h2>
+      <p style="font-size: 16px; line-height: 1.5; color: var(--color-mid-gray); margin-bottom: var(--s-5);">Compact row-based display for high-volume browsing. Metadata, sharing avatars, and file size shown in-line.</p>
+
+      <div class="list-view">
+        <div class="list-view__row">
+          <input type="checkbox" class="list-view__checkbox">
+          <div class="list-view__icon">📄</div>
+          <div class="list-view__name">Strategic_Roadmap_FY25.pdf</div>
+          <div class="list-view__meta">Oct 14, 2024</div>
+          <div class="list-view__size">2.4 MB</div>
+          <div class="list-view__avatars">
+            <div class="avatar">A</div>
+            <div class="avatar" style="background: linear-gradient(135deg, #7b68ee 0%, #17bebb 100%);">B</div>
+          </div>
+        </div>
+        <div class="list-view__row">
+          <input type="checkbox" class="list-view__checkbox">
+          <div class="list-view__icon">📊</div>
+          <div class="list-view__name">Performance_Metrics_Q3.xlsx</div>
+          <div class="list-view__meta">Oct 12, 2024</div>
+          <div class="list-view__size">1.8 MB</div>
+          <div class="list-view__avatars">
+            <div class="avatar

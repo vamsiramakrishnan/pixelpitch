@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Component Inventory — Atlassian</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--color-n10, #fafbfc);
+      color: var(--color-n800, #172b4d);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 32px 64px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 56px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border, #ebecf0);
+    }
+    .header__title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 29px;
+      font-weight: 600;
+      line-height: 1.10;
+      letter-spacing: -0.01em;
+      color: var(--color-n800, #172b4d);
+      margin-bottom: 8px;
+    }
+    .header__subtitle {
+      font-size: 14px;
+      line-height: 1.43;
+      color: var(--color-n300, #5e6c84);
+      margin-bottom: 16px;
+    }
+    .header__meta {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-slate, #7a869a);
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 48px;
+    }
+    .section__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-n300, #5e6c84);
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #ebecf0);
+    }
+
+    .component-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: var(--bone, #ffffff);
+      border-radius: 3px;
+      border: 1px solid var(--border, #ebecf0);
+    }
+
+    .component-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-n200, #6b778c);
+      display: block;
+      width: 100%;
+      margin-bottom: 8px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: var(--button-py, 10px) var(--button-px, 20px);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.14;
+      border-radius: var(--button-radius, 3px);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      border: none;
+      white-space: nowrap;
+    }
+
+    .btn--primary {
+      background: var(--ink, #0052cc);
+      color: var(--bone, #ffffff);
+    }
+    .btn--primary:hover {
+      background: var(--color-blue-400, #0065ff);
+    }
+    .btn--primary:active {
+      background: var(--color-blue-600, #0747a6);
+    }
+    .btn--primary:disabled {
+      background: var(--color-n20, #f4f5f7);
+      color: var(--color-n50, #c1c7d0);
+      cursor: not-allowed;
+    }
+    .btn--primary:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #4c9aff;
+    }
+
+    .btn--default {
+      background: var(--color-n10, #fafbfc);
+      color: var(--color-n500, #42526e);
+      border: 1px solid var(--border, #ebecf0);
+    }
+    .btn--default:hover {
+      background: var(--color-n20, #f4f5f7);
+    }
+    .btn--default:active {
+      background: var(--color-blue-75, #b3d4ff);
+      border-color: var(--color-blue-75, #b3d4ff);
+    }
+    .btn--default:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #4c9aff;
+    }
+
+    .btn--danger {
+      background: var(--color-red-500, #ff5630);
+      color: var(--bone, #ffffff);
+    }
+    .btn--danger:hover {
+      background: var(--color-red-400, #ff7452);
+    }
+    .btn--danger:active {
+      background: #bf2600;
+    }
+    .btn--danger:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(255, 86, 48, 0.4);
+    }
+
+    .btn--sm {
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+
+    .btn--lg {
+      padding: 12px 24px;
+      font-size: 16px;
+    }
+
+    /* Cards */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--bone, #ffffff);
+      border-radius: var(--card-radius, 4px);
+      padding: 16px;
+      border: var(--card-border, 1px solid #ebecf0);
+      box-shadow: var(--card-shadow, 0 2px 8px rgba(0,0,0,0.08));
+      transition: box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .card__eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink, #0052cc);
+      margin-bottom: 6px;
+    }
+    .card__title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: -0.006em;
+      color: var(--color-n800, #172b4d);
+      margin-bottom: 8px;
+    }
+    .card__body {
+      font-size: 14px;
+      line-height: 1.43;
+      color: var(--color-n500, #42526e);
+      margin-bottom: 12px;
+    }
+    .card__footer {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* Inputs */
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: flex-start;
+      padding: 16px;
+      background: var(--bone, #ffffff);
+      border-radius: 3px;
+      border: 1px solid var(--border, #ebecf0);
+    }
+    .input-wrap {
+      flex: 1;
+      min-width: 240px;
+    }
+    .input-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.14;
+      color: var(--color-n800, #172b4d);
+      margin-bottom: 6px;
+    }
+    .input {
+      display: block;
+      width: 100%;
+      padding: 8px 12px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      line-height: 1.43;
+      color: var(--color-n800, #172b4d);
+      background: var(--bone, #ffffff);
+      border: 1px solid var(--border, #ebecf0);
+      border-radius: 3px;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .input::placeholder {
+      color: var(--color-n200, #6b778c);
+    }
+    .input:focus {
+      border-color: var(--ink, #0052cc);
+      box-shadow: 0 0 0 2px rgba(0, 82, 204, 0.2);
+    }
+
+    /* Lozenges */
+    .lozenge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 4px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 3px;
+      line-height: 1.45;
+    }
+
+    .lozenge--default {
+      background: var(--color-n40, #dfe1e6);
+      color: var(--color-n500, #42526e);
+    }
+
+    .lozenge--progress {
+      background: var(--color-blue-50, #e6effc);
+      color: var(--ink, #0052cc);
+    }
+
+    .lozenge--success {
+      background: var(--color-green-100, #e3fcef);
+      color: var(--color-green-500, #00875a);
+    }
+
+    .lozenge--removed {
+      background: var(--color-red-100, #ffebe6);
+      color: #bf2600;
+    }
+
+    .lozenge--new {
+      background: var(--color-purple-100, #eae6ff);
+      color: #403294;
+    }
+
+    .lozenge--moved {
+      background: var(--color-yellow-100, #fff0b3);
+      color: var(--color-yellow-500, #ffab00);
+    }
+
+    /* Bold Lozenges */
+    .lozenge--bold {
+      color: var(--bone, #ffffff);
+      padding: 4px 8px;
+    }
+
+    .lozenge--bold.lozenge--progress {
+      background: var(--ink, #0052cc);
+    }
+
+    .lozenge--bold.lozenge--success {
+      background: var(--color-green-500, #00875a);
+    }
+
+    .lozenge--bold.lozenge--removed {
+      background: #bf2600;
+    }
+
+    /* Board columns */
+    .board-container {
+      display: flex;
+      gap: 8px;
+      padding: 16px;
+      background: var(--color-n10, #fafbfc);
+      border-radius: 4px;
+      overflow-x: auto;
+      padding-bottom: 24px;
+    }
+
+    .board-column {
+      flex: 0 0 280px;
+      background: var(--color-n20, #f4f5f7);
+      border-radius: 4px 4px 0 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .board-column__header {
+      padding: 12px 10px;
+      background: var(--color-n20, #f4f5f7);
+      border-bottom: 1px solid var(--border, #ebecf0);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .board-column__title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-n300, #5e6c84);
+    }
+
+    .board-column__count {
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--color-n40, #dfe1e6);
+      color: var(--color-n500, #42526e);
+      padding: 2px 6px;
+      border-radius: 3px;
+      min-width: 24px;
+      text-align: center;
+    }
+
+    .board-column__cards {
+      flex: 1;
+      padding: 8px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .board-column__drop-zone {
+      min-height: 80px;
+      border: 2px dashed var(--ink, #0052cc);
+      background: rgba(0, 82, 204, 0.04);
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink, #0052cc);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* Issue card */
+    .issue-card {
+      background: var(--bone, #ffffff);
+      border: none;
+      border-radius: 3px;
+      padding: 10px;
+      box-shadow: 0 1px 1px rgba(9, 30, 66, 0.25), 0 0 1px rgba(9, 30, 66, 0.31);
+      cursor: grab;
+      transition: box-shadow 0.15s ease, transform 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .issue-card:hover {
+      background: var(--color-n20, #f4f5f7);
+    }
+
+    .issue-card:active {
+      box-shadow: 0 4px 8px -2px rgba(9, 30, 66, 0.25), 0 0 1px rgba(9, 30, 66, 0.31);
+      cursor: grabbing;
+      transform: rotate(2deg);
+    }
+
+    .issue-card__summary {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.43;
+      color: var(--color-n800, #172b4d);
+    }
+
+    .issue-card__key {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-n200, #6b778c);
+      letter-spacing: 0.04em;
+    }
+
+    .issue-card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .issue-card__meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--color-n40, #dfe1e6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--color-n500, #42526e);
+      flex-shrink: 0;
+    }
+
+    .icon-16 {
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .icon-priority-highest {
+      color: var(--color-red-500, #ff5630);
+    }
+
+    .icon-priority-high {
+      color: var(--color-red-500, #ff5630);
+    }
+
+    .icon-priority-medium {
+      color: var(--color-yellow-500, #ffab00);
+    }
+
+    .icon-priority-low {
+      color: var(--color-blue-400, #0065ff);
+    }
+
+    .icon-issue-story {
+      color: var(--color-green-400, #36b37e);
+    }
+
+    .icon-issue-bug {
+      color: var(--color-red-500, #ff5630);
+    }
+
+    .icon-issue-task {
+      color: var(--color-teal-500, #00b8d9);
+    }
+
+    /* Badges & Tags */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      padding: 16px;
+      background: var(--bone, #ffffff);
+      border-radius: 3px;
+      border: 1px solid var(--border, #ebecf0);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 3px;
+      line-height: 1.33;
+      background: var(--color-n40, #dfe1e6);
+      color: var(--color-n500, #42526e);
+    }
+
+    .badge--success {
+      background: var(--color-green-100, #e3fcef);
+      color: var(--color-green-500, #00875a);
+    }
+
+    .badge--warning {
+      background: var(--color-yellow-100, #fff0b3);
+      color: var(--color-yellow-500, #ffab00);
+    }
+
+    .badge--danger {
+      background: var(--color-red-100, #ffebe6);
+      color: var(--color-red-500, #ff5630);
+    }
+
+    .badge--info {
+      background: var(--color-blue-50, #e6effc);
+      color: var(--ink, #0052cc);
+    }
+
+    /* Sub-section heading */
+    .sub-heading {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.14;
+      color: var(--color-n800, #172b4d);
+      margin-bottom: 12px;
+      margin-top: 4px;
+    }
+
+    .sub-heading--with-divider {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #ebecf0);
+    }
+
+    /* Divider */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border, #ebecf0);
+      margin: 24px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Header -->
+    <header class="header" id="header">
+      <h1 class="header__title">Component Inventory</h1>
+      <p class="header__subtitle">Enterprise-grade UI patterns built for dense information architecture and rapid team collaboration.</p>
+      <p class="header__meta">Atlassian Design System</p>
+    </header>
+
+    <!-- Buttons -->
+    <div class="section">
+      <div class="section__label">Buttons</div>
+
+      <div class="component-row">
+        <span class="component-label">Primary Actions</span>
+        <button class="btn btn--primary btn--sm">Small Primary</button>
+        <button class="btn btn--primary">Primary Button</button>
+        <button class="btn btn--primary btn--lg">Large Primary</button>
+        <button class="btn btn--primary" disabled>Disabled Primary</button>
+      </div>
+
+      <div class="component-row">
+        <span class="component-label">Default Actions</span>
+        <button class="btn btn--default btn--sm">Small Default</button>
+        <button class="btn btn--default">Default Button</button>
+        <button class="btn btn--default btn--lg">Large Default</button>
+      </div>
+
+      <div class="component-row">
+        <span class="component-label">Danger Actions</span>
+        <button class="btn btn--danger btn--sm">Delete</button>
+        <button class="btn btn--danger">Remove Member</button>
+        <button class="btn btn--danger btn--lg">Confirm Delete</button>
+      </div>
+    </div>
+
+    <!-- Status Lozenges -->
+    <div class="section">
+      <div class="section__label">Status Lozenges</div>
+
+      <div class="component-row">
+        <span class="component-label">Outlined (Default)</span>
+        <span class="lozenge lozenge--default">To Do</span>
+        <span class="lozenge lozenge--default">Open</span>
+        <span class="lozenge lozenge--default">Backlog</span>
+      </div>
+
+      <div class="component-row">
+        <span class="component-label">In Progress</span>
+        <span class="lozenge lozenge--progress">In Progress</span>
+        <span class="lozenge lozenge--progress">In Review</span>
+        <span class="lozenge lozenge--progress">In Development</span>
+      </div>
+
+      <div class="component-row">
+        <span class="component-label">Success</span>
+        <span class="lozenge lozenge--success">Done</span>
+        <span class="lozenge lozenge--success">Resolved</span>
+        <span class="lozenge lozenge--success">Merged</span>
+      </div>
+
+      <div class="component-row">
+        <span class="component-label">Removed / Won't Do</span>
+        <span class="lozenge lozenge--removed">Declined</span>
+        <span class="lozenge lozenge--removed">Won't Do</span>
+        <span class="lozenge lozenge--removed">Cancelled</span>
+      </div>
+
+      <div class="component-row">
+        <span class="component-label">New / Updated</span>
+        <span class="lozenge lozenge--new">New</span>
+        <span class="lozenge lozenge--new">Updated</span>
+        <span class="lozenge lozenge--new">Changed</span>
+      </div>
+
+      <div class="component-row">
+        <span class="component-label">Moved / Changed</span>
+        <span class="lozenge lozenge--moved">Moved</span>
+        <span class="lozenge lozenge--moved">Changed</span>
+      </div>
+
+      <div class="component-row">
+        <span class="component-label">Bold Lozenges (High-Emphasis)</span>
+        <span class="lozenge lozenge--bold lozenge--progress">In Progress</span>
+        <span class="lozenge lozenge--bold lozenge--success">Done</span>
+        <span class="lozenge lozenge--bold lozenge--removed">Blocked</span>
+      </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="section">
+      <div class="section__label">Cards</div>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__eyebrow">Standard Card</div>
+          <div class="card__title">Information Container</div>
+          <div class="card__body">
+            A standard card with border and subtle shadow, used to group related content in enterprise dashboards and detail views. Hover to see the shadow deepen.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Open</button>
+            <button class="btn btn--default btn--sm">Cancel</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__eyebrow">Interactive Card</div>
+          <div class="card__title">Elevated Content</div>
+          <div class="card__body">
+            Cards with borders and shadows provide subtle hierarchy. Used extensively in Jira dashboards, Confluence spaces, and Bitbucket pull request views for quick navigation.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">View Details</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__eyebrow">Status Card</div>
+          <div class="card__title">Work Summary</div>
+          <div class="card__body">
+            Status cards display project health, sprint progress, or deployment state. The structured layout accommodates icons, badges, and metrics without clutter.
+          </div>
+          <div class="card__footer">
+            <span class="lozenge lozenge--progress">5 Active</span>
+            <span class="lozenge lozenge--success">8 Done</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input Fields -->
+    <div class="section">
+      <div class="section__label">Input Fields</div>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Issue Summary</label>
+          <input class="input" type="text" placeholder="Summarize the work in one sentence">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Assignee</label>
+          <input class="input" type="text" placeholder="Search team members or groups">
+        </div>
+      </div>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Description</label>
+          <textarea class="input" placeholder="Add detailed context..." style="min-height: 100px; resize: vertical;"></textarea>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Project Key</label>
+          <input class="input" type="text" placeholder="JIRA" value="JIRA">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Issue Type</label>
+          <input class="input" type="text" placeholder="Select issue type" value="Story">
+        </div>
+      </div>
+    </div>
+
+    <!-- Jira Board -->
+    <div class="section">
+      <div class="section__label">Jira Board Columns</div>
+      <div class="board-container">
+        <!-- To Do Column -->
+        <div class="board-column">
+          <div class="board-column__header">
+            <span class="board-column__title">To Do</span>
+            <span class="board-column__count">3</span>
+          </div>
+          <div class="board-column__cards">
+            <div class="issue-card">
+              <div class="issue-card__key">JIRA-247</div>
+              <div class="issue-card__summary">Implement user authentication flow</div>
+              <div class="issue-card__footer">
+                <div class="issue-card__meta">
+                  <div class="avatar">JD</div>
+                </div>
+                <div class="issue-card__meta">
+                  <span class="icon-16 icon-priority-high">⬆</span>
+                  <span class="icon-16 icon-issue-story">⚡</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="issue-card">
+              <div class="issue-card__key">JIRA-248</div>
+              <div class="issue-card__summary">Update API documentation</div>
+              <div class="issue-card__footer">
+                <div class="issue-card__meta">
+                  <div class="avatar">AP</div>
+                </div>
+                <div class="issue-card__meta">
+                  <span class="icon-16 icon-priority-medium">—</span>
+                  <span class="icon-16 icon-issue-task">✓</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="issue-card">
+              <div class="issue-card__key">JIRA-250</div>
+              <div class="issue-card__summary">Fix regex validation bug</div>
+              <div class="issue-card__footer">
+                <div class="issue-card__meta">
+                  <div class="avatar">SM</div>
+                </div>
+                <div class="issue-card__meta">
+                  <span class="icon-16 icon-priority-highest">⬆⬆</span>
+                  <span class="icon-16 icon-issue-bug">🐛</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- In Progress Column -->
+        <div class="board-column">
+          <div class="board-column__header">
+            <span class="board-column__title">In Progress</span>
+            <span class="board-column__count">2</span>
+          </div>
+          <div class="board-column__cards">
+            <div class="issue-card">
+              <div class="issue-card__key">JIRA-245</div>
+              <div class="issue-card__summary">Design component library</div>
+              <div class="issue-card__footer">
+                <div class="issue-card__meta">
+                  <div class="avatar">EM</div>
+                </div>
+                <div class="issue-card__meta">
+                  <span class="icon-16 icon-priority-medium">—</span>
+                  <span class="icon-16 icon-issue-story">⚡</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="issue-card">
+              <div class="issue-card__key">JIRA-249</div>
+              <div class="issue-card__summary">Deploy staging environment</div>
+              <div class="issue-card__footer">
+                <div class="issue-card__meta">
+                  <div class="avatar">RS</div>
+                </div>
+                <div class="issue-card__meta">
+                  <span class="icon-16 icon-priority-high">⬆</span>
+                  <span class="icon-16 icon-issue-task">✓</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Done Column -->
+        <div class="board-column">
+          <div class="board-column__header">
+            <span class="board-column__title">Done</span>
+            <span class="board-column__count">8</span>
+          </div>
+          <div class="board-column__cards">
+            <div class="issue-card">

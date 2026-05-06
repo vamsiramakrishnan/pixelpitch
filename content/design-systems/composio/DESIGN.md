@@ -24,6 +24,7 @@ What makes Composio distinctive is its tension between extreme minimalism and st
 
 ### Primary
 - **Composio Cobalt** (`#0007cd`): The core brand color — a deep, saturated blue used sparingly for high-priority interactive elements and brand moments. It anchors the identity with quiet intensity.
+- **Accessible Brand Blue** (`#8859ff`): Lighter variant for text on dark surfaces. Passes WCAG AA.
 
 ### Secondary & Accent
 - **Electric Cyan** (`#00ffff`): The attention-grabbing accent — used at low opacity (`rgba(0,255,255,0.12)`) for glowing button backgrounds and card highlights. At full saturation, it serves as the energetic counterpoint to the dark canvas.
@@ -37,7 +38,7 @@ What makes Composio distinctive is its tension between extreme minimalism and st
 
 ### Neutrals & Text
 - **Pure White** (`#ffffff`): Primary heading and high-emphasis text color on dark surfaces.
-- **Muted Smoke** (`#444444`): De-emphasized body text, metadata, and tertiary content.
+- **Muted Smoke** (`#7b7b7b`): De-emphasized body text, metadata, and tertiary content.
 - **Ghost White** (`rgba(255,255,255,0.6)`): Secondary body text and link labels — visible but deliberately receded.
 - **Whisper White** (`rgba(255,255,255,0.5)`): Tertiary button text and placeholder content.
 - **Phantom White** (`rgba(255,255,255,0.2)`): Subtle button backgrounds and deeply receded UI chrome.

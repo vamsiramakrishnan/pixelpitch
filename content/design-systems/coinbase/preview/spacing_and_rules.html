@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'CoinbaseText', system-ui, sans-serif);
+      background: var(--paper, #0a0b0d);
+      color: var(--ink, #0a0b0d);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+      border-bottom: 1px solid var(--signal, #0052ff);
+      padding-bottom: 48px;
+    }
+    .header__title {
+      font-family: var(--font-display, 'CoinbaseDisplay', system-ui, sans-serif);
+      font-size: 64px;
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: -0.01em;
+      color: var(--color-pure-white, #ffffff);
+      margin-bottom: 12px;
+    }
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate, #666666);
+      font-weight: 400;
+    }
+    .header__rule {
+      display: block;
+      width: 48px;
+      height: 4px;
+      background: var(--signal, #0052ff);
+      border: none;
+      margin-top: 24px;
+      border-radius: 2px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 64px;
+    }
+    .section__label {
+      font-family: var(--font-display, 'CoinbaseDisplay', system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--surface, #282b31);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 80px;
+      gap: 20px;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--surface, #282b31);
+    }
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      color: var(--color-pure-white, #ffffff);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      background: var(--surface, #282b31);
+      border-radius: 4px;
+      padding: 0 8px;
+    }
+    .spacing-row__bar {
+      height: 3px;
+      background: var(--signal, #0052ff);
+      border-radius: 2px;
+      min-width: 2px;
+      transition: all 0.2s ease;
+    }
+    .spacing-row:hover .spacing-row__bar {
+      height: 4px;
+      box-shadow: 0 0 12px rgba(0, 82, 255, 0.4);
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      color: var(--slate, #666666);
+      text-align: right;
+      font-weight: 500;
+    }
+
+    /* Rule weights / depth levels */
+    .rule-demo {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--surface, #282b31);
+    }
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+    }
+    .rule-demo__name {
+      font-family: var(--font-display, 'CoinbaseDisplay', system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-pure-white, #ffffff);
+      text-transform: capitalize;
+    }
+    .rule-demo__spec {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      letter-spacing: 0.02em;
+    }
+    .rule-demo__visual {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 16px;
+      margin-top: 12px;
+    }
+    .rule-demo__sample {
+      padding: 20px;
+      background: var(--surface, #282b31);
+      border-radius: 8px;
+      text-align: center;
+    }
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 1px;
+      background: var(--signal, #0052ff);
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 32px;
+    }
+    .radius-item {
+      text-align: center;
+    }
+    .radius-item__box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 140px;
+      margin: 0 auto 16px;
+      background: var(--bone, #eef0f3);
+      border: 2px solid var(--signal, #0052ff);
+      opacity: 0.6;
+      transition: all 0.2s ease;
+    }
+    .radius-item:hover .radius-item__box {
+      opacity: 1;
+      box-shadow: 0 0 16px rgba(0, 82, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    .radius-item__name {
+      font-family: var(--font-display, 'CoinbaseDisplay', system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-pure-white, #ffffff);
+      margin-bottom: 4px;
+      text-transform: capitalize;
+    }
+    .radius-item__value {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      letter-spacing: 0.02em;
+    }
+
+    /* Depth elevation */
+    .depth-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 24px;
+    }
+    .depth-item {
+      padding: 32px;
+      background: var(--surface, #282b31);
+      border-radius: var(--radius-md, 12px);
+      text-align: center;
+      border: 1px solid rgba(0, 82, 255, 0.2);
+      transition: all 0.2s ease;
+    }
+    .depth-item:hover {
+      border-color: var(--signal, #0052ff);
+      box-shadow: 0 0 16px rgba(0, 82, 255, 0.2);
+    }
+    .depth-item__name {
+      font-family: var(--font-display, 'CoinbaseDisplay', system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-pure-white, #ffffff);
+      margin-bottom: 8px;
+      text-transform: capitalize;
+    }
+    .depth-item__spec {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      color: var(--slate, #666666);
+      word-break: break-all;
+      letter-spacing: 0.02em;
+    }
+
+    /* Philosophy block */
+    .philosophy {
+      padding: 48px;
+      background: var(--surface, #282b31);
+      border-left: 4px solid var(--signal, #0052ff);
+      border-radius: 8px;
+      margin-bottom: 64px;
+    }
+    .philosophy__title {
+      font-family: var(--font-display, 'CoinbaseDisplay', system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--signal, #0052ff);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .philosophy__text {
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--bone, #eef0f3);
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--surface, #282b31);
+      border-top-color: var(--signal, #0052ff);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 600px) {
+      .page {
+        padding: 40px 20px;
+      }
+      .spacing-row {
+        grid-template-columns: 70px 1fr 70px;
+        gap: 12px;
+      }
+      .header__title {
+        font-size: 48px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': '1px',
+      's-2': '3px',
+      's-3': '4px',
+      's-4': '5px',
+      's-5': '6px',
+      's-6': '8px',
+      's-7': '10px',
+      's-8': '12px',
+      's-9': '15px',
+      's-10': '16px',
+      's-11': '20px',
+      's-12': '24px',
+      's-13': '25px',
+      's-14': '32px',
+      's-15': '48px',
+    };
+
+    const DEFAULT_DEPTH = {
+      'Flat': { weight: '0px', color: 'none', description: 'No shadow or border' },
+      'Border': { weight: '1px', color: 'var(--signal, #0052ff)', description: 'Subtle accent border' },
+      'Elevated': { weight: '2px', color: 'rgba(0,0,0,0.2)', description: 'Light shadow elevation' },
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': '0',
+      'sm': '4px',
+      'md': '12px',
+      'lg': '24px',
+      'full': '56px',
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#578bfa">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+
+      const spacing = tokens.spacing && tokens.spacing.scale ? tokens.spacing.scale : DEFAULT_SPACING;
+      const depth   = DEFAULT_DEPTH;
+      const radius  = tokens.radii || DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Eight Pixels.<br>One Ruler.</h1>';
+      html += '  <p class="header__subtitle">Spacing, rules, and corner tokens for institutional clarity.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Philosophy */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Design Principle</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Coinbase spaces for trust through precision. Our spacing system is built on an 8-pixel base with a measured progression for responsive layouts. Rules are minimal—just enough structure for institutional confidence. Border radius scales from sharp (4px) to pill-shaped (56px), matching our blue-forward, minimalist aesthetic.';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Spacing scale ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, v]) => parseFloat(v) || 0), 1);
+
+      spacingEntries.forEach(([key, value]) => {
+        const px = parseFloat(value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        html += '<div class="spacing-row">';
+        html += '  <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* ---- Rule weights / Depth ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth &amp; Elevation</div>';
+
+      Object.entries(depth).forEach(([key, val]) => {
+        const weight = val.weight || '0px';
+        const color  = val.color || 'none';
+        const desc   = val.description || '';
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <span class="rule-demo__name">' + esc(key) + '</span>';
+        html += '    <span class="rule-demo__spec">' + esc(desc) + '</span>';
+        html += '  </div>';
+        
+        if (key === 'Flat') {
+          html += '  <div class="rule-demo__sample" style="border:2px dashed rgba(0,82,255,0.3)">';
+          html += '    <span style="font-size:12px;color:var(--slate)">No elevation</span>';
+          html += '  </div>';
+        } else if (key === 'Border') {
+          html += '  <div class="rule-demo__sample" style="border:1px solid var(--signal)">';
+          html += '    <span style="font-size:12px;color:var(--signal)">1px border accent</span>';
+          html += '  </div>';
+        } else if (key === 'Elevated') {
+          html += '  <div class="rule-demo__sample" style="box-shadow:0 2px 8px rgba(0,0,0,0.2);border:none">';
+          html += '    <span style="font-size:12px;color:var(--slate)">Soft shadow</span>';
+          html += '  </div>';
+        }
+
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* ---- Border radius ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+      html += '  <div class="radius-grid">';
+
+      Object.entries(radius).forEach(([key, value]) => {
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__box" style="border-radius:' + esc(value) + '"></div>';
+        html += '  <div class="radius-item__name">' + esc(key) + '</div>';
+        html += '  <div class="radius-item__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Semantic uses ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Semantic Applications</div>';
+      html += '  <div class="depth-grid">';
+
+      const semanticUses = [
+        { name: 'Cards', desc: '--radius-md + border', radius: '12px' },
+        { name: 'Buttons', desc: '--radius-md for standard, --radius-full for pill', radius: '12px' },
+        { name: 'Input Fields', desc: '--radius-sm for compact inputs', radius: '4px' },
+        { name: 'Feature Containers', desc: '--radius-lg for large sections', radius: '24px' },
+      ];
+
+      semanticUses.forEach(use => {
+        html += '<div class="depth-item">';
+        html += '  <div style="margin-bottom:12px;padding:20px;background:var(--bone,#eef0f3);border-radius:' + use.radius + ';height:80px;display:flex;align-items:center;justify-content:center;">';
+        html += '    <span style="color:var(--ink);font-weight:600;font-size:12px">' + esc(use.name) + '</span>';
+        html += '  </div>';
+        html += '  <div class="depth-item__name">' + esc(use.name) + '</div>';
+        html += '  <div class="depth-item__spec">' + esc(use.desc) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+/* Intercom — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #111111;
+  --ink:     #111111;
+  --slate:   #7b7b78;
+  --signal:  #ff5600;
+  --bone:    #faf9f6;
+  --border:  #dedbd6;
+  --surface: #faf9f6;
+
+  /* Extended palette */
+  --color-pure-white: #ffffff;
+  --color-report-orange: #fe4c02;
+  --color-report-blue: #65b5ff;
+  --color-report-green: #0bdf50;
+  --color-report-red: #c41c1c;
+  --color-report-pink: #ff2067;
+  --color-report-lime: #b3e01c;
+  --color-green: #00da00;
+  --color-deep-blue: #0007cb;
+  --color-black-80: #313130;
+  --color-black-60: #626260;
+  --color-content-tertiary: #9c9fa5;
+  --color-warm-sand: #d3cec6;
+
+  /* Semantic */
+  --success: #0bdf50;
+  --danger:  #c41c1c;
+  --info:    #65b5ff;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    MediumLL;
+  --font-mono:    SaansMono;
+
+  /* Type ramp */
+  --t-display-hero: 80px;
+  --t-section-heading: 54px;
+  --t-sub-heading: 40px;
+  --t-card-title: 32px;
+  --t-feature-title: 24px;
+  --t-body-emphasis: 20px;
+  --t-nav-ui: 18px;
+  --t-body: 16px;
+  --t-body-light: 14px;
+  --t-button: 16px;
+  --t-button-bold: 16px;
+  --t-serif-body: 16px;
+  --t-mono-label: 12px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   16px;
+  --radius-md:   10px;
+  --radius-lg:   20px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  10px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    10px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

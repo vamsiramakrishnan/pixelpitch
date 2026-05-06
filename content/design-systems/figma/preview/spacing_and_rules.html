@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Figma</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 96px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 86px;
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: -1.72px;
+      color: var(--ink, #111111);
+      margin-bottom: 12px;
+      max-width: 100%;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 330;
+      line-height: 1.3;
+      letter-spacing: -0.1px;
+      color: var(--slate, #666666);
+      max-width: 85%;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 120px;
+      height: 1px;
+      background: var(--border, #000000);
+      border: none;
+      margin-top: 24px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 96px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 48px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #000000);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 80px;
+      gap: 24px;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.28px;
+      color: var(--ink, #111111);
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      color: var(--slate, #666666);
+      margin-top: 4px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 2px;
+      background: var(--ink, #111111);
+      min-width: 2px;
+      transition: opacity 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.6;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.26px;
+      color: var(--ink, #111111);
+      text-align: right;
+    }
+
+    /* Rule weights */
+    .rule-demo {
+      padding: 40px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 20px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 330;
+      letter-spacing: -0.14px;
+      color: var(--ink, #111111);
+    }
+
+    .rule-demo__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      color: var(--slate, #666666);
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      letter-spacing: 0.24px;
+      color: var(--slate, #666666);
+    }
+
+    .rule-demo__container {
+      width: 100%;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 12px 0;
+      background: var(--bone, #f5f5f5);
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    /* Border radius grid */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 64px;
+      margin-bottom: 48px;
+    }
+
+    .radius-item {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 32px;
+      align-items: flex-start;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .radius-item__box {
+      width: 120px;
+      height: 120px;
+      background: var(--bone, #f5f5f5);
+      border: 1px solid var(--border, #000000);
+      flex-shrink: 0;
+    }
+
+    .radius-item__info {
+      flex: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.26px;
+      text-transform: uppercase;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      letter-spacing: 0.28px;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 15px;
+      line-height: 1.45;
+      letter-spacing: -0.15px;
+      color: var(--slate, #666666);
+    }
+
+    /* Philosophy block */
+    .philosophy {
+      background: var(--bone, #f5f5f5);
+      padding: 48px;
+      border: 1px solid var(--border, #000000);
+      margin-bottom: 64px;
+    }
+
+    .philosophy__title {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 320;
+      line-height: 1.45;
+      letter-spacing: -0.26px;
+      color: var(--ink, #111111);
+    }
+
+    .philosophy__text strong {
+      font-weight: 540;
+    }
+
+    .philosophy__text em {
+      font-style: italic;
+    }
+
+    .philosophy__text code {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      background: rgba(0, 0, 0, 0.06);
+      padding: 2px 6px;
+      font-size: 0.95em;
+      letter-spacing: 0.12px;
+    }
+
+    /* Grid demo */
+    .grid-demo {
+      background: var(--bone, #f5f5f5);
+      padding: 48px;
+      border: 1px solid var(--border, #000000);
+      margin-bottom: 64px;
+    }
+
+    .grid-demo__title {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 28px;
+    }
+
+    .grid-demo__visual {
+      width: 100%;
+      height: 160px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+      padding: 16px;
+      border: 1px dashed rgba(0, 0, 0, 0.2);
+      background: rgba(0, 0, 0, 0.02);
+    }
+
+    .grid-demo__column {
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.22px;
+      color: var(--signal, #3b82f6);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 8px;
+    }
+
+    .grid-demo__info {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+
+    .grid-demo__stat {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 330;
+      letter-spacing: -0.14px;
+      color: var(--ink, #111111);
+    }
+
+    .grid-demo__stat-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.22px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 6px;
+    }
+
+    /* Focus philosophy */
+    .focus-demo {
+      background: var(--bone, #f5f5f5);
+      padding: 48px;
+      border: 1px solid var(--border, #000000);
+      margin-bottom: 96px;
+    }
+
+    .focus-demo__title {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 28px;
+    }
+
+    .focus-demo__visual {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .focus-demo__button {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 330;
+      letter-spacing: -0.14px;
+      padding: 10px 20px;
+      border: 1px solid var(--border, #000000);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      cursor: pointer;
+      border-radius: 8px;
+      outline: 2px dashed var(--signal, #3b82f6);
+      outline-offset: 2px;
+    }
+
+    .focus-demo__text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 15px;
+      line-height: 1.45;
+      letter-spacing: -0.15px;
+      color: var(--slate, #666666);
+    }
+
+    .focus-demo__text strong {
+      font-weight: 540;
+      color: var(--ink, #111111);
+    }
+
+    .focus-demo__text code {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      background: rgba(0, 0, 0, 0.06);
+      padding: 2px 6px;
+      font-size: 0.95em;
+      letter-spacing: 0.12px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 2px solid rgba(0, 0, 0, 0.15);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 900px) {
+      .page {
+        padding: 64px 32px;
+      }
+
+      .header {
+        margin-bottom: 64px;
+      }
+
+      .header__title {
+        font-size: 56px;
+        letter-spacing: -1.12px;
+      }
+
+      .header__subtitle {
+        font-size: 18px;
+        max-width: 100%;
+      }
+
+      .section {
+        margin-bottom: 64px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 80px 1fr 70px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .radius-item {
+        grid-template-columns: 100px 1fr;
+        gap: 24px;
+      }
+
+      .radius-item__box {
+        width: 100px;
+        height: 100px;
+      }
+
+      .philosophy, .grid-demo, .focus-demo {
+        padding: 32px;
+      }
+
+      .grid-demo__info {
+        grid-template-columns: 1fr;
+      }
+
+      .focus-demo__visual {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '1px', label: 'hairline' },
+      's-2': { value: '2px', label: 'thin' },
+      's-3': { value: '4px', label: 'xs' },
+      's-4': { value: '4.5px', label: 'xs+' },
+      's-5': { value: '8px', label: 'sm' },
+      's-6': { value: '10px', label: 'sm+' },
+      's-7': { value: '12px', label: 'md' },
+      's-8': { value: '16px', label: 'lg' },
+      's-9': { value: '18px', label: 'lg+' },
+      's-10': { value: '24px', label: 'xl' },
+      's-11': { value: '32px', label: '2xl' },
+      's-12': { value: '40px', label: '3xl' },
+      's-13': { value: '46px', label: '3xl+' },
+      's-14': { value: '48px', label: '4xl' },
+      's-15': { value: '50px', label: '4xl+' }
+    };
+
+    const DEFAULT_RULES = {
+      'flat': { name: 'Flat', weight: 'none', description: 'Default state — no border, no shadow' },
+      'border': { name: 'Border', weight: '1px solid', description: 'Subtle definition for cards, inputs, containers' },
+      'elevated': { name: 'Elevated', weight: '0 2px 8px rgba(0,0,0,0.08)', description: 'Soft shadow for floating states, hover elevation' }
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'Sharp corners — most elements default to this.' },
+      'sm': { value: '6px', use: 'Small buttons, compact UI elements, minor cards.' },
+      'md': { value: '8px', use: 'Primary button radius, card corners, input fields, dialogs.' },
+      'lg': { value: '18px', use: 'Large featured containers, showcase cards, hero sections.' },
+      'full': { value: '50px', use: 'Pill buttons, circular icon buttons, badge elements.' }
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const rules = DEFAULT_RULES;
+      const radius = DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Spacing &amp; Rules</div>';
+      html += '  <h1 class="header__title">Precision at every scale.</h1>';
+      html += '  <p class="header__subtitle">A modular spacing system and depth hierarchy designed for collaborative design. Eight pixels as the foundation, with micro-intervals and flexible scale for every interface moment.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Philosophy block */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Spacing Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Start with <strong>8px base unit</strong>. But precision demands micro-adjustments: <code>1px</code> for hairlines, <code>4.5px</code> for tight vertical density, <code>10px</code>, <code>18px</code>, <code>46px</code> for those moments where the standard scale falls short. The system is <strong>not dogmatic</strong> — it accommodates the unusual interval when design intent demands it. Spacing breathes rhythm into the interface. Generous padding in hero sections (<strong>96px+</strong>), tight density in toolbars (<strong>4px–8px</strong>), and breathing room in lists and grids (<strong>16px–32px</strong>). Every pixel serves a purpose.';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        const label = obj.label || key;
+
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Grid visualization */
+      html += '<div class="section">';
+      html += '  <div class="section__label">12-Column Grid System</div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__title">Responsive Canvas (559px – 1920px)</div>';
+      html += '    <div class="grid-demo__visual">';
+      for (let i = 1; i <= 12; i++) {
+        html += '      <div class="grid-demo__column">Col ' + i + '</div>';
+      }
+      html += '    </div>';
+      html += '    <div class="grid-demo__info">';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Max width</div>';
+      html += '        <div class="grid-demo__stat">1920px (desktop layout)</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Gutter spacing</div>';
+      html += '        <div class="grid-demo__stat">12px between columns</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Responsive behavior</div>';
+      html += '        <div class="grid-demo__stat">Fluid from 559px mobile to full desktop</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Breakpoints</div>';
+      html += '        <div class="grid-demo__stat">Mobile, tablet, desktop layouts</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Rule weights */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth &amp; Elevation</div>';
+
+      Object.entries(rules).forEach(([key, rule]) => {
+        const weight = rule.weight;
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <div>';
+        html += '      <div class="rule-demo__name">' + esc(rule.name) + '</div>';
+        html += '      <div class="rule-demo__label">' + esc(rule.description) + '</div>';
+        html += '    </div>';
+        html += '    <div class="rule-demo__spec">' + esc(weight) + '</div>';
+        html += '  </div>';
+
+        if (weight === 'none') {
+          html += '  <div class="rule-demo__container" style="background: var(--paper); border: 1px dashed rgba(0,0,0,0.2); min-height: 60px;">';
+          html += '    <div style="font-family: var(--font-mono); font-size: 13px; color: var(--slate); letter-spacing: 0.26px;">Flat surface — no border, no shadow</div>';
+          html += '  </div>';
+        } else if (weight.includes('rgba')) {
+          html += '  <div class="rule-demo__container" style="background: var(--paper); border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 2px 8px rgba(0,0,0,0.08); min-height: 60px;">';
+          html += '    <div style="font-family: var(--font-mono); font-size: 13px; color: var(--slate); letter-spacing: 0.26px;">Soft shadow elevation</div>';
+          html += '  </div>';
+        } else {
+          html += '  <div class="rule-demo__container" style="background: var(--paper); border: 1px solid var(--border); min-height: 60px;">';
+          html += '    <div style="font-family: var(--font-mono); font-size: 13px; color: var(--slate); letter-spacing: 0.26px;">1px solid border</div>';
+          html += '  </div>';
+        }
+
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+
+      const radiusEntries = Object.entries(radius);
+      const halfCount = Math.ceil(radiusEntries.length / 2);
+
+      html += '  <div class="radius-grid">';
+
+      radiusEntries.forEach(([key, obj], idx) => {
+        const radiusValue = obj.value;
+
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__demo">';
+        html += '    <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '  </div>';
+        html += '  <div class="radius-item__info">';
+        html += '    <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '    <div class="radius-item__value">' + esc(radiusValue) + '</div>';
+        html += '    <div class="radius-item__description">' + esc(obj.use) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* Focus indicator philosophy */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Focus Indicator</div>';
+      html += '  <div class="focus-demo">';
+      html += '    <div class="focus-demo__title">Keyboard Navigation</div>';
+      html += '    <div class="focus-demo__visual">';
+      html += '      <button class="focus-demo__button">Focused button</button>';
+      html += '      <div class="focus-demo__text">Hover to see focus outline</div>';
+      html += '    </div>';
+      html += '    <div class="focus-demo__text">';
+      html += '      Focus states use a <strong>2px dashed outline in signal blue</strong> (<code>#3b82f6</code>) with <strong>2px offset</strong> from the element. This creates an echo of Figma\'s own selection handles in the editor, bridging the gap between website UI and product UI. The dashed pattern is deliberate — it echoes the selection marquee in the design tool itself.';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Whitespace philosophy */
+      html += '<div class="philosophy" style="margin-top: 96px; margin-bottom: 0;">';
+      html += '  <div class="philosophy__title">Whitespace &amp; Pacing</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    <strong>Generous breathing room</strong>: The interface is not cramped. Hero sections get 96px+ padding. Section dividers breathe with 64px+ gaps. <strong>Hierarchy through density, not size</strong>: Type ramp carries most visual weight (86px display down to 12px mono). Spacing supports but does not dominate. <strong>Tool-like compactness where it matters</strong>: Toolbars, controls, and action areas stay tight (4px–8px inter-element spacing). Content areas expand to 24px–32px gutters. <strong>The gallery principle</strong>: Each major section is a self-contained exhibit, separated by whitespace and often framed by subtle borders. The spacing makes each piece breathe independently.';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

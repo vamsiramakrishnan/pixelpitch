@@ -1,0 +1,108 @@
+/* Stripe — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #533afd;
+  --slate:   #64748d;
+  --signal:  #ea2261;
+  --bone:    #ffffff;
+  --border:  #15be53;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-deep-navy: #061b31;
+  --color-brand-dark: #1c1e54;
+  --color-dark-navy: #0d253d;
+  --color-magenta: #f96bee;
+  --color-magenta-light: #ffd7ef;
+  --color-purple-hover: #4434d4;
+  --color-purple-deep: #2e2b8c;
+  --color-purple-light: #b9b9f9;
+  --color-purple-mid: #665efd;
+  --color-label: #273951;
+  --color-success-text: #108c3d;
+  --color-lemon: #9b6829;
+  --color-border-default: #e5edf5;
+  --color-border-soft-purple: #d6d9fc;
+  --color-border-dashed: #362baa;
+
+  /* Semantic */
+  --success: #15be53;
+  --warning: #9b6829;
+  --danger:  #ea2261;
+  --info:    #533afd;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    SourceCodePro;
+
+  /* Type ramp */
+  --t-display-hero: 56px;
+  --t-display-large: 48px;
+  --t-section-heading: 32px;
+  --t-sub-heading-large: 26px;
+  --t-sub-heading: 22px;
+  --t-body-large: 18px;
+  --t-body: 16px;
+  --t-button: 16px;
+  --t-button-small: 14px;
+  --t-link: 14px;
+  --t-caption: 13px;
+  --t-caption-small: 12px;
+  --t-caption-tabular: 12px;
+  --t-micro: 10px;
+  --t-micro-tabular: 10px;
+  --t-nano: 8px;
+  --t-code-body: 12px;
+  --t-code-bold: 12px;
+  --t-code-label: 12px;
+  --t-code-micro: 9px;
+
+  /* ── Spacing ── */
+  --s-1: 1px;
+  --s-2: 2px;
+  --s-3: 4px;
+  --s-4: 6px;
+  --s-5: 8px;
+  --s-6: 10px;
+  --s-7: 11px;
+  --s-8: 12px;
+  --s-9: 14px;
+  --s-10: 16px;
+  --s-11: 18px;
+  --s-12: 20px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   2px;
+  --radius-md:   5px;
+  --radius-lg:   8px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  5px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    5px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

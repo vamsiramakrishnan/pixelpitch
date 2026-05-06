@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — Application</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+    }
+    .header__title {
+      font-family: var(--font-display, var(--font-body, system-ui, sans-serif));
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 12px;
+    }
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate, #666666);
+      max-width: 600px;
+    }
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 3px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin-top: 24px;
+      border-radius: 2px;
+    }
+
+    /* Font family summary */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 56px;
+    }
+    .font-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      padding: 28px 24px;
+    }
+    .font-card__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 8px;
+    }
+    .font-card__name {
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+    .font-card__fallback {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      word-break: break-all;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-display, var(--font-body, system-ui, sans-serif));
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 32px;
+      align-items: baseline;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 720px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-display, var(--font-body, system-ui, sans-serif));
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+    .ramp-meta__detail {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--slate, #666666);
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--ink, #111111);
+      overflow-wrap: break-word;
+    }
+
+    /* Ramp section container */
+    .ramp-section {
+      margin-bottom: 56px;
+    }
+
+    /* Pangram block */
+    .pangram-block {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      padding: 40px 32px;
+      margin-bottom: 56px;
+    }
+    .pangram-block__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+    .pangram-block__chars {
+      font-size: 28px;
+      line-height: 1.5;
+      letter-spacing: 0.02em;
+      color: var(--ink, #111111);
+      word-break: break-all;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Build faster with a system that scales across your entire product suite.',
+      'Clean interfaces emerge from precise typographic structure and careful spacing.',
+      'Every pixel should serve the developer workflow, not distract from it.',
+      'Hierarchy creates clarity. Clarity drives action.',
+      'Consistency is the foundation of trust in professional applications.',
+      'Thoughtful design removes friction from repetitive tasks.',
+      'A well-designed system speaks in one coherent voice across all platforms.',
+      'Focus the dashboard. Eliminate what does not matter.',
+    ];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.meta?.name || tokens.name || 'Application';
+
+      /* Load Google Fonts if present */
+      if (tokens.googleFontsUrl) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = tokens.googleFontsUrl;
+        document.head.appendChild(link);
+      }
+      if (tokens.fonts?.googleUrl) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = tokens.fonts.googleUrl;
+        document.head.appendChild(link);
+      }
+
+      const fonts = tokens.fonts || {
+        display: tokens.typography?.fontDisplay,
+        body: tokens.typography?.fontBody,
+        mono: tokens.typography?.fontMono
+      };
+
+      const ramp = tokens.typeRamp || tokens.typography?.ramp || tokens.typography || {};
+      let rampEntries = Array.isArray(ramp)
+        ? ramp
+        : Object.entries(ramp).map(([role, v]) =>
+            typeof v === 'object' ? { role, ...v } : { role, size: v });
+
+      /* If no ramp provided, generate default scale */
+      if (!rampEntries.length || rampEntries.every(e => !e.size && !e.fontSize)) {
+        rampEntries = [
+          { role: 'Label', size: '12px', weight: '500', lh: '1.4' },
+          { role: 'Body Small', size: '14px', weight: '400', lh: '1.6' },
+          { role: 'Body', size: '16px', weight: '400', lh: '1.6' },
+          { role: 'Lead', size: '20px', weight: '500', lh: '1.5' },
+          { role: 'Subheading', size: '24px', weight: '600', lh: '1.3' },
+          { role: 'Heading', size: '32px', weight: '600', lh: '1.2' },
+        ];
+      }
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">' + esc(name) + '</h1>';
+      html += '  <p class="header__subtitle">Type Specimen &mdash; ' + rampEntries.length + ' roles</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      const families = [];
+      if (fonts.display) families.push({ label: 'Display', name: fonts.display, fallback: '' });
+      if (fonts.body) families.push({ label: 'Body', name: fonts.body, fallback: '' });
+      if (fonts.mono) families.push({ label: 'Monospace', name: fonts.mono, fallback: '' });
+
+      if (families.length) {
+        html += '<div class="font-families">';
+        families.forEach(f => {
+          const displayName = typeof f.name === 'string' ? f.name.split(',')[0].trim().replace(/['"]/g, '') : f.name;
+          html += '<div class="font-card">';
+          html += '  <div class="font-card__label">' + esc(f.label) + '</div>';
+          html += '  <div class="font-card__name" style="font-family:' + f.name + '">' + esc(displayName) + '</div>';
+          if (f.fallback) html += '  <div class="font-card__fallback">' + esc(f.fallback) + '</div>';
+          html += '</div>';
+        });
+        html += '</div>';
+      }
+
+      /* Character set block */
+      const displayFont = fonts.display || fonts.body || '';
+      html += '<div class="pangram-block">';
+      html += '  <div class="pangram-block__label">Character Set</div>';
+      html += '  <div class="pangram-block__chars"' +
+              (displayFont ? ' style="font-family:' + displayFont + '"' : '') +
+              '>AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>0123456789 !@#$%&amp;*()&ndash;&mdash;&lsquo;&rsquo;&ldquo;&rdquo;</div>';
+      html += '</div>';
+
+      /* Type ramp */
+      if (rampEntries.length) {
+        html += '<div class="ramp-section">';
+        html += '<div class="section-label">Type Ramp</div>';
+        rampEntries.forEach((entry, i) => {
+          html += rampRow(entry, i, fonts);
+        });
+        html += '</div>';
+      }
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(entry, idx, fonts) {
+      const role = entry.role || entry.name || 'Role ' + (idx + 1);
+      const size = entry.size || entry.fontSize || '16px';
+      const weight = entry.weight || entry.fontWeight || '400';
+      const lh = entry.lineHeight || entry.lh || '1.5';
+      const ls = entry.letterSpacing || entry.ls || 'normal';
+      const family = entry.font || entry.fontFamily || '';
+      const sampleIdx = idx % EDITORIAL_SAMPLES.length;
+      const sample = EDITORIAL_SAMPLES[sampleIdx];
+
+      const sizeNum = parseFloat(size);
+      /* Truncate very large samples */
+      const displaySample = sizeNum >= 40
+        ? sample.split('.')[0] + '.'
+        : sample;
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + ';';
+      if (ls !== 'normal') fontStyle += 'letter-spacing:' + ls + ';';
+      if (family) fontStyle += 'font-family:' + family + ';';
+
+      let meta = '';
+      meta += esc(size) + ' / ' + esc(weight);
+      if (family) meta += '\n' + esc(family);
+      meta += '\nline-height: ' + esc(String(lh));
+      if (ls !== 'normal') meta += '\nletter-spacing: ' + esc(ls);
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(displaySample) + '</div>' +
+        '</div>';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+/* ClickHouse — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #000000;
+  --ink:     #ffffff;
+  --slate:   #a0a0a0;
+  --signal:  #faff69;
+  --bone:    #161600;
+  --border:  #faff69;
+  --surface: #414141;
+
+  /* Extended palette */
+  --color-forest-green: #166534;
+  --color-dark-forest: #14572f;
+  --color-pale-yellow: #f4f692;
+  --color-border-olive: #4f5100;
+  --color-near-black: #141414;
+  --color-deep-charcoal: #343434;
+  --color-hover-gray: #3a3a3a;
+  --color-mid-gray: #585858;
+  --color-border-gray: #e5e7eb;
+
+  /* Semantic */
+  --success: #faff69;
+  --warning: #faff69;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    Inconsolata;
+
+  /* Type ramp */
+  --t-display-mega: 96px;
+  --t-display-hero: 72px;
+  --t-feature-heading: 36px;
+  --t-sub-heading: 24px;
+  --t-feature-title: 20px;
+  --t-body-large: 18px;
+  --t-body-button: 16px;
+  --t-caption: 14px;
+  --t-uppercase-label: 14px;
+  --t-code: 16px;
+  --t-small: 12px;
+  --t-micro: 11.2px;
+
+  /* ── Spacing ── */
+  --s-1: 2px;
+  --s-2: 6px;
+  --s-3: 7px;
+  --s-4: 8px;
+  --s-5: 10px;
+  --s-6: 12px;
+  --s-7: 16px;
+  --s-8: 20px;
+  --s-9: 24px;
+  --s-10: 25px;
+  --s-11: 32px;
+  --s-12: 40px;
+  --s-13: 44px;
+  --s-14: 48px;
+  --s-15: 64px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   64px;
+  --radius-full: 9999px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    8px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

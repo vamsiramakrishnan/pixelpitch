@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Apple Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #1d1d1f);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 80px;
+      padding-bottom: 64px;
+      border-bottom: 1px solid var(--bone, #d2d2d7);
+    }
+    .header__supertitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 56px;
+      font-weight: 600;
+      line-height: 1.07;
+      letter-spacing: -0.28px;
+      color: var(--ink, #1d1d1f);
+      margin-bottom: 16px;
+      max-width: 800px;
+    }
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 19px;
+      font-weight: 400;
+      line-height: 1.47;
+      color: var(--slate, #666666);
+      max-width: 700px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 72px;
+    }
+    .section__label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 0.216px;
+      line-height: 1.17;
+      color: var(--ink, #1d1d1f);
+      margin-bottom: 40px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--bone, #d2d2d7);
+    }
+
+    /* Spacing scale */
+    .spacing-scale {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 100px;
+      gap: 24px;
+      align-items: center;
+      padding: 0;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink, #1d1d1f);
+    }
+    .spacing-row__role {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--slate, #666666);
+      margin-left: 8px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      background: var(--color-pale-apple-gray, #f5f5f7);
+      border-radius: 8px;
+      padding: 4px;
+    }
+    .spacing-row__bar {
+      height: 24px;
+      background: var(--signal, #0071e3);
+      border-radius: 4px;
+      min-width: 2px;
+      transition: background-color 0.2s ease;
+    }
+    .spacing-row:hover .spacing-row__bar {
+      background: var(--color-body-link-blue, #0066cc);
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate, #666666);
+      text-align: right;
+    }
+
+    /* Rule weights / Depth */
+    .rule-demo {
+      padding: 32px 0;
+      border-bottom: 1px solid var(--bone, #d2d2d7);
+    }
+    .rule-demo:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 20px;
+      gap: 16px;
+    }
+    .rule-demo__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink, #1d1d1f);
+    }
+    .rule-demo__treatment {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--slate, #666666);
+    }
+    .rule-demo__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--slate, #666666);
+      text-align: right;
+      white-space: nowrap;
+    }
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 1px;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 40px;
+    }
+    .radius-item {
+      text-align: center;
+    }
+    .radius-item__box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 160px;
+      margin: 0 auto 16px;
+      background: var(--paper, #ffffff);
+      border: 2px solid var(--signal, #0071e3);
+      transition: all 0.2s ease;
+    }
+    .radius-item:hover .radius-item__box {
+      border-color: var(--color-body-link-blue, #0066cc);
+      background: var(--color-pale-apple-gray, #f5f5f7);
+    }
+    .radius-item__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink, #1d1d1f);
+      margin-bottom: 4px;
+    }
+    .radius-item__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--slate, #666666);
+    }
+
+    /* Philosophy block */
+    .philosophy {
+      background: var(--color-pale-apple-gray, #f5f5f7);
+      padding: 40px 48px;
+      border-radius: 18px;
+      margin-bottom: 72px;
+      line-height: 1.6;
+    }
+    .philosophy__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 21px;
+      font-weight: 600;
+      line-height: 1.14;
+      color: var(--ink, #1d1d1f);
+      margin-bottom: 16px;
+    }
+    .philosophy__text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.47;
+      color: var(--slate, #666666);
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 17px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--bone, #d2d2d7);
+      border-top-color: var(--signal, #0071e3);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 24px;
+      }
+      .header {
+        margin-bottom: 64px;
+        padding-bottom: 48px;
+      }
+      .header__title {
+        font-size: 40px;
+        line-height: 1.10;
+        letter-spacing: 0;
+      }
+      .spacing-row {
+        grid-template-columns: 100px 1fr 80px;
+        gap: 16px;
+      }
+      .radius-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 32px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        padding: 48px 16px;
+      }
+      .header__title {
+        font-size: 32px;
+        line-height: 1.09;
+      }
+      .section__label {
+        font-size: 21px;
+        line-height: 1.14;
+      }
+      .spacing-row {
+        grid-template-columns: 80px 1fr 70px;
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { px: '4px', role: 'Micro gaps' },
+      's-2': { px: '8px', role: 'Base unit' },
+      's-3': { px: '16px', role: 'Component padding' },
+      's-4': { px: '24px', role: 'Section margin' },
+      's-5': { px: '32px', role: 'Utility spacing' },
+      's-6': { px: '48px', role: 'Module gap' },
+      's-7': { px: '64px', role: 'Scene chapter' },
+      's-8': { px: '96px', role: 'Hero spacing' },
+    };
+
+    const DEFAULT_DEPTH = [
+      {
+        level: 0,
+        name: 'Accessibility',
+        treatment: 'Blue focus signal (#0071e3)',
+        spec: 'Focus ring'
+      },
+      {
+        level: 1,
+        name: 'Subtle',
+        treatment: 'Subtle border containment (#d2d2d7, #86868b)',
+        spec: '1px solid'
+      },
+      {
+        level: 2,
+        name: 'Elevated',
+        treatment: 'Soft shadow (rgba(0,0,0,0.08) to 0.22)',
+        spec: 'Subtle shadow'
+      },
+      {
+        level: 3,
+        name: 'Dark Surface',
+        treatment: 'Dark-surface stepping (#272729 → #2a2a2c)',
+        spec: 'Overlay depth'
+      }
+    ];
+
+    const DEFAULT_RADIUS = {
+      'none': '0',
+      'sm': '4px',
+      'lg': '18px',
+      'md': '20px',
+      'full': '999px',
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+
+      const spacing = tokens.spacing?.scale || DEFAULT_SPACING;
+      const depth = tokens.depth || DEFAULT_DEPTH;
+      const radius = tokens.radii || DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__supertitle">Spacing &amp; Rules</div>';
+      html += '  <h1 class="header__title">Eight pixels.<br>One rhythm.</h1>';
+      html += '  <p class="header__subtitle">Apple\'s spacing system embraces cinematic calm on marketing surfaces and transaction density on commerce flows, unified by an 8px base unit and a philosophy of silence.</p>';
+      html += '</header>';
+
+      /* Philosophy block */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">The Rhythm</div>';
+      html += '  <p class="philosophy__text">Apple\'s layout operates on two gears: showcase mode uses broad chapters with deep breathing room between scenes, while commerce mode introduces tighter grids and stacked product cards. Both modes share the same 8px foundation. Whitespace is never decorative—it\'s compositional, directing attention toward imagery and material finish. Section transitions rely on surface contrast and color chapters rather than lines or artificial separators.</p>';
+      html += '</div>';
+
+      /* ---- Spacing scale ---- */
+      html += '<div class="section">';
+      html += '  <h2 class="section__label">Spacing Scale</h2>';
+      html += '  <div class="spacing-scale">';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(
+        ...spacingEntries.map(([, v]) => {
+          const valStr = typeof v === 'object' ? v.px : v;
+          return parseFloat(valStr) || 0;
+        }),
+        1
+      );
+
+      spacingEntries.forEach(([key, val]) => {
+        const valObj = typeof val === 'object' ? val : { px: val, role: '' };
+        const px = parseFloat(valObj.px) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        const role = valObj.role || '';
+
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        if (role) {
+          html += '    <div class="spacing-row__role">' + esc(role) + '</div>';
+        }
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(valObj.px) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Depth & Rules ---- */
+      html += '<div class="section">';
+      html += '  <h2 class="section__label">Depth &amp; Elevation</h2>';
+
+      depth.forEach(item => {
+        const name = item.name || 'Level ' + (item.level || 0);
+        const treatment = item.treatment || '';
+        const spec = item.spec || '';
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <div>';
+        html += '      <div class="rule-demo__name">' + esc(name) + '</div>';
+        if (treatment) {
+          html += '      <div class="rule-demo__treatment">' + esc(treatment) + '</div>';
+        }
+        html += '    </div>';
+        if (spec) {
+          html += '    <div class="rule-demo__spec">' + esc(spec) + '</div>';
+        }
+        html += '  </div>';
+
+        /* Render a demo line or element based on level */
+        if (item.level === 0) {
+          html += '  <div style="height:3px;background:var(--signal, #0071e3);border-radius:2px;width:100%"></div>';
+        } else if (item.level === 1) {
+          html += '  <div style="height:1px;background:var(--bone, #d2d2d7);border-radius:1px;width:100%"></div>';
+        } else if (item.level === 2) {
+          html += '  <div style="padding:24px;background:var(--paper, #fff);border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08);border:1px solid var(--bone, #d2d2d7)">Soft shadow elevation</div>';
+        } else if (item.level === 3) {
+          html += '  <div style="padding:24px;background:var(--surface, #272729);border-radius:12px;color:var(--paper, #fff)">Dark surface stepping</div>';
+        }
+
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* ---- Border radius ---- */
+      html += '<div class="section">';
+      html += '  <h2 class="section__label">Border Radius</h2>';
+      html += '  <div class="radius-grid">';
+
+      Object.entries(radius).forEach(([key, value]) => {
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__box" style="border-radius:' + esc(value) + '"></div>';
+        html += '  <div class="radius-item__name">' + esc(key) + '</div>';
+        html += '  <div class="radius-item__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

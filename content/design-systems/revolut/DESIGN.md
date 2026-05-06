@@ -45,7 +45,7 @@ What distinguishes Revolut is its pill-everything button system. Every button us
 - **Red Text** (`#8b0000`): `--website-color-red-text`, dark red text
 
 ### Neutral Scale
-- **Mid Slate** (`#505a63`): Secondary text
+- **Mid Slate** (`#7a848e`): Secondary text
 - **Cool Gray** (`#8d969e`): Muted text, tertiary
 - **Gray Tone** (`#c9c9cd`): `--rui-color-grey-tone-20`, borders/dividers
 

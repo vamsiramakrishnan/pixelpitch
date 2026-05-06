@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs – Composio</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #0f0f0f);
+      color: var(--ink, #111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 32px;
+    }
+
+    /* ── Header ── */
+    .header {
+      margin-bottom: 72px;
+    }
+    .header__title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 64px;
+      font-weight: 400;
+      line-height: 0.87;
+      letter-spacing: -0.01em;
+      color: var(--color-pure-white, #ffffff);
+      margin-bottom: 16px;
+    }
+    .header__subtitle {
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.5);
+      max-width: 680px;
+      line-height: 1.6;
+    }
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 2px;
+      background: var(--signal, #00ffff);
+      border: none;
+      margin-top: 32px;
+      border-radius: 1px;
+    }
+
+    /* ── Section ── */
+    .section {
+      margin-bottom: 64px;
+    }
+    .section__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* ── Atmosphere Card ── */
+    .atmosphere-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(0, 255, 255, 0.12);
+      border-radius: 4px;
+      padding: 32px;
+    }
+    .atmosphere-card p {
+      font-size: 16px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* ── Key Characteristics ── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+    .traits-list li {
+      position: relative;
+      padding: 14px 0 14px 24px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.75);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--signal, #00ffff);
+      opacity: 0.6;
+    }
+
+    /* ── Do's and Don'ts ── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .dd-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(0, 255, 255, 0.12);
+      border-radius: 4px;
+      padding: 28px;
+      overflow: hidden;
+    }
+    .dd-card__heading {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .dd-card__heading--do { color: #4ade80; }
+    .dd-card__heading--dont { color: #f87171; }
+
+    .dd-card__icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .dd-card__icon--do {
+      background: rgba(74, 222, 128, 0.15);
+      color: #4ade80;
+    }
+    .dd-card__icon--dont {
+      background: rgba(248, 113, 113, 0.15);
+      color: #f87171;
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+    .dd-list li {
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.7);
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ── Color Harmony Strip ── */
+    .harmony-strip {
+      display: flex;
+      border-radius: 4px;
+      overflow: hidden;
+      height: 100px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: pointer;
+      border: 1px solid rgba(0, 255, 255, 0.1);
+    }
+    .harmony-strip__swatch:hover {
+      flex: 1.6;
+    }
+    .harmony-strip__label {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 8px;
+      border-radius: 2px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      letter-spacing: 0.5px;
+    }
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ── Type Pairing Demo ── */
+    .type-pairing {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(0, 255, 255, 0.12);
+      border-radius: 4px;
+      padding: 48px;
+    }
+    @media (max-width: 640px) {
+      .type-pairing {
+        padding: 32px;
+      }
+    }
+    .type-pairing__display {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: -0.01em;
+      color: var(--color-pure-white, #ffffff);
+      margin-bottom: 24px;
+    }
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.75);
+      max-width: 720px;
+    }
+    .type-pairing__meta {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      letter-spacing: 0.5px;
+    }
+    .type-pairing__meta-label {
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* ── Code & Monospace Demo ── */
+    .code-demo {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(0, 255, 255, 0.08);
+      border-radius: 4px;
+      padding: 20px;
+      margin-bottom: 32px;
+    }
+    .code-demo__label {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.4);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .code-demo__content {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--signal, #00ffff);
+      word-break: break-all;
+    }
+
+    /* ── Loading ── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid rgba(0, 255, 255, 0.2);
+      border-top-color: var(--signal, #00ffff);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Glow Effects ── */
+    .glow-accent {
+      position: relative;
+    }
+    .glow-accent::after {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+      border-radius: 4px;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border', 'surface'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#f87171">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.meta?.name || 'Composio';
+      const colors = tokens.colors || {};
+      const fonts = tokens.typography || {};
+      const meta = tokens.meta || {};
+
+      /* Load Google Fonts */
+      const gfUrl = fonts.googleFontsUrl || (fonts.googleUrl);
+      if (gfUrl) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = gfUrl;
+        document.head.appendChild(link);
+      }
+
+      let html = '';
+
+      /* ── Header ── */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">The Composio<br>Design System</h1>';
+      html += '  <p class="header__subtitle">Developer-focused dark mode aesthetic. Nocturnal command center with electric cyan signals and brutalist precision.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ── Atmosphere ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Brand Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Composio is a nocturnal command center — a developer tool that lives in the dark, where electric cyan and deep cobalt signals cut through an almost-pure-black canvas. Every interface element whispers authority through geometric precision and monospace credibility. This is not marketing theater. This is infrastructure built for engineers who understand terminals, APIs, and the syntax of integration.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ── Key Characteristics ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      const traits = [
+        'Pitch-black canvas (#0f0f0f) with near-invisible white-border containment (4–12% opacity)',
+        'Dual-font identity: geometric sans-serif for content, JetBrains Mono for technical credibility',
+        'Ultra-tight heading line-heights (0.87–1.0) creating compressed, authoritative text blocks',
+        'Bioluminescent accent strategy — cyan and blue glows that feel like they\'re emitting light from within',
+        'Hard-offset brutalist shadows (4px 4px) on select interactive elements for raw edge',
+        'Monochrome hierarchy with color reserved only for high-signal moments (CTAs, accents)',
+        'Developer-terminal aesthetic that bridges marketing and technical documentation',
+        'Minimal but impactful — restrained decorative elements, maximum signal-to-noise ratio'
+      ];
+      traits.forEach(t => {
+        html += '<li>' + esc(t) + '</li>';
+      });
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ── Do's and Don'ts ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '<div class="dd-card">';
+      html += '  <div class="dd-card__heading dd-card__heading--do">';
+      html += '    <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '  </div>';
+      html += '  <ul class="dd-list">';
+      const dos = [
+        'Use Void Black (#0f0f0f) as the primary page background',
+        'Keep heading line-heights ultra-tight (0.87–1.0) for compressed authority',
+        'Use white-opacity borders (4–12%) for containment and depth',
+        'Reserve Electric Cyan (#00ffff) for high-signal moments only',
+        'Pair geometric sans-serif with JetBrains Mono to reinforce developer identity',
+        'Use the hard-offset shadow (4px 4px) intentionally for brutalist personality',
+        'Keep button text dark even on darkest backgrounds — buttons carry their own surface',
+        'Layer opacity-based borders to create subtle depth'
+      ];
+      dos.forEach(d => { html += '<li>' + esc(d) + '</li>'; });
+      html += '  </ul></div>';
+
+      html += '<div class="dd-card">';
+      html += '  <div class="dd-card__heading dd-card__heading--dont">';
+      html += '    <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '  </div>';
+      html += '  <ul class="dd-list">';
+      const donts = [
+        'Use bright backgrounds or light surfaces as primary containers',
+        'Apply heavy shadows everywhere — depth comes from border opacity',
+        'Use Cobalt (#0007cd) as body text — it\'s too saturated and dark-on-dark',
+        'Increase heading line-heights beyond 1.2 — the compressed feel is core',
+        'Use bold (700+) weight for body or heading text — 400–500 is the ceiling',
+        'Mix warm colors into the palette — strictly cool (blue, cyan, white, black)',
+        'Use border-radius larger than 4px — precision and near-square corners matter',
+        'Place Electric Cyan at full opacity on large surfaces — it\'s an accent only'
+      ];
+      donts.forEach(d => { html += '<li>' + esc(d) + '</li>'; });
+      html += '  </ul></div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ── Color Harmony Strip ── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.3 ? '#111' : '#fff';
+          const labelBg = lum > 0.3 ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.15)';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + ';border-color:rgba(0,255,255,' + (lum > 0.5 ? '0.2' : '0.08') + ')">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + ';background:' + labelBg + '">' + esc(key) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ── Extended Colors ── */
+      const extended = colors.extended || {};
+      const extendedKeys = Object.keys(extended).filter(k => extended[k]);
+      if (extendedKeys.length > 0) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Extended Palette</div>';
+        html += '  <div class="harmony-strip">';
+
+        extendedKeys.forEach(key => {
+          const hex = extended[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.3 ? '#111' : '#fff';
+          const labelBg = lum > 0.3 ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.15)';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + ';border-color:rgba(0,255,255,0.1)">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + ';background:' + labelBg + '">' + esc(key) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ── Typography Pairing ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography System</div>';
+      html += '  <div class="type-pairing">';
+      html += '    <div class="type-pairing__display">Integrations built for developers</div>';
+      html += '    <div class="type-pairing__body">Typography in Composio reinforces the developer-first identity. Geometric sans-serif carries marketing content with authoritative compression, while JetBrains Mono signals technical credibility across all code examples, API references, and integration documentation. The system never shouts — it whispers with precision.</div>';
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Display:</span> System UI, Sans-serif (geometric)</div>';
+      html += '      <div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Body:</span> System UI, Sans-serif</div>';
+      html += '      <div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Code:</span> JetBrains Mono</div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ── Monospace / Code Demo ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Code & Monospace</div>';
+      html += '  <div class="code-demo">';
+      html += '    <div class="code-demo__label">JetBrains Mono – 14px</div>';
+      html += '    <div class="code-demo__content">const composio = await Composio.init();<br>await composio.integrations.connect(\'slack\');</div>';
+      html += '  </div>';
+      html += '  <div class="code-demo">';
+      html += '    <div class="code-demo__label">JetBrains Mono – 12px (Caption)</div>';
+      html += '    <div class="code-demo__content" style="font-size: 12px;">#0f0f0f · Void Black | #00ffff · Electric Cyan | #0089ff · Ocean Blue</div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ── Spacing Scale ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+      html += '  <div style="display: grid; gap: 12px;">';
+      const spacing = tokens.spacing?.scale || {};
+      const spacingKeys = ['s-5', 's-9', 's-12', 's-15'];
+      spacingKeys.forEach(key => {
+        const value = spacing[key];
+        if (value) {
+          html += '<div style="display: flex; align-items: center; gap: 16px; padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">';
+          html += '  <div style="width: 120px; font-family: var(--font-mono); font-size: 12px; color: rgba(255, 255, 255, 0.5);">' + esc(key) + '</div>';
+          html += '  <div style="width: ' + esc(value) + '; height: 20px; background: linear-gradient(90deg, var(--signal) 0%, rgba(0, 255, 255, 0.3) 100%); border-radius: 2px;"></div>';
+          html += '  <div style="font-family: var(--font-mono); font-size: 12px; color: rgba(255, 255, 255, 0.4);">' + esc(value) + '</div>';
+          html += '</div>';
+        }
+      });
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    /* ── Utilities ── */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function relativeLuminance(hex) {
+      try {
+        const [r, g, b] = hexToRgb(hex).map(c => {
+          c /= 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      } catch { return 0.5; }
+    }
+  </script>
+</body>
+</html>

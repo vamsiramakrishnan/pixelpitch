@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Editorial</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 64px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 60px;
+      height: 2px;
+      background: var(--ink, #111111);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--ink, #111111);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 28px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--ink, #111111);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 22px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--signal, #3b82f6);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      padding: 32px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--ink, #111111);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 120px;
+      border: 1px solid var(--border, #e5e5e5);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.4;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--bone, #f5f5f5);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      padding: 48px 40px;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--ink, #111111);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--slate, #666666);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 700;
+      color: var(--ink, #111111);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--bone, #f5f5f5);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      padding: 32px;
+      max-width: 840px;
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--ink, #111111);
+    }
+
+    /* ──── Grid & Layout Visual ──── */
+    .grid-demo {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .grid-cell {
+      background: var(--signal, #3b82f6);
+      border-radius: 4px;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--paper, #ffffff);
+      opacity: 0.8;
+    }
+
+    .grid-cell:nth-child(2n) {
+      opacity: 0.5;
+    }
+
+    /* ──── Reading Experience ──── */
+    .reading-example {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      padding: 40px;
+      max-width: 720px;
+    }
+
+    .reading-example h3 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 16px;
+    }
+
+    .reading-example p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.8;
+      color: var(--ink, #111111);
+      margin-bottom: 16px;
+    }
+
+    .reading-example p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ──── Motion Demo ──── */
+    .motion-demo {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .motion-demo {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .motion-box {
+      background: var(--signal, #3b82f6);
+      border-radius: 8px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--paper, #ffffff);
+      transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+    }
+
+    .motion-box:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#3b82f6">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">The <span>Grammar</span> of Editorial</h1>';
+      html += '  <p class="header__subtitle">Structured grids, refined typography, and elegant reading experiences. A design system rooted in magazine publishing.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Editorial embraces the time-honored principles of magazine design: clean typography, breathing whitespace, structured grids, and an unwavering commitment to readability. The color palette is refined—paper white, ink black, editorial blue, with warm grays for support. Content hierarchy flows through scale and weight. Rounded corners at 8px create modern softness without losing form. The design honors the reader's experience above all else.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Clean, light canvas (#FFFFFF) supports extended reading sessions</li>';
+      html += '    <li>Five-token palette: paper, bone, ink, slate, signal—pure and legible</li>';
+      html += '    <li>System typeface stack for universal legibility across platforms</li>';
+      html += '    <li>Editorial blue (#3B82F6) for interactive states and accent moments</li>';
+      html += '    <li>8px border radius standard—modern softness with structure</li>';
+      html += '    <li>Grid-based layouts with 16px baseline spacing throughout</li>';
+      html += '    <li>Generous line-height (1.6–1.8) for comfortable reading</li>';
+      html += '    <li>Consistent depth through borders and subtle elevation shadows</li>';
+      html += '    <li>Purposeful transitions at 150–250ms emphasize interaction clarity</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use grid columns as the basis for layout rhythm</li>';
+      html += '      <li>Prioritize line-height for reading comfort (1.6–1.8 for body)</li>';
+      html += '      <li>Apply 8px border-radius for component softness</li>';
+      html += '      <li>Use Editorial Blue as primary interactive signal</li>';
+      html += '      <li>Maintain high contrast for accessibility (4.5:1 minimum)</li>';
+      html += '      <li>Scale typography through weight and size, not color</li>';
+      html += '      <li>Use 16px+ spacing units to define breathing room</li>';
+      html += '      <li>Employ borders (1px) for subtle depth over shadows</li>';
+      html += '      <li>Test readability at minimum 16px body text size</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use arbitrary spacing—stick to the 8px scale</li>';
+      html += '      <li>Set body text below 16px without justified reasoning</li>';
+      html += '      <li>Add multiple accent colors beyond Editorial Blue</li>';
+      html += '      <li>Reduce line-height below 1.5 for body text</li>';
+      html += '      <li>Overuse shadows—borders are often stronger</li>';
+      html += '      <li>Break grid alignment for the sake of design fashion</li>';
+      html += '      <li>Use animated transitions longer than 250ms for basic interactions</li>';
+      html += '      <li>Apply color to convey hierarchy in text—use scale instead</li>';
+      html += '      <li>Ignore visual impairment considerations in contrast ratios</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#111111' : '#ffffff';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Typography Pairing ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Display + Body</div>';
+      html += '    <div class="type-pairing__display">Headlines anchor <span>meaning</span></div>';
+
+      html += '    <div class="type-pairing__body">The system typeface stack provides universal compatibility while maintaining editorial intent. Headlines use bold weight (700) at generous scale. Body text flows at 16px minimum with 1.7 line-height for comfortable reading. The relationship between display and body creates visual hierarchy that guides the reader naturally through content.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Display Font</span>';
+      html += '        System UI, 700 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Body Font</span>';
+      html += '        System UI, 400 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Mono Font</span>';
+      html += '        UI Monospace, 600 weight';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Grid Foundation ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Grid Foundation</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 15px; line-height: 1.6; color: var(--slate); margin-bottom: 24px; max-width: 840px;">A 12-column grid at 16px spacing creates the structural backbone of all layouts. This modular system allows for flexible arrangements while maintaining visual coherence across breakpoints. Every content block aligns to the grid.</p>';
+      html += '  <div class="grid-demo">';
+      
+      for (let i = 0; i < 12; i++) {
+        html += '<div class="grid-cell">' + (i + 1) + '</div>';
+      }
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Reading Experience ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Reading Experience</div>';
+      html += '  <div class="reading-example">';
+      html += '    <h3>Legibility in Practice</h3>';
+      html += '    <p>The choice of typeface, size, line-height, and measure (line length) directly impacts reading comfort. Editorial maintains generous defaults across all text: 16px minimum for body, 1.7 line-height, and measures between 45–75 characters. These decisions honor the reader\'s cognitive load and visual comfort.</p>';
+      html += '    <p>Long-form content benefits most from these principles. Articles, documentation, and prose benefit from breathing room. The system provides semantic components that preserve reading flow while maintaining design consistency.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Motion & Interaction ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Motion & Interaction</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 15px; line-height: 1.6; color: var(--slate); margin-bottom: 24px; max-width: 840px;">Subtle transitions emphasize Editorial Blue as the primary interaction signal. Default timing is 150–250ms with stable easing. Hover, focus, active, disabled, and loading states are explicit and accessible. Motion supports clarity, never obscures it.</p>';
+      html += '  <div class="motion-demo">';
+      html += '    <div class="motion-box">Hover Me (200ms)</div>';
+      html += '    <div class="motion-box">Hover Me (200ms)</div>';
+      html += '    <div class="motion-box">Hover Me (200ms)</div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Type Ramp Section ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Type Ramp & Roles</div>';
+      html += '  <div style="border: 1px solid var(--border); border-radius: 8px; padding: 32px; background: var(--bone);">';
+
+      const ramp = [
+        { role: 'Hero', size: '56px', weight: '700', lineHeight: '1.1', example: 'Breaking news headline' },
+        { role: 'Display', size: '48px', weight: '700', lineHeight: '1.15', example: 'Page heading' },
+        { role: 'Headline', size: '32px', weight: '700', lineHeight: '1.2', example: 'Section title' },
+        { role: 'Subhead', size: '24px', weight: '700', lineHeight: '1.3', example: 'Article subtitle' },
+        { role: 'Lead', size: '20px', weight: '400', lineHeight: '1.4', example: 'Deck or intro text' },
+        { role: 'Body', size: '16px', weight: '400', lineHeight: '1.7', example: 'Main paragraph text for extended reading' },
+        { role: 'Small', size: '14px', weight: '400', lineHeight: '1.5', example: 'Supplementary text or label' },
+        { role: 'Caption', size: '13px', weight: '400', lineHeight: '1.5', example: 'Image captions and footnotes' },
+        { role: 'Meta', size: '12px', weight: '600', lineHeight: '1.4', example: 'BYLINE · DATE · CATEGORY' }
+      ];
+
+      ramp.forEach((item, i) => {
+        html += '<div style="margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--border); display: flex; gap: 24px; align-items: flex-start;">';
+        html += '  <div style="flex: 0 0 140px;">';
+        html += '    <div style="font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--slate); font-weight: 600; margin-bottom: 4px;">' + esc(item.role) + '</div>';
+        html += '    <div style="font-family: var(--font-mono); font-size: 12px; color: var(--slate); line-height: 1.5; font-weight: 500;">' + esc(item.size) + '<br>Weight ' + esc(item.weight) + '<br>LH ' + esc(item.lineHeight) + '</div>';
+        html += '  </div>';
+        html += '  <div style="flex: 1;">';
+        html += '    <div style="font-family: var(--font-display); font-size: ' + item.size + '; font-weight: ' + item.weight + '; line-height: ' + item.lineHeight + '; letter-spacing: ' + (item.weight === '700' ? '-0.01em' : '0') + '; color: var(--ink); margin-bottom: 8px;">' + esc(item.example) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    /* ──── Utilities ──── */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function relativeLuminance(hex) {
+      try {
+        const [r, g, b] = hexToRgb(hex).map(c => {
+          c /= 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      } catch { return 0.5; }
+    }
+  </script>
+</body>
+</html>

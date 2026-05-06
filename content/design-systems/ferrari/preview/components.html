@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ferrari — Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-8) var(--s-5);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--s-4);
+      margin-bottom: var(--s-7);
+      border-bottom: 1px solid var(--ink);
+      border-top: 4px solid var(--ink);
+      padding-top: var(--s-4);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .masthead__prancing-horse {
+      color: var(--signal);
+      font-style: italic;
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-5);
+      border-bottom: 3px solid var(--ink);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 72px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 0.95;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate);
+      max-width: 720px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 54px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: var(--s-5);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-4);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--slate);
+      margin-right: var(--s-3);
+      min-width: 160px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 1.28px;
+      line-height: 1.5;
+      border: 1px solid var(--ink);
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      gap: var(--s-2);
+    }
+
+    .btn:hover {
+      background: var(--color-info-blue);
+      color: var(--paper);
+      border-color: var(--color-info-blue);
+      opacity: 0.9;
+    }
+
+    .btn:focus {
+      background: var(--color-info-blue);
+      color: var(--paper);
+      border: 1px solid var(--paper);
+      outline: 2px solid var(--ink);
+      outline-offset: 2px;
+      opacity: 0.9;
+    }
+
+    .btn--primary {
+      background: var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--ink);
+    }
+
+    .btn--primary:hover {
+      background: var(--color-info-blue);
+      color: var(--paper);
+      border-color: var(--color-info-blue);
+    }
+
+    .btn--signal {
+      background: var(--signal);
+      color: var(--paper);
+      border: 1px solid var(--signal);
+    }
+
+    .btn--signal:hover {
+      background: var(--color-dark-red);
+      border-color: var(--color-dark-red);
+      opacity: 0.9;
+    }
+
+    .btn--ghost {
+      border: 1px solid var(--paper);
+      background: transparent;
+      color: var(--paper);
+      padding: var(--button-py) var(--button-px);
+    }
+
+    .btn--ghost:hover {
+      background: var(--color-info-blue);
+      border-color: var(--color-info-blue);
+      color: var(--paper);
+      opacity: 0.9;
+    }
+
+    .btn--sm {
+      padding: 6px 14px;
+      font-size: 14px;
+    }
+
+    .btn--lg {
+      padding: 14px 32px;
+      font-size: 16px;
+    }
+
+    /* ──── DARK BACKGROUND SECTION ──── */
+    .dark-section {
+      background: var(--color-absolute-black);
+      color: var(--paper);
+      padding: var(--s-8) var(--s-5);
+      margin: var(--s-8) calc(var(--s-5) * -1);
+      margin-bottom: var(--s-8);
+    }
+
+    .dark-section .section__title {
+      color: var(--paper);
+    }
+
+    .dark-section .section__kicker {
+      color: var(--color-mid-gray);
+    }
+
+    .dark-section .btn--ghost {
+      border: 1px solid var(--paper);
+      color: var(--paper);
+    }
+
+    /* ──── CARDS / EDITORIAL TILES ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-5);
+      margin-bottom: var(--s-5);
+    }
+
+    .editorial-card {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 0;
+      overflow: hidden;
+    }
+
+    .editorial-card__image {
+      display: block;
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      background: var(--bone);
+      border-radius: 0;
+    }
+
+    .editorial-card__body {
+      padding: var(--s-4);
+    }
+
+    .editorial-card__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-1);
+    }
+
+    .editorial-card__heading {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .editorial-card__caption {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.195px;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+
+    /* ──── DARK CINEMATIC CARD ──── */
+    .cinematic-card {
+      background: var(--color-absolute-black);
+      position: relative;
+      overflow: hidden;
+      border-radius: 0;
+      min-height: 320px;
+      display: flex;
+      align-items: flex-end;
+      padding: var(--s-6);
+    }
+
+    .cinematic-card__image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.4;
+    }
+
+    .cinematic-card__content {
+      position: relative;
+      z-index: 2;
+      color: var(--paper);
+    }
+
+    .cinematic-card__label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .cinematic-card__heading {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--paper);
+      margin-bottom: var(--s-3);
+    }
+
+    /* ──── PULL QUOTE ──── */
+    .pullquote {
+      border-top: 3px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+      padding: var(--s-5) 0;
+      margin: var(--s-6) 0;
+    }
+
+    .pullquote__mark {
+      font-family: var(--font-display);
+      font-size: 96px;
+      font-weight: 400;
+      line-height: 0.8;
+      color: var(--signal);
+      display: block;
+      margin-bottom: var(--s-2);
+    }
+
+    .pullquote__text {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: var(--s-4);
+    }
+
+    .pullquote__attribution {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── LINEUP CAROUSEL ──── */
+    .lineup-carousel {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .lineup-item {
+      text-align: center;
+    }
+
+    .lineup-item__image {
+      display: block;
+      width: 100%;
+      height: 200px;
+      background: var(--bone);
+      object-fit: contain;
+      margin-bottom: var(--s-3);
+      border-radius: 0;
+    }
+
+    .lineup-item__name {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: var(--s-1);
+    }
+
+    .lineup-item__badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--signal);
+    }
+
+    /* ──── INPUTS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .input-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    .input {
+      padding: 12px 14px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 0;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--color-silver-gray);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: inset 0 0 0 2px rgba(218, 41, 28, 0.1);
+    }
+
+    .input--dark {
+      background: transparent;
+      border: 1px solid var(--color-silver-gray);
+      color: var(--paper);
+    }
+
+    .input--dark::placeholder {
+      color: var(--color-mid-gray);
+    }
+
+    .input--dark:focus {
+      border-color: var(--signal);
+      background: rgba(218, 41, 28, 0.05);
+    }
+
+    /* ──── BADGES / STATUS PILLS ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      margin-bottom: var(--s-4);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      line-height: 1.27;
+      border-radius: var(--radius-full);
+      background: var(--bone);
+      color: var(--ink);
+    }
+
+    .badge--signal {
+      background: rgba(218, 41, 28, 0.15);
+      color: var(--signal);
+    }
+
+    .badge--success {
+      background: rgba(3, 144, 74, 0.15);
+      color: var(--success);
+    }
+
+    .badge--warning {
+      background: rgba(241, 58, 44, 0.15);
+      color: var(--warning);
+    }
+
+    .badge--info {
+      background: rgba(76, 152, 185, 0.15);
+      color: var(--info);
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    /* ──── SPEC TABLE ──── */
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: var(--s-5);
+    }
+
+    .spec-table__header {
+      background: var(--paper);
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .spec-table__header-cell {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: left;
+      padding: var(--s-3);
+      border-right: 1px solid var(--border);
+    }
+
+    .spec-table__header-cell:last-child {
+      border-right: none;
+    }
+
+    .spec-table__row {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .spec-table__row:last-child {
+      border-bottom: none;
+    }
+
+    .spec-table__cell {
+      padding: var(--s-3);
+      text-align: left;
+      border-right: 1px solid var(--border);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .spec-table__cell:last-child {
+      border-right: none;
+    }
+
+    .spec-table__label {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    /* ──── UTILITY ──── */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+      margin-top: var(--s-4);
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: var(--s-5) 0;
+    }
+
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-3) 0;
+      margin-top: var(--s-8);
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-6) var(--s-3);
+      }
+
+      .stage-head__title {
+        font-size: 48px;
+      }
+
+      .section__title {
+        font-size: 36px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .lineup-carousel {
+        grid-template-columns: 1fr;
+      }
+
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+
+      .pullquote__text {
+        font-size: 36px;
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: var(--s-3);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">
+        FERRARI
+      </div>
+      <div class="masthead__tagline">
+        Automotive<br>Luxury
+      </div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Racing Precision</h1>
+      <p class="stage-head__subtitle">
+        Ferrari's component system reflects the brand's commitment to precision engineering and editorial storytelling. Restrained color palette, chiaroscuro contrast, and the Prancing Horse emblem as a solitary hero — every element operates in service of the machine and the moment.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Buttons</div>
+      <h2 class="section__title">Action States</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary (White)</span>
+        <button class="btn btn--primary">Configure</button>
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary btn--lg">Large Action</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Signal (Red)</span>
+        <button class="btn btn--signal">Subscribe</button>
+        <button class="btn btn--signal btn--sm">Small</button>
+        <button class="btn btn--signal btn--lg">Large Red</button>
+      </div>
+
+      <div class="subsection-label">Ghost (On Dark Background)</div>
+      <div style="background: var(--color-absolute-black); padding: var(--s-5); margin-bottom: var(--s-5); border-radius: 0;">
+        <div class="button-row" style="margin-bottom: 0;">
+          <button class="btn btn--ghost">Learn More</button>
+          <button class="btn btn--ghost btn--sm">Explore</button>
+          <button class="btn btn--ghost btn--lg">Discover</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dark Editorial Section -->
+    <div class="dark-section">
+      <div class="section__kicker">Cinematic</div>
+      <h2 class="section__title">Dark Editorial</h2>
+      <p style="font-size: 17px; line-height: 1.45; color: var(--color-mid-gray); margin-bottom: var(--s-5);">
+        Ferrari's cinematic sections alternate with white editorial panels. Pure black backgrounds with full-bleed imagery create the chiaroscuro effect — darkness yielding to light, machinery yielding to human story.
+      </p>
+
+      <div class="cards-grid">
+        <div class="cinematic-card">
+          <svg class="cinematic-card__image" viewBox="0 0 400 320" style="background: linear-gradient(135deg, #303030 0%, #1a1a1a 100%);">
+            <rect width="400" height="320" fill="currentColor"/>
+          </svg>
+          <div class="cinematic-card__content">
+            <div class="cinematic-card__label">F1 Racing</div>
+            <h3 class="cinematic-card__heading">Speed Redefined</h3>
+          </div>
+        </div>
+
+        <div class="cinematic-card">
+          <svg class="cinematic-card__image" viewBox="0 0 400 320" style="background: linear-gradient(135deg, #303030 0%, #1a1a1a 100%);">
+            <rect width="400" height="320" fill="currentColor"/>
+          </svg>
+          <div class="cinematic-card__content">
+            <div class="cinematic-card__label">Concept</div>
+            <h3 class="cinematic-card__heading">Future Vision</h3>
+          </div>
+        </div>
+
+        <div class="cinematic-card">
+          <svg class="cinematic-card__image" viewBox="0 0 400 320" style="background: linear-gradient(135deg, #303030 0%, #1a1a1a 100%);">
+            <rect width="400" height="320" fill="currentColor"/>
+          </svg>
+          <div class="cinematic-card__content">
+            <div class="cinematic-card__label">Heritage</div>
+            <h3 class="cinematic-card__heading">Italian Craftsmanship</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Editorial Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Editorial</div>
+      <h2 class="section__title">Story Cards</h2>
+      <p style="font-size: 17px; line-height: 1.45; color: var(--slate); margin-bottom: var(--s-5);">
+        White cards with hairline borders host curated editorial moments. Image above, heading and caption below — each card is a vignette from the Ferrari yearbook.
+      </p>
+
+      <div class="cards-grid">
+        <article class="editorial-card">
+          <svg class="editorial-card__image" viewBox="0 0 400 240" style="background: linear-gradient(135deg, #d2d2d2 0%, #b8b8b8 100%);">
+            <rect width="400" height="240" fill="currentColor"/>
+          </svg>
+          <div class="editorial-card__body">
+            <div class="editorial-card__kicker">Production</div>
+            <h3 class="editorial-card__heading">488 GTB</h3>
+            <p class="editorial-card__caption">Mid-rear mounted V8 delivering 661 PS. The benchmark for Italian sports car precision.</p>
+          </div>
+        </article>
+
+        <article class="editorial-card">
+          <svg class="editorial-card__image" viewBox="0 0 400 240" style="background: linear-gradient(135deg, #d2d2d2 0%, #b8b8b8 100%);">
+            <rect width="400" height="240" fill="currentColor"/>
+          </svg>
+          <div class="editorial-card__body">
+            <div class="editorial-card__kicker" style="color: var(--signal);">Concept</div>
+            <h3 class="editorial-card__heading">SF90 Stradale</h3>
+            <p class="editorial-card__caption">The first hybrid Ferrari. Eight-cylinder engine plus electric motors. 986 PS of innovation.</p>
+          </div>
+        </article>
+
+        <article class="editorial-card">
+          <svg class="editorial-card__image" viewBox="0 0 400 240" style="background: linear-gradient(135deg, #d2d2d2 0%, #b8b8b8 100%);">
+            <rect width="400" height="240" fill="currentColor"/>
+          </svg>
+          <div class="editorial-card__body">
+            <div class="editorial-card__kicker">Heritage</div>
+            <h3 class="editorial-card__heading">250 GTO</h3>
+            <p class="editorial-card__caption">1962. The most valuable car on Earth. Enzo's masterpiece. Three liters of legend.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Pull Quote Section -->
+    <section class="section">
+      <div class="section__kicker">Featured</div>
+      <h2 class="section__title">Brand Voice</h2>
+
+      <div class="pullquote">
+        <span class="pullquote__mark">"</span>
+        <blockquote class="pullquote__text">Chiaroscuro: darkness yielding to light. Machinery yielding to human story. That is Ferrari.</blockquote>
+        <p class="pullquote__attribution">Design Manifesto, 2024</p>
+      </div>
+    </section>
+
+    <!-- Vehicle Lineup Section -->
+    <section class="section">
+      <div class="section__kicker">Roster</div>
+      <h2 class="section__title">Model Lineup</h2>
+      <p style="font-size: 17px; line-height: 1.45; color: var(--slate); margin-bottom: var(--s-5);">
+        Horizontal carousel grid showcasing the current lineup. Each model on neutral background. Navigation arrows and dot indicators guide the viewer through Maranello's portfolio.
+      </p>
+
+      <div class="lineup-carousel">
+        <div class="lineup-item">
+          <svg class="lineup-item__image" viewBox="0 0 300 200" style="background: var(--bone);">
+            <rect width="300" height="200" fill="currentColor"/>
+          </svg>
+          <h4 class="lineup-item__name">F8 Tributo</h4>
+          <div class="lineup-item__badge">V12 • 710 PS</div>
+        </div>
+
+        <div class="lineup-item">
+          <svg class="lineup-item__image" viewBox="0 0 300 200" style="background: var(--bone);">
+            <rect width="300" height="200" fill="currentColor"/>
+          </svg>
+          <h4 class="lineup-item__name">SF90 Stradale</h4>
+          <div class="lineup-item__badge">Hybrid • 986 PS</div>
+        </div>
+
+        <div class="lineup-item">
+          <svg class="lineup-item__image" viewBox="0 0 300 200" style="background: var(--bone);">
+            <rect width="300" height="200" fill="currentColor"/>
+          </svg>
+          <h4 class="lineup-item__name">GTC4Lusso</h4>
+          <div class="lineup-item__badge">V12 • 690 PS</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inputs & Forms Section -->
+    <section class="section">
+      <div class="section__kicker">Forms</div>
+      <h2 class="section__title">Input Fields</h2>
+
+      <div class="subsection-label">Light Background Inputs</div>
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input class="input" type="email" placeholder="your@address.com">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Phone Number</label>
+          <input class="input" type="tel" placeholder="+1 (555) 123-4567">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label

@@ -1,0 +1,85 @@
+/* Framer — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #000000;
+  --ink:     #ffffff;
+  --slate:   #a6a6a6;
+  --signal:  #ffffff;
+  --bone:    #090909;
+  --border:  #0099ff;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-default-link-blue: #0000ee;
+
+  /* Semantic */
+  --info:    #0099ff;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: GT Walsheim Framer Medium;
+  --font-body:    GT Walsheim Framer Medium;
+  --font-mono:    Azeret Mono;
+
+  /* Type ramp */
+  --t-display-hero: 110px;
+  --t-section-display: 85px;
+  --t-section-heading: 62px;
+  --t-feature-heading: 32px;
+  --t-accent-display: 61.5px;
+  --t-card-title: 24px;
+  --t-feature-title: 22px;
+  --t-sub-heading: 20px;
+  --t-body-large: 18px;
+  --t-body: 15px;
+  --t-nav-ui: 15px;
+  --t-body-readable: 14px;
+  --t-caption: 14px;
+  --t-label: 13px;
+  --t-small-caption: 12px;
+  --t-micro-code: 10.4px;
+  --t-badge: 9px;
+  --t-micro-uppercase: 7px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   5px;
+  --radius-md:   10px;
+  --radius-lg:   80px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  10px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    10px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

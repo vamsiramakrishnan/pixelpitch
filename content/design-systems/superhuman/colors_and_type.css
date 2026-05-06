@@ -1,0 +1,86 @@
+/* Superhuman — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #292827;
+  --slate:   #666666;
+  --signal:  #cbb7fb;
+  --bone:    #e9e5dd;
+  --border:  #dcd7d3;
+  --surface: #dcd7d3;
+
+  /* Extended palette */
+  --color-mysteria-purple: #1b1938;
+  --color-amethyst-link: #714cb6;
+
+  /* Semantic */
+  --info:    #1b1938;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 64px;
+  --t-section-display: 48px;
+  --t-section-heading: 48px;
+  --t-feature-title: 28px;
+  --t-sub-heading-large: 26px;
+  --t-card-heading: 22px;
+  --t-body-heading: 20px;
+  --t-body-heading-alt: 20px;
+  --t-body-heading-relaxed: 20px;
+  --t-emphasis-body: 18px;
+  --t-body: 16px;
+  --t-button-ui-bold: 16px;
+  --t-button-ui-semi: 16px;
+  --t-nav-link: 16px;
+  --t-caption: 14px;
+  --t-caption-semi: 14px;
+  --t-caption-body: 14px;
+  --t-micro-label: 12px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   6px;
+  --radius-md:   12px;
+  --radius-lg:   18px;
+  --radius-full: 50px;
+
+  /* ── Components ── */
+  --button-radius:  12px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    12px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

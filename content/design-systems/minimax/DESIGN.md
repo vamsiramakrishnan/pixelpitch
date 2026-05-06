@@ -28,6 +28,7 @@ What makes MiniMax distinctive is its pill-button geometry (9999px radius) for n
 - **Brand Blue** (`#1456f0`): `--brand-6`, primary brand identity color
 - **Sky Blue** (`#3daeff`): `--col-brand00`, lighter brand variant for accents
 - **Brand Pink** (`#ea5ec1`): `--col-brand02`, secondary brand accent
+- **Accessible Pink Text** (`#ad1b89`): Darker variant for text on light surfaces. Passes WCAG AA.
 
 ### Blue Scale (Primary)
 - **Primary 200** (`#bfdbfe`): `--color-primary-200`, light blue backgrounds
@@ -42,8 +43,8 @@ What makes MiniMax distinctive is its pill-button geometry (9999px radius) for n
 - **Dark** (`#18181b`): Button text, headings
 - **Charcoal** (`#181e25`): Dark surface text, footer background
 - **Dark Gray** (`#45515e`): `--col-text04`, secondary text
-- **Mid Gray** (`#8e8e93`): Tertiary text, muted labels
-- **Light Gray** (`#5f5f5f`): `--brand-2`, helper text
+- **Mid Gray** (`#5f5f63`): Tertiary text, muted labels
+- **Light Gray** (`#848484`): `--brand-2`, helper text
 
 ### Surface & Background
 - **Pure White** (`#ffffff`): `--col-bg13`, primary background

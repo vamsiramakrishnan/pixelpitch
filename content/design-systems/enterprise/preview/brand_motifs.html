@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Enterprise</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--ink, #111111);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 28px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 24px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--signal, #3b82f6);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      padding: 32px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: 0;
+      overflow: hidden;
+      height: 120px;
+      border: 1px solid var(--border, #e5e5e5);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.4;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      padding: 48px 40px;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 54px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--slate, #666666);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 700;
+      color: var(--ink, #111111);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      padding: 32px;
+      max-width: 840px;
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+    }
+
+    /* ──── Interaction States Visual ──── */
+    .states-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .states-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .states-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .state-card {
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      padding: 24px;
+      background: var(--bone, #f5f5f5);
+      text-align: center;
+    }
+
+    .state-card__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .state-card__example {
+      display: inline-block;
+      padding: var(--button-py, 10px) var(--button-px, 20px);
+      background: var(--signal, #3b82f6);
+      color: var(--paper, #ffffff);
+      border: none;
+      border-radius: var(--button-radius, 8px);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 150ms ease;
+      margin-bottom: 12px;
+    }
+
+    .state-card__example--hover {
+      background: #1d70dd;
+    }
+
+    .state-card__example--active {
+      background: #1a5cbe;
+      transform: scale(0.98);
+    }
+
+    .state-card__example--disabled {
+      background: var(--bone, #f5f5f5);
+      color: var(--slate, #666666);
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .state-card__desc {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate, #666666);
+    }
+
+    /* ──── Data Grid Example ──── */
+    .grid-example {
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      overflow: hidden;
+      background: var(--paper, #ffffff);
+    }
+
+    .grid-example__head {
+      background: var(--bone, #f5f5f5);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+      padding: 16px 24px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 16px;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+    }
+
+    .grid-example__row {
+      padding: 16px 24px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 16px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      color: var(--ink, #111111);
+    }
+
+    .grid-example__row:last-child {
+      border-bottom: none;
+    }
+
+    .grid-example__row:hover {
+      background: var(--bone, #f5f5f5);
+    }
+
+    .grid-example__cell {
+      display: flex;
+      align-items: center;
+    }
+
+    .grid-example__badge {
+      display: inline-block;
+      padding: 4px 8px;
+      background: var(--signal, #3b82f6);
+      color: var(--paper, #ffffff);
+      border-radius: var(--radius-sm, 4px);
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 18px;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#3b82f6">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">The <span>Enterprise</span> Way</h1>';
+      html += '  <p class="header__subtitle">Clean systems designed for clarity. High contrast, intentional interaction, and data-driven layouts that work for serious workflows.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Enterprise is built on clarity and precision. Pure white (#FFFFFF) canvas with strong ink (#111111) hierarchy. The blue signal (#3b82f6) acts as the sole accent—interaction, error, and focus converge here. Spacing is measured and deliberate via an 8px scale. Borders define surfaces, elevations are subtle. Every micro-interaction (hover, focus, active) is explicit and immediate. Sans-serif throughout ensures legibility in data-dense contexts. This is design that disappears in service of the user\'s task.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Pure white canvas (#FFFFFF) with maximum ink contrast for clarity</li>';
+      html += '    <li>Single blue signal (#3B82F6) for interaction, error, focus, and selection</li>';
+      html += '    <li>System-ui sans-serif throughout for efficiency and trust</li>';
+      html += '    <li>Measurable spacing grid: 8px base with 8 levels (4px to 96px)</li>';
+      html += '    <li>Subtle borders define surfaces; shadows are minimal and functional</li>';
+      html += '    <li>Rounded corners at component level only (4px–8px), not decorative</li>';
+      html += '    <li>Explicit state management: hover, focus-visible, active, disabled, loading</li>';
+      html += '    <li>Fast transitions 150–250ms with stable easing for confidence</li>';
+      html += '    <li>Data-focused: tables, grids, and lists prioritize scanability</li>';
+      html += '    <li>Drag-and-drop patterns use visual feedback, never false states</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use white (#FFFFFF) as the primary canvas on every screen</li>';
+      html += '      <li>Reserve blue signal (#3B82F6) for actionable elements only</li>';
+      html += '      <li>Apply 1px borders to define card and section boundaries</li>';
+      html += '      <li>Use slate (#666666) for secondary labels, timestamps, hints</li>';
+      html += '      <li>Test contrast ratios: ink on white = 20.5:1, meets AAA standards</li>';
+      html += '      <li>Provide explicit focus-visible states on all interactive elements</li>';
+      html += '      <li>Use 150ms ease transitions for button and toggle feedback</li>';
+      html += '      <li>Implement loading states as spinners, not disabled buttons</li>';
+      html += '      <li>Build grids with clear headers and hover states for scanability</li>';
+      html += '      <li>Align elements to the 8px scale for structural coherence</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Mix signal blue with other accent colors (no secondary blues)</li>';
+      html += '      <li>Use shadows as primary depth—borders are sufficient</li>';
+      html += '      <li>Round corners to full radius (border-radius: 999px) on controls</li>';
+      html += '      <li>Deploy colors without contrast testing (WCAG AA minimum 4.5:1)</li>';
+      html += '      <li>Animate on hover without pause states or loading indicators</li>';
+      html += '      <li>Hide disabled states—they must be visually explicit</li>';
+      html += '      <li>Use decorative icons without labels in data contexts</li>';
+      html += '      <li>Break the 8px grid casually; structural rhythm builds trust</li>';
+      html += '      <li>Deploy gradients, glassmorphism, or visual novelty</li>';
+      html += '      <li>Require more than one click to reveal essential information</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#111111' : '#ffffff';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Typography Pairing ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Display + Body</div>';
+      html += '    <div class="type-pairing__display">Clean, <span>legible</span>, efficient</div>';
+
+      html += '    <div class="type-pairing__body">System UI sans-serif is the only typeface family in Enterprise. It prioritizes legibility in dense data environments, renders crisply on all screens, and signals trust through restraint. Display weight is 700; body weight is 400. Hierarchy comes from scale, not family mixing. Every reader should recognize this as institutional, serious, and focused on their task—not on design novelty.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Display Font</span>';
+      html += '        System-UI, 700 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Body Font</span>';
+      html += '        System-UI, 400 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Mono Font</span>';
+      html += '        UI-Monospace, 600 weight';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Interaction States ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Interaction States</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.65; color: var(--slate); margin-bottom: 24px; max-width: 840px;">Every interactive element has four explicit states: Default (at rest), Hover (cursor over), Active (pressed or selected), and Disabled (cannot interact). Loading states show spinners; focus-visible states add a 2px blue outline. Transitions run 150–250ms with cubic-bezier easing for confidence.</p>';
+      html += '  <div class="states-grid">';
+
+      html += '    <div class="state-card">';
+      html += '      <div class="state-card__label">Default</div>';
+      html += '      <button class="state-card__example" style="background: var(--signal);">Click me</button>';
+      html += '      <div class="state-card__desc">At rest, blue signal background with white text</div>';
+      html += '    </div>';
+
+      html += '    <div class="state-card">';
+      html += '      <div class="state-card__label">Hover</div>';
+      html += '      <button class="state-card__example state-card__example--hover">Click me</button>';
+      html += '      <div class="state-card__desc">Darker blue on cursor over, 150ms transition</div>';
+      html += '    </div>';
+
+      html += '    <div class="state-card">';
+      html += '      <div class="state-card__label">Active</div>';
+      html += '      <button class="state-card__example state-card__example--active">Click me</button>';
+      html += '      <div class="state-card__desc">Even darker, slight downward scale to indicate press</div>';
+      html += '    </div>';
+
+      html += '    <div class="state-card">';
+      html += '      <div class="state-card__label">Disabled</div>';
+      html += '      <button class="state-card__example state-card__example--disabled" disabled>Click me</button>';
+      html += '      <div class="state-card__desc">Reduced opacity, muted colors, cursor not-allowed</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Data Grid Example ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Data Presentation</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.65; color: var(--slate); margin-bottom: 24px; max-width: 840px;">Tables are the heartbeat of enterprise interfaces. Clear headers, subtle row hover states, and alignment to the spacing grid create scannable, accessible data displays. Inline actions use minimal button styles; status badges use blue signal with white text.</p>';
+      html += '  <div class="grid-example">';
+
+      html += '    <div class="grid-example__head">';
+      html += '      <div>Product</div>';
+      html += '      <div>Revenue</div>';
+      html += '      <div>Status</div>';
+      html += '      <div>Updated</div>';
+      html += '    </div>';
+
+      const gridRows = [
+        { product: 'Analytics Pro', revenue: '$124.5K', status: 'Active', updated: 'Feb 14' },
+        { product: 'Data Studio', revenue: '$98.2K', status: 'Active', updated: 'Feb 13' },
+        { product: 'Compliance Audit', revenue: '$52.1K', status: 'Pending', updated: 'Feb 10' },
+        { product: 'Legacy Bridge', revenue: '$12.8K', status: 'Deprecated', updated: 'Dec 22' }
+      ];
+
+      gridRows.forEach(row => {
+        html += '<div class="grid-example__row">';
+        html += '  <div class="grid-example__cell">' + esc(row.product) + '</div>';
+        html += '  <div class="grid-example__cell">' + esc(row.revenue) + '</div>';
+        html += '  <div class="grid-example__cell"><span class="grid-example__badge">' + esc(row.status) + '</span></div>';
+        html += '  <div class="grid-example__cell" style="color: var(--slate);">' + esc(row.updated) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Spacing & Rhythm ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.65; color: var(--slate); margin-bottom: 24px; max-width: 840px;">All spacing derives from an 8px base unit. This creates predictable rhythm, easier responsive scaling, and alignment to invisible grids. Components stack at s-3 (16px), sections separate at s-5 (32px) or s-7 (64px).</p>';
+      html += '  <div style="border: 1px solid var(--border); border-radius: var(--radius-md); padding: 32px; background: var(--paper)

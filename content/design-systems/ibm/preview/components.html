@@ -1,0 +1,901 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IBM — Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    .page {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: var(--s-8) var(--s-5);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--s-5) 0;
+      margin-bottom: var(--s-8);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-body);
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.32px;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-9);
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.32px;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-3);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 60px;
+      font-weight: 300;
+      letter-spacing: 0;
+      line-height: 1.17;
+      color: var(--ink);
+      margin-bottom: var(--s-4);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate);
+      max-width: 900px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-9);
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.32px;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-3);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 42px;
+      font-weight: 300;
+      letter-spacing: 0;
+      line-height: 1.19;
+      color: var(--ink);
+      margin-bottom: var(--s-6);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-5);
+      align-items: center;
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-4);
+      align-items: center;
+      margin-bottom: var(--s-6);
+      padding-bottom: var(--s-5);
+      border-bottom: 1px solid var(--bone);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.16px;
+      color: var(--slate);
+      min-width: 160px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.16px;
+      line-height: 1.29;
+      border: none;
+      background: var(--signal);
+      color: var(--paper);
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      gap: var(--s-3);
+      height: 48px;
+      min-width: 48px;
+    }
+
+    .btn:hover {
+      background: var(--color-blue-70);
+    }
+
+    .btn:active {
+      background: var(--color-blue-80);
+    }
+
+    .btn:focus {
+      outline: 2px solid var(--signal);
+      outline-offset: 2px;
+    }
+
+    .btn--primary {
+      background: var(--signal);
+      color: var(--paper);
+    }
+
+    .btn--primary:hover {
+      background: var(--color-blue-70);
+    }
+
+    .btn--primary:active {
+      background: var(--color-blue-80);
+    }
+
+    .btn--secondary {
+      background: var(--color-gray-80);
+      color: var(--paper);
+    }
+
+    .btn--secondary:hover {
+      background: var(--color-gray-60);
+    }
+
+    .btn--tertiary {
+      background: transparent;
+      color: var(--signal);
+      border: 1px solid var(--signal);
+    }
+
+    .btn--tertiary:hover {
+      background: var(--color-blue-10);
+      color: var(--color-blue-70);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--signal);
+      border: none;
+      padding: var(--button-py) var(--s-4);
+      height: auto;
+    }
+
+    .btn--ghost:hover {
+      background: var(--bone);
+    }
+
+    .btn--danger {
+      background: var(--color-red-60);
+      color: var(--paper);
+    }
+
+    .btn--danger:hover {
+      background: #b81921;
+    }
+
+    .btn--sm {
+      height: 40px;
+      padding: 6px 16px;
+      font-size: 13px;
+    }
+
+    .btn--lg {
+      height: 64px;
+      padding: 14px 28px;
+      font-size: 16px;
+    }
+
+    .btn--icon-only {
+      width: 48px;
+      padding: 0;
+    }
+
+    /* ──── CARDS ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: var(--s-5);
+      margin-bottom: var(--s-5);
+    }
+
+    .card {
+      background: var(--paper);
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      padding: var(--s-5);
+      transition: background 0.15s ease;
+    }
+
+    .card--elevated {
+      background: var(--bone);
+    }
+
+    .card:hover {
+      background: var(--color-gray-10-hover);
+    }
+
+    .card__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.32px;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-3);
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: 1.33;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .card__body {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate);
+      margin-bottom: var(--s-4);
+    }
+
+    .card__footer {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.32px;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── INPUTS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-6);
+      margin-bottom: var(--s-5);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.32px;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    .input {
+      padding: 0 var(--s-4);
+      height: 40px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--bone);
+      border: none;
+      border-bottom: 2px solid transparent;
+      border-radius: 0;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--color-gray-60);
+    }
+
+    .input:hover {
+      background: var(--color-gray-20);
+    }
+
+    .input:focus {
+      background: var(--paper);
+      border-bottom-color: var(--signal);
+    }
+
+    .input:disabled {
+      background: var(--bone);
+      color: var(--color-gray-60);
+      cursor: not-allowed;
+    }
+
+    .input-help {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.32px;
+      color: var(--slate);
+      margin-top: var(--s-2);
+    }
+
+    .input--error {
+      border-bottom-color: var(--color-red-60);
+    }
+
+    .input-error-text {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.32px;
+      color: var(--color-red-60);
+      margin-top: var(--s-2);
+    }
+
+    /* ──── BADGES / TAGS ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      margin-bottom: var(--s-5);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-2);
+      padding: var(--s-2) var(--s-4);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.16px;
+      line-height: 1.33;
+      border-radius: var(--radius-full);
+      background: var(--bone);
+      color: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    .badge--signal {
+      background: var(--color-blue-10);
+      color: var(--signal);
+      border-color: var(--signal);
+    }
+
+    .badge--success {
+      background: rgba(36, 161, 72, 0.1);
+      color: var(--success);
+      border-color: var(--success);
+    }
+
+    .badge--warning {
+      background: rgba(241, 194, 27, 0.1);
+      color: var(--warning);
+      border-color: var(--warning);
+    }
+
+    .badge--danger {
+      background: rgba(218, 30, 40, 0.1);
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 999px;
+    }
+
+    /* ──── FEATURE SHOWCASE ──── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--s-6);
+      margin-bottom: var(--s-5);
+    }
+
+    .feature-item {
+      background: var(--bone);
+      padding: var(--s-5);
+      border-radius: var(--button-radius);
+      border: 1px solid var(--border);
+    }
+
+    .feature-item__title {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.16px;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .feature-item__value {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0;
+      color: var(--slate);
+      word-break: break-all;
+    }
+
+    /* ──── TYPOGRAPHY SHOWCASE ──── */
+    .type-scale {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-6);
+      margin-bottom: var(--s-5);
+    }
+
+    .type-item {
+      padding-bottom: var(--s-4);
+      border-bottom: 1px solid var(--bone);
+    }
+
+    .type-item:last-child {
+      border-bottom: none;
+    }
+
+    .type-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.32px;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .type-sample--display-01 {
+      font-size: 60px;
+      font-weight: 300;
+      line-height: 1.17;
+      letter-spacing: 0;
+    }
+
+    .type-sample--display-02 {
+      font-size: 48px;
+      font-weight: 300;
+      line-height: 1.17;
+      letter-spacing: 0;
+    }
+
+    .type-sample--heading-01 {
+      font-size: 42px;
+      font-weight: 300;
+      line-height: 1.19;
+      letter-spacing: 0;
+    }
+
+    .type-sample--heading-02 {
+      font-size: 32px;
+      font-weight: 400;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .type-sample--heading-03 {
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.33;
+      letter-spacing: 0;
+    }
+
+    .type-sample--heading-04 {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: 0;
+    }
+
+    .type-sample--body-long-01 {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    .type-sample--body-short-01 {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.29;
+      letter-spacing: 0.16px;
+    }
+
+    .type-sample--caption-01 {
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.33;
+      letter-spacing: 0.32px;
+    }
+
+    .type-sample--code-01 {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.43;
+      letter-spacing: 0.16px;
+    }
+
+    .type-sample--mono-display {
+      font-family: var(--font-mono);
+      font-size: 42px;
+      font-weight: 400;
+      line-height: 1.19;
+      letter-spacing: 0;
+    }
+
+    /* ──── DIVIDER ──── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: var(--s-6) 0;
+    }
+
+    /* ──── UTILITIES ──── */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.16px;
+      color: var(--slate);
+      margin-bottom: var(--s-4);
+      margin-top: var(--s-5);
+    }
+
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-4) 0;
+      margin-top: var(--s-8);
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.32px;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-6) var(--s-4);
+      }
+
+      .masthead {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--s-3);
+      }
+
+      .stage-head__title {
+        font-size: 42px;
+      }
+
+      .section__title {
+        font-size: 32px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+
+      .button-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .type-sample--display-01 {
+        font-size: 42px;
+      }
+
+      .type-sample--display-02 {
+        font-size: 32px;
+      }
+
+      .type-sample--heading-01 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">IBM</div>
+      <div class="masthead__tagline">Carbon Design System</div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Editorial Vocabulary</h1>
+      <p class="stage-head__subtitle">
+        The IBM Carbon Design System brings structure to enterprise technology through a methodically organized component library. Every element operates on a rigid 2x grid, every color maps to a semantic token, every interaction state is precisely defined. This is design as specification—elegant through constraint.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Buttons</div>
+      <h2 class="section__title">Button States & Variants</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary (Blue 60)</span>
+        <button class="btn btn--primary">Default</button>
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary btn--lg">Large</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Secondary (Gray 80)</span>
+        <button class="btn btn--secondary">Default</button>
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary btn--lg">Large</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Tertiary (Ghost Blue)</span>
+        <button class="btn btn--tertiary">Default</button>
+        <button class="btn btn--tertiary btn--sm">Small</button>
+        <button class="btn btn--tertiary btn--lg">Large</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Ghost (Text)</span>
+        <button class="btn btn--ghost">Learn more</button>
+        <button class="btn btn--ghost">Explore</button>
+        <button class="btn btn--ghost">Read docs</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Danger (Red 60)</span>
+        <button class="btn btn--danger">Delete</button>
+        <button class="btn btn--danger btn--sm">Remove</button>
+        <button class="btn btn--danger btn--lg">Confirm Delete</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Icon Button</span>
+        <button class="btn btn--primary btn--icon-only" title="Search">⊙</button>
+        <button class="btn btn--secondary btn--icon-only" title="Menu">≡</button>
+        <button class="btn btn--tertiary btn--icon-only" title="Settings">⚙</button>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Containers</div>
+      <h2 class="section__title">Card Patterns</h2>
+
+      <div class="subsection-label">Standard Cards (White Background)</div>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__kicker">Analytics</div>
+          <h3 class="card__title">Data Foundation</h3>
+          <p class="card__body">Structure your analytics platform with Carbon's component library. Enterprise-grade patterns built on the 2x grid.</p>
+          <div class="card__footer">Carbon Design System</div>
+        </div>
+
+        <div class="card">
+          <div class="card__kicker">Design</div>
+          <h3 class="card__title">Component Tokens</h3>
+          <p class="card__body">Every interactive element references a semantic CSS custom property. Enable theme switching at the variable level.</p>
+          <div class="card__footer">Tokenized Architecture</div>
+        </div>
+
+        <div class="card">
+          <div class="card__kicker">Development</div>
+          <h3 class="card__title">Structured Grid</h3>
+          <p class="card__body">All spacing snaps to the 8px base unit. No arbitrary margins. Everything aligns to the 2x grid foundation.</p>
+          <div class="card__footer">8px Base Grid</div>
+        </div>
+      </div>
+
+      <div class="subsection-label">Elevated Cards (Gray 10 Background)</div>
+      <div class="cards-grid">
+        <div class="card card--elevated">
+          <div class="card__kicker">Featured</div>
+          <h3 class="card__title">Blue 60 Accent</h3>
+          <p class="card__body">IBM Blue 60 serves as the system's sole interactive accent. Every CTA, link, and focus state references this signal color.</p>
+          <div class="card__footer">#0f62fe</div>
+        </div>
+
+        <div class="card card--elevated">
+          <div class="card__kicker">Typography</div>
+          <h3 class="card__title">IBM Plex Trio</h3>
+          <p class="card__body">Plex Sans at light weight (300) for display. Plex Mono for code. Plex Serif rarely surfaces. Every choice is intentional.</p>
+          <div class="card__footer">System-ui Fallback</div>
+        </div>
+
+        <div class="card card--elevated">
+          <div class="card__kicker">Depth</div>
+          <h3 class="card__title">Color Layering</h3>
+          <p class="card__body">Depth emerges through background-color shifts, not shadows. White to Gray 10 to Gray 20 creates visual hierarchy without lift.</p>
+          <div class="card__footer">Flat Design</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Input Section -->
+    <section class="section">
+      <div class="section__kicker">Forms</div>
+      <h2 class="section__title">Input Fields & Text Controls</h2>
+      <p style="font-size: 16px; line-height: 1.5; color: var(--slate); margin-bottom: var(--s-5);">
+        Carbon inputs use the signature bottom-border pattern. Gray 10 background shifts to white on focus, with a 2px Blue 60 bottom-border indicating active state. Helper text and error states follow strict typography rules.
+      </p>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Full Name</label>
+          <input type="text" class="input" placeholder="Enter your name">
+          <div class="input-help">Help text goes here</div>
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input type="email" class="input" placeholder="your@email.com">
+          <div class="input-help">We'll never share your email</div>
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Error Example</label>
+          <input type="text" class="input input--error" placeholder="This has an error" value="Invalid input">
+          <div class="input-error-text">This field is required</div>
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Disabled Input</label>
+          <input type="text" class="input" placeholder="Disabled" disabled>
+          <div class="input-help">This field is disabled</div>
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Message</label>
+          <textarea class="input" placeholder="Enter your message" style="height: 120px; resize: none;"></textarea>
+          <div class="input-help">Limited to 500 characters</div>
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Select Option</label>
+          <select class="input" style="appearance: none; padding-right: 32px; background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 viewBox=%220 0 16 16%22><path fill=%22%23161616%22 d=%22M8 11L3 6h10z%22/></svg>'); background-repeat: no-repeat; background-position: right 8px center; background-size: 16px;">
+            <option>Choose an option</option>
+            <option>Option One</option>
+            <option>Option Two</option>
+            <option>Option Three</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="section">
+      <div class="section__kicker">Status</div>
+      <h2 class="section__title">Badge & Tag Patterns</h2>
+
+      <div class="subsection-label">Default Badges</div>
+      <div class="badge-row">
+        <span class="badge">Active</span>
+        <span class="badge">Pending</span>
+        <span class="badge">Archived</span>
+        <span class="badge">Review</span>
+      </div>
+
+      <div class="subsection-label">Semantic Status Badges</div>
+      <div class="badge-row">
+        <span class="badge badge--signal">
+          <span class="badge__dot"></span>
+          Info
+        </span>
+        <span class="badge badge--success">
+          <span class="badge__dot"></span>
+          Success
+        </span>
+        <span class="badge badge--warning">
+          <span class="badge__dot"></span>
+          Warning
+        </span>
+        <span class="badge badge--danger">
+          <span class="badge__dot"></span>
+          Error
+        </span>
+      </div>
+
+      <div class="subsection-label">With Metadata</div>
+      <div class="badge-row">
+        <span class="badge">v2.4.1</span>
+        <span class="badge badge--signal">Beta</span>
+        <span class="badge badge--success">Deployed</span>
+        <span class="badge badge--warning">Maintenance</span>
+        <span class="badge badge--danger">Failed</span>
+      </div>
+    </section>
+
+    <!-- Typography Section -->
+    <section class="section">
+      <div class="section__kicker">Typography</div>
+      <h2 class="section__title">Type Scale & Text Hierarchy</h2>
+      <p style="font-size: 16px; line-height: 1.5; color: var(--slate); margin-bottom: var(--s-6);">
+        IBM Plex Sans drives the type system. Display sizes (60px, 48px) use light weight (300) for airy, structural headlines. Body and caption text introduce micro-tracking (0.16px, 0.32px) for engineered precision.
+      </p>
+
+      <div class="type-scale">
+        <div class="type-item">
+          <div class="type-label">Display 01 — 60px, Light (300), Line 1.17</div>
+          <div class="type-sample--display-01">Enterprise architecture at scale</div>
+        </div>
+
+        <div class="type

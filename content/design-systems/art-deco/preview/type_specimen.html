@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Art Deco — Type Specimen</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 32px;
+      }
+    }
+
+    /* ─────────────────────────────────────────────────────────────── Header */
+    .header {
+      margin-bottom: 80px;
+      position: relative;
+      padding-bottom: 48px;
+      border-bottom: 3px solid var(--ink);
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 0;
+      width: 64px;
+      height: 3px;
+      background: #d4af37;
+    }
+
+    .header__title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 56px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate);
+      max-width: 700px;
+      line-height: 1.5;
+      letter-spacing: 0.01em;
+    }
+
+    /* ─────────────────────────────────────────────────────────────── Intro */
+    .intro {
+      background: var(--bone);
+      border-left: 4px solid #d4af37;
+      padding: 32px 40px;
+      margin-bottom: 80px;
+      max-width: 900px;
+    }
+
+    .intro__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 12px;
+    }
+
+    .intro__text {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--ink);
+      font-style: italic;
+    }
+
+    /* ─────────────────────────────────────────────────────────────── Font cards */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 32px;
+      margin-bottom: 80px;
+    }
+
+    .font-card {
+      background: var(--paper);
+      border: 2px solid var(--ink);
+      border-radius: 0;
+      padding: 40px 32px;
+      position: relative;
+    }
+
+    .font-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #d4af37 0%, transparent 100%);
+    }
+
+    .font-card__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 12px;
+    }
+
+    .font-card__name {
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+
+    .font-card__name--display {
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+
+    .font-card__name--body {
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    .font-card__name--mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--slate);
+      line-height: 1.6;
+      word-break: break-all;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ─────────────────────────────────────────────────────────────── Pangram */
+    .pangram-block {
+      background: var(--paper);
+      border: 2px solid var(--ink);
+      border-radius: 0;
+      padding: 56px 48px;
+      margin-bottom: 80px;
+      position: relative;
+    }
+
+    .pangram-block::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #d4af37 0%, transparent 100%);
+    }
+
+    .pangram-block__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 24px;
+    }
+
+    .pangram-block__chars {
+      font-size: 32px;
+      line-height: 1.8;
+      letter-spacing: 0.02em;
+      color: var(--ink);
+      word-break: break-all;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 400;
+    }
+
+    /* ─────────────────────────────────────────────────────────────── Section */
+    .section-label {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 56px;
+      margin-top: 80px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid var(--ink);
+      position: relative;
+    }
+
+    .section-label::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 48px;
+      height: 3px;
+      background: #d4af37;
+    }
+
+    /* ─────────────────────────────────────────────────────────────── Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 36px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 800px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+
+    .ramp-meta__role {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.8;
+      color: var(--slate);
+      letter-spacing: 0.01em;
+    }
+
+    .ramp-sample {
+      color: var(--ink);
+      overflow-wrap: break-word;
+      hyphens: auto;
+    }
+
+    .ramp-sample--display {
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+
+    .ramp-sample--body {
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    /* ─────────────────────────────────────────────────────────────── Footer */
+    .footer {
+      margin-top: 96px;
+      padding-top: 48px;
+      border-top: 2px solid var(--ink);
+      position: relative;
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 0;
+      width: 48px;
+      height: 3px;
+      background: #d4af37;
+    }
+
+    .footer__note {
+      font-size: 12px;
+      color: var(--slate);
+      line-height: 1.6;
+      max-width: 800px;
+    }
+
+    .footer__note strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* ─────────────────────────────────────────────────────────────── Loading */
+    .loading {
+      text-align: center;
+      padding: 120px 48px;
+      color: var(--slate);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 24px auto 0;
+      border: 3px solid var(--border);
+      border-top-color: #d4af37;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .header__title {
+        font-size: 40px;
+      }
+      .section-label {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading type specimen…</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Elegance in every letter, geometry in every line.',
+      'The machine-age aesthetic demands precision and drama.',
+      'Symmetry is the foundation of civilized composition.',
+      'Where gold meets the page, luxury begins.',
+      'Bold verticals anchor the composition; serifs echo the spire.',
+      'Typography as architecture—each letter a facet of crystal.',
+      'The typeface whispers of marble halls and afternoon light.',
+      'Luxe sans-serif for the modern tempo, serif for timeless presence.',
+      'Contrast creates rhythm, rhythm creates movement.',
+      'Every detail is intentional; nothing is incidental.',
+      'The surface gleams like brushed brass and onyx.',
+      'Form follows function, but decoration amplifies meaning.',
+    ];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Art Deco';
+      const summary = tokens.meta?.summary || 'A design system rooted in 1920s geometric glamour.';
+
+      const ramp = tokens.typography?.ramp || [];
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">' + esc(title) + '</h1>';
+      html += '  <p class="header__subtitle">Type Specimen — ' + ramp.length + ' roles</p>';
+      html += '</header>';
+
+      /* Intro */
+      html += '<div class="intro">';
+      html += '  <div class="intro__label">About this system</div>';
+      html += '  <p class="intro__text">' + esc(summary) + '</p>';
+      html += '</div>';
+
+      /* Font families */
+      html += '<div class="font-families">';
+      html += '  <div class="font-card">';
+      html += '    <div class="font-card__label">Display Headlines</div>';
+      html += '    <div class="font-card__name font-card__name--display">Playfair Display</div>';
+      html += '    <div class="font-card__fallback">Georgia, serif<br>Weights: 400, 600, 700<br>Styles: Roman, Italic</div>';
+      html += '  </div>';
+      html += '  <div class="font-card">';
+      html += '    <div class="font-card__label">Body & UI</div>';
+      html += '    <div class="font-card__name font-card__name--body">Inter</div>';
+      html += '    <div class="font-card__fallback">system-ui, sans-serif<br>Weights: 400, 500, 600, 700<br>Styles: Roman only</div>';
+      html += '  </div>';
+      html += '  <div class="font-card">';
+      html += '    <div class="font-card__label">Code & Data</div>';
+      html += '    <div class="font-card__name font-card__name--mono">JetBrains Mono</div>';
+      html += '    <div class="font-card__fallback">ui-monospace, monospace<br>Weights: 400, 600<br>Tabular figures: enabled</div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Pangram block */
+      html += '<div class="pangram-block">';
+      html += '  <div class="pangram-block__label">Character Set — Playfair Display</div>';
+      html += '  <div class="pangram-block__chars">AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>0123456789 !@#$%&amp;*()–—''""</div>';
+      html += '</div>';
+
+      /* Type ramp */
+      if (ramp.length) {
+        html += '<div class="ramp-section">';
+        html += '<h2 class="section-label">Type Ramp</h2>';
+        ramp.forEach((entry, i) => {
+          html += rampRow(entry, i);
+        });
+        html += '</div>';
+      }
+
+      /* Footer */
+      html += '<footer class="footer">';
+      html += '  <p class="footer__note">';
+      html += '    <strong>Design Principles:</strong> Headlines in Playfair Display echo the geometric confidence of 1930s luxury brands. Body text in Inter ensures clarity and contemporary warmth. All type is set with generous breathing room and measured contrast. Gold accents are reserved for labels and interactive states—never body copy.';
+      html += '  </p>';
+      html += '</footer>';
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(entry, idx) {
+      const role = entry.role || 'Role ' + (idx + 1);
+      const size = entry.size || '16px';
+      const weight = entry.weight || 400;
+      const lh = entry.lineHeight || '1.5';
+      const ls = entry.letterSpacing || '0';
+      const fontKey = entry.fontKey || 'body';
+
+      const sampleIdx = idx % EDITORIAL_SAMPLES.length;
+      const sample = EDITORIAL_SAMPLES[sampleIdx];
+
+      const sizeNum = parseFloat(size);
+      const displaySample = sizeNum >= 32
+        ? sample.split('.')[0] + '.'
+        : sample;
+
+      let fontFamily = 'Inter';
+      let sampleClass = 'ramp-sample--body';
+      if (fontKey === 'display') {
+        fontFamily = 'Playfair Display';
+        sampleClass = 'ramp-sample--display';
+      } else if (fontKey === 'mono') {
+        fontFamily = 'JetBrains Mono';
+        sampleClass = 'ramp-sample--body';
+      }
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + ';';
+      if (ls !== '0') fontStyle += 'letter-spacing:' + ls + ';';
+
+      let meta = '';
+      meta += esc(size) + ' / ' + esc(String(weight));
+      meta += '\n' + esc(fontFamily);
+      meta += '\nline-height: ' + esc(String(lh));
+      if (ls !== '0') meta += '\nletter-spacing: ' + esc(ls);
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample ' + sampleClass + '" style="' + fontStyle + '">' + esc(displaySample) + '</div>' +
+        '</div>';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

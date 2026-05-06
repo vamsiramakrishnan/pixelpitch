@@ -1,0 +1,71 @@
+/* SpaceX — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #000000;
+  --ink:     #111111;
+  --slate:   #666666;
+  --signal:  #3b82f6;
+  --bone:    #f0f0fa;
+  --border:  #e5e5e5;
+  --surface: #f0f0fa;
+
+  /* Semantic */
+  --info:    #f0f0fa;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: D-DIN-Bold;
+  --font-body:    D-DIN-Bold;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 48px;
+  --t-body: 16px;
+  --t-nav-link-bold: 13px;
+  --t-nav-link: 12px;
+  --t-caption-bold: 13px;
+  --t-caption: 12px;
+  --t-micro: 10px;
+
+  /* ── Spacing ── */
+  --s-1: 3px;
+  --s-2: 5px;
+  --s-3: 12px;
+  --s-4: 15px;
+  --s-5: 18px;
+  --s-6: 20px;
+  --s-7: 24px;
+  --s-8: 30px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   20px;
+  --radius-lg:   15px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  20px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    20px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

@@ -59,6 +59,8 @@ export interface SkillResponse {
   skill: SkillDetail;
 }
 
+export type { DesignSystemTokens } from './design-system-tokens.js';
+
 export interface DesignSystemSummary {
   id: string;
   title: string;
@@ -66,6 +68,8 @@ export interface DesignSystemSummary {
   summary: string;
   swatches?: string[];
   surface?: 'web' | 'image' | 'video' | 'audio';
+  hasStructuredTokens?: boolean;
+  previews?: string[];
 }
 
 export interface DesignSystemDetail extends DesignSystemSummary {

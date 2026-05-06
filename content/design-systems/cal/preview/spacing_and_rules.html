@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Cal.com Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--color-charcoal, #242424);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-8, 96px) var(--s-6, 48px);
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: var(--s-8, 96px);
+      padding-bottom: var(--s-7, 64px);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'Cal Sans', system-ui, sans-serif);
+      font-size: 64px;
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--color-charcoal, #242424);
+      margin-bottom: var(--s-3, 16px);
+    }
+
+    .header__title-line2 {
+      display: block;
+      margin-top: 4px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 300;
+      line-height: 1.4;
+      color: var(--slate, #898989);
+      max-width: 600px;
+      margin: var(--s-4, 24px) 0 0 0;
+    }
+
+    .header__meta {
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--slate, #898989);
+      margin-top: var(--s-6, 48px);
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: var(--s-8, 96px);
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section__label {
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #898989);
+      margin-bottom: var(--s-4, 24px);
+      padding-bottom: var(--s-3, 16px);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* Spacing scale */
+    .spacing-scale {
+      display: grid;
+      gap: var(--s-2, 8px);
+    }
+
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 100px;
+      gap: var(--s-4, 24px);
+      align-items: center;
+      padding: var(--s-2, 8px) 0;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, 'Roboto Mono', monospace);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-charcoal, #242424);
+      letter-spacing: 0.02em;
+    }
+
+    .spacing-row__visual {
+      display: flex;
+      align-items: center;
+      height: 32px;
+    }
+
+    .spacing-row__bar {
+      height: 12px;
+      background: linear-gradient(90deg, var(--signal, #0000ee) 0%, var(--ink, #0099ff) 100%);
+      border-radius: 2px;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+      min-width: 2px;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 1;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, 'Roboto Mono', monospace);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--slate, #898989);
+      text-align: right;
+    }
+
+    /* Depth & Rules */
+    .depth-list {
+      display: grid;
+      gap: var(--s-4, 24px);
+    }
+
+    .depth-item {
+      padding: var(--s-4, 24px);
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 12px);
+      transition: all 0.2s ease;
+    }
+
+    .depth-item:hover {
+      border-color: var(--slate, #898989);
+      background: #fafafa;
+    }
+
+    .depth-item__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: var(--s-3, 16px);
+    }
+
+    .depth-item__name {
+      font-family: var(--font-mono, 'Roboto Mono', monospace);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-charcoal, #242424);
+    }
+
+    .depth-item__role {
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--slate, #898989);
+    }
+
+    .depth-item__spec {
+      font-family: var(--font-mono, 'Roboto Mono', monospace);
+      font-size: 11px;
+      color: var(--slate, #898989);
+      line-height: 1.4;
+      word-break: break-all;
+      margin-top: var(--s-2, 8px);
+      padding: var(--s-2, 8px);
+      background: rgba(0, 0, 0, 0.02);
+      border-radius: 4px;
+      max-height: 80px;
+      overflow: auto;
+    }
+
+    .depth-item__demo {
+      margin-top: var(--s-3, 16px);
+      height: 60px;
+      background: var(--paper, #ffffff);
+      border-radius: var(--radius-sm, 6px);
+      transition: all 0.2s ease;
+    }
+
+    /* Border radius grid */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: var(--s-5, 32px);
+    }
+
+    .radius-item {
+      text-align: center;
+    }
+
+    .radius-item__box {
+      width: 100%;
+      aspect-ratio: 1;
+      max-width: 120px;
+      margin: 0 auto var(--s-3, 16px);
+      background: var(--paper, #ffffff);
+      border: 2px solid var(--color-charcoal, #242424);
+      opacity: 0.5;
+      transition: opacity 0.2s ease;
+    }
+
+    .radius-item:hover .radius-item__box {
+      opacity: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, 'Roboto Mono', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-charcoal, #242424);
+      margin-bottom: 4px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, 'Roboto Mono', monospace);
+      font-size: 12px;
+      color: var(--slate, #898989);
+    }
+
+    /* Intro text */
+    .intro {
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.6;
+      color: var(--slate, #898989);
+      margin-bottom: var(--s-7, 64px);
+      max-width: 700px;
+    }
+
+    .intro em {
+      font-style: normal;
+      color: var(--color-charcoal, #242424);
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-7, 64px) var(--s-4, 24px);
+      }
+
+      .header {
+        margin-bottom: var(--s-7, 64px);
+        padding-bottom: var(--s-6, 48px);
+      }
+
+      .header__title {
+        font-size: 48px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 80px 1fr 80px;
+        gap: var(--s-3, 16px);
+      }
+
+      .section {
+        margin-bottom: var(--s-7, 64px);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: var(--s-6, 48px) var(--s-3, 16px);
+      }
+
+      .header__title {
+        font-size: 36px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 70px 1fr 70px;
+        gap: var(--s-2, 8px);
+      }
+
+      .radius-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--s-4, 24px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div style="text-align: center; padding: 120px 24px; color: var(--slate, #898989);">
+      <p style="font-size: 16px; margin-bottom: 16px;">Loading design tokens…</p>
+      <div style="width: 32px; height: 32px; margin: 0 auto; border: 2px solid var(--border, #e5e5e5); border-top-color: var(--signal, #0000ee); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+    </div>
+  </div>
+
+  <script>
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    const DEFAULT_SPACING = {
+      's-1': '4px',
+      's-2': '8px',
+      's-3': '16px',
+      's-4': '24px',
+      's-5': '32px',
+      's-6': '48px',
+      's-7': '64px',
+      's-8': '96px',
+    };
+
+    const DEFAULT_RADII = {
+      'none': '0',
+      'sm': '6px',
+      'md': '12px',
+      'lg': '20px',
+      'full': '9px',
+    };
+
+    const DEFAULT_DEPTH = [
+      {
+        level: 0,
+        name: 'Flat',
+        role: 'Page canvas, text containers',
+        treatment: 'none'
+      },
+      {
+        level: 1,
+        name: 'Border',
+        role: 'Subtle containment, input wells',
+        treatment: '1px solid var(--border)'
+      },
+      {
+        level: 2,
+        name: 'Elevated',
+        role: 'Cards, containers, default depth',
+        treatment: '0 2px 8px rgba(0,0,0,0.08)'
+      },
+    ];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div style="text-align: center; padding: 120px 24px; color: #dc2626;">' +
+          '<p style="font-size: 16px; margin-bottom: 8px;">Could not load tokens.json</p>' +
+          '<p style="font-size: 13px;">' + esc(err.message) + '</p>' +
+          '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+
+      const spacing = tokens.spacing?.scale || DEFAULT_SPACING;
+      const radii = tokens.radii || DEFAULT_RADII;
+      const depth = tokens.depth || DEFAULT_DEPTH;
+
+      let html = '';
+
+      /* ---- Header ---- */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Spacing<span class="header__title-line2">&amp; Rules</span></h1>';
+      html += '  <p class="header__subtitle">The invisible grid that holds Cal.com\'s interface together — generous section spacing, precise component alignment, and a sophisticated depth hierarchy built entirely on shadows.</p>';
+      html += '  <p class="header__meta">Design System — Cal.com</p>';
+      html += '</header>';
+
+      html += '<div class="intro"><em>Cal.com\'s spacing philosophy</em> begins with an 8-pixel base unit and grows through a carefully calibrated scale. The key insight: lavish section spacing (80–96px) creates a breathable, premium feel, while tight component gaps (4–8px) maintain precision. The depth system relies entirely on shadows — no borders, no gradients — creating a sophisticated three-dimensional effect through multi-layered compositing.</div>';
+
+      /* ---- Spacing Scale ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+      html += '  <div class="spacing-scale">';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, v]) => parseFloat(v) || 0), 1);
+
+      spacingEntries.forEach(([key, value]) => {
+        const px = parseFloat(value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        html += '<div class="spacing-row">';
+        html += '  <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '  <div class="spacing-row__visual">';
+        html += '    <div class="spacing-row__bar" style="width: ' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Depth & Elevation ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Elevation Levels</div>';
+      html += '  <div class="depth-list">';
+
+      depth.forEach(d => {
+        const treatment = d.treatment || 'none';
+        html += '<div class="depth-item">';
+        html += '  <div class="depth-item__header">';
+        html += '    <span class="depth-item__name">Level ' + d.level + ': ' + esc(d.name) + '</span>';
+        html += '    <span class="depth-item__role">' + esc(d.role || '') + '</span>';
+        html += '  </div>';
+        html += '  <div class="depth-item__spec">' + esc(treatment) + '</div>';
+
+        if (treatment !== 'none') {
+          let boxStyle = '';
+          if (treatment.includes('solid') || treatment.includes('rgba')) {
+            boxStyle = 'box-shadow: ' + treatment + ';';
+          }
+          html += '  <div class="depth-item__demo" style="' + boxStyle + '"></div>';
+        }
+
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Border Radius ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius Scale</div>';
+      html += '  <div class="radius-grid">';
+
+      Object.entries(radii).forEach(([key, value]) => {
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__box" style="border-radius: ' + esc(value) + '"></div>';
+        html += '  <div class="radius-item__name">' + esc(key) + '</div>';
+        html += '  <div class="radius-item__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

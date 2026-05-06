@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brutalism — Components</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-8) var(--s-5);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s-5);
+      align-items: flex-start;
+      margin-bottom: var(--s-8);
+      padding: var(--s-4);
+      border: 3px solid var(--ink);
+      background: var(--bone);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--slate);
+      line-height: 1.8;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-8);
+      padding: var(--s-6);
+      border: 2px solid var(--ink);
+      background: var(--paper);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 72px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 0.95;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+      text-transform: uppercase;
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate);
+      max-width: 720px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 56px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: var(--s-5);
+      text-transform: uppercase;
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row__label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-right: var(--s-3);
+      min-width: 140px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      line-height: 1;
+      border: 2px solid var(--ink);
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.1s ease;
+      text-decoration: none;
+      gap: var(--s-2);
+    }
+
+    .btn:hover {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn--primary {
+      background: var(--signal);
+      color: var(--paper);
+      border-color: var(--signal);
+    }
+
+    .btn--primary:hover {
+      background: #2563eb;
+      border-color: #2563eb;
+    }
+
+    .btn--danger {
+      background: var(--paper);
+      color: #dc2626;
+      border-color: #dc2626;
+    }
+
+    .btn--danger:hover {
+      background: #dc2626;
+      color: var(--paper);
+    }
+
+    .btn--ghost {
+      border: none;
+      background: transparent;
+      color: var(--signal);
+      padding: var(--s-2) 0;
+      text-decoration: underline;
+      font-family: var(--font-body);
+      font-size: 14px;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .btn--ghost:hover {
+      opacity: 0.7;
+    }
+
+    .btn--sm {
+      padding: 6px 12px;
+      font-size: 11px;
+    }
+
+    .btn--lg {
+      padding: 14px 28px;
+      font-size: 15px;
+    }
+
+    /* ──── CARDS ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .card {
+      border: var(--card-border);
+      padding: var(--s-4);
+      background: var(--paper);
+      border-radius: var(--card-radius);
+    }
+
+    .card--elevated {
+      border: 2px solid var(--ink);
+      box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    .card__header {
+      margin-bottom: var(--s-3);
+      padding-bottom: var(--s-3);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: var(--ink);
+      text-transform: uppercase;
+    }
+
+    .card__body {
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--slate);
+    }
+
+    /* ──── INPUT FIELDS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--ink);
+      letter-spacing: 0.08em;
+    }
+
+    .input {
+      padding: var(--s-3);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--paper);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: inset 0 0 0 2px rgba(59, 130, 246, 0.1);
+    }
+
+    /* ──── BADGES & TAGS ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2);
+      margin-bottom: var(--s-4);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      line-height: 1;
+      border-radius: var(--radius-full);
+      background: var(--bone);
+      color: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    .badge--signal {
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--signal);
+      border-color: var(--signal);
+    }
+
+    .badge--success {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+      border-color: #22c55e;
+    }
+
+    .badge--warning {
+      background: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+      border-color: #f59e0b;
+    }
+
+    .badge--danger {
+      background: rgba(220, 38, 38, 0.1);
+      color: #dc2626;
+      border-color: #dc2626;
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 999px;
+    }
+
+    /* ──── LAYOUT BLOCKS ──── */
+    .block-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--s-3);
+      margin-bottom: var(--s-5);
+    }
+
+    .block {
+      padding: var(--s-4);
+      border: 2px solid var(--ink);
+      background: var(--bone);
+      border-radius: var(--radius-sm);
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .block__label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--signal);
+    }
+
+    .block__content {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      text-transform: uppercase;
+    }
+
+    /* ──── FEATURED SECTION ──── */
+    .featured {
+      background: var(--ink);
+      color: var(--paper);
+      padding: var(--s-6);
+      margin: var(--s-6) 0;
+      border-radius: var(--radius-md);
+    }
+
+    .featured__kicker {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .featured__headline {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin-bottom: var(--s-3);
+      text-transform: uppercase;
+    }
+
+    .featured__body {
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      max-width: 600px;
+    }
+
+    /* ──── GRID SHOWCASE ──── */
+    .component-showcase {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .component-showcase__item {
+      padding: var(--s-4);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bone);
+    }
+
+    .component-showcase__label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+      display: block;
+    }
+
+    /* ──── UTILITY ──── */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin: var(--s-5) 0 var(--s-3) 0;
+      letter-spacing: 0.08em;
+    }
+
+    .divider {
+      border: none;
+      border-top: 2px solid var(--ink);
+      margin: var(--s-5) 0;
+    }
+
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-4) 0;
+      margin-top: var(--s-8);
+      border-top: 2px solid var(--ink);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-6) var(--s-3);
+      }
+
+      .masthead {
+        grid-template-columns: 1fr;
+      }
+
+      .stage-head__title {
+        font-size: 48px;
+      }
+
+      .section__title {
+        font-size: 36px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .component-showcase {
+        grid-template-columns: 1fr;
+      }
+
+      .featured__headline {
+        font-size: 32px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">
+        BRUT<br>ALISM
+      </div>
+      <div class="masthead__tagline">
+        RAW. ANTI-DESIGN.<br>
+        CONCRETE FORMS.<br>
+        FUNCTIONAL MINIMALISM.<br>
+        UNADORNED ELEMENTS.
+      </div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">System</div>
+      <h1 class="stage-head__title">Component Vocabulary</h1>
+      <p class="stage-head__subtitle">
+        A brutalist component system with raw borders, bold typography, and uncompromising structure. No flourishes. No gradients. No apologies. Pure functional form.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Interaction</div>
+      <h2 class="section__title">Buttons</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Default State</span>
+        <button class="btn">Click Me</button>
+        <button class="btn btn--sm">Small Button</button>
+        <button class="btn btn--lg">Large Button</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary Signal</span>
+        <button class="btn btn--primary">Primary Action</button>
+        <button class="btn btn--primary btn--sm">Small Primary</button>
+        <button class="btn btn--primary btn--lg">Large Primary</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Danger State</span>
+        <button class="btn btn--danger">Delete</button>
+        <button class="btn btn--danger btn--sm">Remove</button>
+        <button class="btn btn--danger btn--lg">Destroy</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Ghost Text Link</span>
+        <a href="#" class="btn btn--ghost">Learn more</a>
+        <a href="#" class="btn btn--ghost">Read docs</a>
+        <a href="#" class="btn btn--ghost">View source</a>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Containers</div>
+      <h2 class="section__title">Cards & Panels</h2>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__header">
+            <h3 class="card__title">Default Card</h3>
+          </div>
+          <p class="card__body">
+            A simple bordered container. Clean, minimal, with a subtle top border. Ideal for content grouping and hierarchy.
+          </p>
+        </div>
+
+        <div class="card card--elevated">
+          <div class="card__header">
+            <h3 class="card__title">Elevated Card</h3>
+          </div>
+          <p class="card__body">
+            Bold borders and a hard shadow. Lifts content off the page. Used for emphasis and primary call-to-action containers.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card__header">
+            <h3 class="card__title">Information</h3>
+          </div>
+          <p class="card__body">
+            Cards stack in grids. Responsive. No padding jank. Consistent gutters. Pure function meets raw aesthetic.
+          </p>
+        </div>
+
+        <div class="card card--elevated">
+          <div class="card__header">
+            <h3 class="card__title">Feature</h3>
+          </div>
+          <p class="card__body">
+            The elevated variant delivers impact. Negative space and hard-edge shadow create visual separation and depth.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Input Fields Section -->
+    <section class="section">
+      <div class="section__kicker">Forms</div>
+      <h2 class="section__title">Input Fields</h2>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Text Input</label>
+          <input type="text" class="input" placeholder="Enter text here">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input type="email" class="input" placeholder="user@example.com">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Search Query</label>
+          <input type="search" class="input" placeholder="Search...">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Password</label>
+          <input type="password" class="input" placeholder="••••••••">
+        </div>
+      </div>
+
+      <div class="subsection-label">Focus State Demo</div>
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Try clicking here</label>
+          <input type="text" class="input" placeholder="Focus ring appears on input" autofocus>
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges & Tags Section -->
+    <section class="section">
+      <div class="section__kicker">Status</div>
+      <h2 class="section__title">Badges & Tags</h2>
+
+      <div class="subsection-label">Status Indicators</div>
+      <div class="badge-row">
+        <span class="badge">Default</span>
+        <span class="badge badge--signal">Active</span>
+        <span class="badge badge--success">Success</span>
+        <span class="badge badge--warning">Warning</span>
+        <span class="badge badge--danger">Critical</span>
+      </div>
+
+      <div class="subsection-label">With Indicators</div>
+      <div class="badge-row">
+        <span class="badge badge--signal">
+          <span class="badge__dot"></span>
+          Live
+        </span>
+        <span class="badge badge--success">
+          <span class="badge__dot"></span>
+          Verified
+        </span>
+        <span class="badge badge--warning">
+          <span class="badge__dot"></span>
+          Pending
+        </span>
+        <span class="badge badge--danger">
+          <span class="badge__dot"></span>
+          Error
+        </span>
+      </div>
+
+      <div class="subsection-label">Semantic Tags</div>
+      <div class="badge-row">
+        <span class="badge">Component</span>
+        <span class="badge">Pattern</span>
+        <span class="badge">Utility</span>
+        <span class="badge">Deprecated</span>
+        <span class="badge badge--signal">Beta</span>
+        <span class="badge badge--success">Released</span>
+      </div>
+    </section>
+
+    <!-- Block Showcase Section -->
+    <section class="section">
+      <div class="section__kicker">Layout</div>
+      <h2 class="section__title">Content Blocks</h2>
+
+      <div class="block-grid">
+        <div class="block">
+          <span class="block__label">Block One</span>
+          <div class="block__content">Raw Edge</div>
+        </div>
+
+        <div class="block">
+          <span class="block__label">Block Two</span>
+          <div class="block__content">Concrete</div>
+        </div>
+
+        <div class="block">
+          <span class="block__label">Block Three</span>
+          <div class="block__content">Unadorned</div>
+        </div>
+
+        <div class="block">
+          <span class="block__label">Block Four</span>
+          <div class="block__content">Brutal</div>
+        </div>
+
+        <div class="block">
+          <span class="block__label">Block Five</span>
+          <div class="block__content">Bold</div>
+        </div>
+
+        <div class="block">
+          <span class="block__label">Block Six</span>
+          <div class="block__content">Stark</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Section -->
+    <section class="section">
+      <div class="featured">
+        <div class="featured__kicker">Principle</div>
+        <h2 class="featured__headline">No Softness. No Compromise.</h2>
+        <p class="featured__body">
+          Brutalism rejects ornamentation. Hard lines. Bold borders. Thick typography. Raw materials. Pure function expressed through uncompromising form. This is a design system for builders who refuse to apologize for their code.
+        </p>
+      </div>
+    </section>
+
+    <!-- Component Showcase Section -->
+    <section class="section">
+      <div class="section__kicker">Patterns</div>
+      <h2 class="section__title">Component Variations</h2>
+
+      <div class="component-showcase">
+        <div class="component-showcase__item">
+          <span class="component-showcase__label">Button: Default</span>
+          <button class="btn" style="width: 100%;">Default Button</button>
+        </div>
+
+        <div class="component-showcase__item">
+          <span class="component-showcase__label">Button: Primary</span>
+          <button class="btn btn--primary" style="width: 100%;">Primary Button</button>
+        </div>
+
+        <div class="component-showcase__item">
+          <span class="component-showcase__label">Input: Default State</span>
+          <input type="text" class="input" style="width: 100%;" placeholder="Type something...">
+        </div>
+
+        <div class="component-showcase__item">
+          <span class="component-showcase__label">Input: Focus State</span>
+          <input type="text" class="input" style="width: 100%; border-color: var(--signal);" placeholder="Focused input...">
+        </div>
+
+        <div class="component-showcase__item">
+          <span class="component-showcase__label">Badge: Signal</span>
+          <span class="badge badge--signal">Signal Badge</span>
+        </div>
+
+        <div class="component-showcase__item">
+          <span class="component-showcase__label">Badge: Danger</span>
+          <span class="badge badge--danger">Danger Badge</span>
+        </div>
+
+        <div class="component-showcase__item">
+          <span class="component-showcase__label">Card: Standard</span>
+          <div class="card" style="margin: 0;">
+            <p class="card__body" style="margin: 0;">Standard card with border and padding.</p>
+          </div>
+        </div>
+
+        <div class="component-showcase__item">
+          <span class="component-showcase__label">Card: Elevated</span>
+          <div class="card card--elevated" style="margin: 0;">
+            <p class="card__body" style="margin: 0;">Elevated card with shadow.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Folio -->
+    <div class="folio">
+      <span class="folio__chapter">Brutalism — Component System</span>
+      <span class="folio__page">Components Preview</span>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Cyberpunk</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: #0a0e27;
+      color: #e0e0e8;
+      line-height: 1.6;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Subtle scan-line overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: repeating-linear-gradient(
+        0deg,
+        rgba(0, 255, 150, 0.02),
+        rgba(0, 255, 150, 0.02) 2px,
+        transparent 2px,
+        transparent 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 100px;
+      position: relative;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -40px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, #00ff96 0%, transparent 100%);
+      box-shadow: 0 0 20px rgba(0, 255, 150, 0.4);
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #00ff96;
+      margin-bottom: 16px;
+      text-shadow: 0 0 10px rgba(0, 255, 150, 0.5);
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: #e0e0e8;
+      margin-bottom: 16px;
+      text-shadow: 0 0 20px rgba(0, 255, 150, 0.2);
+    }
+
+    .header__title .neon {
+      color: #00ff96;
+      text-shadow: 0 0 20px rgba(0, 255, 150, 0.8), 0 0 40px rgba(0, 255, 150, 0.4);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: #a0a0b0;
+      max-width: 780px;
+      margin-bottom: 40px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 100px;
+      position: relative;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #ff00ff;
+      margin-bottom: 32px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 0, 255, 0.3);
+      text-shadow: 0 0 10px rgba(255, 0, 255, 0.4);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 32px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: #e0e0e8;
+      border-bottom: 1px solid rgba(0, 255, 150, 0.15);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '█';
+      position: absolute;
+      left: 0;
+      top: 18px;
+      color: #00ff96;
+      font-size: 8px;
+      text-shadow: 0 0 8px rgba(0, 255, 150, 0.8);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: rgba(15, 20, 45, 0.6);
+      border: 1px solid rgba(0, 255, 150, 0.25);
+      border-radius: 4px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dd-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        repeating-linear-gradient(
+          90deg,
+          rgba(0, 255, 150, 0.03),
+          rgba(0, 255, 150, 0.03) 1px,
+          transparent 1px,
+          transparent 2px
+        ),
+        repeating-linear-gradient(
+          0deg,
+          rgba(0, 255, 150, 0.02),
+          rgba(0, 255, 150, 0.02) 1px,
+          transparent 1px,
+          transparent 2px
+        );
+      pointer-events: none;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .dd-card__heading--do {
+      color: #00ff96;
+      text-shadow: 0 0 10px rgba(0, 255, 150, 0.6);
+    }
+
+    .dd-card__heading--dont {
+      color: #ff00ff;
+      text-shadow: 0 0 10px rgba(255, 0, 255, 0.6);
+    }
+
+    .dd-card__icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 2px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 11px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: #00ff96;
+      box-shadow: 0 0 10px rgba(0, 255, 150, 0.5);
+    }
+
+    .dd-card__icon--dont {
+      color: #ff00ff;
+      box-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: #e0e0e8;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(100, 100, 100, 0.2);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: rgba(15, 20, 45, 0.5);
+      border: 1px solid rgba(0, 255, 150, 0.3);
+      border-radius: 4px;
+      padding: 40px;
+      max-width: 900px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .atmosphere-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        repeating-linear-gradient(
+          0deg,
+          rgba(0, 255, 150, 0.02),
+          rgba(0, 255, 150, 0.02) 1px,
+          transparent 1px,
+          transparent 2px
+        );
+      pointer-events: none;
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: #e0e0e8;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ──── The Rule of One Visual ──── */
+    .rule-of-one {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .rule-of-one {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .rule-slide {
+      border: 1px solid rgba(0, 255, 150, 0.4);
+      border-radius: 4px;
+      aspect-ratio: 16 / 10;
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background: rgba(15, 20, 45, 0.7);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .rule-slide::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: radial-gradient(circle at 20% 50%, rgba(0, 255, 150, 0.08), transparent 50%);
+      pointer-events: none;
+    }
+
+    .rule-slide--incorrect {
+      border-color: rgba(255, 0, 255, 0.4);
+    }
+
+    .rule-slide--incorrect::before {
+      background-image: radial-gradient(circle at 20% 50%, rgba(255, 0, 255, 0.08), transparent 50%);
+    }
+
+    .rule-slide__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #a0a0b0;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rule-slide__headline {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 44px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: #e0e0e8;
+      margin-bottom: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rule-slide__accent {
+      color: #00ff96;
+      text-shadow: 0 0 15px rgba(0, 255, 150, 0.8);
+    }
+
+    .rule-slide--incorrect .rule-slide__accent {
+      color: #ff00ff;
+      text-shadow: 0 0 15px rgba(255, 0, 255, 0.8);
+    }
+
+    .rule-slide__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #a0a0b0;
+      margin-top: 28px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(0, 255, 150, 0.2);
+      position: relative;
+      z-index: 1;
+    }
+
+    .rule-slide--incorrect .rule-slide__label {
+      border-top-color: rgba(255, 0, 255, 0.2);
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-section {
+      margin-top: 32px;
+    }
+
+    .harmony-strip {
+      display: flex;
+      border-radius: 4px;
+      overflow: hidden;
+      height: 140px;
+      border: 1px solid rgba(0, 255, 150, 0.3);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 16px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.5;
+      box-shadow: inset 0 0 30px rgba(0, 255, 150, 0.2);
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      white-space: nowrap;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+      text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: rgba(15, 20, 45, 0.6);
+      border: 1px solid rgba(0, 255, 150, 0.3);
+      border-radius: 4px;
+      padding: 56px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .type-pairing::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        repeating-linear-gradient(
+          90deg,
+          rgba(0, 255, 150, 0.02),
+          rgba(0, 255, 150, 0.02) 2px,
+          transparent 2px,
+          transparent 4px
+        );
+      pointer-events: none;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #ff00ff;
+      margin-bottom: 16px;
+      text-shadow: 0 0 10px rgba(255, 0, 255, 0.4);
+      position: relative;
+      z-index: 1;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 56px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: #e0e0e8;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .type-pairing__display span {
+      color: #00ff96;
+      text-shadow: 0 0 20px rgba(0, 255, 150, 0.8);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: #e0e0e8;
+      max-width: 780px;
+      margin-bottom: 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(0, 255, 150, 0.2);
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: #a0a0b0;
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: #00ff96;
+      display: block;
+      margin-bottom: 6px;
+      text-shadow: 0 0 8px rgba(0, 255, 150, 0.4);
+    }
+
+    /* ──── Type Ramp ──── */
+    .type-ramp-container {
+      border: 1px solid rgba(0, 255, 150, 0.25);
+      border-radius: 4px;
+      padding: 40px;
+      background: rgba(15, 20, 45, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .type-ramp-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        repeating-linear-gradient(
+          0deg,
+          rgba(0, 255, 150, 0.02),
+          rgba(0, 255, 150, 0.02) 1px,
+          transparent 1px,
+          transparent 2px
+        );
+      pointer-events: none;
+    }
+
+    .ramp-item {
+      margin-bottom: 32px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid rgba(100, 100, 100, 0.15);
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+      position: relative;
+      z-index: 1;
+    }
+
+    .ramp-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .ramp-item__label {
+      flex: 0 0 140px;
+    }
+
+    .ramp-item__label-role {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #ff00ff;
+      margin-bottom: 6px;
+      text-shadow: 0 0 8px rgba(255, 0, 255, 0.3);
+    }
+
+    .ramp-item__label-specs {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      color: #a0a0b0;
+      line-height: 1.6;
+    }
+
+    .ramp-item__example {
+      flex: 1;
+    }
+
+    .ramp-item__preview {
+      margin-bottom: 12px;
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 200px 24px;
+      color: #a0a0b0;
+      font-size: 16px;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      text-shadow: 0 0 10px rgba(0, 255, 150, 0.3);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 24px auto 0;
+      border: 2px solid rgba(0, 255, 150, 0.4);
+      border-top-color: #00ff96;
+      border-radius: 50%;
+      animation: spin 1.2s linear infinite;
+      box-shadow: 0 0 20px rgba(0, 255, 150, 0.5);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ──── Divider ──── */
+    .section-divider {
+      margin-top: 60px;
+      padding-top: 60px;
+      border-top: 1px solid rgba(0, 255, 150, 0.15);
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Initializing system…</div>
+  </div>
+
+  <script>
+    const NEON_COLORS = {
+      'neon-green': '#00ff96',
+      'neon-magenta': '#ff00ff',
+      'neon-cyan': '#00ffff'
+    };
+
+    const CORE_BG_COLORS = {
+      'abyss': '#0a0e27',
+      'void': '#050710',
+      'carbon': '#1a1f3a',
+      'gunmetal': '#2a2f45',
+      'dim-gray': '#4a4a5a'
+    };
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#ff00ff">' +
+          'ERROR: ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">> CYBERPUNK SYSTEM</div>';
+      html += '  <h1 class="header__title">Neon <span class="neon">Dystopia</span> — Terminal Aesthetic</h1>';
+      html += '  <p class="header__subtitle">Dark canvas, neon signal. One primary hue per interaction. Scan lines, hex grids, and the glow of a terminal at 3 AM in an abandoned server room. This is the interface of a megacorp augmented-reality headset.</p>';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section section-divider">';
+      html += '  <div class="section__label">// ATMOSPHERE</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Cyberpunk surfaces are dark — abyss-black (#0A0E27) by default — with layered depth from dim overlays (carbon #1A1F3A, gunmetal #2A2F45). Neon primaries (green #00FF96, magenta #FF00FF, cyan #00FFFF) cut through darkness like light from a holographic display. The aesthetic is pure terminal: monospace type for data, sans-serif for sustained reading. Every edge glows slightly; no element is fully opaque. Scan lines breathe under everything. Interaction is dramatic: one glitch on load, one pulsing indicator per view, one progress sweep. The rest is silent. Test contrast obsessively — neon on abyss hits 12.5:1 WCAG AAA. Use ghost-white (#E0E0E8) for primary text, not harsh white. Images are duotone or threshold-filtered, never raw photography. Border-radius is a fixed 4px — no pill shapes, no sharp corners.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section section-divider">';
+      html += '  <div class="section__label">// SIGNATURE MOVES</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Canvas is abyss-black (#0A0E27), never light gray or white</li>';
+      html += '    <li>Three neon primaries: green (#00FF96), magenta (#FF00FF), cyan (#00FFFF) — pick one per interaction</li>';
+      html += '    <li>Text is ghost-white (#E0E0E8), never #FFFFFF — softer on dark backgrounds</li>';
+      html += '    <li>All corners are border-radius 4px — sharp-cornered and industrial, never 999px pill shapes</li>';
+      html += '    <li>Depth from layered overlays: dim-gray 30% (#4a4a5a), then carbon (#1A1F3A), then gunmetal (#2A2F45)</li>';
+      html += '    <li>Scan-line overlay at 2-3% opacity — felt, not seen, layered on every surface</li>';
+      html += '    <li>Hex-grid backgrounds behind cards and panels for terminal authenticity</li>';
+      html += '    <li>Neon glow via text-shadow on type, box-shadow on interactive elements</li>';
+      html += '    <li>Monospace font for headings, data, and status labels (JetBrains Mono)</li>';
+      html += '    <li>System sans-serif for body text (system-ui) — clean, high-resolution, anti-serif digital</li>';
+      html += '    <li>One glitch animation on hero load; minimal motion elsewhere (one pulse per viewport)</li>';
+      html += '    <li>Images processed through duotone or threshold filters — no raw photography</li>';
+      html += '    <li>All UI labels in monospace — no emoji, no rounded icon libraries</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section section-divider">';
+      html += '  <div class="section__label">// DO\'S AND DON\'TS</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> DO';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use neon color exclusively for signal: buttons, active states, alerts</li>';
+      html += '      <li>Maintain clear hierarchy: one primary neon per screen max</li>';
+      html += '      <li>Keep scan-line overlay subtle (2-3% opacity) — atmospheric, not distracting</li>';
+      html += '      <li>Use monospace type for data, status, headings; sans-serif for body</li>';
+      html += '      <li>Animate with restraint: one glitch on load, one pulse per view</li>';
+      html += '      <li>Test contrast: green on abyss hits 12.5:1; verify ghost-white readability</li>';
+      html += '      <li>Apply border-radius 4px universally for consistent industrial aesthetic</li>';
+      html += '      <li>Layer depth: dim-gray 30%, carbon, then gunmetal for visual stratification</li>';
+      html += '      <li>Use text-shadow for neon glow on type; box-shadow for interactive elements</li>';
+      html += '      <li>Process images through duotone or threshold filters — no raw photography</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> DON\'T';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use pill-shaped buttons (border-radius 999px) — they break the control-room vibe</li>';
+      html += '      <li>Fill large areas with neon — it is signal, not background. Neon on neon is unreadable</li>';
+      html += '      <li>Use #FFFFFF for text — it is too harsh. Use ghost-white (#E0E0E8)</li>';
+      html += '      <li>Mix warm and cool neons in the same element — green and magenta together create visual conflict</li>';
+      html += '      <li>Animate everything — one glitch per hero, one pulse per indicator, rest is still</li>';
+      html += '      <li>Build light-mode variants — this is dark-only. Light version = separate system</li>';
+      html += '      <li>Use raw photography without duotone or threshold filters — breaks the synthetic aesthetic</li>';
+      html += '      <li>Use emoji in UI labels — breaks the monospace grid and austere tone</li>';
+      html += '      <li>Add drop-shadows to simulate depth — use layered overlays and borders instead</li>';
+      html += '      <li>Introduce a fourth neon color — three is the maximum palette</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div

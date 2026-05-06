@@ -36,7 +36,7 @@ The interaction design carries the same spirit: hover states flash PostHog Orang
 ### Surface & Background
 - **Warm Parchment** (`#fdfdf8`): Primary page background — warm near-white with yellow-green undertone
 - **Sage Cream** (`#eeefe9`): Input backgrounds, secondary surfaces — light sage tint
-- **Light Sage** (`#e5e7e0`): Button backgrounds, tertiary surfaces — muted sage-green
+- **Light Sage** (`#747670`): Button backgrounds, tertiary surfaces — muted sage-green
 - **Warm Tan** (`#d4c9b8`): Featured button backgrounds — warm tan/khaki for emphasis
 - **Hover White** (`#f4f4f4`): Universal hover background state
 
@@ -97,7 +97,7 @@ The interaction design carries the same spirit: hover states flash PostHog Orang
 
 ### Buttons
 - **Dark Primary**: `#1e1f23` background, white text, 6px radius, `10px 12px` padding. Hover: opacity 0.7 with Amber Gold text. Active: opacity 0.8 with slight scale transform. The main CTA — dark and confident
-- **Sage Light**: `#e5e7e0` background, Olive Ink (`#4d4f46`) text, 4px radius, `4px` padding. Hover: `#f4f4f4` bg with PostHog Orange text. Compact utility button
+- **Sage Light**: `#747670` background, Olive Ink (`#4d4f46`) text, 4px radius, `4px` padding. Hover: `#f4f4f4` bg with PostHog Orange text. Compact utility button
 - **Warm Tan Featured**: `#d4c9b8` background, black text, no visible radius. Hover: same orange text flash. Featured/premium actions
 - **Input-style**: `#eeefe9` background, Sage Placeholder (`#9ea096`) text, 4px radius, 1px `#b6b7af` border. Looks like a search/filter control
 - **Near-white Ghost**: `#fdfdf8` background, Olive Ink text, 4px radius, transparent 1px border. Minimal presence
@@ -169,7 +169,7 @@ The interaction design carries the same spirit: hover states flash PostHog Orang
 ### Shadow Philosophy
 PostHog's elevation system is remarkably minimal — only one shadow definition exists in the entire system. Depth is communicated through:
 - **Border containment**: Sage-tinted borders (`#bfc1b7`) at 1px create gentle warm separation
-- **Surface color shifts**: Moving from `#fdfdf8` to `#eeefe9` to `#e5e7e0` creates layered depth without shadows
+- **Surface color shifts**: Moving from `#fdfdf8` to `#eeefe9` to `#747670` creates layered depth without shadows
 - **The single shadow**: The one defined shadow (`0 25px 50px -12px`) is reserved for floating elements — modals, dropdowns, popovers. It's a deep, dramatic shadow that creates clear separation when needed
 
 ### Decorative Depth
@@ -238,7 +238,7 @@ PostHog's elevation system is remarkably minimal — only one shadow definition 
 - Dark Text: Deep Olive (`#23251d`)
 - Hover Accent: PostHog Orange (`#F54E00`)
 - Dark CTA: Near-Black (`#1e1f23`)
-- Button Surface: Light Sage (`#e5e7e0`)
+- Button Surface: Light Sage (`#747670`)
 - Page Background: Warm Parchment (`#fdfdf8`)
 - Border: Sage Border (`#bfc1b7`)
 - Placeholder: Sage Placeholder (`#9ea096`)
@@ -247,7 +247,7 @@ PostHog's elevation system is remarkably minimal — only one shadow definition 
 - "Create a hero section on warm parchment background (#fdfdf8) with 30px IBM Plex Sans heading at weight 800, line-height 1.20, letter-spacing -0.75px, olive ink text (#4d4f46), and a dark CTA button (#1e1f23, 6px radius, white text, opacity 0.7 on hover)"
 - "Design a feature card with #fdfdf8 background, 1px #bfc1b7 border, 4px radius, IBM Plex Sans heading at 20px weight 700, and 16px body text at weight 400 with 1.50 line-height in olive ink (#4d4f46)"
 - "Build a navigation bar with warm background, IBM Plex Sans links at 15px weight 600 in deep olive (#23251d), underline on hover, and a dark CTA button (#1e1f23) at the right"
-- "Create a button group: primary dark (#1e1f23, white text, 6px radius), secondary sage (#e5e7e0, #4d4f46 text, 4px radius), and ghost/text button — all flash #F54E00 orange text on hover"
+- "Create a button group: primary dark (#1e1f23, white text, 6px radius), secondary sage (#747670, #4d4f46 text, 4px radius), and ghost/text button — all flash #F54E00 orange text on hover"
 - "Design an input field with #eeefe9 background, 1px #b6b7af border, 4px radius, #9ea096 placeholder text, focus ring in #3b82f6 at 50% opacity"
 
 ### Iteration Guide

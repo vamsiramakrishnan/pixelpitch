@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules – Canva</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #0e1318);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ── Header / Stage Head ── */
+    .header {
+      margin-bottom: 80px;
+      position: relative;
+    }
+
+    .header__overline {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-coral, #ff7059);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: var(--ink, #0e1318);
+      margin-bottom: 16px;
+    }
+
+    .header__subtitle {
+      font-size: 18px;
+      line-height: 1.4;
+      color: var(--color-ink-muted, #5f6368);
+      max-width: 720px;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 48px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-purple-to-blue-gradient, #7d2ae8), var(--color-canva-cyan, #00c4cc));
+      border: none;
+      border-radius: 2px;
+    }
+
+    /* ── Section ── */
+    .section {
+      margin-bottom: 72px;
+    }
+
+    .section__label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-ink-muted, #5f6368);
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #e1e3e6);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section__label::before {
+      content: '';
+      display: block;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--color-coral, #ff7059);
+    }
+
+    /* ── Spacing Scale ── */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 100px;
+      gap: 20px;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border, #e1e3e6);
+      transition: background 0.15s ease;
+    }
+
+    .spacing-row:hover {
+      background: var(--bone, #f4f5f7);
+      padding: 16px 12px;
+      margin: 0 -12px;
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #0e1318);
+      letter-spacing: 0.02em;
+    }
+
+    .spacing-row__role {
+      font-size: 12px;
+      color: var(--color-ink-faint, #9aa0a6);
+      font-weight: 400;
+      font-family: var(--font-body, system-ui, sans-serif);
+      margin-top: 2px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      background: var(--bone, #f4f5f7);
+      border-radius: var(--radius-sm, 4px);
+      padding: 0 12px;
+      overflow: hidden;
+    }
+
+    .spacing-row__bar {
+      height: 6px;
+      background: linear-gradient(90deg, var(--color-purple-to-blue-gradient, #7d2ae8), var(--color-canva-cyan, #00c4cc));
+      border-radius: 3px;
+      min-width: 2px;
+      transition: height 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      height: 8px;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink, #0e1318);
+      text-align: right;
+    }
+
+    /* ── Rules / Depth ── */
+    .rule-demo {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border, #e1e3e6);
+      transition: background 0.15s ease;
+    }
+
+    .rule-demo:hover {
+      background: var(--bone, #f4f5f7);
+      padding: 24px 12px;
+      margin: 0 -12px;
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+      gap: 16px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink, #0e1318);
+    }
+
+    .rule-demo__role {
+      font-size: 12px;
+      color: var(--color-ink-faint, #9aa0a6);
+      font-weight: 400;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      color: var(--color-ink-muted, #5f6368);
+      white-space: nowrap;
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 1px;
+      display: block;
+      margin: 0;
+    }
+
+    /* ── Border Radius ── */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 28px;
+    }
+
+    .radius-item {
+      text-align: center;
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .radius-item:hover {
+      transform: translateY(-4px);
+    }
+
+    .radius-item__box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      margin: 0 auto 16px;
+      background: linear-gradient(135deg, rgba(125, 42, 232, 0.1), rgba(0, 196, 204, 0.1));
+      border: 2px solid var(--border, #e1e3e6);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .radius-item:hover .radius-item__box {
+      border-color: var(--color-purple-to-blue-gradient, #7d2ae8);
+      background: linear-gradient(135deg, rgba(125, 42, 232, 0.15), rgba(0, 196, 204, 0.15));
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #0e1318);
+      margin-bottom: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--color-ink-faint, #9aa0a6);
+      font-weight: 400;
+    }
+
+    /* ── Depth / Elevation ── */
+    .depth-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 24px;
+    }
+
+    .depth-item {
+      padding: 28px 24px;
+      background: var(--paper, #ffffff);
+      border-radius: var(--radius-md, 8px);
+      border: 1px solid var(--border, #e1e3e6);
+      text-align: center;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .depth-item:hover {
+      transform: translateY(-2px);
+      border-color: var(--color-border-strong, #c7cdd3);
+    }
+
+    .depth-item__swatch {
+      width: 100%;
+      height: 80px;
+      border-radius: var(--radius-sm, 4px);
+      margin-bottom: 16px;
+      background: var(--bone, #f4f5f7);
+      border: 1px solid var(--border, #e1e3e6);
+    }
+
+    .depth-item__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #0e1318);
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    .depth-item__role {
+      font-size: 12px;
+      color: var(--color-ink-faint, #9aa0a6);
+      font-weight: 400;
+      font-family: var(--font-body, system-ui, sans-serif);
+      margin-bottom: 8px;
+    }
+
+    .depth-item__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 10px;
+      color: var(--color-ink-muted, #5f6368);
+      word-break: break-word;
+      line-height: 1.3;
+    }
+
+    /* ── Footnote ── */
+    .footer {
+      margin-top: 96px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border, #e1e3e6);
+      font-size: 12px;
+      color: var(--color-ink-faint, #9aa0a6);
+      line-height: 1.6;
+    }
+
+    /* ── Loading ── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--color-ink-muted, #5f6368);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 36px;
+      height: 36px;
+      margin: 20px auto 0;
+      border: 3px solid var(--border, #e1e3e6);
+      border-top-color: var(--color-purple-to-blue-gradient, #7d2ae8);
+      border-right-color: var(--color-canva-cyan, #00c4cc);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 48px 24px;
+      }
+
+      .header__title {
+        font-size: 40px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 90px 1fr 70px;
+        gap: 12px;
+      }
+
+      .radius-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 20px;
+      }
+
+      .depth-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    /* Default spacing scale */
+    const DEFAULT_SPACING = {
+      's-1': { px: '4px', role: 'Micro' },
+      's-2': { px: '8px', role: 'Extra small' },
+      's-3': { px: '16px', role: 'Small' },
+      's-4': { px: '24px', role: 'Base' },
+      's-5': { px: '32px', role: 'Medium' },
+      's-6': { px: '48px', role: 'Large' },
+      's-7': { px: '64px', role: 'Extra large' },
+      's-8': { px: '96px', role: 'Jumbo' },
+    };
+
+    /* Default depth / rules */
+    const DEFAULT_DEPTH = [
+      { name: 'Flat', role: 'No elevation', treatment: 'none' },
+      { name: 'Border', role: '1px dividing line', treatment: '1px solid var(--border, #e1e3e6)' },
+      { name: 'Elevated', role: 'Card / panel shadow', treatment: '0 2px 8px rgba(0,0,0,0.08)' },
+    ];
+
+    /* Default border radius */
+    const DEFAULT_RADIUS = {
+      'none': '0',
+      'sm':   '4px',
+      'md':   '8px',
+      'lg':   '24px',
+      'full': '999px',
+    };
+
+    const tokensUrl = '../tokens.json';
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve(window.__DESIGN_TOKENS__) : fetch(tokensUrl).then(r => r.json()))
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#ff5757">' +
+          'Could not load design tokens — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Design System';
+
+      const spacingObj = tokens.spacing?.scale || DEFAULT_SPACING;
+      const depthArr = tokens.depth || DEFAULT_DEPTH;
+      const radiusObj = tokens.radii || DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* ── Header ── */
+      html += '<header class="header">';
+      html += '  <span class="header__overline">Spatial System</span>';
+      html += '  <h1 class="header__title">Spacing &amp; Rules</h1>';
+      html += '  <p class="header__subtitle">Canva is built on a 4px base unit. Generous padding and soft edges create a friendly, inviting canvas. Depth is expressed through borders and subtle shadows—never overwhelming.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ── Spacing Scale ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacingObj);
+      const maxPx = Math.max(...spacingEntries.map(([, v]) => {
+        const px = typeof v === 'object' ? parseFloat(v.px) : parseFloat(v);
+        return isNaN(px) ? 0 : px;
+      }), 1);
+
+      spacingEntries.forEach(([key, val]) => {
+        const px = typeof val === 'object' ? val.px : val;
+        const role = typeof val === 'object' ? val.role : '';
+        const pxNum = parseFloat(px) || 0;
+        const pct = Math.max((pxNum / maxPx) * 100, 2);
+
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += (role ? '    <div class="spacing-row__role">' + esc(role) + '</div>' : '');
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(px) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* ── Rules / Depth ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth & Elevation</div>';
+
+      depthArr.forEach(item => {
+        const name = item.name || 'Unnamed';
+        const role = item.role || item.description || '';
+        const treatment = item.treatment || 'none';
+
+        let lineStyle = 'height: 1px; background: var(--border, #e1e3e6);';
+
+        if (treatment.includes('0 2px 8px')) {
+          lineStyle = 'height: 40px; background: var(--bone, #f4f5f7); box-shadow: ' + treatment + '; border-radius: 4px;';
+        } else if (treatment.includes('1px solid')) {
+          lineStyle = 'height: 1px; background: var(--ink, #0e1318);';
+        }
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <div>';
+        html += '      <div class="rule-demo__name">' + esc(name) + '</div>';
+        html += (role ? '      <div class="rule-demo__role">' + esc(role) + '</div>' : '');
+        html += '    </div>';
+        html += '    <span class="rule-demo__spec">' + (treatment === 'none' ? 'flat' : esc(treatment.substring(0, 40))) + '</span>';
+        html += '  </div>';
+        html += '  <div class="rule-demo__line" style="' + lineStyle + '"></div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* ── Border Radius ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+      html += '  <div class="radius-grid">';
+
+      Object.entries(radiusObj).forEach(([key, value]) => {
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__box" style="border-radius:' + esc(value) + '"></div>';
+        html += '  <div class="radius-item__name">' + esc(key) + '</div>';
+        html += '  <div class="radius-item__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ── Footer ── */
+      html += '<div class="footer">';
+      html += '  <p><strong>Spacing philosophy:</strong> A 4px base unit compounds into a predictable scale. The generous padding (16–32px) on cards and panels creates breathing room. The soft 8–24px radii reflect Canva\'s friendly geometry.</p>';
+      html += '  <p style="margin-top: 12px;"><strong>Depth:</strong> Flat layouts are the default. Borders (1px) divide sections; subtle shadows (2px / 8px blur) lift elevated surfaces. No harsh shadows—Canva keeps it light.</p>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

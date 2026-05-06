@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Palette — Bugatti</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #000000);
+      color: var(--signal, #ffffff);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 96px;
+      border-bottom: 1px solid var(--border, #ffffff);
+      padding-bottom: 48px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 72px;
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: 0;
+      color: var(--signal, #ffffff);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      color: var(--color-silver-mist, #999999);
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      max-width: 640px;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--color-silver-mist, #999999);
+      margin-bottom: 32px;
+      margin-top: 64px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--color-silver-mist, #999999);
+    }
+
+    .section-label:first-of-type {
+      margin-top: 0;
+    }
+
+    /* Swatch grid */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 32px;
+      margin-bottom: 64px;
+    }
+
+    .swatch {
+      background: var(--paper, #000000);
+      border: 1px solid var(--color-silver-mist, #999999);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: border-color 0.3s ease;
+    }
+
+    .swatch:hover {
+      border-color: var(--signal, #ffffff);
+    }
+
+    .swatch__chip {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 12px;
+    }
+
+    .swatch__chip-contrast {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 400;
+      padding: 4px 10px;
+      border-radius: 0;
+      line-height: 1.2;
+      border: 1px solid;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .swatch__meta {
+      padding: 20px 20px 24px;
+    }
+
+    .swatch__var {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--signal, #ffffff);
+      word-break: break-all;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .swatch__hex {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      color: var(--signal, #ffffff);
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+      font-weight: 400;
+    }
+
+    .swatch__role {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--color-silver-mist, #999999);
+      margin-bottom: 8px;
+    }
+
+    .swatch__contrast-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 400;
+      margin-top: 8px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .contrast-pass { color: #4ade80; }
+    .contrast-fail { color: #f87171; }
+    .contrast-aa-large { color: #facc15; }
+
+    /* Philosophy section */
+    .philosophy {
+      margin: 96px 0;
+      padding: 48px;
+      border: 1px solid var(--color-silver-mist, #999999);
+      border-radius: 8px;
+    }
+
+    .philosophy h2 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 36px;
+      font-weight: 400;
+      line-height: 1.11;
+      margin-bottom: 24px;
+      color: var(--signal, #ffffff);
+      text-transform: uppercase;
+    }
+
+    .philosophy p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--color-silver-mist, #999999);
+      margin-bottom: 16px;
+      max-width: 800px;
+    }
+
+    .philosophy p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Rule of One demo */
+    .rule-of-one {
+      margin: 96px 0;
+      padding: 48px;
+      border: 1px solid var(--color-silver-mist, #999999);
+      border-radius: 8px;
+    }
+
+    .rule-of-one h2 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 36px;
+      font-weight: 400;
+      line-height: 1.11;
+      margin-bottom: 32px;
+      color: var(--signal, #ffffff);
+      text-transform: uppercase;
+    }
+
+    .rule-of-one-demo {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+
+    .demo-card {
+      background: var(--paper, #000000);
+      border: 1px solid var(--color-silver-mist, #999999);
+      border-radius: 8px;
+      padding: 24px;
+    }
+
+    .demo-card h3 {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--color-silver-mist, #999999);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .demo-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--signal, #ffffff);
+      margin-bottom: 16px;
+    }
+
+    .demo-button {
+      display: inline-block;
+      background: transparent;
+      border: 1px solid var(--signal, #ffffff);
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--signal, #ffffff);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .demo-button:hover {
+      border-color: var(--signal, #ffffff);
+      color: var(--paper, #000000);
+      background: var(--signal, #ffffff);
+    }
+
+    .demo-secondary-button {
+      background: transparent;
+      border: 1px solid var(--color-silver-mist, #999999);
+      color: var(--color-silver-mist, #999999);
+    }
+
+    .demo-secondary-button:hover {
+      border-color: var(--signal, #ffffff);
+      color: var(--signal, #ffffff);
+    }
+
+    /* WCAG footer */
+    .wcag-summary {
+      margin: 96px 0 0 0;
+      padding: 48px;
+      border: 1px solid var(--color-silver-mist, #999999);
+      border-radius: 8px;
+    }
+
+    .wcag-summary h2 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 36px;
+      font-weight: 400;
+      line-height: 1.11;
+      margin-bottom: 8px;
+      color: var(--signal, #ffffff);
+      text-transform: uppercase;
+    }
+
+    .wcag-intro {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      color: var(--color-silver-mist, #999999);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .wcag-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--color-silver-mist, #999999);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      color: var(--signal, #ffffff);
+    }
+
+    .wcag-row:last-child {
+      border-bottom: none;
+    }
+
+    .wcag-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 0;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      border: 1px solid;
+      min-width: 80px;
+      text-align: center;
+    }
+
+    .wcag-badge--pass {
+      background: transparent;
+      border-color: #4ade80;
+      color: #4ade80;
+    }
+
+    .wcag-badge--fail {
+      background: transparent;
+      border-color: #f87171;
+      color: #f87171;
+    }
+
+    .wcag-badge--aa-large {
+      background: transparent;
+      border-color: #facc15;
+      color: #facc15;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 160px 24px;
+      color: var(--color-silver-mist, #999999);
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 24px auto 0;
+      border: 2px solid var(--color-silver-mist, #999999);
+      border-top-color: var(--signal, #ffffff);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">LOADING DESIGN TOKENS</div>
+  </div>
+
+  <script>
+    /* ────────────────────────────────────────────────────────────────────── */
+    /* WCAG Contrast Ratio Calculation (2.1 Relative Luminance)              */
+    /* ────────────────────────────────────────────────────────────────────── */
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function luminance([r, g, b]) {
+      const [rs, gs, bs] = [r, g, b].map(c => {
+        c /= 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    }
+
+    function contrastRatio(hex1, hex2) {
+      const l1 = luminance(hexToRgb(hex1));
+      const l2 = luminance(hexToRgb(hex2));
+      const lighter = Math.max(l1, l2);
+      const darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function wcagLevel(ratio) {
+      if (ratio >= 7) return { label: 'AAA', cls: 'pass' };
+      if (ratio >= 4.5) return { label: 'AA', cls: 'pass' };
+      if (ratio >= 3) return { label: 'AA Large', cls: 'aa-large' };
+      return { label: 'Fail', cls: 'fail' };
+    }
+
+    /* ────────────────────────────────────────────────────────────────────── */
+    /* Core Token Roles & Descriptions                                       */
+    /* ────────────────────────────────────────────────────────────────────── */
+    const CORE_ROLES = {
+      paper:   'Cinema-black canvas — the entire page background',
+      ink:     'Primary text color (near-black used internally)',
+      slate:   'Secondary muted text',
+      signal:  'Showroom white — all active UI, text, and borders',
+      bone:    'Subtle background tint',
+      border:  'Dividers, outlines, and active borders',
+      surface: 'Card and container fill (black)',
+    };
+
+    /* ────────────────────────────────────────────────────────────────────── */
+    /* Load and Render from tokens.json                                      */
+    /* ────────────────────────────────────────────────────────────────────── */
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#f87171">' +
+          'ERROR: ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || 'Bugatti';
+      const rawColors = tokens.colors || {};
+      const paperHex = rawColors.paper || '#000000';
+
+      /* Flatten nested color structure */
+      const colors = {};
+      for (const [k, v] of Object.entries(rawColors)) {
+        if (typeof v === 'string') { colors[k] = v; }
+        else if (v && typeof v === 'object') {
+          for (const [sk, sv] of Object.entries(v)) {
+            if (typeof sv === 'string') colors[k + '-' + sk] = sv;
+          }
+        }
+      }
+
+      /* Split core and extended */
+      const coreKeys = Object.keys(CORE_ROLES).filter(k => colors[k]);
+      const extendedKeys = Object.keys(colors).filter(k => !CORE_ROLES[k] && typeof colors[k] === 'string');
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">' + esc(name) + '</h1>';
+      html += '  <p class="header__subtitle">Color Palette — ' + (coreKeys.length + extendedKeys.length) + ' tokens</p>';
+      html += '</header>';
+
+      /* Philosophy */
+      html += '' +
+        '<section class="philosophy">' +
+        '  <h2>Monochromatic Discipline</h2>' +
+        '  <p>Bugatti's color system enforces radical austerity. The entire brand operates on three colors at rest: pure black (#000000), pure white (#ffffff), and a single mid-gray (#999999) for tertiary states. This monochromatic discipline is not a limitation—it is a design choice that prioritizes the product itself.</p>' +
+        '  <p>The page is a black velvet display stand. The only color that exists is whatever paint the car happens to wear. No accent colors compete with the hero photography. No gradients soften the edges. No brand blue interrupts the canvas. The silence of the chrome makes the roar of the machine unmistakable.</p>' +
+        '</section>';
+
+      /* Core palette */
+      if (coreKeys.length) {
+        html += '<div class="section-label">CORE PALETTE</div>';
+        html += '<div class="swatch-grid">';
+        coreKeys.forEach(key => {
+          html += swatchCard(key, colors[key], paperHex, CORE_ROLES[key]);
+        });
+        html += '</div>';
+      }
+
+      /* Extended palette */
+      if (extendedKeys.length) {
+        html += '<div class="section-label">EXTENDED PALETTE</div>';
+        html += '<div class="swatch-grid">';
+        extendedKeys.forEach(key => {
+          const role = formatRole(key);
+          html += swatchCard(key, colors[key], paperHex, role);
+        });
+        html += '</div>';
+      }
+
+      /* Rule of One demo */
+      html += '' +
+        '<section class="rule-of-one">' +
+        '  <h2>Rule of One</h2>' +
+        '  <div class="rule-of-one-demo">' +
+        '    <div class="demo-card">' +
+        '      <h3>Primary Button</h3>' +
+        '      <p>White border on black. No background fill. Maximum contrast.</p>' +
+        '      <button class="demo-button">EXPLORE OPPORTUNITIES</button>' +
+        '    </div>' +
+        '    <div class="demo-card">' +
+        '      <h3>Secondary Button</h3>' +
+        '      <p>Silver mist border. Used for lower-priority CTAs and disabled states.</p>' +
+        '      <button class="demo-button demo-secondary-button">LEARN MORE</button>' +
+        '    </div>' +
+        '    <div class="demo-card">' +
+        '      <h3>Text Hierarchy</h3>' +
+        '      <p style="color: var(--signal, #ffffff);">Primary text in white. Secondary in gray. No tertiary exists—if it's not worth white, it's not on the page.</p>' +
+        '    </div>' +
+        '  </div>' +
+        '</section>';
+
+      /* WCAG summary */
+      html += wcagSummary(colors, paperHex);
+
+      app.innerHTML = html;
+    }
+
+    /* ────────────────────────────────────────────────────────────────────── */
+    /* Swatch Card Builder                                                   */
+    /* ────────────────────────────────────────────────────────────────────── */
+    function swatchCard(key, hex, paperHex, role) {
+      const ratio = contrastRatio(hex, paperHex);
+      const level = wcagLevel(ratio);
+
+      /* Determine chip text/badge colors */
+      const lum = luminance(hexToRgb(hex));
+      const chipTextColor = lum > 0.5 ? '#000000' : '#ffffff';
+      const chipBadgeBorder = lum > 0.5 ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.3)';
+
+      return '' +
+        '<div class="swatch">' +
+        '  <div class="swatch__chip" style="background:' + hex + '">' +
+        '    <span class="swatch__chip-contrast" style="color:' + chipTextColor +
+             ';border-color:' + chipBadgeBorder + '">' + ratio.toFixed(1) + ':1</span>' +
+        '  </div>' +
+        '  <div class="swatch__meta">' +
+        '    <div class="swatch__var">--' + esc(key.replace(/-/g, '-')) + '</div>' +
+        '    <div class="swatch__hex">' + esc(hex) + '</div>' +
+        '    <div class="swatch__role">' + esc(role) + '</div>' +
+        '    <div class="swatch__contrast-label contrast-' + level.cls + '">' +
+             'WCAG ' + level.label + '</div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ────────────────────────────────────────────────────────────────────── */
+    /* WCAG Compliance Summary                                               */
+    /* ────────────────────────────────────────────────────────────────────── */
+    function wcagSummary(colors, paperHex) {
+      const keys = Object.keys(colors);
+      let passAAA = 0, passAA = 0, passAALarge = 0, fail = 0;
+
+      keys.forEach(k => {
+        const ratio = contrastRatio(colors[k], paperHex);
+        if (ratio >= 7) passAAA++;
+        else if (ratio >= 4.5) passAA++;
+        else if (ratio >= 3) passAALarge++;
+        else fail++;
+      });
+
+      let html = '<div class="wcag-summary">';
+      html += '<h2>WCAG 2.1 Compliance</h2>';
+      html += '<p class="wcag-intro">Contrast ratios measured against the paper background (' + esc(paperHex) + ')</p>';
+      html += row('AAA (7:1+)', passAAA, 'pass');
+      html += row('AA (4.5:1+)', passAA, 'pass');
+      html += row('AA Large Text (3:1+)', passAALarge, 'aa-large');
+      html += row('Below threshold', fail, fail > 0 ? 'fail' : 'pass');
+      html += '</div>';
+      return html;
+
+      function row(label, count, badge) {
+        return '<div class="wcag-row">' +
+               '<span class="wcag-badge wcag-badge--' + badge + '">' + count + '</span>' +
+               '<span>' + label + '</span>' +
+               '</div>';
+      }
+    }
+
+    /* ────────────────────────────────────────────────────────────────────── */
+    /* Utilities                                                             */
+    /* ────────────────────────────────────────────────────────────────────── */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function formatRole(key) {
+      return key
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/[-_]/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase())
+        .trim();
+    }
+  </script>
+</body>
+</html>

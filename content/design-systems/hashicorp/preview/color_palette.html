@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Palette — HashiCorp</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      background: var(--paper, #15181e);
+      color: var(--ink, #efeff1);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 72px;
+      border-bottom: 1px solid var(--signal, #b2b6bd);
+      padding-bottom: 32px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--slate, #3b3d45);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 82px;
+      font-weight: 600;
+      line-height: 1.17;
+      letter-spacing: 0;
+      color: var(--ink, #efeff1);
+      margin-bottom: 8px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 20px;
+      line-height: 1.50;
+      color: var(--slate, #3b3d45);
+      max-width: 720px;
+      margin-bottom: 16px;
+    }
+
+    .header__meta {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      color: var(--slate, #3b3d45);
+      text-transform: uppercase;
+    }
+
+    /* Section labels */
+    .section-label {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--slate, #3b3d45);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--signal, #b2b6bd);
+    }
+
+    /* Swatch grid */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+      margin-bottom: 64px;
+    }
+
+    .swatch {
+      background: var(--paper, #15181e);
+      border: 1px solid var(--signal, #b2b6bd);
+      border-radius: 5px;
+      overflow: hidden;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .swatch:hover {
+      border-color: var(--color-action-blue, #1060ff);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .swatch__chip {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      position: relative;
+    }
+
+    .swatch__chip-contrast {
+      position: absolute;
+      bottom: 10px;
+      right: 12px;
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 3px;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+
+    .swatch__meta {
+      padding: 18px 20px 20px;
+    }
+
+    .swatch__var {
+      font-family: ui-monospace, monospace;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink, #efeff1);
+      word-break: break-all;
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    .swatch__hex {
+      font-family: ui-monospace, monospace;
+      font-size: 11px;
+      color: var(--slate, #3b3d45);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .swatch__role {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink, #efeff1);
+      margin-bottom: 8px;
+    }
+
+    .swatch__contrast-label {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 8px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .contrast-pass { color: #4ade80; }
+    .contrast-fail { color: #fca5a5; }
+    .contrast-aa-large { color: #fbbf24; }
+
+    /* Chip contrast badge styling */
+    .chip-badge {
+      border-radius: 3px;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    /* Usage pattern section */
+    .usage-section {
+      margin-bottom: 64px;
+      padding: 40px;
+      background: var(--color-near-black, #0d0e12);
+      border: 1px solid var(--signal, #b2b6bd);
+      border-radius: 5px;
+    }
+
+    .usage-section h2 {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 52px;
+      font-weight: 600;
+      line-height: 1.19;
+      letter-spacing: 0;
+      color: var(--ink, #efeff1);
+      margin-bottom: 24px;
+    }
+
+    .usage-section p {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      line-height: 1.63;
+      color: var(--slate, #3b3d45);
+      margin-bottom: 24px;
+      max-width: 720px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 24px;
+      margin-top: 32px;
+    }
+
+    .product-card {
+      padding: 24px;
+      background: var(--paper, #15181e);
+      border: 1px solid var(--signal, #b2b6bd);
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .product-card__color {
+      width: 80px;
+      height: 80px;
+      border-radius: 5px;
+      margin: 0 auto 16px;
+      border: 1px solid var(--signal, #b2b6bd);
+    }
+
+    .product-card__name {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink, #efeff1);
+      margin-bottom: 8px;
+    }
+
+    .product-card__hex {
+      font-family: ui-monospace, monospace;
+      font-size: 11px;
+      color: var(--slate, #3b3d45);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Semantic section */
+    .semantic-section {
+      margin-bottom: 64px;
+      padding: 40px;
+      background: var(--color-near-black, #0d0e12);
+      border: 1px solid var(--signal, #b2b6bd);
+      border-radius: 5px;
+    }
+
+    .semantic-section h2 {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 52px;
+      font-weight: 600;
+      line-height: 1.19;
+      color: var(--ink, #efeff1);
+      margin-bottom: 24px;
+    }
+
+    .semantic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+    }
+
+    .semantic-example {
+      padding: 24px;
+      background: var(--paper, #15181e);
+      border: 1px solid var(--signal, #b2b6bd);
+      border-radius: 5px;
+    }
+
+    .semantic-example__label {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--slate, #3b3d45);
+      margin-bottom: 12px;
+    }
+
+    .semantic-example__swatch {
+      width: 100%;
+      height: 120px;
+      border-radius: 5px;
+      margin-bottom: 12px;
+      border: 1px solid var(--signal, #b2b6bd);
+    }
+
+    .semantic-example__text {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink, #efeff1);
+    }
+
+    /* WCAG summary */
+    .wcag-summary {
+      margin-top: 64px;
+      padding: 40px;
+      background: var(--color-near-black, #0d0e12);
+      border: 1px solid var(--signal, #b2b6bd);
+      border-radius: 5px;
+    }
+
+    .wcag-summary h2 {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 52px;
+      font-weight: 600;
+      line-height: 1.19;
+      margin-bottom: 24px;
+      color: var(--ink, #efeff1);
+    }
+
+    .wcag-summary p {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      line-height: 1.63;
+      color: var(--slate, #3b3d45);
+      margin-bottom: 24px;
+    }
+
+    .wcag-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--signal, #b2b6bd);
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+    }
+
+    .wcag-row:last-child { border-bottom: none; }
+
+    .wcag-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 3px;
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+      min-width: 80px;
+      text-align: center;
+    }
+
+    .wcag-badge--pass { background: #1e3a1f; color: #4ade80; }
+    .wcag-badge--fail { background: #3a1f1f; color: #fca5a5; }
+    .wcag-badge--aa-large { background: #3a2f1f; color: #fbbf24; }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #3b3d45);
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 24px auto 0;
+      border: 2px solid var(--signal, #b2b6bd);
+      border-top-color: var(--color-action-blue, #1060ff);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .page { padding: 48px 20px; }
+      .header { padding-bottom: 24px; margin-bottom: 48px; }
+      .header__title { font-size: 48px; }
+      .swatch-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+      .semantic-grid { grid-template-columns: 1fr; }
+      .usage-section { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    /* ───────────────────────────────────────────────────────────── */
+    /* Contrast ratio calculation (WCAG 2.1 relative luminance)      */
+    /* ───────────────────────────────────────────────────────────── */
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function luminance([r, g, b]) {
+      const [rs, gs, bs] = [r, g, b].map(c => {
+        c /= 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    }
+
+    function contrastRatio(hex1, hex2) {
+      const l1 = luminance(hexToRgb(hex1));
+      const l2 = luminance(hexToRgb(hex2));
+      const lighter = Math.max(l1, l2);
+      const darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function wcagLevel(ratio) {
+      if (ratio >= 7) return { label: 'AAA', cls: 'pass' };
+      if (ratio >= 4.5) return { label: 'AA', cls: 'pass' };
+      if (ratio >= 3) return { label: 'AA Large', cls: 'aa-large' };
+      return { label: 'Fail', cls: 'fail' };
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Core color roles and descriptions                             */
+    /* ───────────────────────────────────────────────────────────── */
+    const CORE_ROLES = {
+      paper:  'Dark mode canvas. Primary background for infrastructure-grade UI.',
+      ink:    'Light text on dark surfaces. Maximum readability for dense content.',
+      slate:  'Secondary text, borders, metadata. Subtle gray for visual hierarchy.',
+      signal: 'Border accent. Micro-emphasis without distraction.',
+      bone:   'Light mode surface. Inverted for product pages and documentation.',
+      border: 'Divider and outline. System borders at 1px weight.',
+      surface: 'Pure black. Product accent and command emphasis.',
+    };
+
+    const PRODUCT_ROLES = {
+      'terraform-purple': 'Terraform product brand. Infrastructure as code.',
+      'vault-yellow': 'Vault product brand. Secrets management.',
+      'waypoint-teal': 'Waypoint product brand. Application deployment.',
+      'waypoint-teal-hover': 'Waypoint interactive state.',
+      'vagrant-blue': 'Vagrant product brand. Development environments.',
+      'purple-accent': 'Secondary accent. Highlight and elevation.',
+      'visited-purple': 'Visited link state. Brand purple.',
+    };
+
+    const SEMANTIC_ROLES = {
+      'action-blue': 'Primary action on dark. Links and CTAs.',
+      'link-blue': 'Primary link on light. Documentation hypertext.',
+      'bright-blue': 'Active and hover state. Bright primary blue.',
+      'amber': 'Warning state. Caution and alerts.',
+      'amber-light': 'Warning background. Subtle warning context.',
+      'vault-faint-yellow': 'Vault highlight background. Invisible until active.',
+      'orange': 'Secondary warning. Warm alert accent.',
+      'red': 'Danger and error. Critical state indicator.',
+      'navy': 'Deep blue. Secondary emphasis and depth.',
+      'dark-gray': 'Dark text on light. Maximum contrast alternative.',
+      'near-black': 'Deepest surface. Form inputs and modal overlays.',
+    };
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Render from tokens.json                                       */
+    /* ───────────────────────────────────────────────────────────── */
+    (window.__DESIGN_TOKENS__ 
+      ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) 
+      : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:var(--color-action-blue,#1060ff)">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const rawColors = tokens.colors || {};
+      const paperHex = rawColors.paper || '#15181e';
+      const inkHex = rawColors.ink || '#efeff1';
+
+      /* Flatten nested color structure */
+      const colors = {};
+      for (const [k, v] of Object.entries(rawColors)) {
+        if (typeof v === 'string') {
+          colors[k] = v;
+        } else if (v && typeof v === 'object') {
+          for (const [sk, sv] of Object.entries(v)) {
+            if (typeof sv === 'string') colors[k + '-' + sk] = sv;
+          }
+        }
+      }
+
+      /* Split core, product, and semantic */
+      const coreKeys = Object.keys(CORE_ROLES).filter(k => colors[k]);
+      const productKeys = Object.keys(PRODUCT_ROLES).filter(k => colors[k]);
+      const semanticKeys = Object.keys(SEMANTIC_ROLES).filter(k => colors[k]);
+      const extendedKeys = Object.keys(colors).filter(k => 
+        !CORE_ROLES[k] && !PRODUCT_ROLES[k] && !SEMANTIC_ROLES[k] && typeof colors[k] === 'string'
+      );
+
+      let html = '';
+
+      /* ─ Stage head header ─ */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Enterprise Color System</div>';
+      html += '  <h1 class="header__title">Black &amp; White<br>with Chromatic Products</h1>';
+      html += '  <p class="header__subtitle">Dark-mode infrastructure UI anchored in a seven-color core palette. Product brand colors (Terraform, Vault, Waypoint, Vagrant) layer semantic meaning. No shadows—depth through weight and darkness.</p>';
+      html += '  <div class="header__meta">Core + Extended + Product Palette &mdash; ' + (coreKeys.length + productKeys.length + semanticKeys.length + extendedKeys.length) + ' Tokens</div>';
+      html += '</header>';
+
+      /* ─ Core Palette ─ */
+      if (coreKeys.length) {
+        html += '<div class="section-label">Core Palette (7 Tokens)</div>';
+        html += '<div class="swatch-grid">';
+        coreKeys.forEach(key => {
+          html += swatchCard(key, colors[key], paperHex, inkHex, CORE_ROLES[key]);
+        });
+        html += '</div>';
+      }
+
+      /* ─ Product Brand Colors ─ */
+      if (productKeys.length) {
+        html += '<section class="usage-section">';
+        html += '<h2>Product Brand Colors</h2>';
+        html += '<p>Each product in the HashiCorp portfolio carries its own chromatic identity. These colors represent the product line and layer semantic meaning in charts, badges, and accent elements. Use sparingly—one product color per interface context.</p>';
+        html += '<div class="product-grid">';
+        productKeys.forEach(key => {
+          const hex = colors[key];
+          html += '<div class="product-card">';
+          html += '  <div class="product-card__color" style="background:' + esc(hex) + '"></div>';
+          html += '  <div class="product-card__name">' + esc(formatRole(key)) + '</div>';
+          html += '  <div class="product-card__hex">--color-' + esc(key) + '<br>' + esc(hex.toUpperCase()) + '</div>';
+          html += '</div>';
+        });
+        html += '</div>';
+        html += '</section>';
+      }
+
+      /* ─ Semantic Colors ─ */
+      if (semanticKeys.length) {
+        html += '<section class="semantic-section">';
+        html += '<h2>Semantic Colors</h2>';
+        html += '<p>Action links, warnings, errors, and info states. These colors establish meaning across interactive patterns and form feedback. Action blue is the primary CTA; red signals danger; amber indicates caution.</p>';
+        html += '<div class="semantic-grid">';
+        semanticKeys.forEach(key => {
+          const hex = colors[key];
+          html += '<div class="semantic-example">';
+          html += '  <div class="semantic-example__label">' + esc(formatRole(key)) + '</div>';
+          html += '  <div class="semantic-example__swatch" style="background:' + esc(hex) + '"></div>';
+          html += '  <div class="semantic-example__text">';
+          html += '    <strong style="color:var(--ink)">--color-' + esc(key) + '</strong><br>';
+          html += '    <code style="color:var(--slate,#3b3d45)">' + esc(hex.toUpperCase()) + '</code>';
+          html += '  </div>';
+          html += '</div>';
+        });
+        html += '</div>';
+        html += '</section>';
+      }
+
+      /* ─ WCAG Summary ─ */
+      html += wcagSummary(colors, paperHex, inkHex);
+
+      app.innerHTML = html;
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Swatch card builder                                           */
+    /* ───────────────────────────────────────────────────────────── */
+    function swatchCard(key, hex, paperHex, inkHex, role) {
+      const ratio = contrastRatio(hex, paperHex);
+      const level = wcagLevel(ratio);
+      const lum = luminance(hexToRgb(hex));
+      const chipTextColor = lum > 0.5 ? '#000000' : '#ffffff';
+      const chipBadgeBg = lum > 0.5 ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)';
+
+      return '' +
+        '<div class="swatch">' +
+        '  <div class="swatch__chip" style="background:' + hex + '">' +
+        '    <span class="swatch__chip-contrast chip-badge" style="color:' + chipTextColor +
+             ';background:' + chipBadgeBg + '">' + ratio.toFixed(2) + ':1</span>' +
+        '  </div>' +
+        '  <div class="swatch__meta">' +
+        '    <div class="swatch__var">--' + esc(key) + '</div>' +
+        '    <div class="swatch__hex">' + esc(hex.toUpperCase()) + '</div>' +
+        '    <div class="swatch__role">' + esc(role) + '</div>' +
+        '    <div class="swatch__contrast-label contrast-' + level.cls + '">' +
+             'WCAG ' + level.label + '</div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* WCAG compliance summary                                       */
+    /* ───────────────────────────────────────────────────────────── */
+    function wcagSummary(colors, paperHex, inkHex) {
+      const keys = Object.keys(colors);
+      let passAAA = 0, passAA = 0, passAALarge = 0, fail = 0;
+
+      keys.forEach(k => {
+        const ratio = contrastRatio(colors[k], paperHex);
+        if (ratio >= 7) passAAA++;
+        else if (ratio >= 4.5) passAA++;
+        else if (ratio >= 3) passAALarge++;
+        else fail++;
+      });
+
+      let html = '<div class="wcag-summary">';
+      html += '<h2>WCAG 2.1 Compliance</h2>';
+      html += '<p>All contrast ratios measured against the dark paper background (#15181E). HashiCorp prioritizes readability in dark mode—the primary interface for infrastructure tooling. Product brand colors and semantic states meet AA standards for interactive elements; body text uses the ink and slate tokens for maximum legibility in technical documentation.</p>';
+      html += row('AAA (7:1+)', passAAA, 'pass');
+      html += row('AA (4.5:1+)', passAA, 'pass');
+      html += row('AA Large Text (3:1+)', passAALarge, 'aa-large');
+      html += row('Below threshold', fail, fail > 0 ? 'fail' : 'pass');
+      html += '</div>';
+      return html;
+
+      function row(label, count, badge) {
+        return '<div class="wcag-row">' +
+               '<span class="wcag-badge wcag-badge--' + badge + '">' + count + '</span>' +
+               '<span>' + label + '</span>' +
+               '</div>';
+      }
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Utilities                                                      */
+    /* ───────────────────────────────────────────────────────────── */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function formatRole(key) {
+      return key
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/[-_]/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase())
+        .trim();
+    }
+  </script>
+</body>
+</html>

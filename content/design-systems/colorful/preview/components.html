@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colorful – Components</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: var(--s-7) var(--s-5);
+    }
+
+    /* Header / Stage Head */
+    .header {
+      margin-bottom: var(--s-7);
+    }
+
+    .header__title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate);
+      margin-bottom: var(--s-5);
+    }
+
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 3px;
+      background: var(--signal);
+      border: none;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: var(--s-7);
+    }
+
+    .section__label {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-4);
+      padding-bottom: var(--s-3);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sub-heading {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+      margin-top: var(--s-2);
+    }
+
+    .component-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: flex-start;
+      margin-bottom: var(--s-4);
+    }
+
+    /* ------- BUTTONS ------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--s-2);
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.4;
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      border: none;
+    }
+
+    .btn--primary {
+      background: var(--signal);
+      color: var(--paper);
+    }
+
+    .btn--primary:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+
+    .btn--primary:active {
+      filter: brightness(0.95);
+      transform: translateY(0);
+    }
+
+    .btn--secondary {
+      background: var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    .btn--secondary:hover {
+      background: var(--bone);
+      border-color: var(--slate);
+    }
+
+    .btn--secondary:active {
+      background: var(--border);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--signal);
+      padding: var(--button-py) var(--s-2);
+      text-decoration: none;
+      border-bottom: 1px solid var(--signal);
+      border-radius: 0;
+    }
+
+    .btn--ghost:hover {
+      opacity: 0.8;
+    }
+
+    .btn--sm {
+      padding: 6px 14px;
+      font-size: 13px;
+    }
+
+    .btn--lg {
+      padding: 14px 32px;
+      font-size: 16px;
+    }
+
+    /* ------- CARDS ------- */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--s-4);
+    }
+
+    .card {
+      background: var(--paper);
+      border-radius: var(--card-radius);
+      padding: var(--s-5);
+      border: var(--card-border);
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--slate);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.12);
+    }
+
+    .card__eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .card__body {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--slate);
+      margin-bottom: var(--s-4);
+    }
+
+    .card__footer {
+      display: flex;
+      gap: var(--s-2);
+      align-items: center;
+    }
+
+    /* ------- INPUTS ------- */
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-4);
+      align-items: flex-start;
+    }
+
+    .input-wrap {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .input {
+      display: block;
+      width: 100%;
+      padding: 10px 14px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3);
+      padding: 10px 16px;
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      max-width: 480px;
+      transition: border-color 0.15s ease;
+    }
+
+    .search-bar:focus-within {
+      border-color: var(--signal);
+    }
+
+    .search-bar__icon {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      color: var(--slate);
+    }
+
+    .search-bar__input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--ink);
+    }
+
+    .search-bar__input::placeholder {
+      color: var(--slate);
+    }
+
+    /* ------- BADGES & TAGS ------- */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2);
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-1);
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: var(--radius-full);
+      line-height: 1.4;
+    }
+
+    .badge--signal {
+      background: rgba(59, 130, 246, 0.12);
+      color: var(--signal);
+    }
+
+    .badge--success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge--warning {
+      background: #fef9c3;
+      color: #854d0e;
+    }
+
+    .badge--danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge--neutral {
+      background: var(--bone);
+      color: var(--ink);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-1);
+      padding: 5px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: var(--radius-md);
+      background: var(--bone);
+      color: var(--ink);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .tag:hover {
+      background: var(--border);
+      border-color: var(--slate);
+    }
+
+    .tag--active {
+      background: var(--signal);
+      color: var(--paper);
+      border-color: var(--signal);
+    }
+
+    /* Divider */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: var(--s-4) 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Header -->
+    <header class="header" id="header">
+      <h1 class="header__title">Colorful Components</h1>
+      <p class="header__subtitle">A vibrant collection of interactive elements styled with bold, high-contrast tokens.</p>
+      <hr class="header__rule">
+    </header>
+
+    <!-- Buttons -->
+    <div class="section">
+      <div class="section__label">Buttons</div>
+
+      <div class="sub-heading">Primary Action</div>
+      <div class="component-row">
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary">Default</button>
+        <button class="btn btn--primary btn--lg">Large Primary</button>
+      </div>
+
+      <div class="sub-heading">Secondary Action</div>
+      <div class="component-row">
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary">Default</button>
+        <button class="btn btn--secondary btn--lg">Large Secondary</button>
+      </div>
+
+      <div class="sub-heading">Ghost / Text Link</div>
+      <div class="component-row">
+        <a href="#" class="btn btn--ghost">Learn more</a>
+        <a href="#" class="btn btn--ghost">Explore features</a>
+        <a href="#" class="btn btn--ghost">View documentation</a>
+      </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="section">
+      <div class="section__label">Cards</div>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__eyebrow">Bordered Card</div>
+          <div class="card__title">Vibrant Clarity</div>
+          <div class="card__body">
+            Clean, bordered card design emphasizes content hierarchy with a subtle frame. Perfect for organizing information with high readability.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Action</button>
+            <button class="btn btn--secondary btn--sm">Dismiss</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__eyebrow">Interactive State</div>
+          <div class="card__title">Hover Effect</div>
+          <div class="card__body">
+            Cards respond with subtle border and shadow elevation on hover, inviting user interaction. The accent color provides visual feedback.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Explore</button>
+            <a href="#" class="btn btn--ghost btn--sm" style="border:none;padding:6px 8px">Learn more</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inputs -->
+    <div class="section">
+      <div class="section__label">Inputs</div>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Full Name</label>
+          <input class="input" type="text" placeholder="Enter your full name">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input class="input" type="email" placeholder="you@example.com">
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="sub-heading">Search Bar</div>
+      <div class="search-bar">
+        <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input class="search-bar__input" type="text" placeholder="Search components, tokens, patterns...">
+      </div>
+    </div>
+
+    <!-- Badges & Tags -->
+    <div class="section">
+      <div class="section__label">Badges & Tags</div>
+
+      <div class="sub-heading">Status Badges</div>
+      <div class="badge-row" style="margin-bottom: var(--s-4)">
+        <span class="badge badge--signal">Active</span>
+        <span class="badge badge--success">Shipped</span>
+        <span class="badge badge--warning">In Review</span>
+        <span class="badge badge--danger">Blocked</span>
+        <span class="badge badge--neutral">Draft</span>
+      </div>
+
+      <div class="sub-heading">Category Tags</div>
+      <div class="badge-row">
+        <span class="tag tag--active">All</span>
+        <span class="tag">Typography</span>
+        <span class="tag">Colors</span>
+        <span class="tag">Spacing</span>
+        <span class="tag">Components</span>
+        <span class="tag">Layout</span>
+        <span class="tag">Interaction</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => r.ok ? r.json() : null)
+      .then(tokens => {
+        if (!tokens) return;
+        const name = tokens.meta?.title || tokens.meta?.id || '';
+        if (name) {
+          document.getElementById('header').querySelector('.header__title').textContent = name + ' Components';
+        }
+        const gfUrl = tokens.googleFontsUrl || (tokens.fonts && tokens.fonts.googleUrl);
+        if (gfUrl) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = gfUrl;
+          document.head.appendChild(link);
+        }
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>

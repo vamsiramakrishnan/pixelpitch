@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Palette — Claude</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Georgia', serif);
+      background: var(--paper, #f5f4ed);
+      color: var(--ink, #141413);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 72px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'Georgia', serif);
+      font-size: 56px;
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--ink, #141413);
+      margin-bottom: 8px;
+    }
+
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate, #5e5d59);
+      max-width: 640px;
+      margin-bottom: 24px;
+      font-weight: 400;
+    }
+
+    .header__rule {
+      display: block;
+      width: 56px;
+      height: 3px;
+      background: var(--signal, #c96442);
+      border: none;
+      margin-top: 20px;
+      border-radius: 1px;
+    }
+
+    .header__meta {
+      display: flex;
+      gap: 32px;
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--slate, #5e5d59);
+    }
+
+    .header__meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .header__meta-label {
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 11px;
+    }
+
+    /* Section labels */
+    .section-label {
+      font-family: var(--font-display, 'Georgia', serif);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #5e5d59);
+      margin-bottom: 28px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-cream, #f0eee6);
+    }
+
+    /* Swatch grid */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 24px;
+      margin-bottom: 64px;
+    }
+
+    .swatch {
+      background: var(--bone, #faf9f5);
+      border: 1px solid var(--border-cream, #f0eee6);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.25s ease;
+    }
+
+    .swatch:hover {
+      box-shadow: 0 4px 16px rgba(20, 20, 19, 0.12);
+      border-color: var(--slate, #5e5d59);
+    }
+
+    .swatch__chip {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      position: relative;
+    }
+
+    .swatch__chip-contrast {
+      position: absolute;
+      bottom: 10px;
+      right: 12px;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 3px;
+      line-height: 1.4;
+      font-family: var(--font-mono, 'Courier New', monospace);
+    }
+
+    .swatch__meta {
+      padding: 16px 16px 18px;
+    }
+
+    .swatch__var {
+      font-family: var(--font-mono, 'Courier New', monospace);
+      font-size: 12px;
+      color: var(--ink, #141413);
+      word-break: break-all;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .swatch__hex {
+      font-family: var(--font-mono, 'Courier New', monospace);
+      font-size: 11px;
+      color: var(--slate, #5e5d59);
+      margin-bottom: 8px;
+      letter-spacing: 0.3px;
+    }
+
+    .swatch__role {
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--slate, #5e5d59);
+      margin-bottom: 8px;
+    }
+
+    .swatch__contrast-label {
+      font-size: 11px;
+      font-weight: 500;
+      margin-top: 6px;
+      font-family: var(--font-mono, 'Courier New', monospace);
+    }
+
+    .contrast-pass {
+      color: #2d7a3a;
+    }
+
+    .contrast-fail {
+      color: #8b3a3a;
+    }
+
+    .contrast-aa-large {
+      color: #7a6e2e;
+    }
+
+    /* Philosophy section */
+    .philosophy {
+      background: var(--bone, #faf9f5);
+      padding: 40px;
+      border-radius: 8px;
+      border: 1px solid var(--border-cream, #f0eee6);
+      margin-bottom: 64px;
+    }
+
+    .philosophy h2 {
+      font-family: var(--font-display, 'Georgia', serif);
+      font-size: 28px;
+      font-weight: 500;
+      margin-bottom: 16px;
+      color: var(--ink, #141413);
+      line-height: 1.20;
+    }
+
+    .philosophy p {
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--slate, #5e5d59);
+      margin-bottom: 12px;
+    }
+
+    .philosophy p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Usage demo */
+    .usage-demo {
+      margin-bottom: 64px;
+    }
+
+    .usage-demo h3 {
+      font-family: var(--font-display, 'Georgia', serif);
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      color: var(--ink, #141413);
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .demo-card {
+      background: var(--bone, #faf9f5);
+      padding: 24px;
+      border-radius: 8px;
+      border: 1px solid var(--border-cream, #f0eee6);
+    }
+
+    .demo-card h4 {
+      font-family: var(--font-display, 'Georgia', serif);
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 12px;
+      color: var(--ink, #141413);
+    }
+
+    .demo-card p {
+      font-size: 13px;
+      line-height: 1.60;
+      color: var(--slate, #5e5d59);
+      margin-bottom: 16px;
+    }
+
+    .demo-button {
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 15px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: var(--font-body, 'Georgia', serif);
+    }
+
+    .demo-button-primary {
+      background: var(--signal, #c96442);
+      color: white;
+    }
+
+    .demo-button-primary:hover {
+      background: #b8562f;
+    }
+
+    .demo-button-secondary {
+      background: var(--warm-sand, #e8e6dc);
+      color: var(--ink, #141413);
+      border: 1px solid var(--border, #30302e);
+    }
+
+    .demo-button-secondary:hover {
+      background: #dbd7cc;
+    }
+
+    .demo-link {
+      color: var(--signal, #c96442);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .demo-link:hover {
+      color: #b8562f;
+    }
+
+    /* WCAG footer */
+    .wcag-summary {
+      margin-top: 48px;
+      padding: 40px;
+      background: var(--bone, #faf9f5);
+      border: 1px solid var(--border-cream, #f0eee6);
+      border-radius: 8px;
+    }
+
+    .wcag-summary h2 {
+      font-family: var(--font-display, 'Georgia', serif);
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 12px;
+      color: var(--ink, #141413);
+    }
+
+    .wcag-summary p {
+      font-size: 13px;
+      color: var(--slate, #5e5d59);
+      margin-bottom: 20px;
+    }
+
+    .wcag-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-cream, #f0eee6);
+      font-size: 14px;
+    }
+
+    .wcag-row:last-child {
+      border-bottom: none;
+    }
+
+    .wcag-badge {
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .wcag-badge--pass {
+      background: #e8f4e8;
+      color: #2d7a3a;
+    }
+
+    .wcag-badge--fail {
+      background: #f4e8e8;
+      color: #8b3a3a;
+    }
+
+    .wcag-badge--aa-large {
+      background: #f4f0e8;
+      color: #7a6e2e;
+    }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #5e5d59);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border-cream, #f0eee6);
+      border-top-color: var(--signal, #c96442);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 48px 24px;
+      }
+
+      .header__title {
+        font-size: 40px;
+      }
+
+      .swatch-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 16px;
+      }
+
+      .philosophy,
+      .wcag-summary,
+      .demo-card {
+        padding: 24px;
+      }
+
+      .header__meta {
+        flex-direction: column;
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    /* ── Contrast-ratio helpers (WCAG 2.1 relative luminance) ── */
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function luminance([r, g, b]) {
+      const [rs, gs, bs] = [r, g, b].map(c => {
+        c /= 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    }
+
+    function contrastRatio(hex1, hex2) {
+      const l1 = luminance(hexToRgb(hex1));
+      const l2 = luminance(hexToRgb(hex2));
+      const lighter = Math.max(l1, l2);
+      const darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function wcagLevel(ratio) {
+      if (ratio >= 7) return { label: 'AAA', cls: 'pass' };
+      if (ratio >= 4.5) return { label: 'AA', cls: 'pass' };
+      if (ratio >= 3) return { label: 'AA Large', cls: 'aa-large' };
+      return { label: 'Fail', cls: 'fail' };
+    }
+
+    /* ── Core token roles ── */
+    const CORE_ROLES = {
+      paper: 'Page background — warm parchment canvas',
+      ink: 'Primary text — warm near-black',
+      slate: 'Secondary text — warm medium-dark gray',
+      signal: 'Brand accent — terracotta',
+      bone: 'Elevated surface — soft ivory',
+      border: 'Borders and dividers — warm charcoal',
+      surface: 'Card background — ivory',
+    };
+
+    /* ── Render the page ── */
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#8b3a3a">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || 'Claude';
+      const rawColors = tokens.colors || {};
+      const paperHex = rawColors.paper || '#f5f4ed';
+
+      /* Flatten nested colors */
+      const colors = {};
+      for (const [k, v] of Object.entries(rawColors)) {
+        if (typeof v === 'string') { colors[k] = v; }
+        else if (v && typeof v === 'object') {
+          for (const [sk, sv] of Object.entries(v)) {
+            if (typeof sv === 'string') colors[k + '-' + sk] = sv;
+          }
+        }
+      }
+
+      /* Split into core and extended */
+      const coreKeys = Object.keys(CORE_ROLES).filter(k => colors[k]);
+      const extendedKeys = Object.keys(colors)
+        .filter(k => !CORE_ROLES[k] && typeof colors[k] === 'string' && !k.includes('-'))
+        .sort();
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Color Palette</h1>';
+      html += '  <p class="header__subtitle">A warm, literary aesthetic for a thoughtful AI companion</p>';
+      html += '  <hr class="header__rule">';
+      html += '  <div class="header__meta">';
+      html += '    <div class="header__meta-item"><span class="header__meta-label">System</span><span>' + esc(name) + '</span></div>';
+      html += '    <div class="header__meta-item"><span class="header__meta-label">Total Colors</span><span>' + (coreKeys.length + extendedKeys.length) + '</span></div>';
+      html += '    <div class="header__meta-item"><span class="header__meta-label">Theme</span><span>Warm, Editorial</span></div>';
+      html += '  </div>';
+      html += '</header>';
+
+      /* Philosophy */
+      html += '<div class="philosophy">';
+      html += '  <h2>Palette Philosophy</h2>';
+      html += '  <p>Claude\'s color palette is built on warmth and trustworthiness. Every color carries a yellow-brown undertone—there are no cool blue-grays anywhere. The parchment canvas (#f5f4ed) deliberately evokes premium paper rather than screens. The terracotta accent (#c96442) is deliberately earthy and un-tech, creating an emotional connection rather than a corporate one.</p>';
+      html += '  <p>The palette prioritizes reading comfort and editorial hierarchy, with warm neutrals for text and surfaces that feel lived-in and human. This chromatic consistency—from the dark warm surfaces to the cream-tinted borders—creates a space that\'s uniquely warm compared to every other major AI brand.</p>';
+      html += '</div>';
+
+      /* Core palette */
+      if (coreKeys.length) {
+        html += '<div class="section-label">Core Palette</div>';
+        html += '<div class="swatch-grid">';
+        coreKeys.forEach(key => {
+          html += swatchCard(key, colors[key], paperHex, CORE_ROLES[key]);
+        });
+        html += '</div>';
+      }
+
+      /* Extended palette */
+      if (extendedKeys.length) {
+        html += '<div class="section-label">Extended Palette</div>';
+        html += '<div class="swatch-grid">';
+        extendedKeys.forEach(key => {
+          const role = formatRole(key);
+          html += swatchCard(key, colors[key], paperHex, role);
+        });
+        html += '</div>';
+      }
+
+      /* Usage demo */
+      html += usageDemo();
+
+      /* WCAG summary */
+      html += wcagSummary(colors, paperHex);
+
+      app.innerHTML = html;
+    }
+
+    /* ── Swatch card builder ── */
+    function swatchCard(key, hex, paperHex, role) {
+      const ratio = contrastRatio(hex, paperHex);
+      const level = wcagLevel(ratio);
+      const chipTextColor = luminance(hexToRgb(hex)) > 0.45 ? '#141413' : '#faf9f5';
+      const chipBadgeBg = luminance(hexToRgb(hex)) > 0.45
+        ? 'rgba(20, 20, 19, 0.08)' : 'rgba(250, 249, 245, 0.2)';
+
+      return '' +
+        '<div class="swatch">' +
+        '  <div class="swatch__chip" style="background:' + hex + '">' +
+        '    <span class="swatch__chip-contrast" style="color:' + chipTextColor +
+             ';background:' + chipBadgeBg + '">' + ratio.toFixed(2) + ':1</span>' +
+        '  </div>' +
+        '  <div class="swatch__meta">' +
+        '    <div class="swatch__var">--' + esc(key) + '</div>' +
+        '    <div class="swatch__hex">' + esc(hex) + '</div>' +
+        '    <div class="swatch__role">' + esc(role) + '</div>' +
+        '    <div class="swatch__contrast-label contrast-' + level.cls + '">' +
+             'WCAG ' + level.label + '</div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ── Usage demo ── */
+    function usageDemo() {
+      return `
+        <div class="usage-demo">
+          <h3>Color in Action</h3>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h4>Primary CTA</h4>
+              <p>The terracotta accent (#c96442) is used for primary calls-to-action. It's warm, earthy, and distinctly human.</p>
+              <button class="demo-button demo-button-primary">Send Message</button>
+            </div>
+            <div class="demo-card">
+              <h4>Editorial Hierarchy</h4>
+              <p>Slate text (#5e5d59) for secondary content and body copy creates readable hierarchy with warm undertones throughout.</p>
+              <p style="margin-top: 8px; color: var(--slate, #5e5d59);">The secondary copy feels muted without being cold or distant.</p>
+            </div>
+            <div class="demo-card">
+              <h4>Warm Surfaces</h4>
+              <p>Cards and elevated containers use warm sand and ivory—never white, always with a parchment tint.</p>
+              <button class="demo-button demo-button-secondary">Secondary Action</button>
+            </div>
+            <div class="demo-card">
+              <h4>Text Links</h4>
+              <p>Links use the coral accent (<a href="#" class="demo-link">#d97757</a>) on dark backgrounds or the terracotta on light backgrounds.</p>
+              <p style="margin-top: 8px;">Accessibility is built into the color system itself.</p>
+            </div>
+            <div class="demo-card">
+              <h4>Error States</h4>
+              <p>The error crimson (#b53333) maintains warmth even in validation feedback, avoiding cold alarm colors.</p>
+              <p style="color: var(--color-error-crimson, #b53333); margin-top: 8px;">This color maintains brand warmth</p>
+            </div>
+            <div class="demo-card">
+              <h4>Borders & Dividers</h4>
+              <p>Light borders use cream (#f0eee6), dark borders use warm charcoal (#30302e). No harsh grays anywhere.</p>
+              <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border-cream, #f0eee6);">Subtle dividers</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* ── WCAG compliance summary ── */
+    function wcagSummary(colors, paperHex) {
+      const keys = Object.keys(colors);
+      let passAAA = 0, passAA = 0, passAALarge = 0, fail = 0;
+
+      keys.forEach(k => {
+        const ratio = contrastRatio(colors[k], paperHex);
+        if (ratio >= 7) passAAA++;
+        else if (ratio >= 4.5) passAA++;
+        else if (ratio >= 3) passAALarge++;
+        else fail++;
+      });
+
+      let html = '<div class="wcag-summary">';
+      html += '<h2>WCAG 2.1 Compliance</h2>';
+      html += '<p>Contrast ratios measured against the parchment background (' + esc(paperHex) + '). Every color token is evaluated for accessibility across light-theme contexts.</p>';
+      html += row('AAA (7:1+)', passAAA, 'pass');
+      html += row('AA (4.5:1+)', passAA, 'pass');
+      html += row('AA Large Text (3:1+)', passAALarge, 'aa-large');
+      html += row('Below threshold', fail, fail > 0 ? 'fail' : 'pass');
+      html += '</div>';
+      return html;
+
+      function row(label, count, badge) {
+        return '<div class="wcag-row">' +
+               '<span class="wcag-badge wcag-badge--' + badge + '">' + count + '</span>' +
+               '<span>' + label + '</span>' +
+               '</div>';
+      }
+    }
+
+    /* ── Utilities ── */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function formatRole(key) {
+      return key
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/[-_]/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase())
+        .trim();
+    }
+  </script>
+</body>
+</html>

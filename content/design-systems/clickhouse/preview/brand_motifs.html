@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — ClickHouse</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      background: var(--paper, #000000);
+      color: var(--ink, #ffffff);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--slate, #a0a0a0);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display);
+      font-size: 96px;
+      font-weight: 900;
+      line-height: 1.0;
+      letter-spacing: 0;
+      color: var(--ink, #ffffff);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--signal, #faff69);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.40;
+      color: var(--slate, #a0a0a0);
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--signal, #faff69);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--signal, #faff69);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--surface, #414141);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 28px;
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.56;
+      color: var(--ink, #ffffff);
+      border-bottom: 1px solid var(--surface, #414141);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 24px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--signal, #faff69);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #000000);
+      border: 1px solid var(--surface, #414141);
+      border-radius: 8px;
+      padding: 32px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--signal, #faff69);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--slate, #a0a0a0);
+    }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--signal, #faff69);
+      background: rgba(250, 255, 105, 0.1);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--slate, #a0a0a0);
+      background: rgba(160, 160, 160, 0.1);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.50;
+      color: var(--ink, #ffffff);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--surface, #414141);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 120px;
+      border: 1px solid var(--surface, #414141);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.4;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, 'Inconsolata', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--paper, #000000);
+      border: 1px solid var(--signal, #faff69);
+      border-radius: 8px;
+      padding: 48px 40px;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--slate, #a0a0a0);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display);
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 1.0;
+      letter-spacing: 0;
+      color: var(--ink, #ffffff);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #faff69);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.56;
+      color: var(--ink, #ffffff);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--surface, #414141);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--slate, #a0a0a0);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--signal, #faff69);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--paper, #000000);
+      border: 1px solid var(--surface, #414141);
+      border-radius: 8px;
+      padding: 32px;
+      max-width: 840px;
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.56;
+      color: var(--ink, #ffffff);
+    }
+
+    /* ──── Neon Accent Showcase ──── */
+    .neon-showcase {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .neon-showcase {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .neon-slide {
+      border: 2px solid var(--signal, #faff69);
+      border-radius: 8px;
+      aspect-ratio: 16 / 10;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background: var(--paper, #000000);
+    }
+
+    .neon-slide__kicker {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #a0a0a0);
+      margin-bottom: 12px;
+    }
+
+    .neon-slide__headline {
+      font-family: var(--font-display);
+      font-size: 54px;
+      font-weight: 700;
+      line-height: 1.0;
+      letter-spacing: 0;
+      color: var(--ink, #ffffff);
+      margin-bottom: 0;
+    }
+
+    .neon-slide__accent {
+      color: var(--signal, #faff69);
+    }
+
+    .neon-slide__label {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #a0a0a0);
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--surface, #414141);
+    }
+
+    /* ──── Type Ramp ──── */
+    .ramp-container {
+      border: 1px solid var(--surface, #414141);
+      border-radius: 8px;
+      padding: 32px;
+      background: var(--paper, #000000);
+    }
+
+    .ramp-item {
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--surface, #414141);
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .ramp-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .ramp-info {
+      flex: 0 0 160px;
+    }
+
+    .ramp-label {
+      font-family: var(--font-body);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #a0a0a0);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .ramp-detail {
+      font-family: var(--font-mono, 'Inconsolata', monospace);
+      font-size: 12px;
+      color: var(--slate, #a0a0a0);
+      line-height: 1.5;
+    }
+
+    .ramp-example {
+      flex: 1;
+    }
+
+    /* ──── CTA Buttons Showcase ──── */
+    .cta-showcase {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.50;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .cta-button--neon {
+      background: var(--signal, #faff69);
+      color: var(--paper, #000000);
+      border: 1px solid var(--signal, #faff69);
+    }
+
+    .cta-button--neon:hover {
+      background: var(--color-pale-yellow, #f4f692);
+      border-color: var(--color-pale-yellow, #f4f692);
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .cta-button--green {
+      background: var(--color-forest-green, #166534);
+      color: var(--ink, #ffffff);
+      border: 1px solid var(--color-forest-green, #166534);
+    }
+
+    .cta-button--green:hover {
+      background: var(--color-dark-forest, #14572f);
+      border-color: var(--color-dark-forest, #14572f);
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #a0a0a0);
+      font-size: 18px;
+      font-family: var(--font-body);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--surface, #414141);
+      border-top-color: var(--signal, #faff69);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'surface'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#faff69">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">Electrified <span>Speed</span></h1>';
+      html += '  <p class="header__subtitle">Neon yellow-green on pure black. Extreme weight display type. High-contrast technical cockpit aesthetic that screams performance.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>ClickHouse's interface is a high-performance cockpit. Pure black canvas (#000000) holds dark charcoal cards (#414141) and terminal-grade borders. The only chromatic disruption is neon yellow-green (#faff69) — slashing across CTAs, borders, and accents like a highlighter on a dark console. Inter at weight 900 sets hero display at 96px with physical mass. The electrifying tension between near-black and neon creates one of the highest-contrast pairings in tech design — making every CTA impossible to miss. Forest green (#166534) provides secondary action hierarchy without competing with the neon. Nothing subtle. It mirrors the product's promise: extreme speed and raw power.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Pure black canvas (#000000) with neon yellow-green (#faff69) accent — maximum contrast</li>';
+      html += '    <li>Extra-heavy display typography: Inter at weight 900 (Black) up to 96px</li>';
+      html += '    <li>Dark charcoal card system with #414141 borders at 80% opacity</li>';
+      html += '    <li>Forest green (#166534) secondary CTA buttons — distinct action hierarchy</li>';
+      html += '    <li>Performance stats as oversized display numbers — core visual argument</li>';
+      html += '    <li>Uppercase labels with wide letter-spacing (1.4px) for navigation structure</li>';
+      html += '    <li>Active/pressed state shifts text to pale yellow (#f4f692) with inset shadow</li>';
+      html += '    <li>All links hover to neon yellow-green — unified interactive signal</li>';
+      html += '    <li>Sharp geometry reflects database precision — no rounded corners beyond 8px</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use Neon Volt (#faff69) as the sole chromatic accent — it must pop against pure black</li>';
+      html += '      <li>Use Inter at weight 900 for hero display text — extreme weight is the personality</li>';
+      html += '      <li>Keep everything on pure black (#000000) — never use dark gray as page background</li>';
+      html += '      <li>Use charcoal borders (rgba(65,65,65,0.8)) for all card containment</li>';
+      html += '      <li>Apply Forest Green (#166534) for primary CTA buttons — distinct from neon</li>';
+      html += '      <li>Show performance stats as oversized display numbers</li>';
+      html += '      <li>Use uppercase with wide letter-spacing (1.4px) for section labels</li>';
+      html += '      <li>Apply Pale Yellow (#f4f692) for active/pressed text states</li>';
+      html += '      <li>Link hovers should ALWAYS shift to Neon Volt — unified interactive feedback</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Introduce additional colors — palette is strictly black, neon, green, and gray</li>';
+      html += '      <li>Use neon as a background fill — it's an accent and border color only</li>';
+      html += '      <li>Reduce display weight below 700 — heavy weight is core to the personality</li>';
+      html += '      <li>Use light/white backgrounds anywhere — entire experience is dark</li>';
+      html += '      <li>Round corners beyond 8px — sharp geometry reflects database precision</li>';
+      html += '      <li>Use soft/diffused shadows on black — they're invisible. Use borders instead</li>';
+      html += '      <li>Skip the inset shadow on active states — the "pressed" effect is distinctive</li>';
+      html += '      <li>Use warm neutrals — all grays are perfectly neutral</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Neon Accent Showcase ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">The Neon Volt Accent</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.50; color: var(--slate); margin-bottom: 24px; max-width: 840px;">One neon accent per slide creates the electrifying tension. It appears as a border, an underline, a button fill, or a highlight — never scattered, never layered. This high-contrast pairing (#faff69 on #000000) is what makes the interface feel like a high-performance cockpit.</p>';
+      html += '  <div class="neon-showcase">';
+
+      html += '    <div class="neon-slide">';
+      html += '      <div class="neon-slide__kicker">Correct</div>';
+      html += '      <div class="neon-slide__headline">One <span class="neon-slide__accent">neon</span> stroke</div>';
+      html += '      <div class="neon-slide__label">Single accent creates maximum contrast and legibility.</div>';
+      html += '    </div>';
+
+      html += '    <div class="neon-slide">';
+      html += '      <div class="neon-slide__kicker">Incorrect</div>';
+      html += '      <div style="font-size: 24px; font-family: var(--font-display); color: var(--signal); margin-bottom: 12px;">Multiple neon layers</div>';
+      html += '      <div class="neon-slide__headline">Create visual <span class="neon-slide__accent">chaos</span></div>';
+      html += '      <div class="neon-slide__label">Competing accents dilute the neon's power.</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#000000' : '#ffffff';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Typography Pairing ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Display + Body</div>';
+      html += '    <div class="type-pairing__display">Heavy weight <span>drives</span> impact</div>';
+
+      html += '    <div class="type-pairing__body">Inter at weight 900 sets hero display at 96px with physical mass. Lower weights carry body text at 18px with 1.56 line height. The extreme weight contrast between headlines and body creates the cockpit aesthetic — everything feels engineered and precise. Uppercase labels with 1.4px letter-spacing structure navigation.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Display Font</span>';
+      html += '        Inter, 900 weight (96px hero), 700 weight (72px display)';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Body Font</span>';
+      html += '        Inter, 400 weight (18px), 600 weight (headings)';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Mono Font</span>';
+      html += '        Inconsolata, 600 weight (code)';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── CTA Buttons ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Call-to-Action Buttons</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.50; color: var(--slate); margin-bottom: 24px; max-width: 840px;">Two button tiers create clear action hierarchy. Neon yellow-green (primary) commands attention with highest contrast. Forest green (secondary) provides alternative action without competing with neon. Pale yellow (#f4f692) active state with inset shadow creates the "pressed" effect distinctive to ClickHouse design.</p>';
+      html += '  <div class="cta-showcase">';
+      html += '    <button class="cta-button cta-button--neon">Primary CTA — Neon Yellow-Green</button>';
+      html += '    <button class="cta-button cta-button--green">Secondary CTA — Forest Green</button>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Type Ramp Section ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Type Ramp & Roles</div>';
+      html += '  <div class="ramp-container">';
+
+      const ramp = [
+        { role: 'Display Mega', size: '96px', weight: '900', lineHeight: '1.00', example: 'Electrified Speed' },
+        { role: 'Display / Hero', size: '72px', weight: '700', lineHeight: '1.00', example: 'High Performance' },
+        { role: 'Feature Heading', size: '36px', weight: '600', lineHeight: '1.30', example: 'Key capabilities' },
+        { role: 'Sub-heading', size: '24px', weight: '600', lineHeight: '1.17', example: 'Section title' },
+        { role: 'Feature Title', size: '20px', weight: '600', lineHeight: '1.40', example: 'Feature name' },
+        { role: 'Body Large', size: '18px', weight: '400', lineHeight: '1.56', example: 'Main paragraph text for reading and explanation' },
+        { role: 'Body / Button', size: '16px', weight: '400', lineHeight: '1.50', example: 'Button text and smaller body copy' },
+        { role: 'Caption', size: '14px', weight: '400', lineHeight: '1.43', example: 'Image caption or description' },
+        { role: 'Uppercase Label', size: '14px', weight: '600', lineHeight: '1.43', example: 'NAVIGATION · SECTION LABEL', spacing: '1.4px' },
+        { role: 'Code', size: '16px', weight: '600', lineHeight: '1.50', example: 'SELECT * FROM table' },
+        { role: 'Small', size: '12px', weight: '500', lineHeight: '1.33', example: 'Fine print' },
+        { role: 'Micro', size: '11.2px', weight: '500', lineHeight: '1.79', example: 'Tiny metadata' }
+      ];
+
+      ramp.forEach((item, i) => {
+        html += '<div class="ramp-item">';
+        html += '  <div class="ramp-info">';
+        html += '    <div class="r

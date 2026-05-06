@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Arc Browser</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #1a1a1f);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+      position: relative;
+    }
+
+    .header__gradient {
+      position: absolute;
+      top: -120px;
+      left: -64px;
+      right: -64px;
+      height: 280px;
+      background: linear-gradient(135deg, #7f5af0 0%, #e84393 100%);
+      opacity: 0.08;
+      border-radius: 0 0 48px 48px;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--ink, #1a1a1f);
+      margin-bottom: 12px;
+    }
+
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate, #54545a);
+      max-width: 600px;
+      font-weight: 400;
+    }
+
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 3px;
+      background: linear-gradient(90deg, #7f5af0, #e84393);
+      border: none;
+      margin-top: 24px;
+      border-radius: 2px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 56px;
+    }
+
+    .section__label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #54545a);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* Key characteristics */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 12px 0 12px 28px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--ink, #1a1a1f);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 18px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7f5af0, #e84393);
+      opacity: 0.7;
+    }
+
+    /* Do's and Don'ts */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 16px;
+      padding: 24px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .dd-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      border-radius: 16px 16px 0 0;
+    }
+
+    .dd-card--do::before {
+      background: linear-gradient(90deg, #16f2b3, #0db4f7);
+    }
+
+    .dd-card--dont::before {
+      background: linear-gradient(90deg, #ff7e5f, #feb47b);
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dd-card__heading--do { color: #0db4f7; }
+    .dd-card__heading--dont { color: #ff7e5f; }
+
+    .dd-card__icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .dd-card__icon--do {
+      background: rgba(22, 242, 179, 0.15);
+      color: #16f2b3;
+    }
+
+    .dd-card__icon--dont {
+      background: rgba(255, 126, 95, 0.15);
+      color: #ff7e5f;
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ink, #1a1a1f);
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* Color harmony strip */
+    .harmony-strip {
+      display: flex;
+      border-radius: 16px;
+      overflow: hidden;
+      height: 120px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.8;
+    }
+
+    .harmony-strip__label {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* Type pairing demo */
+    .type-pairing {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(245, 245, 245, 0.5)),
+                  linear-gradient(135deg, #7f5af0 0%, #e84393 100%);
+      background-attachment: fixed;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 16px;
+      padding: 48px 40px;
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .type-pairing::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(124, 90, 240, 0.15), transparent);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 42px;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: var(--ink, #1a1a1f);
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #1a1a1f);
+      max-width: 640px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .type-pairing__meta {
+      display: flex;
+      gap: 24px;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(229, 229, 229, 0.6);
+      position: relative;
+      z-index: 1;
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #54545a);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--ink, #1a1a1f);
+    }
+
+    /* Atmosphere card */
+    .atmosphere-card {
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(229, 229, 229, 0.8);
+      border-radius: 16px;
+      padding: 32px;
+      backdrop-filter: blur(8px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .atmosphere-card::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(124, 90, 240, 0.1), transparent);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .atmosphere-card p {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--ink, #1a1a1f);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Gradient showcase */
+    .gradients-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .gradient-swatch {
+      border-radius: 16px;
+      height: 140px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      cursor: default;
+      transition: transform 0.2s ease;
+    }
+
+    .gradient-swatch:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .gradient-swatch__label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(26, 26, 31, 0.8);
+      backdrop-filter: blur(8px);
+      padding: 12px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-ink-inverse, #fafafa);
+      letter-spacing: 0.05em;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #54545a);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: #7f5af0;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border', 'surface'];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#f56565">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.name || 'Arc Browser';
+      const colors = tokens.colors || {};
+      const extendedColors = colors.extended || {};
+      const fonts = tokens.typography || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__gradient"></div>';
+      html += '  <h1 class="header__title">Brand Motifs</h1>';
+      html += '  <p class="header__subtitle">The DNA of Arc: translucent surfaces, gradient warmth, and sidebar-first thinking.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ---- Atmosphere / Description ---- */
+      const atmosphere = 'Arc dissolves the boundary between chrome and page. Where traditional browsers treat the frame as a container, Arc treats it as scenery — the toolbar fades into the system wallpaper, the sidebar carries gradient warmth, and translucency is everywhere. The visual signature is frosted glass plus a single saturated gradient—peach-to-coral, violet-to-fuchsia, or mint-to-cyan—setting the emotional temperature of the entire window.';
+
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card"><p>' + esc(atmosphere) + '</p></div>';
+      html += '</div>';
+
+      /* ---- Key Characteristics ---- */
+      const traits = [
+        'Translucent frosted-glass surfaces over saturated gradient backgrounds',
+        'Theme-color gradients (Sunset, Twilight, Aurora) as the primary mood setter',
+        'Inter for product chrome; serif for marketing display (editorial voice)',
+        'Squircle-soft 12–16px radii everywhere; 8px on tabs; 9999px on pills',
+        'Sidebar-first layout: tabs, spaces, and bookmarks on the left, not the top',
+        'Color picker as a brand surface—themes are user-driven, not fixed',
+        'Subtle shadows (0 8px 32px rgba(0,0,0,0.08)) over the gradient backdrop',
+        'Tinted background washes (rgba(255,255,255,0.5)) instead of visible borders'
+      ];
+
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      traits.forEach(t => {
+        html += '<li>' + esc(t) + '</li>';
+      });
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ---- Do's and Don'ts ---- */
+      const dos = [
+        'Embrace translucency and blur—let the gradient show through',
+        'Use soft, generous radii (12–16px) on cards; 8px on smaller elements',
+        'Layer surfaces with tinted background washes, not stark borders',
+        'Pair Sans-serif chrome with serif marketing display for contrast',
+        'Let user-driven color theming define the emotional tone',
+        'Compose with tight tracking and generous line-height (1.55+)'
+      ];
+
+      const donts = [
+        'Apply hard, angular corners (0–4px radii) to primary surfaces',
+        'Use visible borders as your primary delineation strategy',
+        'Mix multiple competing gradients or accent colors',
+        'Apply heavy shadows—Arc is airy, not weighted',
+        'Stack sans and sans typefaces without purpose',
+        'Center-align main navigation; sidebars own the left edge'
+      ];
+
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '<div class="dd-card dd-card--do">';
+      html += '  <div class="dd-card__heading dd-card__heading--do">';
+      html += '    <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '  </div>';
+      html += '  <ul class="dd-list">';
+      dos.forEach(d => { html += '<li>' + esc(d) + '</li>'; });
+      html += '  </ul></div>';
+
+      html += '<div class="dd-card dd-card--dont">';
+      html += '  <div class="dd-card__heading dd-card__heading--dont">';
+      html += '    <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '  </div>';
+      html += '  <ul class="dd-list">';
+      donts.forEach(d => { html += '<li>' + esc(d) + '</li>'; });
+      html += '  </ul></div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Theme Gradients Showcase ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Theme Gradients</div>';
+      html += '  <div class="gradients-grid">';
+
+      const gradients = [
+        { name: 'Sunset', start: extendedColors['sunset-start'] || '#ff7e5f', end: extendedColors['sunset-end'] || '#feb47b' },
+        { name: 'Twilight', start: extendedColors['twilight-start'] || '#7f5af0', end: extendedColors['twilight-end'] || '#e84393' },
+        { name: 'Aurora', start: extendedColors['aurora-start'] || '#16f2b3', end: extendedColors['aurora-end'] || '#0db4f7' }
+      ];
+
+      gradients.forEach(g => {
+        html += '<div class="gradient-swatch" style="background:linear-gradient(135deg,' + esc(g.start) + ' 0%,' + esc(g.end) + ' 100%)">';
+        html += '  <div class="gradient-swatch__label">' + esc(g.name) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Color Harmony Strip ---- */
+      const harmonyKeys = ['paper', 'bone', 'border', 'slate', 'ink', 'signal'];
+      const harmonyColors = {};
+      harmonyKeys.forEach(k => {
+        if (colors[k]) harmonyColors[k] = colors[k];
+      });
+
+      if (Object.keys(harmonyColors).length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = harmonyColors[key];
+          if (hex) {
+            const lum = relativeLuminance(hex);
+            const labelColor = lum > 0.4 ? '#1a1a1f' : '#fafafa';
+            const labelBg = lum > 0.4 ? 'rgba(0,0,0,0.08)' : 'rgba(0,0,0,0.3)';
+            html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+            html += '  <span class="harmony-strip__label" style="color:' + labelColor + ';background:' + labelBg + '">' + esc(key) + '</span>';
+            html += '</div>';
+          }
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ---- Typography Pairing Demo ---- */
+      const displayFont = fonts.fontDisplay || 'system-ui, sans-serif';
+      const bodyFont = fonts.fontBody || 'system-ui, sans-serif';
+
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__display" style="font-family:' + esc(displayFont) + '">The browser that browses for you</div>';
+
+      html += '    <div class="type-pairing__body" style="font-family:' + esc(bodyFont) + '">';
+      html += 'Arc pairs a clean, tight sans-serif for the browser chrome with editorially-voiced display type for marketing. ';
+      html += 'On the product side, generous line-height (1.55+) and tight tracking make even small text feel spacious. ';
+      html += 'Every typeface choice reinforces the brand's personality: productive yet warm, technical yet human.';
+      html += '    </div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '<div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Display:</span> ' + esc(displayFont) + '</div>';
+      html += '<div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Body:</span> ' + esc(bodyFont) + '</div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    /* ---- Utilities ---- */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function relativeLuminance(hex) {
+      try {
+        const [r, g, b] = hexToRgb(hex).map(c => {
+          c /= 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      } catch { return 0.5; }
+    }
+  </script>
+</body>
+</html>

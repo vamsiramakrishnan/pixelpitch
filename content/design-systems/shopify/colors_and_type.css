@@ -1,0 +1,103 @@
+/* Shopify — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #000000;
+  --ink:     #ffffff;
+  --slate:   #a1a1aa;
+  --signal:  #36f4a4;
+  --bone:    #02090a;
+  --border:  #1e2c31;
+  --surface: #c1fbd4;
+
+  /* Extended palette */
+  --color-pistachio: #d4f9e0;
+  --color-dark-forest: #061a1c;
+  --color-forest: #102620;
+  --color-shade-30: #d4d4d8;
+  --color-shade-50: #71717a;
+  --color-shade-60: #52525b;
+  --color-shade-70: #3f3f46;
+  --color-light-border: #e4e4e7;
+  --color-link-muted: #9797a2;
+  --color-link-sage: #9dabad;
+  --color-link-lavender: #bdbdca;
+  --color-link-mint: #99b3ad;
+
+  /* Semantic */
+  --success: #36f4a4;
+  --info:    #71717a;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-xl: 96px;
+  --t-display-xl-bold: 90.74px;
+  --t-display-xl-tracked: 96px;
+  --t-display-light: 96px;
+  --t-heading-1: 70px;
+  --t-heading-2: 55px;
+  --t-heading-3: 48px;
+  --t-heading-4: 32px;
+  --t-heading-5: 28px;
+  --t-heading-6: 24px;
+  --t-body-large: 20px;
+  --t-body: 18px;
+  --t-body-medium: 18px;
+  --t-body-small: 16px;
+  --t-body-small-medium: 16px;
+  --t-button: 16px;
+  --t-nav-link: 18px;
+  --t-caption: 14px;
+  --t-caption-medium: 14px;
+  --t-overline: 15.36px;
+  --t-micro: 13px;
+  --t-label: 12px;
+  --t-code: 16px;
+  --t-code-small: 12px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   32px;
+  --radius-md:   8px;
+  --radius-lg:   16px;
+  --radius-full: 9px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    20px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

@@ -1,0 +1,96 @@
+/* MongoDB — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #001e2b;
+  --ink:     #3c9171;
+  --slate:   #5c6c75;
+  --signal:  #00ed64;
+  --bone:    #e8edeb;
+  --border:  #3c9171;
+  --surface: #1c2d38;
+
+  /* Extended palette */
+  --color-action-blue: #006cfa;
+  --color-hover-blue: #3860be;
+  --color-teal-active: #1eaedb;
+  --color-teal-gray: #3d4f58;
+  --color-dark-slate: #21313c;
+  --color-silver-teal: #b8c4c2;
+  --color-pure-white: #ffffff;
+  --color-black: #000000;
+
+  /* Semantic */
+  --success: #00ed64;
+  --info:    #006cfa;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 96px;
+  --t-display-secondary: 64px;
+  --t-section-heading: 36px;
+  --t-sub-heading: 24px;
+  --t-body-large: 20px;
+  --t-body: 18px;
+  --t-body-light: 16px;
+  --t-nav-ui: 16px;
+  --t-body-bold: 15px;
+  --t-button: 13.5px;
+  --t-caption: 14px;
+  --t-small: 11px;
+  --t-code-heading: 40px;
+  --t-code-body: 16px;
+  --t-code-label: 14px;
+  --t-code-micro: 9px;
+
+  /* ── Spacing ── */
+  --s-1: 1px;
+  --s-2: 4px;
+  --s-3: 7px;
+  --s-4: 8px;
+  --s-5: 10px;
+  --s-6: 12px;
+  --s-7: 14px;
+  --s-8: 15px;
+  --s-9: 16px;
+  --s-10: 18px;
+  --s-11: 20px;
+  --s-12: 24px;
+  --s-13: 32px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   80px;
+  --radius-full: 100px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    8px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

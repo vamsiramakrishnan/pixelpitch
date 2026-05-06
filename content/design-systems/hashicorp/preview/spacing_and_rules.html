@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — HashiCorp</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 96px 64px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 96px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display);
+      font-size: 82px;
+      font-weight: 600;
+      line-height: 1.17;
+      letter-spacing: 0;
+      color: var(--ink);
+      margin-bottom: 16px;
+      max-width: 90%;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.50;
+      color: var(--signal);
+      max-width: 75%;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 120px;
+      height: 1px;
+      background: var(--color-action-blue);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 96px;
+    }
+
+    .section__label {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: 48px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--slate);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 100px;
+      gap: 24px;
+      align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--slate);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--signal);
+      margin-top: 4px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 2px;
+      background: var(--color-action-blue);
+      min-width: 2px;
+      transition: opacity 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.6;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      text-align: right;
+    }
+
+    /* Rule weights / Depth levels */
+    .rule-demo {
+      padding: 32px 0;
+      border-bottom: 1px solid var(--slate);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .rule-demo__label {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--signal);
+      margin-top: 4px;
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--signal);
+    }
+
+    .rule-demo__container {
+      width: 100%;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      background: var(--color-near-black);
+      border-radius: var(--radius-md);
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    .rule-demo__flat-demo {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--signal);
+      padding: 16px;
+      background: var(--color-near-black);
+      border-radius: var(--radius-md);
+      text-align: center;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .radius-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .radius-item__box {
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(135deg, var(--color-vagrant-blue), var(--color-action-blue));
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .radius-item__info {
+      flex: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--signal);
+      margin-bottom: 12px;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body);
+      font-size: 13px;
+      line-height: 1.63;
+      color: var(--signal);
+    }
+
+    /* Spacing philosophy block */
+    .philosophy {
+      background: var(--color-near-black);
+      padding: 48px;
+      border: 1px solid var(--slate);
+      margin-bottom: 64px;
+      border-radius: var(--radius-md);
+    }
+
+    .philosophy__title {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: 16px;
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.63;
+      color: var(--ink);
+    }
+
+    .philosophy__text strong {
+      font-weight: 600;
+    }
+
+    .philosophy__text em {
+      font-style: italic;
+    }
+
+    .philosophy__text code {
+      font-family: var(--font-mono);
+      background: rgba(97, 104, 117, 0.08);
+      padding: 2px 6px;
+      border-radius: 2px;
+      font-size: 0.95em;
+      color: var(--color-action-blue);
+    }
+
+    /* Grid demo */
+    .grid-demo {
+      background: var(--color-near-black);
+      padding: 48px;
+      border: 1px solid var(--slate);
+      margin-bottom: 64px;
+      border-radius: var(--radius-md);
+    }
+
+    .grid-demo__title {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: 24px;
+    }
+
+    .grid-demo__visual {
+      width: 100%;
+      height: 240px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+      background: transparent;
+      padding: 24px;
+      border: 1px dashed var(--slate);
+      border-radius: var(--radius-md);
+    }
+
+    .grid-demo__column {
+      background: linear-gradient(135deg, rgba(16, 96, 255, 0.15), rgba(16, 24, 89, 0.15));
+      border: 1px solid var(--slate);
+      border-radius: 2px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--color-action-blue);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 8px;
+    }
+
+    .grid-demo__info {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .grid-demo__stat {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--ink);
+      line-height: 1.63;
+    }
+
+    .grid-demo__stat-label {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.88px;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: 4px;
+    }
+
+    /* Breakpoints */
+    .breakpoints-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 32px;
+    }
+
+    .breakpoints-table thead {
+      border-bottom: 1px solid var(--slate);
+    }
+
+    .breakpoints-table th {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--signal);
+      text-align: left;
+      padding: 12px 16px;
+      background: var(--color-near-black);
+    }
+
+    .breakpoints-table td {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--ink);
+      padding: 16px;
+      border-bottom: 1px solid var(--slate);
+    }
+
+    .breakpoints-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .breakpoints-table code {
+      font-family: var(--font-mono);
+      background: rgba(97, 104, 117, 0.08);
+      padding: 2px 6px;
+      border-radius: 2px;
+      color: var(--color-action-blue);
+    }
+
+    /* Depth philosophy */
+    .depth-philosophy {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 96px;
+    }
+
+    .depth-philosophy__item {
+      padding: 32px;
+      background: var(--color-near-black);
+      border: 1px solid var(--slate);
+      border-radius: var(--radius-md);
+    }
+
+    .depth-philosophy__title {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .depth-philosophy__text {
+      font-family: var(--font-body);
+      font-size: 13px;
+      line-height: 1.63;
+      color: var(--signal);
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--signal);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 2px solid rgba(16, 96, 255, 0.2);
+      border-top-color: var(--color-action-blue);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 900px) {
+      .page {
+        padding: 64px 32px;
+      }
+
+      .header {
+        margin-bottom: 64px;
+      }
+
+      .header__title {
+        font-size: 56px;
+        max-width: 100%;
+      }
+
+      .header__subtitle {
+        max-width: 100%;
+      }
+
+      .section {
+        margin-bottom: 64px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 90px 1fr 70px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .radius-item {
+        grid-template-columns: 100px 1fr;
+      }
+
+      .depth-philosophy {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '2px', label: 'micro' },
+      's-2': { value: '3px', label: 'xs' },
+      's-3': { value: '4px', label: 'xs+' },
+      's-4': { value: '6px', label: 'sm' },
+      's-5': { value: '7px', label: 'sm+' },
+      's-6': { value: '8px', label: 'sm++' },
+      's-7': { value: '9px', label: 'md-' },
+      's-8': { value: '11px', label: 'md' },
+      's-9': { value: '12px', label: 'md+' },
+      's-10': { value: '16px', label: 'lg' },
+      's-11': { value: '20px', label: 'lg+' },
+      's-12': { value: '24px', label: 'xl' },
+      's-13': { value: '32px', label: 'xl+' },
+      's-14': { value: '40px', label: '2xl' },
+      's-15': { value: '48px', label: '3xl' }
+    };
+
+    const DEFAULT_RULES = {
+      'flat': { name: 'Flat', level: 0, treatment: 'none', use: 'Default surfaces, text blocks, canvas' },
+      'border': { name: 'Border', level: 1, treatment: '1px solid var(--border)', use: 'Card borders, input fields, subtle dividers' },
+      'elevated': { name: 'Elevated', level: 2, treatment: '0 2px 8px rgba(0,0,0,0.08)', use: 'Interactive surfaces, floating elements, clickable cards' }
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'Reserved for explicit sharp corners.' },
+      'sm': { value: '3px', use: 'Checkboxes, small inline elements, micro interactions.' },
+      'md': { value: '5px', use: 'Primary buttons, badges, inputs, cards — the standard radius throughout.' },
+      'lg': { value: '48px', use: 'Reserved (not used in system).' },
+      'full': { value: '999px', use: 'Reserved (not used in system).' }
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#731e25">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      
+      /* Load Google Fonts */
+      const gfUrl = tokens.typography?.googleFontsUrl || tokens.googleFontsUrl;
+      if (gfUrl) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = gfUrl;
+        document.head.appendChild(link);
+      }
+
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const rules = DEFAULT_RULES;
+      const radius = DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Spacing &amp; Rules</div>';
+      html += '  <h1 class="header__title">Enterprise breathing room</h1>';
+      html += '  <p class="header__subtitle">The spacing and depth system for HashiCorp — a token-driven scale where every interval communicates infrastructure-grade stability and visual hierarchy.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Philosophy block */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Depth Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    HashiCorp uses <strong>the subtlest shadow system in modern web design</strong>. The elevation shadow at <code>0 2px 8px rgba(0,0,0,0.08)</code> is nearly invisible — it exists not to create visual drama but to signal <strong>interactivity</strong>. Combined with the <code>1px</code> border treatment for contained elements, depth is communicated through <strong>restraint and hierarchy, not floatiness</strong>. This communicates enterprise stability: nothing jumps at you, everything is controlled and predictable. Shadows signal clickability. Borders separate surfaces. <em>That\'s all you need.</em>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        const label = obj.label || key;
+        
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Whitespace philosophy */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Whitespace Principles</div>';
+      html += '  <div class="depth-philosophy">';
+      html += '    <div class="depth-philosophy__item">';
+      html += '      <div class="depth-philosophy__title">Dense headings, spacious body</div>';
+      html += '      <div class="depth-philosophy__text">Headings use tight line-heights (1.17–1.19) and substantial weights (600–700) creating dense, authoritative text. Body text breathes with 1.50–1.63 line-height. This weight-at-the-top strategy creates visual hierarchy without additional spacing.</div>';
+      html += '    </div>';
+      html += '    <div class="depth-philosophy__item">';
+      html += '      <div class="depth-philosophy__title">Generous vertical intervals</div>';
+      html += '      <div class="depth-philosophy__text">Section-to-section spacing uses 48px–96px gaps, signaling distinct zones. This generosity communicates stability and enterprise seriousness. Sections breathe. Content is never crowded.</div>';
+      html += '    </div>';
+      html += '    <div class="depth-philosophy__item">';
+      html += '      <div class="depth-philosophy__title">Base unit: 8px</div>';
+      html += '      <div class="depth-philosophy__text">The entire scale derives from an 8px base, with micro-adjustments (2px, 3px, 4px, 6px, 7px, 9px, 11px, 12px) for fine-tuning. This creates a <strong>granular but intentional</strong> palette.</div>';
+      html += '    </div>';
+      html += '    <div class="depth-philosophy__item">';
+      html += '      <div class="depth-philosophy__title">Dark as breathing room</div>';
+      html += '      <div class="depth-philosophy__text">Hero sections use dark backgrounds (#15181e, #0d0e12) with extra vertical padding. The darkness provides visual breathing room — it\'s not a container, it\'s a canvas. Content floats in it.</div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Grid visualization */
+      html += '<div class="section">';
+      html += '  <div class="section__label">12-Column Grid Layout</div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__title">Responsive Breakpoints</div>';
+      html += '    <div class="grid-demo__visual">';
+      for (let i = 1; i <= 12; i++) {
+        html += '      <div class="grid-demo__column">' + i + '</div>';
+      }
+      html += '    </div>';
+      html += '    <div class="grid-demo__info">';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Max content width</div>';
+      html += '        <div class="grid-demo__stat">~1150px (xl breakpoint), centered on large displays</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Column structure</div>';
+      html += '        <div class="grid-demo__stat">12 columns with 16px–32px gutters depending on breakpoint</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Outer margins</div>';
+      html += '        <div class="grid-demo__stat">64px desktop, 32px tablet, 16px mobile</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Hero sections</div>';
+      html += '        <div class="grid-demo__stat">Full-width dark (#15181e), content contained within grid max-width</div>';
+      html += '      </div>';
+      html += '    </div>';
+
+      html += '    <table class="breakpoints-table" style="margin-top: 32px;">';
+      html += '      <thead>';
+      html += '        <tr>';
+      html += '          <th>Breakpoint</th>';
+      html += '          <th>Width Range</th>';
+      html += '          <th>Behavior</th>';
+      html += '        </tr>';
+      html += '      </thead>';
+      html += '      <tbody>';
+      html += '        <tr>';
+      html += '          <td><code>mobile-small</code></td>';
+      html += '          <td>&lt;375px</td>';
+      html += '          <td>Tight single column, 16px margins</td>';
+      html += '        </tr>';
+      html += '        <tr>';
+      html += '          <td><code>mobile</code></td>';
+      html += '          <td>375–480px</td>';
+      html += '          <td>Standard mobile, full width, single column</td>';
+      html += '        </tr>';
+      html += '        <tr>';
+      html += '          <td><code>tablet-small</code></td>';
+      html += '          <td>480–600px</td>';
+      html += '          <td>Minor adjustments, beginning of multi-column</td>';
+      html += '        </tr>';
+      html += '        <tr>';
+      html += '          <td><code>tablet</code></td>';
+      html += '          <td>600–768px</td>';
+      html += '          <td>2–3 column grids, 32px margins</td>';
+      html += '        </tr>';
+      html += '        <tr>';
+      html += '          <td><code>desktop-small</code></td>';
+      html += '          <td>768–992px</td>';
+      html += '          <td>Full navigation visible, full grid</td>';
+      html += '        </tr>';
+      html += '        <tr>';
+      html += '          <td><code>desktop</code></td>';
+      html += '          <td>992–1120px</td>';
+      html += '          <td>Standard layout, 64px margins</td>';
+      html += '        </tr>';
+      html += '        <tr>';
+      html += '          <td><code>desktop-large</code></td>';
+      html += '          <td>1120–1440px</td>';
+      html += '          <td>Max-width content (1150px), centered</td>';
+      html += '        </tr>';
+      html += '        <tr>';
+      html += '          <td><code>ultra-wide</code></td>';
+      html += '          <td>&gt;1440px</td>';
+      html += '          <td>Content capped, generous side margins</td>';
+      html += '        </tr>';
+      html += '      </tbody>';
+      html += '    </table>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Rule weights / Depth levels */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth Levels</div>';
+
+      Object.entries(rules).forEach(([key, rule]) => {
+        const treatment = rule.treatment;
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <div>';
+        html += '      <div class="rule-demo__name">' + esc(rule.name) + '</div>';
+        html += '      <div class="rule-demo__label">' + esc(rule.use) + '</div>';
+        html += '    </div>';
+        html += '    <div class="rule-demo__spec">Level ' + rule.level + ': ' + esc(treatment) + '</div>';
+        html += '  </div>';
+        
+        if (treatment === 'none') {
+          html += '  <div class="rule-demo__flat-demo">No border, no shadow — flat canvas</div>';
+        } else if (treatment.startsWith('1px solid')) {
+          html += '  <div class="rule-demo__container">';
+          html += '    <div class="rule-demo__line" style="border: 1px solid var(--border); height: 100%; width: 100%; border-radius: 2px;"></div>';
+          html += '  </div>';
+        } else {
+          html += '  <div class="rule-demo__container" style="box-shadow: 0 2px 8px rgba(0,0,0,0.08);">';
+          html += '    <span style="color: var(--signal); font-size: 12px;">Subtle elevation shadow applied above</span>';
+          html += '  </div>';
+        }
+        
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; color: var(--signal); line-height: 1.63; margin-bottom: 48px;">HashiCorp favors <strong>sharp corners</strong> (0) and minimal rounding. Only two practical radii are used:</p>';
+      html += '  <div class="radius-grid">';
+
+      Object.entries(radius).forEach(([key, obj]) => {
+        const radiusValue = obj.value;
+
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__demo">';
+        html += '    <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '  </div>';
+        html += '  <div class="radius-item__info">';
+        html += '    <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '    <div class="radius-item__value">' + esc(radiusValue) + '</div>';
+        html += '    <div class="radius-item__description">'

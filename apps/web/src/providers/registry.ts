@@ -14,6 +14,9 @@ import type {
   DeployProjectFileResponse,
   DesignSystemDetail,
   DesignSystemSummary,
+  LiveArtifact,
+  LiveArtifactRefreshLogEntry,
+  LiveArtifactSummary,
   ProjectDeploymentsResponse,
   PromptTemplateDetail,
   PromptTemplateSummary,
@@ -264,6 +267,35 @@ export async function deployProjectFile(
     throw new Error(payload?.error?.message || payload?.message || `Deploy failed (${resp.status})`);
   }
   return (await resp.json()) as DeployProjectFileResponse;
+}
+
+export interface ExportProjectPptxResponse {
+  file: ProjectFile;
+  audit?: {
+    ok: boolean;
+    output: string;
+  };
+  report?: unknown;
+}
+
+export async function exportProjectFileAsPptx(
+  projectId: string,
+  fileName: string,
+): Promise<ExportProjectPptxResponse> {
+  const resp = await fetch(`/api/projects/${encodeURIComponent(projectId)}/export/pptx`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fileName }),
+  });
+  if (!resp.ok) {
+    const payload = (await resp.json().catch(() => null)) as
+      | { error?: { message?: string; details?: { stderr?: string } }; message?: string }
+      | null;
+    const stderr = payload?.error?.details?.stderr?.trim();
+    const message = payload?.error?.message || payload?.message || `PPTX export failed (${resp.status})`;
+    throw new Error(stderr ? `${message}\n${stderr}` : message);
+  }
+  return (await resp.json()) as ExportProjectPptxResponse;
 }
 
 export async function checkDeploymentLink(
@@ -634,6 +666,27 @@ export async function fetchDesignSystemPreview(id: string): Promise<string | nul
   }
 }
 
+export async function fetchDesignSystemPreviewCard(id: string, card: string): Promise<string | null> {
+  try {
+    const resp = await fetch(`/api/design-systems/${encodeURIComponent(id)}/preview/${encodeURIComponent(card)}`);
+    if (!resp.ok) return null;
+    return await resp.text();
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchDesignSystemPreviews(id: string): Promise<string[]> {
+  try {
+    const resp = await fetch(`/api/design-systems/${encodeURIComponent(id)}/previews`);
+    if (!resp.ok) return [];
+    const json = (await resp.json()) as { previews: string[] };
+    return json.previews ?? [];
+  } catch {
+    return [];
+  }
+}
+
 export async function fetchDesignSystemShowcase(id: string): Promise<string | null> {
   try {
     const resp = await fetch(`/api/design-systems/${encodeURIComponent(id)}/showcase`);
@@ -642,4 +695,79 @@ export async function fetchDesignSystemShowcase(id: string): Promise<string | nu
   } catch {
     return null;
   }
+}
+
+export async function fetchLiveArtifacts(projectId: string): Promise<LiveArtifactSummary[]> {
+  try {
+    const qs = new URLSearchParams({ projectId });
+    const resp = await fetch(`/api/live-artifacts?${qs.toString()}`);
+    if (!resp.ok) return [];
+    const json = (await resp.json()) as { artifacts?: LiveArtifactSummary[] };
+    return json.artifacts ?? [];
+  } catch {
+    return [];
+  }
+}
+
+export async function fetchLiveArtifact(projectId: string, artifactId: string): Promise<LiveArtifact | null> {
+  try {
+    const qs = new URLSearchParams({ projectId });
+    const resp = await fetch(`/api/live-artifacts/${encodeURIComponent(artifactId)}?${qs.toString()}`);
+    if (!resp.ok) return null;
+    const json = (await resp.json()) as { artifact?: LiveArtifact };
+    return json.artifact ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export async function refreshLiveArtifact(projectId: string, artifactId: string): Promise<LiveArtifact | null> {
+  try {
+    const qs = new URLSearchParams({ projectId });
+    const resp = await fetch(`/api/live-artifacts/${encodeURIComponent(artifactId)}/refresh?${qs.toString()}`, {
+      method: 'POST',
+    });
+    if (!resp.ok) return null;
+    const json = (await resp.json()) as { artifact?: LiveArtifact };
+    return json.artifact ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchLiveArtifactRefreshes(
+  projectId: string,
+  artifactId: string,
+): Promise<LiveArtifactRefreshLogEntry[]> {
+  try {
+    const qs = new URLSearchParams({ projectId });
+    const resp = await fetch(`/api/live-artifacts/${encodeURIComponent(artifactId)}/refreshes?${qs.toString()}`);
+    if (!resp.ok) return [];
+    const json = (await resp.json()) as { refreshes?: LiveArtifactRefreshLogEntry[] };
+    return json.refreshes ?? [];
+  } catch {
+    return [];
+  }
+}
+
+export async function deleteLiveArtifact(projectId: string, artifactId: string): Promise<boolean> {
+  try {
+    const qs = new URLSearchParams({ projectId });
+    const resp = await fetch(`/api/live-artifacts/${encodeURIComponent(artifactId)}?${qs.toString()}`, {
+      method: 'DELETE',
+    });
+    return resp.ok;
+  } catch {
+    return false;
+  }
+}
+
+export function liveArtifactPreviewUrl(projectId: string, artifactId: string): string {
+  const qs = new URLSearchParams({ projectId });
+  return `/api/live-artifacts/${encodeURIComponent(artifactId)}/preview?${qs.toString()}`;
+}
+
+export function liveArtifactCodeUrl(projectId: string, artifactId: string, variant: 'template' | 'rendered-source'): string {
+  const qs = new URLSearchParams({ projectId, variant });
+  return `/api/live-artifacts/${encodeURIComponent(artifactId)}/preview?${qs.toString()}`;
 }

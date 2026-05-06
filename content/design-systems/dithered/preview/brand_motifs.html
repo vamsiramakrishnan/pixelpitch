@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Dithered</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--ink, #111111);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--ink, #111111);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 28px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 24px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--signal, #3b82f6);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 2px solid var(--ink, #111111);
+      border-radius: 8px;
+      padding: 32px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Dither Pattern Demo ──── */
+    .dither-demo {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .dither-demo {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .dither-swatch {
+      aspect-ratio: 1;
+      border: 2px solid var(--ink, #111111);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      text-align: center;
+      padding: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dither-swatch::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: 
+        radial-gradient(circle, currentColor 1px, transparent 1px);
+      background-size: 3px 3px;
+      background-position: 0 0;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .dither-swatch__label {
+      position: relative;
+      z-index: 1;
+      font-weight: 600;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 140px;
+      border: 2px solid var(--ink, #111111);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.4;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0 8px;
+      white-space: nowrap;
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+      text-align: center;
+    }
+
+    .harmony-strip__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 10px;
+      letter-spacing: 0.05em;
+      opacity: 0.6;
+      transition: opacity 0.2s ease;
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label,
+    .harmony-strip__swatch:hover .harmony-strip__value {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--paper, #ffffff);
+      border: 2px solid var(--ink, #111111);
+      border-radius: 8px;
+      padding: 48px 40px;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 54px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--slate, #666666);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--ink, #111111);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Motif Card ──── */
+    .motif-card {
+      background: var(--bone, #f5f5f5);
+      border: 2px solid var(--ink, #111111);
+      border-radius: 8px;
+      padding: 32px;
+      max-width: 840px;
+    }
+
+    .motif-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+    }
+
+    /* ──── Interaction State Demo ──── */
+    .states-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .states-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .state-slide {
+      border: 2px solid var(--ink, #111111);
+      border-radius: 8px;
+      aspect-ratio: 16 / 10;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: var(--paper, #ffffff);
+      position: relative;
+    }
+
+    .state-slide__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+
+    .state-slide__content {
+      text-align: center;
+    }
+
+    .state-demo-button {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 500;
+      padding: var(--button-py, 10px) var(--button-px, 20px);
+      border-radius: var(--button-radius, 8px);
+      border: 2px solid var(--ink, #111111);
+      background: var(--signal, #3b82f6);
+      color: var(--paper, #ffffff);
+      cursor: pointer;
+      transition: all 150ms ease;
+      margin: 8px;
+    }
+
+    .state-demo-button:hover {
+      transform: translateY(-2px);
+    }
+
+    .state-demo-button:active {
+      transform: translateY(0);
+      opacity: 0.85;
+    }
+
+    .state-demo-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .state-demo-button--outline {
+      background: transparent;
+      color: var(--signal, #3b82f6);
+    }
+
+    .state-demo-button--outline:hover {
+      background: var(--bone, #f5f5f5);
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 18px;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#3b82f6">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">Retro <span>Dot Pattern</span> Rendering</h1>';
+      html += '  <p class="header__subtitle">A limited palette rendered with dithered precision. High contrast, nostalgic aesthetics meet modern interaction design.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Visual Atmosphere</div>';
+      html += '  <div class="motif-card">';
+      html += '    <p>Dithered embraces retro-computing aesthetics through controlled dot-pattern halftoning. The palette is minimal: five core colors rendered with optical mixing. Interactions are snappy (150ms), state changes are explicit, and every element maintains crisp borders and rounded corners. Blue (#3B82F6) signals interactivity. No gradients. No blur. High contrast drives recognition at any scale. The dither effect evokes 8-bit and 16-bit era graphics while maintaining 21st-century usability.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Five-token palette: paper, ink, slate, signal, bone — pixel-perfect limited color</li>';
+      html += '    <li>Dot-pattern dithering simulates additional tones using optical mixing</li>';
+      html += '    <li>High-contrast borders (2px solid) on all major containers</li>';
+      html += '    <li>Signal blue (#3B82F6) as the exclusive interaction accent color</li>';
+      html += '    <li>Consistent border-radius (8px) on cards, buttons, and components</li>';
+      html += '    <li>Purposeful motion: 150–250ms transitions on interaction state changes</li>';
+      html += '    <li>Explicit state design: hover, focus, active, disabled, and loading states</li>';
+      html += '    <li>Square pixel grid aesthetic — spacing in multiples of 8px</li>';
+      html += '    <li>System fonts (sans-serif) for modern legibility and performance</li>';
+      html += '    <li>No shadows, no gradients, no blur effects — flat, geometric design</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use 2px borders on all major card and container elements</li>';
+      html += '      <li>Apply dither patterns to simulate mid-tone colors</li>';
+      html += '      <li>Render borders and edges with sharp, pixel-perfect clarity</li>';
+      html += '      <li>Use the signal blue (#3B82F6) exclusively for interactive elements</li>';
+      html += '      <li>Keep transitions short and purposeful (150–250ms)</li>';
+      html += '      <li>Design explicit states: hover, focus, active, disabled</li>';
+      html += '      <li>Use 8px grid for all spacing and sizing decisions</li>';
+      html += '      <li>Apply consistent border-radius (8px) across components</li>';
+      html += '      <li>Maintain high contrast for accessibility and retro legibility</li>';
+      html += '      <li>Stick to system fonts for crisp, modern rendering</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Add box-shadow or drop-shadow effects</li>';
+      html += '      <li>Use gradient fills or color transitions</li>';
+      html += '      <li>Apply blur, glassmorphism, or atmospheric effects</li>';
+      html += '      <li>Mix accent colors — only blue for interaction</li>';
+      html += '      <li>Use serif fonts (except in special editorial contexts)</li>';
+      html += '      <li>Round corners beyond 8px border-radius</li>';
+      html += '      <li>Break the 8px spacing grid for layouts</li>';
+      html += '      <li>Use colors from outside the five core tokens</li>';
+      html += '      <li>Apply dither patterns inconsistently or randomly</li>';
+      html += '      <li>Create transitions longer than 250ms for standard interactions</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Dither Pattern Demo ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Dither Pattern Rendering</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.65; color: var(--slate); margin-bottom: 24px; max-width: 840px;">Dot-pattern dithering simulates intermediate tones using only the five core colors. The optical mixing effect creates the illusion of additional shades while maintaining the retro aesthetic.</p>';
+      html += '  <div class="dither-demo">';
+
+      const ditherExamples = [
+        { label: 'Paper', color: '#ffffff' },
+        { label: 'Bone (75%)', color: '#f5f5f5' },
+        { label: 'Slate (50%)', color: '#cccccc' },
+        { label: 'Ink', color: '#111111' }
+      ];
+
+      ditherExamples.forEach(ex => {
+        html += '<div class="dither-swatch" style="background: ' + esc(ex.color) + '; color: var(--ink);">';
+        html += '  <div class="dither-swatch__label">' + esc(ex.label) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#111111' : '#ffffff';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '  <span class="harmony-strip__value" style="color:' + labelColor + '">' + esc(hex.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Typography Pairing ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Display + Body</div>';
+      html += '    <div class="type-pairing__display">System fonts render <span>crisp and fast</span></div>';
+
+      html += '    <div class="type-pairing__body">Dithered uses native system fonts (system-ui, sans-serif) for all text. This choice prioritizes rendering performance, optical clarity, and cross-platform consistency. Display text runs bold and tight, while body text opens to 1.65 line height for readability. The geometric simplicity of system fonts complements the dithered aesthetic.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Display Font</span>';
+      html += '        system-ui, 700 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Body Font</span>';
+      html += '        system-ui, 400 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Mono Font</span>';
+      html += '        ui-monospace, 500 weight';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Interaction States ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Interaction & Motion</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.65; color: var(--slate); margin-bottom: 24px; max-width: 840px;">Interactions are explicit and purposeful. All state changes occur within 150–250ms. Hover states lift the element slightly, active states compress it, and disabled states reduce opacity. Focus states use a visible outline for keyboard accessibility.</p>';
+      html += '  <div class="states-grid">';
+
+      html += '    <div class="state-slide">';
+      html += '      <div class="state-slide__kicker">Default</div>';
+      html += '      <div class="state-slide__content">';
+      html += '        <button class="state-demo-button">Click me</button>';
+      html += '        <div style="font-size: 12px; color: var(--slate); margin-top: 16px;">Static, ready for interaction</div>';
+      html += '      </div>';
+      html += '    </div>';
+
+      html += '    <div class="state-slide">';
+      html += '      <div class="state-slide__kicker">Hover + Active</div>';
+      html += '      <div class="state-slide__content">';
+      html += '        <button class="state-demo-button" style="transform: translateY(-2px);">Hovering…</button>';
+      html += '        <div style="font-size: 12px; color: var(--slate); margin-top: 16px;">Lifts on hover, depresses on click</div>';
+      html += '      </div>';
+      html += '    </div>';
+
+      html += '    <div class="state-slide">';
+      html += '      <div class="state-slide__kicker">Disabled</div>';
+      html += '      <div class="state-slide__content">';
+      html += '        <button class="state-demo-button" disabled>Disabled</button>';
+      html += '        <div style="font-size: 12px; color: var(--slate); margin-top: 16px;">Opacity 50%, pointer-events: none</div>';
+      html += '      </div>';
+      html += '    </div>';
+
+      html += '    <div class="state-slide">';
+      html += '      <div class="state-slide__kicker">Outline Variant</div>';
+      html += '      <div class="state-slide__content">';
+      html += '        <button class="state-demo-button state-demo-button--outline">Secondary</button>';
+      html += '        <div style="font-size: 12px; color: var(--slate); margin-top: 16px;">Outline style, transparent background</div>';
+      html += '      </div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Grid & Spacing ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing & Grid System</div>';
+      html += '  <div style="border: 2px solid var(--ink); border-radius: 8px; padding: 32px; background: var(--bone);">';
+
+      const spacingScale = [
+        { token: 's-1', value: '4px', desc: 'Micro spacing, border widths' },
+        { token: 's-2', value: '8px', desc: 'Grid unit, base spacing' },
+        { token: 's-3', value: '16px', desc: 'Small gap, padding' },
+        { token: 's-4', value: '24px', desc: 'Medium gap, container padding' },
+        { token: 's-5', value: '32px', desc: 'Large gap, section spacing' },
+        { token: 's-6', value: '48px', desc: 'Extra large gap' },
+        { token: 's-7', value: '64px', desc: 'Page section divider' },
+        { token: 's-8', value: '96px', desc: 'Hero spacing, major divider' }
+      ];
+
+      spacingScale.forEach((item, i) => {
+        html += '<div style="margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 24px; align-items: center;">';
+        html += '  <div style="flex: 0 0 140px;">';
+        html += '    <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing:

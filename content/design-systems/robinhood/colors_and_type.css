@@ -1,0 +1,94 @@
+/* Robinhood — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #1e2124;
+  --slate:   #666666;
+  --signal:  #00bfa5;
+  --bone:    #ffffff;
+  --border:  #e8e8ea;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-robinhood-green: #00c805;
+  --color-loss-red: #ff5000;
+  --color-neutral-gray: #76767e;
+  --color-brand-green-dark: #00a033;
+  --color-accessible-green-text: #008b00;
+  --color-brand-black: #1c1e21;
+  --color-surface-light-gray: #f5f5f7;
+  --color-surface-muted: #f0f0f2;
+  --color-text-secondary: #6f7072;
+  --color-disabled: #c4c4c8;
+
+  /* Semantic */
+  --success: #00c805;
+  --danger:  #ff5000;
+  --info:    #ff5000;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    SF Mono;
+
+  /* Type ramp */
+  --t-portfolio-value: 40px;
+  --t-stock-price: 32px;
+  --t-section-heading: 24px;
+  --t-card-title: 20px;
+  --t-body-large: 17px;
+  --t-body: 15px;
+  --t-body-small: 13px;
+  --t-button: 17px;
+  --t-tab-label: 13px;
+  --t-gain-loss-: 15px;
+  --t-ticker-symbol: 15px;
+  --t-caption: 12px;
+  --t-stat-label: 13px;
+  --t-stat-value: 15px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-7: 32px;
+  --s-8: 40px;
+  --s-9: 48px;
+  --s-10: 64px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-full: 16px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    8px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

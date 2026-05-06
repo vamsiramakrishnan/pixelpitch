@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Figma</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 86px;
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: -1.72px;
+      color: var(--ink, #111111);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      font-weight: 700;
+      color: var(--signal, #3b82f6);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 20px;
+      font-weight: 330;
+      line-height: 1.3;
+      letter-spacing: -0.1px;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 1px;
+      background: var(--ink, #111111);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--ink, #111111);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 28px;
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 320;
+      line-height: 1.45;
+      letter-spacing: -0.26px;
+      color: var(--ink, #111111);
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 24px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--signal, #3b82f6);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--ink, #111111);
+      border-radius: 8px;
+      padding: 32px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      font-weight: 330;
+      line-height: 1.4;
+      letter-spacing: -0.14px;
+      color: var(--ink, #111111);
+      padding: 12px 0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 120px;
+      border: 1px solid var(--ink, #111111);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.4;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.54px;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--ink, #111111);
+      border-radius: 8px;
+      padding: 48px 40px;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 64px;
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.96px;
+      color: var(--ink, #111111);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      font-weight: 700;
+      color: var(--signal, #3b82f6);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 20px;
+      font-weight: 330;
+      line-height: 1.3;
+      letter-spacing: -0.1px;
+      color: var(--ink, #111111);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--ink, #111111);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      color: var(--slate, #666666);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 400;
+      color: var(--ink, #111111);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--ink, #111111);
+      border-radius: 8px;
+      padding: 32px;
+      max-width: 840px;
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 320;
+      line-height: 1.45;
+      letter-spacing: -0.26px;
+      color: var(--ink, #111111);
+    }
+
+    /* ──── The Variable Weight Visual ──── */
+    .weight-demo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .weight-demo {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .weight-slide {
+      border: 2px solid var(--ink, #111111);
+      border-radius: 8px;
+      aspect-ratio: 16 / 10;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background: var(--paper, #ffffff);
+    }
+
+    .weight-slide__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .weight-slide__headline {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 40px;
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.4px;
+      color: var(--ink, #111111);
+      margin-bottom: 0;
+    }
+
+    .weight-slide__accent {
+      font-weight: 700;
+      color: var(--signal, #3b82f6);
+    }
+
+    .weight-slide__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.54px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--ink, #111111);
+    }
+
+    /* ──── Weight Ramp ──── */
+    .weight-ramp {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--ink, #111111);
+      border-radius: 8px;
+      padding: 32px;
+    }
+
+    .weight-step {
+      display: flex;
+      align-items: baseline;
+      gap: 24px;
+    }
+
+    .weight-step__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      flex: 0 0 80px;
+    }
+
+    .weight-step__text {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 20px;
+      line-height: 1.3;
+      letter-spacing: -0.1px;
+      color: var(--ink, #111111);
+      flex: 1;
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 18px;
+      font-family: var(--font-body, 'system-ui', sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid #e0e0e0;
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#3b82f6">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">The <span>Variable</span> Weight of Figma</h1>';
+      html += '  <p class="header__subtitle">A monochrome interface where typography modulates through micro-weight differences. Color belongs to the product, not the design system.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Figma's design system is a study in what remains when you strip away color. The interface is strictly black and white — #000000 and #ffffff only. All hierarchical differentiation lives in a custom variable font (figmaSans) with unusual weight stops at 320, 330, 340, 450, 480, 540, 700. This granular weight control gives the interface a sophisticated flexibility that standard "regular, medium, bold" fonts cannot achieve. Body text at weight 320 is lighter than traditional "thin," while subheadings at 540 are heavier than "semi-bold" but lighter than bold. The result is a system that feels playful and organic — like selecting from a palette of tools — rather than rigid. Negative letter-spacing throughout (-1.72px on heroes, down to -0.26px on light body text) tightens the visual appearance. Buttons use rounded geometry (pills at 50px radius, circles at 50%). Focus outlines are dashed, not solid — an echo of Figma's own editor selection handles. Color exists in the product content displayed on this white gallery wall, never in the interface chrome itself.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Custom variable font (figmaSans) with granular weight stops: 320, 330, 340, 450, 480, 540, 700</li>';
+      html += '    <li>Strictly monochrome interface — only #000000 and #ffffff, never any color in chrome</li>';
+      html += '    <li>Negative letter-spacing on all text weights: -1.72px on heroes, down to -0.26px on body light</li>';
+      html += '    <li>Weight 320 for body light text — lighter than traditional "thin" or "extra-light"</li>';
+      html += '    <li>Weight 330 for body and button text — precise micro-weight control</li>';
+      html += '    <li>Weight 540 for subheadings — heavier than "semi-bold" but lighter than bold</li>';
+      html += '    <li>Weight 700 for emphasized titles and accents — the darkest chromatic weight</li>';
+      html += '    <li>Pill button geometry (50px radius) and circular icon buttons (50% border-radius)</li>';
+      html += '    <li>Dashed 2px focus outlines — references Figma editor selection handles</li>';
+      html += '    <li>figmaMono for uppercase technical labels with positive letter-spacing (0.54px–0.6px)</li>';
+      html += '    <li>OpenType "kern" feature enabled globally for refined metrics</li>';
+      html += '    <li>Colors belong to product content, not the design system itself</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use figmaSans variable font with precise weights (320–540) — the control is essential</li>';
+      html += '      <li>Apply negative letter-spacing throughout the entire type ramp</li>';
+      html += '      <li>Keep interface chrome strictly black and white — zero color tolerance</li>';
+      html += '      <li>Use pill (50px) and circular (50%) geometry on all interactive elements</li>';
+      html += '      <li>Apply dashed 2px focus outlines on interactive components</li>';
+      html += '      <li>Scale headlines with aggressive letter-spacing reduction (-1.72px on hero)</li>';
+      html += '      <li>Use weight 320 for light-weight body text (18px Body Light)</li>';
+      html += '      <li>Use weight 540 for subheadings — the mid-dark register</li>';
+      html += '      <li>Use weight 700 for emphasized titles, accents, and bold statements</li>';
+      html += '      <li>Apply positive letter-spacing to mono labels (0.54px–0.6px)</li>';
+      html += '      <li>Enable OpenType "kern" feature on all typography</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Don\'t use standard font weights (400, 500, 600, 700) — the variable font stops are mandatory</li>';
+      html += '      <li>Don\'t add color to interface chrome — it breaks the monochrome principle</li>';
+      html += '      <li>Don\'t use sharp corners on buttons — pill and circular geometry only</li>';
+      html += '      <li>Don\'t use solid focus outlines — dashed 2px is the signature</li>';
+      html += '      <li>Don\'t apply positive letter-spacing to body text — negative spacing throughout</li>';
+      html += '      <li>Don\'t increase body font weight above 450 — the light aesthetic is core</li>';
+      html += '      <li>Don\'t use weight 400 for body copy — use 320 or 330</li>';
+      html += '      <li>Don\'t disable the kerning feature on typography</li>';
+      html += '      <li>Don\'t mix serif fonts or use Georgia, Times, or other traditional serif families</li>';
+      html += '      <li>Don\'t add shadows, gradients, or atmospheric effects to interface elements</li>';
+      html += '      <li>Don\'t color product content on the canvas — let the white gallery wall stand empty</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── The Variable Weight Visual ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Variable Weight Modulation</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.4; letter-spacing: -0.14px; color: var(--slate); margin-bottom: 24px; max-width: 840px;">The variable font gives Figma the ability to modulate weight in micro-increments. Weight 330 is not "regular" — it\'s specifically heavier than 320 but lighter than 340. This granular control enables hierarchy without blunt transitions.</p>';
+      html += '  <div class="weight-demo">';
+
+      html += '    <div class="weight-slide">';
+      html += '      <div class="weight-slide__kicker">Weight 320</div>';
+      html += '      <div class="weight-slide__headline">Body <span class="weight-slide__accent">Light</span></div>';
+      html += '      <div class="weight-slide__label">Lightest body text register — 18px Body Light</div>';
+      html += '    </div>';
+
+      html += '    <div class="weight-slide">';
+      html += '      <div class="weight-slide__kicker">Weight 700</div>';
+      html += '      <div class="weight-slide__headline">Feature <span class="weight-slide__accent">Title</span></div>';
+      html += '      <div class="weight-slide__label">Boldest emphasis — 24px Feature Title at weight 700</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Weight Ramp ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">The Weight Ramp: Granular Control</div>';
+      html += '  <div class="weight-ramp">';
+
+      const weights = [
+        { label: 'W 320', text: 'Lightest body light register, 18px with -0.26px letter-spacing' },
+        { label: 'W 330', text: 'Body and button text, 16–20px with -0.1px to -0.14px letter-spacing' },
+        { label: 'W 340', text: 'Subheading light, 26px with -0.26px letter-spacing' },
+        { label: 'W 450', text: 'Not used in standard type ramp — available for custom hierarchy' },
+        { label: 'W 480', text: 'Not used in standard type ramp — available for future weights' },
+        { label: 'W 540', text: 'Subheading bold, 26px with -0.26px letter-spacing' },
+        { label: 'W 700', text: 'Feature title and emphasis, 24px with 0 letter-spacing' }
+      ];
+
+      weights.forEach(item => {
+        html += '<div class="weight-step">';
+        html += '  <div class="weight-step__label">' + esc(item.label) + '</div>';
+        html += '  <div class="weight-step__text">' + esc(item.text) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Palette</div>';
+        html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.4; letter-spacing: -0.14px; color: var(--slate); margin-bottom: 24px; max-width: 840px;">The interface palette is strictly binary: paper (#FFFFFF) and ink (#111111). All other colors (slate, signal, bone) exist only in product content, never in chrome. The design system itself is monochrome.</p>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#111111' : '#ffffff';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Typography Pairing ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Display + Body</div>';
+      html += '    <div class="type-pairing__display">Hierarchy through <span>variable weight</span>, not size alone</div>';
+
+      html += '    <div class="type-pairing__body">Figma uses a single typeface family (figmaSans) across all scales. The hierarchy emerges from variable weight modulation combined with precise letter-spacing. Hero text at weight 400 with -1.72px spacing feels monumental. Body text at weight 330 with -0.14px spacing feels intimate. The same typeface becomes many different things through weight and spacing, not through font switching.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Variable Font</span>';
+      html += '        figmaSans, 320–700';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Mono Font</span>';
+      html += '        figmaMono, 400 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Feature</span>';
+      html += '        OpenType kern enabled globally';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Type Ramp Section ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Type Ramp & Roles</div>';
+      html += '  <div style="border: 1px solid var(--ink); border-radius: 8px; padding: 32px; background: var(--paper);">';
+
+      const ramp = [
+        { role: 'Display / Hero', size: '86px', weight: '400', lineHeight: '1.00', letterSpacing: '-1.72px', example: 'Monochrome hierarchy' },
+        { role: 'Section Heading', size: '64px', weight: '400', lineHeight: '1.10', letterSpacing: '-0.96px', example: 'Major section title' },
+        { role: 'Subheading', size: '26px', weight: '540', lineHeight: '1.35', letterSpacing: '-0.26px', example: 'Bold subheading register' },
+        { role: 'Subheading Light', size: '26px', weight: '340', lineHeight: '1.35', letterSpacing: '-0.26px', example: 'Light subheading register' },
+        { role: 'Feature Title', size: '24px', weight: '700', lineHeight: '1.45', letterSpacing: '0', example: 'Emphasized feature title' },
+        { role: 'Body Large', size: '20px', weight: '330', lineHeight: '1.30', letterSpacing: '-0.1px', example: 'Larger reading text' },
+        { role: 'Body / Button', size

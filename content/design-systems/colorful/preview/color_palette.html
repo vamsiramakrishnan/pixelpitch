@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Palette – Colorful Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+    }
+
+    .header__pretitle {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 8px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 52px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 16px;
+    }
+
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate, #666666);
+      max-width: 640px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--signal, #3b82f6), var(--slate, #666666));
+      border: none;
+      border-radius: 2px;
+    }
+
+    /* Section labels */
+    .section-label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-top: 56px;
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--signal, #3b82f6);
+      display: inline-block;
+    }
+
+    /* Swatch grid */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .swatch {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    .swatch:hover {
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.12);
+      transform: translateY(-2px);
+      border-color: var(--signal, #3b82f6);
+    }
+
+    .swatch__chip {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 12px;
+    }
+
+    .swatch__chip-contrast {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      line-height: 1.4;
+      backdrop-filter: blur(8px);
+      font-family: var(--font-mono, ui-monospace, monospace);
+    }
+
+    .swatch__meta {
+      padding: 16px;
+      background: var(--bone, #f5f5f5);
+    }
+
+    .swatch__var {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--signal, #3b82f6);
+      word-break: break-all;
+      margin-bottom: 6px;
+    }
+
+    .swatch__hex {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    .swatch__role {
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--slate, #666666);
+      margin-bottom: 10px;
+    }
+
+    .swatch__contrast-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    .contrast-pass { color: #16a34a; }
+    .contrast-fail { color: #dc2626; }
+    .contrast-aa-large { color: #d97706; }
+
+    /* Usage demo */
+    .demo-section {
+      margin-top: 56px;
+      padding: 40px;
+      background: var(--bone, #f5f5f5);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 12px;
+    }
+
+    .demo-section h2 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink, #111111);
+      margin-bottom: 24px;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .demo-item {
+      background: var(--paper, #ffffff);
+      padding: 24px;
+      border-radius: 8px;
+      border: 1px solid var(--border, #e5e5e5);
+      text-align: center;
+    }
+
+    .demo-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .demo-sample {
+      padding: 32px 16px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .demo-sample--primary {
+      background: var(--signal, #3b82f6);
+      color: white;
+    }
+
+    .demo-sample--text {
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      border: 1px solid var(--border, #e5e5e5);
+    }
+
+    .demo-sample--surface {
+      background: var(--surface, #f5f5f5);
+      color: var(--ink, #111111);
+      border: 1px solid var(--border, #e5e5e5);
+    }
+
+    .demo-sample--accent {
+      background: var(--signal, #3b82f6);
+      color: white;
+    }
+
+    /* WCAG summary */
+    .wcag-summary {
+      margin-top: 56px;
+      padding: 32px 40px;
+      background: var(--paper, #ffffff);
+      border: 2px solid var(--border, #e5e5e5);
+      border-radius: 12px;
+    }
+
+    .wcag-summary h2 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--ink, #111111);
+    }
+
+    .wcag-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+      font-size: 14px;
+    }
+
+    .wcag-row:last-child { border-bottom: none; }
+
+    .wcag-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 48px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-family: var(--font-mono, ui-monospace, monospace);
+    }
+
+    .wcag-badge--pass { background: #dcfce7; color: #166534; }
+    .wcag-badge--fail { background: #fee2e2; color: #991b1b; }
+    .wcag-badge--aa-large { background: #fef9c3; color: #854d0e; }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 20px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .page { padding: 40px 24px; }
+      .header__title { font-size: 36px; }
+      .swatch-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+      .demo-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    /* ────────────────────────────────────────────────────────────────── */
+    /* Contrast ratio calculation (WCAG 2.1 relative luminance)           */
+    /* ────────────────────────────────────────────────────────────────── */
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function luminance([r, g, b]) {
+      const [rs, gs, bs] = [r, g, b].map(c => {
+        c /= 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    }
+
+    function contrastRatio(hex1, hex2) {
+      const l1 = luminance(hexToRgb(hex1));
+      const l2 = luminance(hexToRgb(hex2));
+      const lighter = Math.max(l1, l2);
+      const darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function wcagLevel(ratio) {
+      if (ratio >= 7) return { label: 'AAA', cls: 'pass' };
+      if (ratio >= 4.5) return { label: 'AA', cls: 'pass' };
+      if (ratio >= 3) return { label: 'AA Large', cls: 'aa-large' };
+      return { label: 'Fail', cls: 'fail' };
+    }
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* Core color roles with descriptions                                 */
+    /* ────────────────────────────────────────────────────────────────── */
+    const CORE_ROLES = {
+      paper:   'Page background',
+      ink:     'Primary text & headings',
+      slate:   'Secondary text & muted content',
+      signal:  'Primary accent & interactive elements',
+      bone:    'Subtle background tint',
+      border:  'Dividers & outlines',
+      surface: 'Card & container fill',
+    };
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* Build page from tokens.json                                        */
+    /* ────────────────────────────────────────────────────────────────── */
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.name || 'Design System';
+      const category = tokens.meta?.category || 'Design System';
+      const rawColors = tokens.colors || {};
+      const paperHex = rawColors.paper || '#ffffff';
+
+      /* Flatten nested structure into flat map */
+      const colors = {};
+      for (const [k, v] of Object.entries(rawColors)) {
+        if (typeof v === 'string') {
+          colors[k] = v;
+        } else if (v && typeof v === 'object') {
+          for (const [sk, sv] of Object.entries(v)) {
+            if (typeof sv === 'string') colors[k + '-' + sk] = sv;
+          }
+        }
+      }
+
+      /* Split into core and extended */
+      const coreKeys = Object.keys(CORE_ROLES).filter(k => colors[k]);
+      const extendedKeys = Object.keys(colors).filter(k => !CORE_ROLES[k] && typeof colors[k] === 'string');
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__pretitle">Color Palette</div>';
+      html += '  <h1 class="header__title">' + esc(name) + '</h1>';
+      html += '  <p class="header__subtitle">' + esc(category) + ' — Vibrant, high-contrast palettes designed for engaging and memorable user experiences.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Core palette */
+      if (coreKeys.length) {
+        html += '<h2 class="section-label">Core Palette</h2>';
+        html += '<div class="swatch-grid">';
+        coreKeys.forEach(key => {
+          html += swatchCard(key, colors[key], paperHex, CORE_ROLES[key]);
+        });
+        html += '</div>';
+      }
+
+      /* Extended palette */
+      if (extendedKeys.length) {
+        html += '<h2 class="section-label">Extended Palette</h2>';
+        html += '<div class="swatch-grid">';
+        extendedKeys.forEach(key => {
+          const role = (tokens.colorRoles && tokens.colorRoles[key]) || formatRole(key);
+          html += swatchCard(key, colors[key], paperHex, role);
+        });
+        html += '</div>';
+      }
+
+      /* Usage demo */
+      html += demoSection();
+
+      /* WCAG summary */
+      html += wcagSummary(colors, paperHex);
+
+      app.innerHTML = html;
+    }
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* Swatch card builder                                                */
+    /* ────────────────────────────────────────────────────────────────── */
+    function swatchCard(key, hex, paperHex, role) {
+      const ratio = contrastRatio(hex, paperHex);
+      const level = wcagLevel(ratio);
+      const lum = luminance(hexToRgb(hex));
+      const chipTextColor = lum > 0.4 ? '#111111' : '#ffffff';
+      const chipBadgeBg = lum > 0.4
+        ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.25)';
+
+      return '' +
+        '<div class="swatch">' +
+        '  <div class="swatch__chip" style="background:' + hex + '">' +
+        '    <span class="swatch__chip-contrast" style="color:' + chipTextColor +
+             ';background:' + chipBadgeBg + '">' + ratio.toFixed(1) + ':1</span>' +
+        '  </div>' +
+        '  <div class="swatch__meta">' +
+        '    <div class="swatch__var">--' + esc(key) + '</div>' +
+        '    <div class="swatch__hex">' + esc(hex.toUpperCase()) + '</div>' +
+        '    <div class="swatch__role">' + esc(role) + '</div>' +
+        '    <div class="swatch__contrast-label contrast-' + level.cls + '">' +
+             'WCAG ' + level.label + '</div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* Usage demo section                                                 */
+    /* ────────────────────────────────────────────────────────────────── */
+    function demoSection() {
+      return '' +
+        '<div class="demo-section">' +
+        '  <h2>Color Usage & Application</h2>' +
+        '  <div class="demo-grid">' +
+        '    <div class="demo-item">' +
+        '      <div class="demo-label">Primary Accent</div>' +
+        '      <div class="demo-sample demo-sample--primary">Button · Link</div>' +
+        '      <p style="font-size:12px;color:var(--slate,#666666);">Use signal (#3B82F6) for CTAs, focus states, and interactive elements.</p>' +
+        '    </div>' +
+        '    <div class="demo-item">' +
+        '      <div class="demo-label">Body Text</div>' +
+        '      <div class="demo-sample demo-sample--text">The quick brown fox jumps over the lazy dog</div>' +
+        '      <p style="font-size:12px;color:var(--slate,#666666);">Use ink (#111111) for primary content and headings.</p>' +
+        '    </div>' +
+        '    <div class="demo-item">' +
+        '      <div class="demo-label">Backgrounds</div>' +
+        '      <div class="demo-sample demo-sample--surface">Surface & Cards</div>' +
+        '      <p style="font-size:12px;color:var(--slate,#666666);">Use paper (#FFFFFF) and bone (#F5F5F5) for layering.</p>' +
+        '    </div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* WCAG compliance summary                                            */
+    /* ────────────────────────────────────────────────────────────────── */
+    function wcagSummary(colors, paperHex) {
+      const keys = Object.keys(colors);
+      let passAAA = 0, passAA = 0, passAALarge = 0, fail = 0;
+
+      keys.forEach(k => {
+        const ratio = contrastRatio(colors[k], paperHex);
+        if (ratio >= 7) passAAA++;
+        else if (ratio >= 4.5) passAA++;
+        else if (ratio >= 3) passAALarge++;
+        else fail++;
+      });
+
+      let html = '<div class="wcag-summary">';
+      html += '<h2>WCAG 2.1 Compliance</h2>';
+      html += '<p style="font-size:13px;color:var(--slate,#666666);margin-bottom:20px;max-width:640px;">' +
+              'All color tokens measured for contrast ratio against the paper background (' + esc(paperHex) + '). ' +
+              'Ensures accessibility standards for text and interactive elements across the system.</p>';
+      html += wcagRow('AAA (7.0:1 or higher)', passAAA, 'pass');
+      html += wcagRow('AA (4.5:1 or higher)', passAA, 'pass');
+      html += wcagRow('AA Large Text (3:1 or higher)', passAALarge, 'aa-large');
+      if (fail > 0) html += wcagRow('Below Threshold', fail, 'fail');
+      html += '</div>';
+      return html;
+
+      function wcagRow(label, count, badge) {
+        return '<div class="wcag-row">' +
+               '<span class="wcag-badge wcag-badge--' + badge + '">' + count + '</span>' +
+               '<span>' + label + '</span>' +
+               '</div>';
+      }
+    }
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* Utilities                                                          */
+    /* ────────────────────────────────────────────────────────────────── */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function formatRole(key) {
+      return key
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/[-_]/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase())
+        .trim();
+    }
+  </script>
+</body>
+</html>

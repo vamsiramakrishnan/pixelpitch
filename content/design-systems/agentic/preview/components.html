@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic — Components</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: var(--s-7, 64px) var(--s-5, 32px);
+    }
+
+    /* ── Header ── */
+    .header {
+      margin-bottom: var(--s-7, 64px);
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: var(--s-3, 16px);
+    }
+
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate, #666666);
+      margin-bottom: var(--s-5, 32px);
+    }
+
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 3px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      border-radius: 2px;
+    }
+
+    /* ── Section ── */
+    .section {
+      margin-bottom: var(--s-6, 48px);
+    }
+
+    .section__label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: var(--s-4, 24px);
+      padding-bottom: var(--s-3, 16px);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .component-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3, 16px);
+      align-items: flex-start;
+      margin-bottom: var(--s-4, 24px);
+    }
+
+    .component-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--slate, #666666);
+      margin-bottom: var(--s-2, 8px);
+    }
+
+    .sub-heading {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      margin-bottom: var(--s-3, 16px);
+      margin-top: var(--s-2, 8px);
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border, #e5e5e5);
+      margin: var(--s-4, 24px) 0;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--s-2, 8px);
+      padding: var(--button-py, 10px) var(--button-px, 20px);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.4;
+      border-radius: var(--button-radius, 8px);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      border: none;
+      white-space: nowrap;
+    }
+
+    .btn--primary {
+      background: var(--signal, #3b82f6);
+      color: var(--paper, #ffffff);
+    }
+
+    .btn--primary:hover {
+      filter: brightness(1.08);
+    }
+
+    .btn--primary:active {
+      filter: brightness(0.95);
+    }
+
+    .btn--secondary {
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      border: 1px solid var(--border, #e5e5e5);
+    }
+
+    .btn--secondary:hover {
+      background: var(--surface, #f5f5f5);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--signal, #3b82f6);
+      padding: 10px 8px;
+      text-decoration: none;
+      border-bottom: 1px solid var(--signal, #3b82f6);
+      border-radius: 0;
+    }
+
+    .btn--ghost:hover {
+      opacity: 0.8;
+    }
+
+    .btn--sm {
+      padding: 6px 14px;
+      font-size: 13px;
+    }
+
+    .btn--lg {
+      padding: 14px 32px;
+      font-size: 16px;
+    }
+
+    /* ── Cards ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--s-4, 24px);
+    }
+
+    .card {
+      background: var(--paper, #ffffff);
+      border-radius: var(--card-radius, 8px);
+      padding: var(--s-5, 32px) var(--s-4, 24px);
+      border: var(--card-border, 1px solid var(--border, #e5e5e5));
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--slate, #666666);
+    }
+
+    .card--elevated {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .card--elevated:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .card__eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: var(--s-2, 8px);
+    }
+
+    .card__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--ink, #111111);
+      margin-bottom: var(--s-2, 8px);
+    }
+
+    .card__body {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+      margin-bottom: var(--s-4, 24px);
+    }
+
+    .card__footer {
+      display: flex;
+      gap: var(--s-2, 8px);
+      align-items: center;
+    }
+
+    /* ── Inputs ── */
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-4, 24px);
+      align-items: flex-start;
+    }
+
+    .input-wrap {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink, #111111);
+      margin-bottom: var(--s-2, 8px);
+    }
+
+    .input {
+      display: block;
+      width: 100%;
+      padding: 10px 14px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink, #111111);
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate, #666666);
+    }
+
+    .input:focus {
+      border-color: var(--signal, #3b82f6);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2, 8px);
+      padding: 10px 16px;
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-lg, 16px);
+      max-width: 480px;
+      transition: border-color 0.15s ease;
+    }
+
+    .search-bar:focus-within {
+      border-color: var(--signal, #3b82f6);
+    }
+
+    .search-bar__icon {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      color: var(--slate, #666666);
+    }
+
+    .search-bar__input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      color: var(--ink, #111111);
+    }
+
+    .search-bar__input::placeholder {
+      color: var(--slate, #666666);
+    }
+
+    /* ── Badges & Tags ── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2, 8px);
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: var(--radius-full, 999px);
+      line-height: 1.4;
+    }
+
+    .badge--signal {
+      background: rgba(59, 130, 246, 0.12);
+      color: var(--signal, #3b82f6);
+    }
+
+    .badge--success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge--warning {
+      background: #fef9c3;
+      color: #854d0e;
+    }
+
+    .badge--danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge--neutral {
+      background: var(--surface, #f5f5f5);
+      color: var(--ink, #111111);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: var(--radius-md, 8px);
+      background: var(--surface, #f5f5f5);
+      color: var(--ink, #111111);
+      border: 1px solid var(--border, #e5e5e5);
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .tag:hover {
+      background: var(--bone, #f5f5f5);
+      border-color: var(--slate, #666666);
+    }
+
+    .tag--active {
+      background: var(--signal, #3b82f6);
+      color: var(--paper, #ffffff);
+      border-color: var(--signal, #3b82f6);
+    }
+
+    .tag--active:hover {
+      filter: brightness(1.08);
+    }
+
+    /* ── Conversation / Agentic Pattern ── */
+    .message-thread {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-3, 16px);
+      max-width: 600px;
+    }
+
+    .message {
+      padding: var(--s-3, 16px);
+      border-radius: var(--radius-md, 8px);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .message--user {
+      background: var(--signal, #3b82f6);
+      color: var(--paper, #ffffff);
+      margin-left: auto;
+      max-width: 480px;
+      text-align: right;
+    }
+
+    .message--agent {
+      background: var(--surface, #f5f5f5);
+      color: var(--ink, #111111);
+      border: 1px solid var(--border, #e5e5e5);
+      max-width: 480px;
+    }
+
+    .message-timestamp {
+      font-size: 11px;
+      opacity: 0.7;
+      margin-top: var(--s-2, 8px);
+    }
+
+    /* ── Action Bar ── */
+    .action-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2, 8px);
+      padding: var(--s-3, 16px);
+      background: var(--surface, #f5f5f5);
+      border-radius: var(--radius-md, 8px);
+      border: 1px solid var(--border, #e5e5e5);
+    }
+
+    .action-bar__input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      color: var(--ink, #111111);
+    }
+
+    .action-bar__input::placeholder {
+      color: var(--slate, #666666);
+    }
+
+    .action-bar__button {
+      flex-shrink: 0;
+    }
+
+    /* ── Status Indicators ── */
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: var(--radius-full, 999px);
+      margin-right: 4px;
+    }
+
+    .status-dot--active {
+      background: #16a34a;
+    }
+
+    .status-dot--idle {
+      background: var(--slate, #666666);
+    }
+
+    .status-dot--error {
+      background: #dc2626;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Header -->
+    <header class="header">
+      <h1 class="header__title">Component Vocabulary</h1>
+      <p class="header__subtitle">Minimal controls, clear outcomes. Agentic UI patterns for conversational workflows.</p>
+      <hr class="header__rule">
+    </header>
+
+    <!-- Buttons -->
+    <div class="section">
+      <div class="section__label">Buttons</div>
+
+      <div class="sub-heading">Primary — Delegated Actions</div>
+      <div class="component-row">
+        <button class="btn btn--primary btn--sm">Execute Task</button>
+        <button class="btn btn--primary">Run Agent</button>
+        <button class="btn btn--primary btn--lg">Start Workflow</button>
+      </div>
+
+      <div class="sub-heading">Secondary — Conditional Controls</div>
+      <div class="component-row">
+        <button class="btn btn--secondary btn--sm">Cancel</button>
+        <button class="btn btn--secondary">Review</button>
+        <button class="btn btn--secondary btn--lg">Adjust Settings</button>
+      </div>
+
+      <div class="sub-heading">Ghost — Minimal Navigation</div>
+      <div class="component-row">
+        <a href="#" class="btn btn--ghost">Learn more</a>
+        <a href="#" class="btn btn--ghost">View transcript</a>
+        <a href="#" class="btn btn--ghost">See history</a>
+      </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="section">
+      <div class="section__label">Cards</div>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__eyebrow">Task Card</div>
+          <div class="card__title">Prepare Report</div>
+          <div class="card__body">
+            The agent is gathering data and formatting the quarterly financial summary. Estimated time remaining: 45 seconds.
+          </div>
+          <div class="card__footer">
+            <span class="status-dot status-dot--active"></span>
+            <span style="font-size: 12px; color: var(--slate, #666666);">In Progress</span>
+          </div>
+        </div>
+
+        <div class="card card--elevated">
+          <div class="card__eyebrow">Completed Outcome</div>
+          <div class="card__title">Report Ready</div>
+          <div class="card__body">
+            Successfully compiled the Q4 report with key metrics, variance analysis, and growth projections. Ready for review.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Review</button>
+            <button class="btn btn--secondary btn--sm">Export</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inputs & Search -->
+    <div class="section">
+      <div class="section__label">Inputs</div>
+
+      <div class="sub-heading">Text Fields</div>
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Agent Name</label>
+          <input class="input" type="text" placeholder="e.g., Research Bot">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Task Objective</label>
+          <input class="input" type="text" placeholder="What should the agent accomplish?">
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="sub-heading">Search & Discovery</div>
+      <div class="search-bar">
+        <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input class="search-bar__input" type="text" placeholder="Search workflows, agents, tasks...">
+      </div>
+    </div>
+
+    <!-- Badges & Status Pills -->
+    <div class="section">
+      <div class="section__label">Status &amp; Tags</div>
+
+      <div class="sub-heading">Task Status Pills</div>
+      <div class="badge-row" style="margin-bottom: var(--s-5, 32px)">
+        <span class="badge badge--signal">Active</span>
+        <span class="badge badge--success">Completed</span>
+        <span class="badge badge--warning">Pending Review</span>
+        <span class="badge badge--danger">Failed</span>
+        <span class="badge badge--neutral">Queued</span>
+      </div>
+
+      <div class="sub-heading">Filter Tags</div>
+      <div class="badge-row">
+        <span class="tag tag--active">All Workflows</span>
+        <span class="tag">My Tasks</span>
+        <span class="tag">Delegated</span>
+        <span class="tag">Completed</span>
+        <span class="tag">In Progress</span>
+      </div>
+    </div>
+
+    <!-- Conversational Pattern -->
+    <div class="section">
+      <div class="section__label">Conversational Thread</div>
+
+      <div class="message-thread">
+        <div class="message message--user">
+          Can you analyze our Q4 sales data and identify growth opportunities?
+          <div class="message-timestamp">9:42 AM</div>
+        </div>
+
+        <div class="message message--agent">
+          I'll analyze your Q4 sales data across all regions and compile a report with growth opportunities. This will take about 2 minutes.
+          <div class="message-timestamp">9:42 AM</div>
+        </div>
+
+        <div class="message message--agent">
+          ✓ Report complete. I found 7 key opportunities: (1) North America—expand SMB segment, (2) EMEA—increase partner channel, (3) Asia—localize product offerings. Ready to dive deeper into any area.
+          <div class="message-timestamp">9:44 AM</div>
+        </div>
+
+        <div class="message message--user">
+          Focus on the North America SMB expansion. What's the recommended strategy?
+          <div class="message-timestamp">9:45 AM</div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="sub-heading">Task Input</div>
+      <div class="action-bar">
+        <input class="action-bar__input" type="text" placeholder="Delegate a task to the agent...">
+        <button class="btn btn--primary btn--sm action-bar__button">Send</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* Load tokens.json for dynamic header */
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => r.ok ? r.json() : null)
+      .then(tokens => {
+        if (!tokens) return;
+        const name = tokens.meta?.title || tokens.meta?.id || '';
+        if (name) {
+          document.querySelector('.header__title').textContent = name + ' — Components';
+        }
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>

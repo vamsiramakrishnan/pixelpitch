@@ -1,0 +1,101 @@
+/* Zapier — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #fffefb;
+  --ink:     #201515;
+  --slate:   #36342e;
+  --signal:  #ff4f00;
+  --bone:    #fffefb;
+  --border:  #ff4f00;
+  --surface: #fffefb;
+
+  /* Extended palette */
+  --color-off-white: #fffdf9;
+  --color-warm-gray: #939084;
+  --color-sand: #c5c0b1;
+  --color-light-sand: #eceae3;
+  --color-mid-warm: #b5b2aa;
+
+  /* Semantic */
+  --success: #939084;
+  --warning: #fffefb;
+  --danger:  #201515;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: Degular Display;
+  --font-body:    Degular Display;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero-xl: 80px;
+  --t-display-hero: 56px;
+  --t-display-hero-sm: 40px;
+  --t-display-button: 24px;
+  --t-section-heading: 48px;
+  --t-editorial-heading: 48px;
+  --t-editorial-sub: 40px;
+  --t-sub-heading-lg: 36px;
+  --t-sub-heading: 32px;
+  --t-sub-heading-md: 28px;
+  --t-card-title: 24px;
+  --t-body-large: 20px;
+  --t-body-emphasis: 18px;
+  --t-body: 16px;
+  --t-body-semibold: 16px;
+  --t-button: 16px;
+  --t-button-sm: 14px;
+  --t-caption: 14px;
+  --t-caption-upper: 14px;
+  --t-micro: 12px;
+  --t-micro-sm: 13px;
+
+  /* ── Spacing ── */
+  --s-1: 1px;
+  --s-2: 4px;
+  --s-3: 6px;
+  --s-4: 8px;
+  --s-5: 10px;
+  --s-6: 12px;
+  --s-7: 16px;
+  --s-8: 20px;
+  --s-9: 24px;
+  --s-10: 32px;
+  --s-11: 40px;
+  --s-12: 48px;
+  --s-13: 56px;
+  --s-14: 64px;
+  --s-15: 72px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   6px;
+  --radius-md:   8px;
+  --radius-lg:   20px;
+  --radius-full: 20px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    8px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

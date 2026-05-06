@@ -1,0 +1,100 @@
+/* Claude (Anthropic) — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #f5f4ed;
+  --ink:     #141413;
+  --slate:   #5e5d59;
+  --signal:  #c96442;
+  --bone:    #faf9f5;
+  --border:  #30302e;
+  --surface: #faf9f5;
+
+  /* Extended palette */
+  --color-coral-accent: #d97757;
+  --color-error-crimson: #b53333;
+  --color-focus-blue: #3898ec;
+  --color-pure-white: #ffffff;
+  --color-warm-sand: #e8e6dc;
+  --color-charcoal-warm: #4d4c48;
+  --color-stone-gray: #87867f;
+  --color-dark-warm: #3d3d3a;
+  --color-warm-silver: #b0aea5;
+  --color-border-cream: #f0eee6;
+  --color-ring-warm: #d1cfc5;
+  --color-ring-subtle: #dedc01;
+  --color-ring-deep: #c2c0b6;
+
+  /* Semantic */
+  --success: #f5f4ed;
+  --warning: #f5f4ed;
+  --danger:  #b53333;
+  --info:    #3898ec;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: Anthropic Serif;
+  --font-body:    Anthropic Serif;
+  --font-mono:    Anthropic Mono;
+
+  /* Type ramp */
+  --t-display-hero: 64px;
+  --t-section-heading: 52px;
+  --t-sub-heading-large: 36.8px;
+  --t-sub-heading: 32px;
+  --t-sub-heading-small: 25.6px;
+  --t-feature-title: 20.8px;
+  --t-body-serif: 17px;
+  --t-body-large: 20px;
+  --t-body-nav: 17px;
+  --t-body-standard: 16px;
+  --t-body-small: 15px;
+  --t-caption: 14px;
+  --t-label: 12px;
+  --t-overline: 10px;
+  --t-micro: 9.6px;
+  --t-code: 15px;
+
+  /* ── Spacing ── */
+  --s-1: 3px;
+  --s-2: 4px;
+  --s-3: 6px;
+  --s-4: 8px;
+  --s-5: 10px;
+  --s-6: 12px;
+  --s-7: 16px;
+  --s-8: 20px;
+  --s-9: 24px;
+  --s-10: 30px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   5px;
+  --radius-lg:   120px;
+  --radius-full: 32px;
+
+  /* ── Components ── */
+  --button-radius:  5px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    16px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

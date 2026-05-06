@@ -24,6 +24,7 @@ Shape language is friendly: 16–20px radii on cards, 12px on buttons, 9999px on
 
 ### Primary
 - **Owl Green** (`#58cc02`): Brand primary, primary CTA, correct answer.
+- **Accessible Duo Green Text** (`#008b00`): Darker variant for text on light surfaces. Passes WCAG AA (4.47:1 on white).
 - **Owl Green Deep** (`#58a700`): Pressed/shadow color for green buttons.
 - **Owl Green Light** (`#89e219`): Hover, soft fills.
 - **Owl Green Pale** (`#dbf8c5`): Soft surface, success banner.
@@ -45,7 +46,7 @@ Shape language is friendly: 16–20px radii on cards, 12px on buttons, 9999px on
 ### Ink & Text
 - **Eel Black** (`#3c3c3c`): Primary text.
 - **Wolf** (`#777777`): Secondary text, captions.
-- **Hare** (`#afafaf`): Disabled, placeholder.
+- **Hare** (`#777777`): Disabled, placeholder.
 
 ### Border
 - **Swan** (`#e5e5e5`): Standard 2px border.
@@ -76,6 +77,12 @@ Shape language is friendly: 16–20px radii on cards, 12px on buttons, 9999px on
 - **800 is default**: Feather Bold runs at 800 across headings and buttons. 700 feels weak in this system.
 - **Big type**: heading sizes are 25–40% larger than typical product brands — confidence as identity.
 - **Rounded letterforms**: every glyph has soft terminals; sharp serifs would break the friendliness contract.
+
+### Do
+- Use Accessible Duo Green (#008b00) for green text on white backgrounds
+
+### Don't
+- Don't use Duo Green (#58cc02) as text on white — it fails WCAG AA
 
 ## 4. Component Stylings
 

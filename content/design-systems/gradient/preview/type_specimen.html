@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — Gradient</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, -apple-system, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 48px 24px;
+      }
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 96px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 88px;
+      font-weight: 700;
+      line-height: 0.98;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 24px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+      max-width: 720px;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 120px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--signal, #3b82f6), transparent);
+      border: none;
+      margin: 0;
+    }
+
+    /* Font families section */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-bottom: 96px;
+      margin-top: 64px;
+    }
+
+    .font-card {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(255, 255, 255, 0));
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 12px;
+      padding: 36px;
+      backdrop-filter: blur(4px);
+    }
+
+    .font-card__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 12px;
+    }
+
+    .font-card__name {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      word-break: break-word;
+      line-height: 1.5;
+    }
+
+    /* Character set block */
+    .charmap-block {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), transparent);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 12px;
+      padding: 54px;
+      margin-bottom: 96px;
+    }
+
+    .charmap-block__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 28px;
+    }
+
+    .charmap-block__chars {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 36px;
+      font-weight: 600;
+      line-height: 1.8;
+      letter-spacing: 0.02em;
+      color: var(--ink, #111111);
+      word-break: break-word;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--signal, #3b82f6);
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 800px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink, #111111);
+      margin-bottom: 10px;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.8;
+      color: var(--slate, #666666);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--ink, #111111);
+      overflow-wrap: break-word;
+      word-spacing: 0.1em;
+    }
+
+    /* Ramp section */
+    .ramp-section {
+      margin-bottom: 96px;
+    }
+
+    /* Weights showcase */
+    .weights-showcase {
+      margin-bottom: 96px;
+    }
+
+    .weights-showcase__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--signal, #3b82f6);
+    }
+
+    .weights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 24px;
+    }
+
+    .weight-sample {
+      padding: 24px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.04), transparent);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .weight-sample__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .weight-sample__text {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 28px;
+      color: var(--ink, #111111);
+      line-height: 1.4;
+    }
+
+    /* Gradient demo */
+    .gradient-demo {
+      margin-bottom: 96px;
+    }
+
+    .gradient-demo__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--signal, #3b82f6);
+    }
+
+    .gradient-showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .gradient-block {
+      height: 180px;
+      border-radius: 12px;
+      border: 1px solid var(--border, #e5e5e5);
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gradient-block__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: white;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 2;
+    }
+
+    .gradient-1 { background: linear-gradient(135deg, #3b82f6, #8b5cf6); }
+    .gradient-2 { background: linear-gradient(135deg, #ec4899, #f97316); }
+    .gradient-3 { background: linear-gradient(135deg, #10b981, #06b6d4); }
+    .gradient-4 { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 160px 48px;
+      color: var(--slate, #666666);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 24px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Modern playful interfaces deserve smooth transitions.',
+      'Gradient surfaces add depth without shadows.',
+      'Every color carries semantic meaning and purpose.',
+      'Smooth motion connects micro-interactions to macro flows.',
+      'Visual hierarchy emerges through contrast and layering.',
+      'Morphism bends geometry for contemporary appeal.',
+      'Color transitions guide attention naturally.',
+      'Depth surfaces through gradient fields.',
+      'Light plays across layered color planes.',
+      'Modern design respects motion and time.',
+    ];
+
+    const GRADIENT_DEMO_TEXT = 'Gradient systems thrive on smooth transitions between states. The visual language uses color continuously—not discretely—to create surfaces with perceived depth. When applied consistently across buttons, cards, backgrounds, and overlays, gradients become the defining characteristic of the interface. Morphism adds softness to geometry: rounded corners everywhere, subtle blurs, layered color planes. This is contemporary interface design. Not flat. Not skeuomorphic. But modern and playful, with visual depth earned through careful color orchestration, not heavy shadows. Every surface breathes. Every interaction flows. The system scales from mobile to desktop without breaking its personality.';
+
+    fetch('../tokens.json')
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#ef4444">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Design System';
+      const summary = tokens.meta?.summary || '';
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Type Specimen</div>';
+      html += '  <h1 class="header__title">' + esc(title) + '</h1>';
+      html += '  <p class="header__subtitle">' + esc(summary) + '</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      const families = [
+        { label: 'Display', name: 'Space Grotesk', fallback: 'system-ui, -apple-system, Helvetica Neue, sans-serif', note: 'Geometric sans with personality' },
+        { label: 'Primary', name: 'Montserrat', fallback: 'system-ui, -apple-system, Helvetica Neue, sans-serif', note: 'Body and UI typography' },
+        { label: 'Monospace', name: 'JetBrains Mono', fallback: 'ui-monospace, Menlo, monospace', note: 'Code, kickers, and metadata' }
+      ];
+
+      html += '<div class="font-families">';
+      families.forEach(f => {
+        html += '<div class="font-card">';
+        html += '  <div class="font-card__label">' + esc(f.label) + '</div>';
+        html += '  <div class="font-card__name">' + esc(f.name) + '</div>';
+        html += '  <div class="font-card__fallback">' + esc(f.fallback) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      /* Character set */
+      html += '<div class="charmap-block">';
+      html += '  <div class="charmap-block__label">Character Set · Space Grotesk</div>';
+      html += '  <div class="charmap-block__chars" style="font-family:\'Space Grotesk\',\'Montserrat\',system-ui,sans-serif">';
+      html += '    AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>';
+      html += '    0123456789 !@#$%&amp;*()–—''""‚„';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Type ramp */
+      html += buildTypeRamp();
+
+      /* Weights showcase */
+      html += buildWeightsShowcase();
+
+      /* Gradient demo */
+      html += buildGradientDemo();
+
+      app.innerHTML = html;
+    }
+
+    function buildTypeRamp() {
+      const ramp = [
+        { role: 'Hero', size: '72px', weight: 700, lh: '0.95', font: 'display', sample: 'Modern playful interfaces deserve smooth transitions.' },
+        { role: 'H1 · Display', size: '56px', weight: 700, lh: '1.1', font: 'display', sample: 'Gradient surfaces add depth without shadows.' },
+        { role: 'H2 · Heading', size: '42px', weight: 700, lh: '1.15', font: 'display', sample: 'Every color carries semantic meaning.' },
+        { role: 'H3 · Subheading', size: '32px', weight: 600, lh: '1.2', font: 'body', sample: 'Visual hierarchy emerges through contrast.' },
+        { role: 'H4 · Subtitle', size: '24px', weight: 600, lh: '1.3', font: 'body', sample: 'Smooth motion connects interactions to flows.' },
+        { role: 'Body · Large', size: '18px', weight: 400, lh: '1.55', font: 'body', sample: 'Morphism bends geometry for contemporary appeal. Light plays across layered color planes.' },
+        { role: 'Body · Default', size: '16px', weight: 400, lh: '1.6', font: 'body', sample: 'The visual language uses color continuously to create surfaces with perceived depth. When applied consistently across components, gradients become the defining characteristic.' },
+        { role: 'Body · Small', size: '14px', weight: 400, lh: '1.6', font: 'body', sample: 'Modern interface design respects motion, time, and the human eye. Subtle blurs and layered planes guide attention naturally through the visual field.' },
+        { role: 'Caption · Kicker', size: '12px', weight: 700, lh: '1.5', font: 'mono', sample: 'TYPE RAMP · SPECIMEN SHOWCASE · GRADIENT SYSTEM' },
+      ];
+
+      let html = '<div class="ramp-section">';
+      html += '<div class="section-label">Type Ramp</div>';
+      ramp.forEach((entry, i) => {
+        const fontFamily = entry.font === 'mono' 
+          ? 'var(--font-mono, ui-monospace, monospace)'
+          : entry.font === 'display'
+          ? 'var(--font-display, system-ui, sans-serif)'
+          : 'var(--font-body, system-ui, sans-serif)';
+
+        let fontStyle = 'font-size:' + entry.size + ';font-weight:' + entry.weight + ';line-height:' + entry.lh + ';';
+        fontStyle += 'font-family:' + fontFamily + ';';
+
+        let meta = esc(entry.size) + ' / ' + esc(String(entry.weight));
+        meta += '\n' + fontLabel(entry.font);
+        meta += '\nline-height: ' + esc(String(entry.lh));
+
+        html += '<div class="ramp-row">';
+        html += '  <div class="ramp-meta">';
+        html += '    <div class="ramp-meta__role">' + esc(entry.role) + '</div>';
+        html += '    <pre class="ramp-meta__detail">' + meta + '</pre>';
+        html += '  </div>';
+        html += '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(entry.sample) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      return html;
+    }
+
+    function buildWeightsShowcase() {
+      const weights = [100, 300, 400, 500, 600, 700, 900];
+      const labels = ['Thin', 'Light', 'Regular', 'Medium', 'Semibold', 'Bold', 'Black'];
+
+      let html = '<div class="weights-showcase">';
+      html += '<div class="weights-showcase__label">Font Weights · Space Grotesk</div>';
+      html += '<div class="weights-grid">';
+
+      weights.forEach((w, i) => {
+        html += '<div class="weight-sample">';
+        html += '  <div class="weight-sample__label">' + labels[i] + '</div>';
+        html += '  <div class="weight-sample__text" style="font-family:\'Space Grotesk\',system-ui,sans-serif;font-weight:' + w + '">Gradient</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+      html += '</div>';
+
+      return html;
+    }
+
+    function buildGradientDemo() {
+      let html = '<div class="gradient-demo">';
+      html += '<div class="gradient-demo__label">Signature Gradients</div>';
+      html += '<div class="gradient-showcase">';
+
+      html += '<div class="gradient-block gradient-1">';
+      html += '  <div class="gradient-block__label">Blue to Violet</div>';
+      html += '</div>';
+
+      html += '<div class="gradient-block gradient-2">';
+      html += '  <div class="gradient-block__label">Rose to Orange</div>';
+      html += '</div>';
+
+      html += '<div class="gradient-block gradient-3">';
+      html += '  <div class="gradient-block__label">Emerald to Cyan</div>';
+      html += '</div>';
+
+      html += '<div class="gradient-block gradient-4">';
+      html += '  <div class="gradient-block__label">Amber to Red</div>';
+      html += '</div>';
+
+      html += '</div>';
+      html += '</div>';
+
+      return html;
+    }
+
+    function fontLabel(key) {
+      const map = {
+        'display': 'Space Grotesk',
+        'body': 'Montserrat',
+        'mono': 'JetBrains Mono'
+      };
+      return map[key] || 'Unknown';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

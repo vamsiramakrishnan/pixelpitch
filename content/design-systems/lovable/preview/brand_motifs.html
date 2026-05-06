@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Lovable</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      background: var(--paper, #f7f4ed);
+      color: var(--ink, #1c1c1c);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #5f5f5d);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 72px;
+      font-weight: 600;
+      line-height: 1.00;
+      letter-spacing: -1.2px;
+      color: var(--ink, #1c1c1c);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--info, #3b82f6);
+      font-weight: 600;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #5f5f5d);
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 1px;
+      background: var(--ink, #1c1c1c);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #5f5f5d);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #eceae4);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 28px;
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #1c1c1c);
+      border-bottom: 1px solid rgba(28, 28, 28, 0.08);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 24px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--info, #3b82f6);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #f7f4ed);
+      border: 1px solid var(--border, #eceae4);
+      border-radius: 8px;
+      padding: 32px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--ink, #1c1c1c);
+    }
+
+    .dd-card__heading--dont {
+      color: rgba(28, 28, 28, 0.6);
+    }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--ink, #1c1c1c);
+    }
+
+    .dd-card__icon--dont {
+      color: rgba(28, 28, 28, 0.4);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #1c1c1c);
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(28, 28, 28, 0.04);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: 0;
+      overflow: hidden;
+      height: 120px;
+      border: 1px solid var(--border, #eceae4);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.4;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+      color: var(--ink);
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--paper, #f7f4ed);
+      border: 1px solid var(--border, #eceae4);
+      border-radius: 8px;
+      padding: 48px 40px;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #5f5f5d);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 54px;
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.9px;
+      color: var(--ink, #1c1c1c);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--info, #3b82f6);
+      font-weight: 600;
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #1c1c1c);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #eceae4);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--slate, #5f5f5d);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--ink, #1c1c1c);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--paper, #f7f4ed);
+      border: 1px solid var(--border, #eceae4);
+      border-radius: 8px;
+      padding: 32px;
+      max-width: 840px;
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #1c1c1c);
+    }
+
+    /* ──── Opacity & Depth Visual ──── */
+    .opacity-demo {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .opacity-demo {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .opacity-swatch {
+      border: 1px solid var(--border, #eceae4);
+      border-radius: 8px;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .opacity-swatch__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    .opacity-swatch__value {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      color: var(--slate);
+    }
+
+    /* ──── Button States Demo ──── */
+    .button-states {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .button-states {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .button-state-card {
+      border: 1px solid var(--border, #eceae4);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .button-state-card__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #5f5f5d);
+    }
+
+    .demo-button {
+      padding: var(--button-py, 10px) var(--button-px, 20px);
+      border-radius: var(--button-radius, 8px);
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+    }
+
+    .demo-button--primary {
+      background: var(--ink, #1c1c1c);
+      color: var(--paper, #f7f4ed);
+      box-shadow: rgba(255,255,255,0.2) 0px 0.5px 0px 0px inset, rgba(0,0,0,0.2) 0px 0px 0px 0.5px inset;
+    }
+
+    .demo-button--primary:hover {
+      background: rgba(28, 28, 28, 0.9);
+    }
+
+    .demo-button--secondary {
+      background: var(--paper, #f7f4ed);
+      color: var(--ink, #1c1c1c);
+      border: 1px solid var(--border, #eceae4);
+    }
+
+    .demo-button--secondary:hover {
+      background: rgba(28, 28, 28, 0.04);
+    }
+
+    .demo-button--focus {
+      background: var(--ink, #1c1c1c);
+      color: var(--paper, #f7f4ed);
+      box-shadow: rgba(59, 130, 246, 0.5) 0px 0px 0px 2px, rgba(0,0,0,0.1) 0px 4px 12px;
+    }
+
+    .demo-button--disabled {
+      background: rgba(28, 28, 28, 0.4);
+      color: var(--paper, #f7f4ed);
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* ──── The Opacity Principle ──── */
+    .principle-section {
+      background: var(--paper, #f7f4ed);
+      border: 1px solid var(--border, #eceae4);
+      border-radius: 8px;
+      padding: 32px;
+      max-width: 840px;
+      margin-top: 24px;
+    }
+
+    .principle-section p {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #1c1c1c);
+      margin-bottom: 12px;
+    }
+
+    .principle-section p:last-child {
+      margin-bottom: 0;
+    }
+
+    .principle-section code {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      background: rgba(28, 28, 28, 0.04);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--ink, #1c1c1c);
+    }
+
+    /* ──── Type Ramp ──── */
+    .type-ramp-grid {
+      border: 1px solid var(--border, #eceae4);
+      border-radius: 8px;
+      padding: 32px;
+      background: var(--paper, #f7f4ed);
+    }
+
+    .ramp-item {
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(28, 28, 28, 0.04);
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .ramp-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .ramp-item__meta {
+      flex: 0 0 160px;
+    }
+
+    .ramp-item__meta-label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #5f5f5d);
+      font-weight: 500;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .ramp-item__meta-detail {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      color: var(--slate, #5f5f5d);
+      line-height: 1.5;
+    }
+
+    .ramp-item__example {
+      flex: 1;
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #5f5f5d);
+      font-size: 18px;
+      font-family: var(--font-body, 'system-ui', sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--border, #eceae4);
+      border-top-color: var(--info, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color: rgba(28,28,28,0.6)">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">Warm, <span>Approachable</span> Design</h1>';
+      html += '  <p class="header__subtitle">Lovable\'s visual system radiates warmth through deliberate restraint. Cream canvas, humanist typography, and opacity-driven color unity create a developer tool that feels like a craft, not a corporate mandate.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Lovable sits on a warm, parchment-toned cream (#f7f4ed) — not white, not beige, but something that feels hand-selected and lived-in. The near-black text (#1c1c1c) against this warm background creates a readable, easy-on-the-eyes contrast ratio while maintaining approachability. Camera Plain Variable brings humanist warmth to every headline: slightly rounded terminals, organic curves, and editorial letter-spacing compress at scale (–0.9px to –1.5px) to create confident, compact statements. The system\'s secret is opacity-driven depth: every gray on the page derives from #1c1c1c at varying transparency levels (0.03, 0.04, 0.4, 0.82–0.83), creating visual coherence that arbitrary hex palettes can\'t achieve. Inset shadows on buttons, soft focus rings, and borders crafted from the same opacity scale complete the unified, tactile system.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Warm parchment canvas (#f7f4ed) — intentional cream, never pure white</li>';
+      html += '    <li>Near-black ink (#1c1c1c) with opacity-driven grays at 0.03, 0.04, 0.4, 0.82–0.83 levels</li>';
+      html += '    <li>Camera Plain Variable: humanist sans with warm terminals and organic curves</li>';
+      html += '    <li>Display headlines set tight at 600 weight with –0.9px to –1.5px letter-spacing</li>';
+      html += '    <li>Body text at 400 weight, 1.38–1.55 line height for comfortable reading rhythm</li>';
+      html += '    <li>Inset shadow technique on dark buttons: rgba(255,255,255,0.2) top, rgba(0,0,0,0.2) bottom</li>';
+      html += '    <li>Full-pill radius (9999px) for action buttons and icon toggles only</li>';
+      html += '    <li>Square corners (8px radius) on cards, modals, and input containers</li>';
+      html += '    <li>Border system: #eceae4 for passive, rgba(28,28,28,0.4) for interactive elements</li>';
+      html += '    <li>Soft focus shadow: rgba(0,0,0,0.1) 0px 4px 12px instead of sharp outlines</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use the warm cream (#f7f4ed) as the page foundation — it\'s Lovable\'s warmth</li>';
+      html += '      <li>Derive all grays from #1c1c1c at varying opacity for tonal unity</li>';
+      html += '      <li>Apply negative letter-spacing (–0.9px to –1.5px) on display headlines</li>';
+      html += '      <li>Use the inset shadow technique on dark buttons for tactile depth</li>';
+      html += '      <li>Apply 8px border-radius on cards, modals, and containers</li>';
+      html += '      <li>Use #eceae4 borders for passive, rgba(28,28,28,0.4) for interactive</li>';
+      html += '      <li>Keep font weight narrow: 400 for body/UI, 600 for headings max</li>';
+      html += '      <li>Use soft shadow-based focus indicators instead of sharp outlines</li>';
+      html += '      <li>Apply full-pill radius (9999px) only to action buttons and icon toggles</li>';
+      html += '      <li>Use opacity 0.8 or 0.9 on active/hover states for responsive feedback</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use pure white (#ffffff) as a page background — the cream is intentional</li>';
+      html += '      <li>Add heavy box-shadows to cards — borders are the containment mechanism</li>';
+      html += '      <li>Introduce saturated accent colors — the palette is warm-neutral by design</li>';
+      html += '      <li>Use font weight 700 (bold) — 600 is the maximum weight in the system</li>';
+      html += '      <li>Apply 9999px radius on rectangular buttons — pills are for icons/toggles only</li>';
+      html += '      <li>Use sharp focus outlines — the system uses soft shadow-based indicators</li>';
+      html += '      <li>Mix border styles — stick to the two-border opacity system</li>';
+      html += '      <li>Increase letter-spacing on headings — Camera Plain runs tight by design</li>';
+      html += '      <li>Use decorative shadows, blurs, or glassmorphism effects</li>';
+      html += '      <li>Pull colors from outside the five-token palette for UI elements</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Opacity & Depth Principle ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">The Opacity Principle</div>';
+      html += '  <div class="principle-section">';
+      html += '    <p><strong>All grays in Lovable derive from a single hue: #1c1c1c (ink), at varying opacity levels.</strong> This creates visual coherence that\'s impossible with arbitrary hex values. Rather than maintaining a traditional gray scale (e.g., #e5e5e5, #d4d4d4, #999999), the system modulates opacity: 0.03 for ghost borders, 0.04 for light dividers, 0.4 for strong interactive boundaries, and 0.82–0.83 for text-heavy regions. This approach ensures that every shade respects the same hue family while maintaining the warm parchment atmosphere.</p>';
+      html += '    <p>The benefit: adjusting the brand\'s warmth or contrast requires changing only one variable. The entire tonal range shifts coherently. Focus states, hover states, and disabled states all feel intentional rather than added.</p>';
+      html += '  </div>';
+      html += '  <div class="opacity-demo">';
+      
+      const opacityLevels = [
+        { label: 'Minimal', value: '0.03', hex: 'rgba(28,28,28,0.03)' },
+        { label: 'Light', value: '0.04', hex: 'rgba(28,28,28,0.04)' },
+        { label: 'Medium', value: '0.4', hex: 'rgba(28,28,28,0.4)' },
+        { label: 'Strong', value: '0.82', hex: 'rgba(28,28,28,0.82)' },
+        { label: 'Text', value: '0.83', hex: 'rgba(28,28,28,0.83)' }
+      ];
+
+      opacityLevels.forEach(level => {
+        html += '<div class="opacity-swatch" style="background: ' + level.hex + '; border-color: ' + level.hex + ';">';
+        html += '  <span class="opacity-swatch__label">' + esc(level.label) + '</span>';
+        html += '  <span class="opacity-swatch__value">' + esc(level.value) + '</span>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Button States ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Button States & Focus</div>';
+      html += '  <div class="button-states">';
+
+      html += '    <div class="button-state-card">';
+      html += '      <span class="button-state-card__label">Default</span>';
+      html += '      <button class="demo-button demo-button--primary">Action</button>';
+      html += '    </div>';
+
+      html += '    <div class="button-state-card">';
+      html += '      <span class="button-state-card__label">Hover</span>';
+      html += '      <button class="demo-button demo-button--primary" style="background: rgba(28,28,28,0.9);">Action</button>';
+      html += '    </div>';
+
+      html += '    <div class="button-state-card">';
+      html += '      <span class="button-state-card__label">Focus Ring</span>';
+      html += '      <button class="demo-button demo-button--focus">Action</button>';
+      html += '    </div>';
+
+      html += '    <div class="button-state-card">';
+      html += '      <span class="button-state-card__label">Disabled</span>';
+      html += '      <button class="demo-button demo-button--disabled" disabled>Action</button>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '  <div class="principle-section">';
+      html += '    <p><strong>Focus ring uses soft shadow, not outline:</strong> <code>

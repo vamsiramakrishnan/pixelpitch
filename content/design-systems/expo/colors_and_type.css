@@ -1,0 +1,101 @@
+/* Expo — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  /* ── Colors ── */
+  --paper:   #f0f0f3;
+  --ink:     #1c2024;
+  --slate:   #60646c;
+  --signal:  #47c2ff;
+  --bone:    #333333;
+  --border:  #7e8288;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-expo-black: #000000;
+  --color-link-cobalt: #0d74ce;
+  --color-legal-blue: #476cff;
+  --color-preview-purple: #8145b5;
+  --color-widget-dark: #1a1a1a;
+  --color-banner-dark: #171717;
+  --color-mid-slate: #555860;
+  --color-silver: #6a6e74;
+  --color-pewter: #999999;
+  --color-light-silver: #cccccc;
+  --color-warning-amber: #ab6400;
+  --color-destructive-rose: #eb8e90;
+  --color-border-lavender: #e0e1e6;
+  --color-input-border: #d9d9e0;
+  --color-dark-focus-ring: #2547d0;
+
+  /* Semantic */
+  --warning: #ab6400;
+  --danger:  #eb8e90;
+  --info:    #1c2024;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    JetBrains Mono;
+
+  /* Type ramp */
+  --t-display-hero: 64px;
+  --t-section-heading: 48px;
+  --t-sub-heading: 20px;
+  --t-body-large: 18px;
+  --t-body-button: 16px;
+  --t-caption-label: 14px;
+  --t-tag-small: 12px;
+  --t-code-body: 16px;
+  --t-code-caption: 14px;
+  --t-code-small: 12px;
+
+  /* ── Spacing ── */
+  --s-1: 1px;
+  --s-2: 2px;
+  --s-3: 4px;
+  --s-4: 8px;
+  --s-5: 12px;
+  --s-6: 16px;
+  --s-7: 24px;
+  --s-8: 32px;
+  --s-9: 40px;
+  --s-10: 48px;
+  --s-11: 64px;
+  --s-12: 80px;
+  --s-13: 96px;
+  --s-14: 144px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   8px;
+  --radius-md:   8px;
+  --radius-lg:   16px;
+  --radius-full: 9999px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    24px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

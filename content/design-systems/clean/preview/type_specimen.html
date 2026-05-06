@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — Clean</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 48px 24px;
+      }
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 96px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 96px;
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.015em;
+      color: var(--ink, #111111);
+      margin-bottom: 24px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 96px;
+      height: 2px;
+      background: var(--ink, #111111);
+      border: none;
+      margin: 0;
+    }
+
+    /* Font families section */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+      margin-bottom: 96px;
+      margin-top: 64px;
+    }
+
+    .font-card {
+      background: transparent;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      padding: 32px;
+    }
+
+    .font-card__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .font-card__name {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      word-break: break-word;
+      font-weight: 400;
+    }
+
+    /* Character set block */
+    .charmap-block {
+      background: transparent;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      padding: 48px;
+      margin-bottom: 96px;
+    }
+
+    .charmap-block__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+    }
+
+    .charmap-block__chars {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 1.8;
+      letter-spacing: 0.01em;
+      color: var(--ink, #111111);
+      word-break: break-word;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--ink, #111111);
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 800px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 1.8;
+      color: var(--slate, #666666);
+      letter-spacing: 0.02em;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--ink, #111111);
+      overflow-wrap: break-word;
+      word-spacing: 0.1em;
+    }
+
+    /* Ramp section */
+    .ramp-section {
+      margin-bottom: 96px;
+    }
+
+    /* Drop cap demo */
+    .dropcap-demo {
+      margin-bottom: 96px;
+    }
+
+    .dropcap-demo__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--ink, #111111);
+    }
+
+    .dropcap-container {
+      background: transparent;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      padding: 48px;
+      max-width: 680px;
+    }
+
+    .dropcap-para {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--ink, #111111);
+      margin: 0;
+      text-align: left;
+    }
+
+    .dropcap {
+      float: left;
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 96px;
+      font-weight: 700;
+      line-height: 0.85;
+      color: var(--signal, #3b82f6);
+      margin-right: 6px;
+      margin-top: -4px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 160px 48px;
+      color: var(--slate, #666666);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 24px auto 0;
+      border: 2px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Simplicity is the ultimate sophistication.',
+      'Clarity emerges from constraint, not abundance.',
+      'Whitespace is not empty. It is breathing room.',
+      'Typography carries meaning through legibility.',
+      'Reduction reveals what truly matters.',
+      'Consistency builds trust and recognition.',
+      'Every element should earn its presence.',
+      'Clean design respects the reader\'s time.',
+      'Minimal palette, maximum impact.',
+      'Restraint is the mark of confidence.',
+    ];
+
+    const DROPCAP_TEXT = 'Simplicity is not about minimalism for its own sake. It\'s about clarity of purpose. Every font choice, every color, every inch of whitespace serves the user\'s need to understand quickly and act decisively. In the Clean system, we use three typeface families—Poppins for display presence, Roboto for body readability, and Inconsolata for precise code and metadata. The scale spans from 12 pixels to 32 pixels, each step calibrated for its role. No decorative fonts. No unnecessary weights. Just three sizes and a limited palette of weights that move from thin to bold. This discipline scales beautifully across interfaces, documents, and screens. Clean design is honest design.';
+
+    fetch('../tokens.json')
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#3b82f6">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Design System';
+      const summary = tokens.meta?.summary || '';
+
+      const fonts = tokens.typography || {};
+      const ramp = tokens.typography?.ramp || [];
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Type Specimen</div>';
+      html += '  <h1 class="header__title">' + esc(title) + '</h1>';
+      html += '  <p class="header__subtitle">' + esc(summary) + '</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      const families = [
+        { label: 'Display', name: 'Poppins', fallback: 'system-ui, -apple-system, sans-serif' },
+        { label: 'Body', name: 'Roboto', fallback: 'system-ui, -apple-system, sans-serif' },
+        { label: 'Monospace', name: 'Inconsolata', fallback: 'ui-monospace, Menlo, monospace' }
+      ];
+
+      html += '<div class="font-families">';
+      families.forEach(f => {
+        html += '<div class="font-card">';
+        html += '  <div class="font-card__label">' + esc(f.label) + '</div>';
+        html += '  <div class="font-card__name">' + esc(f.name) + '</div>';
+        html += '  <div class="font-card__fallback">' + esc(f.fallback) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      /* Character set */
+      html += '<div class="charmap-block">';
+      html += '  <div class="charmap-block__label">Character Set</div>';
+      html += '  <div class="charmap-block__chars">';
+      html += '    AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>';
+      html += '    0123456789 !@#$%&amp;*()&ndash;&mdash;&lsquo;&rsquo;&ldquo;&rdquo;';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Type ramp */
+      html += buildTypeRamp();
+
+      /* Drop cap demo */
+      html += '<div class="dropcap-demo">';
+      html += '<div class="dropcap-demo__label">Drop Cap — Display / 96px / 700 Weight / Signal Blue</div>';
+      html += '<div class="dropcap-container">';
+      const firstChar = DROPCAP_TEXT.charAt(0);
+      const restText = DROPCAP_TEXT.substring(1);
+      html += '<p class="dropcap-para">';
+      html += '<span class="dropcap">' + esc(firstChar) + '</span>';
+      html += esc(restText);
+      html += '</p>';
+      html += '</div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function buildTypeRamp() {
+      const rampData = [
+        { role: 'Display Hero', font: 'Poppins', size: '96px', weight: 700, lh: '0.95', ls: '-0.02em' },
+        { role: 'Display Large', font: 'Poppins', size: '64px', weight: 700, lh: '1.1', ls: '-0.015em' },
+        { role: 'Display Medium', font: 'Poppins', size: '48px', weight: 600, lh: '1.15', ls: '-0.01em' },
+        { role: 'Display Small', font: 'Poppins', size: '32px', weight: 600, lh: '1.2', ls: '0' },
+        { role: 'Heading 1', font: 'Poppins', size: '28px', weight: 600, lh: '1.25', ls: '0' },
+        { role: 'Heading 2', font: 'Poppins', size: '24px', weight: 600, lh: '1.3', ls: '0' },
+        { role: 'Heading 3', font: 'Roboto', size: '20px', weight: 600, lh: '1.4', ls: '0' },
+        { role: 'Body Large', font: 'Roboto', size: '18px', weight: 400, lh: '1.6', ls: '0' },
+        { role: 'Body Regular', font: 'Roboto', size: '16px', weight: 400, lh: '1.6', ls: '0' },
+        { role: 'Body Small', font: 'Roboto', size: '14px', weight: 400, lh: '1.5', ls: '0' },
+        { role: 'Label', font: 'Roboto', size: '12px', weight: 500, lh: '1.4', ls: '0.05em' },
+        { role: 'Monospace', font: 'Inconsolata', size: '14px', weight: 400, lh: '1.6', ls: '0' }
+      ];
+
+      let html = '<div class="ramp-section">';
+      html += '<div class="section-label">Type Ramp</div>';
+
+      rampData.forEach((entry, i) => {
+        const sampleIdx = i % EDITORIAL_SAMPLES.length;
+        let sample = EDITORIAL_SAMPLES[sampleIdx];
+
+        const sizeNum = parseFloat(entry.size);
+        if (sizeNum >= 48) {
+          sample = sample.split('.')[0].slice(0, 35) + '.';
+        }
+
+        let fontFamily = 'var(--font-body)';
+        if (entry.font === 'Poppins') fontFamily = 'var(--font-display)';
+        if (entry.font === 'Inconsolata') fontFamily = 'var(--font-mono)';
+
+        let fontStyle = 'font-size:' + entry.size + ';font-weight:' + entry.weight + ';line-height:' + entry.lh + ';';
+        fontStyle += 'font-family:' + fontFamily + ';';
+        if (entry.ls && entry.ls !== '0') fontStyle += 'letter-spacing:' + entry.ls + ';';
+
+        let meta = esc(entry.size) + ' / ' + esc(String(entry.weight));
+        meta += '\n' + esc(entry.font);
+        meta += '\nline-height: ' + esc(String(entry.lh));
+        if (entry.ls && entry.ls !== '0') meta += '\nletter-spacing: ' + esc(entry.ls);
+
+        html += '' +
+          '<div class="ramp-row">' +
+          '  <div class="ramp-meta">' +
+          '    <div class="ramp-meta__role">' + esc(entry.role) + '</div>' +
+          '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+          '  </div>' +
+          '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(sample) + '</div>' +
+          '</div>';
+      });
+
+      html += '</div>';
+      return html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

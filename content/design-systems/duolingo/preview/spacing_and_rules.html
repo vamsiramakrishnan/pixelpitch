@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Duolingo Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #3c3c3c);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 64px 24px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 80px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal, #58cc02);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 56px;
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--ink, #3c3c3c);
+      margin-bottom: 16px;
+      max-width: 85%;
+    }
+
+    .header__title-accent {
+      color: var(--signal, #58cc02);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 17px;
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--slate, #777777);
+      max-width: 75%;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 4px;
+      background: var(--signal, #58cc02);
+      border: none;
+      margin-top: 24px;
+      border-radius: var(--radius-sm, 4px);
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal, #58cc02);
+      margin-bottom: 32px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--signal, #58cc02);
+      display: inline-block;
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 80px;
+      gap: 24px;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--color-swan, #e5e5e5);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink, #3c3c3c);
+      letter-spacing: 0.02em;
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      color: var(--slate, #777777);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 6px;
+      background: var(--signal, #58cc02);
+      border-radius: var(--radius-full, 999px);
+      min-width: 6px;
+      box-shadow: 0 2px 4px rgba(88, 204, 2, 0.24);
+      transition: box-shadow 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      box-shadow: 0 4px 8px rgba(88, 204, 2, 0.32);
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #3c3c3c);
+      text-align: right;
+    }
+
+    /* Rule weights */
+    .rule-demo {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--color-swan, #e5e5e5);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink, #3c3c3c);
+      letter-spacing: 0.02em;
+    }
+
+    .rule-demo__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      color: var(--slate, #777777);
+      font-weight: 500;
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate, #777777);
+    }
+
+    .rule-demo__container {
+      width: 100%;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 0;
+      background: var(--bone, #f7f7f7);
+      border-radius: var(--radius-md, 8px);
+      position: relative;
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    .rule-demo__shadow {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      width: 100%;
+      border-radius: var(--radius-md, 8px);
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .radius-item {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .radius-item__box {
+      width: 100px;
+      height: 100px;
+      background: var(--signal, #58cc02);
+      border: 2px solid var(--color-owl-green-deep, #58a700);
+      flex-shrink: 0;
+      box-shadow: 0 4px 0 rgba(88, 204, 2, 0.32);
+    }
+
+    .radius-item__info {
+      flex: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink, #3c3c3c);
+      margin-bottom: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate, #777777);
+      margin-bottom: 12px;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--slate, #777777);
+      font-weight: 500;
+    }
+
+    /* Philosophy block */
+    .philosophy {
+      background: var(--color-owl-green-pale, #dbf8c5);
+      padding: 40px;
+      border: 2px solid var(--signal, #58cc02);
+      margin-bottom: 80px;
+      border-radius: var(--radius-lg, 16px);
+      box-shadow: 0 4px 0 rgba(88, 204, 2, 0.24);
+    }
+
+    .philosophy__title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal, #58cc02);
+      margin-bottom: 16px;
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--ink, #3c3c3c);
+      font-weight: 500;
+    }
+
+    .philosophy__text strong {
+      font-weight: 700;
+      color: var(--color-owl-green-deep, #58a700);
+    }
+
+    .philosophy__text em {
+      font-style: italic;
+    }
+
+    /* Grid demo */
+    .grid-demo {
+      background: var(--bone, #f7f7f7);
+      padding: 40px;
+      border: 2px solid var(--color-swan, #e5e5e5);
+      margin-bottom: 80px;
+      border-radius: var(--radius-lg, 16px);
+    }
+
+    .grid-demo__title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal, #58cc02);
+      margin-bottom: 24px;
+    }
+
+    .grid-demo__visual {
+      width: 100%;
+      height: 160px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      padding: 20px;
+      border: 2px dashed var(--color-swan, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      background: var(--paper, #ffffff);
+    }
+
+    .grid-demo__column {
+      background: linear-gradient(135deg, var(--signal, #58cc02) 0%, var(--color-owl-green-light, #89e219) 100%);
+      border: 2px solid var(--color-owl-green-deep, #58a700);
+      border-radius: var(--radius-md, 8px);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--paper, #ffffff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      box-shadow: 0 2px 4px rgba(88, 204, 2, 0.24);
+    }
+
+    .grid-demo__info {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .grid-demo__stat {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      color: var(--ink, #3c3c3c);
+      font-weight: 500;
+    }
+
+    .grid-demo__stat-label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal, #58cc02);
+      margin-bottom: 6px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #777777);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid rgba(88, 204, 2, 0.2);
+      border-top-color: var(--signal, #58cc02);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .footer-philosophy {
+      margin-top: 96px;
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 900px) {
+      .page {
+        padding: 48px 20px;
+      }
+
+      .header {
+        margin-bottom: 64px;
+      }
+
+      .header__title {
+        font-size: 42px;
+      }
+
+      .section {
+        margin-bottom: 64px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 80px 1fr 70px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .radius-item {
+        grid-template-columns: 120px 1fr;
+      }
+
+      .grid-demo__visual {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '4px', label: 'xs' },
+      's-2': { value: '8px', label: 'sm' },
+      's-3': { value: '16px', label: 'md' },
+      's-4': { value: '24px', label: 'lg' },
+      's-5': { value: '32px', label: 'xl' },
+      's-6': { value: '48px', label: '2xl' },
+      's-7': { value: '64px', label: '3xl' },
+      's-8': { value: '96px', label: '4xl' }
+    };
+
+    const DEFAULT_RULES = {
+      'flat': { name: 'Flat', weight: 'none', color: 'transparent', use: 'Canvas, body backgrounds' },
+      'border': { name: 'Border', weight: '1px solid', color: '#58cc02', use: 'Card borders, dividers' },
+      'button-shadow': { name: 'Button Shadow', weight: '0 4px 0', color: '#58cc02', use: '3D press affordance on all interactive elements' },
+      'elevated': { name: 'Elevated', weight: '0 2px 8px', color: 'rgba(0,0,0,0.08)', use: 'Floating panels, modals, tooltips' }
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'Never used — avoid sharp corners' },
+      'sm': { value: '4px', use: 'Internal elements, icon containers' },
+      'md': { value: '8px', use: 'Buttons, input fields, small cards' },
+      'lg': { value: '16px', use: 'Large cards, modals, containers' },
+      'full': { value: '999px', use: 'Chips, badges, pill-shaped progress bars, Duo avatar' }
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const rules = DEFAULT_RULES;
+      const radius = DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Spacing &amp; Rules</div>';
+      html += '  <h1 class="header__title">Four pixels.<br><span class="header__title-accent">Infinite joy.</span></h1>';
+      html += '  <p class="header__subtitle">The spacing and depth system for Duolingo — a modular scale where every pixel earns its presence through tactile, gamified delight. Base 4px unit powers the entire rhythm.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Philosophy block */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Spacing Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    <strong>Base 4px unit</strong> governs all spacing, from padding to margins to gaps. Every interactive element — every button, card, and input — is surrounded by multiples of 4px. This creates a <strong>predictable, playful rhythm</strong> that feels intentional and snappy. <strong>Generous breathing room</strong> between lessons and content blocks (48–64px) makes each section feel like a distinct challenge or achievement. <strong>Tight internal padding</strong> (8–12px) inside buttons and cards keeps text and icons dense, coordinated. The entire scale is: 4, 8, 12, 16, 24, 32, 48, 64, 96px. <em>No exceptions.</em>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 4);
+        const label = obj.label || key;
+        
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Grid visualization */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Layout Grid</div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__title">4-Column Grid (1080px max container)</div>';
+      html += '    <div class="grid-demo__visual">';
+      for (let i = 1; i <= 4; i++) {
+        html += '      <div class="grid-demo__column">Col ' + i + '</div>';
+      }
+      html += '    </div>';
+      html += '    <div class="grid-demo__info">';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Container width</div>';
+      html += '        <div class="grid-demo__stat">Max 1080px, responsive below</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Gutter</div>';
+      html += '        <div class="grid-demo__stat">24px horizontal gap</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Lesson tree</div>';
+      html += '        <div class="grid-demo__stat">320px centered column</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Margins</div>';
+      html += '        <div class="grid-demo__stat">24px on mobile, 48px+ desktop</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Rule weights */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth &amp; Shadows</div>';
+
+      Object.entries(rules).forEach(([key, rule]) => {
+        const weight = rule.weight;
+        const color = rule.color;
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <div>';
+        html += '      <div class="rule-demo__name">' + esc(rule.name) + '</div>';
+        html += '      <div class="rule-demo__label">' + esc(rule.use) + '</div>';
+        html += '    </div>';
+        html += '    <div class="rule-demo__spec">' + esc(weight) + '</div>';
+        html += '  </div>';
+        
+        if (weight === 'none') {
+          html += '  <div class="rule-demo__container" style="border: 2px dashed var(--color-swan); background: var(--paper);">';
+          html += '    <div style="font-family: var(--font-mono); font-size: 12px; color: var(--slate); font-weight: 500;">Flat canvas, no treatment</div>';
+          html += '  </div>';
+        } else if (weight.includes('4px')) {
+          html += '  <div class="rule-demo__container">';
+          html += '    <div class="rule-demo__shadow" style="height: 4px; background: ' + color + '; opacity: 0.32; bottom: 0; top: auto; border-radius: 0;"></div>';
+          html += '    <div style="font-family: var(--font-body); font-size: 13px; color: var(--slate); font-weight: 500; margin-left: 20px; z-index: 1; position: relative;">Chunky 4px bottom-shadow for tactile press</div>';
+          html += '  </div>';
+        } else if (weight.includes('solid')) {
+          html += '  <div class="rule-demo__container" style="border: 1px solid ' + color + '; background: var(--paper);">';
+          html += '    <div style="font-family: var(--font-body); font-size: 13px; color: var(--slate); font-weight: 500; margin-left: 20px;">1px solid border in owl green</div>';
+          html += '  </div>';
+        } else {
+          html += '  <div class="rule-demo__container" style="box-shadow: ' + weight + ' ' + color + '; background: var(--paper);">';
+          html += '    <div style="font-family: var(--font-body); font-size: 13px; color: var(--slate); font-weight: 500; margin-left: 20px;">Soft shadow for floating elements</div>';
+          html += '  </div>';
+        }
+        
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+
+      Object.entries(radius).forEach(([key, obj]) => {
+        const radiusValue = obj.value;
+
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__demo">';
+        html += '    <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '  </div>';
+        html += '  <div class="radius-item__info">';
+        html += '    <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '    <div class="radius-item__value">' + esc(radiusValue) + '</div>';
+        html += '    <div class="radius-item__description">' + esc(obj.use) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Depth philosophy */
+      html += '<div class="philosophy footer-philosophy">';
+      html += '  <div class="philosophy__title">Tactile Depth Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    <strong>Every interactive element has a chunky 4px bottom-shadow</strong> — this is the "press" affordance, the 3D button waiting to be tapped. It\'s not a floating shadow; it\'s a solid, opaque shadow underneath, like a button pushing into the page. Cards and modals use soft shadows (0 2px 8px) for elevation without tactile feedback. <strong>Never use hairline rules</strong> — all borders are 1–2px and owl green. <strong>Rounded corners are friend</strong>: 16px on large containers, 8px on buttons, 999px on chips and Duo\'s avatar. Duolingo is soft, friendly, and playful — geometry reflects that.';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

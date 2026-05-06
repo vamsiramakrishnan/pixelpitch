@@ -1,0 +1,88 @@
+/* Starbucks — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #1e3932;
+  --ink:     #000000;
+  --slate:   #8da098;
+  --signal:  #006241;
+  --bone:    #f9f9f9;
+  --border:  #edebe9;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-green-accent: #00754a;
+  --color-green-uplift: #2b5148;
+  --color-green-light: #d4e9e2;
+  --color-gold: #cba258;
+  --color-accessible-siren-gold-text: #8b6820;
+  --color-gold-light: #dfc49d;
+  --color-gold-lightest: #faf6ee;
+  --color-neutral-warm: #f2f0eb;
+  --color-red: #c82014;
+  --color-yellow: #fbbc05;
+
+  /* Semantic */
+  --success: #006241;
+  --warning: #fbbc05;
+  --danger:  #c82014;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-text-10: 80px;
+  --t-jumbo-text-9: 58px;
+  --t-hero-large-text-8: 45px;
+  --t-h1: 24px;
+  --t-h2: 24px;
+  --t-body-large: 19px;
+  --t-body-text-3: 16px;
+  --t-small-text-2: 14px;
+  --t-micro-text-1: 13px;
+  --t-button-label: 16px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   343px;
+  --radius-md:   24px;
+  --radius-lg:   64px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  24px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    12px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

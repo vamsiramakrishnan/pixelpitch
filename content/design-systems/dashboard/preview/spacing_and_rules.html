@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Dashboard</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 64px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 96px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 64px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+      max-width: 90%;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+      max-width: 75%;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 3px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin-top: 24px;
+      border-radius: 2px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 96px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 48px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 100px;
+      gap: 24px;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      margin-top: 3px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 28px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 3px;
+      background: var(--signal, #3b82f6);
+      min-width: 2px;
+      border-radius: 2px;
+      transition: opacity 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.7;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      text-align: right;
+    }
+
+    /* Depth/Rules treatment */
+    .depth-demo {
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .depth-demo:last-child {
+      border-bottom: none;
+    }
+
+    .depth-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 20px;
+    }
+
+    .depth-demo__name {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+    }
+
+    .depth-demo__label {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+
+    .depth-demo__spec {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+
+    .depth-demo__container {
+      width: 100%;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      background: var(--surface, #f5f5f5);
+      border-radius: 8px;
+    }
+
+    .depth-demo__sample {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 64px;
+      margin-bottom: 48px;
+    }
+
+    .radius-item {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .radius-item__box {
+      width: 120px;
+      height: 120px;
+      background: var(--surface, #f5f5f5);
+      border: 2px solid var(--border, #e5e5e5);
+      flex-shrink: 0;
+    }
+
+    .radius-item__info {
+      flex: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      margin-bottom: 4px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+    }
+
+    /* Philosophy block */
+    .philosophy {
+      background: var(--surface, #f5f5f5);
+      padding: 48px;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      margin-bottom: 64px;
+    }
+
+    .philosophy__title {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--ink, #111111);
+    }
+
+    .philosophy__text strong {
+      font-weight: 600;
+      color: var(--ink, #111111);
+    }
+
+    .philosophy__text em {
+      font-style: italic;
+    }
+
+    .philosophy__text code {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      background: rgba(59, 130, 246, 0.08);
+      color: var(--signal, #3b82f6);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    /* Grid demo */
+    .grid-demo {
+      background: var(--surface, #f5f5f5);
+      padding: 48px;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      margin-bottom: 64px;
+    }
+
+    .grid-demo__title {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+    }
+
+    .grid-demo__visual {
+      width: 100%;
+      height: 200px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+      padding: 24px;
+      border: 1px dashed var(--border, #e5e5e5);
+      border-radius: 8px;
+      background: var(--paper, #ffffff);
+    }
+
+    .grid-demo__column {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.04) 100%);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 4px;
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--signal, #3b82f6);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 8px;
+    }
+
+    .grid-demo__info {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .grid-demo__stat {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 13px;
+      color: var(--ink, #111111);
+    }
+
+    .grid-demo__stat-label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 4px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 2px solid rgba(59, 130, 246, 0.2);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 900px) {
+      .page {
+        padding: 64px 32px;
+      }
+
+      .header {
+        margin-bottom: 64px;
+      }
+
+      .header__title {
+        font-size: 48px;
+      }
+
+      .section {
+        margin-bottom: 64px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 100px 1fr 80px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .radius-item {
+        grid-template-columns: 120px 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '4px', label: 'xs' },
+      's-2': { value: '8px', label: 'sm' },
+      's-3': { value: '16px', label: 'md' },
+      's-4': { value: '24px', label: 'lg' },
+      's-5': { value: '32px', label: 'xl' },
+      's-6': { value: '48px', label: '2xl' },
+      's-7': { value: '64px', label: '3xl' },
+      's-8': { value: '96px', label: '4xl' }
+    };
+
+    const DEFAULT_DEPTH = [
+      { level: 0, name: 'Flat', treatment: 'none', use: 'Default, no elevation' },
+      { level: 1, name: 'Border', treatment: '1px solid var(--border)', use: 'Input, card, panel borders' },
+      { level: 2, name: 'Elevated', treatment: '0 2px 8px rgba(0,0,0,0.08)', use: 'Floating UI, modals, dropdowns' }
+    ];
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'Flat, minimal elements' },
+      'sm': { value: '4px', use: 'Form inputs, small UI components' },
+      'md': { value: '8px', use: 'Standard buttons, cards, panels' },
+      'lg': { value: '16px', use: 'Large cards, hero sections' },
+      'full': { value: '999px', use: 'Pills, badges, circular elements' }
+    };
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#ef4444">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const depth = tokens.depth || DEFAULT_DEPTH;
+      const radius = tokens.radii ? Object.entries(tokens.radii).map(([k, v]) => ({ key: k, value: v, use: DEFAULT_RADIUS[k]?.use || 'UI element corners' })) : Object.entries(DEFAULT_RADIUS).map(([k, v]) => ({ key: k, ...v }));
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Spacing &amp; Rules</div>';
+      html += '  <h1 class="header__title">Modular.<br>Predictable.</h1>';
+      html += '  <p class="header__subtitle">The spacing and depth system for Dashboard — an 8px base scale with clear elevation rules for data-driven interfaces.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Philosophy block */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Spacing Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Dashboard uses an <strong>8px base grid</strong> for all spacing decisions. This modular scale ensures consistency across panels, cards, and data blocks. Every interval (4px, 8px, 16px, 24px, 32px, 48px, 64px, 96px) is derived from the base to create <strong>predictable rhythm</strong>. Whitespace is content — it separates concerns, establishes hierarchy, and lets data breathe. Content density is balanced by generous outer margins and breathing room between major sections. Use <code>--s-3</code> (16px) for card padding, <code>--s-4</code> (24px) for section margins, and <code>--s-6</code> (48px) for major vertical separation.';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        const label = obj.label || key;
+
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Grid visualization */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Dashboard Grid</div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__title">12-Column Responsive Grid</div>';
+      html += '    <div class="grid-demo__visual">';
+      for (let i = 1; i <= 12; i++) {
+        html += '      <div class="grid-demo__column">' + i + '</div>';
+      }
+      html += '    </div>';
+      html += '    <div class="grid-demo__info">';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Desktop width</div>';
+      html += '        <div class="grid-demo__stat">1200px–1920px (responsive)</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Gutter &amp; margins</div>';
+      html += '        <div class="grid-demo__stat">12px gap, 24px outer margin</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Panel/card sizing</div>';
+      html += '        <div class="grid-demo__stat">2–6 column spans, align to grid</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Data hierarchy</div>';
+      html += '        <div class="grid-demo__stat">Consistent card height, aligned rows</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Depth/Rules */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth Levels</div>';
+
+      depth.forEach((rule, idx) => {
+        const treatment = rule.treatment || 'none';
+        const name = rule.name || 'Level ' + rule.level;
+        const use = rule.use || '';
+
+        html += '<div class="depth-demo">';
+        html += '  <div class="depth-demo__header">';
+        html += '    <div>';
+        html += '      <div class="depth-demo__name">' + esc(name) + '</div>';
+        html += '      <div class="depth-demo__label">' + esc(use) + '</div>';
+        html += '    </div>';
+        html += '    <div class="depth-demo__spec">' + esc(treatment) + '</div>';
+        html += '  </div>';
+
+        if (treatment === 'none') {
+          html += '  <div class="depth-demo__container" style="background: var(--paper); border: 1px dashed var(--border);">';
+          html += '    <div class="depth-demo__sample">No border, no shadow</div>';
+          html += '  </div>';
+        } else if (treatment.startsWith('0')) {
+          html += '  <div class="depth-demo__container" style="box-shadow: ' + treatment + ';">';
+          html += '    <div class="depth-demo__sample">Elevated with soft shadow</div>';
+          html += '  </div>';
+        } else {
+          html += '  <div class="depth-demo__container" style="border: ' + treatment + '; background: var(--paper);">';
+          html += '    <div class="depth-demo__sample">Bordered container</div>';
+          html += '  </div>';
+        }
+
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+
+      radius.forEach((item) => {
+        const radiusValue = item.value;
+        const key = item.key || 'radius';
+        const useText = item.use || '';
+
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__demo">';
+        html += '    <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '  </div>';
+        html += '  <div class="radius-item__info">';
+        html += '    <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '    <div class="radius-item__value">' + esc(radiusValue) + '</div>';
+        html += '    <div class="radius-item__description">' + esc(useText) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Depth philosophy */
+      html += '<div class="philosophy" style="margin-top: 96px; margin-bottom: 0;">';
+      html += '  <div class="philosophy__title">Elevation Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Dashboard uses a <strong>three-tier elevation system</strong>: <strong>Flat</strong> for inline content (no border, no shadow), <strong>Border</strong> for contained elements (card edges, input fields), and <strong>Elevated</strong> for floating UI (modals, dropdowns, tooltips). Each tier is subtle and supports data focus, not distraction. Consistency comes from using the same radius across all cards and panels — <code>--radius-md</code> (8px) is the standard. Shadows are soft and directional, reinforcing hierarchy without overwhelming the interface.';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

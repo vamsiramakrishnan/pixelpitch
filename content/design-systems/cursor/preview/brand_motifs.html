@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Cursor</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #f2f1ed);
+      color: var(--ink, #26251e);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 72px;
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -2.16px;
+      color: var(--ink, #26251e);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--signal, #f54e00);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      max-width: 720px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 1px;
+      background: var(--ink, #26251e);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--ink, #26251e);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 28px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #26251e);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 24px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--signal, #f54e00);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #f2f1ed);
+      border: 1px solid var(--ink, #26251e);
+      border-radius: 0;
+      padding: 32px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--ink, #26251e);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--signal, #f54e00);
+    }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--ink, #26251e);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--signal, #f54e00);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #26251e);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: 0;
+      overflow: hidden;
+      height: 120px;
+      border: 1px solid var(--ink, #26251e);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.4;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--paper, #f2f1ed);
+      border: 1px solid var(--ink, #26251e);
+      border-radius: 0;
+      padding: 48px 40px;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 54px;
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -1.62px;
+      color: var(--ink, #26251e);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #f54e00);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #26251e);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--ink, #26251e);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--slate, #666666);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--ink, #26251e);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--paper, #f2f1ed);
+      border: 1px solid var(--ink, #26251e);
+      border-radius: 0;
+      padding: 32px;
+      max-width: 840px;
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #26251e);
+    }
+
+    /* ──── Border & Accent Visual ──── */
+    .signature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .signature-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .signature-card {
+      border: 2px solid var(--ink, #26251e);
+      border-radius: 0;
+      aspect-ratio: 16 / 10;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background: var(--paper, #f2f1ed);
+      position: relative;
+    }
+
+    .signature-card__accent {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--signal, #f54e00);
+    }
+
+    .signature-card__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .signature-card__headline {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 40px;
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -1.2px;
+      color: var(--ink, #26251e);
+      margin-bottom: 0;
+    }
+
+    .signature-card__accent-text {
+      color: var(--signal, #f54e00);
+    }
+
+    .signature-card__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--ink, #26251e);
+    }
+
+    /* ──── Letter Spacing Demo ──── */
+    .spacing-demo {
+      display: grid;
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .spacing-demo__item {
+      border: 1px solid var(--ink, #26251e);
+      padding: 24px;
+      background: var(--paper, #f2f1ed);
+    }
+
+    .spacing-demo__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 8px;
+    }
+
+    .spacing-demo__text {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 400;
+      line-height: 1.1;
+      color: var(--ink, #26251e);
+    }
+
+    .spacing-demo__text--tight {
+      letter-spacing: -2.16px;
+    }
+
+    .spacing-demo__text--loose {
+      letter-spacing: 0.08px;
+    }
+
+    .spacing-demo__text--normal {
+      letter-spacing: 0;
+    }
+
+    /* ──── Type Ramp Section ──── */
+    .ramp-table {
+      border: 1px solid var(--ink, #26251e);
+      border-radius: 0;
+      padding: 32px;
+      background: var(--paper, #f2f1ed);
+    }
+
+    .ramp-item {
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .ramp-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .ramp-item__meta {
+      flex: 0 0 160px;
+    }
+
+    .ramp-item__meta-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      font-weight: 500;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .ramp-item__meta-detail {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      line-height: 1.5;
+    }
+
+    .ramp-item__preview {
+      flex: 1;
+    }
+
+    .ramp-item__preview-text {
+      color: var(--ink, #26251e);
+      margin-bottom: 8px;
+    }
+
+    /* ──── Semantic Colors ──── */
+    .semantic-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .semantic-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .semantic-swatch {
+      border: 1px solid var(--ink, #26251e);
+      border-radius: 0;
+      padding: 20px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .semantic-swatch__color {
+      width: 80px;
+      height: 80px;
+      border: 1px solid var(--ink, #26251e);
+      flex-shrink: 0;
+    }
+
+    .semantic-swatch__info {
+      flex: 1;
+    }
+
+    .semantic-swatch__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .semantic-swatch__hex {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--ink, #26251e);
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 18px;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #f54e00);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone'];
+    const SEMANTIC_COLORS = {
+      'error': '#cf2d56',
+      'success': '#1f8a65',
+      'thinking': '#dfa88f',
+      'grep': '#9fc9a2',
+      'read': '#9fbbe0',
+      'edit': '#c0a8dd'
+    };
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#f54e00">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">The <span>DNA</span> of Cursor</h1>';
+      html += '  <p class="header__subtitle">Warm minimalism meets code-editor elegance. Aggressive typography, perceptually uniform borders, semantic color harmony.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Cursor\'s palette is warm, not cold. A cream canvas (#f2f1ed) with deeply warm near-black text (#26251e) that carries yellow undertones—the color of ink on aged paper. CursorGothic compresses headlines with aggressive negative letter-spacing (-2.16px at 72px), creating an engineered, technical feel. jjannon serif brings literary grace to body copy with contextual swash alternates. berkeleyMono connects marketing to the code editor itself. Borders live in oklab() color space for perceptual uniformity. No shadows. No gradients. No rounded corners unless essential. The signal orange (#f54e00) appears strategically—one per context. This is minimalism with warmth, restraint with personality.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Warm off-white canvas (#f2f1ed) — cream, not cold white</li>';
+      html += '    <li>CursorGothic with aggressive negative letter-spacing (-2.16px at 72px)</li>';
+      html += '    <li>jjannon serif for body copy with OpenType contextual swash alternates</li>';
+      html += '    <li>berkeleyMono for code and technical labels—the editor\'s voice</li>';
+      html += '    <li>Warm near-black ink (#26251e) with yellow undertone, never pure black</li>';
+      html += '    <li>Signal orange (#f54e00) as the single accent color</li>';
+      html += '    <li>oklab() color space borders for perceptually uniform edge treatment</li>';
+      html += '    <li>8px base spacing with fine-grained sub-8px increments (1.5px, 2px, 2.5px, 3px, 4px, 5px, 6px)</li>';
+      html += '    <li>Pill-shaped elements with extreme radius (full 9999px for toggle switches)</li>';
+      html += '    <li>Square corners (border-radius: 0) on cards, buttons, containers</li>';
+      html += '    <li>Semantic color harmony: error, success, thinking, grep, read, edit states</li>';
+      html += '    <li>No drop shadows in chrome—elevation through borders and spacing</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use warm paper (#f2f1ed) as the default canvas</li>';
+      html += '      <li>Compress headlines with -2.16px letter-spacing (CursorGothic hero)</li>';
+      html += '      <li>Use jjannon serif for long-form body copy and editorial passages</li>';
+      html += '      <li>Apply oklab() borders at varying alpha levels (0.1, 0.2, 0.55)</li>';
+      html += '      <li>Color text shifts to error state (#cf2d56) on hover for buttons</li>';
+      html += '      <li>Use 150ms ease transitions for color/interactive changes</li>';
+      html += '      <li>Scale typography aggressively: 72px hero down to 11px micro</li>';
+      html += '      <li>Apply focus state with rgba(0,0,0,0.1) shadow (4px 12px blur)</li>';
+      html += '      <li>Keep button padding at 10px block, 20px inline (base spacing scale)</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use pure white backgrounds or cold grays</li>';
+      html += '      <li>Use rounded corners on cards, buttons, or form controls (border-radius: 0)</li>';
+      html += '      <li>Mix typeface roles — each family has a locked lane</li>';
+      html += '      <li>Use drop shadows for elevation — use borders instead</li>';
+      html += '      <li>Colorize with anything outside the semantic palette</li>';
+      html += '      <li>Apply gradients, blurs, or glassmorphism effects</li>';
+      html += '      <li>Use cold blue focus rings — stick with rgba(0,0,0,0.1) shadow</li>';
+      html += '      <li>Place signal orange in multiple locations on one screen</li>';
+      html += '      <li>Override letter-spacing on display headlines — the compression is the signature</li>';
+      html += '      <li>Use rgba() for borders instead of oklab() — perceptual uniformity matters</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Signature Elements ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Signature Elements</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.65; color: var(--slate); margin-bottom: 24px; max-width: 840px;">Cursor\'s visual signature is built on three pillars: compressed typography with aggressive negative letter-spacing, warm minimalism with oklab() borders, and a strict separation between display, body, and mono voices. The signal orange appears sparingly and strategically. Every container is square-cornered unless designed for scrolling (pill-shaped toggles).</p>';
+      html += '  <div class="signature-grid">';
+
+      html += '    <div class="signature-card">';
+      html += '      <div class="signature-card__accent"></div>';
+      html += '      <div class="signature-card__kicker">Letter Spacing</div>';
+      html += '      <div class="signature-card__headline">Aggressive <span class="signature-card__accent-text">negative</span> spacing</div>';
+      html += '      <div class="signature-card__label">-2.16px at 72px creates compressed, engineered feel</div>';
+      html += '    </div>';
+
+      html += '    <div class="signature-card">';
+      html += '      <div class="signature-card__accent"></div>';
+      html += '      <div class="signature-card__kicker">Color Space</div>';
+      html += '      <div class="signature-card__headline">oklab() <span class="signature-card__accent-text">borders</span> for harmony</div>';
+      html += '      <div class="signature-card__label">Perceptually uniform edge treatment across all surfaces</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Letter Spacing Demo ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Letter Spacing Compression</div>';
+      html += '  <div class="spacing-demo">';
+
+      html += '    <div class="spacing-demo__item">';
+      html += '      <div class="spacing-demo__label">Display Hero (-2.16px)</div>';
+      html += '      <div class="spacing-demo__text spacing-demo__text--tight">CursorGothic</div>';
+      html += '    </div>';
+
+      html += '    <div class="spacing-demo__item">';
+      html += '      <div class="spacing-demo__label">Section Heading (-0.72px)</div>';
+      html += '      <div style="font-size: 36px; font-weight: 400; line-height: 1.2; letter-spacing: -0.72px; font-family: var(--font-display); color: var(--ink);">Compressed Gothic</div>';
+      html += '    </div>';
+
+      html += '    <div class="spacing-demo__item">';
+      html += '      <div class="spacing-demo__label">Body Sans (0.08px)</div>';
+      html += '      <div style="font-size: 16px; font-weight: 400; line-height: 1.5; letter-spacing: 0.08px; font-family: var(--font-body); color: var(--ink);">Tight tracking on sans-serif body copy maintains legibility while suggesting precision</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#26251e' : '#f2f1ed';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Semantic Colors ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Semantic Color States</div>';
+      html += '  <div class="semantic-grid">';
+
+      const semanticEntries = [
+        { name: 'Error', hex: '#cf2d56', desc: 'Warm crimson for danger and warnings' },
+        { name: 'Success', hex: '#1f8a65', desc: 'Teal for successful operations' },
+        { name: 'Thinking', hex: '#dfa88f', desc: 'Warm tan for AI reasoning states' },
+        { name: 'Grep', hex: '#9fc9

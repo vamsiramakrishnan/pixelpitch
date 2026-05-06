@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules – Cohere</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'CohereText', system-ui, serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #212121);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 48px;
+    }
+
+    /* ── Header ── */
+    .header {
+      margin-bottom: 80px;
+    }
+    .header__title {
+      font-family: var(--font-display, 'CohereText', system-ui, serif);
+      font-size: 72px;
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: -1.44px;
+      color: var(--ink, #212121);
+      margin-bottom: 16px;
+    }
+    .header__title-line-2 {
+      display: block;
+    }
+    .header__subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--slate, #93939f);
+      max-width: 620px;
+    }
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--signal, #1863dc);
+      border: none;
+      margin-top: 32px;
+      border-radius: 1px;
+    }
+
+    /* ── Section ── */
+    .section {
+      margin-bottom: 72px;
+    }
+    .section__label {
+      font-family: var(--font-mono, 'CohereMono', ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.24px;
+      text-transform: uppercase;
+      color: var(--slate, #93939f);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--color-border-light, #e5e7eb);
+    }
+
+    /* ── Spacing scale ── */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 100px;
+      gap: 24px;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--color-lightest-gray, #f2f2f2);
+    }
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, 'CohereMono', ui-monospace, monospace);
+      font-size: 14px;
+      color: var(--ink, #212121);
+      font-weight: 400;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      background: var(--color-snow, #fafafa);
+      border-radius: var(--radius-sm, 4px);
+      padding: 0 12px;
+    }
+    .spacing-row__bar {
+      height: 6px;
+      background: var(--signal, #1863dc);
+      border-radius: 3px;
+      opacity: 0.22;
+      min-width: 2px;
+      transition: opacity 0.2s ease, background 0.2s ease;
+    }
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.5;
+      background: var(--color-ring-blue, #4c6ee6);
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, 'CohereMono', ui-monospace, monospace);
+      font-size: 14px;
+      color: var(--slate, #93939f);
+      text-align: right;
+      font-weight: 400;
+    }
+
+    /* ── Spacing role labels ── */
+    .spacing-role {
+      font-size: 12px;
+      color: var(--slate, #93939f);
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    /* ── Rule weights ── */
+    .rule-demo {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--color-lightest-gray, #f2f2f2);
+    }
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+    }
+    .rule-demo__name {
+      font-family: var(--font-mono, 'CohereMono', ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink, #212121);
+    }
+    .rule-demo__spec {
+      font-family: var(--font-mono, 'CohereMono', ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #93939f);
+    }
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 1px;
+    }
+    .rule-demo__desc {
+      font-size: 14px;
+      color: var(--slate, #93939f);
+      margin-top: 12px;
+      font-style: italic;
+    }
+
+    /* ── Border radius ── */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 32px;
+    }
+    .radius-item {
+      text-align: center;
+    }
+    .radius-item__box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 140px;
+      margin: 0 auto 16px;
+      background: var(--paper, #ffffff);
+      border: 2px solid var(--signal, #1863dc);
+      opacity: 0.5;
+      transition: opacity 0.2s ease, border-color 0.2s ease;
+    }
+    .radius-item:hover .radius-item__box {
+      opacity: 1;
+      border-color: var(--color-ring-blue, #4c6ee6);
+    }
+    .radius-item__name {
+      font-family: var(--font-mono, 'CohereMono', ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink, #212121);
+      margin-bottom: 4px;
+    }
+    .radius-item__value {
+      font-family: var(--font-mono, 'CohereMono', ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #93939f);
+    }
+
+    /* ── Depth / elevation ── */
+    .depth-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 28px;
+    }
+    .depth-item {
+      padding: 32px 28px;
+      background: var(--paper, #ffffff);
+      border-radius: var(--radius-md, 8px);
+      border: 1px solid var(--color-border-light, #e5e7eb);
+      text-align: center;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .depth-item:hover {
+      transform: translateY(-3px);
+      border-color: var(--signal, #1863dc);
+    }
+    .depth-item__name {
+      font-family: var(--font-mono, 'CohereMono', ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink, #212121);
+      margin-bottom: 8px;
+    }
+    .depth-item__spec {
+      font-family: var(--font-mono, 'CohereMono', ui-monospace, monospace);
+      font-size: 11px;
+      color: var(--slate, #93939f);
+      word-break: break-all;
+      line-height: 1.4;
+    }
+
+    /* ── Grid visualization ── */
+    .grid-demo {
+      background: var(--color-lightest-gray, #f2f2f2);
+      padding: 40px 24px;
+      border-radius: var(--radius-md, 8px);
+      margin-top: 24px;
+    }
+    .grid-demo__label {
+      font-size: 12px;
+      color: var(--slate, #93939f);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.24px;
+    }
+    .grid-demo__cols {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+    }
+    .grid-demo__col {
+      aspect-ratio: 1 / 1;
+      background: var(--signal, #1863dc);
+      opacity: 0.12;
+      border-radius: var(--radius-sm, 4px);
+      border: 1px solid var(--signal, #1863dc);
+      opacity: 0.08;
+      transition: opacity 0.2s ease;
+    }
+    .grid-demo__col:hover {
+      opacity: 0.25;
+    }
+
+    /* ── Loading ── */
+    .loading {
+      text-align: center;
+      padding: 100px 24px;
+      color: var(--slate, #93939f);
+      font-size: 16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 20px auto 0;
+      border: 3px solid var(--color-border-light, #e5e7eb);
+      border-top-color: var(--signal, #1863dc);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 60px 32px;
+      }
+      .header__title {
+        font-size: 48px;
+        letter-spacing: -0.96px;
+      }
+      .spacing-row {
+        grid-template-columns: 100px 1fr 80px;
+        gap: 16px;
+      }
+      .radius-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 24px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 40px 20px;
+      }
+      .header__title {
+        font-size: 36px;
+        letter-spacing: -0.72px;
+      }
+      .spacing-row {
+        grid-template-columns: 80px 1fr 70px;
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    /* Default spacing scale */
+    const DEFAULT_SPACING = {
+      's-1': '2px',
+      's-2': '6px',
+      's-3': '8px',
+      's-4': '10px',
+      's-5': '12px',
+      's-6': '16px',
+      's-7': '20px',
+      's-8': '22px',
+      's-9': '24px',
+      's-10': '28px',
+      's-11': '32px',
+      's-12': '36px',
+      's-13': '40px',
+      's-14': '56px',
+      's-15': '60px',
+    };
+
+    /* Spacing role mapping */
+    const SPACING_ROLES = {
+      's-1': 'Hairlines, dividers',
+      's-2': 'Micro spacing',
+      's-3': 'Component gaps',
+      's-4': 'Form fields',
+      's-5': 'Label spacing',
+      's-6': 'Standard padding',
+      's-7': 'Button spacing',
+      's-8': 'Card signature radius',
+      's-9': 'Card internal padding',
+      's-10': 'Element spacing',
+      's-11': 'Component margins',
+      's-12': 'Section spacing',
+      's-13': 'Feature spacing',
+      's-14': 'Section dividers',
+      's-15': 'Major section gaps',
+    };
+
+    /* Default depth levels */
+    const DEFAULT_DEPTH = {
+      'Flat': { weight: 'none', color: 'transparent', desc: 'No depth. Background or text elements.' },
+      'Bordered': { weight: '1px', color: 'var(--color-border-light, #e5e7eb)', desc: 'Cool gray border. Card containment and list separation.' },
+      'Elevated': { weight: '2px', color: 'rgba(0,0,0,0.08)', desc: 'Subtle shadow. Floating containers and interactive elements.' },
+    };
+
+    /* Default border radius */
+    const DEFAULT_RADIUS = {
+      'none': '0',
+      'sm': '4px',
+      'md': '8px',
+      'lg': '60px',
+      'full': '9999px',
+    };
+
+    const RADIUS_ROLES = {
+      'none': 'Sharp edges for code and micro UI',
+      'sm': 'Buttons, tags, small cards',
+      'md': 'Dialog boxes, secondary containers',
+      'lg': 'Feature cards, large components',
+      'full': 'Pill buttons, status indicators',
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const systemName = tokens.meta?.title || tokens.meta?.name || tokens.name || 'Design System';
+
+      /* Load Google Fonts if specified */
+      const gfUrl = tokens.googleFontsUrl || (tokens.fonts && tokens.fonts.googleUrl);
+      if (gfUrl) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = gfUrl;
+        document.head.appendChild(link);
+      }
+
+      const spacing = (tokens.spacing && tokens.spacing.scale) || DEFAULT_SPACING;
+      const depth = tokens.depth ? buildDepthMap(tokens.depth) : DEFAULT_DEPTH;
+      const radius = (tokens.radii) || DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* ── Header ── */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">';
+      html += '    Eight pixels.<br>';
+      html += '    <span class="header__title-line-2">One ruler.</span>';
+      html += '  </h1>';
+      html += '  <p class="header__subtitle">The Cohere spacing system builds enterprise clarity through generous whitespace, precise rhythm, and restrained depth. Every pixel serves information architecture.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ── Spacing scale ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, v]) => parseFloat(v) || 0), 1);
+
+      spacingEntries.forEach(([key, value]) => {
+        const px = parseFloat(value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        const role = SPACING_ROLES[key] || '';
+        html += '<div class="spacing-row">';
+        html += '  <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '  <div>';
+        html += '    <div class="spacing-row__bar-wrap">';
+        html += '      <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '    </div>';
+        if (role) {
+          html += '    <div class="spacing-role">' + esc(role) + '</div>';
+        }
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* ── Rule weights / Depth levels ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth & Elevation</div>';
+
+      const depthEntries = Object.entries(depth);
+      depthEntries.forEach(([key, val]) => {
+        const weight = val.weight || '1px';
+        const color = val.color || 'var(--slate, #93939f)';
+        const desc = val.desc || '';
+        const isNone = weight === 'none' || weight === 'none';
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <span class="rule-demo__name">' + esc(key) + '</span>';
+        html += '    <span class="rule-demo__spec">' + esc(weight) + '</span>';
+        html += '  </div>';
+
+        if (isNone) {
+          html += '  <div class="rule-demo__line" style="height:48px;background:var(--color-snow, #fafafa);border:1px dashed var(--color-border-light, #e5e7eb);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--slate, #93939f);font-size:12px;font-style:italic;">No elevation</div>';
+        } else {
+          html += '  <hr class="rule-demo__line" style="height:' + (isNone ? 0 : 1) + 'px;background:' + color + ';opacity:' + (key === 'Elevated' ? 1 : 0.4) + '">';
+        }
+
+        if (desc) {
+          html += '  <div class="rule-demo__desc">' + esc(desc) + '</div>';
+        }
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* ── Border radius ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+      html += '  <div class="radius-grid">';
+
+      Object.entries(radius).forEach(([key, value]) => {
+        const role = RADIUS_ROLES[key] || '';
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__box" style="border-radius:' + esc(value) + '"></div>';
+        html += '  <div class="radius-item__name">' + esc(key) + '</div>';
+        html += '  <div class="radius-item__value">' + esc(value) + '</div>';
+        if (role) {
+          html += '  <div style="font-size:11px;color:var(--slate, #93939f);margin-top:4px;font-style:italic;">' + esc(role) + '</div>';
+        }
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ── Grid visualization ── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">12-Column Responsive Grid</div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__label">Base 12-column system — scales responsively from mobile to 2560px wide</div>';
+      html += '    <div class="grid-demo__cols">';
+      for (let i = 0; i < 12; i++) {
+        html += '<div class="grid-demo__col"></div>';
+      }
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ── Spacing philosophy ── */
+      html += '<div class="section" style="margin-bottom:120px;">';
+      html += '  <div class="section__label">Spacing Philosophy</div>';
+      html += '  <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;">';
+      html += '    <div>';
+      html += '      <h3 style="font-size:18px;font-weight:400;margin-bottom:12px;color:var(--ink, #212121);">Enterprise Clarity</h3>';
+      html += '      <p style="font-size:14px;line-height:1.6;color:var(--slate, #93939f);margin-bottom:16px;">Whitespace is not empty. It is organizational structure. Every gap between sections, every padding within cards, every margin around text creates visual hierarchy and reading rhythm that makes 10,000-row dashboards legible.</p>';
+      html += '    </div>';
+      html += '    <div>';
+      html += '      <h3 style="font-size:18px;font-weight:400;margin-bottom:12px;color:var(--ink, #212121);">The 22px Signature</h3>';
+      html += '      <p style="font-size:14px;line-height:1.6;color:var(--slate, #93939f);margin-bottom:16px;">The 22px radius (--s-8) is Cohere\'s fingerprint. It appears in primary cards, hero images, and major containers. This organic roundness — not too sharp, not too soft — communicates that enterprise software can be elegant.</p>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function buildDepthMap(depthArray) {
+      const map = {};
+      depthArray.forEach(item => {
+        const treatment = item.treatment || 'none';
+        let weight = 'none';
+        let color = 'transparent';
+        let desc = '';
+
+        if (treatment === 'none') {
+          weight = 'none';
+          color = 'transparent';
+          desc = 'No depth. Background or text elements.';
+        } else if (treatment.startsWith('1px')) {
+          weight = '1px';
+          color = 'var(--color-border-light, #e5e7eb)';
+          desc = 'Cool gray border. Card containment and list separation.';
+        } else if (treatment.startsWith('0 2px')) {
+          weight = '2px';
+          color = 'rgba(0,0,0,0.08)';
+          desc = 'Subtle shadow. Floating containers and interactive elements.';
+        }
+
+        map[item.name] = { weight, color, desc };
+      });
+      return Object.keys(map).length > 0 ? map : DEFAULT_DEPTH;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

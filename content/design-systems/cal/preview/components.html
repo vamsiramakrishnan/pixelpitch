@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cal.com — Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--color-charcoal, #242424);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 48px;
+    }
+
+    /* ────────────────── HEADER ────────────────── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'Cal Sans', system-ui, sans-serif);
+      font-size: 64px;
+      font-weight: 600;
+      line-height: 1.10;
+      letter-spacing: -0.02em;
+      color: var(--color-charcoal, #242424);
+      margin-bottom: 16px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 300;
+      line-height: 1.30;
+      letter-spacing: -0.2px;
+      color: var(--slate, #898989);
+      margin-bottom: 40px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--color-charcoal, #242424);
+      border: none;
+      margin-top: 32px;
+      border-radius: 1px;
+    }
+
+    /* ────────────────── SECTION ────────────────── */
+    .section {
+      margin-bottom: 72px;
+    }
+
+    .section__label {
+      font-family: var(--font-display, 'Cal Sans', system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.50;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #898989);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .component-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 28px;
+    }
+
+    .component-label {
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.00;
+      letter-spacing: 0px;
+      color: var(--slate, #898989);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    /* ────────────────── BUTTONS ────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: var(--button-py, 10px) var(--button-px, 20px);
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.00;
+      border-radius: var(--button-radius, 12px);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      border: none;
+      appearance: none;
+    }
+
+    .btn--primary {
+      background: var(--color-charcoal, #242424);
+      color: var(--paper, #ffffff);
+    }
+
+    .btn--primary:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+    }
+
+    .btn--primary:active {
+      opacity: 0.75;
+      transform: translateY(0);
+    }
+
+    .btn--secondary {
+      background: var(--paper, #ffffff);
+      color: var(--color-charcoal, #242424);
+      border: 1px solid var(--border, #e5e5e5);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .btn--secondary:hover {
+      background: #f9f9f9;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--color-charcoal, #242424);
+      padding: var(--button-py, 10px) 0;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
+      border-radius: 0;
+    }
+
+    .btn--ghost:hover {
+      opacity: 0.7;
+    }
+
+    .btn--pill {
+      border-radius: 9999px;
+    }
+
+    .btn--sm {
+      padding: 6px 14px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .btn--lg {
+      padding: 14px 32px;
+      font-size: 18px;
+    }
+
+    .btn--icon {
+      padding: 8px;
+      width: 40px;
+      height: 40px;
+    }
+
+    /* ────────────────── CARDS ────────────────── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 32px;
+    }
+
+    .card {
+      background: var(--paper, #ffffff);
+      border-radius: var(--card-radius, 12px);
+      padding: 28px 24px;
+      transition: all 0.2s ease;
+    }
+
+    .card--bordered {
+      border: var(--card-border, 1px solid #e5e5e5);
+    }
+
+    .card--bordered:hover {
+      border-color: var(--color-charcoal, #242424);
+    }
+
+    .card--elevated {
+      border: var(--card-border, 1px solid #e5e5e5);
+      box-shadow: var(--card-shadow, 0 2px 8px rgba(0,0,0,0.08));
+    }
+
+    .card--elevated:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .card__eyebrow {
+      font-family: var(--font-display, 'Cal Sans', system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.50;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #898989);
+      margin-bottom: 8px;
+    }
+
+    .card__title {
+      font-family: var(--font-display, 'Cal Sans', system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.20;
+      letter-spacing: 0.2px;
+      color: var(--color-charcoal, #242424);
+      margin-bottom: 12px;
+    }
+
+    .card__body {
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.14;
+      letter-spacing: 0px;
+      color: var(--slate, #898989);
+      margin-bottom: 20px;
+    }
+
+    .card__footer {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* ────────────────── INPUTS ────────────────── */
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .input-wrap {
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .input-label {
+      display: block;
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.14;
+      letter-spacing: 0px;
+      color: var(--color-charcoal, #242424);
+      margin-bottom: 8px;
+    }
+
+    .input {
+      display: block;
+      width: 100%;
+      padding: 10px 12px;
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.14;
+      letter-spacing: 0px;
+      color: var(--color-charcoal, #242424);
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-sm, 6px);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate, #898989);
+    }
+
+    .input:focus {
+      border-color: var(--color-focus-ring, #3b82f6);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .input-helper {
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.00;
+      letter-spacing: 0px;
+      color: var(--slate, #898989);
+      margin-top: 4px;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 12px);
+      max-width: 500px;
+      transition: all 0.15s ease;
+    }
+
+    .search-bar:focus-within {
+      border-color: var(--color-focus-ring, #3b82f6);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .search-bar__icon {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      color: var(--slate, #898989);
+    }
+
+    .search-bar__input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--color-charcoal, #242424);
+    }
+
+    .search-bar__input::placeholder {
+      color: var(--slate, #898989);
+    }
+
+    /* ────────────────── BADGES & TAGS ────────────────── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.00;
+      letter-spacing: 0px;
+      border-radius: 6px;
+      line-height: 1.4;
+    }
+
+    .badge--active {
+      background: rgba(0, 0, 0, 0.08);
+      color: var(--color-charcoal, #242424);
+    }
+
+    .badge--success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge--warning {
+      background: #fef9c3;
+      color: #854d0e;
+    }
+
+    .badge--danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge--neutral {
+      background: #f5f5f5;
+      color: var(--color-charcoal, #242424);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.00;
+      border-radius: var(--radius-sm, 6px);
+      background: var(--paper, #ffffff);
+      color: var(--color-charcoal, #242424);
+      border: 1px solid var(--border, #e5e5e5);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .tag:hover {
+      background: #f9f9f9;
+      border-color: var(--color-charcoal, #242424);
+    }
+
+    .tag--active {
+      background: var(--color-charcoal, #242424);
+      color: var(--paper, #ffffff);
+      border-color: var(--color-charcoal, #242424);
+    }
+
+    /* ────────────────── TYPOGRAPHY ────────────────── */
+    .sub-heading {
+      font-family: var(--font-display, 'Cal Sans', system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.50;
+      letter-spacing: 0px;
+      color: var(--color-charcoal, #242424);
+      margin-bottom: 12px;
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+
+    /* ────────────────── UTILITIES ────────────────── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border, #e5e5e5);
+      margin: 32px 0;
+    }
+
+    .spacer {
+      height: 24px;
+    }
+
+    /* ────────────────── DEMO GRID ────────────────── */
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .demo-item {
+      padding: 16px;
+      background: #f9f9f9;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-sm, 6px);
+      text-align: center;
+    }
+
+    .demo-item__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #898989);
+      margin-bottom: 8px;
+    }
+
+    .demo-item__content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 60px;
+    }
+
+    /* ────────────────── RESPONSIVE ────────────────── */
+    @media (max-width: 768px) {
+      .page {
+        padding: 60px 32px;
+      }
+
+      .header__title {
+        font-size: 48px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .input-group {
+        flex-direction: column;
+      }
+
+      .input-wrap {
+        min-width: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Header -->
+    <header class="header" id="header">
+      <h1 class="header__title">Component Inventory</h1>
+      <p class="header__subtitle">The vocabulary of interactions. Crafted for scheduling, shaped by simplicity.</p>
+      <hr class="header__rule">
+    </header>
+
+    <!-- Buttons Section -->
+    <div class="section">
+      <div class="section__label">Buttons</div>
+
+      <div class="sub-heading">Primary Dark</div>
+      <div class="component-row">
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary">Standard</button>
+        <button class="btn btn--primary btn--lg">Large</button>
+      </div>
+
+      <div class="sub-heading">Secondary Light</div>
+      <div class="component-row">
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary">Standard</button>
+        <button class="btn btn--secondary btn--lg">Large</button>
+      </div>
+
+      <div class="sub-heading">Ghost / Text Link</div>
+      <div class="component-row">
+        <a href="#" class="btn btn--ghost">Learn more</a>
+        <a href="#" class="btn btn--ghost">View docs</a>
+        <a href="#" class="btn btn--ghost">Explore features</a>
+      </div>
+
+      <div class="sub-heading">Pill Radius</div>
+      <div class="component-row">
+        <button class="btn btn--primary btn--pill btn--sm">Active</button>
+        <button class="btn btn--secondary btn--pill btn--sm">Inactive</button>
+        <button class="btn btn--primary btn--pill btn--sm">Scheduled</button>
+      </div>
+    </div>
+
+    <!-- Cards Section -->
+    <div class="section">
+      <div class="section__label">Cards</div>
+
+      <div class="cards-grid">
+        <div class="card card--bordered">
+          <div class="card__eyebrow">Border Treatment</div>
+          <div class="card__title">Standard Card</div>
+          <div class="card__body">
+            A minimal card with a single-pixel border. Perfect for grouping related content without visual weight.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Action</button>
+            <button class="btn btn--secondary btn--sm">Cancel</button>
+          </div>
+        </div>
+
+        <div class="card card--elevated">
+          <div class="card__eyebrow">Elevation & Shadow</div>
+          <div class="card__title">Elevated Card</div>
+          <div class="card__body">
+            A card with layered shadow for depth. Hovers to deepen the shadow, signaling interactive potential.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Primary</button>
+            <a href="#" class="btn btn--ghost btn--sm">Secondary</a>
+          </div>
+        </div>
+
+        <div class="card card--bordered">
+          <div class="card__eyebrow">Calendar Feature</div>
+          <div class="card__title">Availability View</div>
+          <div class="card__body">
+            Display scheduling availability with clean borders and minimal visual hierarchy. Core to the Cal.com experience.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Configure</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inputs & Forms Section -->
+    <div class="section">
+      <div class="section__label">Inputs &amp; Forms</div>
+
+      <div class="sub-heading">Text Input</div>
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Event Title</label>
+          <input class="input" type="text" placeholder="Type event name...">
+          <div class="input-helper">Required field</div>
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Duration (minutes)</label>
+          <input class="input" type="number" placeholder="30" value="30">
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="sub-heading">Search Bar</div>
+      <div class="search-bar">
+        <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <input class="search-bar__input" type="text" placeholder="Search events, calendars, integrations...">
+      </div>
+
+      <hr class="divider">
+
+      <div class="sub-heading">Textarea & Select</div>
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Event Description</label>
+          <textarea class="input" rows="4" placeholder="Add notes, agenda, or meeting link..."></textarea>
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Calendar</label>
+          <select class="input">
+            <option>Select a calendar</option>
+            <option>Work Calendar</option>
+            <option>Personal Calendar</option>
+            <option>Team Calendar</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Badges & Tags Section -->
+    <div class="section">
+      <div class="section__label">Badges &amp; Tags</div>
+
+      <div class="sub-heading">Status Badges</div>
+      <div class="badge-row" style="margin-bottom: 24px;">
+        <span class="badge badge--active">Available</span>
+        <span class="badge badge--success">Booked</span>
+        <span class="badge badge--warning">Pending</span>
+        <span class="badge badge--danger">Unavailable</span>
+        <span class="badge badge--neutral">Blocked</span>
+      </div>
+
+      <div class="sub-heading">Category Tags</div>
+      <div class="badge-row">
+        <span class="tag tag--active">All Integrations</span>
+        <span class="tag">Google Calendar</span>
+        <span class="tag">Outlook</span>
+        <span class="tag">Slack</span>
+        <span class="tag">Zapier</span>
+        <span class="tag">Stripe</span>
+        <span class="tag">Slack Bot</span>
+      </div>
+    </div>
+
+    <!-- Color Palette Section -->
+    <div class="section">
+      <div class="section__label">Color Palette</div>
+
+      <div class="sub-heading">Primary & Neutrals</div>
+      <div class="demo-grid">
+        <div class="demo-item">
+          <div class="demo-item__label">Paper (Background)</div>
+          <div class="demo-item__content" style="background: var(--paper, #ffffff); border: 1px solid var(--border, #e5e5e5);"></div>
+        </div>
+        <div class="demo-item">
+          <div class="demo-item__label">Bone (Dark Text)</div>
+          <div class="demo-item__content" style="background: var(--bone, #111111);"></div>
+        </div>
+        <div class="demo-item">
+          <div class="demo-item__label">Slate (Muted)</div>
+          <div class="demo-item__content" style="background: var(--slate, #898989);"></div>
+        </div>
+        <div class="demo-item">
+          <div class="demo-item__label">Border</div>
+          <div class="demo-item__content" style="background: var(--border, #e5e5e5);"></div>
+        </div>
+        <div class="demo-item">
+          <div class="demo-item__label">Signal (Accent)</div>
+          <div class="demo-item__content" style="background: var(--signal, #0000ee);"></div>
+        </div>
+        <div class="demo-item">
+          <div class="demo-item__label">Charcoal (UI Dark)</div>
+          <div class="demo-item__content" style="background: var(--color-charcoal, #242424);"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Typography Samples -->
+    <div class="section">
+      <div class="section__label">Typography Scale</div>
+
+      <div style="margin-bottom: 32px;">
+        <div class="sub-heading" style="margin-bottom: 16px;">Display Hero — 64px, 600 weight</div>
+        <h1 style="font-family: var(--font-display, 'Cal Sans', system-ui, sans-serif); font-size: 64px; font-weight: 600; line-height: 1.10; letter-spacing: -0.02em; margin-bottom: 24px;">Schedule like a pro.</h1>
+      </div>
+
+      <div style="margin-bottom: 32px;">
+        <div class="sub-heading" style="margin-bottom: 16px;">Section Heading — 48px, 600 weight</div>
+        <h2 style="font-family: var(--font-display, 'Cal Sans', system-ui, sans-serif); font-size: 48px; font-weight: 600; line-height: 1.10; margin-bottom: 24px;">Open-source scheduling, simplified.</h2>
+      </div>
+
+      <div style="margin-bottom: 32px;">
+        <div class="sub-heading" style="margin-bottom: 16px;">Feature Heading — 24px, 600 weight</div>
+        <h3 style="font-family: var(--font-display, 'Cal Sans', system-ui, sans-serif); font-size: 24px; font-weight: 600; line-height: 1.30; margin-bottom: 24px;">Built for teams and developers.</h3>
+      </div>
+
+      <div style="margin-bottom: 32px;">
+        <div class="sub-heading" style="margin-bottom: 16px;">Body Light — 18px, 300 weight</div>
+        <p style="font-family: var(--font-display, 'Cal Sans', system-ui, sans-serif); font-size: 18px; font-weight: 300; line-height: 1.30; letter-spacing: -0.2px; color: var(--slate, #898989); margin-bottom: 24px;">Cal.com is an open-source scheduling infrastructure for absolutely everyone. Build complex scheduling systems without the pain.</p>
+      </div>
+
+      <div style="margin-bottom: 32px;">
+        <div class="sub-heading" style="margin-bottom: 16px;">Body Matter — 14px, 400 weight</div>
+        <p style="font-family: var(--font-body, 'Inter', system-ui, sans-serif); font-size: 14px; font-weight: 400; line-height: 1.14; color: var(--color-charcoal, #242424); margin-bottom: 24px;">Everything from integrating Stripe payments to SMS reminders and video calls. The permutations go on and on. Ultimately, your users should be able to use our hosted version or roll their own.</p>
+      </div>
+
+      <div style="margin-bottom: 32px;">
+        <div class="sub-heading" style="margin-bottom: 16px;">Caption Inter — 14px, 500 weight</div>
+        <p style="font-family: var(--font-body, 'Inter', system-ui, sans-serif); font-size: 14px; font-weight: 500; line-height: 1.14; color: var(--slate, #898989);">Small-caps and secondary information hierarchy. Use for labels, captions, and assistive text throughout the interface.</p>
+      </div>
+
+      <div style="margin-bottom: 32px;">
+        <div class="sub-heading" style="margin-bottom: 16px;">Code — 14px, 600 weight, Mono</div>
+        <code style="font-family: var(--font-mono, 'Roboto Mono', monospace); font-size: 14px; font-weight: 600; line-height: 1.00; background: #f5f5f5; padding: 8px 12px; border-radius: 6px; display: inline-block; color: var(--color-charcoal, #242424);">const booking = new CalEvent()</code>
+      </div>
+    </div>
+
+    <!-- Spacing & Radii -->
+    <div class="section">
+      <div class="section__label">Spacing & Radii</div>
+
+      <div class="sub-heading">Spacing Scale</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; margin-bottom: 32px;">
+        <div>
+          <div class="component-label">S-1 (4px)</div>
+          <div style="width: 40px; height: 40px; background: #f5f5f5; border: 1px dashed var(--border, #e5e5e5);"></div>
+        </div>
+        <div>
+          <div class="component-label">S-2 (8px)</div>
+          <div style="width: 48px; height: 48px; background: #f5f5f5; border: 1px dashed var(--border, #e5e5e5);"></div>
+        </div>
+        <div>
+          <div class="component-label">S-3 (16px)</div>
+          <div style="width: 56px; height: 56px; background: #f5f5f5; border: 1px dashed var(--border, #e5e5e5);"></div>
+        </div>
+        <div>
+          <div class="component-label">S-4 (24px)</div>
+          <div style="width: 64px; height: 64px; background: #f5f5f5; border: 1px dashed var(--border, #e5e5e5);"></div>
+        </div>
+        <div>
+          <div class="component-label">S-5 (32px)</div>
+          <div style="width: 72px; height: 72px; background: #f5f5f5; border: 1px dashed var(--border, #e5e5e5);"></div>
+        </div>

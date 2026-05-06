@@ -1,0 +1,66 @@
+/* Figma — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #111111;
+  --slate:   #666666;
+  --signal:  #3b82f6;
+  --bone:    #f5f5f5;
+  --border:  #000000;
+  --surface: #ffffff;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 86px;
+  --t-section-heading: 64px;
+  --t-sub-heading: 26px;
+  --t-sub-heading-light: 26px;
+  --t-feature-title: 24px;
+  --t-body-large: 20px;
+  --t-body-button: 16px;
+  --t-body-light: 18px;
+  --t-mono-label: 18px;
+  --t-mono-small: 12px;
+
+  /* ── Spacing ── */
+  --s-1: 1px;
+  --s-2: 2px;
+  --s-3: 4px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   6px;
+  --radius-md:   8px;
+  --radius-lg:   18px;
+  --radius-full: 50px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    8px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

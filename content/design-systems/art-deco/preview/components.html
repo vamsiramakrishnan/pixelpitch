@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Art Deco Components</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: #0a0a0a;
+      color: #f5f5dc;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 48px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      margin-bottom: 96px;
+      text-align: center;
+      position: relative;
+      padding-bottom: 48px;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #c9a96e, transparent);
+    }
+
+    .header__sunburst {
+      width: 120px;
+      height: 60px;
+      margin: 0 auto 32px;
+      background: conic-gradient(
+        from 0deg,
+        rgba(201, 169, 110, 0.15) 0deg,
+        transparent 7.5deg,
+        transparent 15deg,
+        rgba(201, 169, 110, 0.15) 22.5deg,
+        transparent 30deg,
+        transparent 37.5deg,
+        rgba(201, 169, 110, 0.15) 45deg,
+        transparent 52.5deg,
+        transparent 60deg,
+        rgba(201, 169, 110, 0.15) 67.5deg,
+        transparent 75deg,
+        transparent 82.5deg,
+        rgba(201, 169, 110, 0.15) 90deg,
+        transparent 97.5deg,
+        transparent 105deg,
+        rgba(201, 169, 110, 0.15) 112.5deg,
+        transparent 120deg,
+        transparent 127.5deg,
+        rgba(201, 169, 110, 0.15) 135deg,
+        transparent 142.5deg,
+        transparent 150deg,
+        rgba(201, 169, 110, 0.15) 157.5deg,
+        transparent 165deg,
+        transparent 172.5deg,
+        rgba(201, 169, 110, 0.15) 180deg
+      );
+      clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+    }
+
+    .header__title {
+      font-family: var(--font-display);
+      font-size: 56px;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: #ffd700;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      font-style: italic;
+    }
+
+    .header__subtitle {
+      font-size: 18px;
+      color: #c9a96e;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── SECTION ── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #c9a96e;
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(201, 169, 110, 0.2);
+      position: relative;
+    }
+
+    .section__label::before {
+      content: '◆';
+      position: absolute;
+      left: 0;
+      top: -8px;
+      font-size: 12px;
+      color: #c9a96e;
+    }
+
+    .section__label::after {
+      content: '◆';
+      position: absolute;
+      right: 0;
+      top: -8px;
+      font-size: 12px;
+      color: #c9a96e;
+    }
+
+    /* ── COMPONENT ROW ── */
+    .component-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      align-items: flex-start;
+      margin-bottom: 32px;
+    }
+
+    .component-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .component-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #c9a96e;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.4;
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-decoration: none;
+      border: none;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 215, 0, 0.1);
+      transition: left 0.3s ease;
+      z-index: -1;
+    }
+
+    .btn:hover::before {
+      left: 0;
+    }
+
+    .btn--primary {
+      background: #c9a96e;
+      color: #0a0a0a;
+      border: 2px solid #c9a96e;
+    }
+
+    .btn--primary:hover {
+      border-color: #ffd700;
+      box-shadow: 0 0 16px rgba(201, 169, 110, 0.4);
+    }
+
+    .btn--secondary {
+      background: transparent;
+      color: #c9a96e;
+      border: 2px solid #c9a96e;
+    }
+
+    .btn--secondary:hover {
+      background: rgba(201, 169, 110, 0.1);
+      box-shadow: 0 0 16px rgba(201, 169, 110, 0.3);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: #ffd700;
+      border: 1px solid transparent;
+      padding: var(--button-py) 8px;
+      border-bottom: 2px solid #c9a96e;
+      border-radius: 0;
+    }
+
+    .btn--ghost:hover {
+      color: #ffd700;
+      border-bottom-color: #ffd700;
+    }
+
+    .btn--sm {
+      padding: 8px 16px;
+      font-size: 12px;
+    }
+
+    .btn--lg {
+      padding: 14px 32px;
+      font-size: 14px;
+    }
+
+    /* ── DECO FRAMES ── */
+    .deco-frame {
+      border: 2px solid #c9a96e;
+      clip-path: polygon(
+        0 12px, 12px 12px, 12px 0,
+        calc(100% - 12px) 0, calc(100% - 12px) 12px, 100% 12px,
+        100% calc(100% - 12px), calc(100% - 12px) calc(100% - 12px),
+        calc(100% - 12px) 100%, 12px 100%, 12px calc(100% - 12px),
+        0 calc(100% - 12px)
+      );
+      padding: 32px;
+      background: #1a1a1a;
+    }
+
+    .deco-frame__title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      color: #ffd700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .deco-frame__body {
+      font-size: 14px;
+      color: #f5f5dc;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    /* ── CARDS ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+
+    .card {
+      background: #1a1a1a;
+      border: 2px solid #c9a96e;
+      border-radius: var(--card-radius);
+      padding: 0;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #c9a96e, #ffd700, #c9a96e);
+      z-index: 1;
+    }
+
+    .card:hover {
+      border-color: #ffd700;
+      box-shadow: 0 0 24px rgba(201, 169, 110, 0.25);
+      transform: translateY(-4px);
+    }
+
+    .card__accent {
+      height: 6px;
+      background: linear-gradient(90deg, transparent, #c9a96e, transparent);
+    }
+
+    .card__content {
+      padding: 28px;
+    }
+
+    .card__eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #c9a96e;
+      margin-bottom: 12px;
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: #ffd700;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .card__body {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #d4b896;
+      margin-bottom: 20px;
+    }
+
+    .card__footer {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding-top: 16px;
+      border-top: 1px solid rgba(201, 169, 110, 0.15);
+    }
+
+    /* ── INPUTS ── */
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      align-items: flex-start;
+    }
+
+    .input-wrap {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #c9a96e;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .input {
+      display: block;
+      width: 100%;
+      padding: 12px 16px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      color: #f5f5dc;
+      background: #1a1a1a;
+      border: 2px solid #c9a96e;
+      border-radius: var(--button-radius);
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    .input::placeholder {
+      color: rgba(201, 169, 110, 0.5);
+    }
+
+    .input:focus {
+      border-color: #ffd700;
+      box-shadow: 0 0 16px rgba(255, 215, 0, 0.25);
+      background: rgba(26, 26, 26, 0.8);
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 18px;
+      background: #1a1a1a;
+      border: 2px solid #c9a96e;
+      border-radius: var(--button-radius);
+      max-width: 520px;
+      transition: all 0.25s ease;
+    }
+
+    .search-bar:focus-within {
+      border-color: #ffd700;
+      box-shadow: 0 0 16px rgba(201, 169, 110, 0.2);
+    }
+
+    .search-bar__icon {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      color: #c9a96e;
+    }
+
+    .search-bar__input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: #f5f5dc;
+    }
+
+    .search-bar__input::placeholder {
+      color: rgba(201, 169, 110, 0.5);
+    }
+
+    /* ── BADGES & TAGS ── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 20px;
+      line-height: 1.4;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border: 2px solid #c9a96e;
+      background: transparent;
+      color: #c9a96e;
+      transition: all 0.2s ease;
+    }
+
+    .badge:hover {
+      border-color: #ffd700;
+      color: #ffd700;
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
+    }
+
+    .badge--active {
+      background: #c9a96e;
+      color: #0a0a0a;
+      border-color: #ffd700;
+    }
+
+    .badge--active:hover {
+      background: #ffd700;
+      box-shadow: 0 0 16px rgba(255, 215, 0, 0.4);
+    }
+
+    /* ── MEDALLIONS ── */
+    .medallion-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .medallion {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      border: 3px solid #c9a96e;
+      border-radius: 50%;
+      background: #1a1a1a;
+      color: #ffd700;
+      font-weight: 700;
+      font-size: 24px;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .medallion::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border: 1px dashed rgba(201, 169, 110, 0.3);
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .medallion:hover {
+      border-color: #ffd700;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    }
+
+    .medallion:hover::before {
+      opacity: 1;
+    }
+
+    /* ── DECORATIVE ELEMENTS ── */
+    .divider {
+      border: none;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #c9a96e, transparent);
+      margin: 40px 0;
+    }
+
+    .chevron-bg {
+      position: relative;
+      padding: 32px;
+      background: #1a1a1a;
+      border: 2px solid rgba(201, 169, 110, 0.2);
+      border-radius: var(--button-radius);
+      overflow: hidden;
+    }
+
+    .chevron-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        120deg,
+        transparent,
+        transparent 20px,
+        rgba(201, 169, 110, 0.03) 20px,
+        rgba(201, 169, 110, 0.03) 40px
+      );
+      pointer-events: none;
+    }
+
+    .chevron-bg__content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .chevron-bg__title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      color: #ffd700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .chevron-bg__text {
+      font-size: 14px;
+      color: #d4b896;
+      line-height: 1.6;
+    }
+
+    /* ── SUNBURST DIVIDER ── */
+    .sunburst-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 48px 0;
+    }
+
+    .sunburst-divider__ray {
+      flex-shrink: 0;
+    }
+
+    .sunburst-divider__line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #c9a96e, transparent);
+    }
+
+    /* ── UTILITY ── */
+    .sub-heading {
+      font-size: 13px;
+      font-weight: 700;
+      color: #c9a96e;
+      margin-bottom: 16px;
+      margin-top: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .sub-heading:first-child {
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Header -->
+    <header class="header">
+      <div class="header__sunburst"></div>
+      <h1 class="header__title">Component Vocabulary</h1>
+      <p class="header__subtitle">Geometric Precision & Luxurious Detail</p>
+    </header>
+
+    <!-- Buttons Section -->
+    <div class="section">
+      <div class="section__label">Buttons</div>
+
+      <div class="component-group">
+        <div class="component-label">Primary Action</div>
+        <div class="component-row">
+          <button class="btn btn--primary btn--sm">Reserve</button>
+          <button class="btn btn--primary">Book Now</button>
+          <button class="btn btn--primary btn--lg">Confirm Booking</button>
+        </div>
+      </div>
+
+      <div class="component-group">
+        <div class="component-label">Secondary Action</div>
+        <div class="component-row">
+          <button class="btn btn--secondary btn--sm">Cancel</button>
+          <button class="btn btn--secondary">Learn More</button>
+          <button class="btn btn--secondary btn--lg">View Details</button>
+        </div>
+      </div>
+
+      <div class="component-group">
+        <div class="component-label">Tertiary / Ghost</div>
+        <div class="component-row">
+          <a href="#" class="btn btn--ghost btn--sm">Explore</a>
+          <a href="#" class="btn btn--ghost">Skip</a>
+          <a href="#" class="btn btn--ghost btn--lg">Continue Reading</a>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Frames & Borders Section -->
+    <div class="section">
+      <div class="section__label">Geometric Frames</div>
+
+      <div class="component-row">
+        <div class="deco-frame">
+          <div class="deco-frame__title">Stepped Corner</div>
+          <div class="deco-frame__body">The signature Art Deco frame with precision-cut notched corners. Used for featured content and high-hierarchy callouts.</div>
+        </div>
+        <div class="deco-frame">
+          <div class="deco-frame__title">Symmetry</div>
+          <div class="deco-frame__body">Bilateral balance is paramount. All structural elements honor the vertical axis, creating visual gravitas and deliberate ceremony.</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Cards Section -->
+    <div class="section">
+      <div class="section__label">Cards</div>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__accent"></div>
+          <div class="card__content">
+            <div class="card__eyebrow">Standard Card</div>
+            <div class="card__title">Chrysler Crown</div>
+            <div class="card__body">
+              A bordered card with a gold accent bar. Perfect for product features, testimonials, or editorial content. Hover to reveal shadow depth.
+            </div>
+            <div class="card__footer">
+              <button class="btn btn--primary btn--sm">Action</button>
+              <button class="btn btn--secondary btn--sm">Dismiss</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__accent"></div>
+          <div class="card__content">
+            <div class="card__eyebrow">Elevated Presence</div>
+            <div class="card__title">Gilt & Marble</div>
+            <div class="card__body">
+              Each card is a self-contained vignette of luxury. Stepped precision borders and gold foil accents evoke high-class interiors.
+            </div>
+            <div class="card__footer">
+              <button class="btn btn--primary btn--sm">Explore</button>
+              <a href="#" class="btn btn--ghost btn--sm">Details</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__accent"></div>
+          <div class="card__content">
+            <div class="card__eyebrow">Ceremony & Depth</div>
+            <div class="card__title">Geometric Soul</div>
+            <div class="card__body">
+              Angular forms, mathematical precision, and bilateral symmetry define the visual language. No curves without purpose.
+            </div>
+            <div class="card__footer">
+              <button class="btn btn--primary btn--sm">Discover</button>
+              <button class="btn btn--ghost btn--sm">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Inputs Section -->
+    <div class="section">
+      <div class="section__label">Input Fields</div>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Event Name</label>
+          <input class="input" type="text" placeholder="Gala, Soirée, Exhibition">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Venue Location</label>
+          <input class="input" type="text" placeholder="Fifth Avenue, Manhattan">
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="sub-heading">Search & Discovery</div>
+      <div class="search-bar">
+        <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input class="search-bar__input" type="text" placeholder="Discover glamour, patterns, architecture...">
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Badges & Medallions Section -->
+    <div class="section">
+      <div class="section__label">Badges &amp; Medallions</div>
+
+      <div class="sub-heading">Status Pills</div>
+      <div class="badge-row" style="margin-bottom: 32px;">
+        <span class="badge badge--active">Featured</span>
+        <span class="badge">Curated</span>
+        <span class="badge">Archive</span>
+        <span class="badge">Exclusive</span>
+        <span class="badge">Limited</span>
+      </div>
+
+      <div class="sub-heading">Circular Medallions</div>
+      <div class="medallion-row">
+        <div class="medallion">✦</div>
+        <div class="medallion">①</div>
+        <div class="medallion">Σ</div>
+        <div class="medallion">◆</div>
+        <div class="medallion">∞</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Decorative Patterns Section -->
+    <div class="section">
+      <div class="section__label">Atmospheric Patterns</div>
+
+      <div class="component-group">
+        <div class="component-label">Chevron Texture</div>
+        <div class="chevron-bg">
+          <div class="chevron-bg__content">
+            <div class="chevron-bg__title">Layered Geometry</div>
+            <div class="chevron-bg__text">Repeating V-shaped patterns create rhythmic texture without overwhelming. Used as a subtle backdrop on secondary panels and footer regions to suggest velocity and forward motion.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sunburst-divider">
+        <svg class="sunburst-divider__ray" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="2" fill="#c9a96e"/>
+          <line x1="12" y1="2" x2="12" y2="6" stroke="#c9a96e" stroke-width="1.5"/>
+          <line x1="12" y1="18" x2="12" y2="22" stroke="#c9a96e" stroke-width="1.5"/>
+          <line x1="2" y1="12" x2="6" y2="12" stroke="#c9a96e" stroke-width="1.5"/>
+          <line x1="18" y1="12" x2="22" y2="12" stroke="#c9a96e" stroke-width="1.5"/>
+          <line x1="5" y1="5" x2="8" y2="8" stroke="#c9a96e" stroke-width="1.5"/>
+          <line x1="16" y1="16" x2="19" y2="19" stroke="#c9a96e" stroke-width="1.5"/>
+          <line x1="19" y1="5" x2="16" y2="8" stroke="#c9a96e" stroke-width="1.5"/>
+          <line x1="8" y1="16" x2="5" y2="19" stroke="#c9a96e" stroke-width="1.5"/>
+        </svg>
+        <div class="sunburst-divider__line"></div>
+        <svg class="sunburst-divider__ray" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="2" fill="#c9a96e"/>
+          <line x1="12" y1="2" x2="12" y2="6" stroke="#c9a96e" stroke-width="1.5"/>
+          <line x1="12" y1="18" x2="12" y2="22" stroke="#c9a96e" stroke-width="1.5"/>
+          <line x1="2" y1="12" x2="6" y2="12" stroke="#c9a96e" stroke-width="1.5"/>
+          <line x1="18" y1="12" x2="22" y2="12" stroke="#c9a96e" stroke-width="1.5"/>
+          <line x1="5" y1="5" x2="8" y2="8" stroke="#c9a96e" stroke-width="1.5"/>
+          <line x1="16" y1="16" x2="19" y2="19" stroke="#c9a96e" stroke-width="1.5"/>
+          <line x1="19" y1="5" x2="16" y2="8" stroke="#c9a96e" stroke-width="1.5"/>
+          <line x1="8" y1="16" x2="5" y2="19" stroke="#c9a96e" stroke-width="1.5"/>
+        </svg>
+      </div>
+
+      <div class="component-group">
+        <div class="component-label">Sunburst Motif</div>
+        <div style="text-align: center; padding: 40px; background: #1a1a1a; border: 2px solid rgba(201, 169, 110, 0.2); border-radius: 8px;">
+          <div style="width: 200px; height: 100px; margin: 0 auto 24px; background: conic-gradient(from 0deg, rgba(201, 169, 110, 0.2) 0deg, transparent 8deg, transparent 16deg, rgba(201, 169, 110, 0.2) 24deg, transparent 32deg, transparent 40deg, rgba(201, 169, 110, 0.2) 48deg, transparent 56deg, transparent 64deg, rgba(201, 169, 110, 0.2) 72deg, transparent 80deg, transparent 88deg, rgba(201, 169, 110, 0.2) 96deg, transparent 104deg, transparent

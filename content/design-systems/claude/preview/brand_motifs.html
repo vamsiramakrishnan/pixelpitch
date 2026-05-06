@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Claude</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Crimson Text', serif);
+      background: var(--paper, #f5f4ed);
+      color: var(--ink, #141413);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ── Header ── */
+    .header {
+      margin-bottom: 72px;
+    }
+    .header__title {
+      font-family: var(--font-display, 'Crimson Text', serif);
+      font-size: 56px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--ink, #141413);
+      margin-bottom: 12px;
+    }
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate, #5e5d59);
+      max-width: 600px;
+      font-weight: 400;
+    }
+    .header__rule {
+      display: block;
+      width: 48px;
+      height: 2px;
+      background: var(--signal, #c96442);
+      border: none;
+      margin-top: 28px;
+      border-radius: 1px;
+    }
+
+    /* ── Section ── */
+    .section {
+      margin-bottom: 64px;
+    }
+    .section__label {
+      font-family: var(--font-body, 'Crimson Text', serif);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #5e5d59);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--color-border-cream, #f0eee6);
+    }
+
+    /* ── Key Characteristics ── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+    .traits-list li {
+      position: relative;
+      padding: 14px 0 14px 24px;
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--ink, #141413);
+      border-bottom: 1px solid var(--color-border-cream, #f0eee6);
+    }
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 22px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--signal, #c96442);
+      opacity: 0.7;
+    }
+
+    /* ── Do's and Don'ts ── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .dd-card {
+      background: var(--bone, #faf9f5);
+      border: 1px solid var(--color-border-cream, #f0eee6);
+      border-radius: 12px;
+      padding: 28px;
+      overflow: hidden;
+    }
+    .dd-card__heading {
+      font-family: var(--font-display, 'Crimson Text', serif);
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .dd-card__heading--do { color: #166534; }
+    .dd-card__heading--dont { color: #991b1b; }
+
+    .dd-card__icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .dd-card__icon--do {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .dd-card__icon--dont {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+    .dd-list li {
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--ink, #141413);
+      padding: 8px 0;
+      border-bottom: 1px solid var(--color-border-cream, #f0eee6);
+    }
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ── Color Harmony Strip ── */
+    .harmony-strip {
+      display: flex;
+      border-radius: 12px;
+      overflow: hidden;
+      height: 96px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border: 1px solid var(--color-border-cream, #f0eee6);
+    }
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+    }
+    .harmony-strip__swatch:hover {
+      flex: 1.6;
+    }
+    .harmony-strip__label {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 3px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ── Type Pairing Demo ── */
+    .type-pairing {
+      background: var(--bone, #faf9f5);
+      border: 1px solid var(--color-border-cream, #f0eee6);
+      border-radius: 12px;
+      padding: 48px 40px;
+    }
+    .type-pairing__display {
+      font-family: var(--font-display, 'Crimson Text', serif);
+      font-size: 42px;
+      font-weight: 600;
+      line-height: 1.20;
+      letter-spacing: -0.01em;
+      color: var(--ink, #141413);
+      margin-bottom: 20px;
+    }
+    .type-pairing__body {
+      font-family: var(--font-body, 'Crimson Text', serif);
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #141413);
+      max-width: 680px;
+    }
+    .type-pairing__meta {
+      display: flex;
+      gap: 28px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--color-border-cream, #f0eee6);
+    }
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 12px;
+      color: var(--slate, #5e5d59);
+    }
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--ink, #141413);
+    }
+
+    /* ── Atmosphere Card ── */
+    .atmosphere-card {
+      background: var(--bone, #faf9f5);
+      border: 1px solid var(--color-border-cream, #f0eee6);
+      border-radius: 12px;
+      padding: 32px;
+    }
+    .atmosphere-card p {
+      font-size: 16px;
+      line-height: 1.70;
+      color: var(--ink, #141413);
+    }
+
+    /* ── Loading ── */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #5e5d59);
+      font-size: 16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--color-border-cream, #f0eee6);
+      border-top-color: var(--signal, #c96442);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Visual Demo Cards ── */
+    .palette-demo {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px;
+      margin-top: 12px;
+    }
+    .palette-item {
+      background: var(--bone, #faf9f5);
+      border: 1px solid var(--color-border-cream, #f0eee6);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+    .palette-item:hover {
+      transform: translateY(-2px);
+    }
+    .palette-swatch {
+      width: 100%;
+      height: 80px;
+      border-bottom: 1px solid var(--color-border-cream, #f0eee6);
+    }
+    .palette-info {
+      padding: 12px;
+    }
+    .palette-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink, #141413);
+      margin-bottom: 4px;
+    }
+    .palette-hex {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 11px;
+      color: var(--slate, #5e5d59);
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border', 'surface'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#b53333">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.meta?.name || tokens.name || 'Design System';
+      const colors = tokens.colors || {};
+      const fonts = tokens.typography || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Brand DNA</h1>';
+      html += '  <p class="header__subtitle">The signature moves and visual personality that make Claude distinctly warm, editorial, and trustworthy.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Atmosphere / Description */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card"><p>';
+      html += 'Claude&rsquo;s design is a literary salon reimagined as a product interface—warm, unhurried, and quietly intellectual. ';
+      html += 'The parchment canvas (#f5f4ed) evokes high-quality paper rather than a digital surface, while the custom Anthropic Serif typeface ';
+      html += 'gives every headline the gravitas of a book title. Terracotta accents (#c96442) radiate human warmth. ';
+      html += 'Every gray carries a yellow-brown undertone, creating a chromatic consistency that feels lived-in and trustworthy. ';
+      html += 'This is not a cold, futuristic AI interface—it&rsquo;s a thoughtful companion with good taste.';
+      html += '</p></div>';
+      html += '</div>';
+
+      /* Key Characteristics */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Warm parchment canvas (#f5f4ed) evoking premium paper, not screens</li>';
+      html += '    <li>Custom Anthropic typeface: Serif for headlines, Sans for UI, Mono for code</li>';
+      html += '    <li>Terracotta brand accent (#c96442)—warm, earthy, deliberately un-tech</li>';
+      html += '    <li>Exclusively warm-toned neutrals; every gray has a yellow-brown undertone</li>';
+      html += '    <li>Organic, editorial illustrations replacing typical tech iconography</li>';
+      html += '    <li>Ring-based shadow system creating depth without heavy drop shadows</li>';
+      html += '    <li>Magazine-like pacing with generous section spacing and serif hierarchy</li>';
+      html += '    <li>Serif/sans split: serifs for content headlines, sans for UI labels</li>';
+      html += '    <li>Generous border-radius (12–32px) for soft, approachable feel</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* Do's and Don'ts */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+      
+      html += '    <div class="dd-card">';
+      html += '      <div class="dd-card__heading dd-card__heading--do">';
+      html += '        <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '      </div>';
+      html += '      <ul class="dd-list">';
+      html += '        <li>Use Parchment (#f5f4ed) as the primary background—it IS the Claude personality</li>';
+      html += '        <li>Use Anthropic Serif weight 500 for all headlines—consistency is intentional</li>';
+      html += '        <li>Use Terracotta (#c96442) only for primary CTAs and highest-signal moments</li>';
+      html += '        <li>Keep all neutrals warm-toned with yellow-brown undertones</li>';
+      html += '        <li>Use ring shadows instead of drop shadows for interactive states</li>';
+      html += '        <li>Maintain editorial serif/sans hierarchy throughout</li>';
+      html += '        <li>Use generous body line-height (1.60) for literary reading experience</li>';
+      html += '        <li>Apply soft border-radius (12–32px) for approachable feel</li>';
+      html += '      </ul>';
+      html += '    </div>';
+
+      html += '    <div class="dd-card">';
+      html += '      <div class="dd-card__heading dd-card__heading--dont">';
+      html += '        <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '      </div>';
+      html += '      <ul class="dd-list">';
+      html += '        <li>Don\'t use cool blue-grays—palette is exclusively warm-toned</li>';
+      html += '        <li>Don\'t use serif weights above 500—weight ceiling is intentional</li>';
+      html += '        <li>Don\'t introduce colors beyond Terracotta—palette is deliberately muted</li>';
+      html += '        <li>Don\'t use sharp corners (< 6px radius)—softness is core identity</li>';
+      html += '        <li>Don\'t apply heavy drop shadows—depth comes from ring shadows</li>';
+      html += '        <li>Don\'t use pure white (#fff)—always use Parchment or Ivory</li>';
+      html += '        <li>Don\'t use geometric tech-style illustrations—keep them organic</li>';
+      html += '        <li>Don\'t reduce body line-height below 1.40—spacing supports personality</li>';
+      html += '      </ul>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Color Harmony */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Color Harmony</div>';
+      html += '  <div class="harmony-strip">';
+      
+      const harmonyKeys = ['paper', 'bone', 'signal', 'slate', 'ink', 'border'];
+      harmonyKeys.forEach(key => {
+        if (colors[key]) {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.4 ? '#141413' : '#faf9f5';
+          const labelBg = lum > 0.4 ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.12)';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + ';background:' + labelBg + '">' + esc(key) + '</span>';
+          html += '</div>';
+        }
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* Core Palette with Hex Display */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Core Palette</div>';
+      html += '  <div class="palette-demo">';
+      
+      const paletteKeys = [
+        { key: 'paper', label: 'Paper' },
+        { key: 'bone', label: 'Bone' },
+        { key: 'surface', label: 'Surface' },
+        { key: 'signal', label: 'Signal' },
+        { key: 'slate', label: 'Slate' },
+        { key: 'ink', label: 'Ink' },
+        { key: 'border', label: 'Border' }
+      ];
+
+      paletteKeys.forEach(item => {
+        if (colors[item.key]) {
+          const hex = colors[item.key];
+          html += '<div class="palette-item">';
+          html += '  <div class="palette-swatch" style="background:' + esc(hex) + '"></div>';
+          html += '  <div class="palette-info">';
+          html += '    <div class="palette-name">' + esc(item.label) + '</div>';
+          html += '    <div class="palette-hex">' + esc(hex) + '</div>';
+          html += '  </div>';
+          html += '</div>';
+        }
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* Typography Pairing */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+      
+      html += '    <div class="type-pairing__display">The architecture of language</div>';
+      html += '    <div class="type-pairing__body">';
+      html += '      Typography is the craft of endowing human language with durable visual form. ';
+      html += '      Claude\'s Anthropic Serif typeface carries the weight of editorial tradition—a serif font with generous proportions ';
+      html += '      that breathes at comfortable line-heights, creating a cadence more like reading an essay than scanning a product page. ';
+      html += '      This is a deliberate choice: serious, thoughtful, unhurried.';
+      html += '    </div>';
+      
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Display:</span> Anthropic Serif, weight 500</div>';
+      html += '      <div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Body:</span> Anthropic Serif, weight 400</div>';
+      html += '      <div class="type-pairing__meta-item"><span class="type-pairing__meta-label">Code:</span> Anthropic Mono, weight 400</div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    /* ── Utilities ── */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function relativeLuminance(hex) {
+      try {
+        const [r, g, b] = hexToRgb(hex).map(c => {
+          c /= 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      } catch { return 0.5; }
+    }
+  </script>
+</body>
+</html>

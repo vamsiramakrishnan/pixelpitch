@@ -1,0 +1,90 @@
+/* Supabase — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #171717;
+  --ink:     #fafafa;
+  --slate:   #898989;
+  --signal:  #3ecf8e;
+  --bone:    #efefef;
+  --border:  #3ecf8e;
+  --surface: #2e2e2e;
+
+  /* Extended palette */
+  --color-green-link: #00c573;
+  --color-near-black: #0f0f0f;
+  --color-dark-border: #242424;
+  --color-mid-border: #363636;
+  --color-border-light: #393939;
+  --color-charcoal: #434343;
+  --color-dark-gray: #7f7f7f;
+  --color-light-gray: #b4b4b4;
+
+  /* Semantic */
+  --success: #3ecf8e;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    Source Code Pro;
+
+  /* Type ramp */
+  --t-display-hero: 72px;
+  --t-section-heading: 36px;
+  --t-card-title: 24px;
+  --t-sub-heading: 18px;
+  --t-body: 16px;
+  --t-nav-link: 14px;
+  --t-button: 14px;
+  --t-caption: 14px;
+  --t-small: 12px;
+  --t-code-label: 12px;
+
+  /* ── Spacing ── */
+  --s-1: 1px;
+  --s-2: 4px;
+  --s-3: 6px;
+  --s-4: 8px;
+  --s-5: 12px;
+  --s-6: 16px;
+  --s-7: 20px;
+  --s-8: 24px;
+  --s-9: 32px;
+  --s-10: 40px;
+  --s-11: 48px;
+  --s-12: 90px;
+  --s-13: 96px;
+  --s-14: 128px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   6px;
+  --radius-md:   8px;
+  --radius-lg:   48px;
+  --radius-full: 9999px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    8px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

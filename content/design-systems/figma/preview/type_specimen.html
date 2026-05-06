@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — Figma</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 48px 24px;
+      }
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 96px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 86px;
+      font-weight: 400;
+      line-height: 1.00;
+      letter-spacing: -1.72px;
+      color: var(--ink, #111111);
+      margin-bottom: 24px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 20px;
+      font-weight: 330;
+      line-height: 1.30;
+      letter-spacing: -0.1px;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 1px;
+      background: var(--ink, #111111);
+      border: none;
+      margin: 0;
+    }
+
+    /* Font families section */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 32px;
+      margin-bottom: 96px;
+      margin-top: 64px;
+    }
+
+    .font-card {
+      background: transparent;
+      border: 1px solid var(--border, #000000);
+      border-radius: 0;
+      padding: 32px;
+    }
+
+    .font-card__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .font-card__name {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 32px;
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.64px;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      color: var(--slate, #666666);
+      word-break: break-word;
+      letter-spacing: 0.4px;
+    }
+
+    /* Character set block */
+    .charmap-block {
+      background: transparent;
+      border: 1px solid var(--border, #000000);
+      border-radius: 0;
+      padding: 48px;
+      margin-bottom: 96px;
+    }
+
+    .charmap-block__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+    }
+
+    .charmap-block__chars {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1.8;
+      letter-spacing: -0.28px;
+      color: var(--ink, #111111);
+      word-break: break-word;
+    }
+
+    /* Weight specimens */
+    .weight-samples {
+      margin-bottom: 96px;
+    }
+
+    .weight-samples__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--ink, #111111);
+    }
+
+    .weight-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 32px;
+      align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--bone, #f5f5f5);
+    }
+
+    .weight-row:last-child {
+      border-bottom: none;
+    }
+
+    .weight-label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+    }
+
+    .weight-sample {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 24px;
+      line-height: 1.45;
+      letter-spacing: -0.24px;
+      color: var(--ink, #111111);
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--ink, #111111);
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--bone, #f5f5f5);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 800px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      letter-spacing: -0.18px;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 1.8;
+      color: var(--slate, #666666);
+      letter-spacing: 0.4px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--ink, #111111);
+      overflow-wrap: break-word;
+      word-spacing: 0.05em;
+    }
+
+    /* Ramp section */
+    .ramp-section {
+      margin-bottom: 96px;
+    }
+
+    /* Emphasis callout */
+    .emphasis-block {
+      background: var(--bone, #f5f5f5);
+      border: 1px solid var(--border, #000000);
+      padding: 48px;
+      margin-bottom: 96px;
+    }
+
+    .emphasis-block__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+    }
+
+    .emphasis-text {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 24px;
+      font-weight: 540;
+      line-height: 1.45;
+      letter-spacing: -0.24px;
+      color: var(--ink, #111111);
+      margin: 0;
+    }
+
+    .emphasis-light {
+      font-weight: 340;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 160px 48px;
+      color: var(--slate, #666666);
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 24px auto 0;
+      border: 2px solid var(--border, #000000);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Hierarchy through weight precision, not size jumps.',
+      'Every letter kerned. Every word tracked.',
+      'Light is the base. Five hundred forty is the emphasis.',
+      'Figma Sans holds 320 to 700 with stops most fonts skip.',
+      'Mono uppercase, always spaced. The interface speaks in capitals.',
+      'Negative tracking breathes design into every line.',
+      'Tools are made of circles and pills and carefully counted pixels.',
+      'The variable font carries the entire system in one file.',
+      'White wall, colorful art. Chrome disappears.',
+      'Selection handles echo dashed focus states everywhere.',
+    ];
+
+    const EMPHASIS_TEXT = 'Variable fonts unlock granular control. Most systems know bold, regular, light. Figma explores the in-between: 320, 330, 340, 450, 480, 540, 700. Each stop is an opportunity for precise visual weight. Weight 330 versus 340 may be imperceptible alone, but in context—body versus sub-heading—the distinction carries architectural meaning. This is not decoration. This is the structure of the interface itself.';
+
+    fetch('../tokens.json')
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#3b82f6">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Design System';
+      const summary = tokens.meta?.summary || '';
+
+      const ramp = tokens.typography?.ramp || [];
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Type Specimen</div>';
+      html += '  <h1 class="header__title">' + esc(title) + '</h1>';
+      html += '  <p class="header__subtitle">' + esc(summary) + '</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      const families = [
+        { label: 'Display & Body', name: 'figmaSans', fallback: 'system-ui, -apple-system, helvetica', note: 'Variable 320–700 with precision stops' },
+        { label: 'Monospace', name: 'figmaMono', fallback: 'ui-monospace, SF Mono, menlo', note: 'Uppercase labels & metadata' }
+      ];
+
+      html += '<div class="font-families">';
+      families.forEach(f => {
+        html += '<div class="font-card">';
+        html += '  <div class="font-card__label">' + esc(f.label) + '</div>';
+        html += '  <div class="font-card__name">' + esc(f.name) + '</div>';
+        html += '  <div class="font-card__fallback">' + esc(f.fallback) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      /* Character set */
+      html += '<div class="charmap-block">';
+      html += '  <div class="charmap-block__label">Character Set · figmaSans</div>';
+      html += '  <div class="charmap-block__chars" style="font-family:system-ui,sans-serif">';
+      html += '    AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>';
+      html += '    0123456789 !@#$%&amp;*()–—''""';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Weight specimens */
+      html += '<div class="weight-samples">';
+      html += '<div class="weight-samples__label">Weight Spectrum · figmaSans Variable</div>';
+      const weights = [
+        { w: 320, label: 'Weight 320 · Lightest body' },
+        { w: 330, label: 'Weight 330 · Body standard' },
+        { w: 340, label: 'Weight 340 · Light heading' },
+        { w: 450, label: 'Weight 450 · Medium bridge' },
+        { w: 480, label: 'Weight 480 · Mid emphasis' },
+        { w: 540, label: 'Weight 540 · Sub-heading' },
+        { w: 700, label: 'Weight 700 · Bold maximum' }
+      ];
+      weights.forEach(wt => {
+        html += '<div class="weight-row">';
+        html += '  <div class="weight-label">' + esc(wt.label) + '</div>';
+        html += '  <div class="weight-sample" style="font-weight:' + wt.w + '">The variable font carries hierarchy in its bones.</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      /* Emphasis callout */
+      html += '<div class="emphasis-block">';
+      html += '<div class="emphasis-block__label">Sub-heading Contrast · Weight 540 vs 340</div>';
+      html += '<p class="emphasis-text" style="font-weight:540;margin-bottom:16px">Emphasis. Weight five forty brings maximum presence within the subheading role.</p>';
+      html += '<p class="emphasis-text emphasis-light">Light. Weight three forty floats beneath, still subheading size but aerially positioned.</p>';
+      html += '</div>';
+
+      /* Type ramp */
+      if (ramp.length) {
+        html += '<div class="ramp-section">';
+        html += '<div class="section-label">Type Ramp</div>';
+        ramp.forEach((entry, i) => {
+          html += rampRow(entry, i);
+        });
+        html += '</div>';
+      }
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(entry, idx) {
+      const role = entry.role || 'Role ' + (idx + 1);
+      const size = entry.size || '16px';
+      const weight = entry.weight || 400;
+      const lh = entry.lineHeight || '1.5';
+      const ls = entry.letterSpacing || '0';
+
+      let fontFamily = 'system-ui, sans-serif';
+      if (entry.fontKey === 'mono') fontFamily = 'ui-monospace, monospace';
+
+      const sizeNum = parseFloat(size);
+      const sampleIdx = idx % EDITORIAL_SAMPLES.length;
+      let sample = EDITORIAL_SAMPLES[sampleIdx];
+
+      /* Truncate very large samples */
+      if (sizeNum >= 64) {
+        sample = sample.split('.')[0].slice(0, 35);
+        if (!sample.endsWith('.')) sample += '.';
+      }
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + ';';
+      fontStyle += 'font-family:' + fontFamily + ';';
+      if (ls && ls !== '0' && ls !== 'normal') fontStyle += 'letter-spacing:' + ls + ';';
+
+      let meta = esc(size) + ' / weight ' + esc(String(weight));
+      meta += '\n' + fontFamilyLabel(entry.fontKey);
+      meta += '\nline-height: ' + esc(String(lh));
+      if (ls && ls !== '0' && ls !== 'normal') meta += '\nletter-spacing: ' + esc(ls);
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <div class="ramp-meta__detail">' + meta + '</div>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(sample) + '</div>' +
+        '</div>';
+    }
+
+    function fontFamilyLabel(key) {
+      const map = {
+        'ui': 'figmaSans variable',
+        'mono': 'figmaMono'
+      };
+      return map[key] || 'figmaSans';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

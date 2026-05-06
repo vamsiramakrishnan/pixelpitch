@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — Lingo</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 48px 24px;
+      }
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 96px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 96px;
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 24px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 96px;
+      height: 3px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin: 0;
+      border-radius: var(--radius-full, 999px);
+    }
+
+    /* Font families section */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+      margin-bottom: 96px;
+      margin-top: 64px;
+    }
+
+    .font-card {
+      background: var(--bone, #f5f5f5);
+      border: 2px solid var(--signal, #3b82f6);
+      border-radius: var(--radius-lg, 16px);
+      padding: 32px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .font-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(59, 130, 246, 0.12);
+    }
+
+    .font-card__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 12px;
+    }
+
+    .font-card__name {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      word-break: break-word;
+    }
+
+    /* Character set block */
+    .charmap-block {
+      background: var(--bone, #f5f5f5);
+      border: 2px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-lg, 16px);
+      padding: 48px;
+      margin-bottom: 96px;
+    }
+
+    .charmap-block__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 24px;
+    }
+
+    .charmap-block__chars {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.8;
+      letter-spacing: 0.02em;
+      color: var(--ink, #111111);
+      word-break: break-word;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 3px solid var(--signal, #3b82f6);
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 32px 0;
+      border-bottom: 2px solid var(--border, #e5e5e5);
+      border-radius: 0;
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 800px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.8;
+      color: var(--slate, #666666);
+      letter-spacing: 0.02em;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--ink, #111111);
+      overflow-wrap: break-word;
+      word-spacing: 0.1em;
+    }
+
+    /* Ramp section */
+    .ramp-section {
+      margin-bottom: 96px;
+    }
+
+    /* Weight demo */
+    .weight-demo {
+      margin-bottom: 96px;
+    }
+
+    .weight-demo__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 3px solid var(--signal, #3b82f6);
+    }
+
+    .weight-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 24px;
+      align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .weight-row:last-child {
+      border-bottom: none;
+    }
+
+    .weight-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate, #666666);
+      text-align: right;
+    }
+
+    .weight-sample {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 24px;
+      color: var(--ink, #111111);
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 160px 48px;
+      color: var(--slate, #666666);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 24px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Playful, minimal design with bright colors.',
+      'Rounded shapes and tactile 3D borders.',
+      'Friendly interfaces that feel approachable.',
+      'Bold typography carries personality.',
+      'Nunito works hard across all sizes.',
+      'Weights from 400 to 900 give range.',
+      'Colors sing against neutral space.',
+      'System-wide consistency through scale.',
+      'Scannable, readable, always friendly.',
+      'Creative and artistic surfaces thrive here.',
+    ];
+
+    const DROPCAP_TEXT = 'Lingo brings playful energy to interface design without sacrificing clarity or usability. Every element—from typography to spacing to color—works together to create something instantly recognizable and unmistakably friendly. Nunito, a rounded geometric sans-serif, forms the backbone of this system. Its warmth and approachability make it ideal for headings and body text alike. Nine weights, from 400 to 900, provide the range needed to express hierarchy, emphasis, and personality. The color palette is vibrant but not chaotic: primary blue signals interactive elements, while a clean neutral base lets content breathe. Rounded corners—16 pixels for large surfaces, 8 pixels for buttons and cards—soften every edge. Spacing flows naturally in a consistent scale. The result is a system that feels like it was designed for humans who enjoy delightful interfaces. This is design that smiles.';
+
+    fetch('../tokens.json')
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#3b82f6">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Design System';
+      const summary = tokens.meta?.summary || '';
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Type Specimen</div>';
+      html += '  <h1 class="header__title">' + esc(title) + '</h1>';
+      html += '  <p class="header__subtitle">' + esc(summary) + '</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      const families = [
+        { label: 'Display', name: 'Nunito', fallback: 'system-ui, sans-serif', note: 'Rounded geometric sans' },
+        { label: 'Body', name: 'Nunito', fallback: 'system-ui, sans-serif', note: 'Warm and approachable' },
+        { label: 'Monospace', name: 'JetBrains Mono', fallback: 'ui-monospace, monospace', note: 'Code and metadata' }
+      ];
+
+      html += '<div class="font-families">';
+      families.forEach(f => {
+        html += '<div class="font-card">';
+        html += '  <div class="font-card__label">' + esc(f.label) + '</div>';
+        html += '  <div class="font-card__name">' + esc(f.name) + '</div>';
+        html += '  <div class="font-card__fallback">' + esc(f.fallback) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      /* Character set */
+      html += '<div class="charmap-block">';
+      html += '  <div class="charmap-block__label">Character Set · Nunito Display</div>';
+      html += '  <div class="charmap-block__chars" style="font-family:\'Nunito\',system-ui,sans-serif;font-weight:700">';
+      html += '    AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>';
+      html += '    0123456789 !@#$%&amp;*()&ndash;&mdash;&lsquo;&rsquo;&ldquo;&rdquo;';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Type ramp */
+      html += '<div class="ramp-section">';
+      html += '<div class="section-label">Type Ramp · Scale 12 / 14 / 16 / 20 / 24 / 32</div>';
+
+      const rampConfig = [
+        { role: 'Micro', size: '12px', weight: 600, lh: '1.4', sample: 0 },
+        { role: 'Caption', size: '14px', weight: 500, lh: '1.4', sample: 1 },
+        { role: 'Body', size: '16px', weight: 400, lh: '1.6', sample: 2 },
+        { role: 'Lead', size: '20px', weight: 500, lh: '1.5', sample: 3 },
+        { role: 'Subhead', size: '24px', weight: 600, lh: '1.4', sample: 4 },
+        { role: 'Headline', size: '32px', weight: 700, lh: '1.2', sample: 5 },
+        { role: 'Hero', size: '64px', weight: 900, lh: '0.95', sample: 6 }
+      ];
+
+      rampConfig.forEach((entry, idx) => {
+        html += rampRow(entry);
+      });
+
+      html += '</div>';
+
+      /* Weight range */
+      html += '<div class="weight-demo">';
+      html += '<div class="weight-demo__label">Weight Range · Nunito 400 to 900</div>';
+
+      const weights = [
+        { weight: 400, label: 'Regular' },
+        { weight: 500, label: 'Medium' },
+        { weight: 600, label: 'Semibold' },
+        { weight: 700, label: 'Bold' },
+        { weight: 800, label: 'Extrabold' },
+        { weight: 900, label: 'Black' }
+      ];
+
+      weights.forEach(w => {
+        html += '<div class="weight-row">';
+        html += '  <div class="weight-label">' + esc(w.label) + '</div>';
+        html += '  <div class="weight-sample" style="font-family:\'Nunito\',system-ui,sans-serif;font-weight:' + w.weight + '">The quick brown fox jumps</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Drop cap demo */
+      html += '<div class="weight-demo">';
+      html += '<div class="weight-demo__label">Long-Form Reading · Nunito Regular Body</div>';
+      html += '<div style="background:var(--bone,#f5f5f5);border:2px solid var(--border,#e5e5e5);border-radius:var(--radius-lg,16px);padding:48px;max-width:680px">';
+
+      const firstChar = DROPCAP_TEXT.charAt(0);
+      const restText = DROPCAP_TEXT.substring(1);
+      html += '<p style="font-family:\'Nunito\',system-ui,sans-serif;font-size:18px;font-weight:400;line-height:1.7;color:var(--ink,#111111);margin:0;">';
+      html += '<span style="float:left;font-family:\'Nunito\',system-ui,sans-serif;font-size:96px;font-weight:900;line-height:0.85;color:var(--signal,#3b82f6);margin-right:8px;margin-top:-4px">' + esc(firstChar) + '</span>';
+      html += esc(restText);
+      html += '</p>';
+      html += '</div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(entry) {
+      const { role, size, weight, lh, sample } = entry;
+      const sampleIdx = sample % EDITORIAL_SAMPLES.length;
+      let sampleText = EDITORIAL_SAMPLES[sampleIdx];
+
+      const sizeNum = parseFloat(size);
+      if (sizeNum >= 48) {
+        sampleText = sampleText.split('.')[0].slice(0, 35);
+        if (!sampleText.endsWith('.')) sampleText += '.';
+      }
+
+      const fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + ';font-family:\'Nunito\',system-ui,sans-serif;';
+
+      const meta = esc(size) + ' / ' + esc(String(weight)) + '\nNunito\nline-height: ' + esc(String(lh));
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(sampleText) + '</div>' +
+        '</div>';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

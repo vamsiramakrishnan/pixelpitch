@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clean — Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: var(--s-8) var(--s-5);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--s-4);
+      margin-bottom: var(--s-7);
+      border-bottom: 1px solid var(--border);
+      border-top: 1px solid var(--border);
+      padding-top: var(--s-4);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1;
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-5);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: var(--s-4);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate);
+      max-width: 680px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: var(--s-4);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-4);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate);
+      margin-right: var(--s-3);
+      min-width: 120px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1;
+      border: 1px solid var(--border);
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      gap: var(--s-2);
+    }
+
+    .btn:hover {
+      background: var(--bone);
+      border-color: var(--slate);
+    }
+
+    .btn:active {
+      background: var(--slate);
+      color: var(--paper);
+      border-color: var(--slate);
+    }
+
+    .btn--primary {
+      background: var(--signal);
+      color: var(--paper);
+      border-color: var(--signal);
+    }
+
+    .btn--primary:hover {
+      background: #2563eb;
+      border-color: #2563eb;
+    }
+
+    .btn--primary:active {
+      background: #1d4ed8;
+      border-color: #1d4ed8;
+    }
+
+    .btn--secondary {
+      background: var(--bone);
+      color: var(--ink);
+      border-color: var(--border);
+    }
+
+    .btn--secondary:hover {
+      background: var(--border);
+      border-color: var(--slate);
+    }
+
+    .btn--ghost {
+      border: none;
+      background: transparent;
+      color: var(--signal);
+      padding: 10px 0;
+      text-decoration: underline;
+      font-family: var(--font-body);
+      font-size: 14px;
+    }
+
+    .btn--ghost:hover {
+      color: #2563eb;
+    }
+
+    .btn--sm {
+      padding: 8px 14px;
+      font-size: 13px;
+    }
+
+    .btn--lg {
+      padding: 12px 28px;
+      font-size: 15px;
+    }
+
+    .btn--disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* ──── CARDS ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-5);
+      margin-bottom: var(--s-5);
+    }
+
+    .card {
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      padding: var(--s-4);
+      background: var(--paper);
+      transition: all 0.15s ease;
+    }
+
+    .card:hover {
+      border-color: var(--slate);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .card__header {
+      margin-bottom: var(--s-3);
+    }
+
+    .card__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-1);
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--ink);
+    }
+
+    .card__body {
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+    }
+
+    .card--elevated {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border: none;
+    }
+
+    .card--elevated:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    /* ──── INPUT FIELDS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .input {
+      padding: 10px 12px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:hover {
+      border-color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .input:disabled {
+      background: var(--bone);
+      color: var(--slate);
+      cursor: not-allowed;
+    }
+
+    .input-hint {
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: var(--slate);
+      margin-top: var(--s-1);
+    }
+
+    /* ──── BADGES ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2);
+      margin-bottom: var(--s-4);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      line-height: 1;
+      border-radius: var(--radius-full);
+      background: var(--bone);
+      color: var(--ink);
+    }
+
+    .badge--primary {
+      background: var(--signal);
+      color: var(--paper);
+    }
+
+    .badge--success {
+      background: #10b981;
+      color: var(--paper);
+    }
+
+    .badge--warning {
+      background: #f59e0b;
+      color: var(--paper);
+    }
+
+    .badge--danger {
+      background: #ef4444;
+      color: var(--paper);
+    }
+
+    .badge--muted {
+      background: var(--surface);
+      color: var(--slate);
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    /* ──── TYPOGRAPHY DEMO ──── */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+      margin-top: var(--s-4);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .type-sample {
+      margin-bottom: var(--s-4);
+      padding-bottom: var(--s-4);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .type-sample:last-child {
+      border-bottom: none;
+    }
+
+    .type-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .type-content {
+      font-family: var(--font-body);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .type-h1 {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .type-h2 {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.005em;
+    }
+
+    .type-h3 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .type-body {
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    .type-body-sm {
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    .type-mono {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      background: var(--bone);
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ──── FORM STATES ──── */
+    .form-demo {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .form-field__label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .form-field__input {
+      padding: 10px 12px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    /* ──── UTILITY ──── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: var(--s-5) 0;
+    }
+
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-3) 0;
+      margin-top: var(--s-8);
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-6) var(--s-3);
+      }
+
+      .stage-head__title {
+        font-size: 32px;
+      }
+
+      .section__title {
+        font-size: 24px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: var(--s-3);
+      }
+
+      .button-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .button-row__label {
+        margin-right: 0;
+        margin-bottom: var(--s-2);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">Clean</div>
+      <div class="masthead__tagline">
+        Component<br>Library
+      </div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Complete Component Vocabulary</h1>
+      <p class="stage-head__subtitle">
+        The Clean system provides a refined set of reusable components designed for clarity and simplicity. Every component follows a consistent spacing grid, minimal aesthetic, and predictable interaction patterns.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Interaction</div>
+      <h2 class="section__title">Buttons</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Default</span>
+        <button class="btn">Default Button</button>
+        <button class="btn btn--sm">Small</button>
+        <button class="btn btn--lg">Large Button</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary</span>
+        <button class="btn btn--primary">Primary Action</button>
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary btn--lg">Large Primary</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Secondary</span>
+        <button class="btn btn--secondary">Secondary Action</button>
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary btn--lg">Large Secondary</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Ghost</span>
+        <a href="#" class="btn btn--ghost">Ghost Link</a>
+        <a href="#" class="btn btn--ghost">Learn More</a>
+        <a href="#" class="btn btn--ghost">View Details</a>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">States</span>
+        <button class="btn" disabled>Disabled</button>
+        <button class="btn btn--primary" disabled>Disabled Primary</button>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Containers</div>
+      <h2 class="section__title">Cards</h2>
+      <p style="font-size: 16px; line-height: 1.6; color: var(--slate); margin-bottom: var(--s-5);">Clean cards use subtle borders and hover states to create clear visual hierarchy. The elevated variant adds shadow for deeper emphasis.</p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__header">
+            <div class="card__kicker">Component</div>
+            <h3 class="card__title">Standard Card</h3>
+          </div>
+          <p class="card__body">A bordered card with clean typography and predictable padding. Hover to reveal a subtle shadow effect and border emphasis.</p>
+          <button class="btn btn--primary btn--sm">Learn More</button>
+        </div>
+
+        <div class="card card--elevated">
+          <div class="card__header">
+            <div class="card__kicker">Feature</div>
+            <h3 class="card__title">Elevated Card</h3>
+          </div>
+          <p class="card__body">Cards with elevation use shadow depth for emphasis. Perfect for featured content or primary call-to-action areas.</p>
+          <button class="btn btn--primary btn--sm">Explore</button>
+        </div>
+
+        <div class="card">
+          <div class="card__header">
+            <div class="card__kicker">Content</div>
+            <h3 class="card__title">Multiple States</h3>
+          </div>
+          <p class="card__body">Each card responds to interaction. Borders tighten, shadows appear. States remain consistent across the entire system.</p>
+          <button class="btn btn--secondary btn--sm">View More</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Input Fields Section -->
+    <section class="section">
+      <div class="section__kicker">Forms</div>
+      <h2 class="section__title">Input Fields</h2>
+      <p style="font-size: 16px; line-height: 1.6; color: var(--slate); margin-bottom: var(--s-5);">Input fields feature clear focus rings and hover states. Labels are paired above inputs for accessibility and clarity.</p>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Text Input</label>
+          <input type="text" class="input" placeholder="Enter text..." />
+          <span class="input-hint">This is helpful hint text</span>
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input type="email" class="input" placeholder="you@example.com" />
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Disabled Input</label>
+          <input type="text" class="input" value="Disabled state" disabled />
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Password</label>
+          <input type="password" class="input" placeholder="••••••••" />
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Search</label>
+          <input type="search" class="input" placeholder="Search..." />
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Number</label>
+          <input type="number" class="input" placeholder="0" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="section">
+      <div class="section__kicker">Status</div>
+      <h2 class="section__title">Badges & Status Indicators</h2>
+      <p style="font-size: 16px; line-height: 1.6; color: var(--slate); margin-bottom: var(--s-4);">Badges signal status, tags, or categorical information. Use semantic colors for status badges.</p>
+
+      <div class="subsection-label">Default & Primary</div>
+      <div class="badge-row">
+        <span class="badge">Default</span>
+        <span class="badge">Neutral</span>
+        <span class="badge">Standard</span>
+      </div>
+
+      <div class="badge-row">
+        <span class="badge badge--primary">Primary</span>
+        <span class="badge badge--primary">Featured</span>
+        <span class="badge badge--primary">Active</span>
+      </div>
+
+      <div class="subsection-label">Semantic Colors</div>
+      <div class="badge-row">
+        <span class="badge badge--success"><span class="badge__dot"></span> Active</span>
+        <span class="badge badge--warning"><span class="badge__dot"></span> Pending</span>
+        <span class="badge badge--danger"><span class="badge__dot"></span> Critical</span>
+      </div>
+
+      <div class="subsection-label">Muted</div>
+      <div class="badge-row">
+        <span class="badge badge--muted">Inactive</span>
+        <span class="badge badge--muted">Archived</span>
+        <span class="badge badge--muted">Draft</span>
+      </div>
+    </section>
+
+    <!-- Typography Section -->
+    <section class="section">
+      <div class="section__kicker">Typography</div>
+      <h2 class="section__title">Type Scale & Styles</h2>
+
+      <div class="type-sample">
+        <div class="type-label">Heading 1 (32px, 600)</div>
+        <div class="type-content type-h1">Clarity through simplicity and consistent typography.</div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-label">Heading 2 (24px, 600)</div>
+        <div class="type-content type-h2">Each element follows an 8pt grid for rhythm.</div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-label">Heading 3 (18px, 600)</div>
+        <div class="type-content type-h3">Minimal design reduces cognitive load.</div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-label">Body (16px, 400)</div>
+        <div class="type-content type-body">The Clean design system emphasizes legibility and whitespace. Every component is stripped to its essentials, creating an interface that's easy to understand and use. Generous padding, clear hierarchy, and a limited color palette work together to reduce visual clutter.</div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-label">Small Body (14px, 400)</div>
+        <div class="type-content type-body-sm">Secondary text and supporting information use a smaller scale to create visual hierarchy without clutter. This keeps the interface focused on primary content.</div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-label">Monospace (13px)</div>
+        <div class="type-content type-mono">var(--signal: #3b82f6)</div>
+      </div>
+    </section>
+
+    <!-- Color Palette Section -->
+    <section class="section">
+      <div class="section__kicker">Colors</div>
+      <h2 class="section__title">Color System</h2>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__kicker">Primary</div>
+          <h3 class="card__title">Paper</h3>
+          <div style="width: 100%; height: 80px; background: var(--paper); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: var(--s-3);"></div>
+          <div class="type-mono">#ffffff</div>
+        </div>
+
+        <div class="card">
+          <div class="card__kicker">Text</div>
+          <h3 class="card__title">Ink</h3>
+          <div style="width: 100%; height: 80px; background: var(--ink); border-radius: var(--radius-sm); margin-bottom: var(--s-3);"></div>
+          <div class="type-mono">#111111</div>
+        </div>
+
+        <div class="card">
+          <div class="card__kicker">Secondary</div>
+          <h3 class="card__title">Slate</h3>
+          <div style="width: 100%; height: 80px; background: var(--slate); border-radius: var(--radius-sm); margin-bottom: var(--s-3);"></div>
+          <div class="type-mono">#666666</div>
+        </div>
+
+        <div class="card">
+          <div class="card__kicker">Accent</div>
+          <h3 class="card__title">Signal</h3>
+          <div style="width: 100%; height: 80px; background: var(--signal); border-radius: var(--radius-sm); margin-bottom: var(--s-3);"></div>
+          <div class="type-mono">#3b82f6</div>
+        </div>
+
+        <div class="card">
+          <div class="card__kicker">Background</div>
+          <h3 class="card__title">Bone</h3>
+          <div style="width: 100%; height: 80px; background: var(--bone); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: var(--s-3);"></div>
+          <div class="type-mono">#f5f5f5</div>
+        </div>
+
+        <div class="card">
+          <div class="card__kicker">Divider</div>
+          <h3 class="card__title">Border</h3>
+          <div style="width: 100%; height: 80px; background: var(--border); border-radius: var(--radius-sm); margin-bottom: var(--s-3);"></div>
+          <div class="type-mono">#e5e5e5</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Spacing Section -->
+    <section class="section">
+      <div class="section__kicker">Layout</div>
+      <h2 class="section__title">Spacing Scale</h2>
+      <p style="font-size: 16px; line-height: 1.6; color: var(--slate); margin-bottom: var(--s-5);">An 8pt baseline grid ensures consistency and rhythm throughout the system. All spacing values are multiples of 8.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--s-4);">
+        <div>
+          <div class="type-label">s-1</div>
+          <div style="width: 100%; height: 4px; background: var(--signal); margin-bottom: var(--s-2); border-radius: var(--radius-sm);"></div>
+          <div class="type-body-sm">4px</div>
+        </div>
+        <div>
+          <div class="type-label">s-2</div>
+          <div style="width: 100%; height: 8px; background: var(--signal); margin-bottom: var(--s-2); border-radius: var(--radius-sm);"></div>
+          <div class="type-body-sm">8px</div>
+        </div>
+        <div>
+          <div class="type-label">s-3</div>
+          <div style="width: 100%; height: 16px; background: var(--signal); margin-bottom: var(--s-2); border-radius: var(--radius-sm);"></div>
+          <div class="type-body-sm">16px</div>
+        </div>
+        <div>
+          <div class="type-label">s-4</div>
+          <div style="width: 100%; height: 24px; background: var(--signal); margin-bottom: var(--s-2); border-radius: var(--radius-sm);"></div>
+          <div class="type-body-sm">24px</div>
+        </div>
+        <div>

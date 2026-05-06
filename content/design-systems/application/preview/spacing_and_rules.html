@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: var(--s-8) var(--s-5);
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: var(--s-8);
+    }
+    .header__title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate);
+      margin-bottom: var(--s-5);
+    }
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 3px;
+      background: var(--signal);
+      border: none;
+      border-radius: 2px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: var(--s-7);
+    }
+    .section__label {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-4);
+      padding-bottom: var(--s-3);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 80px;
+      gap: var(--s-3);
+      align-items: center;
+      padding: var(--s-2) 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 28px;
+      display: flex;
+      align-items: center;
+    }
+    .spacing-row__bar {
+      height: 100%;
+      background: var(--signal);
+      border-radius: 4px;
+      opacity: 0.18;
+      min-width: 2px;
+      transition: opacity 0.15s ease;
+    }
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.35;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--slate);
+      text-align: right;
+    }
+
+    /* Rule weights */
+    .rule-demo {
+      padding: var(--s-4) 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: var(--s-3);
+    }
+    .rule-demo__name {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .rule-demo__spec {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--slate);
+    }
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 1px;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: var(--s-5);
+    }
+    .radius-item {
+      text-align: center;
+    }
+    .radius-item__box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 120px;
+      margin: 0 auto var(--s-3);
+      background: var(--surface);
+      border: 2px solid var(--signal);
+      opacity: 0.6;
+      transition: opacity 0.15s ease;
+    }
+    .radius-item:hover .radius-item__box {
+      opacity: 1;
+    }
+    .radius-item__name {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: var(--s-1);
+    }
+    .radius-item__value {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--slate);
+    }
+
+    /* Depth/elevation demos */
+    .depth-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--s-5);
+    }
+    .depth-item {
+      padding: var(--s-5);
+      background: var(--paper);
+      border-radius: var(--radius-md);
+      text-align: center;
+      transition: transform 0.15s ease;
+      border: 1px solid var(--border);
+    }
+    .depth-item:hover {
+      transform: translateY(-2px);
+    }
+    .depth-item__name {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+    .depth-item__spec {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--slate);
+      word-break: break-all;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate);
+      font-size: 16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border);
+      border-top-color: var(--signal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 600px) {
+      .page {
+        padding: var(--s-6) var(--s-3);
+      }
+      .spacing-row {
+        grid-template-columns: 80px 1fr 60px;
+        gap: var(--s-2);
+      }
+      .header__title {
+        font-size: 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    /* Default spacing scale */
+    const DEFAULT_SPACING = {
+      's-1': '4px',
+      's-2': '8px',
+      's-3': '16px',
+      's-4': '24px',
+      's-5': '32px',
+      's-6': '48px',
+      's-7': '64px',
+      's-8': '96px',
+    };
+
+    /* Default depth levels */
+    const DEFAULT_DEPTH = {
+      flat:     { name: 'Flat', treatment: 'none' },
+      border:   { name: 'Border', treatment: '1px solid var(--border)' },
+      elevated: { name: 'Elevated', treatment: '0 2px 8px rgba(0,0,0,0.08)' },
+    };
+
+    /* Default border radius */
+    const DEFAULT_RADIUS = {
+      none: '0',
+      sm:   '4px',
+      md:   '8px',
+      lg:   '16px',
+      full: '999px',
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.meta?.name || tokens.name || 'Design System';
+
+      /* Load Google Fonts if provided */
+      const gfUrl = tokens.googleFontsUrl || (tokens.fonts && tokens.fonts.googleUrl);
+      if (gfUrl) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = gfUrl;
+        document.head.appendChild(link);
+      }
+
+      /* Extract tokens */
+      const spacing = (tokens.spacing && tokens.spacing.scale) || tokens.spacing || DEFAULT_SPACING;
+      const radii   = tokens.radii || tokens.radius || tokens.borderRadius || DEFAULT_RADIUS;
+      
+      /* Parse depth levels */
+      let depth = DEFAULT_DEPTH;
+      if (tokens.depth && Array.isArray(tokens.depth)) {
+        depth = {};
+        tokens.depth.forEach(item => {
+          const key = (item.name || '').toLowerCase().replace(/\s+/g, '-') || 'level-' + item.level;
+          depth[key] = {
+            name: item.name,
+            treatment: item.treatment,
+          };
+        });
+      } else if (tokens.depth && typeof tokens.depth === 'object') {
+        depth = tokens.depth;
+      }
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Spacing &amp; Rules</h1>';
+      html += '  <p class="header__subtitle">The rhythm and structure of ' + esc(name) + '.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ---- Spacing scale ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, v]) => parseFloat(v) || 0), 1);
+
+      spacingEntries.forEach(([key, value]) => {
+        const px = parseFloat(value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 1);
+        html += '<div class="spacing-row">';
+        html += '  <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* ---- Rule weights / Depth levels ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth &amp; Elevation</div>';
+
+      const depthEntries = Object.entries(depth);
+      depthEntries.forEach(([key, val]) => {
+        const name      = (typeof val === 'object' ? val.name : null) || key;
+        const treatment = (typeof val === 'object' ? val.treatment : val) || 'none';
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <span class="rule-demo__name">' + esc(name) + '</span>';
+        html += '    <span class="rule-demo__spec">' + esc(treatment) + '</span>';
+        html += '  </div>';
+
+        /* Render the treatment visually */
+        if (treatment === 'none') {
+          html += '  <hr class="rule-demo__line" style="height:1px;background:var(--border)">';
+        } else if (treatment.includes('solid')) {
+          /* Parse border rule */
+          const match = treatment.match(/(\d+)px/);
+          const weight = match ? match[1] : '1';
+          html += '  <hr class="rule-demo__line" style="height:' + weight + 'px;background:var(--border)">';
+        } else if (treatment.includes('rgba') || treatment.includes('shadow')) {
+          /* Shadow treatment */
+          const sampleBox = document.createElement('div');
+          sampleBox.style.height = '32px';
+          sampleBox.style.background = 'var(--surface)';
+          sampleBox.style.borderRadius = 'var(--radius-md)';
+          sampleBox.style.boxShadow = treatment;
+          html += '  <div style="height:40px;display:flex;align-items:center;justify-content:center">' +
+                  '    <div style="width:60%;height:32px;background:var(--surface);border-radius:var(--radius-md);box-shadow:' + esc(treatment) + '"></div>' +
+                  '  </div>';
+        } else {
+          html += '  <hr class="rule-demo__line" style="height:1px;background:var(--border)">';
+        }
+
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* ---- Border radius ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+      html += '  <div class="radius-grid">';
+
+      Object.entries(radii).forEach(([key, value]) => {
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__box" style="border-radius:' + esc(value) + '"></div>';
+        html += '  <div class="radius-item__name">' + esc(key) + '</div>';
+        html += '  <div class="radius-item__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

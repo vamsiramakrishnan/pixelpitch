@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Bento</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--ink, #111111);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--signal, #3b82f6);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .traits-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 20px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      background: var(--bone, #f5f5f5);
+      border-radius: var(--radius-md, 8px);
+      border-left: 4px solid var(--signal, #3b82f6);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: var(--card-border, 1px solid #e5e5e5);
+      border-radius: var(--card-radius, 8px);
+      padding: 32px;
+      transition: all 200ms ease;
+    }
+
+    .dd-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-card__icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+      background: currentColor;
+      color: white;
+    }
+
+    .dd-card__icon--dont {
+      background: var(--signal, #3b82f6);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: var(--radius-md, 8px);
+      overflow: hidden;
+      height: 120px;
+      border: var(--card-border, 1px solid #e5e5e5);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.4;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--bone, #f5f5f5);
+      border: var(--card-border, 1px solid #e5e5e5);
+      border-radius: var(--card-radius, 8px);
+      padding: 48px 40px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 54px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 24px;
+      border-top: 2px solid var(--signal, #3b82f6);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--slate, #666666);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 700;
+      color: var(--ink, #111111);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--bone, #f5f5f5);
+      border: var(--card-border, 1px solid #e5e5e5);
+      border-radius: var(--card-radius, 8px);
+      padding: 32px;
+      max-width: 840px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+    }
+
+    /* ──── Grid Pattern Visual ──── */
+    .grid-pattern {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .grid-pattern {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .grid-cell {
+      aspect-ratio: 1;
+      background: var(--bone, #f5f5f5);
+      border: var(--card-border, 1px solid #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate, #666666);
+      transition: all 200ms ease;
+    }
+
+    .grid-cell:hover {
+      border-color: var(--signal, #3b82f6);
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.12);
+      transform: translateY(-2px);
+    }
+
+    /* ──── Spacing Showcase ──── */
+    .spacing-demo {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .spacing-demo {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .spacing-block {
+      background: var(--paper, #ffffff);
+      border: var(--card-border, 1px solid #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      padding: 24px;
+    }
+
+    .spacing-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .spacing-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .spacing-item__swatch {
+      width: 60px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--signal, #3b82f6), rgba(59, 130, 246, 0.2));
+      border-radius: var(--radius-sm, 4px);
+      flex-shrink: 0;
+    }
+
+    .spacing-item__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate, #666666);
+    }
+
+    /* ──── Radius Showcase ──── */
+    .radius-showcase {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .radius-showcase {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .radius-item {
+      text-align: center;
+    }
+
+    .radius-box {
+      width: 100%;
+      aspect-ratio: 1;
+      background: var(--signal, #3b82f6);
+      margin-bottom: 12px;
+      transition: all 200ms ease;
+    }
+
+    .radius-item:hover .radius-box {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.24);
+    }
+
+    .radius-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate, #666666);
+      margin-bottom: 4px;
+    }
+
+    .radius-value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      color: var(--slate, #666666);
+      opacity: 0.7;
+    }
+
+    /* ──── Motion Demo ──── */
+    .motion-demo {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .motion-demo {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .motion-item {
+      text-align: center;
+    }
+
+    .motion-box {
+      width: 100%;
+      height: 80px;
+      background: var(--signal, #3b82f6);
+      border-radius: var(--radius-md, 8px);
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 200ms ease;
+    }
+
+    .motion-box:hover {
+      transform: scale(1.08);
+    }
+
+    .motion-box--press:active {
+      transform: scale(0.95);
+    }
+
+    .motion-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate, #666666);
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 18px;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#3b82f6">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const spacing = tokens.spacing?.scale || {};
+      const radii = tokens.radii || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">Modular, <span>Organized</span>, Scannable</h1>';
+      html += '  <p class="header__subtitle">Bento is a layout system built on grid harmony, subtle depth, and purposeful contrast. Card-like blocks. Clear hierarchy. Responsive by design.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Bento embraces modular composition. Content lives in card containers with consistent padding, soft rounded corners, and subtle borders. The grid breathes through generous spacing. Primary blue (#3B82F6) signals interaction and focus. Depth comes from minimal shadows and refined borders, never heavy effects. Every element is built for scanning and quick comprehension. Sans-serif typography, smooth transitions (150–250ms), and clear state indicators make navigation intuitive and responsive.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li><strong>Grid-Based Layout</strong><br>Modular, composable card blocks with consistent spacing</li>';
+      html += '    <li><strong>Soft Corners</strong><br>8px default radius balances modern warmth with clarity</li>';
+      html += '    <li><strong>Subtle Depth</strong><br>Minimal shadows (2px blur, 8% opacity) and 1px borders</li>';
+      html += '    <li><strong>Signal Blue</strong><br>Primary color (#3B82F6) for interaction, focus, and hierarchy</li>';
+      html += '    <li><strong>Clean Sans-Serif</strong><br>System fonts for optimal performance and familiarity</li>';
+      html += '    <li><strong>Breathing Space</strong><br>8–64px spacing scale creates clear information density</li>';
+      html += '    <li><strong>Explicit States</strong><br>Hover, focus, active, disabled, loading — all distinct</li>';
+      html += '    <li><strong>Responsive Cards</strong><br>Blocks adapt fluidly from 1 column to 4+ columns</li>';
+      html += '    <li><strong>Smooth Motion</strong><br>150–250ms transitions with purposeful easing curves</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon" style="background: #10b981;">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use 8px base spacing for consistent rhythm across all layouts</li>';
+      html += '      <li>Apply 8px radius by default to cards, buttons, and containers</li>';
+      html += '      <li>Signal interaction with Primary blue (#3B82F6)</li>';
+      html += '      <li>Combine borders and minimal shadows for depth, never both alone</li>';
+      html += '      <li>Group related content in distinct card blocks</li>';
+      html += '      <li>Use system fonts (system-ui) for performance and legibility</li>';
+      html += '      <li>Animate with 150–250ms easing for smooth, responsive feel</li>';
+      html += '      <li>Ensure all states are visually distinct (hover, focus, active)</li>';
+      html += '      <li>Design grid-first — blocks should stack and flex</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Mix uneven spacing — always use the 8px scale</li>';
+      html += '      <li>Use sharp corners (border-radius: 0) for primary blocks</li>';
+      html += '      <li>Layer multiple shadows — one subtle shadow maximum</li>';
+      html += '      <li>Introduce new colors outside the core semantic palette</li>';
+      html += '      <li>Use serif fonts or script typefaces in UI chrome</li>';
+      html += '      <li>Animate with durations longer than 400ms without purpose</li>';
+      html += '      <li>Leave hover/focus states ambiguous or unmapped</li>';
+      html += '      <li>Force fixed layouts — responsive is non-negotiable</li>';
+      html += '      <li>Hide disabled states or conflate them with inactive</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#111111' : '#ffffff';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Grid Pattern ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Modular Grid</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.6; color: var(--slate); margin-bottom: 24px; max-width: 840px;">Bento arranges content in a responsive grid of cards. Four-column on desktop, two-column on tablet, one-column on mobile. Consistent spacing and rounded corners create visual coherence. Hover states elevate cards with subtle shadows.</p>';
+      html += '  <div class="grid-pattern">';
+      for (let i = 1; i <= 8; i++) {
+        html += '    <div class="grid-cell">Card ' + i + '</div>';
+      }
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Typography Pairing ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Display + Body</div>';
+      html += '    <div class="type-pairing__display">Clean sans-serif for <span>clarity</span> and scale</div>';
+
+      html += '    <div class="type-pairing__body">System-ui typeface family ensures optimal rendering across platforms. Bold, confident display headlines set the hierarchy. Regular-weight body text maximizes legibility at all sizes. A single typeface family used at different weights and sizes creates a cohesive, modern aesthetic. No serif fonts in the UI layer.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Display Font</span>';
+      html += '        system-ui, 700 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Body Font</span>';
+      html += '        system-ui, 400 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Mono Font</span>';
+      html += '        ui-monospace, 600 weight';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Spacing Scale ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.6; color: var(--slate); margin-bottom: 24px; max-width: 840px;">An 8px base scale governs all spacing decisions. Gaps, padding, margins — all derive from multiples of 8. This creates rhythm, predictability, and responsive scaling.</p>';
+      html += '  <div class="spacing-demo">';
+
+      html += '    <div class="spacing-block">';
+      html += '      <div class="spacing-item">';
+      html += '        <div class="spacing-item__swatch"></div>';
+      html += '        <div class="spacing-item__label">s-1: 4px (half unit)</div>';
+      html += '      </div>';
+      html += '      <div class="spacing-item">';
+      html += '        <div class="spacing-item__swatch" style="width: 100px;"></div>';
+      html += '        <div class="spacing-item__label">s-2: 8px (base)</div>';
+      html += '      </div>';
+      html += '      <div class="spacing-item">';
+      html += '        <div class="spacing-item__swatch" style="width: 140px;"></div>';
+      html += '        <div class="spacing-item__label">s-3: 16px (2x)</div>';
+      html += '      </div>';
+      html += '      <div class="spacing-item">';
+      html += '        <div class="spacing-item__swatch" style="width: 180px;"></div>';
+      html += '        <div class="spacing-item__label">s-4: 24px (3x)</div>';
+      html += '      </div>';
+      html += '    </div>';
+
+      html += '    <div class="spacing-block">';
+      html += '      <div class="spacing-item">';
+      html += '        <div class="spacing-item__swatch" style="width: 220px;"></div>';
+      html += '        <div class="spacing-item__label">s-5: 32px (4x)</div>';
+      html += '      </div>';
+      html += '      <div class="spacing-item">';
+      html += '        <div class="spacing-item__swatch" style="width: 280px;"></div>';
+      html += '        <div class="spacing-item__label">s-6: 48px (6x)</div>';
+      html += '      </div>';
+      html += '      <div class="spacing-item">';
+      html += '        <div class="spacing-item__swatch" style="width: 340px;"></div>';
+      html += '        <div class="spacing-item__label">s-7: 64px (8x)</div>';
+      html += '      </div>';
+      html += '      <div class="spacing-item">';
+      html += '        <div class="spacing-item__swatch" style="width: 400px;"></div>';
+      html += '        <div class="spacing-item__label">s-8: 96px (12x)</div>';
+      html += '      </div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Radius Scale ──── */
+      html += '<div class="section">';
+      html +=

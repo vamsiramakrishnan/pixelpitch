@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — Mastercard</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #f3f0ee);
+      color: var(--ink, #141413);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 48px 24px;
+      }
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 96px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.56px;
+      text-transform: uppercase;
+      color: var(--slate, #696969);
+      margin-bottom: 16px;
+    }
+
+    .header__kicker::before {
+      content: '• ';
+      margin-right: 8px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 64px;
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: -1.28px;
+      color: var(--ink, #141413);
+      margin-bottom: 24px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 450;
+      line-height: 1.4;
+      color: var(--slate, #696969);
+      max-width: 680px;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 96px;
+      height: 2px;
+      background: var(--ink, #141413);
+      border: none;
+      margin: 0;
+    }
+
+    /* Font families section */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+      margin-bottom: 96px;
+      margin-top: 64px;
+    }
+
+    .font-card {
+      background: var(--color-lifted-cream, #fcfbfa);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 64px);
+      padding: 32px;
+    }
+
+    .font-card__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.56px;
+      text-transform: uppercase;
+      color: var(--slate, #696969);
+      margin-bottom: 12px;
+    }
+
+    .font-card__label::before {
+      content: '• ';
+      margin-right: 8px;
+    }
+
+    .font-card__name {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 32px;
+      font-weight: 500;
+      line-height: 1.2;
+      letter-spacing: -0.64px;
+      color: var(--ink, #141413);
+      margin-bottom: 8px;
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #696969);
+      word-break: break-word;
+      line-height: 1.4;
+    }
+
+    /* Character set block */
+    .charmap-block {
+      background: var(--color-lifted-cream, #fcfbfa);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 64px);
+      padding: 48px;
+      margin-bottom: 96px;
+    }
+
+    .charmap-block__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.56px;
+      text-transform: uppercase;
+      color: var(--slate, #696969);
+      margin-bottom: 24px;
+    }
+
+    .charmap-block__label::before {
+      content: '• ';
+      margin-right: 8px;
+    }
+
+    .charmap-block__chars {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 32px;
+      font-weight: 500;
+      line-height: 1.8;
+      letter-spacing: 0.02em;
+      color: var(--ink, #141413);
+      word-break: break-word;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.56px;
+      text-transform: uppercase;
+      color: var(--slate, #696969);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--ink, #141413);
+    }
+
+    .section-label::before {
+      content: '• ';
+      margin-right: 8px;
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 800px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: -0.36px;
+      color: var(--ink, #141413);
+      margin-bottom: 8px;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 1.8;
+      color: var(--slate, #696969);
+      letter-spacing: 0;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--ink, #141413);
+      overflow-wrap: break-word;
+      word-spacing: 0.05em;
+    }
+
+    /* Ramp section */
+    .ramp-section {
+      margin-bottom: 96px;
+    }
+
+    /* Drop cap demo */
+    .dropcap-demo {
+      margin-bottom: 96px;
+    }
+
+    .dropcap-demo__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.56px;
+      text-transform: uppercase;
+      color: var(--slate, #696969);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--ink, #141413);
+    }
+
+    .dropcap-demo__label::before {
+      content: '• ';
+      margin-right: 8px;
+    }
+
+    .dropcap-container {
+      background: var(--color-lifted-cream, #fcfbfa);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 64px);
+      padding: 48px;
+      max-width: 680px;
+    }
+
+    .dropcap-para {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 450;
+      line-height: 1.4;
+      color: var(--ink, #141413);
+      margin: 0;
+      text-align: left;
+    }
+
+    .dropcap {
+      float: left;
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 128px;
+      font-weight: 500;
+      line-height: 0.85;
+      letter-spacing: -2.56px;
+      color: var(--signal-orange, #cf4500);
+      margin-right: 8px;
+      margin-top: -8px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 160px 48px;
+      color: var(--slate, #696969);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 450;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 24px auto 0;
+      border: 2px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal-orange, #cf4500);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'A global network built on trust and precision.',
+      'Every transaction carries responsibility and care.',
+      'Payments should feel seamless, never mechanical.',
+      'Warmth in every interaction, even at scale.',
+      'One billion cards, one mission: connected commerce.',
+      'Editorial clarity runs through our entire system.',
+      'Warmth without compromise, strength without edges.',
+      'The cream canvas supports every shape we make.',
+      'Orbits and circles—motion even in stillness.',
+      'Design carries the entire brand forward.',
+    ];
+
+    const DROPCAP_TEXT = 'Mastercard's typography lives in MarkForMC—a geometric sans designed exclusively for the brand. Every headline carries the confidence of the payments network itself. Weight 450 is load-bearing across body copy, softer than 400 but firmer than light, creating an unusually warm reading tone. Headlines lock together with tight negative tracking, -2% as standard, giving display text its editorial density. This is not decorative typography. This is structural. The warm cream canvas—a muted putty-cream rather than white or gray—echoes the paper of premium annual reports. On that canvas, everything that matters carries an oversized radius: heroes at 40 points, cards fully pill-shaped, service images cropped into circular orbits, buttons completing the visual gesture. Orbit and trajectory connect every element. Circular portraits are dotted with satellite microinteractions, attached like moons to the perimeter, while thin hand-drawn-feeling orange arcs span entire viewport widths implying constellation rather than list. This is simultaneously institutional and editorial—exactly the tension Mastercard wants to hold.';
+
+    fetch('../tokens.json')
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:var(--signal-orange, #cf4500)">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Design System';
+      const summary = tokens.meta?.summary || '';
+
+      const ramp = tokens.typography?.ramp || [];
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Type Specimen</div>';
+      html += '  <h1 class="header__title">' + esc(title) + '</h1>';
+      html += '  <p class="header__subtitle">' + esc(summary) + '</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      const families = [
+        { label: 'Display', name: 'MarkForMC', fallback: 'SofiaSans, Arial, sans-serif', note: 'Proprietary geometric sans' },
+        { label: 'Body', name: 'MarkForMC', fallback: 'SofiaSans, Arial, sans-serif', note: 'Weight 450 for soft reading' },
+        { label: 'Official', name: 'MarkOffcForMC', fallback: 'SofiaSans, Arial, sans-serif', note: 'Legal text and forms' },
+        { label: 'Monospace', name: 'JetBrains Mono', fallback: 'ui-monospace, Menlo, monospace', note: 'Metadata and tokens' }
+      ];
+
+      html += '<div class="font-families">';
+      families.forEach(f => {
+        html += '<div class="font-card">';
+        html += '  <div class="font-card__label">' + esc(f.label) + '</div>';
+        html += '  <div class="font-card__name">' + esc(f.name) + '</div>';
+        html += '  <div class="font-card__fallback">' + esc(f.fallback) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      /* Character set */
+      html += '<div class="charmap-block">';
+      html += '  <div class="charmap-block__label">Character Set — MarkForMC</div>';
+      html += '  <div class="charmap-block__chars">';
+      html += '    AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>';
+      html += '    0123456789 !@#$%&amp;*()–—''"&ldquo;&rdquo;';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Type ramp */
+      if (ramp.length) {
+        html += '<div class="ramp-section">';
+        html += '<div class="section-label">Type Ramp</div>';
+        ramp.forEach((entry, i) => {
+          html += rampRow(entry, i);
+        });
+        html += '</div>';
+      }
+
+      /* Drop cap demo */
+      html += '<div class="dropcap-demo">';
+      html += '<div class="dropcap-demo__label">Drop Cap — Five-Line MarkForMC 500, Signal Orange</div>';
+      html += '<div class="dropcap-container">';
+      const firstChar = DROPCAP_TEXT.charAt(0);
+      const restText = DROPCAP_TEXT.substring(1);
+      html += '<p class="dropcap-para">';
+      html += '<span class="dropcap">' + esc(firstChar) + '</span>';
+      html += esc(restText);
+      html += '</p>';
+      html += '</div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(entry, idx) {
+      const role = entry.role || 'Role ' + (idx + 1);
+      const size = entry.size || '16px';
+      const weight = entry.weight || 450;
+      const lh = entry.lineHeight || '22.4';
+      const ls = entry.letterSpacing || '0';
+
+      let fontFamily = 'var(--font-body)';
+      if (entry.fontKey === 'display') fontFamily = 'var(--font-display)';
+      else if (entry.fontKey === 'mono') fontFamily = 'var(--font-mono)';
+      else if (entry.fontKey === 'ui') fontFamily = 'var(--font-body)';
+
+      const sizeNum = parseFloat(size);
+      const sampleIdx = idx % EDITORIAL_SAMPLES.length;
+      let sample = EDITORIAL_SAMPLES[sampleIdx];
+
+      /* Truncate very large samples */
+      if (sizeNum >= 48) {
+        sample = sample.split('.')[0].slice(0, 50);
+        if (!sample.endsWith('.')) sample += '.';
+      }
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + 'px;';
+      fontStyle += 'font-family:' + fontFamily + ';';
+      if (ls && ls !== '0' && ls !== 'normal') fontStyle += 'letter-spacing:' + ls + ';';
+
+      let meta = esc(size) + ' / ' + esc(String(weight));
+      meta += '\n' + fontFamilyLabel(entry.fontKey);
+      meta += '\nline-height: ' + esc(String(lh)) + 'px';
+      if (ls && ls !== '0' && ls !== 'normal') meta += '\nletter-spacing: ' + esc(ls);
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(sample) + '</div>' +
+        '</div>';
+    }
+
+    function fontFamilyLabel(key) {
+      const map = {
+        'display': 'MarkForMC',
+        'body': 'MarkForMC',
+        'mono': 'JetBrains Mono',
+        'ui': 'MarkForMC'
+      };
+      return map[key] || 'Unknown';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

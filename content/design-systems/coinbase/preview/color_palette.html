@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Palette – Coinbase Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'CoinbaseText', system-ui, sans-serif);
+      background: var(--paper, #0a0b0d);
+      color: var(--ink, #0a0b0d);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    .page {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 80px;
+    }
+    .header__title {
+      font-family: var(--font-display, 'CoinbaseDisplay', system-ui, sans-serif);
+      font-size: 72px;
+      font-weight: 400;
+      line-height: 1.00;
+      letter-spacing: -0.01em;
+      color: var(--color-pure-white, #ffffff);
+      margin-bottom: 16px;
+    }
+    .header__subtitle {
+      font-size: 20px;
+      color: var(--slate, #666666);
+      max-width: 720px;
+      line-height: 1.5;
+      font-weight: 400;
+    }
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: var(--signal, #0052ff);
+      border: none;
+      margin-top: 32px;
+      border-radius: 2px;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-display, 'CoinbaseDisplay', system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 40px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--surface, #282b31);
+    }
+
+    /* Swatch grid */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 32px;
+      margin-bottom: 72px;
+    }
+
+    .swatch {
+      background: var(--surface, #282b31);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .swatch:hover {
+      box-shadow: 0 8px 32px rgba(0, 82, 255, 0.15);
+      border-color: var(--signal, #0052ff);
+    }
+
+    .swatch__chip {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 16px;
+    }
+    .swatch__chip-contrast {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      line-height: 1.4;
+      backdrop-filter: blur(8px);
+    }
+
+    .swatch__meta {
+      padding: 20px;
+    }
+    .swatch__var {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      color: var(--color-pure-white, #ffffff);
+      word-break: break-all;
+      margin-bottom: 6px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    .swatch__hex {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      margin-bottom: 10px;
+    }
+    .swatch__role {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+    .swatch__contrast-label {
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 8px;
+      letter-spacing: 0.02em;
+    }
+    .contrast-pass { color: #10b981; }
+    .contrast-fail { color: #ef4444; }
+    .contrast-aa-large { color: #f59e0b; }
+
+    /* Usage demo section */
+    .usage-section {
+      margin-top: 80px;
+      padding: 48px;
+      background: var(--surface, #282b31);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+    }
+    .usage-section h2 {
+      font-family: var(--font-display, 'CoinbaseDisplay', system-ui, sans-serif);
+      font-size: 32px;
+      font-weight: 400;
+      line-height: 1.1;
+      color: var(--color-pure-white, #ffffff);
+      margin-bottom: 32px;
+    }
+    .usage-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 48px;
+    }
+    .usage-card {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .usage-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-pure-white, #ffffff);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .usage-example {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+    }
+    .usage-swatch {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .usage-label {
+      font-size: 13px;
+      color: var(--slate, #666666);
+    }
+
+    /* WCAG summary */
+    .wcag-summary {
+      margin-top: 72px;
+      padding: 48px;
+      background: var(--surface, #282b31);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+    }
+    .wcag-summary h2 {
+      font-family: var(--font-display, 'CoinbaseDisplay', system-ui, sans-serif);
+      font-size: 32px;
+      font-weight: 400;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      color: var(--color-pure-white, #ffffff);
+    }
+    .wcag-note {
+      font-size: 14px;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    .wcag-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+    .wcag-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 24px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .wcag-count {
+      font-size: 48px;
+      font-weight: 600;
+      color: var(--signal, #0052ff);
+      margin-bottom: 8px;
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+    }
+    .wcag-label {
+      font-size: 13px;
+      color: var(--slate, #666666);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 600;
+    }
+    .wcag-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-top: 12px;
+    }
+    .wcag-badge--pass { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .wcag-badge--fail { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    .wcag-badge--aa-large { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 20px auto 0;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top-color: var(--signal, #0052ff);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .page { padding: 48px 24px; }
+      .header__title { font-size: 48px; }
+      .swatch-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; }
+      .usage-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    /* ────────────────────────────────────────────────────────────────── */
+    /* WCAG 2.1 Contrast Ratio Calculation                                */
+    /* ────────────────────────────────────────────────────────────────── */
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function luminance([r, g, b]) {
+      const [rs, gs, bs] = [r, g, b].map(c => {
+        c /= 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    }
+
+    function contrastRatio(hex1, hex2) {
+      const l1 = luminance(hexToRgb(hex1));
+      const l2 = luminance(hexToRgb(hex2));
+      const lighter = Math.max(l1, l2);
+      const darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function wcagLevel(ratio) {
+      if (ratio >= 7) return { label: 'AAA', cls: 'pass' };
+      if (ratio >= 4.5) return { label: 'AA', cls: 'pass' };
+      if (ratio >= 3) return { label: 'AA Large', cls: 'aa-large' };
+      return { label: 'Fail', cls: 'fail' };
+    }
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* Core Color Roles                                                   */
+    /* ────────────────────────────────────────────────────────────────── */
+    const CORE_ROLES = {
+      paper:   'Primary background & base surface',
+      ink:     'Primary text color',
+      slate:   'Secondary & muted text',
+      signal:  'Brand accent, links & CTAs',
+      bone:    'Subtle background tint',
+      border:  'Dividers & outlines',
+      surface: 'Card & container fill',
+    };
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* Fetch & Render                                                     */
+    /* ────────────────────────────────────────────────────────────────── */
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#ef4444">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const systemName = tokens.meta?.title || 'Design System';
+      const rawColors = tokens.colors || {};
+      const paperHex = rawColors.paper || '#0a0b0d';
+
+      /* Flatten nested colors */
+      const colors = {};
+      for (const [k, v] of Object.entries(rawColors)) {
+        if (typeof v === 'string') { colors[k] = v; }
+        else if (v && typeof v === 'object') {
+          for (const [sk, sv] of Object.entries(v)) {
+            if (typeof sv === 'string') colors[k + '-' + sk] = sv;
+          }
+        }
+      }
+
+      /* Split core vs extended */
+      const coreKeys = Object.keys(CORE_ROLES).filter(k => colors[k]);
+      const extendedKeys = Object.keys(colors)
+        .filter(k => !CORE_ROLES[k] && typeof colors[k] === 'string')
+        .sort();
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">' + esc(systemName) + '</h1>';
+      html += '  <p class="header__subtitle">Color palette defining the visual identity. ' + (coreKeys.length + extendedKeys.length) + ' tokens across core and extended palette.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Core palette */
+      if (coreKeys.length) {
+        html += '<div class="section-label">Core Palette</div>';
+        html += '<div class="swatch-grid">';
+        coreKeys.forEach(key => {
+          html += swatchCard(key, colors[key], paperHex, CORE_ROLES[key]);
+        });
+        html += '</div>';
+      }
+
+      /* Extended palette */
+      if (extendedKeys.length) {
+        html += '<div class="section-label">Extended Palette</div>';
+        html += '<div class="swatch-grid">';
+        extendedKeys.forEach(key => {
+          const displayKey = key.replace(/-/g, '-').split('-').join(' ');
+          html += swatchCard(key, colors[key], paperHex, formatRole(displayKey));
+        });
+        html += '</div>';
+      }
+
+      /* Usage demo */
+      html += usageDemo(colors);
+
+      /* WCAG summary */
+      html += wcagSummary(colors, paperHex);
+
+      app.innerHTML = html;
+    }
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* Swatch Card                                                         */
+    /* ────────────────────────────────────────────────────────────────── */
+    function swatchCard(key, hex, paperHex, role) {
+      const ratio = contrastRatio(hex, paperHex);
+      const level = wcagLevel(ratio);
+      const chipTextColor = luminance(hexToRgb(hex)) > 0.5 ? '#0a0b0d' : '#ffffff';
+      const chipBadgeBg = luminance(hexToRgb(hex)) > 0.5
+        ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.15)';
+
+      return '' +
+        '<div class="swatch">' +
+        '  <div class="swatch__chip" style="background:' + hex + '">' +
+        '    <span class="swatch__chip-contrast" style="color:' + chipTextColor +
+             ';background:' + chipBadgeBg + '">' + ratio.toFixed(2) + ':1</span>' +
+        '  </div>' +
+        '  <div class="swatch__meta">' +
+        '    <div class="swatch__var">--' + esc(key) + '</div>' +
+        '    <div class="swatch__hex">' + esc(hex) + '</div>' +
+        '    <div class="swatch__role">' + esc(role) + '</div>' +
+        '    <div class="swatch__contrast-label contrast-' + level.cls + '">' +
+             'WCAG ' + level.label + '</div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* Usage Demo                                                          */
+    /* ────────────────────────────────────────────────────────────────── */
+    function usageDemo(colors) {
+      const signal = colors.signal || '#0052ff';
+      const paperHex = colors.paper || '#0a0b0d';
+      const ink = colors.ink || '#0a0b0d';
+      const slate = colors.slate || '#666666';
+      const bone = colors.bone || '#eef0f3';
+      const surface = colors.surface || '#282b31';
+
+      return '' +
+        '<div class="usage-section">' +
+        '  <h2>Color in Use</h2>' +
+        '  <div class="usage-grid">' +
+        '    <div class="usage-card">' +
+        '      <h3>Primary Accent</h3>' +
+        '      <div class="usage-example">' +
+        '        <div class="usage-swatch" style="background:' + signal + '"></div>' +
+        '        <div class="usage-label">Coinbase Blue used for brand CTAs, links, and accent elements.</div>' +
+        '      </div>' +
+        '    </div>' +
+        '    <div class="usage-card">' +
+        '      <h3>Text Hierarchy</h3>' +
+        '      <div class="usage-example">' +
+        '        <div class="usage-swatch" style="background:' + ink + '"></div>' +
+        '        <div class="usage-label">Primary ink for headlines and body text.</div>' +
+        '      </div>' +
+        '      <div class="usage-example">' +
+        '        <div class="usage-swatch" style="background:' + slate + '"></div>' +
+        '        <div class="usage-label">Slate for secondary, muted, and metadata text.</div>' +
+        '      </div>' +
+        '    </div>' +
+        '    <div class="usage-card">' +
+        '      <h3>Surfaces</h3>' +
+        '      <div class="usage-example">' +
+        '        <div class="usage-swatch" style="background:' + bone + '"></div>' +
+        '        <div class="usage-label">Bone for subtle background tints and dividers.</div>' +
+        '      </div>' +
+        '      <div class="usage-example">' +
+        '        <div class="usage-swatch" style="background:' + surface + '"></div>' +
+        '        <div class="usage-label">Surface for card and container fill.</div>' +
+        '      </div>' +
+        '    </div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* WCAG Compliance Summary                                            */
+    /* ────────────────────────────────────────────────────────────────── */
+    function wcagSummary(colors, paperHex) {
+      const keys = Object.keys(colors);
+      let passAAA = 0, passAA = 0, passAALarge = 0, fail = 0;
+
+      keys.forEach(k => {
+        const ratio = contrastRatio(colors[k], paperHex);
+        if (ratio >= 7) passAAA++;
+        else if (ratio >= 4.5) passAA++;
+        else if (ratio >= 3) passAALarge++;
+        else fail++;
+      });
+
+      const total = keys.length;
+
+      return '' +
+        '<div class="wcag-summary">' +
+        '  <h2>WCAG 2.1 Compliance</h2>' +
+        '  <p class="wcag-note">Contrast ratios measured against the paper background (' + esc(paperHex) + ') per WCAG 2.1 Level AA standards.</p>' +
+        '  <div class="wcag-grid">' +
+        '    <div class="wcag-card">' +
+        '      <div class="wcag-count">' + passAAA + '</div>' +
+        '      <div class="wcag-label">AAA (7:1)</div>' +
+        '      <span class="wcag-badge wcag-badge--pass">Enhanced</span>' +
+        '    </div>' +
+        '    <div class="wcag-card">' +
+        '      <div class="wcag-count">' + passAA + '</div>' +
+        '      <div class="wcag-label">AA (4.5:1)</div>' +
+        '      <span class="wcag-badge wcag-badge--pass">Standard</span>' +
+        '    </div>' +
+        '    <div class="wcag-card">' +
+        '      <div class="wcag-count">' + passAALarge + '</div>' +
+        '      <div class="wcag-label">AA Large (3:1)</div>' +
+        '      <span class="wcag-badge wcag-badge--aa-large">Large text only</span>' +
+        '    </div>' +
+        '    <div class="wcag-card">' +
+        '      <div class="wcag-count">' + fail + '</div>' +
+        '      <div class="wcag-label">Below threshold</div>' +
+        '      <span class="wcag-badge ' + (fail > 0 ? 'wcag-badge--fail' : 'wcag-badge--pass') + '">' + (fail > 0 ? 'At risk' : 'None') + '</span>' +
+        '    </div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* Utilities                                                          */
+    /* ────────────────────────────────────────────────────────────────── */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function formatRole(str) {
+      return str
+        .replace(/([a-z])([A-Z])/g, '$1 $2')
+        .replace(/[-_]/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase())
+        .trim();
+    }
+  </script>
+</body>
+</html>

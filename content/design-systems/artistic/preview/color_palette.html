@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Palette — Artistic Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+    }
+    .header__title {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 52px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+    .header__subtitle {
+      font-size: 20px;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+    .header__meta {
+      display: flex;
+      gap: 32px;
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--slate, #666666);
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+    }
+    .header__rule {
+      display: block;
+      width: 72px;
+      height: 4px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin-top: 28px;
+      border-radius: 2px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 56px;
+    }
+    .section-label {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 28px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* Swatch grid */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 28px;
+      margin-bottom: 0;
+    }
+
+    .swatch {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: box-shadow 0.25s cubic-bezier(0.2, 0.3, 0.25, 0.9);
+    }
+    .swatch:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    }
+
+    .swatch__chip {
+      width: 100%;
+      aspect-ratio: 16 / 12;
+      position: relative;
+      overflow: hidden;
+    }
+    .swatch__chip-contrast {
+      position: absolute;
+      bottom: 10px;
+      right: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 5px;
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      backdrop-filter: blur(8px);
+    }
+
+    .swatch__meta {
+      padding: 16px 18px 18px;
+    }
+    .swatch__var {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      word-break: break-all;
+      margin-bottom: 6px;
+      letter-spacing: 0.01em;
+    }
+    .swatch__hex {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      color: var(--slate, #666666);
+      margin-bottom: 8px;
+      letter-spacing: 0.01em;
+    }
+    .swatch__role {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--slate, #666666);
+      margin-bottom: 8px;
+    }
+    .swatch__contrast-label {
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 6px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .contrast-pass { color: #16a34a; }
+    .contrast-fail { color: #dc2626; }
+    .contrast-aa-large { color: #d97706; }
+
+    /* Usage section */
+    .usage-section {
+      margin-top: 72px;
+      padding-top: 56px;
+      border-top: 2px solid var(--border, #e5e5e5);
+    }
+
+    .usage-intro {
+      max-width: 720px;
+      margin-bottom: 40px;
+    }
+    .usage-intro h2 {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      color: var(--ink, #111111);
+    }
+    .usage-intro p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+    }
+
+    .usage-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 32px;
+      margin-bottom: 48px;
+    }
+
+    .usage-card {
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 12px;
+      padding: 24px;
+      background: var(--paper, #ffffff);
+    }
+    .usage-card h3 {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--ink, #111111);
+    }
+    .usage-card p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .usage-demo {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    .demo-button {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .demo-button-primary {
+      background: var(--signal, #3b82f6);
+      color: white;
+    }
+    .demo-button-primary:hover {
+      filter: brightness(0.9);
+    }
+    .demo-button-secondary {
+      background: var(--bone, #f5f5f5);
+      color: var(--ink, #111111);
+      border: 1px solid var(--border, #e5e5e5);
+    }
+    .demo-button-secondary:hover {
+      background: var(--border, #e5e5e5);
+    }
+
+    /* WCAG summary */
+    .wcag-section {
+      margin-top: 56px;
+      padding-top: 56px;
+      border-top: 2px solid var(--border, #e5e5e5);
+    }
+    .wcag-section h2 {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--ink, #111111);
+    }
+    .wcag-intro {
+      font-size: 15px;
+      color: var(--slate, #666666);
+      max-width: 720px;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .wcag-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .wcag-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .wcag-card h3 {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+    .wcag-card-content {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .wcag-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      border-radius: 10px;
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 24px;
+      font-weight: 700;
+      color: white;
+    }
+    .wcag-badge--aaa {
+      background: #16a34a;
+    }
+    .wcag-badge--aa {
+      background: #3b82f6;
+    }
+    .wcag-badge--large {
+      background: #d97706;
+    }
+    .wcag-badge--fail {
+      background: #dc2626;
+    }
+    .wcag-stats {
+      flex: 1;
+    }
+    .wcag-count {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--ink, #111111);
+      line-height: 1;
+    }
+    .wcag-desc {
+      font-size: 12px;
+      color: var(--slate, #666666);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 20px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Footer */
+    .footer {
+      margin-top: 72px;
+      padding-top: 48px;
+      border-top: 1px solid var(--border, #e5e5e5);
+      text-align: center;
+      color: var(--slate, #666666);
+      font-size: 13px;
+    }
+    .footer p {
+      margin: 0;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    /* ────────────────────────────────────────────────────────────────── */
+    /* WCAG 2.1 Contrast Ratio Calculation                                */
+    /* ────────────────────────────────────────────────────────────────── */
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function luminance([r, g, b]) {
+      const [rs, gs, bs] = [r, g, b].map(c => {
+        c /= 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    }
+
+    function contrastRatio(hex1, hex2) {
+      const l1 = luminance(hexToRgb(hex1));
+      const l2 = luminance(hexToRgb(hex2));
+      const lighter = Math.max(l1, l2);
+      const darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function wcagLevel(ratio) {
+      if (ratio >= 7) return { label: 'AAA', cls: 'pass', level: 'aaa' };
+      if (ratio >= 4.5) return { label: 'AA', cls: 'pass', level: 'aa' };
+      if (ratio >= 3) return { label: 'AA Large', cls: 'aa-large', level: 'large' };
+      return { label: 'Fail', cls: 'fail', level: 'fail' };
+    }
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* Core Color Roles                                                    */
+    /* ────────────────────────────────────────────────────────────────── */
+    const CORE_ROLES = {
+      paper:   'Primary background / canvas',
+      ink:     'Primary text and headings',
+      slate:   'Secondary text and muted content',
+      signal:  'Primary action and accent',
+      bone:    'Subtle background tint',
+      border:  'Dividers and borders',
+      surface: 'Card and component fills',
+    };
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* Page Rendering                                                      */
+    /* ────────────────────────────────────────────────────────────────── */
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Artistic';
+      const rawColors = tokens.colors || {};
+      const paperHex = rawColors.paper || '#ffffff';
+
+      /* Flatten color tree */
+      const colors = {};
+      for (const [k, v] of Object.entries(rawColors)) {
+        if (typeof v === 'string') { colors[k] = v; }
+        else if (v && typeof v === 'object') {
+          for (const [sk, sv] of Object.entries(v)) {
+            if (typeof sv === 'string') colors[k + '-' + sk] = sv;
+          }
+        }
+      }
+
+      /* Split core and extended */
+      const coreKeys = Object.keys(CORE_ROLES).filter(k => colors[k]);
+      const extendedKeys = Object.keys(colors).filter(k => !CORE_ROLES[k] && typeof colors[k] === 'string');
+
+      /* Compute stats */
+      const allKeys = [...coreKeys, ...extendedKeys];
+      let statsAAA = 0, statsAA = 0, statsLarge = 0, statsFail = 0;
+      allKeys.forEach(k => {
+        const ratio = contrastRatio(colors[k], paperHex);
+        const level = wcagLevel(ratio);
+        if (level.level === 'aaa') statsAAA++;
+        else if (level.level === 'aa') statsAA++;
+        else if (level.level === 'large') statsLarge++;
+        else statsFail++;
+      });
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Color Palette</h1>';
+      html += '  <p class="header__subtitle">A high-contrast, expressive palette crafted for visually striking and accessible interfaces.</p>';
+      html += '  <div class="header__meta">';
+      html += '    <span>System: ' + esc(title) + '</span>';
+      html += '    <span>' + allKeys.length + ' tokens</span>';
+      html += '  </div>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Core Palette ──── */
+      if (coreKeys.length) {
+        html += '<section class="section">';
+        html += '  <div class="section-label">Core Palette</div>';
+        html += '  <div class="swatch-grid">';
+        coreKeys.forEach(key => {
+          html += swatchCard(key, colors[key], paperHex, CORE_ROLES[key]);
+        });
+        html += '  </div>';
+        html += '</section>';
+      }
+
+      /* ──── Extended Palette ──── */
+      if (extendedKeys.length) {
+        html += '<section class="section">';
+        html += '  <div class="section-label">Extended Palette</div>';
+        html += '  <div class="swatch-grid">';
+        extendedKeys.forEach(key => {
+          const role = (tokens.colorRoles && tokens.colorRoles[key]) || formatRole(key);
+          html += swatchCard(key, colors[key], paperHex, role);
+        });
+        html += '  </div>';
+        html += '</section>';
+      }
+
+      /* ──── Usage & Principles ──── */
+      html += '<section class="usage-section">';
+      html += '  <div class="usage-intro">';
+      html += '    <h2>Color Application</h2>';
+      html += '    <p>The Artistic palette prioritizes <strong>high contrast</strong> and <strong>visual impact</strong>. Use the primary signal blue for call-to-action buttons and essential interactions. Reserve surface and bone for background treatments to maintain breathing room between content layers.</p>';
+      html += '  </div>';
+      html += '  <div class="usage-grid">';
+      html += usageCard('Primary Actions', 'Use signal (#3B82F6) for buttons, links, and interactive elements that demand user attention.', [
+        { label: 'Button', bg: '#3b82f6', fg: 'white', text: 'CTA Button' },
+        { label: 'Link', bg: 'transparent', fg: '#3b82f6', text: 'Interactive Link' }
+      ]);
+      html += usageCard('Backgrounds', 'Layer with paper for primary canvas, bone for subtle containers, and surface for distinct card sections.', [
+        { label: 'Paper', bg: '#ffffff', fg: '#111111', text: 'Primary' },
+        { label: 'Bone', bg: '#f5f5f5', fg: '#111111', text: 'Subtle' }
+      ]);
+      html += usageCard('Text Hierarchy', 'Ink for primary body copy, slate for secondary labels and metadata to establish clear visual hierarchy.', [
+        { label: 'Ink', bg: 'transparent', fg: '#111111', text: 'Primary text' },
+        { label: 'Slate', bg: 'transparent', fg: '#666666', text: 'Secondary text' }
+      ]);
+      html += '  </div>';
+      html += '</section>';
+
+      /* ──── WCAG Compliance ──── */
+      html += '<section class="wcag-section">';
+      html += '  <h2>Accessibility & Compliance</h2>';
+      html += '  <p class="wcag-intro">All color tokens are tested for WCAG 2.1 contrast compliance against the paper background (' + esc(paperHex) + '). The palette achieves strong accessibility standards across text sizes and interactive elements.</p>';
+      html += '  <div class="wcag-summary">';
+      html += wcagStatCard('AAA', statsAAA, 'Highest contrast (7:1+)', 'aaa');
+      html += wcagStatCard('AA', statsAA, 'Standard contrast (4.5:1+)', 'aa');
+      html += wcagStatCard('AA Large', statsLarge, 'Large text (3:1+)', 'large');
+      html += wcagStatCard('Below', statsFail, 'Below threshold', 'fail');
+      html += '  </div>';
+      html += '</section>';
+
+      /* ──── Footer ──── */
+      html += '<footer class="footer">';
+      html += '  <p>Artistic Design System — Color tokens auto-generated from design definitions.</p>';
+      html += '</footer>';
+
+      app.innerHTML = html;
+    }
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* Component Builders                                                  */
+    /* ────────────────────────────────────────────────────────────────── */
+
+    function swatchCard(key, hex, paperHex, role) {
+      const ratio = contrastRatio(hex, paperHex);
+      const level = wcagLevel(ratio);
+      const lum = luminance(hexToRgb(hex));
+      const chipTextColor = lum > 0.5 ? '#111111' : '#ffffff';
+      const chipBadgeBg = lum > 0.5
+        ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.25)';
+
+      return '' +
+        '<div class="swatch">' +
+        '  <div class="swatch__chip" style="background:' + hex + '">' +
+        '    <span class="swatch__chip-contrast" style="color:' + chipTextColor +
+             ';background:' + chipBadgeBg + '">' + ratio.toFixed(2) + ':1</span>' +
+        '  </div>' +
+        '  <div class="swatch__meta">' +
+        '    <div class="swatch__var">--' + esc(key) + '</div>' +
+        '    <div class="swatch__hex">' + esc(hex.toUpperCase()) + '</div>' +
+        '    <div class="swatch__role">' + esc(role) + '</div>' +
+        '    <div class="swatch__contrast-label contrast-' + level.cls + '">' +
+             'WCAG ' + level.label + '</div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    function usageCard(title, desc, demos) {
+      let html = '<div class="usage-card">';
+      html += '  <h3>' + esc(title) + '</h3>';
+      html += '  <p>' + desc + '</p>';
+      html += '  <div class="usage-demo">';
+      demos.forEach(demo => {
+        const style = demo.bg === 'transparent'
+          ? 'color:' + demo.fg + ';border:1px solid ' + demo.fg
+          : 'background:' + demo.bg + ';color:' + demo.fg;
+        html += '<button class="demo-button" style="' + style + '">' + esc(demo.text) + '</button>';
+      });
+      html += '  </div>';
+      html += '</div>';
+      return html;
+    }
+
+    function wcagStatCard(badge, count, desc, level) {
+      return '' +
+        '<div class="wcag-card">' +
+        '  <h3>Level ' + badge + '</h3>' +
+        '  <div class="wcag-card-content">' +
+        '    <div class="wcag-badge wcag-badge--' + level + '">' + count + '</div>' +
+        '    <div class="wcag-stats">' +
+        '      <div class="wcag-count">' + count + '</div>' +
+        '      <div class="wcag-desc">' + desc + '</div>' +
+        '    </div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ────────────────────────────────────────────────────────────────── */
+    /* Utilities                                                           */
+    /* ────────────────────────────────────────────────────────────────── */
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function formatRole(key) {
+      return key
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/[-_]/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase())
+        .trim();
+    }
+  </script>
+</body>
+</html>

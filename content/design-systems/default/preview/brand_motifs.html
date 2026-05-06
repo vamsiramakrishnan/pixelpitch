@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Neutral Modern</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 64px;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 1px;
+      background: var(--ink, #111111);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 28px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--ink, #111111);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 24px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--signal, #3b82f6);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      padding: 32px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--ink, #111111);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 120px;
+      border: 1px solid var(--border, #e5e5e5);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.4;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--bone, #f5f5f5);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      padding: 48px 40px;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--ink, #111111);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--slate, #666666);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--ink, #111111);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--bone, #f5f5f5);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      padding: 32px;
+      max-width: 840px;
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--ink, #111111);
+    }
+
+    /* ──── One Accent Per Screen Visual ──── */
+    .accent-demo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .accent-demo {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .accent-slide {
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      aspect-ratio: 16 / 10;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background: var(--bone, #f5f5f5);
+    }
+
+    .accent-slide__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .accent-slide__headline {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 36px;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 0;
+    }
+
+    .accent-slide__accent {
+      color: var(--signal, #3b82f6);
+    }
+
+    .accent-slide__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#3b82f6">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">The <span>DNA</span> of Neutral Modern</h1>';
+      html += '  <p class="header__subtitle">Content-first design for product tools. Calm, functional, quietly confident. One accent. No ornament. Let whitespace do the work.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Neutral Modern is the voice of utility and clarity. The canvas is paper white (#FFFFFF), never the absolute brightest. The palette contains exactly six tokens: paper, ink, slate, signal, bone, and border. One cobalt accent appears per screen maximum — on a primary CTA, a hero highlight, or a link. Headlines set loose (1.2 line height) while body text opens to 1.5. No gradients. No drop shadows on inputs. No neumorphism. Depth comes from borders and subtle elevation. Every pixel serves content, not decoration.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Paper white canvas (#FFFFFF) for primary surfaces, never pure white</li>';
+      html += '    <li>Six-token palette: paper, ink, slate, signal, bone, border — nothing extra</li>';
+      html += '    <li>Cobalt accent (#3B82F6) for CTAs, links, and one hero element per screen</li>';
+      html += '    <li>System-ui sans-serif for all typography — display, body, and hierarchy</li>';
+      html += '    <li>One accent color maximum per screen (the "one accent" principle)</li>';
+      html += '    <li>8px and 16px radii on cards, buttons, and inputs — consistent roundness</li>';
+      html += '    <li>Borders and whitespace for depth, never shadows on chrome</li>';
+      html += '    <li>Headline line-height 1.2, body line-height 1.5 — breathing room</li>';
+      html += '    <li>Display weight 600, body weight 400 — clear hierarchy through weight</li>';
+      html += '    <li>Mono font for metadata, labels, and code — JetBrains Mono at 500 weight</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use paper white (#FFFFFF) as the default canvas</li>';
+      html += '      <li>Reserve cobalt accent for one primary element per screen</li>';
+      html += '      <li>Set headings in 600 weight with 1.2 line height</li>';
+      html += '      <li>Set body text in 400 weight with 1.5 line height</li>';
+      html += '      <li>Use 8px or 16px border radius on all containers</li>';
+      html += '      <li>Separate sections with whitespace, not dividers</li>';
+      html += '      <li>Use 1px borders for depth, no drop shadows</li>';
+      html += '      <li>Write sentence-case headings; title case for brand names only</li>';
+      html += '      <li>Use semantic colors for status: success green, warning yellow, danger red</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use pure white (#FFFFFF) for large background areas</li>';
+      html += '      <li>Apply cobalt accent to multiple elements on one screen</li>';
+      html += '      <li>Add drop shadows to input fields or form controls</li>';
+      html += '      <li>Use gradients — even subtle ones — in the main UI</li>';
+      html += '      <li>Mix typeface families or use fonts outside the system</li>';
+      html += '      <li>Invent new colors outside the six-token palette</li>';
+      html += '      <li>Use neumorphism, glassmorphism, or blurred effects</li>';
+      html += '      <li>Center content vertically — top-bias all layouts</li>';
+      html += '      <li>Use more than three type sizes on a single screen</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── One Accent Per Screen Visual ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">One Accent Per Screen</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 14px; line-height: 1.5; color: var(--slate); margin-bottom: 24px; max-width: 840px;">Cobalt acts as your primary wayfinding element. Use it once per screen — on a primary button, a hero link, or an active state. Multiple accents create visual noise and dilute the hierarchy. This restraint is what keeps Neutral Modern clean and content-focused.</p>';
+      html += '  <div class="accent-demo">';
+
+      html += '    <div class="accent-slide">';
+      html += '      <div class="accent-slide__kicker">Correct</div>';
+      html += '      <div class="accent-slide__headline">One <span class="accent-slide__accent">primary</span> action</div>';
+      html += '      <div class="accent-slide__label">Cobalt appears once. Clear, focused, purposeful.</div>';
+      html += '    </div>';
+
+      html += '    <div class="accent-slide">';
+      html += '      <div class="accent-slide__kicker">Incorrect</div>';
+      html += '      <div style="font-size: 18px; font-family: var(--font-display); color: var(--signal); margin-bottom: 12px; font-weight: 600;">Multiple signals</div>';
+      html += '      <div class="accent-slide__headline">Create <span class="accent-slide__accent">visual</span> chaos</div>';
+      html += '      <div class="accent-slide__label">Competing accents fragment attention and hierarchy.</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#111111' : '#f5f5f5';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Typography Pairing ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Display + Body</div>';
+      html += '    <div class="type-pairing__display">Tight headlines, open <span>body</span> text</div>';
+
+      html += '    <div class="type-pairing__body">Typography carries hierarchy through weight and scale. Display text sets at 600 weight and 1.2 line height for compactness and presence. Body text runs at 400 weight and 1.5 line height for comfortable reading. The contrast between tight and open creates the information architecture. Every size and weight decision serves clarity and usability over decoration.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Display Font</span>';
+      html += '        System-ui, 600 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Body Font</span>';
+      html += '        System-ui, 400 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Mono Font</span>';
+      html += '        JetBrains Mono, 600 weight';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Type Ramp Section ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Type Ramp & Roles</div>';
+      html += '  <div style="border: 1px solid var(--border); border-radius: 8px; padding: 32px; background: var(--bone);">';
+
+      const ramp = [
+        { role: 'Display', size: '48px', weight: '600', lineHeight: '1.2', font: 'System-ui', example: 'Hero heading, page title' },
+        { role: 'Title', size: '32px', weight: '600', lineHeight: '1.2', font: 'System-ui', example: 'Section heading' },
+        { role: 'Subhead', size: '24px', weight: '600', lineHeight: '1.2', font: 'System-ui', example: 'Subsection title' },
+        { role: 'Body', size: '16px', weight: '400', lineHeight: '1.5', font: 'System-ui', example: 'Main paragraph text for reading' },
+        { role: 'Caption', size: '14px', weight: '400', lineHeight: '1.5', font: 'System-ui', example: 'Image caption or supporting text' },
+        { role: 'Label', size: '12px', weight: '600', lineHeight: '1.2', font: 'JetBrains Mono', example: 'FORM LABEL · BUTTON TEXT' }
+      ];
+
+      ramp.forEach((item, i) => {
+        const fontFamily = item.font === 'System-ui' ? 'var(--font-display)' : 'var(--font-mono)';
+        
+        html += '<div style="margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--border); display: flex; gap: 24px; align-items: flex-start;">';
+        html += '  <div style="flex: 0 0 160px;">';
+        html += '    <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--slate); font-weight: 600; margin-bottom: 4px;">' + esc(item.role) + '</div>';
+        html += '    <div style="font-family: var(--font-mono); font-size: 12px; color: var(--slate); line-height: 1.5;">' + esc(item.size) + '<br>' + esc(item.font) + ' ' + esc(item.weight) + '<br>LH ' + esc(item.lineHeight) + '</div>';
+        html += '  </div>';
+        html += '  <div style="flex: 1;">';
+        html += '    <div style="font-family: ' + fontFamily + '; font-size: ' + item.size + '; font-weight: ' + item.weight + '; line-height: ' + item.lineHeight + '; letter-spacing: ' + (item.role === 'Display' || item.role === 'Title' ? '-0.01em' : '0') + '; color: var(--ink); margin-bottom: 8px;">' + esc(item.example) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    /* ──── Utilities ──── */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function relativeLuminance(hex) {
+      try {
+        const [r, g, b] = hexToRgb(hex).map(c => {
+          c /= 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      } catch { return 0.5; }
+    }
+  </script>
+</body>
+</html>

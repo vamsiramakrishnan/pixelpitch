@@ -1,0 +1,87 @@
+/* Mastercard — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #f3f0ee;
+  --ink:     #141413;
+  --slate:   #696969;
+  --signal:  #555555;
+  --bone:    #f4f4f4;
+  --border:  #e5e5e5;
+  --surface: #eb001b;
+
+  /* Extended palette */
+  --color-mastercard-yellow: #f79e1b;
+  --color-signal-orange: #cf4500;
+  --color-light-signal-orange: #f37338;
+  --color-clay-brown: #9a3a0a;
+  --color-lifted-cream: #fcfbfa;
+  --color-white: #ffffff;
+  --color-charcoal: #262627;
+  --color-graphite: #565656;
+  --color-dust-taupe: #d1cdc7;
+  --color-link-blue: #3860be;
+
+  /* Semantic */
+  --warning: #f79e1b;
+  --danger:  #eb001b;
+  --info:    #3860be;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-h1-hero: 64px;
+  --t-h2-section: 36px;
+  --t-h3-card-title: 24px;
+  --t-h4-subhead: 14px;
+  --t-eyebrow-h5: 14px;
+  --t-body-paragraph: 16px;
+  --t-nav-link-button-label: 16px;
+  --t-footer-link: 14px;
+  --t-footer-column-header: 14px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   64px;
+  --radius-lg:   16px;
+  --radius-full: 1000px;
+
+  /* ── Components ── */
+  --button-radius:  40px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    64px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

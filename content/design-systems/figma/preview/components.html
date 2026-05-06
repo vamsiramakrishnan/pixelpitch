@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Figma — Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.4;
+      font-weight: 330;
+      letter-spacing: -0.14px;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 40px;
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: 32px;
+      margin-bottom: 64px;
+      border-bottom: 1px solid var(--border);
+      border-top: 4px solid var(--ink);
+      padding-top: 32px;
+    }
+
+    .masthead__logo {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -0.48px;
+      line-height: 1;
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: 80px;
+      padding-bottom: 40px;
+      border-bottom: 3px solid var(--ink);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 16px;
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 400;
+      letter-spacing: -0.96px;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 20px;
+      font-weight: 330;
+      line-height: 1.3;
+      color: var(--slate);
+      max-width: 720px;
+      letter-spacing: -0.1px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: 80px;
+      padding-bottom: 64px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 16px;
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 400;
+      letter-spacing: -0.48px;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 40px;
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 330;
+      color: var(--slate);
+      margin-right: 24px;
+      min-width: 160px;
+      letter-spacing: -0.14px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 330;
+      letter-spacing: -0.14px;
+      line-height: 1;
+      border: none;
+      background: var(--ink);
+      color: var(--paper);
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      gap: 8px;
+      outline: none;
+    }
+
+    .btn:focus {
+      outline: 2px dashed var(--ink);
+      outline-offset: 2px;
+    }
+
+    .btn:hover {
+      background: var(--slate);
+    }
+
+    .btn--white {
+      background: var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    .btn--white:hover {
+      background: var(--bone);
+    }
+
+    .btn--white:focus {
+      outline: 2px dashed var(--ink);
+    }
+
+    .btn--glass-dark {
+      background: rgba(0, 0, 0, 0.08);
+      color: var(--ink);
+    }
+
+    .btn--glass-dark:hover {
+      background: rgba(0, 0, 0, 0.12);
+    }
+
+    .btn--glass-light {
+      background: rgba(255, 255, 255, 0.16);
+      color: var(--paper);
+    }
+
+    .btn--glass-light:hover {
+      background: rgba(255, 255, 255, 0.24);
+    }
+
+    .btn--icon {
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      border-radius: 50%;
+    }
+
+    .btn--sm {
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+
+    .btn--lg {
+      padding: 12px 28px;
+      font-size: 18px;
+    }
+
+    /* ──── CARDS ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card__image {
+      display: block;
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      background: var(--bone);
+      border-radius: 6px;
+      margin: -24px -24px 0 -24px;
+      padding: 0;
+    }
+
+    .card__heading {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1.45;
+      color: var(--ink);
+    }
+
+    .card__body {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 330;
+      line-height: 1.4;
+      color: var(--slate);
+      letter-spacing: -0.14px;
+    }
+
+    .card__meta {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-top: auto;
+    }
+
+    /* ──── PULL QUOTE ──── */
+    .pullquote {
+      border-top: 3px solid var(--ink);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 0;
+      margin: 48px 0;
+    }
+
+    .pullquote__mark {
+      font-family: var(--font-display);
+      font-size: 96px;
+      font-weight: 700;
+      line-height: 0.8;
+      color: var(--signal);
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .pullquote__text {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 400;
+      letter-spacing: -0.48px;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+
+    .pullquote__attribution {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── NUMBERED LIST ──── */
+    .numbered-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+
+    .numbered-list__item {
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .numbered-list__item:nth-child(odd):last-child {
+      grid-column: 1 / -1;
+      max-width: 50%;
+    }
+
+    .numbered-list__number {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -0.48px;
+      line-height: 0.9;
+      color: var(--ink);
+      display: block;
+    }
+
+    .numbered-list__number--signal {
+      color: var(--signal);
+    }
+
+    .numbered-list__headline {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 540;
+      letter-spacing: -0.26px;
+      line-height: 1.35;
+      color: var(--ink);
+    }
+
+    .numbered-list__body {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 330;
+      line-height: 1.4;
+      color: var(--slate);
+      letter-spacing: -0.14px;
+    }
+
+    /* ──── INPUT FIELDS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 330;
+      color: var(--ink);
+      letter-spacing: -0.14px;
+    }
+
+    .input {
+      padding: 10px 16px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.4;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      outline: none;
+      transition: all 0.15s ease;
+      letter-spacing: -0.14px;
+      font-weight: 330;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      outline: 2px dashed var(--signal);
+      outline-offset: 2px;
+      border-color: var(--signal);
+    }
+
+    /* ──── BADGES & PILLS ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 330;
+      letter-spacing: -0.14px;
+      line-height: 1.4;
+      border-radius: 50px;
+      background: var(--bone);
+      color: var(--ink);
+      border: 1px solid transparent;
+    }
+
+    .badge--signal {
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--signal);
+    }
+
+    .badge--muted {
+      background: var(--bone);
+      color: var(--slate);
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    /* ──── TABS ──── */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    .tab {
+      padding: 8px 16px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 330;
+      letter-spacing: -0.14px;
+      color: var(--slate);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      border-radius: 50px;
+      transition: all 0.15s ease;
+      outline: none;
+    }
+
+    .tab:hover {
+      color: var(--ink);
+      background: var(--bone);
+    }
+
+    .tab.tab--active {
+      color: var(--ink);
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .tab:focus {
+      outline: 2px dashed var(--ink);
+      outline-offset: -2px;
+    }
+
+    /* ──── ICON BUTTONS ──── */
+    .icon-button-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .icon-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      background: var(--ink);
+      color: var(--paper);
+      cursor: pointer;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .icon-button:hover {
+      background: var(--slate);
+    }
+
+    .icon-button:focus {
+      outline: 2px dashed var(--ink);
+      outline-offset: 2px;
+    }
+
+    .icon-button svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ──── HERO GRADIENT (showcase) ──── */
+    .hero-gradient-demo {
+      background: linear-gradient(135deg, #ec4899 0%, #d946ef 25%, #6366f1 50%, #0ea5e9 100%);
+      border-radius: 8px;
+      padding: 64px 40px;
+      margin: 40px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 320px;
+      gap: 24px;
+    }
+
+    .hero-gradient-demo__text {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 400;
+      letter-spacing: -0.96px;
+      line-height: 1.1;
+      color: var(--paper);
+      text-align: center;
+      max-width: 600px;
+    }
+
+    .hero-gradient-demo__caption {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 330;
+      letter-spacing: -0.14px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* ──── UTILITY ──– */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 330;
+      color: var(--slate);
+      margin-bottom: 16px;
+      margin-top: 32px;
+      letter-spacing: -0.14px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 40px 0;
+    }
+
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 0;
+      margin-top: 64px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── GRID & LAYOUT SHOWCASE ──── */
+    .grid-demo {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .grid-cell {
+      background: var(--bone);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 24px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 330;
+      color: var(--slate);
+      letter-spacing: -0.14px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 40px 20px;
+      }
+
+      .stage-head__title {
+        font-size: 40px;
+        letter-spacing: -0.4px;
+      }
+
+      .section__title {
+        font-size: 32px;
+        letter-spacing: -0.32px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .numbered-list {
+        grid-template-columns: 1fr;
+      }
+
+      .numbered-list__item:nth-child(odd):last-child {
+        max-width: 100%;
+      }
+
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+
+      .pullquote__text {
+        font-size: 32px;
+        letter-spacing: -0.32px;
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: 16px;
+      }
+
+      .grid-demo {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero-gradient-demo {
+        padding: 40px 24px;
+        min-height: 240px;
+      }
+
+      .hero-gradient-demo__text {
+        font-size: 40px;
+        letter-spacing: -0.4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">
+        Figma
+      </div>
+      <div class="masthead__tagline">
+        Components<br>Inventory
+      </div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Design System</div>
+      <h1 class="stage-head__title">Component Library</h1>
+      <p class="stage-head__subtitle">
+        A comprehensive inventory of interactive patterns and UI components designed for collaborative design workflows. Every button, input, and card follows Figma's principle of precision through variable weight typography and dashed focus indicators.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Buttons</div>
+      <h2 class="section__title">Button States</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Black Solid (Pill)</span>
+        <button class="btn">Get Started</button>
+        <button class="btn btn--sm">Small</button>
+        <button class="btn btn--lg">Large Button</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">White Pill</span>
+        <button class="btn btn--white">Try Figma</button>
+        <button class="btn btn--white btn--sm">Small</button>
+        <button class="btn btn--white btn--lg">Learn More</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Glass Dark</span>
+        <button class="btn btn--glass-dark">Secondary</button>
+        <button class="btn btn--glass-dark btn--sm">Small</button>
+        <button class="btn btn--glass-dark btn--lg">Action</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Glass Light (on colored)</span>
+        <button class="btn btn--glass-light">Light Overlay</button>
+        <button class="btn btn--glass-light btn--sm">Small</button>
+        <button class="btn btn--glass-light btn--lg">Primary</button>
+      </div>
+    </section>
+
+    <!-- Icon Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Interactions</div>
+      <h2 class="section__title">Icon Buttons</h2>
+      <p style="font-size: 16px; font-weight: 330; color: var(--slate); margin-bottom: 32px; letter-spacing: -0.14px;">Perfect circles (50% radius) for icon-only actions. All buttons use dashed outline on focus to echo the Figma editor's selection handles.</p>
+
+      <div class="icon-button-row">
+        <button class="icon-button" title="Star">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 10.26 23.77 11.25 17.77 17.25 19.24 25.97 12 21.77 4.76 25.97 6.23 17.25 0.23 11.25 8.91 10.26 12 2"/></svg>
+        </button>
+        <button class="icon-button" title="Heart">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+        <button class="icon-button" title="Copy">
+          <svg viewBox="0 0 24 24"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/></svg>
+        </button>
+        <button class="icon-button" title="Settings">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m5.08 5.08l4.24 4.24M1 12h6m6 0h6M4.22 19.78l4.24-4.24m5.08-5.08l4.24-4.24"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Hero Gradient Showcase -->
+    <section class="section">
+      <div class="section__kicker">Visual Design</div>
+      <h2 class="section__title">Gradient Hero Sections</h2>
+      <p style="font-size: 16px; font-weight: 330; color: var(--slate); margin-bottom: 32px; letter-spacing: -0.14px;">Figma's interface is strictly black and white, while product showcases explode with vibrant multi-color gradients. This creates a gallery-wall aesthetic where colorful art lives against a neutral frame.</p>
+
+      <div class="hero-gradient-demo">
+        <h3 class="hero-gradient-demo__text">Design, prototype, and collaborate</h3>
+        <span class="hero-gradient-demo__caption">All in one tool</span>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Containers</div>
+      <h2 class="section__title">Card Patterns</h2>
+
+      <div class="cards-grid">
+        <div class="card">
+          <svg class="card__image" viewBox="0 0 320 200" style="background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);">
+            <rect width="320" height="200" fill="currentColor"/>
+            <text x="160" y="100" text-anchor="middle" dy=".3em" font-family="system-ui" font-size="16" fill="#9ca3af">Product Screenshot</text>
+          </svg>
+          <h3 class="card__heading">Design Tools</h3>
+          <p class="card__body">Create vector designs with infinite canvas, layers, and components. Build your design system and scale it across projects.</p>
+          <span class="card__meta">Collaborative Design</span>
+        </div>
+
+        <div class="card">
+          <svg class="card__image" viewBox="0 0 320 200" style="background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);">
+            <rect width="320" height="200" fill="currentColor"/>
+            <text x="160" y="100" text-anchor="middle" dy=".3em" font-family="system-ui" font-size="16" fill="#9ca3af">Dev Mode Screenshot</text>
+          </svg>
+          <h3 class="card__heading">Dev Mode</h3>
+          <p class="card__body">Hand off designs to developers with tokens, specs, and code snippets. Close the designer-to-developer loop.</p>
+          <span class="card__meta">Developer Handoff</span>
+        </div>
+
+        <div class="card">
+          <svg class="card__image" viewBox="0 0 320 200" style="background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);">
+            <rect width="320" height="200" fill="currentColor"/>
+            <text x="160" y="100" text-anchor="middle" dy=".3em" font-family="system-ui" font-size="16" fill="#9ca3af">Prototype Screenshot</text>
+          </svg>
+          <h3 class="card__heading">Prototyping</h3>
+          <p class="card__body">Create interactive prototypes with connections and triggers. Test user flows before handoff.</p>
+          <span class="card__meta">Interactive Testing</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tabs Section -->
+    <section class="section">
+      <div class="section__kicker">Navigation</div>
+      <h2 class="section__title">Pill-Shaped Tabs</h2>
+      <p style="font-size: 16px; font-weight: 330; color: var(--slate); margin-bottom: 24px; letter-spacing: -0.14px;">Product navigation uses 50px radius pill tabs. Active state inverts colors. Hover reveals subtle background treatment.</p>
+
+      <div class="tabs">
+        <button class="tab tab--active">Design</button>
+        <button class="tab">Dev Mode</button>
+        <button class="tab">Prototype</button>
+        <button class="tab">Inspect</button>
+        <button class="tab">Libraries</button>
+      </div>
+    </section>
+
+    <!-- Pull Quote -->
+    <section class="section">
+      <div class="section__kicker">Featured Message</div>
+      <h2 class="section__title">Pull Quote</h2>
+
+      <div class="pullquote">
+        <span class="pullquote__mark">"</span>
+        <blockquote class="pullquote__text">One tool for everyone on your product team to design, prototype, and collaborate.</blockquote>
+        <p class="pullquote__attribution">Figma Product Philosophy</p>
+      </div>
+    </section>
+
+    <!-- Numbered List Section -->
+    <section class="section">
+      <div class="section__kicker">Key Features</div>
+      <h2 class="section__title">Feature Highlights</h2>
+
+      <div class="numbered-list">
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">1</span>
+          <h4 class="numbered-list__headline">Infinite Canvas</h4>
+          <p class="numbered-list__body">Design without boundaries. Create at any scale on a collaborative, infinite workspace shared across your team.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">2</span

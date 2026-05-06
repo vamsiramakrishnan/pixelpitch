@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Cursor</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #f2f1ed);
+      color: var(--ink, #26251e);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 120px 64px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 120px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 72px;
+      font-weight: 400;
+      line-height: 1.10;
+      letter-spacing: -2.16px;
+      color: var(--ink, #26251e);
+      margin-bottom: 12px;
+      max-width: 90%;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 19.2px;
+      font-weight: 400;
+      line-height: 1.50;
+      color: var(--slate, #666666);
+      max-width: 75%;
+      margin-bottom: 40px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 3px;
+      background: var(--signal, #f54e00);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 120px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 48px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* Philosophy block */
+    .philosophy {
+      background: var(--surface, #e6e5e0);
+      padding: 48px;
+      border: 1px solid rgba(38, 37, 30, 0.08);
+      border-radius: var(--radius-md, 8px);
+      margin-bottom: 80px;
+    }
+
+    .philosophy__title {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 17.28px;
+      line-height: 1.50;
+      color: var(--ink, #26251e);
+    }
+
+    .philosophy__text strong {
+      font-weight: 600;
+    }
+
+    .philosophy__text em {
+      font-style: italic;
+    }
+
+    .philosophy__text code {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      background: rgba(38, 37, 30, 0.08);
+      padding: 2px 6px;
+      border-radius: 2px;
+      font-size: 0.95em;
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 80px;
+      gap: 24px;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(38, 37, 30, 0.06);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--ink, #26251e);
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      margin-top: 4px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 2px;
+      background: var(--signal, #f54e00);
+      min-width: 2px;
+      transition: opacity 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.6;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--ink, #26251e);
+      text-align: right;
+    }
+
+    /* Rule weights */
+    .rule-demo {
+      padding: 32px 0;
+      border-bottom: 1px solid rgba(38, 37, 30, 0.06);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 20px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--ink, #26251e);
+    }
+
+    .rule-demo__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      color: var(--slate, #666666);
+    }
+
+    .rule-demo__container {
+      width: 100%;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 0;
+      background: var(--paper, #f2f1ed);
+      border-radius: var(--radius-sm, 2px);
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 64px;
+      margin-bottom: 48px;
+    }
+
+    .radius-item {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 32px;
+      align-items: flex-start;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .radius-item__box {
+      width: 120px;
+      height: 120px;
+      background: var(--surface, #e6e5e0);
+      border: 2px solid var(--ink, #26251e);
+      flex-shrink: 0;
+    }
+
+    .radius-item__info {
+      flex: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--ink, #26251e);
+      margin-bottom: 4px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      line-height: 1.50;
+      color: var(--slate, #666666);
+    }
+
+    /* Depth visualization */
+    .depth-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+
+    .depth-item {
+      padding: 32px;
+      border-radius: var(--radius-md, 8px);
+      border: 1px solid rgba(38, 37, 30, 0.08);
+      background: var(--paper, #f2f1ed);
+    }
+
+    .depth-item.level-1 {
+      box-shadow: rgba(0,0,0,0.02) 0px 0px 16px, rgba(0,0,0,0.008) 0px 0px 8px;
+    }
+
+    .depth-item.level-2 {
+      box-shadow: rgba(0,0,0,0.14) 0px 28px 70px, rgba(0,0,0,0.1) 0px 14px 32px;
+    }
+
+    .depth-item.level-3 {
+      box-shadow: rgba(0,0,0,0.1) 0px 4px 12px;
+    }
+
+    .depth-item__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--ink, #26251e);
+      margin-bottom: 4px;
+    }
+
+    .depth-item__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      line-height: 1.50;
+    }
+
+    .depth-item__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 10px;
+      color: var(--slate, #666666);
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(38, 37, 30, 0.06);
+    }
+
+    /* Color scale visualization */
+    .oklab-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .oklab-swatch {
+      padding: 24px;
+      border-radius: var(--radius-sm, 2px);
+      border: 1px solid rgba(38, 37, 30, 0.08);
+      text-align: center;
+    }
+
+    .oklab-swatch__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--slate, #666666);
+      margin-bottom: 8px;
+    }
+
+    .oklab-swatch__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 10px;
+      color: var(--slate, #666666);
+      word-break: break-all;
+    }
+
+    .oklab-swatch__visual {
+      height: 64px;
+      margin: 16px 0;
+      border-radius: var(--radius-sm, 2px);
+      border: 1px solid rgba(38, 37, 30, 0.12);
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 2px solid rgba(38, 37, 30, 0.2);
+      border-top-color: var(--signal, #f54e00);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 1024px) {
+      .page {
+        padding: 80px 48px;
+      }
+
+      .header {
+        margin-bottom: 80px;
+      }
+
+      .header__title {
+        font-size: 54px;
+        letter-spacing: -1.62px;
+      }
+
+      .section {
+        margin-bottom: 80px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 80px 1fr 70px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .radius-item {
+        grid-template-columns: 120px 1fr;
+      }
+
+      .depth-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .oklab-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 60px 24px;
+      }
+
+      .header__title {
+        font-size: 42px;
+        letter-spacing: -1.26px;
+        max-width: 100%;
+      }
+
+      .header__subtitle {
+        font-size: 16px;
+        max-width: 100%;
+      }
+
+      .spacing-row {
+        grid-template-columns: 70px 1fr 60px;
+        gap: 12px;
+      }
+
+      .oklab-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '4px', label: 'xs' },
+      's-2': { value: '8px', label: 'sm' },
+      's-3': { value: '16px', label: 'md' },
+      's-4': { value: '24px', label: 'lg' },
+      's-5': { value: '32px', label: 'xl' },
+      's-6': { value: '48px', label: '2xl' },
+      's-7': { value: '64px', label: '3xl' },
+      's-8': { value: '96px', label: '4xl' }
+    };
+
+    const DEFAULT_RULES = {
+      'flat': { name: 'Flat', weight: 'none', color: 'transparent', use: 'Page background, text blocks' },
+      'border-ring': { name: 'Border Ring', weight: '1px', color: 'oklab(0.263 / 0.1)', use: 'Standard card/container border (warm oklab)' },
+      'border-medium': { name: 'Border Medium', weight: '1px', color: 'oklab(0.263 / 0.2)', use: 'Emphasized borders, active states' },
+      'ambient': { name: 'Ambient', weight: 'soft', color: 'rgba(0,0,0,0.02)', use: 'Floating elements, subtle glow' },
+      'elevated': { name: 'Elevated Card', weight: 'layered', color: 'rgba(0,0,0,0.14)', use: 'Modals, popovers, elevated cards' }
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'Inline text, no rounding' },
+      'sm': { value: '2px', use: 'Inline elements, code spans, fine details' },
+      'md': { value: '8px', use: 'Cards, images, buttons, primary containers' },
+      'lg': { value: '120px', use: 'Large featured containers (reserved)' },
+      'full': { value: '9999px', use: 'Pill buttons, tags, badges, fully rounded' }
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#cf2d56">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const rules = DEFAULT_RULES;
+      const radius = DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">SPACING &amp; RULES</div>';
+      html += '  <h1 class="header__title">Four pixels.<br>One grid.</h1>';
+      html += '  <p class="header__subtitle">The spacing and depth system for Cursor — where fine-grained increments meet warm minimalism and perceptually uniform color creates visual warmth without hard shadows.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Spacing philosophy */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Spacing Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Cursor\'s spacing system honors <strong>compressed headlines and open layouts</strong>. Display text uses aggressive negative letter-spacing (−2.16px at 72px), creating a dense, engineered feel. But this density is <em>surrounded</em> by generous margins and air. The base unit is 8px, but <strong>sub-8px increments</strong> (4px, 1.5px, 2px, 3px) provide precision for micro-adjustments. Whitespace in Cursor is warm — the entire canvas leans toward cream (#f2f1ed), so negative space feels cozy rather than cold. Section spacing uses 24px–96px to create distinct reading zones, while text-to-text padding uses 8px–16px for comfortable measure.';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        const label = obj.label || key;
+        
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Rule weights & depth */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Rule Weights &amp; Borders</div>';
+
+      Object.entries(rules).forEach(([key, rule]) => {
+        const weight = rule.weight;
+        const color = rule.color;
+        const weightNum = parseFloat(weight) || 0;
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <div>';
+        html += '      <div class="rule-demo__name">' + esc(rule.name) + '</div>';
+        html += '      <div class="rule-demo__label">' + esc(rule.use) + '</div>';
+        html += '    </div>';
+        html += '    <div class="rule-demo__spec">' + esc(weight) + '</div>';
+        html += '  </div>';
+        
+        if (weight === 'none') {
+          html += '  <div class="rule-demo__container" style="background: transparent; border: 1px dashed rgba(38,37,30,0.18);">';
+          html += '    <div style="font-family: var(--font-mono); font-size: 12px; color: var(--slate);">No border or shadow</div>';
+          html += '  </div>';
+        } else if (weight === 'soft') {
+          html += '  <div class="rule-demo__container" style="background: var(--paper); box-shadow: rgba(0,0,0,0.02) 0px 0px 16px, rgba(0,0,0,0.008) 0px 0px 8px;">';
+          html += '  </div>';
+        } else if (weight === 'layered') {
+          html += '  <div class="rule-demo__container" style="background: var(--paper); box-shadow: rgba(0,0,0,0.14) 0px 28px 70px, rgba(0,0,0,0.1) 0px 14px 32px;">';
+          html += '  </div>';
+        } else {
+          html += '  <div class="rule-demo__container">';
+          html += '    <div class="rule-demo__line" style="height:' + weightNum + 'px; background:' + color + '"></div>';
+          html += '  </div>';
+        }
+        
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Elevation depth */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Elevation Depth</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 14px; color: var(--slate); line-height: 1.50; margin-bottom: 40px;">Cursor\'s depth system uses <strong>dramatic blur values</strong> (28px, 70px) with moderate opacity to create atmospheric lift rather than hard drop shadows. Cards float gently above the canvas, not like they\'re glued on.</p>';
+
+      html += '  <div class="depth-grid">';
+      
+      html += '    <div class="depth-item level-1">';
+      html += '      <div class="depth-item__name">Ambient (Level 2)</div>';
+      html += '      <div class="depth-item__label">Floating elements, subtle glow</div>';
+      html += '      <div class="depth-item__spec">rgba(0,0,0,0.02) 0px 0px 16px,<br/>rgba(0,0,0,0.008) 0px 0px 8px</div>';
+      html += '    </div>';
+
+      html += '    <div class="depth-item level-2">';
+      html += '      <div class="depth-item__name">Elevated Card (Level 3)</div>';
+      html += '      <div class="depth-item__label">Modals, popovers, elevated cards</div>';
+      html += '      <div class="depth-item__spec">rgba(0,0,0,0.14) 0px 28px 70px,<br/>rgba(0,0,0,0.1) 0px 14px 32px</div>';
+      html += '    </div>';
+
+      html += '    <div class="depth-item level-3">';
+      html += '      <div class="depth-item__name">Focus (Interactive)</div>';
+      html += '      <div class="depth-item__label">Button focus, interactive feedback</div>';
+      html += '      <div class="depth-item__spec">rgba(0,0,0,0.1) 0px 4px 12px</div>';
+      html += '    </div>';
+
+      html += '    <div class="depth-item">';
+      html += '      <div class="depth-item__name">Flat (Level 0)</div>';
+      html += '      <div class="depth-item__label">Page background, text blocks</div>';
+      html += '      <div class="depth-item__spec">No shadow</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+
+      html += '  <div class="radius-grid">';
+      Object.entries(radius).forEach(([key, obj]) => {
+        const radiusValue = obj.value;
+
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__demo">';
+        html += '    <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '  </div>';
+        html += '  <div class="radius-item__info">';
+        html += '    <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '    <div class="radius-item__value">' + esc(radiusValue) + '</div>';
+        html += '    <div class="radius-item__description">' + esc(obj.use) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+      html += '  </div>';
+      html += '</div>';
+
+      /* OKLab border colors */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Color Palette</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 14px; color: var(--slate); line-height: 1.50; margin-bottom: 40px;">Cursor borders use <strong>oklab color space</strong> instead of rgba, ensuring perceptually uniform warmth across different background tones. This gives borders their distinctive warm-brown character.</p>';
+
+      html += '  <div class="oklab-grid">';
+
+      const oklabSwatches = [
+        { name: 'Border (10%)', value: 'oklab(0.263084 -0.00230259 0.0124794 / 0.1)', hex: '#e6e5e0' },
+        { name: 'Border (20%)', value: 'oklab(0.263084 -0.00230259 0.0124794 / 0.2)', hex: '#d9d8d1' },
+        { name: 'Border (55%)', value: 'oklab(0.263084 -0.00230259 0.0124794 / 0.55)', hex: '#7a786f' }
+      ];
+
+      oklabSwatches.forEach(swatch => {
+        html += '<div class="oklab-swatch">';
+        html += '  <div class="oklab-swatch__name">' + esc(swatch.name) + '</div>';
+        html += '  <div class="oklab-swatch__visual" style="background: ' + esc(swatch.value) + '"></div>';
+        html += '  <div class="oklab-swatch__value">' + esc(swatch.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* Final philosophy */
+      html += '<div class="philosophy" style="margin-top: 96px; margin-bottom: 0;">';
+      html += '  <div class="philosophy__title">Design Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Cursor\'s spacing and rules system serves one purpose: to create <strong>warm, breathable interfaces</strong> without gradient gimmicks or shadow excess. Every spacing choice—from 4px gutters to 96px section breaks—plays a role in the editorial pacing of the page. Every border uses warm oklab color space instead of cool gray, and every shadow uses dramatic blur rather than hard edges. The result is an interface that feels like <em>deliberate, engineered design</em>—compressed headlines, open layouts, and everywhere you look, the warmth of ink on paper.';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules – Ant Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 12px;
+    }
+
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate, #666666);
+      font-weight: 400;
+    }
+
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 3px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin-top: 24px;
+      border-radius: 2px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 56px;
+    }
+
+    .section__label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 60px;
+      gap: 16px;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      color: var(--ink, #111111);
+      font-weight: 500;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 28px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 100%;
+      background: var(--signal, #3b82f6);
+      border-radius: 4px;
+      opacity: 0.18;
+      min-width: 2px;
+      transition: opacity 0.15s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.32;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      color: var(--slate, #666666);
+      text-align: right;
+    }
+
+    /* Rule weights */
+    .rule-demo {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink, #111111);
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 1px;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 24px;
+    }
+
+    .radius-item {
+      text-align: center;
+    }
+
+    .radius-item__box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 120px;
+      margin: 0 auto 12px;
+      background: var(--paper, #ffffff);
+      border: 2px solid var(--signal, #3b82f6);
+      opacity: 0.6;
+      transition: opacity 0.15s ease;
+    }
+
+    .radius-item:hover .radius-item__box {
+      opacity: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink, #111111);
+      margin-bottom: 2px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+
+    /* Elevation / Depth demos */
+    .elevation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 24px;
+    }
+
+    .elevation-item {
+      padding: 24px;
+      background: var(--paper, #ffffff);
+      border-radius: var(--radius-md, 8px);
+      text-align: center;
+      transition: transform 0.15s ease;
+    }
+
+    .elevation-item:hover {
+      transform: translateY(-2px);
+    }
+
+    .elevation-item__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink, #111111);
+      margin-bottom: 4px;
+    }
+
+    .elevation-item__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      color: var(--slate, #666666);
+      word-break: break-all;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 600px) {
+      .spacing-row {
+        grid-template-columns: 70px 1fr 50px;
+        gap: 8px;
+      }
+      .header__title {
+        font-size: 36px;
+      }
+      .page {
+        padding: 48px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': '4px',
+      's-2': '8px',
+      's-3': '16px',
+      's-4': '24px',
+      's-5': '32px',
+      's-6': '48px',
+      's-7': '64px',
+      's-8': '96px',
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': '0',
+      'sm':   '4px',
+      'md':   '8px',
+      'lg':   '16px',
+      'full': '999px',
+    };
+
+    const DEFAULT_DEPTH = [
+      { level: 0, name: 'Flat', treatment: 'none' },
+      { level: 1, name: 'Border', treatment: '1px solid var(--border, #e5e5e5)' },
+      { level: 2, name: 'Elevated', treatment: '0 2px 8px rgba(0,0,0,0.08)' },
+    ];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.name || 'Ant Design System';
+
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.assign(spacing, tokens.spacing.scale);
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const radius = tokens.radii || DEFAULT_RADIUS;
+      const depth = tokens.depth || DEFAULT_DEPTH;
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Eight pixels.<br>One ruler.</h1>';
+      html += '  <p class="header__subtitle">Spacing, rules, and depth across ' + esc(name) + '.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ---- Spacing scale ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, v]) => parseFloat(v) || 0), 1);
+
+      spacingEntries.forEach(([key, value]) => {
+        const px = parseFloat(value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 1);
+        html += '<div class="spacing-row">';
+        html += '  <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* ---- Rule weights / Depth levels ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth & Elevation</div>';
+
+      depth.forEach((item) => {
+        const name = item.name || 'Level ' + item.level;
+        const treatment = item.treatment || 'none';
+        let displayTreatment = treatment;
+        let lineStyle = '';
+
+        if (treatment === 'none') {
+          displayTreatment = 'no elevation';
+          lineStyle = 'height:1px;background:var(--border, #e5e5e5)';
+        } else if (treatment.includes('solid')) {
+          lineStyle = 'height:1px;background:var(--border, #e5e5e5)';
+        } else if (treatment.includes('rgba')) {
+          lineStyle = 'height:2px;background:rgba(0,0,0,0.08);box-shadow:0 2px 8px rgba(0,0,0,0.08)';
+        } else {
+          lineStyle = 'height:1px;background:var(--border, #e5e5e5)';
+        }
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <span class="rule-demo__name">' + esc(name) + '</span>';
+        html += '    <span class="rule-demo__spec">' + esc(displayTreatment) + '</span>';
+        html += '  </div>';
+        html += '  <hr class="rule-demo__line" style="' + lineStyle + '">';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* ---- Border radius ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+      html += '  <div class="radius-grid">';
+
+      Object.entries(radius).forEach(([key, value]) => {
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__box" style="border-radius:' + esc(value) + '"></div>';
+        html += '  <div class="radius-item__name">' + esc(key) + '</div>';
+        html += '  <div class="radius-item__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ---- Component-specific tokens ---- */
+      if (tokens.components) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Component Specifications</div>';
+
+        const componentTokens = [
+          { key: 'buttonRadius', label: 'Button Border Radius' },
+          { key: 'buttonPaddingBlock', label: 'Button Padding (vertical)' },
+          { key: 'buttonPaddingInline', label: 'Button Padding (horizontal)' },
+          { key: 'cardRadius', label: 'Card Border Radius' },
+          { key: 'cardBorder', label: 'Card Border' },
+          { key: 'cardShadow', label: 'Card Shadow' },
+        ];
+
+        componentTokens.forEach(({ key, label }) => {
+          if (tokens.components[key] !== undefined) {
+            const value = tokens.components[key];
+            html += '<div class="rule-demo">';
+            html += '  <div class="rule-demo__header">';
+            html += '    <span class="rule-demo__name">' + esc(label) + '</span>';
+            html += '    <span class="rule-demo__spec">' + esc(String(value).substring(0, 50)) + '</span>';
+            html += '  </div>';
+            html += '</div>';
+          }
+        });
+
+        html += '</div>';
+      }
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

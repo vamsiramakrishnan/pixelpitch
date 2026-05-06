@@ -1,0 +1,88 @@
+/* WIRED — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #057dbc;
+  --ink:     #000000;
+  --slate:   #666666;
+  --signal:  #057dbc;
+  --bone:    #e2e8f0;
+  --border:  #000000;
+  --surface: #e2e8f0;
+
+  /* Extended palette */
+  --color-page-ink: #1a1a1a;
+  --color-paper-white: #ffffff;
+  --color-caption-gray: #757575;
+  --color-disabled-gray: #999999;
+
+  /* Semantic */
+  --danger:  #000000;
+  --info:    #057dbc;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-headline-hero: 64px;
+  --t-display-headline-mobile-mid: 26px;
+  --t-section-heading: 20px;
+  --t-subheading: 17px;
+  --t-article-deck-serif: 19px;
+  --t-article-body-serif: 16px;
+  --t-ui-heading: 16px;
+  --t-button-label: 16px;
+  --t-link-inline-ui: 14px;
+  --t-eyebrow-kicker: 13px;
+  --t-eyebrow-bold: 13px;
+  --t-section-ribbon: 12px;
+  --t-photo-caption: 12.73px;
+  --t-timestamp-meta: 12px;
+  --t-tertiary-footer-link: 11px;
+  --t-inter-ui-heading: 16px;
+  --t-inter-ui-caption: 14px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   24px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  12px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    12px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

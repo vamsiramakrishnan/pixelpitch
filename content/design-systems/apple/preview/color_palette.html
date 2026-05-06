@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Palette — Apple Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #1d1d1f);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 32px;
+    }
+
+    /* ── Header ── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 56px;
+      font-weight: 600;
+      line-height: 1.07;
+      letter-spacing: -0.28px;
+      color: var(--ink, #1d1d1f);
+      margin-bottom: 16px;
+    }
+
+    .header__subtitle {
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.47;
+      letter-spacing: -0.374px;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 32px;
+    }
+
+    .header__meta {
+      display: flex;
+      gap: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--bone, #d2d2d7);
+      font-size: 12px;
+      letter-spacing: -0.12px;
+      color: var(--slate, #666666);
+    }
+
+    .header__meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .header__meta-label {
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--slate, #666666);
+    }
+
+    .header__meta-value {
+      font-weight: 400;
+      color: var(--ink, #1d1d1f);
+    }
+
+    /* ── Section ── */
+    .section {
+      margin-bottom: 96px;
+    }
+
+    .section__label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--bone, #d2d2d7);
+    }
+
+    /* ── Swatch Grid ── */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .swatch {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--bone, #d2d2d7);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    .swatch:hover {
+      border-color: var(--slate, #666666);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    }
+
+    .swatch__chip {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 12px;
+    }
+
+    .swatch__chip-contrast {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 4px 10px;
+      border-radius: 6px;
+      line-height: 1.2;
+      backdrop-filter: blur(8px);
+    }
+
+    .swatch__meta {
+      padding: 18px 18px 20px;
+    }
+
+    .swatch__var {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink, #1d1d1f);
+      word-break: break-all;
+      margin-bottom: 6px;
+      letter-spacing: -0.12px;
+    }
+
+    .swatch__hex {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--slate, #666666);
+      margin-bottom: 10px;
+      letter-spacing: -0.12px;
+    }
+
+    .swatch__role {
+      font-size: 13px;
+      line-height: 1.46;
+      color: var(--slate, #666666);
+      margin-bottom: 8px;
+      letter-spacing: -0.224px;
+    }
+
+    .swatch__contrast-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-top: 6px;
+      padding-top: 8px;
+      border-top: 1px solid var(--bone, #d2d2d7);
+    }
+
+    .contrast-pass { color: #34c759; }
+    .contrast-fail { color: #ff3b30; }
+    .contrast-aa-large { color: #ff9500; }
+
+    /* ── Usage Demo ── */
+    .usage-section {
+      margin-bottom: 96px;
+    }
+
+    .usage-section__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1.14;
+      letter-spacing: 0.196px;
+      color: var(--ink, #1d1d1f);
+      margin-bottom: 24px;
+    }
+
+    .usage-section__subtitle {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      max-width: 640px;
+      letter-spacing: -0.224px;
+    }
+
+    .usage-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .usage-demo {
+      border: 1px solid var(--bone, #d2d2d7);
+      border-radius: 12px;
+      padding: 32px;
+      background: var(--paper, #ffffff);
+    }
+
+    .usage-demo__title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .usage-demo__showcase {
+      margin-bottom: 24px;
+    }
+
+    .usage-demo__text {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+      letter-spacing: -0.224px;
+    }
+
+    /* Hero scene demo */
+    .hero-scene {
+      background: linear-gradient(135deg, var(--color-absolute-black) 0%, #0a0a0a 100%);
+      border-radius: 12px;
+      padding: 48px 32px;
+      text-align: center;
+      color: white;
+      margin-bottom: 16px;
+    }
+
+    .hero-scene h3 {
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.32px;
+      margin-bottom: 16px;
+    }
+
+    .hero-scene p {
+      font-size: 15px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.75);
+      letter-spacing: -0.224px;
+    }
+
+    /* Light scene demo */
+    .light-scene {
+      background: var(--color-pale-apple-gray);
+      border-radius: 12px;
+      padding: 48px 32px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .light-scene h3 {
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.32px;
+      color: var(--ink, #1d1d1f);
+      margin-bottom: 16px;
+    }
+
+    .light-scene p {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+      letter-spacing: -0.224px;
+    }
+
+    /* Accent demo buttons */
+    .accent-demo {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .demo-button {
+      padding: 10px 20px;
+      border-radius: 20px;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.224px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .demo-button--primary {
+      background: var(--signal, #0071e3);
+      color: white;
+    }
+
+    .demo-button--primary:hover {
+      background: #0066cc;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 113, 227, 0.3);
+    }
+
+    .demo-button--secondary {
+      background: var(--paper, #ffffff);
+      color: var(--signal, #0071e3);
+      border: 1px solid var(--signal, #0071e3);
+    }
+
+    .demo-button--secondary:hover {
+      background: rgba(0, 113, 227, 0.04);
+    }
+
+    /* ── WCAG Summary ── */
+    .wcag-section {
+      margin-top: 80px;
+      padding-top: 80px;
+      border-top: 1px solid var(--bone, #d2d2d7);
+    }
+
+    .wcag-section__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1.14;
+      letter-spacing: 0.196px;
+      color: var(--ink, #1d1d1f);
+      margin-bottom: 24px;
+    }
+
+    .wcag-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .wcag-card {
+      padding: 28px;
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--bone, #d2d2d7);
+      border-radius: 12px;
+    }
+
+    .wcag-card__badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .wcag-badge--aaa {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .wcag-badge--aa {
+      background: #dbeafe;
+      color: #0c2d6b;
+    }
+
+    .wcag-badge--aa-large {
+      background: #fef3c7;
+      color: #78350f;
+    }
+
+    .wcag-badge--fail {
+      background: #fee2e2;
+      color: #7f1d1d;
+    }
+
+    .wcag-card__label {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.29;
+      letter-spacing: -0.224px;
+      color: var(--ink, #1d1d1f);
+      margin-bottom: 4px;
+    }
+
+    .wcag-card__count {
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1.14;
+      color: var(--slate, #666666);
+    }
+
+    .wcag-summary-text {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      letter-spacing: -0.224px;
+    }
+
+    /* ── Loading ── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 15px;
+      letter-spacing: -0.224px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--bone, #d2d2d7);
+      border-top-color: var(--signal, #0071e3);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .page {
+        padding: 56px 24px;
+      }
+
+      .header {
+        margin-bottom: 56px;
+      }
+
+      .header__title {
+        font-size: 40px;
+        line-height: 1.1;
+        letter-spacing: 0;
+      }
+
+      .header__meta {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .swatch-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 16px;
+      }
+
+      .wcag-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    /* ──────────────────────────────────────────────────────────────── */
+    /* Contrast Ratio & WCAG Helpers                                     */
+    /* ──────────────────────────────────────────────────────────────── */
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function luminance([r, g, b]) {
+      const [rs, gs, bs] = [r, g, b].map(c => {
+        c /= 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    }
+
+    function contrastRatio(hex1, hex2) {
+      const l1 = luminance(hexToRgb(hex1));
+      const l2 = luminance(hexToRgb(hex2));
+      const lighter = Math.max(l1, l2);
+      const darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function wcagLevel(ratio) {
+      if (ratio >= 7) return { label: 'AAA', cls: 'pass' };
+      if (ratio >= 4.5) return { label: 'AA', cls: 'pass' };
+      if (ratio >= 3) return { label: 'AA Large', cls: 'aa-large' };
+      return { label: 'Fail', cls: 'fail' };
+    }
+
+    /* ──────────────────────────────────────────────────────────────── */
+    /* Core Color Roles                                                  */
+    /* ──────────────────────────────────────────────────────────────── */
+    const CORE_ROLES = {
+      paper:   'Page background & primary surfaces',
+      ink:     'Primary body text',
+      slate:   'Secondary & muted text',
+      signal:  'Primary action & focus',
+      bone:    'Subtle borders & dividers',
+      border:  'Field outlines & edges',
+      surface: 'Dark card & media layer',
+    };
+
+    /* ──────────────────────────────────────────────────────────────── */
+    /* Fetch & Render                                                    */
+    /* ──────────────────────────────────────────────────────────────── */
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#ff3b30">' +
+          'Could not load tokens.json — ' + escapeHtml(err.message) + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const rawColors = tokens.colors || {};
+      const paperHex = rawColors.paper || '#ffffff';
+      const systemTitle = tokens.meta?.title || 'Design System';
+
+      /* Flatten colors */
+      const colors = {};
+      for (const [k, v] of Object.entries(rawColors)) {
+        if (typeof v === 'string') { colors[k] = v; }
+        else if (v && typeof v === 'object') {
+          for (const [sk, sv] of Object.entries(v)) {
+            if (typeof sv === 'string') colors[k + '-' + sk] = sv;
+          }
+        }
+      }
+
+      const coreKeys = Object.keys(CORE_ROLES).filter(k => colors[k]);
+      const extendedKeys = Object.keys(colors).filter(k => !CORE_ROLES[k] && typeof colors[k] === 'string');
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += renderHeader(systemTitle, coreKeys.length + extendedKeys.length, paperHex);
+
+      /* ──── Core Palette ──── */
+      if (coreKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Core Palette</div>';
+        html += '  <div class="swatch-grid">';
+        coreKeys.forEach(key => {
+          html += swatchCard(key, colors[key], paperHex, CORE_ROLES[key]);
+        });
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Extended Palette ──── */
+      if (extendedKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Extended Palette</div>';
+        html += '  <div class="swatch-grid">';
+        extendedKeys.forEach(key => {
+          const role = (tokens.colorRoles && tokens.colorRoles[key]) || formatRole(key);
+          html += swatchCard(key, colors[key], paperHex, role);
+        });
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Usage Demos ──── */
+      html += renderUsageDemos(colors, paperHex);
+
+      /* ──── WCAG Summary ──── */
+      html += renderWcagSummary(colors, paperHex);
+
+      app.innerHTML = html;
+    }
+
+    /* ──────────────────────────────────────────────────────────────── */
+    /* Header                                                            */
+    /* ──────────────────────────────────────────────────────────────── */
+    function renderHeader(title, colorCount, paperHex) {
+      return '' +
+        '<header class="header">' +
+        '  <h1 class="header__title">' + escapeHtml(title) + ' Palette</h1>' +
+        '  <p class="header__subtitle">' +
+        '    A precision editorial color system designed for cinematic scenes and dense transaction surfaces. ' +
+        '    Black and pale gray create rhythmic chapter breaks, while Apple Action Blue signals all primary interactions.' +
+        '  </p>' +
+        '  <div class="header__meta">' +
+        '    <div class="header__meta-item">' +
+        '      <span class="header__meta-label">Total Tokens</span>' +
+        '      <span class="header__meta-value">' + colorCount + ' colors</span>' +
+        '    </div>' +
+        '    <div class="header__meta-item">' +
+        '      <span class="header__meta-label">Paper Background</span>' +
+        '      <span class="header__meta-value">' + escapeHtml(paperHex) + '</span>' +
+        '    </div>' +
+        '    <div class="header__meta-item">' +
+        '      <span class="header__meta-label">System</span>' +
+        '      <span class="header__meta-value">Media & Consumer</span>' +
+        '    </div>' +
+        '  </div>' +
+        '</header>';
+    }
+
+    /* ──────────────────────────────────────────────────────────────── */
+    /* Swatch Card                                                       */
+    /* ──────────────────────────────────────────────────────────────── */
+    function swatchCard(key, hex, paperHex, role) {
+      const ratio = contrastRatio(hex, paperHex);
+      const level = wcagLevel(ratio);
+      const chipLum = luminance(hexToRgb(hex));
+      const chipTextColor = chipLum > 0.4 ? '#1d1d1f' : '#ffffff';
+      const chipBgOpacity = chipLum > 0.4 ? '0.1' : '0.25';
+
+      return '' +
+        '<div class="swatch">' +
+        '  <div class="swatch__chip" style="background:' + hex + '">' +
+        '    <span class="swatch__chip-contrast" ' +
+        '         style="color:' + chipTextColor + ';background:rgba(0,0,0,' + chipBgOpacity + ')">' +
+        '      ' + ratio.toFixed(1) + ':1' +
+        '    </span>' +
+        '  </div>' +
+        '  <div class="swatch__meta">' +
+        '    <div class="swatch__var">--' + formatVar(key) + '</div>' +
+        '    <div class="swatch__hex">' + escapeHtml(hex) + '</div>' +
+        '    <div class="swatch__role">' + escapeHtml(role) + '</div>' +
+        '    <div class="swatch__contrast-label contrast-' + level.cls + '">' +
+        '      WCAG ' + level.label + ' vs paper' +
+        '    </div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ──────────────────────────────────────────────────────────────── */
+    /* Usage Demos                                                       */
+    /* ──────────────────────────────────────────────────────────────── */
+    function renderUsageDemos(colors, paperHex) {
+      return '' +
+        '<div class="usage-section">' +
+        '  <h2 class="usage-section__title">Usage & Rhythm</h2>' +
+        '  <p class="usage-section__subtitle">' +
+        '    Apple's color system creates a binary rhythm: immersive black hero scenes alternate with pale neutral features, ' +
+        '    while dense transaction surfaces use white with dark graphite controls. A single blue accent family drives all interaction states.' +
+        '  </p>' +
+        '  <div class="usage-grid">' +
+        '    ' + demoHeroScene() +
+        '    ' + demoLightFeature() +
+        '    ' + demoAccentUsage() +
+        '  </div>' +
+        '</div>';
+    }
+
+    function demoHeroScene() {
+      return '' +
+        '<div class="usage-demo">' +
+        '  <div class="usage-demo__title">Hero Scene</div>' +
+        '  <div class="usage-demo__showcase">' +
+        '    <div class="hero-scene">' +
+        '      <h3>Introducing iPhone 17</h3>' +
+        '      <p>Cinema-grade capture. Precision engineering. Pure innovation.</p>' +
+        '    </div>' +
+        '  </div>' +
+        '  <div class="usage-demo__text">' +
+        '    Deep black (#000000) immerses product and photography. Paired with pale gray feature bands to create rhythmic breathing.' +
+        '  </div>' +
+        '</div>';
+    }
+
+    function demoLightFeature() {
+      return '' +
+        '<div class="usage-demo">' +
+        '  <div class="usage-demo__title">Feature Band</div>' +
+        '  <div class="usage-demo__showcase">' +
+        '    <div class="light-scene">' +
+        '      <h3>Performance Specs</h3>' +
+        '      <p>A19 Bionic chip. 12-hour battery. Fastest 5G on any phone.</p>' +
+        '    </div>' +
+        '  </div>' +
+        '  <div class="usage-demo__text">' +
+        '    Pale Apple Gray (#f5f5f7) for editorial features. Dark text on light creates maximum readability without jarring contrast.' +
+        '  </div>' +
+        '</div>';
+    }
+
+    function demoAccentUsage() {
+      return '' +
+        '<div class="usage-demo">' +
+        '  <div class="usage-demo__title">Action & Focus</div>' +
+        '  <div class="usage-demo__showcase">' +
+        '    <div class="accent-demo">' +
+        '      <button class="demo-button demo-button--primary">Buy now</button>' +
+        '      <button class="demo-button demo-button--secondary">Learn more</button>' +
+        '    </div>' +
+        '  </div>' +
+        '  <div class="usage-demo__text">' +
+        '    Apple Action Blue (#0071e3) for all primary buttons and focus states. No secondary accent palette — one signal, one meaning.' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ──────────────────────────────────────────────────────────────── */
+    /* WCAG Summary                                                      */
+    /* ──────────────────────────────────────────────────────────────── */
+    function renderWcagSummary(colors, paperHex) {
+      const keys = Object.keys(colors);
+      let passAAA = 0, passAA = 0, passAALarge = 0, fail = 0;
+
+      keys.forEach(k => {
+        const ratio = contrastRatio(colors[k], paperHex);
+        if (ratio >= 7) passAAA++;
+        else if (ratio >= 4.5) passAA++;
+        else if (ratio >= 3) passAALarge++;
+        else fail++;
+      });
+
+      return '' +
+        '<div class="wcag-section">' +
+        '  <h2 class="wcag-section__title">WCAG 2.1 Compliance</h2>' +
+        '  <p class="wcag-summary-text">' +
+        '    All color tokens are evaluated for contrast against the paper background (' + escapeHtml(paperHex) + '). ' +
+        '    Core palette meets AAA standards for readability; extended palette supports varied use contexts.' +
+        '  </p>' +
+        '  <div class="wcag-grid">' +
+        '    <div class="wcag-card">' +
+        '      <div class="wcag-card__badge wcag-badge--aaa">AAA</div>' +
+        '      <div class="wcag-card__label">Enhanced Contrast</div>' +
+        '      <div class="wcag-card__count">' + passAAA + '</div>' +
+        '      <div style="font-size:11px;color:var(--slate);margin-top:6px;">7.0:1 ratio</div>' +
+        '    </div>' +
+        '    <div class="wcag-card">' +
+        '      <div class="wcag-card__badge wcag-badge--aa">AA</div>' +
+        '      <div class="wcag-card__label">Standard Contrast</div>' +
+        '      <div class="wcag-card__count">' + passAA + '</div>' +
+        '      <div style="font-size:11px;color:var(--slate);margin-top:6px;">4.5:1 ratio</div>' +
+        '    </div>' +
+        '    <div class="wcag-card">' +
+        '      <div class="wcag-card__badge wcag-badge--aa-large">AA Large</div>' +
+        '      <div class="wcag-card__label">Large Text</div>' +
+        '      <div class="wcag-card__count">' + passAALarge + '</div>' +
+        '      <div style="font-size:11px;color:var(--slate);margin-top:6px;">3.0:1 ratio</div>' +
+        '    </div>' +
+        '    <div class="wcag-card">' +
+        '      <div class="wcag-card__badge wcag-badge--fail">Below</div>' +
+        '      <div class="wcag-card__label">Insufficient</div>' +
+        '      <div class="wcag-card__count">' + fail + '</div>' +
+        '      <div style="font-size:11px;color:var(--slate);margin-top:6px;">Below 3.0:1</div>' +
+        '    </div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ────────────────────────────────────────────────────────────────

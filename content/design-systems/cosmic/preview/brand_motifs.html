@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Cosmic</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--signal, #3b82f6);
+      font-style: italic;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 28px;
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 24px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--signal, #3b82f6);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-lg, 16px);
+      padding: 32px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: var(--radius-lg, 16px);
+      overflow: hidden;
+      height: 120px;
+      border: 1px solid var(--border, #e5e5e5);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.4;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-lg, 16px);
+      padding: 48px 40px;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 54px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #3b82f6);
+      font-style: italic;
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--slate, #666666);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--ink, #111111);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-lg, 16px);
+      padding: 32px;
+      max-width: 840px;
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+    }
+
+    /* ──── Signal Rule Visual ──── */
+    .signal-rule {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .signal-rule {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .signal-slide {
+      border: 2px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-lg, 16px);
+      aspect-ratio: 16 / 10;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .signal-slide--correct {
+      background: var(--paper, #ffffff);
+      border-color: var(--signal, #3b82f6);
+    }
+
+    .signal-slide--incorrect {
+      background: var(--paper, #ffffff);
+    }
+
+    .signal-slide__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .signal-slide__headline {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 40px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 0;
+    }
+
+    .signal-slide__accent {
+      color: var(--signal, #3b82f6);
+      font-style: italic;
+    }
+
+    .signal-slide__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* ──── Interaction States ──── */
+    .states-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .states-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .state-box {
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .state-label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .state-demo {
+      padding: 12px 20px;
+      border-radius: var(--radius-sm, 4px);
+      border: 1px solid transparent;
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+
+    .state-demo--idle {
+      background: var(--signal, #3b82f6);
+      color: var(--paper, #ffffff);
+      border-color: var(--signal, #3b82f6);
+    }
+
+    .state-demo--hover {
+      background: rgba(59, 130, 246, 0.9);
+      color: var(--paper, #ffffff);
+      border-color: var(--signal, #3b82f6);
+    }
+
+    .state-demo--active {
+      background: rgba(59, 130, 246, 0.8);
+      color: var(--paper, #ffffff);
+      border-color: var(--signal, #3b82f6);
+      transform: scale(0.98);
+    }
+
+    .state-demo--disabled {
+      background: var(--bone, #f5f5f5);
+      color: var(--slate, #666666);
+      border-color: var(--border, #e5e5e5);
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .state-demo--focus {
+      background: var(--signal, #3b82f6);
+      color: var(--paper, #ffffff);
+      border-color: var(--signal, #3b82f6);
+      outline: 3px solid rgba(59, 130, 246, 0.3);
+      outline-offset: 2px;
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 18px;
+      font-family: var(--font-body, 'system-ui', sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border', 'surface'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#3b82f6">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">The <span>DNA</span> of Cosmic</h1>';
+      html += '  <p class="header__subtitle">Futuristic sci-fi aesthetic meets premium interactivity. Bold primary blues, clear hierarchy, and purposeful motion define the visual language.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Cosmic balances futuristic intent with usable clarity. The canvas is bright and neutral, preventing cognitive overload. Primary blue (#3B82F6) appears as the interaction signal—every hover, focus, and active state communicates through this accent. Typography is san-serif system fonts for reliability and performance. Motion is subtle and purposeful (150–250ms). Depth comes from clean borders and elevated shadows, never from blur or glassmorphism. Every detail serves interaction clarity and information hierarchy.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Bright white canvas (#FFFFFF) for clarity and minimal cognitive load</li>';
+      html += '    <li>Monolithic primary blue (#3B82F6) as the sole interaction signal</li>';
+      html += '    <li>Neutral palette: ink (#111111), slate (#666666), bone (#F5F5F5) for hierarchy</li>';
+      html += '    <li>System-ui sans-serif for universal compatibility and speed</li>';
+      html += '    <li>Subtle motion (150–250ms) on interactive states with stable easing</li>';
+      html += '    <li>Rounded corners (8–16px) for approachable, premium feel</li>';
+      html += '    <li>Depth through borders and modest elevation, never blur</li>';
+      html += '    <li>Explicit states: hover, focus-visible, active, disabled, loading</li>';
+      html += '    <li>Primary blue underlines and accents guide visual focus</li>';
+      html += '    <li>Mono caps for labels and supplementary information</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use Primary Blue (#3B82F6) for all interactive states</li>';
+      html += '      <li>Provide explicit hover feedback within 150ms</li>';
+      html += '      <li>Show focus-visible rings on keyboard navigation</li>';
+      html += '      <li>Disable buttons and inputs with reduced opacity + cursor change</li>';
+      html += '      <li>Round corners on buttons (8px) and cards (8–16px)</li>';
+      html += '      <li>Separate sections with subtle borders, not shadows</li>';
+      html += '      <li>Use system fonts (system-ui, ui-monospace) for reliability</li>';
+      html += '      <li>Scale typography to reinforce hierarchy: 72px → 14px</li>';
+      html += '      <li>Underline interactive elements with primary blue</li>';
+      html += '      <li>Label all interactive states in ALL-CAPS mono font</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use colors beyond the core palette for UI chrome</li>';
+      html += '      <li>Animate motion longer than 250ms unless showing deep loading</li>';
+      html += '      <li>Apply blur effects or glassmorphism to interactive elements</li>';
+      html += '      <li>Square off corners on buttons, cards, or primary containers</li>';
+      html += '      <li>Omit focus states — keyboard nav must always be visible</li>';
+      html += '      <li>Use shadows on primary cards or buttons (borders only)</li>';
+      html += '      <li>Mix serif fonts into body text or interaction labels</li>';
+      html += '      <li>Change Primary Blue for secondary or accent purposes</li>';
+      html += '      <li>Use gradients or color overlays on backgrounds</li>';
+      html += '      <li>Hide disabled states without visual feedback</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── The Signal Rule Visual ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Primary Blue as Signal</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.65; color: var(--slate); margin-bottom: 24px; max-width: 840px;">Primary blue (#3B82F6) is the sole interaction signal. It appears on hover, focus, and active states — never scattered across semantics or warnings. This discipline keeps the interface clear and fast to parse.</p>';
+      html += '  <div class="signal-rule">';
+
+      html += '    <div class="signal-slide signal-slide--correct">';
+      html += '      <div class="signal-slide__kicker">Correct</div>';
+      html += '      <div class="signal-slide__headline">Blue signals <span class="signal-slide__accent">interaction</span> clarity</div>';
+      html += '      <div class="signal-slide__label">One color for all states. Consistent. Predictable.</div>';
+      html += '    </div>';
+
+      html += '    <div class="signal-slide signal-slide--incorrect">';
+      html += '      <div class="signal-slide__kicker">Incorrect</div>';
+      html += '      <div style="font-size: 24px; font-family: var(--font-display); color: #10b981; margin-bottom: 12px;">Multiple accent colors</div>';
+      html += '      <div class="signal-slide__headline">Dilute focus and <span class="signal-slide__accent" style="color:#ef4444;">confuse</span> intent</div>';
+      html += '      <div class="signal-slide__label">Semantic colors in UI chrome create noise.</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#111111' : '#f5f5f5';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Interaction States ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Interactive States</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.65; color: var(--slate); margin-bottom: 24px; max-width: 840px;">Every interactive element must communicate state. Hover feedback is instant (150ms), focus rings are visible for keyboard nav, active states use subtle scale or opacity, and disabled elements reduce opacity to 50% with a cursor change.</p>';
+      html += '  <div class="states-grid">';
+
+      html += '    <div class="state-box">';
+      html += '      <div class="state-label">Idle</div>';
+      html += '      <button class="state-demo state-demo--idle">Primary Action</button>';
+      html += '    </div>';
+
+      html += '    <div class="state-box">';
+      html += '      <div class="state-label">Hover</div>';
+      html += '      <button class="state-demo state-demo--hover">Hover @ 150ms</button>';
+      html += '    </div>';
+
+      html += '    <div class="state-box">';
+      html += '      <div class="state-label">Active</div>';
+      html += '      <button class="state-demo state-demo--active">Pressed Scale</button>';
+      html += '    </div>';
+
+      html += '    <div class="state-box">';
+      html += '      <div class="state-label">Focus</div>';
+      html += '      <button class="state-demo state-demo--focus">Focus Ring</button>';
+      html += '    </div>';
+
+      html += '    <div class="state-box">';
+      html += '      <div class="state-label">Disabled</div>';
+      html += '      <button class="state-demo state-demo--disabled" disabled>Disabled</button>';
+      html += '    </div>';
+
+      html += '    <div class="state-box">';
+      html += '      <div class="state-label">Loading</div>';
+      html += '      <button class="state-demo state-demo--idle" style="position: relative;">';
+      html += '        <span style="opacity: 0;">Processing</span>';
+      html += '        <span style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite;"></span>';
+      html += '      </button>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Typography Pairing ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Display + Body</div>';
+      html += '    <div class="type-pairing__display">System fonts scale with <span>clarity</span> and speed</div>';
+
+      html += '    <div class="type-pairing__body">System-ui sans-serif powers both headlines and body text. Scale aggressively: 72px for heroes, 54px for sections, 18px for paragraphs. Line height tightens at display scales (1.1) and opens in body (1.65). Mono fonts label metadata and interactive states. This system-first approach ensures Cosmic works on any platform with universal font fallbacks and instant rendering.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Display Font</span>';
+      html += '        system-ui, sans-serif, 700 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Body Font</span>';
+      html += '        system-ui, sans-serif, 400 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Mono Font</span>';
+      html += '        ui-monospace, monospace, 500 weight';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Type Ramp Section ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Type Ramp & Roles</div>';
+      html += '  <div style="border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; background: var(--paper);">';
+
+      const ramp =

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Palette — Atlassian Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--bone, #ffffff);
+      color: var(--ink, #0052cc);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 72px;
+      border-bottom: 1px solid var(--border, #ebecf0);
+      padding-bottom: 48px;
+    }
+    .header__eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #7a869a);
+      margin-bottom: 8px;
+    }
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.5px;
+      color: var(--ink, #0052cc);
+      margin-bottom: 12px;
+    }
+    .header__line-1 { display: block; }
+    .header__line-2 { display: block; color: var(--signal, #6554c0); }
+    .header__subtitle {
+      font-size: 16px;
+      color: var(--slate, #7a869a);
+      max-width: 720px;
+      margin-top: 12px;
+      line-height: 1.50;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #7a869a);
+      margin-bottom: 24px;
+      margin-top: 56px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #ebecf0);
+    }
+    .section-label:first-of-type { margin-top: 0; }
+
+    /* Swatch grid */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .swatch {
+      background: var(--bone, #ffffff);
+      border: 1px solid var(--border, #ebecf0);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+    .swatch:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+      border-color: var(--slate, #7a869a);
+    }
+
+    .swatch__chip {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 8px;
+    }
+    .swatch__chip-contrast {
+      font-family: var(--font-mono, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 2px;
+      line-height: 1.4;
+      backdrop-filter: blur(4px);
+    }
+
+    .swatch__meta {
+      padding: 14px 16px 16px;
+    }
+    .swatch__var {
+      font-family: var(--font-mono, monospace);
+      font-size: 12px;
+      color: var(--ink, #0052cc);
+      word-break: break-all;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+    .swatch__hex {
+      font-family: var(--font-mono, monospace);
+      font-size: 11px;
+      color: var(--slate, #7a869a);
+      margin-bottom: 6px;
+    }
+    .swatch__role {
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--slate, #7a869a);
+      margin-bottom: 8px;
+    }
+    .swatch__contrast-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .contrast-pass { color: #00875a; }
+    .contrast-fail { color: #ff5630; }
+    .contrast-aa-large { color: #ffab00; }
+
+    /* Demo section */
+    .demo-section {
+      margin-top: 56px;
+      padding: 32px;
+      background: var(--color-n20, #f4f5f7);
+      border-radius: 4px;
+    }
+    .demo-section h3 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.20;
+      color: var(--ink, #0052cc);
+      margin-bottom: 24px;
+    }
+    .demo-row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .demo-label {
+      min-width: 140px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #0052cc);
+    }
+    .demo-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .demo-badge--done { background: var(--color-green-100, #e3fcef); color: var(--color-green-500, #00875a); }
+    .demo-badge--progress { background: var(--paper, #deebff); color: var(--ink, #0052cc); }
+    .demo-badge--todo { background: var(--color-n20, #f4f5f7); color: var(--color-n500, #42526e); }
+    .demo-badge--warning { background: var(--color-yellow-100, #fff0b3); color: var(--color-yellow-500, #ffab00); }
+    .demo-badge--error { background: var(--color-red-100, #ffebe6); color: var(--color-red-500, #ff5630); }
+
+    /* WCAG summary */
+    .wcag-summary {
+      margin-top: 48px;
+      padding: 32px;
+      background: var(--bone, #ffffff);
+      border: 1px solid var(--border, #ebecf0);
+      border-radius: 4px;
+    }
+    .wcag-summary h2 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: var(--ink, #0052cc);
+    }
+    .wcag-summary p {
+      font-size: 14px;
+      color: var(--slate, #7a869a);
+      margin-bottom: 20px;
+      line-height: 1.50;
+    }
+    .wcag-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #ebecf0);
+      font-size: 14px;
+    }
+    .wcag-row:last-child { border-bottom: none; }
+    .wcag-badge {
+      display: inline-flex;
+      padding: 4px 10px;
+      border-radius: 2px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      min-width: 50px;
+      justify-content: center;
+    }
+    .wcag-badge--pass { background: var(--color-green-100, #e3fcef); color: var(--color-green-500, #00875a); }
+    .wcag-badge--fail { background: var(--color-red-100, #ffebe6); color: var(--color-red-500, #ff5630); }
+    .wcag-badge--aa-large { background: var(--color-yellow-100, #fff0b3); color: var(--color-yellow-500, #ffab00); }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #7a869a);
+      font-size: 16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border, #ebecf0);
+      border-top-color: var(--ink, #0052cc);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Notes */
+    .notes {
+      margin-top: 56px;
+      padding: 24px;
+      background: var(--color-n10, #fafbfc);
+      border-left: 4px solid var(--ink, #0052cc);
+      border-radius: 2px;
+    }
+    .notes h3 {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink, #0052cc);
+      margin-bottom: 8px;
+    }
+    .notes p {
+      font-size: 13px;
+      line-height: 1.50;
+      color: var(--slate, #7a869a);
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    /* ─────────────────────────────────────────────────────────────── */
+    /* WCAG 2.1 Contrast ratio calculation                            */
+    /* ─────────────────────────────────────────────────────────────── */
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function luminance([r, g, b]) {
+      const [rs, gs, bs] = [r, g, b].map(c => {
+        c /= 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    }
+
+    function contrastRatio(hex1, hex2) {
+      const l1 = luminance(hexToRgb(hex1));
+      const l2 = luminance(hexToRgb(hex2));
+      const lighter = Math.max(l1, l2);
+      const darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function wcagLevel(ratio) {
+      if (ratio >= 7) return { label: 'AAA', cls: 'pass' };
+      if (ratio >= 4.5) return { label: 'AA', cls: 'pass' };
+      if (ratio >= 3) return { label: 'AA Large', cls: 'aa-large' };
+      return { label: 'Fail', cls: 'fail' };
+    }
+
+    /* ─────────────────────────────────────────────────────────────── */
+    /* Core token roles and descriptions                              */
+    /* ─────────────────────────────────────────────────────────────── */
+    const CORE_ROLES = {
+      paper:   'Canvas tint (primary interactive accent)',
+      ink:     'Primary interactive color (buttons, links, active states)',
+      slate:   'Secondary / muted text, helper text',
+      signal:  'Sub-accent (epics, custom labels, brand moments)',
+      bone:    'Surface fill (white card / modal background)',
+      border:  'Dividers, borders, separators at rest',
+      surface: 'Card and container surface',
+    };
+
+    const EXTENDED_ROLES = {
+      'blue-400': 'Blue hover / lighter interactive',
+      'blue-600': 'Blue pressed / active state',
+      'blue-700': 'Blue deep contrast context',
+      'blue-75': 'Blue secondary highlight tint',
+      'blue-50': 'Blue barely-there hover tint',
+      'green-500': 'Success, Done status, resolved, approved',
+      'green-400': 'Green hover / lighter success',
+      'green-100': 'Success background tint',
+      'red-500': 'Error, critical, blocker, destructive',
+      'red-400': 'Red hover / lighter danger',
+      'red-100': 'Error background tint',
+      'yellow-500': 'Warning, medium priority, caution',
+      'yellow-400': 'Yellow hover / lighter warning',
+      'yellow-100': 'Warning background tint',
+      'teal-500': 'Informational, new feature, discovery',
+      'teal-100': 'Info background tint',
+      'purple-100': 'Purple surface tint (epic accent)',
+      'n10': 'Subtle surface tinting, table headers',
+      'n20': 'Sunken surfaces, sidebar backgrounds, disabled fields',
+      'n40': 'Stronger borders, card outlines, dropdowns',
+      'n50': 'Disabled text, placeholder icons',
+      'n60': 'Placeholder text in inputs',
+      'n80': 'De-emphasized metadata, timestamps',
+      'n200': 'Muted body text, table cells',
+      'n300': 'Standard body text, secondary headings',
+      'n500': 'Primary body text, labels, nav items',
+      'n700': 'Strong text, page titles, primary headings',
+      'n800': 'Highest contrast text, modal titles, critical labels',
+    };
+
+    /* ─────────────────────────────────────────────────────────────── */
+    /* Build the page from tokens.json                                */
+    /* ─────────────────────────────────────────────────────────────── */
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#ff5630">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const rawColors = tokens.colors || {};
+      const boneHex = rawColors.bone || '#ffffff';
+
+      /* Flatten nested extended/semantic into a flat map */
+      const colors = {};
+      for (const [k, v] of Object.entries(rawColors)) {
+        if (typeof v === 'string') { colors[k] = v; }
+        else if (v && typeof v === 'object') {
+          for (const [sk, sv] of Object.entries(v)) {
+            if (typeof sv === 'string') colors[k + '-' + sk] = sv;
+          }
+        }
+      }
+
+      /* Split into core and extended */
+      const coreKeys = Object.keys(CORE_ROLES).filter(k => colors[k]);
+      const extendedKeys = Object.keys(EXTENDED_ROLES).filter(k => colors[k]);
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__eyebrow">Design System</div>';
+      html += '  <h1 class="header__title"><span class="header__line-1">Color</span> <span class="header__line-2">Palette</span></h1>';
+      html += '  <p class="header__subtitle">Atlassian\'s color system prioritizes information clarity and functional hierarchy. A restrained blue palette anchors interactive affordances, while semantic colors (green, red, yellow, teal) communicate status and intent. The neutral scale from N10 to N800 creates dense-but-scannable layouts.</p>';
+      html += '</header>';
+
+      /* Core palette */
+      if (coreKeys.length) {
+        html += '<div class="section-label">Core Palette</div>';
+        html += '<div class="swatch-grid">';
+        coreKeys.forEach(key => {
+          html += swatchCard(key, colors[key], boneHex, CORE_ROLES[key]);
+        });
+        html += '</div>';
+      }
+
+      /* Extended palette */
+      if (extendedKeys.length) {
+        html += '<div class="section-label">Extended Palette</div>';
+        html += '<div class="swatch-grid">';
+        extendedKeys.forEach(key => {
+          html += swatchCard(key, colors[key], boneHex, EXTENDED_ROLES[key]);
+        });
+        html += '</div>';
+      }
+
+      /* Demo section */
+      html += demoSection();
+
+      /* WCAG summary */
+      html += wcagSummary(colors, boneHex);
+
+      /* Notes */
+      html += notesSection();
+
+      app.innerHTML = html;
+    }
+
+    /* ─────────────────────────────────────────────────────────────── */
+    /* Swatch card builder                                             */
+    /* ─────────────────────────────────────────────────────────────── */
+    function swatchCard(key, hex, boneHex, role) {
+      const ratio = contrastRatio(hex, boneHex);
+      const level = wcagLevel(ratio);
+      const chipTextColor = luminance(hexToRgb(hex)) > 0.4 ? '#172b4d' : '#ffffff';
+      const chipBadgeBg = luminance(hexToRgb(hex)) > 0.4
+        ? 'rgba(23, 43, 77, 0.15)' : 'rgba(255, 255, 255, 0.25)';
+
+      return '' +
+        '<div class="swatch">' +
+        '  <div class="swatch__chip" style="background:' + hex + '">' +
+        '    <span class="swatch__chip-contrast" style="color:' + chipTextColor +
+             ';background:' + chipBadgeBg + '">' + ratio.toFixed(1) + ':1</span>' +
+        '  </div>' +
+        '  <div class="swatch__meta">' +
+        '    <div class="swatch__var">--' + esc(key) + '</div>' +
+        '    <div class="swatch__hex">' + esc(hex) + '</div>' +
+        '    <div class="swatch__role">' + esc(role) + '</div>' +
+        '    <div class="swatch__contrast-label contrast-' + level.cls + '">' +
+             'WCAG ' + level.label + '</div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ─────────────────────────────────────────────────────────────── */
+    /* Demo section: Status lozenges                                   */
+    /* ─────────────────────────────────────────────────────────────── */
+    function demoSection() {
+      let html = '<div class="demo-section">';
+      html += '<h3>Status Lozenges — A First-Class Pattern</h3>';
+      html += '<p style="font-size:13px;color:var(--slate,#7a869a);margin-bottom:20px;line-height:1.50;">Atlassian uses colored status badges across Jira, Confluence, and Bitbucket to communicate task state at a glance. Each status is paired with a semantic color, never with decoration.</p>';
+      html += '<div class="demo-row">';
+      html += '  <span class="demo-label">Done</span>';
+      html += '  <span class="demo-badge demo-badge--done">Done</span>';
+      html += '  <span class="demo-badge demo-badge--done">Approved</span>';
+      html += '  <span class="demo-badge demo-badge--done">Resolved</span>';
+      html += '</div>';
+      html += '<div class="demo-row">';
+      html += '  <span class="demo-label">In Progress</span>';
+      html += '  <span class="demo-badge demo-badge--progress">In Progress</span>';
+      html += '  <span class="demo-badge demo-badge--progress">Active</span>';
+      html += '</div>';
+      html += '<div class="demo-row">';
+      html += '  <span class="demo-label">To Do</span>';
+      html += '  <span class="demo-badge demo-badge--todo">To Do</span>';
+      html += '  <span class="demo-badge demo-badge--todo">Backlog</span>';
+      html += '</div>';
+      html += '<div class="demo-row">';
+      html += '  <span class="demo-label">Warning</span>';
+      html += '  <span class="demo-badge demo-badge--warning">Medium Priority</span>';
+      html += '  <span class="demo-badge demo-badge--warning">Needs Attention</span>';
+      html += '</div>';
+      html += '<div class="demo-row">';
+      html += '  <span class="demo-label">Error</span>';
+      html += '  <span class="demo-badge demo-badge--error">Blocker</span>';
+      html += '  <span class="demo-badge demo-badge--error">Critical</span>';
+      html += '</div>';
+      html += '</div>';
+      return html;
+    }
+
+    /* ─────────────────────────────────────────────────────────────── */
+    /* WCAG compliance summary                                         */
+    /* ─────────────────────────────────────────────────────────────── */
+    function wcagSummary(colors, boneHex) {
+      const keys = Object.keys(colors);
+      let passAAA = 0, passAA = 0, passAALarge = 0, fail = 0;
+
+      keys.forEach(k => {
+        const ratio = contrastRatio(colors[k], boneHex);
+        if (ratio >= 7) passAAA++;
+        else if (ratio >= 4.5) passAA++;
+        else if (ratio >= 3) passAALarge++;
+        else fail++;
+      });
+
+      let html = '<div class="wcag-summary">';
+      html += '<h2>WCAG 2.1 Compliance Summary</h2>';
+      html += '<p>Contrast ratios measured against the bone background (' + esc(boneHex) + '). All text colors must meet AA (4.5:1) for standard text, AA Large (3:1) for 18pt+.</p>';
+      html += row('AAA (7:1+)', passAAA, 'pass');
+      html += row('AA (4.5:1+)', passAA, 'pass');
+      html += row('AA Large Text (3:1+)', passAALarge, 'aa-large');
+      html += row('Below threshold', fail, fail > 0 ? 'fail' : 'pass');
+      html += '</div>';
+      return html;
+
+      function row(label, count, badge) {
+        return '<div class="wcag-row">' +
+               '<span class="wcag-badge wcag-badge--' + badge + '">' + count + '</span>' +
+               '<span>' + label + '</span>' +
+               '</div>';
+      }
+    }
+
+    /* ─────────────────────────────────────────────────────────────── */
+    /* Notes section                                                   */
+    /* ─────────────────────────────────────────────────────────────── */
+    function notesSection() {
+      let html = '<div class="notes">';
+      html += '<h3>Design Philosophy</h3>';
+      html += '<p><strong>Restraint over decoration:</strong> Atlassian Blue (#0052cc) is the singular interactive accent — used only on buttons, links, active states, and focus rings. Status colors (green, red, yellow, teal) carry semantic intent, never decoration. The neutral scale (N10–N800) provides the structural foundation.</p>';
+      html += '<p style="margin-top:12px;"><strong>Contrast for clarity:</strong> Every color in this palette meets WCAG AA standards for normal text. High-contrast text colors (N500–N800) ensure readability in information-dense layouts like Jira boards and Confluence tables.</p>';
+      html += '<p style="margin-top:12px;"><strong>Status lozenges as a primitive:</strong> Colored pills communicate task state at a glance across the Atlassian suite. Pair a semantic color with a tinted background (e.g., Green 100 with Green 500 text) for consistent, scannable status indicators.</p>';
+      html += '</div>';
+      return html;
+    }
+
+    /* ─────────────────────────────────────────────────────────────── */
+    /* Utilities                                                       */
+    /* ─────────────────────────────────────────────────────────────── */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

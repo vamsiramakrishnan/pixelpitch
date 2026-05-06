@@ -1,0 +1,102 @@
+/* MiniMax — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #bfdbfe;
+  --ink:     #222222;
+  --slate:   #45515e;
+  --signal:  #ea5ec1;
+  --bone:    #f2f3f5;
+  --border:  #f2f3f5;
+  --surface: #ad1b89;
+
+  /* Extended palette */
+  --color-brand-blue: #1456f0;
+  --color-sky-blue: #3daeff;
+  --color-primary-light: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-brand-deep: #17437d;
+  --color-dark: #18181b;
+  --color-charcoal: #181e25;
+  --color-mid-gray: #5f5f63;
+  --color-light-gray: #848484;
+  --color-pure-white: #ffffff;
+  --color-border-gray: #e5e7eb;
+  --color-success-background: #e8ffea;
+
+  /* Semantic */
+  --success: #e8ffea;
+  --info:    #1456f0;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: Outfit;
+  --font-body:    Outfit;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 80px;
+  --t-section-heading: 31px;
+  --t-section-heading-alt: 32px;
+  --t-card-title: 28px;
+  --t-sub-heading: 24px;
+  --t-feature-label: 18px;
+  --t-body-large: 20px;
+  --t-body: 16px;
+  --t-body-bold: 16px;
+  --t-nav-link: 14px;
+  --t-button-small: 13px;
+  --t-caption: 13px;
+  --t-small-label: 12px;
+  --t-micro: 10px;
+
+  /* ── Spacing ── */
+  --s-1: 1px;
+  --s-2: 2px;
+  --s-3: 4px;
+  --s-4: 6px;
+  --s-5: 8px;
+  --s-6: 10px;
+  --s-7: 11px;
+  --s-8: 14px;
+  --s-9: 16px;
+  --s-10: 24px;
+  --s-11: 32px;
+  --s-12: 40px;
+  --s-13: 50px;
+  --s-14: 64px;
+  --s-15: 80px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   6px;
+  --radius-md:   11px;
+  --radius-lg:   16px;
+  --radius-full: 30px;
+
+  /* ── Components ── */
+  --button-radius:  11px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    11px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

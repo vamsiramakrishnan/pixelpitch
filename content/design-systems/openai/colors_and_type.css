@@ -1,0 +1,92 @@
+/* OpenAI — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #0d0d0d;
+  --slate:   #6e6e6e;
+  --signal:  #10a37f;
+  --bone:    #ffffff;
+  --border:  #e5e5e5;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-soft-black: #1a1a1a;
+  --color-mist: #fafafa;
+  --color-pearl: #f5f5f5;
+  --color-cloud: #ececec;
+  --color-teal-deep: #0a7a5e;
+  --color-teal-soft: #e8f5f0;
+  --color-graphite: #3c3c3c;
+  --color-ash: #777777;
+  --color-stone: #c4c4c4;
+  --color-border-soft: #ededed;
+  --color-error: #ef4146;
+  --color-warning: #f5a623;
+  --color-info: #2563eb;
+
+  /* Semantic */
+  --success: #e8f5f0;
+  --warning: #f5a623;
+  --danger:  #ef4146;
+  --info:    #2563eb;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display: 56px;
+  --t-h1: 40px;
+  --t-h2: 28px;
+  --t-h3: 20px;
+  --t-body-large: 18px;
+  --t-body: 16px;
+  --t-body-small: 14px;
+  --t-caption: 13px;
+  --t-label: 12px;
+  --t-code: 14px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   48px;
+  --radius-md:   64px;
+  --radius-lg:   16px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  64px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    64px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

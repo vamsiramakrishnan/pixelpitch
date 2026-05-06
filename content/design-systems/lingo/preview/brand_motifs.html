@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Lingo</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: inline-block;
+      width: 80px;
+      height: 4px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      border-radius: var(--radius-sm, 4px);
+      margin-top: 32px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--signal, #3b82f6);
+      display: inline-block;
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .traits-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 20px 20px 20px 40px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--ink, #111111);
+      background: var(--bone, #f5f5f5);
+      border-radius: var(--radius-lg, 16px);
+      border: 2px solid var(--signal, #3b82f6);
+      transition: transform 150ms ease, box-shadow 150ms ease;
+    }
+
+    .traits-list li:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(59, 130, 246, 0.15);
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--signal, #3b82f6);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 3px solid var(--ink, #111111);
+      border-radius: var(--radius-lg, 16px);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dd-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--signal, #3b82f6);
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+      background: var(--signal, #3b82f6);
+      color: white;
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--ink, #111111);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--bone, #f5f5f5);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Playfulness Card ──── */
+    .playful-card {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.03) 100%);
+      border: 2px dashed var(--signal, #3b82f6);
+      border-radius: var(--radius-lg, 16px);
+      padding: 40px;
+      max-width: 840px;
+    }
+
+    .playful-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: var(--radius-lg, 16px);
+      overflow: hidden;
+      height: 140px;
+      border: 3px solid var(--ink, #111111);
+      gap: 2px;
+      padding: 2px;
+      background: var(--bone, #f5f5f5);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+      border-radius: var(--radius-md, 8px);
+      border: 2px solid var(--ink, #111111);
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.6;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+      color: var(--ink, #111111);
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--bone, #f5f5f5);
+      border: 3px solid var(--ink, #111111);
+      border-radius: var(--radius-lg, 16px);
+      padding: 48px 40px;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 54px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 2px solid var(--signal, #3b82f6);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--slate, #666666);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 700;
+      color: var(--ink, #111111);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Shapes & Rounds Visual ──── */
+    .shapes-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .shapes-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .shapes-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .shape-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .shape-demo {
+      width: 100%;
+      aspect-ratio: 1;
+      border: 3px solid var(--ink, #111111);
+      background: var(--signal, #3b82f6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .shape-demo--none { border-radius: var(--radius-none, 0); }
+    .shape-demo--sm { border-radius: var(--radius-sm, 4px); }
+    .shape-demo--md { border-radius: var(--radius-md, 8px); }
+    .shape-demo--lg { border-radius: var(--radius-lg, 16px); }
+    .shape-demo--full { border-radius: var(--radius-full, 999px); }
+
+    .shape-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      text-align: center;
+    }
+
+    /* ──── Interaction States Demo ──── */
+    .states-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .states-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .state-demo {
+      border: 2px solid var(--ink, #111111);
+      border-radius: var(--radius-lg, 16px);
+      padding: 24px;
+      background: var(--bone, #f5f5f5);
+    }
+
+    .state-demo__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 16px;
+    }
+
+    .state-demo__element {
+      padding: 10px 20px;
+      border-radius: var(--radius-md, 8px);
+      border: 2px solid var(--ink, #111111);
+      font-weight: 600;
+      font-size: 14px;
+      background: var(--signal, #3b82f6);
+      color: white;
+      text-align: center;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+
+    .state-demo__element:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .state-demo__element:active {
+      transform: translateY(0);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .state-demo__element:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 18px;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 3px solid var(--bone, #f5f5f5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#3b82f6">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">Playful & <span>Approachable</span></h1>';
+      html += '  <p class="header__subtitle">Bright colors, rounded corners, and tactile 3D borders that feel friendly and inviting. Lingo makes every interaction delightful.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="playful-card">';
+      html += '    <p>Lingo is designed for joy. Every element carries personality—rounded corners soften edges, bright primary blue (#3B82F6) commands attention, and tactile 3D borders create depth and playfulness. The color palette is confident and limited: white canvas, neutral slate, pure black text, and one hero blue. Illustrations are friendly and minimal, never corporate. Interactions are snappy (150–250ms), with explicit hover and active states. The system celebrates approachability over restraint.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Bright primary blue (#3B82F6) as the interaction signal throughout</li>';
+      html += '    <li>Rounded corners everywhere (min 8px on buttons, 16px on cards)</li>';
+      html += '    <li>Tactile 3D borders (3px stroke + shadows) for depth without gradients</li>';
+      html += '    <li>Friendly, minimal illustrations with approachable character design</li>';
+      html += '    <li>Snappy transitions (150–250ms) with easing for microinteractions</li>';
+      html += '    <li>Bold, weighted typography (600–700) for headlines and labels</li>';
+      html += '    <li>Four-token palette: paper, ink, slate, signal (clean and focused)</li>';
+      html += '    <li>Explicit hover, focus, active, and disabled states on all interactive elements</li>';
+      html += '    <li>Grid-based layout with consistent spacing (8px base unit)</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading">';
+      html += '      <span class="dd-card__icon">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Round corners on buttons (8px), cards (16px), and inputs (8px)</li>';
+      html += '      <li>Use bold 600–700 weight for all interactive labels and kickers</li>';
+      html += '      <li>Add visible hover states: slight lift, shadow, or color shift</li>';
+      html += '      <li>Keep the primary blue for focus rings and active states</li>';
+      html += '      <li>Use 3px borders on cards and modals for tactile depth</li>';
+      html += '      <li>Pair illustrations with text for clarity and warmth</li>';
+      html += '      <li>Transition states at 150–250ms with ease or cubic-bezier</li>';
+      html += '      <li>Scale up on hover for touch-friendly target areas (44px min)</li>';
+      html += '      <li>Maintain 8px grid for padding, margins, and spacing</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading">';
+      html += '      <span class="dd-card__icon">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use sharp corners (0px radius) on interactive elements</li>';
+      html += '      <li>Add subtle, hard-to-see hover states—make them obvious</li>';
+      html += '      <li>Use colors outside the five-token system</li>';
+      html += '      <li>Apply gradients or complex shadow stacks</li>';
+      html += '      <li>Use thin borders (1px) on primary components</li>';
+      html += '      <li>Pair the blue with muted or desaturated colors</li>';
+      html += '      <li>Animate too slowly or use overly complex easing curves</li>';
+      html += '      <li>Hide disabled states—make them clearly unavailable</li>';
+      html += '      <li>Break the grid with arbitrary spacing or alignment</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Rounded Corners & Shapes ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Rounded Corners & Shapes</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.6; color: var(--slate); margin-bottom: 24px; max-width: 840px;">Lingo celebrates curves. Every shape is rounded—buttons, cards, inputs, and illustrations. The radius scale provides options from subtle (4px) to fully rounded (999px). Apply the right radius for the right purpose: small elements use 4–8px, mid-size containers use 8–16px, and circular avatars use full.</p>';
+      html += '  <div class="shapes-grid">';
+
+      const radiusValues = [
+        { key: 'sm', label: '4px', css: 'var(--radius-sm, 4px)' },
+        { key: 'md', label: '8px', css: 'var(--radius-md, 8px)' },
+        { key: 'lg', label: '16px', css: 'var(--radius-lg, 16px)' },
+        { key: 'full', label: '999px', css: 'var(--radius-full, 999px)' }
+      ];
+
+      radiusValues.forEach(r => {
+        html += '<div class="shape-card">';
+        html += '  <div class="shape-demo shape-demo--' + r.key + '">' + r.label + '</div>';
+        html += '  <div class="shape-label">' + esc(r.key.toUpperCase()) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#111111' : '#ffffff';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Typography Pairing ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Display + Body</div>';
+      html += '    <div class="type-pairing__display">Bold headlines with <span>friendly</span> body text</div>';
+
+      html += '    <div class="type-pairing__body">Typography sets the tone. System-UI provides a clean, friendly foundation that works everywhere. Display headings use 700-weight for impact and personality. Body text at 400-weight remains legible and approachable. Every interaction label gets a boost to 600-weight to signal importance and encourage action. The system avoids serifs and decorative fonts, keeping the aesthetic modern and accessible.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Display Font</span>';
+      html += '        System-UI, 700 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Body Font</span>';
+      html += '        System-UI, 400 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Mono Font</span>';
+      html += '        UI Monospace, 600 weight';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Interaction States ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Interaction States</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.6; color: var(--slate); margin-bottom: 24px; max-width: 840px;">Every interactive element must have clear, visible state feedback. Hover lifts the element and adds shadow. Active states compress feedback into the DOM. Focus is always visible via blue outline. Disabled elements fade to 50% opacity and become unpointable. All transitions complete in 150–250ms.</p>';
+      html += '  <div class="states-grid">';
+
+      html += '    <div class="state-demo">';
+      html += '      <div class="state-demo__label">Default</div>';
+      html += '      <button class="state-demo__element">Click me</button>';
+      html += '      <p style="font-family: var(--font-mono); font-size: 11px; color: var(--slate); margin-top: 12px; text-transform: uppercase; letter-spacing: 0.08em;">Neutral, ready for interaction</p>';
+      html += '    </div>';
+
+      html += '    <div class="state-demo">';
+      html += '      <div class="state-demo__label">Hover</div>';
+      html += '      <button class="state-demo__element" style="transform: translateY(-2px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">Click me</button>';
+      html += '      <p style="font-family: var(--font-mono); font-size: 11px; color: var(--slate); margin-top: 12px; text-transform: uppercase; letter-spacing: 0.08em;">Lift + shadow on hover</p>';
+      html += '    </div>';
+
+      html += '    <div class="state-demo">';
+      html += '      <div class="state-demo__label">Active</div>';
+      html += '      <button class="state-demo__element" style="box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); transform: translateY(0);">Click me</button>';
+      html += '      <p style="font-family: var(--font-mono); font-size: 11px; color: var(--slate); margin-top: 12px; text-transform: uppercase; letter-spacing: 0.08em;">Pressed feedback (inset shadow)</p>';
+      html += '    </div>';
+
+      html += '    <div class="state-demo">';
+      html += '      <div class="state-demo__label">Disabled</div>';
+      html += '      <button class="state-demo__element" style="opacity: 0.5; cursor: not-allowed;">Click me</button>';
+      html += '      <p style="font-family: var(--font-mono); font-size: 11px; color: var(--slate); margin-top: 12px; text-transform: uppercase; letter-spacing: 0.08em;">Faded, non-interactive</p>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    /* ──── Utilities ──── */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255,

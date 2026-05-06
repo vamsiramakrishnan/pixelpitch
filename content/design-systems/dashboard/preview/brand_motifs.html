@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Dashboard</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 64px;
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate, #666666);
+      max-width: 720px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 60px;
+      height: 2px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      padding: 32px;
+      max-width: 840px;
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--ink, #111111);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 24px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 22px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--signal, #3b82f6);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      padding: 32px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-card__icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 11px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--ink, #111111);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 120px;
+      border: 1px solid var(--border, #e5e5e5);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.4;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      padding: 48px 40px;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--slate, #666666);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--ink, #111111);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Design Principles ──── */
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .principles-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .principle-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      padding: 24px;
+    }
+
+    .principle-card__icon {
+      width: 40px;
+      height: 40px;
+      background: var(--signal, #3b82f6);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+
+    .principle-card__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+    }
+
+    .principle-card__text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate, #666666);
+    }
+
+    /* ──── Grid Showcase ──── */
+    .grid-showcase {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .grid-showcase {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .grid-item {
+      aspect-ratio: 1 / 1;
+      background: var(--bone, #f5f5f5);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      font-weight: 500;
+    }
+
+    .grid-item--primary {
+      background: var(--signal, #3b82f6);
+      color: white;
+      border-color: var(--signal, #3b82f6);
+    }
+
+    /* ──── Type Ramp ──── */
+    .type-ramp {
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      padding: 32px;
+      background: var(--paper, #ffffff);
+    }
+
+    .ramp-item {
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .ramp-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .ramp-item__meta {
+      flex: 0 0 140px;
+    }
+
+    .ramp-item__meta-role {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .ramp-item__meta-detail {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      color: var(--slate, #666666);
+      line-height: 1.5;
+    }
+
+    .ramp-item__example {
+      flex: 1;
+    }
+
+    /* ──── Interaction States ──── */
+    .states-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .states-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .state-demo {
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      padding: 24px;
+      background: var(--paper, #ffffff);
+    }
+
+    .state-demo__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .state-demo__button {
+      width: 100%;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+
+    .state-demo__button--default {
+      background: var(--signal, #3b82f6);
+      color: white;
+    }
+
+    .state-demo__button--hover {
+      background: #2563eb;
+      color: white;
+    }
+
+    .state-demo__button--active {
+      background: #1d4ed8;
+      color: white;
+    }
+
+    .state-demo__button--disabled {
+      background: var(--bone, #f5f5f5);
+      color: var(--slate, #666666);
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border', 'surface'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#3b82f6">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">Clarity Through <span>Design</span></h1>';
+      html += '  <p class="header__subtitle">A modern cloud-platform aesthetic for productivity dashboards. Clean, modular, purposeful — every element serves clarity and usability.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Dashboard is a light, clean aesthetic inspired by modern cloud platforms like Heroku, Vercel, and GitHub. The foundation is pure white canvas with subtle gray accents and rounded corners that feel contemporary without being trendy. Primary blue (#3B82F6) serves as the interaction signal — the color users learn to reach for. A single typeface family (system-ui) runs the entire system, from headlines to metadata. Depth comes from soft borders and minimal shadows, never harsh blacks or heavy effects. The grid is strict and modular. Components snap to spacings of 8px. Nothing feels heavy; everything feels responsive and ready.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Light canvas (#FFFFFF) with warm soft-gray accents (#F5F5F5) for surfaces</li>';
+      html += '    <li>Primary blue (#3B82F6) as the single interaction signal throughout</li>';
+      html += '    <li>Soft borders (#E5E5E5) and minimal shadows for depth definition</li>';
+      html += '    <li>Rounded corners (8px base) for components, cards, and buttons</li>';
+      html += '    <li>System-ui sans-serif family for all typography — no serifs, no custom faces</li>';
+      html += '    <li>Strict 8px spacing grid — all margins, padding, and gaps align to multiples</li>';
+      html += '    <li>Modular component approach — panels, cards, grids stack and reflow predictably</li>';
+      html += '    <li>Monospace font for metadata, labels, and code — always uppercase, 0.12em tracking</li>';
+      html += '    <li>Font weight hierarchy: 400 body, 500 labels, 600 headlines and interactive elements</li>';
+      html += '    <li>Short, purposeful transitions (150–250ms) on all interactive states</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use white (#FFFFFF) as primary canvas everywhere</li>';
+      html += '      <li>Apply soft gray (#F5F5F5) for secondary surfaces like panels and backgrounds</li>';
+      html += '      <li>Use Primary Blue (#3B82F6) for all interactive elements and call-to-actions</li>';
+      html += '      <li>Border cards and containers with #E5E5E5 for subtle separation</li>';
+      html += '      <li>Round component corners to 8px (buttons, cards, inputs)</li>';
+      html += '      <li>Build layouts on 8px spacing grid — 8, 16, 24, 32, 48, 64 pixels</li>';
+      html += '      <li>Use 400 weight for body text, 600 for headlines and buttons</li>';
+      html += '      <li>Apply system-ui font family universally across all text</li>';
+      html += '      <li>Use monospace uppercase labels with 0.12em tracking above sections</li>';
+      html += '      <li>Animate interactions with 150–250ms duration and ease timing</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use dark backgrounds or dark-mode variants in this system</li>';
+      html += '      <li>Add harsh shadows — only use subtle borders or soft elevation</li>';
+      html += '      <li>Introduce new accent colors — blue is the only interaction signal</li>';
+      html += '      <li>Use serif typefaces or custom display fonts</li>';
+      html += '      <li>Round corners beyond 8px or use no corners — stay consistent</li>';
+      html += '      <li>Break the 8px grid — all spacing must align to multiples</li>';
+      html += '      <li>Use gradient fills or glassmorphic effects</li>';
+      html += '      <li>Apply large animations or transitions beyond 250ms</li>';
+      html += '      <li>Mix font families or use hand-coded weights outside 400, 500, 600</li>';
+      html += '      <li>Use color alone to communicate state — always pair with icons or text</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Design Principles ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Core Principles</div>';
+      html += '  <div class="principles-grid">';
+
+      html += '  <div class="principle-card">';
+      html += '    <div class="principle-card__icon">⚡</div>';
+      html += '    <div class="principle-card__title">Clarity First</div>';
+      html += '    <div class="principle-card__text">Every element exists to make information readable. No decoration. No surprise. Signal when it matters, silence when it doesn\'t.</div>';
+      html += '  </div>';
+
+      html += '  <div class="principle-card">';
+      html += '    <div class="principle-card__icon">📐</div>';
+      html += '    <div class="principle-card__title">Modular Grid</div>';
+      html += '    <div class="principle-card__text">8px is the atom. All spacing, padding, sizing adheres to multiples. Components stack, reflow, and scale predictably across screens.</div>';
+      html += '  </div>';
+
+      html += '  <div class="principle-card">';
+      html += '    <div class="principle-card__icon">✋</div>';
+      html += '    <div class="principle-card__title">Responsive Touch</div>';
+      html += '    <div class="principle-card__text">Interactive elements are approachable. Hover states animate in 150ms. Focus states are visible. Disabled states are clear. Loading states never freeze.</div>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = ['paper', 'bone', 'border', 'slate', 'ink', 'signal'];
+      const harmonyColors = harmonyKeys.filter(k => colors[k]);
+      if (harmonyColors.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyColors.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#111111' : '#ffffff';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Modular Grid Showcase ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Modular Grid System</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 14px; line-height: 1.6; color: var(--slate); margin-bottom: 24px; max-width: 840px;">All components snap to an 8px grid. Cards, buttons, panels, and spacing align to multiples of 8. Primary blue highlights the main interaction zones.</p>';
+      html += '  <div class="grid-showcase">';
+      for (let i = 1; i <= 9; i++) {
+        const isPrimary = [2, 5, 8].includes(i);
+        html += '  <div class="grid-item' + (isPrimary ? ' grid-item--primary' : '') + '">Grid ' + i + '</div>';
+      }
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Typography Pairing ──– */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Display + Body</div>';
+      html += '    <div class="type-pairing__display">Modern clarity through <span>unified</span> typography</div>';
+
+      html += '    <div class="type-pairing__body">System-ui sans-serif runs the entire design system — headlines, body, labels, code. One family eliminates choice and ensures consistency across dashboards, panels, and interfaces. Weight hierarchy drives the visual story: 400 for reading, 500 for labels and metadata, 600 for interactive elements and section heads. Size variance creates rhythm without complexity. Monospace uppercase labels appear above sections, always 0.12em tracked and muted gray, signaling "this is metadata."</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Display Font</span>';
+      html += '        system-ui, 600 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Body Font</span>';
+      html += '        system-ui, 400 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Mono Font</span>';
+      html += '        ui-monospace, 600 weight';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Type Ramp ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Type Ramp & Roles</div>';
+      html += '  <div class="type-ramp">';
+
+      const ramp = [
+        { role: 'Hero', size: '48px', weight: '600', lineHeight: '1.15', example: 'Dashboard Headline' },
+        { role: 'Display', size: '36px', weight: '600', lineHeight: '1.15', example: 'Section Title' },
+        { role: 'Headline', size: '28px', weight: '600', lineHeight: '1.20', example: 'Card Heading' },
+        { role: 'Subhead', size: '22px', weight: '600', lineHeight: '1.25', example: 'Panel Title' },
+        { role: 'Body', size: '16px', weight: '400', lineHeight: '1.60', example: 'Main paragraph text for dashboards and reading content' },
+        { role

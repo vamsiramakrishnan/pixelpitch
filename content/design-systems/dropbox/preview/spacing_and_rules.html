@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Dropbox</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Sharp Grotesk', sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--color-black, #1e1919);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 120px 64px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 120px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'SFMono-Regular', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--slate, #8c8c8c);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'Sharp Grotesk', sans-serif);
+      font-size: 56px;
+      font-weight: 600;
+      line-height: 1.07;
+      letter-spacing: -0.8px;
+      color: var(--color-black, #1e1919);
+      margin-bottom: 12px;
+      max-width: 85%;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'Sharp Grotesk', sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--color-mid-gray, #637282);
+      max-width: 75%;
+      margin-bottom: 40px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 3px;
+      background: var(--ink, #0061ff);
+      border: none;
+      margin-top: 28px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 120px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, 'SFMono-Regular', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--slate, #8c8c8c);
+      margin-bottom: 48px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--color-border-subtle, #ebebeb);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 80px;
+      gap: 32px;
+      align-items: center;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--color-border-subtle, #ebebeb);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, 'SFMono-Regular', monospace);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-black, #1e1919);
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body, 'Sharp Grotesk', sans-serif);
+      font-size: 14px;
+      color: var(--slate, #8c8c8c);
+      margin-top: 4px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 2px;
+      background: var(--ink, #0061ff);
+      min-width: 2px;
+      transition: opacity 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.6;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, 'SFMono-Regular', monospace);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-black, #1e1919);
+      text-align: right;
+    }
+
+    /* Depth & elevation */
+    .elevation-demo {
+      padding: 36px 0;
+      border-bottom: 1px solid var(--color-border-subtle, #ebebeb);
+    }
+
+    .elevation-demo:last-child {
+      border-bottom: none;
+    }
+
+    .elevation-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 20px;
+    }
+
+    .elevation-demo__name {
+      font-family: var(--font-mono, 'SFMono-Regular', monospace);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-black, #1e1919);
+    }
+
+    .elevation-demo__label {
+      font-family: var(--font-body, 'Sharp Grotesk', sans-serif);
+      font-size: 14px;
+      color: var(--slate, #8c8c8c);
+    }
+
+    .elevation-demo__spec {
+      font-family: var(--font-mono, 'SFMono-Regular', monospace);
+      font-size: 13px;
+      color: var(--color-dark-gray, #3d3b39);
+    }
+
+    .elevation-demo__container {
+      width: 100%;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      padding: 0;
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--color-border-subtle, #ebebeb);
+      border-radius: var(--radius-sm, 4px);
+      position: relative;
+    }
+
+    .elevation-demo__sample {
+      width: 120px;
+      height: 120px;
+      background: var(--paper, #ffffff);
+      border-radius: var(--radius-sm, 4px);
+      margin: 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono, 'SFMono-Regular', monospace);
+      font-size: 12px;
+      color: var(--slate, #8c8c8c);
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 64px;
+      margin-bottom: 48px;
+    }
+
+    .radius-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .radius-item__box {
+      width: 120px;
+      height: 120px;
+      background: var(--paper, #ffffff);
+      border: 2px solid var(--color-border-default, #e2e0de);
+      flex-shrink: 0;
+    }
+
+    .radius-item__info {
+      flex: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, 'SFMono-Regular', monospace);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-black, #1e1919);
+      margin-bottom: 6px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, 'SFMono-Regular', monospace);
+      font-size: 13px;
+      color: var(--slate, #8c8c8c);
+      margin-bottom: 12px;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body, 'Sharp Grotesk', sans-serif);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--color-mid-gray, #637282);
+    }
+
+    /* Philosophy block */
+    .philosophy {
+      background: var(--border, #f7f5f2);
+      padding: 48px;
+      border: 1px solid var(--color-border-subtle, #ebebeb);
+      border-radius: var(--radius-sm, 4px);
+      margin-bottom: 80px;
+    }
+
+    .philosophy__title {
+      font-family: var(--font-mono, 'SFMono-Regular', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--slate, #8c8c8c);
+      margin-bottom: 16px;
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body, 'Sharp Grotesk', sans-serif);
+      font-size: 18px;
+      line-height: 1.56;
+      color: var(--color-black, #1e1919);
+    }
+
+    .philosophy__text strong {
+      font-weight: 600;
+    }
+
+    .philosophy__text em {
+      font-style: italic;
+    }
+
+    .philosophy__text code {
+      font-family: var(--font-mono, 'SFMono-Regular', monospace);
+      background: rgba(0, 97, 255, 0.08);
+      padding: 2px 6px;
+      border-radius: var(--radius-sm, 4px);
+      font-size: 16px;
+    }
+
+    /* Grid demo */
+    .grid-demo {
+      background: var(--border, #f7f5f2);
+      padding: 48px;
+      border: 1px solid var(--color-border-subtle, #ebebeb);
+      border-radius: var(--radius-sm, 4px);
+      margin-bottom: 80px;
+    }
+
+    .grid-demo__title {
+      font-family: var(--font-mono, 'SFMono-Regular', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--slate, #8c8c8c);
+      margin-bottom: 28px;
+    }
+
+    .grid-demo__visual {
+      width: 100%;
+      height: 240px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+      background-image: linear-gradient(90deg, rgba(0, 97, 255, 0.06) 1px, transparent 1px);
+      background-size: calc(100% / 12) 100%;
+      padding: 24px;
+      border: 1px dashed var(--color-border-default, #e2e0de);
+      border-radius: var(--radius-sm, 4px);
+    }
+
+    .grid-demo__column {
+      background: rgba(0, 97, 255, 0.12);
+      border: 1px solid rgba(0, 97, 255, 0.2);
+      border-radius: var(--radius-sm, 4px);
+      font-family: var(--font-mono, 'SFMono-Regular', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink, #0061ff);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 8px;
+    }
+
+    .grid-demo__info {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+
+    .grid-demo__stat {
+      font-family: var(--font-body, 'Sharp Grotesk', sans-serif);
+      font-size: 15px;
+      color: var(--color-black, #1e1919);
+      line-height: 1.5;
+    }
+
+    .grid-demo__stat-label {
+      font-family: var(--font-mono, 'SFMono-Regular', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate, #8c8c8c);
+      margin-bottom: 6px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #8c8c8c);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 2px solid rgba(0, 97, 255, 0.2);
+      border-top-color: var(--ink, #0061ff);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 1024px) {
+      .page {
+        padding: 80px 48px;
+      }
+
+      .header {
+        margin-bottom: 80px;
+      }
+
+      .header__title {
+        font-size: 44px;
+        max-width: 100%;
+      }
+
+      .header__subtitle {
+        max-width: 100%;
+      }
+
+      .section {
+        margin-bottom: 80px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 90px 1fr 70px;
+        gap: 24px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+
+      .radius-item {
+        grid-template-columns: 120px 1fr;
+      }
+
+      .grid-demo__info {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 32px;
+      }
+
+      .header__title {
+        font-size: 36px;
+      }
+
+      .header__subtitle {
+        font-size: 18px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 20px 0;
+      }
+
+      .spacing-row__bar-wrap {
+        order: 3;
+        grid-column: 1 / -1;
+      }
+
+      .radius-item {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '4px', label: 'Compact' },
+      's-2': { value: '8px', label: 'Tight UI spacing' },
+      's-3': { value: '12px', label: 'Small gap' },
+      's-4': { value: '16px', label: 'Standard UI' },
+      's-5': { value: '24px', label: 'Comfortable' },
+      's-6': { value: '32px', label: 'Section spacing' },
+      's-7': { value: '48px', label: 'Major break' },
+      's-8': { value: '64px', label: 'Large separation' },
+      's-9': { value: '80px', label: 'Editorial rhythm' },
+      's-10': { value: '120px', label: 'Illustration breathing room' }
+    };
+
+    const DEFAULT_ELEVATION = {
+      'flat': { name: 'Flat', spec: 'No shadow', use: 'Default page surface, file rows' },
+      'border': { name: 'Border', spec: '1px solid #e2e0de', use: 'File cards, inputs, containers' },
+      'raised': { name: 'Raised', spec: '0 2px 8px rgba(0,0,0,0.08)', use: 'Hover states, dropdowns, popovers' },
+      'elevated': { name: 'Elevated', spec: '0 4px 16px rgba(0,0,0,0.12)', use: 'Modals, dialogs, overlays' },
+      'overlay': { name: 'Overlay', spec: '0 8px 32px rgba(0,0,0,0.16)', use: 'Full-screen overlays, previews' }
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'Sharp edges where needed — rarely used' },
+      'sm': { value: '4px', use: 'Small badges, tags, inline elements' },
+      'md': { value: '32px', use: 'Buttons, standard UI components — the workhorse' },
+      'lg': { value: '48px', use: 'Large containers, featured cards' },
+      'full': { value: '180px', use: 'Avatar circles, status dots, toggle switches' }
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color: var(--signal, #ff7e6b)">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const elevation = DEFAULT_ELEVATION;
+      const radius = DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Spacing &amp; Rules</div>';
+      html += '  <h1 class="header__title">Space is the luxury.</h1>';
+      html += '  <p class="header__subtitle">Dropbox uses generous whitespace as a primary design element. Every interval, every rhythm, every breathing room is intentional — from tight 8px UI spacing to vast 120px illustration breaks.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Philosophy block */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Whitespace Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Dropbox communicates through <strong>generous spacing and breathing room</strong>. Where competing productivity apps pack features densely, Dropbox lets every element exist in space. A file card in grid view has internal padding that feels luxurious; a settings page uses full-width sections separated by 48px–80px vertical gaps. This is not waste — this is clarity. <strong>Space is the premium indicator</strong>. The spacing scale moves from 4px (compact) to 120px (editorial breathing room), with each interval earning its place through role: 8px for tight UI grouping, 16px for standard UI, 24px for comfortable spacing, 32px+ for section-level separation. Content hierarchy emerges not from weight or color, but from spacing intervals — tighter spacing signals grouping, wider spacing signals separation.';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 3);
+        const label = obj.label || key;
+        
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Grid visualization */
+      html += '<div class="section">';
+      html += '  <div class="section__label">12-Column Content Grid</div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__title">Responsive Layout Foundation</div>';
+      html += '    <div class="grid-demo__visual">';
+      for (let i = 1; i <= 12; i++) {
+        html += '      <div class="grid-demo__column">' + i + '</div>';
+      }
+      html += '    </div>';
+      html += '    <div class="grid-demo__info">';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Max Content Width</div>';
+      html += '        <div class="grid-demo__stat">1200px centered, with 32px horizontal padding</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Grid System</div>';
+      html += '        <div class="grid-demo__stat">12 columns, 16px gutter, flexible column sizing</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">File Grid</div>';
+      html += '        <div class="grid-demo__stat">auto-fill, minmax(200px, 1fr), 16px gap for file thumbnails</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Sidebar</div>';
+      html += '        <div class="grid-demo__stat">256px fixed width, #f7f5f2 background, persistent left anchor</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Elevation / Depth */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth &amp; Elevation</div>';
+
+      Object.entries(elevation).forEach(([key, rule]) => {
+        const spec = rule.spec;
+        const shadowVal = rule.spec !== 'No shadow' ? rule.spec : 'none';
+
+        html += '<div class="elevation-demo">';
+        html += '  <div class="elevation-demo__header">';
+        html += '    <div>';
+        html += '      <div class="elevation-demo__name">' + esc(rule.name) + '</div>';
+        html += '      <div class="elevation-demo__label">' + esc(rule.use) + '</div>';
+        html += '    </div>';
+        html += '    <div class="elevation-demo__spec">' + esc(spec) + '</div>';
+        html += '  </div>';
+        
+        html += '  <div class="elevation-demo__sample" style="' + (
+          shadowVal === 'none' 
+            ? 'border: 1px solid var(--color-border-default, #e2e0de); box-shadow: none;' 
+            : 'border: 1px solid var(--color-border-subtle, #ebebeb); box-shadow: ' + shadowVal + ';'
+        ) + '">';
+        html += '    Sample element';
+        html += '  </div>';
+        
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius Scale</div>';
+
+      Object.entries(radius).forEach(([key, obj]) => {
+        const radiusValue = obj.value;
+
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__demo">';
+        html += '    <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '  </div>';
+        html += '  <div class="radius-item__info">';
+        html += '    <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '    <div class="radius-item__value">' + esc(radiusValue) + '</div>';
+        html += '    <div class="radius-item__description">' + esc(obj.use) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Closing philosophy */
+      html += '<div class="philosophy" style="margin-top: 120px; margin-bottom: 0;">';
+      html += '  <div class="philosophy__title">Elevation Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Dropbox elevation is <strong>deliberately understated</strong>. The default state for most elements is flat or border-defined — shadows appear only on interaction (hover states, dropdowns, popovers) or for overlay elements (modals, dialogs, full-screen previews). At rest, the interface feels clean and paper-like. Shadows are <strong>pure neutral black</strong> at low opacity, avoiding trendy colored or tinted shadows. This reinforces the utilitarian feel of a file management tool where clarity and trust are paramount. The progression is: flat (no elevation) → border (visual definition) → raised (hover, interaction) → elevated (modals) → overlay (full-screen). No shadows on default surfaces. No emboss, no depth unless earned through interaction or overlay function.';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

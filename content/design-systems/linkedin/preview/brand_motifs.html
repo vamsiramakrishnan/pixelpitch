@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — LinkedIn</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #f4f2ee);
+      color: var(--ink, #0a66c2);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--ink, #0a66c2);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--signal, #0a66c2);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate, #666666);
+      max-width: 760px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 1px;
+      background: var(--ink, #0a66c2);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #e0deda);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 28px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--ink, #0a66c2);
+      border-bottom: 1px solid var(--border, #e0deda);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 22px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--signal, #0a66c2);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--bone, #ffffff);
+      border: var(--card-border, 1px solid #e0deda);
+      border-radius: var(--card-radius, 16px);
+      padding: 32px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--color-success-green, #057642);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--color-error-red, #cc1016);
+    }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--color-success-green, #057642);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--color-error-red, #cc1016);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--ink, #0a66c2);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #e0deda);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: 0;
+      overflow: hidden;
+      height: 120px;
+      border: 1px solid var(--border, #e0deda);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.4;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--bone, #ffffff);
+      border: var(--card-border, 1px solid #e0deda);
+      border-radius: var(--card-radius, 16px);
+      padding: 48px 40px;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: var(--ink, #0a66c2);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #0a66c2);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--ink, #0a66c2);
+      max-width: 760px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #e0deda);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      color: var(--slate, #666666);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--ink, #0a66c2);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--bone, #ffffff);
+      border: var(--card-border, 1px solid #e0deda);
+      border-radius: var(--card-radius, 16px);
+      padding: 32px;
+      max-width: 840px;
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--ink, #0a66c2);
+    }
+
+    /* ──── Avatar Demo ──── */
+    .avatar-demo {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .avatar-demo {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .avatar-item {
+      text-align: center;
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0a66c2 0%, #004182 100%);
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--bone, #ffffff);
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .avatar-item__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate, #666666);
+    }
+
+    /* ──── Card Pattern Demo ──── */
+    .card-demo {
+      background: var(--bone, #ffffff);
+      border: var(--card-border, 1px solid #e0deda);
+      border-radius: var(--card-radius, 16px);
+      padding: 24px;
+      margin-top: 24px;
+    }
+
+    .card-demo__header {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      align-items: flex-start;
+    }
+
+    .card-demo__avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0a66c2 0%, #004182 100%);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--bone, #ffffff);
+      font-weight: 600;
+      font-size: 20px;
+    }
+
+    .card-demo__info {
+      flex: 1;
+    }
+
+    .card-demo__name {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink, #0a66c2);
+      margin-bottom: 2px;
+    }
+
+    .card-demo__meta {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--slate, #666666);
+      line-height: 1.33;
+    }
+
+    .card-demo__content {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.43;
+      color: var(--ink, #0a66c2);
+      margin-bottom: 16px;
+    }
+
+    .card-demo__actions {
+      display: flex;
+      gap: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border, #e0deda);
+    }
+
+    .card-demo__action {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--slate, #666666);
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .card-demo__action:hover {
+      color: var(--ink, #0a66c2);
+    }
+
+    /* ──── Button Demo ──── */
+    .button-demo {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+      padding: 24px;
+      background: var(--bone, #ffffff);
+      border: var(--card-border, 1px solid #e0deda);
+      border-radius: var(--card-radius, 16px);
+    }
+
+    .btn {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 600;
+      padding: var(--button-py, 10px) var(--button-px, 20px);
+      border-radius: var(--button-radius, 4px);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .btn--primary {
+      background: var(--signal, #0a66c2);
+      color: var(--bone, #ffffff);
+    }
+
+    .btn--primary:hover {
+      background: var(--color-blue-hover, #004182);
+    }
+
+    .btn--secondary {
+      background: transparent;
+      color: var(--signal, #0a66c2);
+      border: 2px solid var(--signal, #0a66c2);
+    }
+
+    .btn--secondary:hover {
+      background: var(--color-blue-surface, #edf3f8);
+    }
+
+    .btn--tertiary {
+      background: transparent;
+      color: var(--slate, #666666);
+      border: none;
+    }
+
+    .btn--tertiary:hover {
+      background: var(--color-surface-hover, #f5f5f5);
+    }
+
+    .btn--pill {
+      border-radius: 20px;
+    }
+
+    /* ──── Type Ramp Table ──── */
+    .type-ramp {
+      background: var(--bone, #ffffff);
+      border: var(--card-border, 1px solid #e0deda);
+      border-radius: var(--card-radius, 16px);
+      padding: 32px;
+      overflow-x: auto;
+    }
+
+    .type-ramp__table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .type-ramp__table th {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      text-align: left;
+      padding: 12px;
+      border-bottom: 1px solid var(--border, #e0deda);
+      color: var(--slate, #666666);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .type-ramp__table td {
+      padding: 16px 12px;
+      border-bottom: 1px solid var(--border, #e0deda);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink, #0a66c2);
+    }
+
+    .type-ramp__table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .type-ramp__sample {
+      padding: 16px 12px;
+    }
+
+    .type-ramp__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--slate, #666666);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--border, #e0deda);
+      border-top-color: var(--signal, #0a66c2);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#cc1016">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">The Professional <span>Network</span> Approach</h1>';
+      html += '  <p class="header__subtitle">System font, card-based feeds, and LinkedIn Blue. Professional trust through restraint and clarity.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>LinkedIn\'s design system communicates professional trust without coldness. The canvas is warm off-white (#f4f2ee), not sterile white. Content lives in crisp white cards (#ffffff) with hairline borders, creating a scannable feed architecture. LinkedIn Blue (#0a66c2) — a mid-saturation corporate blue — signals action and connection. The system font stack ensures native rendering on every platform. Typography uses two weights: 600 for headings, 400 for body. Type never exceeds 24px; the largest text is a profile name. Avatars are always circular. Every interaction lives inside or adjacent to a card. This restraint — no custom fonts, no shadows, no more than five core colors — is what builds confidence in a professional network.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Warm off-white page canvas (#f4f2ee) with pure white cards (#ffffff)</li>';
+      html += '    <li>LinkedIn Blue (#0a66c2) as the singular action color — every blue element is interactive</li>';
+      html += '    <li>System font stack for native platform feel — no custom fonts overhead</li>';
+      html += '    <li>Card-based feed architecture with 1px solid borders, no shadows</li>';
+      html += '    <li>48px circular avatars as the primary visual anchor in feed items</li>';
+      html += '    <li>Type scale maxing at 24px — 16px body, 14px body copy, 12px meta</li>';
+      html += '    <li>Two weights only: 600 (semibold) for headings, 400 for body text</li>';
+      html += '    <li>16px internal padding on all cards, 12px gaps between cards</li>';
+      html += '    <li>8px border-radius on containers, 4px on buttons — soft not playful</li>';
+      html += '    <li>Reaction system with six emoji reactions replacing simple likes</li>';
+      html += '    <li>Pill-shaped buttons (16px radius) for primary actions like "Connect"</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use #0a66c2 LinkedIn Blue exclusively for interactive elements</li>';
+      html += '      <li>Use the system font stack for native platform rendering</li>';
+      html += '      <li>Keep type scale between 12px and 24px maximum</li>';
+      html += '      <li>Use 8px border-radius on card containers consistently</li>';
+      html += '      <li>Place 48px circular avatars as visual anchors in feed items</li>';
+      html += '      <li>Use #f4f2ee warm off-white for page backgrounds</li>';
+      html += '      <li>Maintain 16px internal padding on all cards</li>';
+      html += '      <li>Use 1px solid borders on cards instead of shadows</li>';
+      html += '      <li>Show reaction summaries as overlapping emoji icons with count</li>';
+      html += '      <li>Use pill-shaped buttons (16px radius) for primary actions</li>';
+      html += '      <li>Truncate long text with "…see more" at 3 lines</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use LinkedIn Blue for non-interactive text or decoration</li>';
+      html += '      <li>Exceed 24px for any text size — restraint is intentional</li>';
+      html += '      <li>Use custom fonts or heavy web fonts — system stack is the brand</li>';
+      html += '      <li>Apply pill shapes (full radius) to content cards — 8px only</li>';
+      html += '      <li>Use drop shadows on feed cards — borders provide containment</li>';
+      html += '      <li>Mix warm and cool grays — palette is consistently warm</li>';
+      html += '      <li>Make avatars square or rounded-square — always circular</li>';
+      html += '      <li>Use more than two font weights in standard UI</li>';
+      html += '      <li>Place content outside of card containers — everything in a card</li>';
+      html += '      <li>Use colored backgrounds on cards except hover states</li>';
+      html += '      <li>Hide the reaction system behind a generic "like" button</li>';
+      html += '      <li>Use LinkedIn Blue as text on dark backgrounds — WCAG AA fails</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Avatar Demo ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Avatar System</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 14px; line-height: 1.43; color: var(--slate); margin-bottom: 24px; max-width: 840px;">48px circular avatars are the primary visual anchor in feed items, profile cards, and mentions. Always border-radius 50%, never square or rounded-square. Background colors can be subtle gradients or solid colors; initials centered in semibold white text.</p>';
+      html += '  <div class="avatar-demo">';
+      html += '    <div class="avatar-item"><div class="avatar">AJ</div><div class="avatar-item__label">48px Avatar</div></div>';
+      html += '    <div class="avatar-item"><div class="avatar" style="background: linear-gradient(135deg, #70b5f9 0%, #0a66c2 100%);">SK</div><div class="avatar-item__label">Light Gradient</div></div>';
+      html += '    <div class="avatar-item"><div class="avatar" style="background: #004182;">MC</div><div class="avatar-item__label">Hover State</div></div>';
+      html += '    <div class="avatar-item"><div class="avatar" style="background: linear-gradient(135deg, #057642 0%, #01754f 100%);">LW</div><div class="avatar-item__label">Verified Member</div></div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Card Pattern Demo ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Feed Card Pattern</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 14px; line-height: 1.43; color: var(--slate); margin-bottom: 24px; max-width: 840px;">Every feed item is a discrete, scannable card with a header containing avatar, name, and metadata; body content; and action row with reaction buttons. Borders separate, never shadows. All typography locks into the two-weight system.</p>';
+      html += '  <div class="card-demo">';
+      html += '    <div class="card-demo__header">';
+      html += '      <div class="card-demo__avatar">AJ</div>';
+      html += '      <div class="card-demo__info">';
+      html += '        <div class="card-demo__name">Aria Johnson</div>';
+      html += '        <div class="card-demo__meta">Head of Product at LinkedIn<br>3 days ago</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '    <div class="card-demo__content">Just shipped a new feature that lets you highlight projects directly on your profile. This is what happens when product, design, and engineering move at the same velocity.</div>';
+      html += '    <div class="card-demo__actions">';
+      html += '      <div class="card-demo__action">👍 Like</div>';
+      html += '      <div class="card-demo__action">💬 Comment</div>';
+      html += '      <div class="card-demo__action">↗ Share</div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Button System ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Button System</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 14px; line-height: 1.43; color: var(--slate); margin-bottom: 24px; max-width: 840px;">Three button styles: Primary (solid blue) for main actions like "Connect", Secondary (blue outline) for alternative actions, Tertiary (text) for de-emphasized actions. Connect button uses 16px border-radius (pill); all others 4px (subtle roundness).</p>';
+      html += '  <div class="button-demo">';
+      html += '    <button class="btn btn--primary btn--pill">Connect</button>';
+      html += '    <button class="btn btn--secondary">Message</button>';
+      html += '    <button class="btn btn--primary">Follow</button>';
+      html += '    <button class="btn btn--secondary">Save</button>';
+      html += '    <button class="btn btn--tertiary">More</button>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div

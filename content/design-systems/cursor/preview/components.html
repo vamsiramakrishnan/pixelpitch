@@ -1,0 +1,880 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cursor — Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-6) var(--s-5);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--s-3);
+      margin-bottom: var(--s-7);
+      border-bottom: 1px solid var(--ink);
+      border-top: 1px solid var(--ink);
+      padding-top: var(--s-4);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-body);
+      font-size: 28px;
+      font-weight: 500;
+      letter-spacing: 0;
+      line-height: 1;
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.08px;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.33;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-5);
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08px;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-body);
+      font-size: 72px;
+      font-weight: 400;
+      letter-spacing: -2.16px;
+      line-height: 1.10;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 17.28px;
+      font-weight: 400;
+      line-height: 1.35;
+      color: var(--ink);
+      max-width: 720px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08px;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .section__title {
+      font-family: var(--font-body);
+      font-size: 36px;
+      font-weight: 400;
+      letter-spacing: -0.72px;
+      line-height: 1.20;
+      color: var(--ink);
+      margin-bottom: var(--s-4);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--slate);
+      min-width: 140px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: 1.0;
+      border: 1px solid transparent;
+      background: var(--color-surface-300);
+      color: var(--ink);
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      gap: var(--s-2);
+      box-shadow: none;
+    }
+
+    .btn:hover {
+      color: var(--color-error);
+    }
+
+    .btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(245, 78, 0, 0.2);
+    }
+
+    .btn--secondary {
+      background: var(--color-surface-400);
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      color: rgba(38, 37, 30, 0.6);
+    }
+
+    .btn--secondary:hover {
+      color: var(--color-error);
+    }
+
+    .btn--tertiary {
+      background: var(--color-surface-500);
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      color: rgba(38, 37, 30, 0.6);
+    }
+
+    .btn--tertiary:hover {
+      color: var(--color-error);
+    }
+
+    .btn--ghost {
+      background: rgba(38, 37, 30, 0.06);
+      color: rgba(38, 37, 30, 0.55);
+      padding: 6px 12px;
+      border: 1px solid transparent;
+    }
+
+    .btn--ghost:hover {
+      color: var(--color-error);
+    }
+
+    .btn--light {
+      background: var(--color-surface-100);
+      color: var(--ink);
+      padding: 0px 8px 1px 12px;
+    }
+
+    .btn--light:hover {
+      color: var(--color-error);
+    }
+
+    .btn--sm {
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+
+    .btn--lg {
+      padding: 12px 24px;
+      font-size: 16px;
+    }
+
+    /* ──── CARDS ──── */
+    .card {
+      background: var(--bone);
+      border: 1px solid var(--border);
+      border-radius: var(--card-radius);
+      padding: var(--s-4);
+      margin-bottom: var(--s-4);
+    }
+
+    .card--elevated {
+      box-shadow: rgba(0,0,0,0.14) 0px 28px 70px, rgba(0,0,0,0.1) 0px 14px 32px;
+      background: var(--paper);
+    }
+
+    .card__title {
+      font-family: var(--font-body);
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: -0.11px;
+      line-height: 1.30;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .card__body {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.50;
+      color: var(--ink);
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    /* ──── INPUT FIELDS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-1);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink);
+    }
+
+    .input {
+      padding: 8px 12px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: 0 0 0 3px rgba(245, 78, 0, 0.15);
+    }
+
+    /* ──── BADGES ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2);
+      margin-bottom: var(--s-4);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      line-height: 1.27;
+      border-radius: var(--radius-full);
+      background: var(--bone);
+      color: var(--ink);
+    }
+
+    .badge--signal {
+      background: rgba(245, 78, 0, 0.12);
+      color: var(--signal);
+    }
+
+    .badge--success {
+      background: rgba(31, 138, 101, 0.12);
+      color: var(--color-success);
+    }
+
+    .badge--danger {
+      background: rgba(207, 45, 86, 0.12);
+      color: var(--color-error);
+    }
+
+    .badge--info {
+      background: rgba(159, 187, 224, 0.12);
+      color: var(--color-info);
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    /* ──── AI TIMELINE ──── */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+      margin-bottom: var(--s-5);
+    }
+
+    .timeline__step {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3);
+      padding: var(--s-2) var(--s-3);
+      background: var(--bone);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+    }
+
+    .timeline__indicator {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--paper);
+    }
+
+    .timeline__indicator--thinking {
+      background: var(--color-thinking);
+    }
+
+    .timeline__indicator--grep {
+      background: var(--color-grep);
+    }
+
+    .timeline__indicator--read {
+      background: var(--color-read);
+    }
+
+    .timeline__indicator--edit {
+      background: var(--color-edit);
+    }
+
+    .timeline__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink);
+      flex-grow: 1;
+    }
+
+    /* ──── PULL QUOTE ──── */
+    .pullquote {
+      background: var(--color-surface-100);
+      border-left: 4px solid var(--signal);
+      padding: var(--s-4);
+      margin: var(--s-5) 0;
+      border-radius: 0;
+    }
+
+    .pullquote__text {
+      font-family: var(--font-body);
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: -0.11px;
+      line-height: 1.30;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .pullquote__attribution {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── NUMBERED LIST ──── */
+    .numbered-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .numbered-list__item {
+      padding: var(--s-3);
+      background: var(--bone);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+    }
+
+    .numbered-list__number {
+      font-family: var(--font-body);
+      font-size: 26px;
+      font-weight: 400;
+      letter-spacing: -0.325px;
+      line-height: 1.25;
+      color: var(--signal);
+      display: block;
+      margin-bottom: var(--s-1);
+    }
+
+    .numbered-list__headline {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 1.33;
+      color: var(--ink);
+      margin-bottom: var(--s-1);
+    }
+
+    .numbered-list__body {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.33;
+      color: var(--slate);
+    }
+
+    /* ──── TABLE / SCORECARD ──── */
+    .scorecard {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: var(--s-5);
+      background: var(--paper);
+    }
+
+    .scorecard__header {
+      background: var(--bone);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .scorecard__header-cell {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: left;
+      padding: var(--s-2) var(--s-3);
+    }
+
+    .scorecard__row {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .scorecard__row:last-child {
+      border-bottom: none;
+    }
+
+    .scorecard__cell {
+      padding: var(--s-2) var(--s-3);
+      text-align: left;
+      font-size: 14px;
+      color: var(--ink);
+    }
+
+    /* ──── SUBSECTION LABEL ──── */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+      margin-top: var(--s-3);
+    }
+
+    /* ──── DIVIDER ──── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: var(--s-4) 0;
+    }
+
+    /* ──── FOLIO ──── */
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-2) 0;
+      margin-top: var(--s-8);
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.048px;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── RESPONSIVE ──── */
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-5) var(--s-3);
+      }
+
+      .stage-head__title {
+        font-size: 48px;
+        letter-spacing: -1.44px;
+      }
+
+      .section__title {
+        font-size: 28px;
+        letter-spacing: -0.56px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: var(--s-2);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">Cursor</div>
+      <div class="masthead__tagline">
+        Design System<br>Components
+      </div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Component Inventory</div>
+      <h1 class="stage-head__title">Interactive Vocabulary</h1>
+      <p class="stage-head__subtitle">
+        A carefully curated collection of UI patterns built for Cursor's warm minimalism. Each component uses the system's signature typography, spacing, and color palette—optimized for both the code editor interface and editorial marketing surfaces.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Interactive</div>
+      <h2 class="section__title">Buttons</h2>
+
+      <div class="subsection-label">Primary (Warm Surface)</div>
+      <div class="button-row">
+        <button class="btn">Primary Action</button>
+        <button class="btn btn--sm">Small</button>
+        <button class="btn btn--lg">Large Button</button>
+      </div>
+
+      <div class="subsection-label">Secondary Pill</div>
+      <div class="button-row">
+        <button class="btn btn--secondary">Secondary</button>
+        <button class="btn btn--secondary">Another Action</button>
+        <button class="btn btn--secondary">Tag</button>
+      </div>
+
+      <div class="subsection-label">Tertiary Pill (Active)</div>
+      <div class="button-row">
+        <button class="btn btn--tertiary">Active Filter</button>
+        <button class="btn btn--tertiary">Selected Tag</button>
+      </div>
+
+      <div class="subsection-label">Ghost (Transparent)</div>
+      <div class="button-row">
+        <button class="btn btn--ghost">Ghost Action</button>
+        <button class="btn btn--ghost">Dismiss</button>
+        <button class="btn btn--ghost">Tertiary Action</button>
+      </div>
+
+      <div class="subsection-label">Light Surface</div>
+      <div class="button-row">
+        <button class="btn btn--light">Light Surface</button>
+        <button class="btn btn--light">Dropdown</button>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Containers</div>
+      <h2 class="section__title">Cards & Surfaces</h2>
+
+      <div class="subsection-label">Standard Card</div>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__title">Feature Highlight</div>
+          <p class="card__body">This is a standard card with a warm surface background and clean border. Perfect for feature modules and content grouping.</p>
+        </div>
+
+        <div class="card">
+          <div class="card__title">Documentation</div>
+          <p class="card__body">Cards maintain consistent 8px padding and border styling. Use them to organize content into scannable sections.</p>
+        </div>
+
+        <div class="card">
+          <div class="card__title">Module Pattern</div>
+          <p class="card__body">The card system uses oklab-space borders for perceptually uniform edge treatment across different backgrounds.</p>
+        </div>
+      </div>
+
+      <div class="subsection-label">Elevated Card</div>
+      <div class="card card--elevated">
+        <div class="card__title">Featured Content</div>
+        <p class="card__body">Elevated cards use shadow treatment for prominence. Ideal for hero sections, featured stories, or key moments in user flows.</p>
+      </div>
+    </section>
+
+    <!-- Inputs Section -->
+    <section class="section">
+      <div class="section__kicker">Forms</div>
+      <h2 class="section__title">Input Fields</h2>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Text Input</label>
+          <input class="input" type="text" placeholder="Enter text here">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Email Input</label>
+          <input class="input" type="email" placeholder="you@example.com">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Search</label>
+          <input class="input" type="text" placeholder="Search documents...">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Focus State (Try clicking)</label>
+          <input class="input" type="text" placeholder="Focus to see ring">
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="section">
+      <div class="section__kicker">Status</div>
+      <h2 class="section__title">Badges & Status Pills</h2>
+
+      <div class="subsection-label">Default Badge</div>
+      <div class="badge-row">
+        <span class="badge">Draft</span>
+        <span class="badge">Published</span>
+        <span class="badge">Archived</span>
+      </div>
+
+      <div class="subsection-label">Signal (Accent)</div>
+      <div class="badge-row">
+        <span class="badge badge--signal"><span class="badge__dot"></span> Live</span>
+        <span class="badge badge--signal"><span class="badge__dot"></span> Breaking</span>
+      </div>
+
+      <div class="subsection-label">Semantic Colors</div>
+      <div class="badge-row">
+        <span class="badge badge--success"><span class="badge__dot"></span> Success</span>
+        <span class="badge badge--danger"><span class="badge__dot"></span> Error</span>
+        <span class="badge badge--info"><span class="badge__dot"></span> Info</span>
+      </div>
+    </section>
+
+    <!-- AI Timeline Section -->
+    <section class="section">
+      <div class="section__kicker">AI Operations</div>
+      <h2 class="section__title">AI Timeline Pattern</h2>
+      <p style="font-size: 16px; line-height: 1.50; color: var(--ink); margin-bottom: var(--s-4);">
+        Cursor's signature AI operations timeline visualizes the steps of intelligent code editing: thinking (analysis), grep (search), read (context), and edit (modification). Each step is color-coded with semantic meaning.
+      </p>
+
+      <div class="timeline">
+        <div class="timeline__step">
+          <div class="timeline__indicator timeline__indicator--thinking">α</div>
+          <div class="timeline__label">Thinking: Analyzing context and intent</div>
+        </div>
+        <div class="timeline__step">
+          <div class="timeline__indicator timeline__indicator--grep">β</div>
+          <div class="timeline__label">Grep: Searching relevant code patterns</div>
+        </div>
+        <div class="timeline__step">
+          <div class="timeline__indicator timeline__indicator--read">γ</div>
+          <div class="timeline__label">Read: Loading context and dependencies</div>
+        </div>
+        <div class="timeline__step">
+          <div class="timeline__indicator timeline__indicator--edit">δ</div>
+          <div class="timeline__label">Edit: Generating and applying changes</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pull Quote Section -->
+    <section class="section">
+      <div class="section__kicker">Featured</div>
+      <h2 class="section__title">Pull Quote Pattern</h2>
+
+      <div class="pullquote">
+        <p class="pullquote__text">
+          AI compounds velocity when it understands your codebase as well as you do.
+        </p>
+        <p class="pullquote__attribution">From the Cursor Handbook</p>
+      </div>
+    </section>
+
+    <!-- Features List Section -->
+    <section class="section">
+      <div class="section__kicker">Patterns</div>
+      <h2 class="section__title">Feature Grid</h2>
+
+      <div class="numbered-list">
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">01</span>
+          <h3 class="numbered-list__headline">Deep Code Understanding</h3>
+          <p class="numbered-list__body">Cursor reads your entire codebase to provide context-aware suggestions across files and functions.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">02</span>
+          <h3 class="numbered-list__headline">Natural Language Commands</h3>
+          <p class="numbered-list__body">Write what you want in English. Cursor translates intent into working code using semantic understanding.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">03</span>
+          <h3 class="numbered-list__headline">Diff Preview</h3>
+          <p class="numbered-list__body">Review proposed changes before accepting them. Cursor shows you exactly what will change.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">04</span>
+          <h3 class="numbered-list__headline">Keyboard-First</h3>
+          <p class="numbered-list__body">Stay in flow. Every feature is accessible from your keyboard without context switching to UI.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">05</span>
+          <h3 class="numbered-list__headline">Privacy First</h3>
+          <p class="numbered-list__body">Your code stays on your machine. All processing respects your privacy by default.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">06</span>
+          <h3 class="numbered-list__headline">Open Architecture</h3>
+          <p class="numbered-list__body">Built on open standards. Compose your own AI toolkit with Cursor's extensible core.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Specification Table -->
+    <section class="section">
+      <div class="section__kicker">Reference</div>
+      <h2 class="section__title">Component Specifications</h2>
+
+      <table class="scorecard">
+        <thead class="scorecard__header">
+          <tr>
+            <th class="scorecard__header-cell">Component</th>
+            <th class="scorecard__header-cell">Background</th>
+            <th class="scorecard__header-cell">Padding</th>
+            <th class="scorecard__header-cell">Radius</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="scorecard__row">
+            <td class="scorecard__cell">Primary Button</td>
+            <td class="scorecard__cell">#ebeae5 (Surface 300)</td>
+            <td class="scorecard__cell">10px 20px</td>
+            <td class="scorecard__cell">8px</td>
+          </tr>
+          <tr class="scorecard__row">
+            <td class="scorecard__cell">Secondary Pill</td>
+            <td class="scorecard__cell">#e6e5e0 (Surface 400)</td>
+            <td class="scorecard__cell">3px 8px</td>
+            <td class="scorecard__cell">full (9999px)</td>
+          </tr>
+          <tr class="scorecard__row">
+            <td class="scorecard__cell">Card</td>
+            <td class="scorecard__cell">#e6e5e0 (Bone)</td>
+            <td class="scorecard__cell">24px</td>
+            <td class="scorecard__cell">8px</td>
+          </tr>
+          <tr class="scorecard__row">
+            <td class="scorecard__cell">Input Field</td>
+            <td class="scorecard__cell">#f2f1ed (Paper)</td>
+            <td class="scorecard__cell">8px 12px</td>
+            <td class="scorecard__cell">8px</td>
+          </tr>
+          <tr class="scorecard__row">
+            <td class="scorecard__cell">Badge</td>
+            <td class="scorecard__cell">#e6e5e0 (Bone)</td>
+            <td class="scorecard__cell">4px 10px</td>
+            <td class="scorecard__cell">9999px</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Folio -->
+    <div class="folio">
+      <span class="folio__chapter">Cursor Design System</span>
+      <span class="folio__

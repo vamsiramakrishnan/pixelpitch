@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Composio</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #0f0f0f);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+
+    /* Header / Stage Head */
+    .header {
+      margin-bottom: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header__headline {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 56px;
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: var(--color-pure-white, #ffffff);
+      margin-bottom: 8px;
+      max-width: 720px;
+    }
+
+    .header__subheading {
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      max-width: 720px;
+    }
+
+    .header__meta {
+      display: flex;
+      gap: 24px;
+      font-family: var(--font-mono, JetBrains Mono);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      margin-bottom: 40px;
+    }
+
+    .header__meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header__divider {
+      width: 48px;
+      height: 2px;
+      background: var(--signal, #00ffff);
+      border: none;
+      margin-top: 32px;
+      opacity: 0.8;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, JetBrains Mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--signal, #00ffff);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+      opacity: 0.9;
+    }
+
+    .section__description {
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--slate, #666666);
+      margin-bottom: 40px;
+      max-width: 680px;
+    }
+
+    /* Spacing scale */
+    .spacing-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 100px;
+      gap: 24px;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      transition: all 0.2s ease;
+    }
+
+    .spacing-row:hover {
+      background: rgba(0, 255, 255, 0.02);
+      padding: 16px 12px;
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, JetBrains Mono);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-pure-white, #ffffff);
+      letter-spacing: 0.3px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      background: rgba(0, 255, 255, 0.04);
+      border-radius: 4px;
+      padding: 0 8px;
+      border: 1px solid rgba(0, 255, 255, 0.1);
+    }
+
+    .spacing-row__bar {
+      height: 20px;
+      background: linear-gradient(90deg, var(--signal, #00ffff) 0%, var(--color-ocean-blue, #0096ff) 100%);
+      border-radius: 3px;
+      min-width: 2px;
+      transition: all 0.15s ease;
+      box-shadow: 0 0 12px rgba(0, 255, 255, 0.3);
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, JetBrains Mono);
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--slate, #666666);
+      text-align: right;
+    }
+
+    /* Rule weights */
+    .rules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+    }
+
+    .rule-demo {
+      padding: 24px;
+      background: rgba(0, 255, 255, 0.03);
+      border: 1px solid rgba(0, 255, 255, 0.08);
+      border-radius: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .rule-demo:hover {
+      background: rgba(0, 255, 255, 0.06);
+      border-color: rgba(0, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .rule-demo__header {
+      margin-bottom: 16px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-mono, JetBrains Mono);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-pure-white, #ffffff);
+      letter-spacing: 0.3px;
+      margin-bottom: 4px;
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, JetBrains Mono);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      letter-spacing: 0.2px;
+    }
+
+    .rule-demo__lines {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 1px;
+      transition: all 0.15s ease;
+    }
+
+    .rule-demo__line:hover {
+      filter: drop-shadow(0 0 8px currentColor);
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 32px;
+    }
+
+    .radius-item {
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .radius-item:hover {
+      transform: translateY(-4px);
+    }
+
+    .radius-item__box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 120px;
+      margin: 0 auto 14px;
+      background: rgba(0, 255, 255, 0.06);
+      border: 2px solid var(--signal, #00ffff);
+      opacity: 0.5;
+      transition: all 0.15s ease;
+      box-shadow: 0 0 16px rgba(0, 255, 255, 0.1);
+    }
+
+    .radius-item:hover .radius-item__box {
+      opacity: 1;
+      box-shadow: 0 0 24px rgba(0, 255, 255, 0.4);
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, JetBrains Mono);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-pure-white, #ffffff);
+      margin-bottom: 4px;
+      letter-spacing: 0.2px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, JetBrains Mono);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      letter-spacing: 0.2px;
+    }
+
+    /* Depth / shadows */
+    .depth-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 32px;
+    }
+
+    .depth-item {
+      padding: 32px 24px;
+      background: rgba(0, 255, 255, 0.04);
+      border: 1px solid rgba(0, 255, 255, 0.08);
+      border-radius: 10px;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .depth-item:hover {
+      transform: translateY(-4px);
+      background: rgba(0, 255, 255, 0.08);
+      border-color: rgba(0, 255, 255, 0.2);
+    }
+
+    .depth-item__name {
+      font-family: var(--font-mono, JetBrains Mono);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-pure-white, #ffffff);
+      margin-bottom: 8px;
+      letter-spacing: 0.3px;
+    }
+
+    .depth-item__spec {
+      font-family: var(--font-mono, JetBrains Mono);
+      font-size: 11px;
+      color: var(--slate, #666666);
+      word-break: break-all;
+      line-height: 1.4;
+      letter-spacing: 0.2px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 24px auto 0;
+      border: 3px solid rgba(0, 255, 255, 0.2);
+      border-top-color: var(--signal, #00ffff);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Decorative background elements */
+    .page::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.02) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 80%, rgba(0, 124, 205, 0.01) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 60px 24px;
+      }
+
+      .header__headline {
+        font-size: 40px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 100px 1fr 80px;
+        gap: 12px;
+      }
+
+      .rules-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .radius-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 20px;
+      }
+
+      .depth-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': '1px',
+      's-2': '2px',
+      's-3': '4px',
+      's-4': '6px',
+      's-5': '8px',
+      's-6': '10px',
+      's-7': '12px',
+      's-8': '14px',
+      's-9': '16px',
+      's-10': '18px',
+      's-11': '20px',
+      's-12': '24px',
+      's-13': '30px',
+      's-14': '32px',
+      's-15': '40px',
+    };
+
+    const DEFAULT_DEPTH = [
+      { name: 'Flat', treatment: 'none', spec: 'No shadow, no border' },
+      { name: 'Border', treatment: '1px solid var(--signal)', spec: '1px border, subtle elevation' },
+      { name: 'Elevated', treatment: '0 2px 8px rgba(0,0,0,0.08)', spec: 'Soft diffuse shadow' },
+      { name: 'Brutalist', treatment: '4px 4px 0px rgba(0,0,0,0.15)', spec: 'Hard offset shadow' },
+      { name: 'Floating', treatment: '0px 8px 32px rgba(0,0,0,0.5)', spec: 'Deep diffuse shadow' }
+    ];
+
+    const DEFAULT_RADIUS = {
+      'none': '0',
+      'sm': '6px',
+      'md': '10px',
+      'lg': '120px',
+      'full': '37px',
+    };
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#ff6b6b">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const systemName = tokens.meta?.title || 'Composio';
+
+      const spacing = tokens.spacing?.scale || DEFAULT_SPACING;
+      const depth = tokens.depth || DEFAULT_DEPTH;
+      const radius = tokens.radii || DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__headline">Eight pixels.<br>One ruler.</div>';
+      html += '  <p class="header__subheading">The spacing and depth system that orchestrates every interface in ' + esc(systemName) + '.</p>';
+      html += '  <div class="header__meta">';
+      html += '    <div class="header__meta-item"><span>Spacing Scale</span></div>';
+      html += '    <div class="header__meta-item"><span>Rule Weights</span></div>';
+      html += '    <div class="header__meta-item"><span>Radius Scale</span></div>';
+      html += '  </div>';
+      html += '  <hr class="header__divider">';
+      html += '</header>';
+
+      /* Spacing Scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+      html += '  <p class="section__description">Base unit of 8px scales across 15 stops. Each value orchestrates breathing room between components while maintaining the dense, developer-focused aesthetic.</p>';
+      html += '  <div class="spacing-rows">';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, v]) => parseFloat(v) || 0), 1);
+
+      spacingEntries.forEach(([key, value]) => {
+        const px = parseFloat(value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        html += '<div class="spacing-row">';
+        html += '  <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* Rule Weights / Depth */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth &amp; Elevation</div>';
+      html += '  <p class="section__description">Five levels of visual depth, from flat to floating. Sparse use of shadow—most elevation is communicated through borders and opacity gradations, keeping the dark interface crisp and command-center-like.</p>';
+      html += '  <div class="rules-grid">';
+
+      depth.forEach((d, idx) => {
+        const spec = d.spec || d.treatment || '';
+        const treatment = d.treatment || 'none';
+        const displayName = d.name || 'Level ' + idx;
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <div class="rule-demo__name">' + esc(displayName) + '</div>';
+        html += '    <div class="rule-demo__spec">' + esc(spec) + '</div>';
+        html += '  </div>';
+
+        if (treatment === 'none') {
+          html += '  <div style="height:40px;background:rgba(0,255,255,0.02);border-radius:6px;border:1px dashed rgba(0,255,255,0.2);display:flex;align-items:center;justify-content:center;color:var(--slate,#666);font-size:11px;font-family:var(--font-mono);letter-spacing:0.2px;">No elevation</div>';
+        } else if (treatment.includes('box-shadow') || treatment.includes('0px') || treatment.includes('0 ')) {
+          const shadowVal = treatment;
+          html += '  <div style="height:60px;background:rgba(0,255,255,0.03);border-radius:6px;box-shadow:' + shadowVal + ';margin:8px 0;"></div>';
+        } else {
+          const borderVal = treatment;
+          html += '  <div style="height:40px;background:rgba(0,255,255,0.02);border-radius:6px;border:' + borderVal + ';display:flex;align-items:center;justify-content:center;"></div>';
+        }
+
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* Border Radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+      html += '  <p class="section__description">Four radius values balance technical precision (sharp corners for code blocks) with accessibility. The 37px pill shape reserves itself for key interactive moments.</p>';
+      html += '  <div class="radius-grid">';
+
+      Object.entries(radius).forEach(([key, value]) => {
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__box" style="border-radius:' + esc(value) + '"></div>';
+        html += '  <div class="radius-item__name">' + esc(key) + '</div>';
+        html += '  <div class="radius-item__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

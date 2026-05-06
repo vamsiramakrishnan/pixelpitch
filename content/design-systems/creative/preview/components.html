@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creative — Component Library</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-8) var(--s-5);
+    }
+
+    /* ──── HEADER ──── */
+    .header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--s-4);
+      margin-bottom: var(--s-7);
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .header__logo {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .header__tagline {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-5);
+      border-bottom: 3px solid var(--signal);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate);
+      max-width: 680px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 44px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: var(--s-5);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-showcase {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate);
+      min-width: 140px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: capitalize;
+      line-height: 1;
+      border: 2px solid var(--ink);
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      gap: var(--s-2);
+    }
+
+    .btn:hover {
+      background: var(--ink);
+      color: var(--paper);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn--primary {
+      background: var(--signal);
+      border-color: var(--signal);
+      color: var(--paper);
+    }
+
+    .btn--primary:hover {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--paper);
+    }
+
+    .btn--secondary {
+      background: var(--bone);
+      border-color: var(--border);
+      color: var(--ink);
+    }
+
+    .btn--secondary:hover {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--paper);
+    }
+
+    .btn--ghost {
+      border: none;
+      background: transparent;
+      color: var(--signal);
+      padding: var(--s-2) 0;
+      text-decoration: underline;
+      text-decoration-color: var(--signal);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+
+    .btn--ghost:hover {
+      color: var(--ink);
+      text-decoration-color: var(--ink);
+    }
+
+    .btn--sm {
+      padding: 6px 14px;
+      font-size: 13px;
+    }
+
+    .btn--lg {
+      padding: 14px 32px;
+      font-size: 16px;
+    }
+
+    .btn--icon {
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      border-radius: var(--radius-full);
+    }
+
+    /* ──── CARDS ──── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-5);
+      margin-bottom: var(--s-5);
+    }
+
+    .card {
+      background: var(--paper);
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      padding: var(--s-5);
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--signal);
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.12);
+    }
+
+    .card--elevated {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .card__label {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .card__body {
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--slate);
+      margin-bottom: var(--s-4);
+    }
+
+    .card__footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: var(--s-3);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ──── INPUT FIELDS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .input {
+      padding: 10px 14px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .input:disabled {
+      background: var(--bone);
+      color: var(--slate);
+      cursor: not-allowed;
+    }
+
+    /* ──── BADGES ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      margin-bottom: var(--s-5);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-1);
+      padding: 6px 12px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      line-height: 1.4;
+      border-radius: var(--radius-full);
+      background: var(--bone);
+      color: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    .badge--signal {
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--signal);
+      border-color: var(--signal);
+    }
+
+    .badge--success {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+      border-color: #22c55e;
+    }
+
+    .badge--warning {
+      background: rgba(251, 146, 60, 0.1);
+      color: #fb923c;
+      border-color: #fb923c;
+    }
+
+    .badge--danger {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border-color: #ef4444;
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    /* ──── FEATURE SHOWCASE ──── */
+    .feature-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--s-5);
+      margin-bottom: var(--s-6);
+    }
+
+    .feature {
+      text-align: center;
+    }
+
+    .feature__icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto var(--s-4);
+      padding: var(--s-3);
+      background: var(--bone);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+    }
+
+    .feature__title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .feature__body {
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--slate);
+    }
+
+    /* ──── SHOWCASE GRID ──── */
+    .showcase {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .showcase__item {
+      padding: var(--s-4);
+      background: var(--bone);
+      border-radius: var(--radius-lg);
+      text-align: center;
+    }
+
+    .showcase__label {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+    }
+
+    /* ──── TYPOGRAPHY SHOWCASE ──── */
+    .typography-row {
+      margin-bottom: var(--s-6);
+      padding-bottom: var(--s-5);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .typography-row:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .typography-row__sample {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: var(--s-3);
+      color: var(--ink);
+    }
+
+    .typography-row__meta {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--slate);
+      line-height: 1.4;
+    }
+
+    /* ──── PULL QUOTE ──── */
+    .pullquote {
+      padding: var(--s-6) var(--s-5);
+      background: var(--bone);
+      border-left: 4px solid var(--signal);
+      border-radius: var(--radius-lg);
+      margin: var(--s-6) 0;
+    }
+
+    .pullquote__text {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: var(--s-4);
+    }
+
+    .pullquote__attribution {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate);
+    }
+
+    /* ──── UTILITY ──── */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+      margin-top: var(--s-4);
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: var(--s-5) 0;
+    }
+
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-4) 0;
+      margin-top: var(--s-8);
+      border-top: 1px solid var(--border);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-6) var(--s-3);
+      }
+
+      .stage-head__title {
+        font-size: 44px;
+      }
+
+      .section__title {
+        font-size: 32px;
+      }
+
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .showcase {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-row {
+        grid-template-columns: 1fr;
+      }
+
+      .header {
+        flex-direction: column;
+        text-align: left;
+        gap: var(--s-3);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Header -->
+    <div class="header">
+      <div class="header__logo">Creative</div>
+      <div class="header__tagline">Component Library</div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Component Vocabulary</h1>
+      <p class="stage-head__subtitle">
+        A playful, expressive component library designed for creative projects and landing pages. Each component is built with bold typography, generous spacing, and delightful interactions.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Interactions</div>
+      <h2 class="section__title">Buttons & Controls</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Default</span>
+        <button class="btn">Click me</button>
+        <button class="btn btn--sm">Small</button>
+        <button class="btn btn--lg">Large button</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary</span>
+        <button class="btn btn--primary">Get started</button>
+        <button class="btn btn--primary btn--sm">Explore</button>
+        <button class="btn btn--primary btn--lg">Learn more</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Secondary</span>
+        <button class="btn btn--secondary">Browse</button>
+        <button class="btn btn--secondary btn--sm">View</button>
+        <button class="btn btn--secondary btn--lg">Discover</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Ghost</span>
+        <button class="btn btn--ghost">Learn more</button>
+        <button class="btn btn--ghost">Read docs</button>
+        <button class="btn btn--ghost">Get help</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Icon buttons</span>
+        <button class="btn btn--primary btn--icon">→</button>
+        <button class="btn btn--icon">✨</button>
+        <button class="btn btn--icon">★</button>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Containers</div>
+      <h2 class="section__title">Cards & Surfaces</h2>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card__label">Feature</div>
+          <h3 class="card__title">Expressive Typography</h3>
+          <p class="card__body">Bold, playful fonts that bring personality to every project. Mix display and body weights for rhythm and hierarchy.</p>
+          <div class="card__footer">
+            <span class="badge badge--signal">
+              <span class="badge__dot"></span>
+              New
+            </span>
+            <a href="#" class="btn btn--ghost">Explore →</a>
+          </div>
+        </div>
+
+        <div class="card card--elevated">
+          <div class="card__label">Highlight</div>
+          <h3 class="card__title">Elevated Cards</h3>
+          <p class="card__body">Soft shadows and borders create depth without complexity. Perfect for featured content and calls to action.</p>
+          <div class="card__footer">
+            <span class="badge badge--success">
+              <span class="badge__dot"></span>
+              Live
+            </span>
+            <a href="#" class="btn btn--ghost">Preview →</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__label">Interactive</div>
+          <h3 class="card__title">Hover States</h3>
+          <p class="card__body">Smooth transitions and transform effects add playfulness. Every interaction tells a story.</p>
+          <div class="card__footer">
+            <span class="badge badge--warning">
+              <span class="badge__dot"></span>
+              Beta
+            </span>
+            <a href="#" class="btn btn--ghost">Test →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Input Fields Section -->
+    <section class="section">
+      <div class="section__kicker">Forms</div>
+      <h2 class="section__title">Input Fields</h2>
+      <p style="font-size: 16px; line-height: 1.5; color: var(--slate); margin-bottom: var(--s-5);">Clean, focused inputs with playful border transitions. Focus ring reveals the signal blue accent.</p>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Name</label>
+          <input type="text" class="input" placeholder="Your name">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Email</label>
+          <input type="email" class="input" placeholder="you@example.com">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Message</label>
+          <input type="text" class="input" placeholder="What's on your mind?">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Disabled state</label>
+          <input type="text" class="input" placeholder="Disabled input" disabled>
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="section">
+      <div class="section__kicker">Status</div>
+      <h2 class="section__title">Badges & Tags</h2>
+
+      <div class="subsection-label">Status Pills</div>
+      <div class="badge-row">
+        <span class="badge">
+          <span class="badge__dot"></span>
+          Active
+        </span>
+        <span class="badge badge--signal">
+          <span class="badge__dot"></span>
+          Featured
+        </span>
+        <span class="badge badge--success">
+          <span class="badge__dot"></span>
+          Success
+        </span>
+        <span class="badge badge--warning">
+          <span class="badge__dot"></span>
+          In review
+        </span>
+        <span class="badge badge--danger">
+          <span class="badge__dot"></span>
+          Alert
+        </span>
+      </div>
+
+      <div class="subsection-label">Without dots</div>
+      <div class="badge-row">
+        <span class="badge">Design System</span>
+        <span class="badge badge--signal">Component Library</span>
+        <span class="badge badge--success">Documentation</span>
+        <span class="badge badge--warning">Work in progress</span>
+        <span class="badge badge--danger">Deprecated</span>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section">
+      <div class="section__kicker">Patterns</div>
+      <h2 class="section__title">Feature Cards</h2>
+
+      <div class="feature-row">
+        <div class="feature">
+          <div class="feature__icon">🎨</div>
+          <h3 class="feature__title">Playful Design</h3>
+          <p class="feature__body">Character-driven visuals that make every interaction feel intentional and delightful.</p>
+        </div>
+
+        <div class="feature">
+          <div class="feature__icon">✨</div>
+          <h3 class="feature__title">Expressive Type</h3>
+          <p class="feature__body">Bold headlines and readable body text create perfect visual hierarchy and rhythm.</p>
+        </div>
+
+        <div class="feature">
+          <div class="feature__icon">⚡</div>
+          <h3 class="feature__title">Smooth Motion</h3>
+          <p class="feature__body">Subtle transitions and hover effects bring components to life with personality.</p>
+        </div>
+
+        <div class="feature">
+          <div class="feature__icon">🎯</div>
+          <h3 class="feature__title">Clear Focus</h3>
+          <p class="feature__body">Signal blue accents and focus states guide users through your interface with confidence.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Typography Section -->
+    <section class="section">
+      <div class="section__kicker">Typography</div>
+      <h2 class="section__title">Type Scale & Hierarchy</h2>
+
+      <div class="typography-row">
+        <div class="typography-row__sample" style="font-size: 64px;">Display Large</div>
+        <div class="typography-row__meta">
+          font-family: system-ui<br>
+          font-weight: 700<br>
+          font-size: 64px
+        </div>
+      </div>
+
+      <div class="typography-row">
+        <div class="typography-row__sample" style="font-size: 44px;">Display Medium</div>
+        <div class="typography-row__meta">
+          font-family: system-ui<br>
+          font-weight: 700<br>
+          font-size: 44px
+        </div>
+      </div>
+
+      <div class="typography-row">
+        <div class="typography-row__sample" style="font-size: 24px;">Headline</div>
+        <div class="typography-row__meta">
+          font-family: system-ui<br>
+          font-weight: 700<br>
+          font-size: 24px
+        </div>
+      </div>
+
+      <div class="typography-row">
+        <div class="typography-row__sample" style="font-size: 18px; font-weight: 400;">Body text</div>
+        <div class="typography-row__meta">
+          font-family: system-ui<br>
+          font-weight: 400<br>
+          font-size: 18px<br>
+          line-height: 1.6
+        </div>
+      </div>
+
+      <div class="typography-row">
+        <div class="typography-row__sample" style="font-family: var(--font-mono); font-size: 14px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;">Code & Mono</div>
+        <div class="typography-row__meta">
+          font-family: ui-monospace<br>
+          font-weight: 600<br>
+          font-size: 14px<br>
+          letter-spacing: 0.08em
+        </div>
+      </div>
+    </section>
+
+    <!-- Pull Quote Section -->
+    <section class="section">
+      <div class="section__kicker">Featured</div>
+      <h2 class="section__title">Pull Quote</h2>
+
+      <div class="pullquote">
+        <div class="pullquote__text">Design systems turn chaos into clarity, and chaos into confidence.</div>
+        <div class="pullquote__attribution">Inspired by Creative's philosophy</div>
+      </div>
+    </section>
+
+    <!-- Color Showcase Section -->
+    <section class="section">
+      <div class="section__kicker">Palette</div>
+      <h2 class="section__title">Color System</h2>
+
+      <div class="showcase">
+        <div class="showcase__item" style="background: var(--paper); border: 1px solid var(--border);">
+          <div class="showcase__label">Paper</div>
+          <code style="font-size: 12px;">#ffffff</code>
+        </div>
+        <div class="showcase__item" style="background: var(--ink); color: var(--paper);">
+          <div class="showcase__label" style="color: var(--paper);">Ink</div>
+          <code style="font-size: 12px;">#111111</code>
+        </div>
+        <div class="showcase__item" style="background: var(--signal); color: var(--paper);">
+          <div class="showcase__label" style="color: var(--paper);">Signal</div>
+          <code style="font-size: 12px;">#3b82f6</code>
+        </div>
+        <div class="showcase__item" style="background: var(--bone);">
+          <div class="showcase__label">Bone</div>
+          <code style="font-size: 12px;">#f5f5f5</code>
+        </div>
+        <div class="showcase__item" style="background: var(--slate); color: var(--paper);">
+          <div class="showcase__label" style="color: var(--paper);">Slate</div>
+          <code style="font-size: 12px;">#666666</code>
+        </div>
+        <div class="showcase__item" style="background: var(--border);">
+          <div class="showcase__label">Border</div>
+          <code style="font-size: 12px;">#e5e5e5</code>
+        </div>
+      </div>
+    </section>
+
+    <!-- Spacing Section -->
+    <section class="section">
+      <div class="section__kicker">Spacing</div>
+      <h2 class="section__title">Spacing Scale</h2>
+      <p style="font-size: 16px; line-height: 1.5; color: var(--slate); margin-bottom: var(--s-5);">An 8px base unit with a natural 4/8/12/16/24/32 scale. All padding, margins, and gaps align to this system.</p>
+
+      <div style="display: grid; gap: var(--s-4);">
+        <div style="

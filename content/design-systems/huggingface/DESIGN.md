@@ -24,6 +24,7 @@ Shapes are crisp, not soft: 4–6px radii, 1px solid borders that announce thems
 
 ### Primary
 - **HF Yellow** (`#ffd21e`): Brand primary, badges, "new" pill, model-card header bar.
+- **Accessible HF Gold Text** (`#917300`): Darker variant for text on white/light surfaces. Passes WCAG AA (4.51:1).
 - **HF Yellow Deep** (`#f59e0b`): Hover/active for yellow.
 - **HF Yellow Soft** (`#fff4cc`): Surface tint, callout background.
 
@@ -147,3 +148,11 @@ Shapes are crisp, not soft: 4–6px radii, 1px solid borders that announce thems
 - **Duration**: 120ms for hover; 200ms for menu open.
 - **Easing**: `ease-out`.
 - **Tag pop**: a 1.05× scale on hover at 120ms — the only exception to flat-on-hover.
+
+## 7. Do's and Don'ts
+
+### Do
+- Use Accessible HF Gold (#917300) for yellow text on light backgrounds
+
+### Don't
+- Don't use HF Yellow (#ffd21e) as text on white — it fails WCAG AA

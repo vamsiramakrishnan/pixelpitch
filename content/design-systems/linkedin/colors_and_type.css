@@ -1,0 +1,98 @@
+/* LinkedIn — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #f4f2ee;
+  --ink:     #0a66c2;
+  --slate:   #666666;
+  --signal:  #0a66c2;
+  --bone:    #ffffff;
+  --border:  #e0deda;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-blue-hover: #004182;
+  --color-blue-light: #70b5f9;
+  --color-blue-light-dark-mode: #4b86e7;
+  --color-blue-tint: #d0e8ff;
+  --color-blue-surface: #edf3f8;
+  --color-success-green: #057642;
+  --color-green-light: #7fc15e;
+  --color-green-surface: #e7f4e4;
+  --color-warning-orange: #c37d16;
+  --color-premium-gold: #f8c77e;
+  --color-error-red: #cc1016;
+  --color-error-surface: #fce8e6;
+  --color-border-light: #ebebeb;
+  --color-surface-hover: #f5f5f5;
+  --color-surface-active: #e8e8e8;
+  --color-dark-surface: #1d2226;
+  --color-open-to-work-green: #01754f;
+  --color-hiring-frame: #915907;
+  --color-creator-mode-orange: #e7700d;
+
+  /* Semantic */
+  --success: #057642;
+  --warning: #c37d16;
+  --danger:  #cc1016;
+  --info:    #0a66c2;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-profile-name: 24px;
+  --t-section-title: 20px;
+  --t-card-heading: 16px;
+  --t-body-feed-text: 14px;
+  --t-body-semibold: 14px;
+  --t-caption-meta: 12px;
+  --t-button-text: 16px;
+  --t-button-small: 14px;
+  --t-nav-label: 12px;
+  --t-badge-count: 11px;
+  --t-overline-pill: 12px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   8px;
+  --radius-md:   16px;
+  --radius-lg:   24px;
+  --radius-full: 20px;
+
+  /* ── Components ── */
+  --button-radius:  4px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    16px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

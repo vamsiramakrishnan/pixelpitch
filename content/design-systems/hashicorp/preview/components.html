@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HashiCorp — Components</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.63;
+    }
+
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: var(--s-15) var(--s-13);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--s-11);
+      margin-bottom: var(--s-14);
+      border-bottom: 1px solid var(--slate);
+      border-top: 2px solid var(--ink);
+      padding-top: var(--s-11);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: -0.48px;
+      line-height: 1.17;
+      color: var(--ink);
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.69;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-15);
+      padding-bottom: var(--s-13);
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-display);
+      font-size: var(--t-caption);
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-6);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: var(--t-display-hero);
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 1.17;
+      color: var(--ink);
+      margin-bottom: var(--s-11);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: var(--t-body-large);
+      font-weight: 400;
+      line-height: 1.50;
+      color: var(--slate);
+      max-width: 800px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-15);
+      padding-bottom: var(--s-13);
+      border-bottom: 1px solid var(--slate);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-display);
+      font-size: var(--t-caption);
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-6);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: var(--t-section-heading);
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 1.19;
+      color: var(--ink);
+      margin-bottom: var(--s-13);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--s-11);
+      margin-bottom: var(--s-13);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-10);
+      align-items: center;
+      margin-bottom: var(--s-11);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: var(--t-body);
+      font-weight: 600;
+      color: var(--slate);
+      min-width: 160px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 9px 15px 9px 15px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.60;
+      border: 1px solid rgba(178, 182, 189, 0.4);
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      gap: var(--s-6);
+      box-shadow: rgba(97, 104, 117, 0.05) 0px 1px 1px, rgba(97, 104, 117, 0.05) 0px 2px 2px;
+    }
+
+    .btn:hover {
+      background: rgba(178, 182, 189, 0.15);
+      border-color: rgba(178, 182, 189, 0.6);
+    }
+
+    .btn:focus {
+      outline: 3px solid var(--color-action-blue);
+      outline-offset: 2px;
+    }
+
+    .btn--primary {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    .btn--primary:hover {
+      background: rgba(239, 239, 241, 0.85);
+    }
+
+    .btn--secondary {
+      background: var(--bone);
+      color: var(--slate);
+      border: 1px solid transparent;
+    }
+
+    .btn--secondary:hover {
+      background: rgba(241, 242, 243, 0.7);
+    }
+
+    .btn--terraform {
+      background: var(--color-terraform-purple);
+      color: var(--bone);
+      border-color: var(--color-terraform-purple);
+    }
+
+    .btn--terraform:hover {
+      background: rgba(123, 66, 188, 0.85);
+    }
+
+    .btn--vault {
+      background: var(--color-vault-yellow);
+      color: var(--paper);
+      border-color: var(--color-vault-yellow);
+    }
+
+    .btn--vault:hover {
+      background: rgba(255, 207, 37, 0.85);
+    }
+
+    .btn--waypoint {
+      background: var(--color-waypoint-teal);
+      color: var(--bone);
+      border-color: var(--color-waypoint-teal);
+    }
+
+    .btn--waypoint:hover {
+      background: var(--color-waypoint-teal-hover);
+    }
+
+    .btn--vagrant {
+      background: var(--color-vagrant-blue);
+      color: var(--bone);
+      border-color: var(--color-vagrant-blue);
+    }
+
+    .btn--vagrant:hover {
+      background: rgba(24, 104, 242, 0.85);
+    }
+
+    .btn--sm {
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+
+    .btn--lg {
+      padding: 12px 24px;
+      font-size: 16px;
+    }
+
+    .btn--ghost {
+      border: none;
+      background: transparent;
+      color: var(--ink);
+      padding: 0;
+      box-shadow: none;
+      text-decoration: underline;
+      text-decoration-color: transparent;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+      transition: all 0.15s ease;
+    }
+
+    .btn--ghost:hover {
+      text-decoration-color: var(--color-action-blue);
+      color: var(--color-action-blue);
+    }
+
+    /* ──── BADGES ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-10);
+      margin-bottom: var(--s-11);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-3);
+      padding: 3px 7px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.63;
+      border-radius: var(--button-radius);
+      background: #42225b;
+      color: var(--bone);
+      border: 1px solid rgb(180, 87, 255);
+    }
+
+    .badge--terraform {
+      background: rgba(123, 66, 188, 0.15);
+      color: var(--color-terraform-purple);
+      border-color: var(--color-terraform-purple);
+    }
+
+    .badge--vault {
+      background: rgba(255, 207, 37, 0.15);
+      color: #c49800;
+      border-color: var(--color-vault-yellow);
+    }
+
+    .badge--waypoint {
+      background: rgba(20, 198, 203, 0.15);
+      color: var(--color-waypoint-teal);
+      border-color: var(--color-waypoint-teal);
+    }
+
+    .badge--vagrant {
+      background: rgba(24, 104, 242, 0.15);
+      color: var(--color-vagrant-blue);
+      border-color: var(--color-vagrant-blue);
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    /* ──── CARDS ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-13);
+      margin-bottom: var(--s-13);
+    }
+
+    .card {
+      background: var(--paper);
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      padding: var(--s-13);
+      transition: all 0.15s ease;
+    }
+
+    .card:hover {
+      border-color: var(--ink);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
+    }
+
+    .card__kicker {
+      font-family: var(--font-display);
+      font-size: var(--t-caption);
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-6);
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: var(--t-card-title);
+      font-weight: 700;
+      line-height: 1.19;
+      color: var(--ink);
+      margin-bottom: var(--s-8);
+    }
+
+    .card__body {
+      font-family: var(--font-body);
+      font-size: var(--t-body);
+      font-weight: 400;
+      line-height: 1.63;
+      color: var(--slate);
+      margin-bottom: var(--s-11);
+    }
+
+    .card__accent {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(to right, var(--color-terraform-purple), var(--color-vault-yellow), var(--color-waypoint-teal), var(--color-vagrant-blue));
+      margin-bottom: var(--s-10);
+      border-radius: 1px;
+    }
+
+    /* ──── INPUTS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-13);
+      margin-bottom: var(--s-13);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-6);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: var(--t-body);
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .input {
+      padding: 11px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.63;
+      color: var(--ink);
+      background: var(--color-near-black);
+      border: 1px solid rgb(97, 104, 117);
+      border-radius: var(--button-radius);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--color-action-blue);
+      outline: 3px solid var(--color-action-blue);
+      outline-offset: -3px;
+    }
+
+    .input:hover {
+      border-color: rgba(97, 104, 117, 0.8);
+    }
+
+    .input--light {
+      background: var(--bone);
+      border-color: var(--border);
+      color: var(--slate);
+    }
+
+    .input--light::placeholder {
+      color: var(--signal);
+    }
+
+    .input--light:focus {
+      border-color: var(--color-action-blue);
+      background: var(--bone);
+    }
+
+    /* ──── CHECKBOX ──── */
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: var(--s-8);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checkbox__input {
+      width: 18px;
+      height: 18px;
+      background: var(--color-near-black);
+      border: 1px solid rgb(97, 104, 117);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      flex-shrink: 0;
+      accent-color: var(--color-action-blue);
+    }
+
+    .checkbox__label {
+      font-family: var(--font-body);
+      font-size: var(--t-body);
+      font-weight: 400;
+      color: var(--ink);
+    }
+
+    /* ──── LINKS ──── */
+    .link {
+      color: var(--color-action-blue);
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s ease;
+    }
+
+    .link:hover {
+      border-bottom-color: var(--color-action-blue);
+    }
+
+    .link--light {
+      color: var(--color-link-blue);
+    }
+
+    .link--light:hover {
+      border-bottom-color: var(--color-link-blue);
+    }
+
+    .link--white {
+      color: var(--bone);
+    }
+
+    .link--white:hover {
+      border-bottom-color: var(--bone);
+    }
+
+    /* ──── TAGS / PILLS ──── */
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-8);
+      margin-bottom: var(--s-11);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: var(--s-4) var(--s-8);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.29;
+      border-radius: 20px;
+      background: rgba(178, 182, 189, 0.15);
+      color: var(--ink);
+      border: 1px solid rgba(178, 182, 189, 0.3);
+    }
+
+    .tag--terraform {
+      background: rgba(123, 66, 188, 0.12);
+      color: var(--color-terraform-purple);
+      border-color: rgba(123, 66, 188, 0.3);
+    }
+
+    .tag--vault {
+      background: rgba(255, 207, 37, 0.12);
+      color: #c49800;
+      border-color: rgba(255, 207, 37, 0.3);
+    }
+
+    .tag--waypoint {
+      background: rgba(20, 198, 203, 0.12);
+      color: var(--color-waypoint-teal);
+      border-color: rgba(20, 198, 203, 0.3);
+    }
+
+    .tag--vagrant {
+      background: rgba(24, 104, 242, 0.12);
+      color: var(--color-vagrant-blue);
+      border-color: rgba(24, 104, 242, 0.3);
+    }
+
+    /* ──── CALLOUT ──── */
+    .callout {
+      background: var(--color-near-black);
+      border-left: 4px solid var(--color-action-blue);
+      border-radius: var(--button-radius);
+      padding: var(--s-13);
+      margin-bottom: var(--s-13);
+    }
+
+    .callout__title {
+      font-family: var(--font-display);
+      font-size: var(--t-body-emphasis);
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: var(--s-6);
+    }
+
+    .callout__body {
+      font-family: var(--font-body);
+      font-size: var(--t-body);
+      font-weight: 400;
+      line-height: 1.63;
+      color: var(--slate);
+    }
+
+    .callout--warning {
+      border-left-color: var(--color-amber);
+    }
+
+    .callout--danger {
+      border-left-color: var(--color-red);
+    }
+
+    .callout--info {
+      border-left-color: var(--color-action-blue);
+    }
+
+    /* ──── CODE BLOCK ──── */
+    .code-block {
+      background: var(--color-near-black);
+      border: 1px solid rgb(97, 104, 117);
+      border-radius: var(--button-radius);
+      padding: var(--s-13);
+      margin-bottom: var(--s-13);
+      overflow-x: auto;
+    }
+
+    .code-block__code {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--color-bright-blue);
+      margin: 0;
+    }
+
+    /* ──── DIVIDER ──── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--slate);
+      margin: var(--s-15) 0;
+    }
+
+    /* ──── NUMBERED LIST ──── */
+    .numbered-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--s-13);
+      margin-bottom: var(--s-13);
+    }
+
+    .numbered-list__item {
+      padding-bottom: var(--s-11);
+      border-bottom: 1px solid var(--slate);
+    }
+
+    .numbered-list__number {
+      font-family: var(--font-display);
+      font-size: var(--t-feature-heading);
+      font-weight: 700;
+      line-height: 1.19;
+      color: var(--color-action-blue);
+      display: block;
+      margin-bottom: var(--s-6);
+    }
+
+    .numbered-list__headline {
+      font-family: var(--font-display);
+      font-size: var(--t-card-title);
+      font-weight: 700;
+      line-height: 1.19;
+      color: var(--ink);
+      margin-bottom: var(--s-6);
+    }
+
+    .numbered-list__body {
+      font-family: var(--font-body);
+      font-size: var(--t-body);
+      font-weight: 400;
+      line-height: 1.63;
+      color: var(--slate);
+    }
+
+    /* ──── UTILITY ──– */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: var(--t-body);
+      font-weight: 600;
+      color: var(--slate);
+      margin-bottom: var(--s-8);
+      margin-top: var(--s-13);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-11) 0;
+      margin-top: var(--s-15);
+      border-top: 1px solid var(--slate);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-13) var(--s-10);
+      }
+
+      .stage-head__title {
+        font-size: 52px;
+      }
+
+      .section__title {
+        font-size: var(--t-sub-heading);
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .button-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+
+      .numbered-list {
+        grid-template-columns: 1fr;
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: var(--s-11);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">HashiCorp</div>
+      <div class="masthead__tagline">
+        Components<br>Inventory
+      </div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Infrastructure Vocabulary</h1>
+      <p class="stage-head__subtitle">
+        A complete component inventory for HashiCorp's infrastructure automation platform. Every pattern is token-driven, product-color-aware, and optimized for enterprise clarity.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Buttons</div>
+      <h2 class="section__title">Button States</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Default (Dark)</span>
+        <button class="btn">Get Started</button>
+        <button class="btn btn--sm">Small</button>
+        <button class="btn btn--lg">Large Button</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary (Ink)</span>
+        <button class="btn btn--primary">Get Started</button>
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary btn--lg">Large Primary</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Secondary (Bone)</span>
+        <button class="btn btn--secondary">Documentation</button>
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary btn--lg">Learn More</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Ghost (Underline)</span>
+        <a href="#" class="btn btn--ghost">Read the docs</a>
+        <a href="#" class="btn btn--ghost">View tutorials</a>
+        <a href="#" class="btn btn--ghost">Contact sales</a>
+      </div>
+
+      <div class="subsection-label">Product Buttons</div>
+
+      <div class="button-row">
+        <span class="button-row__label">Terraform</span>
+        <button class="btn btn--terraform">Launch Terraform</button>
+        <button class="btn btn--terraform btn--sm">Terraform</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Vault</span>
+        <button class="btn btn--vault">Open Vault</button>
+        <button class="btn btn--vault btn--sm">Vault</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Waypoint</span>
+        <button class="btn btn--waypoint">Deploy Now</button>
+        <button class="btn btn--waypoint btn--sm">Waypoint</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Vagrant</span>
+        <button class="btn btn--vagrant">Start Environment</button>
+        <button class="btn btn--vagrant btn--sm">Vagrant</button>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="section">
+      <div class="section__kicker">Status</div>
+      <h2 class="section__title">Badges & Status Indicators</h2>
+
+      <div class="subsection-label">Default Badges</div>
+      <div class="badge-row">
+        <span class="badge"><span class="badge__dot"></span>Active</span>
+        <span class="badge"><span class="badge__dot"></span>Running</span>
+        <span class="badge"><span class="badge__dot"></span>Deploying</span>
+      </div>
+
+      <div class="subsection-label">Product Badges</div>
+      <div class="badge-row">
+        <span class="badge badge--terraform"><span class="badge__dot"></span>Terraform</span>
+        <span class="badge badge--vault"><span class="badge__dot"></span>Vault</span>
+        <span class="badge badge--waypoint"><span class="badge__dot"></span>Waypoint</span>
+        <span class="badge badge--vagrant"><span class="badge__dot"></span>Vagrant</span>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Containers</div>
+      <h2 class="section__title">Card Patterns</h2>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__accent"></div>
+          <div class="card__kicker">Infrastructure</div>
+          <h3 class="card__title">Terraform</h3>
+          <p class="card__body">Infrastructure as code with predictable, repeatable patterns. Manage any cloud, on-premises, or custom infrastructure with declarative configuration.</p>
+        </div>
+
+        <div class="card">
+          <div class="card__accent"></div>
+          <div class="card__kicker">Secrets</div>
+          <h3 class="card__title">Vault</h3>
+          <p class="card__body">Identity-based secrets and encryption management system. Control access to secrets and system credentials using identity-driven policies.</p>
+        </div>
+
+        <div class="card">
+          <div class="card__accent"></div>
+          <div class="card__kicker">Deployment</div>
+          <h3 class="card__title">Waypoint</h3>
+          <p class="card__body">Build, deploy, and release applications with a single workflow. Deploy across any infrastructure without managing infrastructure details.</p>
+        </div>
+
+        <div class="card">
+          <div class="card__accent"></div>
+          <div class="card__kicker">Environments</div>
+          <h3 class="card__title">Vagrant</h3>
+          <p class="card__body">Reproducible development environments. Create consistent development environments with a single configuration file.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inputs Section -->
+    <section class="section">
+      <div class="section__kicker">Forms</div>
+      <h2 class="section__title">Input Fields & Form Elements</h2>
+
+      <div class="subsection-label">Dark Mode Inputs</div>
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Organization Name</label>
+          <input type="text" class="input" placeholder="my-org">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Workspace URL</label>
+          <input type="text" class="input" placeholder="https://app.terraform.io/app">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">API Token</label>
+          <input type="password" class="input" placeholder="••••••••••••••••">
+        </div>
+      </div>
+
+      <div class="subsection-label">Light Mode Inputs</div>
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input type="email" class="input input--light" placeholder="you@company.com">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Configuration Path</label>
+          <input type="text" class="input input--light" placeholder="/etc/consul.d/config.hcl">
+        </div>
+      </div>
+
+      <div class="subsection-label">Checkboxes</div>
+      <div style="display: flex; flex-direction: column; gap: var(--s-10); margin-bottom: var(--s-13);">
+        <label class="checkbox">
+          <input type="checkbox" class="checkbox__input" checked>
+          <span class="checkbox__label">Enable auto-scaling</span>
+        </label>
+        <label class="checkbox">
+          <input type="checkbox" class="checkbox__input">
+          <span class="checkbox__label">Enable HA replication</span>
+        </label>
+        <label class="checkbox">
+          <input type="checkbox

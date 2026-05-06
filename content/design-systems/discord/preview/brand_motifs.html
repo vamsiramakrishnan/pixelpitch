@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Discord</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      background: var(--color-background-primary, #313338);
+      color: var(--color-text-normal, #dbdee1);
+      line-height: 1.5;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--color-text-muted, #949ba4);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 72px;
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--color-text-normal, #dbdee1);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--paper, #5865f2);
+      font-style: italic;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--color-text-muted, #949ba4);
+      max-width: 720px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--paper, #5865f2);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--paper, #5865f2);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--color-background-secondary, #2b2d31);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 28px;
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--color-text-normal, #dbdee1);
+      border-bottom: 1px solid var(--color-background-secondary, #2b2d31);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 24px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--paper, #5865f2);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--color-background-secondary, #2b2d31);
+      border: 1px solid var(--color-background-tertiary, #1e1f22);
+      border-radius: var(--radius-md, 8px);
+      padding: 32px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--color-status-online, #23a55a);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--color-status-dnd, #f23f43);
+    }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--color-status-online, #23a55a);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--color-status-dnd, #f23f43);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--color-text-normal, #dbdee1);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--color-background-tertiary, #1e1f22);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: var(--radius-md, 8px);
+      overflow: hidden;
+      height: 140px;
+      border: 1px solid var(--color-background-secondary, #2b2d31);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.4;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--color-background-secondary, #2b2d31);
+      border: 1px solid var(--color-background-tertiary, #1e1f22);
+      border-radius: var(--radius-md, 8px);
+      padding: 32px;
+      max-width: 900px;
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--color-text-normal, #dbdee1);
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--color-background-secondary, #2b2d31);
+      border: 1px solid var(--color-background-tertiary, #1e1f22);
+      border-radius: var(--radius-md, 8px);
+      padding: 48px 40px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--paper, #5865f2);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 54px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--color-text-normal, #dbdee1);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--paper, #5865f2);
+      font-style: italic;
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--color-text-normal, #dbdee1);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--color-background-tertiary, #1e1f22);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted, #949ba4);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--color-text-normal, #dbdee1);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Avatar Demo ──── */
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 32px;
+      margin-top: 24px;
+    }
+
+    .avatar-item {
+      text-align: center;
+    }
+
+    .avatar-visual {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--paper, #5865f2) 0%, var(--ink, #00a8fc) 100%);
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #fff;
+      font-size: 20px;
+      position: relative;
+      transition: border-radius 0.2s ease;
+    }
+
+    .avatar-item:hover .avatar-visual {
+      border-radius: 999px;
+    }
+
+    .avatar-status {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 3px solid var(--color-background-secondary, #2b2d31);
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+    }
+
+    .avatar-status--online {
+      background: var(--color-status-online, #23a55a);
+    }
+
+    .avatar-status--idle {
+      background: var(--color-status-idle, #f0b232);
+    }
+
+    .avatar-status--dnd {
+      background: var(--color-status-dnd, #f23f43);
+    }
+
+    .avatar-status--offline {
+      background: var(--color-text-muted, #949ba4);
+    }
+
+    .avatar-label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-text-muted, #949ba4);
+      margin-top: 8px;
+    }
+
+    .avatar-label--status {
+      font-size: 12px;
+      color: var(--color-text-normal, #dbdee1);
+      margin-top: 4px;
+    }
+
+    /* ──── Status Badge Demo ──── */
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 20px;
+      margin-top: 24px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--color-background-tertiary, #1e1f22);
+      border: 1px solid var(--border, #3f4147);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .status-dot--online {
+      background: var(--color-status-online, #23a55a);
+    }
+
+    .status-dot--idle {
+      background: var(--color-status-idle, #f0b232);
+    }
+
+    .status-dot--dnd {
+      background: var(--color-status-dnd, #f23f43);
+    }
+
+    .status-dot--offline {
+      background: var(--color-text-muted, #949ba4);
+    }
+
+    .status-text {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text-normal, #dbdee1);
+    }
+
+    /* ──── Message Row Demo ──── */
+    .message-demo {
+      background: var(--color-background-primary, #313338);
+      border: 1px solid var(--color-background-secondary, #2b2d31);
+      border-radius: var(--radius-md, 8px);
+      padding: 24px;
+      margin-top: 24px;
+    }
+
+    .message-row {
+      display: flex;
+      gap: 12px;
+      padding: 8px 0;
+    }
+
+    .message-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--paper, #5865f2) 0%, var(--ink, #00a8fc) 100%);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .message-content {
+      flex: 1;
+    }
+
+    .message-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .message-username {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--color-text-normal, #dbdee1);
+    }
+
+    .message-timestamp {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      color: var(--color-text-muted, #949ba4);
+    }
+
+    .message-text {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      line-height: 1.375;
+      color: var(--color-text-normal, #dbdee1);
+    }
+
+    .message-text em {
+      color: var(--paper, #5865f2);
+      font-style: italic;
+    }
+
+    /* ──── Color Grid ──── */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 24px;
+    }
+
+    .color-swatch {
+      border-radius: var(--radius-md, 8px);
+      overflow: hidden;
+      border: 1px solid var(--color-background-secondary, #2b2d31);
+      background: var(--color-background-secondary, #2b2d31);
+    }
+
+    .color-swatch__box {
+      height: 100px;
+      width: 100%;
+    }
+
+    .color-swatch__info {
+      padding: 12px;
+      background: var(--color-background-tertiary, #1e1f22);
+    }
+
+    .color-swatch__name {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-text-muted, #949ba4);
+      margin-bottom: 4px;
+    }
+
+    .color-swatch__hex {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      color: var(--color-text-normal, #dbdee1);
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--color-text-muted, #949ba4);
+      font-size: 18px;
+      font-family: var(--font-body, 'system-ui', sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--color-background-secondary, #2b2d31);
+      border-top-color: var(--paper, #5865f2);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ──── Type Ramp ──── */
+    .type-ramp {
+      background: var(--color-background-secondary, #2b2d31);
+      border: 1px solid var(--color-background-tertiary, #1e1f22);
+      border-radius: var(--radius-md, 8px);
+      padding: 32px;
+    }
+
+    .ramp-item {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--color-background-tertiary, #1e1f22);
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .ramp-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .ramp-label {
+      flex: 0 0 140px;
+    }
+
+    .ramp-label__role {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-muted, #949ba4);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .ramp-label__specs {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      color: var(--color-text-muted, #949ba4);
+      line-height: 1.5;
+    }
+
+    .ramp-example {
+      flex: 1;
+    }
+
+    .ramp-example__text {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#f23f43">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const extended = colors.extended || {};
+      const semantic = colors.semantic || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">The <span>Blurple</span> Standard</h1>';
+      html += '  <p class="header__subtitle">Dark-first surfaces, rounded geometry, and the signature Blurple accent. Designed for communities talking all night.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Discord is engineered for evenings, raids, and group voice. The entire surface is dark-first, with a three-step depth system: Background Tertiary (#1E1F22) as the deepest, Background Secondary (#2B2D31) for middle layers, and Background Primary (#313338) for the main canvas. Blurple (#5865F2) is the single saturated accent, reserved for the brand mark, primary CTAs, mentions, and the "you" affordance. It pops against muted neutrals and appears sparingly. Typography is system-ui (Whitney-style) at small sizes for scannable chat rows (4–8px between message groups). Shapes are rounded but not soft: 8px radii on cards, 4px on inputs, full pills (999px) on status badges and tags. Server avatars are 48px rounded-squares (16px radius) that morph to full circles on hover — a tiny motion moment that became part of the brand identity.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Dark-first surfaces: #1E1F22 (tertiary) → #2B2D31 (secondary) → #313338 (primary)</li>';
+      html += '    <li>Blurple #5865F2 as the only saturated accent in the chat surface</li>';
+      html += '    <li>System-ui (Whitney-style) for all text — friendly, geometric, legible at small sizes</li>';
+      html += '    <li>Rounded-square server avatars (16px radius) that snap to circles on hover</li>';
+      html += '    <li>Tight chat-row spacing (4–8px), generous side-panel padding (16–24px)</li>';
+      html += '    <li>Status dots: green online, yellow idle, red dnd, gray offline</li>';
+      html += '    <li>Pixel-snapped 1px dividers in subtle off-white at low alpha</li>';
+      html += '    <li>Eight-point spacing scale: 4px, 8px, 16px, 24px, 32px, 48px, 64px, 96px</li>';
+      html += '    <li>Four radii: 4px (inputs), 8px (cards), 16px (rare), 999px (pills)</li>';
+      html += '    <li>Conversation-first layout: messages left, panels right, servers left</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Keep the primary canvas at #313338, layer with #2B2D31 and #1E1F22</li>';
+      html += '      <li>Use Blurple (#5865F2) for brand moments and primary interactive states</li>';
+      html += '      <li>Round server avatars as 48px rounded-squares (16px radius) or circles</li>';
+      html += '      <li>Apply status dots to avatars: green (online), yellow (idle), red (dnd)</li>';
+      html += '      <li>Use 8px border-radius for cards, buttons, and containers</li>';
+      html += '      <li>Pair tight headline spacing (1.1 line height) with open body (1.375)</li>';
+      html += '      <li>Keep all motion subtle: 200ms transitions, ease-in-out curves</li>';
+      html += '      <li>Use hairline 1px dividers in rgba(255, 255, 255, 0.05)</li>';
+      html += '      <li>Scale type aggressively: 56px hero, 24px headings, 16px body</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use light backgrounds or bright surface colors on dark theme</li>';
+      html += '      <li>Add shadows deeper than 0 2px 8px rgba(0,0,0,0.08) — keep it subtle</li>';
+      html += '      <li>Round corners beyond 8px except for pills and full circles</li>';
+      html += '      <li>Use gradients, blurs, glassmorphism, or atmospheric effects</li>';
+      html += '      <li>Add more than one Blurple highlight per view</li>';
+      html += '      <li>Use accent colors outside the semantic palette (success, danger, info)</li>';
+      html += '      <li>Stack multiple status indicators on one avatar</li>';
+      html += '      <li>Write marketing register ("Reach your crew", "Gamer vibes") in UI</li>';
+      html += '      <li>Use non-system-ui typefaces or emoji outside user-generated content</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Server Avatars & Status ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Server Avatars & Status</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.65; color: var(--color-text-muted); margin-bottom: 24px; max-width: 840px;">Server avatars are 48px rounded-squares with 16px border-radius. On hover, they morph to full circles (border-radius: 999px). Status badges are always overlaid at bottom-right with a 3px border using the surface color. Possible statuses: Online (green), Idle (yellow), Do Not Disturb (red), Streaming (purple), or Offline (gray).</p>';
+      html += '  <div class="avatar-grid">';
+
+      const avatars = [
+        { emoji: 'D', status: 'online', label: 'Online' },
+        { emoji: 'S', status: 'idle', label: 'Idle' },
+        { emoji: 'M', status: 'dnd', label: 'Do Not Disturb' },
+        { emoji: 'X', status: 'offline', label: 'Offline' }
+      ];
+
+      avatars.forEach(av => {
+        html += '<div class="avatar-item">';
+        html += '  <div class="avatar-visual">';
+        html += '    ' + esc(av.emoji);
+        html += '    <div class="avatar-status avatar-status--' + esc(av.status) + '"></div>';
+        html += '  </div>';
+        html += '  <div class="avatar-label"

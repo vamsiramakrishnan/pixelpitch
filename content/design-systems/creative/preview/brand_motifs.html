@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Creative</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 16px;
+    }
+
+    .header__title span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 120px;
+      height: 3px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      border-radius: var(--radius-sm, 4px);
+      margin-top: 32px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--signal, #3b82f6);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 16px 0 16px 28px;
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '✨';
+      position: absolute;
+      left: 0;
+      top: 18px;
+      font-size: 16px;
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--bone, #f5f5f5);
+      border: 2px solid var(--signal, #3b82f6);
+      border-radius: var(--radius-lg, 16px);
+      padding: 32px;
+    }
+
+    .dd-card--dont {
+      border-color: var(--slate, #666666);
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--signal, #3b82f6);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--slate, #666666);
+    }
+
+    .dd-card__icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--signal, #3b82f6);
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--slate, #666666);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: var(--radius-lg, 16px);
+      overflow: hidden;
+      height: 140px;
+      border: 2px solid var(--signal, #3b82f6);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease, transform 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 16px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.5;
+      transform: scaleY(1.05);
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      white-space: nowrap;
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--bone, #f5f5f5);
+      border: 2px solid var(--signal, #3b82f6);
+      border-radius: var(--radius-lg, 16px);
+      padding: 48px 40px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 12px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 56px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 20px;
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #3b82f6);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 24px;
+      border-top: 2px solid var(--signal, #3b82f6);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--slate, #666666);
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 700;
+      color: var(--signal, #3b82f6);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--bone, #f5f5f5);
+      border: 2px solid var(--signal, #3b82f6);
+      border-radius: var(--radius-lg, 16px);
+      padding: 40px;
+      max-width: 840px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+    }
+
+    /* ──── Playfulness Visual ──── */
+    .playfulness-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .playfulness-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .playfulness-card {
+      border: 2px solid var(--signal, #3b82f6);
+      border-radius: var(--radius-lg, 16px);
+      aspect-ratio: 16 / 10;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      background: var(--bone, #f5f5f5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .playfulness-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(59, 130, 246, 0.15);
+    }
+
+    .playfulness-card__kicker {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 12px;
+    }
+
+    .playfulness-card__headline {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink, #111111);
+      margin-bottom: 0;
+    }
+
+    .playfulness-card__accent {
+      color: var(--signal, #3b82f6);
+    }
+
+    .playfulness-card__label {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* ──── Type Ramp ──── */
+    .type-ramp {
+      border: 2px solid var(--signal, #3b82f6);
+      border-radius: var(--radius-lg, 16px);
+      padding: 40px;
+      background: var(--bone, #f5f5f5);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .type-ramp__item {
+      margin-bottom: 32px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+      display: flex;
+      gap: 28px;
+      align-items: flex-start;
+    }
+
+    .type-ramp__item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .type-ramp__meta {
+      flex: 0 0 140px;
+    }
+
+    .type-ramp__role {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: 6px;
+    }
+
+    .type-ramp__specs {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      color: var(--slate, #666666);
+      line-height: 1.6;
+      font-weight: 500;
+    }
+
+    .type-ramp__example {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .type-ramp__specimen {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      color: var(--ink, #111111);
+      word-break: break-word;
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 18px;
+      font-family: var(--font-body, 'system-ui', sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ──── Highlight Box ──── */
+    .highlight-box {
+      background: rgba(59, 130, 246, 0.08);
+      border: 2px solid var(--signal, #3b82f6);
+      border-radius: var(--radius-lg, 16px);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    .highlight-box p {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.65;
+      color: var(--ink, #111111);
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#3b82f6">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand DNA</div>';
+      html += '  <h1 class="header__title">Playful, <span>Expressive</span>, and Bold</h1>';
+      html += '  <p class="header__subtitle">Character-driven design that brings energy and personality to digital experiences. Creative systems are meant to inspire and engage.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Creative systems embrace playfulness without sacrificing clarity. Every interaction is an opportunity to delight. Rounded corners soften the interface, bold signal blue (#3B82F6) energizes the experience, and generous spacing creates breathing room. Typography is assertive—system-ui sans-serif at generous weights. Color is restrained but purposeful: a clean white canvas, neutral grays for hierarchy, and one true blue accent that anchors attention. Motion is subtle but responsive (150–250ms transitions). There\'s no stuffiness here—just straightforward design that smiles.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Bright white canvas (#FFFFFF) with rounded corners everywhere (4px minimum, 16px on containers)</li>';
+      html += '    <li>Bold signal blue (#3B82F6) as the single accent—used strategically for interaction and emphasis</li>';
+      html += '    <li>Clean sans-serif typography (system-ui) in medium-to-bold weights for confidence</li>';
+      html += '    <li>Generous spacing: 8px base unit with scales up to 96px for breathing room</li>';
+      html += '    <li>Elevated cards and buttons with subtle shadows (0 2px 8px) and 2px signal-blue borders</li>';
+      html += '    <li>Playful micro-interactions: 150–250ms transitions, hover lift effects, focus indicators</li>';
+      html += '    <li>Neutral color support (ink, slate, bone) for hierarchy and accessibility</li>';
+      html += '    <li>Semantic color palette for success, warning, danger states (when needed)</li>';
+      html += '    <li>Monospace font for technical, meta, and label information</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use 8px base spacing unit consistently across all layouts</li>';
+      html += '      <li>Apply signal blue (#3B82F6) as primary interactive accent only</li>';
+      html += '      <li>Round corners: 4px minimum, 8px for buttons, 16px for cards</li>';
+      html += '      <li>Add 2px signal-blue borders to primary containers and buttons</li>';
+      html += '      <li>Use system-ui sans-serif at 600–700 weight for headlines</li>';
+      html += '      <li>Employ subtle elevation: 0 2px 8px shadow for depth</li>';
+      html += '      <li>Create hover states that lift and clarify (transform, shadow change)</li>';
+      html += '      <li>Keep color palette to 6 tokens: paper, ink, slate, signal, bone, border</li>';
+      html += '      <li>Test all interactive states: hover, focus-visible, active, disabled</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card dd-card--dont">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use any color outside the core 6-token palette without purpose</li>';
+      html += '      <li>Mix rounded corners at inconsistent radius values</li>';
+      html += '      <li>Add drop shadows larger than 0 2px 8px or blur excessive</li>';
+      html += '      <li>Use multiple accent colors on the same page</li>';
+      html += '      <li>Apply box-shadow to elements that don\'t need depth separation</li>';
+      html += '      <li>Use serif fonts except in quotes or callouts (deliberately)</li>';
+      html += '      <li>Create transitions longer than 250ms—feel sluggish</li>';
+      html += '      <li>Forget focus indicators for keyboard navigation accessibility</li>';
+      html += '      <li>Use dark text on dark backgrounds or light-on-light combos</li>';
+      html += '      <li>Make buttons without clear padding and rounded corners</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── The Playfulness Principle ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">The Playfulness Principle</div>';
+      html += '  <div class="highlight-box">';
+      html += '    <p>Playfulness means delight without distraction. Every animation should have purpose. Every color choice should have meaning. The system supports joyful interaction through predictable, responsive micro-interactions—never gratuitous.</p>';
+      html += '  </div>';
+      html += '  <div class="playfulness-grid">';
+
+      html += '    <div class="playfulness-card">';
+      html += '      <div class="playfulness-card__kicker">Character</div>';
+      html += '      <div class="playfulness-card__headline">Rounded corners and <span class="playfulness-card__accent">signal blue</span> add personality</div>';
+      html += '      <div class="playfulness-card__label">Consistency + Warmth = Approachable</div>';
+      html += '    </div>';
+
+      html += '    <div class="playfulness-card">';
+      html += '      <div class="playfulness-card__kicker">Responsiveness</div>';
+      html += '      <div class="playfulness-card__headline">Hover, focus, and <span class="playfulness-card__accent">active</span> states delight</div>';
+      html += '      <div class="playfulness-card__label">Motion (150–250ms) Gives Feedback</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#111111' : '#ffffff';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Typography Pairing ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Display + Body</div>';
+      html += '    <div class="type-pairing__display">Bold, <span>expressive</span> headlines paired with readable paragraphs</div>';
+
+      html += '    <div class="type-pairing__body">Typography carries intention in Creative systems. System-ui sans-serif appears in two weights: 700 for confident headlines and buttons, 400–500 for body text and labels. Clean, modern, and universally supported. Monospace (ui-monospace) handles technical information and meta labels. The pairing is straightforward: bold display + readable body creates clear hierarchy without decoration.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Display Font</span>';
+      html += '        system-ui, 700 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Body Font</span>';
+      html += '        system-ui, 400 weight';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Mono Font</span>';
+      html += '        ui-monospace, 500 weight';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Type Ramp Section ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Type Ramp & Roles</div>';
+      html += '  <div class="type-ramp">';
+
+      const ramp = [
+        { role: 'Hero', size: '64px', weight: '700', lineHeight: '1.1', font: 'system-ui', example: 'Bold vision statement' },
+        { role: 'Display', size: '48px', weight: '700', lineHeight: '1.15', font: 'system-ui', example: 'Main page headline' },
+        { role: 'Headline', size: '32px', weight: '700', lineHeight: '1.25', font: 'system-ui', example: 'Section heading' },
+        { role: 'Subhead', size: '24px', weight: '600', lineHeight: '1.35', font: 'system-ui', example: 'Subsection title' },
+        { role: 'Body', size: '16px', weight: '400', lineHeight: '1.6', font: 'system-ui', example: 'Main paragraph text for reading and comprehension' },
+        { role: 'Caption', size: '14px', weight: '500', lineHeight: '1.5', font: 'system-ui', example: 'Image captions and small labels' },
+        { role: 'Label', size: '13px', weight: '600', lineHeight: '1.4', font: 'ui-monospace', example: 'Button text and form labels' },
+        { role: 'Meta', size: '12px', weight: '500', lineHeight: '1.4', font: 'ui-monospace', example: 'SOURCE · DATE · METADATA' }
+      ];
+
+      ramp.forEach((item) => {
+        const fontFamily = item.font === 'system-ui' ? 'var(--font-body)' : 'var(--font-mono)';
+        
+        html += '<div class="type-ramp__item">';
+        html += '  <div class="type-ramp__meta">';
+        html += '    <div class="type-ramp__role">' + esc(item.role) + '</div>';
+        html += '    <div class="type-ramp__specs">' + esc(item.size) + '<br>' + esc(item.weight) + '<br>LH ' + esc(item.lineHeight) + '</div>';
+        html += '  </div>';
+        html += '  <div class="type-ramp__example">';
+        html += '    <div class="

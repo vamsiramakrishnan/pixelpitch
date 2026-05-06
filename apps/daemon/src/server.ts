@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import fs from 'node:fs';
 import os from 'node:os';
+import net from 'node:net';
 import { composeSystemPrompt } from './prompts/system.js';
 import { createCommandInvocation } from '@pixelpitch/platform';
 import {
@@ -15,16 +16,20 @@ import {
   isKnownModel,
   resolveAgentBin,
   sanitizeCustomModel,
+  spawnEnvForAgent,
 } from './agents.js';
 import { listSkills } from './skills.js';
 import { listCodexPets, readCodexPetSpritesheet } from './codex-pets.js';
 import { syncCommunityPets } from './community-pets-sync.js';
-import { listDesignSystems, readDesignSystem } from './design-systems.js';
+import { listDesignSystems, readDesignSystem, readDesignSystemTokens, listDesignSystemPreviews } from './design-systems.js';
 import { attachAcpSession } from './acp.js';
 import { attachPiRpcSession } from './pi-rpc.js';
 import { createClaudeStreamHandler } from './claude-stream.js';
 import { createCopilotStreamHandler } from './copilot-stream.js';
 import { createJsonEventStreamHandler } from './json-event-stream.js';
+import { loadCritiqueConfigFromEnv } from './critique/config.js';
+import { reconcileStaleRuns } from './critique/persistence.js';
+import { runOrchestrator } from './critique/orchestrator.js';
 import { renderDesignSystemPreview } from './design-system-preview.js';
 import { renderDesignSystemShowcase } from './design-system-showcase.js';
 import { createChatRunService } from './runs.js';
@@ -34,6 +39,7 @@ import { buildDocumentPreview } from './document-preview.js';
 import { lintArtifact, renderFindingsForAgent } from './lint-artifact.js';
 import { loadCraftSections } from './craft.js';
 import { generateMedia } from './media.js';
+import { PptxExportError, runPptxExport } from './pptx-export.js';
 import {
   AUDIO_DURATIONS_SEC,
   AUDIO_MODELS_BY_KIND,
@@ -55,10 +61,39 @@ import {
   readProjectFile,
   removeProjectDir,
   sanitizeName,
+  searchProjectFiles,
   writeProjectFile,
 } from './projects.js';
 import { validateArtifactManifestInput } from './artifact-manifest.js';
 import { readCurrentAppVersionInfo } from './app-version.js';
+import {
+  createLiveArtifact,
+  deleteLiveArtifact,
+  ensureLiveArtifactPreview,
+  getLiveArtifact,
+  LiveArtifactRefreshLockError,
+  LiveArtifactStoreValidationError,
+  listLiveArtifactRefreshLogEntries,
+  listLiveArtifacts,
+  readLiveArtifactCode,
+  recoverStaleLiveArtifactRefreshes,
+  updateLiveArtifact,
+} from './live-artifacts/store.js';
+import { LiveArtifactRefreshUnavailableError, refreshLiveArtifact } from './live-artifacts/refresh-service.js';
+import { LiveArtifactRefreshAbortError } from './live-artifacts/refresh.js';
+import { CHAT_TOOL_ENDPOINTS, CHAT_TOOL_OPERATIONS, toolTokenRegistry } from './tool-tokens.js';
+import { registerConnectorRoutes } from './connectors/routes.js';
+import {
+  configureConnectorCredentialStore,
+  ConnectorServiceError,
+  deleteConnectorCredentialsByProvider,
+  FileConnectorCredentialStore,
+} from './connectors/service.js';
+import {
+  configureComposioConfigStore,
+  readPublicComposioConfig,
+  writeComposioConfig,
+} from './connectors/composio-config.js';
 import {
   deleteConversation,
   deletePreviewComment,
@@ -610,11 +645,264 @@ export function createSseResponse(
   };
 }
 
-export async function startServer({ port = 17456, host = process.env.PIXELPITCH_BIND_HOST || '0.0.0.0', returnServer = false } = {}) {
+export async function startServer({ port = 17456, host = process.env.PIXELPITCH_BIND_HOST || '127.0.0.1', returnServer = false } = {}) {
   let resolvedPort = port;
   const app = express();
   app.use(express.json({ limit: '4mb' }));
   const db = openDatabase(PROJECT_ROOT, { dataDir: RUNTIME_DATA_DIR });
+  let activeContext = null;
+  const ACTIVE_CONTEXT_TTL_MS = 5 * 60 * 1000;
+  const activeChatAgentEventSinks = new Map();
+  const activeProjectEventSinks = new Map();
+  const critiqueCfg = loadCritiqueConfigFromEnv();
+  const critiqueWarnedAdapters = new Set();
+  configureConnectorCredentialStore(new FileConnectorCredentialStore(RUNTIME_DATA_DIR));
+  configureComposioConfigStore(RUNTIME_DATA_DIR);
+
+  const reconciledStaleRuns = reconcileStaleRuns(db, {
+    staleAfterMs: critiqueCfg.totalTimeoutMs,
+  });
+  if (reconciledStaleRuns > 0) {
+    console.warn(`[critique] reconcileStaleRuns flipped ${reconciledStaleRuns} stale running row(s) to interrupted`);
+  }
+
+  void recoverStaleLiveArtifactRefreshes({ projectsRoot: PROJECTS_DIR }).catch((err) => {
+    console.warn('[live-artifacts] stale refresh recovery failed:', err?.message || err);
+  });
+
+  function emitChatAgentEvent(runId, payload) {
+    const sink = activeChatAgentEventSinks.get(runId);
+    if (!sink) return false;
+    return sink(payload);
+  }
+
+  function emitProjectLiveArtifactEvent(projectId, payload) {
+    const sinks = activeProjectEventSinks.get(projectId);
+    if (!sinks) return false;
+    let emitted = false;
+    for (const sink of sinks) {
+      emitted = sink(payload) || emitted;
+    }
+    return emitted;
+  }
+
+  function emitLiveArtifactEvent(grant, action, artifact) {
+    if (!artifact?.id) return false;
+    const payload = {
+      type: 'live_artifact',
+      action,
+      projectId: artifact.projectId ?? grant.projectId,
+      artifactId: artifact.id,
+      title: artifact.title ?? artifact.id,
+      refreshStatus: artifact.refreshStatus,
+    };
+    let emitted = emitProjectLiveArtifactEvent(payload.projectId, payload);
+    if (grant?.runId) emitted = emitChatAgentEvent(grant.runId, payload) || emitted;
+    return emitted;
+  }
+
+  function emitLiveArtifactRefreshEvent(grant, payload) {
+    if (!payload?.artifactId) return false;
+    const event = {
+      type: 'live_artifact_refresh',
+      projectId: grant.projectId,
+      ...payload,
+    };
+    let emitted = emitProjectLiveArtifactEvent(grant.projectId, event);
+    if (grant?.runId) emitted = emitChatAgentEvent(grant.runId, event) || emitted;
+    return emitted;
+  }
+
+  function normalizeLocalAuthority(value) {
+    if (typeof value !== 'string') return null;
+    const trimmed = value.trim();
+    if (!trimmed || /[\s/@]/.test(trimmed) || trimmed.includes(',')) return null;
+    try {
+      const parsed = new URL(`http://${trimmed}`);
+      const hostname = parsed.hostname.toLowerCase().replace(/\.$/, '');
+      if (!hostname || parsed.username || parsed.password || parsed.pathname !== '/') return null;
+      return { hostname, port: parsed.port };
+    } catch {
+      return null;
+    }
+  }
+
+  function isLoopbackHostname(hostname) {
+    const normalized = String(hostname || '').toLowerCase().replace(/^\[|\]$/g, '').replace(/\.$/, '');
+    if (normalized === 'localhost') return true;
+    if (normalized === '::1' || normalized === '0:0:0:0:0:0:0:1') return true;
+    if (net.isIP(normalized) === 4) return normalized === '127.0.0.1' || normalized.startsWith('127.');
+    return false;
+  }
+
+  function isLoopbackPeerAddress(address) {
+    if (typeof address !== 'string') return false;
+    const normalized = address.trim().toLowerCase().replace(/^\[|\]$/g, '');
+    if (!normalized) return false;
+    if (normalized.startsWith('::ffff:')) return isLoopbackPeerAddress(normalized.slice('::ffff:'.length));
+    if (normalized === '::1' || normalized === '0:0:0:0:0:0:0:1') return true;
+    if (net.isIP(normalized) === 4) return normalized === '127.0.0.1' || normalized.startsWith('127.');
+    return false;
+  }
+
+  function localOriginFromHeader(value) {
+    if (typeof value !== 'string') return null;
+    const trimmed = value.trim();
+    if (!trimmed || trimmed === 'null' || trimmed.includes(',')) return null;
+    try {
+      const parsed = new URL(trimmed);
+      if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return null;
+      if (parsed.pathname !== '/' || parsed.search || parsed.hash || parsed.username || parsed.password) return null;
+      if (!isLoopbackHostname(parsed.hostname)) return null;
+      return parsed.origin;
+    } catch {
+      return null;
+    }
+  }
+
+  function validateLocalDaemonRequest(req) {
+    if (!isLoopbackPeerAddress(req.socket?.remoteAddress)) {
+      return { ok: false, message: 'request peer must be a loopback address', details: { peer: 'remoteAddress' } };
+    }
+    const host = normalizeLocalAuthority(req.get('host'));
+    if (!host || !isLoopbackHostname(host.hostname)) {
+      return { ok: false, message: 'request host must be a loopback daemon address', details: { header: 'host' } };
+    }
+    const originHeader = req.get('origin');
+    if (originHeader !== undefined && !localOriginFromHeader(originHeader)) {
+      return { ok: false, message: 'request origin must be a loopback daemon origin', details: { header: 'origin' } };
+    }
+    return { ok: true, origin: localOriginFromHeader(originHeader) };
+  }
+
+  function requireLocalDaemonRequest(req, res, next) {
+    const validation = validateLocalDaemonRequest(req);
+    if (!validation.ok) {
+      return sendApiError(res, 403, 'FORBIDDEN', validation.message, validation.details ? { details: validation.details } : {});
+    }
+    res.setHeader('Vary', 'Origin');
+    if (validation.origin) {
+      res.setHeader('Access-Control-Allow-Origin', validation.origin);
+    }
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Max-Age', '600');
+    next();
+  }
+
+  function readBearerToken(req) {
+    const header = req.headers.authorization;
+    if (typeof header !== 'string') return null;
+    const match = /^Bearer\s+(.+)$/i.exec(header.trim());
+    return match ? match[1] : null;
+  }
+
+  function authorizeToolRequest(req, res, operation) {
+    const endpoint = req.path;
+    const validation = toolTokenRegistry.validate(readBearerToken(req), {
+      endpoint,
+      operation,
+    });
+    if (!validation.ok) {
+      const status =
+        validation.code === 'TOOL_ENDPOINT_DENIED' || validation.code === 'TOOL_OPERATION_DENIED'
+          ? 403
+          : 401;
+      sendApiError(res, status, validation.code, validation.message, {
+        details: { endpoint, operation },
+      });
+      return null;
+    }
+    return validation.grant;
+  }
+
+  function requestProjectOverride(candidate, grantedProjectId) {
+    return typeof candidate === 'string' && candidate.length > 0 && candidate !== grantedProjectId;
+  }
+
+  function requestRunOverride(candidate, grantedRunId) {
+    return typeof candidate === 'string' && candidate.length > 0 && candidate !== grantedRunId;
+  }
+
+  function createAgentRuntimeToolPrompt(daemonUrl, grant) {
+    if (!grant) return '';
+    return [
+      '## Pixelpitch runtime tools',
+      '',
+      'You can create and update Live Artifacts for this project through the local daemon.',
+      `Daemon URL: ${daemonUrl}`,
+      'Use the bearer token from `PIXELPITCH_TOOL_TOKEN`; do not print or persist it.',
+      '',
+      'Endpoints:',
+      '- POST /api/tools/live-artifacts/create',
+      '- GET /api/tools/live-artifacts/list',
+      '- POST /api/tools/live-artifacts/update',
+      '- POST /api/tools/live-artifacts/refresh',
+      '- GET /api/tools/connectors/list',
+      '- POST /api/tools/connectors/execute',
+      '',
+      'Connector tools are limited to connected, auto-approved read-only tools. Prefer the CLI wrapper when available:',
+      '- `"$PIXELPITCH_NODE_BIN" "$PIXELPITCH_BIN" tools connectors list --format compact`',
+      '- `"$PIXELPITCH_NODE_BIN" "$PIXELPITCH_BIN" tools connectors execute --connector <id> --tool <name> --input input.json`',
+      '',
+      'Prefer Live Artifacts for dashboards, reports, scorecards, and refreshable views where the data and preview should stay structured.',
+    ].join('\n');
+  }
+
+  function sendLiveArtifactRouteError(res, err) {
+    if (err instanceof LiveArtifactStoreValidationError) {
+      return sendApiError(res, 400, 'LIVE_ARTIFACT_INVALID', err.message, {
+        details: { kind: 'validation', issues: err.issues },
+      });
+    }
+    if (err instanceof LiveArtifactRefreshUnavailableError) {
+      return sendApiError(res, 400, 'LIVE_ARTIFACT_REFRESH_UNAVAILABLE', err.message);
+    }
+    if (err instanceof LiveArtifactRefreshLockError) {
+      return sendApiError(res, 409, 'LIVE_ARTIFACT_REFRESH_LOCKED', err.message);
+    }
+    if (err instanceof LiveArtifactRefreshAbortError) {
+      return sendApiError(res, 408, 'LIVE_ARTIFACT_REFRESH_ABORTED', err.message, {
+        details: { kind: err.kind, timeoutMs: err.timeoutMs, step: err.step },
+      });
+    }
+    if (err instanceof ConnectorServiceError) {
+      return sendApiError(res, err.status, err.code, err.message, err.details === undefined ? {} : { details: err.details });
+    }
+    const msg = err instanceof Error ? err.message : String(err);
+    if (/not found/i.test(msg)) return sendApiError(res, 404, 'NOT_FOUND', msg);
+    sendApiError(res, 400, 'BAD_REQUEST', msg);
+  }
+
+  function setLiveArtifactPreviewHeaders(res) {
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Referrer-Policy', 'no-referrer');
+    res.setHeader(
+      'Content-Security-Policy',
+      [
+        "default-src 'none'",
+        "base-uri 'none'",
+        "script-src 'none'",
+        "object-src 'none'",
+        "connect-src 'none'",
+        "form-action 'none'",
+        "frame-ancestors 'self'",
+        "img-src 'self' data: blob:",
+        "font-src 'self' data:",
+        "style-src 'unsafe-inline'",
+        'sandbox allow-same-origin',
+      ].join('; '),
+    );
+  }
+
+  function setLiveArtifactCodeHeaders(res) {
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Referrer-Policy', 'no-referrer');
+  }
 
   if (process.env.PIXELPITCH_CODEX_DISABLE_PLUGINS === '1') {
     console.log('[od] Codex plugins disabled via PIXELPITCH_CODEX_DISABLE_PLUGINS=1');
@@ -632,6 +920,57 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
   app.get('/api/health', async (_req, res) => {
     const versionInfo = await readCurrentAppVersionInfo();
     res.json({ ok: true, version: versionInfo.version });
+  });
+
+  async function readinessPayload() {
+    const versionInfo = await readCurrentAppVersionInfo();
+    const checks = {
+      database: 'ok',
+      projectsDir: 'ok',
+      resources: 'ok',
+    };
+    const details = {};
+
+    try {
+      db.prepare('SELECT 1').get();
+    } catch (err) {
+      checks.database = 'error';
+      details.database = err instanceof Error ? err.message : String(err);
+    }
+
+    try {
+      fs.mkdirSync(path.join(RUNTIME_DATA_DIR, 'projects'), { recursive: true });
+      fs.accessSync(RUNTIME_DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
+    } catch (err) {
+      checks.projectsDir = 'error';
+      details.projectsDir = err instanceof Error ? err.message : String(err);
+    }
+
+    try {
+      await Promise.all([listSkills(), listDesignSystems()]);
+    } catch (err) {
+      checks.resources = 'error';
+      details.resources = err instanceof Error ? err.message : String(err);
+    }
+
+    const ok = Object.values(checks).every((value) => value === 'ok');
+    return {
+      ok,
+      status: ok ? 'ok' : 'degraded',
+      version: versionInfo.version,
+      checks,
+      ...(Object.keys(details).length > 0 ? { details } : {}),
+    };
+  }
+
+  app.get('/api/readyz', async (_req, res) => {
+    const payload = await readinessPayload();
+    res.status(payload.ok ? 200 : 503).json(payload);
+  });
+
+  app.get('/api/healthz', async (_req, res) => {
+    const payload = await readinessPayload();
+    res.status(payload.ok ? 200 : 503).json(payload);
   });
 
   app.get('/api/version', async (_req, res) => {
@@ -855,6 +1194,32 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     }
   });
 
+  app.get('/api/projects/:id/events', (req, res) => {
+    if (!getProject(db, req.params.id)) {
+      return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
+    }
+    try {
+      const sse = createSseResponse(res);
+      const projectEventSink = (payload) => sse.send(payload.type, payload);
+      let sinks = activeProjectEventSinks.get(req.params.id);
+      if (!sinks) {
+        sinks = new Set();
+        activeProjectEventSinks.set(req.params.id, sinks);
+      }
+      sinks.add(projectEventSink);
+      sse.send('ready', { projectId: req.params.id });
+      const cleanup = () => {
+        const currentSinks = activeProjectEventSinks.get(req.params.id);
+        currentSinks?.delete(projectEventSink);
+        if (currentSinks?.size === 0) activeProjectEventSinks.delete(req.params.id);
+      };
+      res.on('close', cleanup);
+      res.on('finish', cleanup);
+    } catch (err) {
+      if (!res.headersSent) sendApiError(res, 400, 'BAD_REQUEST', String(err?.message || err));
+    }
+  });
+
   // ---- Conversations --------------------------------------------------------
 
   app.get('/api/projects/:id/conversations', (req, res) => {
@@ -1024,7 +1389,55 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       tabs,
       typeof active === 'string' ? active : null,
     );
+    activeContext = {
+      projectId: req.params.id,
+      fileName: typeof result.active === 'string' ? result.active : null,
+      ts: Date.now(),
+    };
     res.json(result);
+  });
+
+  app.post('/api/active', (req, res) => {
+    if (!isLocalSameOrigin(req, resolvedPort)) {
+      return res.status(403).json({ error: 'cross-origin request rejected' });
+    }
+    const body = req.body || {};
+    if (body.active === false) {
+      activeContext = null;
+      return res.json({ active: false });
+    }
+    const projectId = typeof body.projectId === 'string' ? body.projectId : '';
+    if (!projectId || !getProject(db, projectId)) {
+      return sendApiError(res, 400, 'BAD_REQUEST', 'valid projectId is required');
+    }
+    const fileName =
+      typeof body.fileName === 'string' && body.fileName.length > 0
+        ? body.fileName
+        : null;
+    activeContext = { projectId, fileName, ts: Date.now() };
+    res.json({ active: true, ...activeContext });
+  });
+
+  app.get('/api/active', (req, res) => {
+    if (!isLocalSameOrigin(req, resolvedPort)) {
+      return res.status(403).json({ error: 'cross-origin request rejected' });
+    }
+    if (!activeContext || Date.now() - activeContext.ts > ACTIVE_CONTEXT_TTL_MS) {
+      activeContext = null;
+      return res.json({ active: false });
+    }
+    const project = getProject(db, activeContext.projectId);
+    if (!project) {
+      activeContext = null;
+      return res.json({ active: false });
+    }
+    res.json({
+      active: true,
+      projectId: activeContext.projectId,
+      projectName: project.name ?? null,
+      fileName: activeContext.fileName,
+      ageMs: Date.now() - activeContext.ts,
+    });
   });
 
   // ---- Templates ----------------------------------------------------------
@@ -1228,6 +1641,56 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     }
   });
 
+  // Serve tokens.css (colors_and_type.css) for a design system
+  app.get('/api/design-systems/:id/tokens.css', async (req, res) => {
+    const cssPath = path.join(DESIGN_SYSTEMS_DIR, req.params.id, 'colors_and_type.css');
+    try {
+      const css = await fs.promises.readFile(cssPath, 'utf-8');
+      res.type('text/css').send(css);
+    } catch { res.status(404).json({ error: 'No tokens.css for this design system' }); }
+  });
+
+  // Serve structured tokens JSON
+  app.get('/api/design-systems/:id/tokens.json', async (req, res) => {
+    const tokens = await readDesignSystemTokens(DESIGN_SYSTEMS_DIR, req.params.id);
+    if (!tokens) return res.status(404).json({ error: 'No tokens.json for this design system' });
+    res.json(tokens);
+  });
+
+  // List available preview cards
+  app.get('/api/design-systems/:id/previews', async (req, res) => {
+    const previews = await listDesignSystemPreviews(DESIGN_SYSTEMS_DIR, req.params.id);
+    res.json({ previews });
+  });
+
+  // Serve a specific preview card with inlined CSS
+  app.get('/api/design-systems/:id/preview/:card', async (req, res) => {
+    const card = req.params.card;
+    if (!/^[a-z0-9_-]+\.html$/i.test(card)) return res.status(400).json({ error: 'Invalid card name' });
+    const systemDir = path.join(DESIGN_SYSTEMS_DIR, req.params.id);
+    const htmlPath = path.join(systemDir, 'preview', card);
+    const cssPath = path.join(systemDir, 'colors_and_type.css');
+    const tokensPath = path.join(systemDir, 'tokens.json');
+    try {
+      let html = await fs.promises.readFile(htmlPath, 'utf-8');
+      // Inline CSS so it works in srcDoc iframes (no base URL for relative paths)
+      try {
+        const css = await fs.promises.readFile(cssPath, 'utf-8');
+        html = html.replace(
+          /<link\s+rel=["']stylesheet["']\s+href=["']\.\.\/colors_and_type\.css["']\s*\/?>/gi,
+          `<style>\n${css}\n</style>`
+        );
+      } catch { /* CSS not found */ }
+      // Inline tokens.json as a global so fetch('../tokens.json') isn't needed
+      try {
+        const tokens = await fs.promises.readFile(tokensPath, 'utf-8');
+        const tokensScript = `<script>window.__DESIGN_TOKENS__ = ${tokens};</script>`;
+        html = html.replace('</head>', `${tokensScript}\n</head>`);
+      } catch { /* tokens.json not found */ }
+      res.type('text/html').send(html);
+    } catch { res.status(404).json({ error: 'Preview card not found' }); }
+  });
+
   app.get('/api/prompt-templates', async (_req, res) => {
     try {
       const templates = await listPromptTemplates(PROMPT_TEMPLATES_DIR);
@@ -1398,6 +1861,292 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       });
     } catch (err) {
       res.status(500).json({ error: String(err) });
+    }
+  });
+
+  app.get('/api/live-artifacts', async (req, res) => {
+    try {
+      const projectId = typeof req.query.projectId === 'string' ? req.query.projectId : undefined;
+      if (!projectId) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'projectId query parameter is required');
+      }
+      const artifacts = await listLiveArtifacts({ projectsRoot: PROJECTS_DIR, projectId });
+      res.json({ artifacts });
+    } catch (err) {
+      sendLiveArtifactRouteError(res, err);
+    }
+  });
+
+  app.options('/api/live-artifacts/:artifactId/preview', requireLocalDaemonRequest, (_req, res) => {
+    res.status(204).end();
+  });
+
+  app.get('/api/live-artifacts/:artifactId/preview', requireLocalDaemonRequest, async (req, res) => {
+    try {
+      const projectId = typeof req.query.projectId === 'string' ? req.query.projectId : undefined;
+      if (!projectId) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'projectId query parameter is required');
+      }
+      const variant = typeof req.query.variant === 'string' ? req.query.variant : 'rendered';
+      if (variant === 'template' || variant === 'rendered-source') {
+        const html = await readLiveArtifactCode({
+          projectsRoot: PROJECTS_DIR,
+          projectId,
+          artifactId: req.params.artifactId,
+          variant: variant === 'template' ? 'template' : 'rendered',
+        });
+        setLiveArtifactCodeHeaders(res);
+        return res.status(200).send(html);
+      }
+      if (variant !== 'rendered') {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'variant must be rendered, template, or rendered-source');
+      }
+      const record = await ensureLiveArtifactPreview({
+        projectsRoot: PROJECTS_DIR,
+        projectId,
+        artifactId: req.params.artifactId,
+      });
+      setLiveArtifactPreviewHeaders(res);
+      res.status(200).send(record.html);
+    } catch (err) {
+      sendLiveArtifactRouteError(res, err);
+    }
+  });
+
+  app.get('/api/live-artifacts/:artifactId', async (req, res) => {
+    try {
+      const projectId = typeof req.query.projectId === 'string' ? req.query.projectId : undefined;
+      if (!projectId) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'projectId query parameter is required');
+      }
+      const record = await getLiveArtifact({
+        projectsRoot: PROJECTS_DIR,
+        projectId,
+        artifactId: req.params.artifactId,
+      });
+      res.json({ artifact: record.artifact });
+    } catch (err) {
+      sendLiveArtifactRouteError(res, err);
+    }
+  });
+
+  app.get('/api/live-artifacts/:artifactId/refreshes', async (req, res) => {
+    try {
+      const projectId = typeof req.query.projectId === 'string' ? req.query.projectId : undefined;
+      if (!projectId) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'projectId query parameter is required');
+      }
+      const refreshes = await listLiveArtifactRefreshLogEntries({
+        projectsRoot: PROJECTS_DIR,
+        projectId,
+        artifactId: req.params.artifactId,
+      });
+      res.json({ refreshes });
+    } catch (err) {
+      sendLiveArtifactRouteError(res, err);
+    }
+  });
+
+  app.post('/api/tools/live-artifacts/create', async (req, res) => {
+    try {
+      const toolGrant = authorizeToolRequest(req, res, 'live-artifacts:create');
+      if (!toolGrant) return;
+      const { projectId, input, templateHtml, provenanceJson, createdByRunId } = req.body || {};
+      if (requestProjectOverride(projectId, toolGrant.projectId)) {
+        return sendApiError(res, 403, 'FORBIDDEN', 'projectId is derived from the tool token', {
+          details: { suppliedProjectId: projectId },
+        });
+      }
+      if (requestRunOverride(createdByRunId, toolGrant.runId)) {
+        return sendApiError(res, 403, 'FORBIDDEN', 'createdByRunId is derived from the tool token', {
+          details: { suppliedRunId: createdByRunId },
+        });
+      }
+      const record = await createLiveArtifact({
+        projectsRoot: PROJECTS_DIR,
+        projectId: toolGrant.projectId,
+        input: input ?? {},
+        templateHtml,
+        provenanceJson,
+        createdByRunId: toolGrant.runId,
+      });
+      emitLiveArtifactEvent(toolGrant, 'created', record.artifact);
+      res.json({ artifact: record.artifact });
+    } catch (err) {
+      sendLiveArtifactRouteError(res, err);
+    }
+  });
+
+  app.get('/api/tools/live-artifacts/list', async (req, res) => {
+    try {
+      const toolGrant = authorizeToolRequest(req, res, 'live-artifacts:list');
+      if (!toolGrant) return;
+      const projectId = typeof req.query.projectId === 'string' ? req.query.projectId : undefined;
+      if (requestProjectOverride(projectId, toolGrant.projectId)) {
+        return sendApiError(res, 403, 'FORBIDDEN', 'projectId is derived from the tool token', {
+          details: { suppliedProjectId: projectId },
+        });
+      }
+      const artifacts = await listLiveArtifacts({ projectsRoot: PROJECTS_DIR, projectId: toolGrant.projectId });
+      res.json({ artifacts });
+    } catch (err) {
+      sendLiveArtifactRouteError(res, err);
+    }
+  });
+
+  app.post('/api/tools/live-artifacts/update', async (req, res) => {
+    try {
+      const toolGrant = authorizeToolRequest(req, res, 'live-artifacts:update');
+      if (!toolGrant) return;
+      const { projectId, artifactId, input, templateHtml, provenanceJson } = req.body || {};
+      if (requestProjectOverride(projectId, toolGrant.projectId)) {
+        return sendApiError(res, 403, 'FORBIDDEN', 'projectId is derived from the tool token', {
+          details: { suppliedProjectId: projectId },
+        });
+      }
+      if (typeof artifactId !== 'string' || artifactId.length === 0) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'artifactId is required');
+      }
+      const record = await updateLiveArtifact({
+        projectsRoot: PROJECTS_DIR,
+        projectId: toolGrant.projectId,
+        artifactId,
+        input: input ?? {},
+        templateHtml,
+        provenanceJson,
+      });
+      emitLiveArtifactEvent(toolGrant, 'updated', record.artifact);
+      res.json({ artifact: record.artifact });
+    } catch (err) {
+      sendLiveArtifactRouteError(res, err);
+    }
+  });
+
+  app.post('/api/tools/live-artifacts/refresh', async (req, res) => {
+    try {
+      const toolGrant = authorizeToolRequest(req, res, 'live-artifacts:refresh');
+      if (!toolGrant) return;
+      const { projectId, artifactId } = req.body || {};
+      if (requestProjectOverride(projectId, toolGrant.projectId)) {
+        return sendApiError(res, 403, 'FORBIDDEN', 'projectId is derived from the tool token', {
+          details: { suppliedProjectId: projectId },
+        });
+      }
+      if (typeof artifactId !== 'string' || artifactId.length === 0) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'artifactId is required');
+      }
+      let result;
+      try {
+        result = await refreshLiveArtifact({
+          projectsRoot: PROJECTS_DIR,
+          projectId: toolGrant.projectId,
+          artifactId,
+          onStarted: ({ refreshId }) => {
+            emitLiveArtifactRefreshEvent(toolGrant, { phase: 'started', artifactId, refreshId });
+          },
+        });
+      } catch (refreshErr) {
+        emitLiveArtifactRefreshEvent(toolGrant, {
+          phase: 'failed',
+          artifactId,
+          error: refreshErr instanceof Error ? refreshErr.message : String(refreshErr),
+        });
+        throw refreshErr;
+      }
+      emitLiveArtifactRefreshEvent(toolGrant, {
+        phase: 'succeeded',
+        artifactId,
+        refreshId: result.refresh.id,
+        title: result.artifact.title,
+        refreshedSourceCount: result.refresh.refreshedSourceCount,
+      });
+      res.json(result);
+    } catch (err) {
+      sendLiveArtifactRouteError(res, err);
+    }
+  });
+
+  app.patch('/api/live-artifacts/:artifactId', async (req, res) => {
+    try {
+      const projectId = typeof req.query.projectId === 'string' ? req.query.projectId : undefined;
+      if (!projectId) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'projectId query parameter is required');
+      }
+      const record = await updateLiveArtifact({
+        projectsRoot: PROJECTS_DIR,
+        projectId,
+        artifactId: req.params.artifactId,
+        input: req.body ?? {},
+      });
+      emitLiveArtifactEvent({ projectId }, 'updated', record.artifact);
+      res.json({ artifact: record.artifact });
+    } catch (err) {
+      sendLiveArtifactRouteError(res, err);
+    }
+  });
+
+  app.delete('/api/live-artifacts/:artifactId', async (req, res) => {
+    try {
+      const projectId = typeof req.query.projectId === 'string' ? req.query.projectId : undefined;
+      if (!projectId) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'projectId query parameter is required');
+      }
+      const existing = await getLiveArtifact({
+        projectsRoot: PROJECTS_DIR,
+        projectId,
+        artifactId: req.params.artifactId,
+      });
+      await deleteLiveArtifact({
+        projectsRoot: PROJECTS_DIR,
+        projectId,
+        artifactId: req.params.artifactId,
+      });
+      updateProject(db, projectId, {});
+      emitLiveArtifactEvent({ projectId }, 'deleted', existing.artifact);
+      res.json({ ok: true });
+    } catch (err) {
+      sendLiveArtifactRouteError(res, err);
+    }
+  });
+
+  app.options('/api/live-artifacts/:artifactId/refresh', requireLocalDaemonRequest, (_req, res) => {
+    res.status(204).end();
+  });
+
+  app.post('/api/live-artifacts/:artifactId/refresh', requireLocalDaemonRequest, async (req, res) => {
+    try {
+      const projectId = typeof req.query.projectId === 'string' ? req.query.projectId : undefined;
+      if (!projectId) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'projectId query parameter is required');
+      }
+      let result;
+      try {
+        result = await refreshLiveArtifact({
+          projectsRoot: PROJECTS_DIR,
+          projectId,
+          artifactId: req.params.artifactId,
+          onStarted: ({ refreshId }) => {
+            emitLiveArtifactRefreshEvent({ projectId }, { phase: 'started', artifactId: req.params.artifactId, refreshId });
+          },
+        });
+      } catch (refreshErr) {
+        emitLiveArtifactRefreshEvent({ projectId }, {
+          phase: 'failed',
+          artifactId: req.params.artifactId,
+          error: refreshErr instanceof Error ? refreshErr.message : String(refreshErr),
+        });
+        throw refreshErr;
+      }
+      emitLiveArtifactRefreshEvent({ projectId }, {
+        phase: 'succeeded',
+        artifactId: req.params.artifactId,
+        refreshId: result.refresh.id,
+        title: result.artifact.title,
+        refreshedSourceCount: result.refresh.refreshedSourceCount,
+      });
+      res.json(result);
+    } catch (err) {
+      sendLiveArtifactRouteError(res, err);
     }
   });
 
@@ -1583,10 +2332,32 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
   // project's own folder (see apps/daemon/src/projects.ts).
   app.get('/api/projects/:id/files', async (req, res) => {
     try {
-      const files = await listFiles(PROJECTS_DIR, req.params.id);
+      const since = Number(req.query?.since);
+      const files = await listFiles(PROJECTS_DIR, req.params.id, {
+        since: Number.isFinite(since) ? since : undefined,
+      });
       /** @type {import('@pixelpitch/contracts').ProjectFilesResponse} */
       const body = { files };
       res.json(body);
+    } catch (err) {
+      sendApiError(res, 400, 'BAD_REQUEST', String(err));
+    }
+  });
+
+  app.get('/api/projects/:id/search', async (req, res) => {
+    try {
+      const query = String(req.query.q ?? '');
+      if (!query) {
+        sendApiError(res, 400, 'BAD_REQUEST', 'q query parameter is required');
+        return;
+      }
+      const pattern = req.query.pattern ? String(req.query.pattern) : null;
+      const max = Math.min(Number(req.query.max) || 200, 1000);
+      const matches = await searchProjectFiles(PROJECTS_DIR, req.params.id, query, {
+        pattern,
+        max,
+      });
+      res.json({ query, matches });
     } catch (err) {
       sendApiError(res, 400, 'BAD_REQUEST', String(err));
     }
@@ -1627,6 +2398,66 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
         res,
         status,
         status === 404 ? 'FILE_NOT_FOUND' : 'BAD_REQUEST',
+        String(err?.message || err),
+      );
+    }
+  });
+
+  app.post('/api/projects/:id/export/pptx', async (req, res) => {
+    try {
+      const { fileName } = req.body || {};
+      if (typeof fileName !== 'string' || !fileName.trim()) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'fileName required');
+      }
+      if (!/\.html?$/i.test(fileName)) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'only HTML files can be exported to PPTX');
+      }
+
+      await ensureProject(PROJECTS_DIR, req.params.id);
+      const dir = projectDir(PROJECTS_DIR, req.params.id);
+      const input = await readProjectFile(PROJECTS_DIR, req.params.id, fileName);
+      const inputPath = path.join(dir, input.path || fileName);
+      if (!isPathWithin(dir, inputPath)) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'file path escapes project');
+      }
+
+      const sourceBase = path.basename(fileName).replace(/\.html?$/i, '') || 'deck';
+      const outputName = sanitizeName(`${sourceBase}.pptx`);
+      const outputPath = path.join(dir, outputName);
+      const reportName = sanitizeName(`${sourceBase}.slidify-report.json`);
+      const reportPath = path.join(dir, reportName);
+      const result = await runPptxExport({
+        inputPath,
+        outputPath,
+        projectRoot: PROJECT_ROOT,
+        reportPath,
+        skillsDir: SKILLS_DIR,
+      });
+
+      const file = await writeProjectFile(
+        PROJECTS_DIR,
+        req.params.id,
+        outputName,
+        await fs.promises.readFile(outputPath),
+      );
+      /** @type {import('@pixelpitch/contracts').ProjectFileResponse & { audit: { ok: boolean; output: string }; report: unknown }} */
+      const body = { file, audit: result.audit, report: result.report };
+      res.json(body);
+    } catch (err) {
+      if (err instanceof PptxExportError) {
+        return sendApiError(
+          res,
+          500,
+          'INTERNAL_ERROR',
+          err.message,
+          { details: { code: err.code, stderr: err.stderr.slice(-4000), stdout: err.stdout.slice(-4000) } },
+        );
+      }
+      const status = err && err.code === 'ENOENT' ? 404 : 500;
+      sendApiError(
+        res,
+        status,
+        status === 404 ? 'FILE_NOT_FOUND' : 'INTERNAL_ERROR',
         String(err?.message || err),
       );
     }
@@ -1853,6 +2684,37 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
         .status(status)
         .json({ error: String(err && err.message ? err.message : err) });
     }
+  });
+
+  app.get('/api/connectors/composio/config', (req, res) => {
+    if (!isLocalSameOrigin(req, resolvedPort)) {
+      return res.status(403).json({ error: 'cross-origin request rejected' });
+    }
+    try {
+      res.json(readPublicComposioConfig());
+    } catch (err) {
+      res.status(500).json({ error: String(err && err.message ? err.message : err) });
+    }
+  });
+
+  app.put('/api/connectors/composio/config', (req, res) => {
+    if (!isLocalSameOrigin(req, resolvedPort)) {
+      return res.status(403).json({ error: 'cross-origin request rejected' });
+    }
+    try {
+      const cfg = writeComposioConfig(req.body);
+      deleteConnectorCredentialsByProvider('composio');
+      res.json(cfg);
+    } catch (err) {
+      res.status(400).json({ error: String(err && err.message ? err.message : err) });
+    }
+  });
+
+  registerConnectorRoutes(app, {
+    sendApiError,
+    authorizeToolRequest,
+    projectsRoot: PROJECTS_DIR,
+    requireLocalDaemonRequest,
   });
 
   app.get('/api/app-config', async (req, res) => {
@@ -2134,6 +2996,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
 
     let designSystemBody;
     let designSystemTitle;
+    let designSystemCss;
     if (effectiveDesignSystemId) {
       const systems = await listDesignSystems(DESIGN_SYSTEMS_DIR);
       const summary = systems.find((s) => s.id === effectiveDesignSystemId);
@@ -2141,6 +3004,11 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       designSystemBody =
         (await readDesignSystem(DESIGN_SYSTEMS_DIR, effectiveDesignSystemId)) ??
         undefined;
+      // Read colors_and_type.css if it exists alongside the DESIGN.md
+      try {
+        const cssPath = path.join(DESIGN_SYSTEMS_DIR, effectiveDesignSystemId, 'colors_and_type.css');
+        designSystemCss = await fs.promises.readFile(cssPath, 'utf-8');
+      } catch { /* no CSS file */ }
     }
 
     const template =
@@ -2154,6 +3022,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       skillMode,
       designSystemBody,
       designSystemTitle,
+      designSystemCss,
       craftBody,
       craftSections,
       metadata,
@@ -2206,6 +3075,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       return design.runs.fail(run, 'BAD_REQUEST', 'message required');
     }
     if (run.cancelRequested || design.runs.isTerminal(run.status)) return;
+    const runId = run.id;
 
     // Resolve the project working directory (creating the folder if it
     // doesn't exist yet). Without one we don't pass cwd to spawn — the
@@ -2271,13 +3141,32 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     const attachmentHint = safeAttachments.length
       ? `\n\nAttached project files: ${safeAttachments.map((p) => `\`${p}\``).join(', ')}`
       : '';
+    const toolTokenGrant =
+      cwd && typeof projectId === 'string' && projectId
+        ? toolTokenRegistry.mint({
+            runId,
+            projectId,
+            allowedEndpoints: CHAT_TOOL_ENDPOINTS,
+            allowedOperations: CHAT_TOOL_OPERATIONS,
+          })
+        : null;
+    let toolTokenRevoked = false;
+    const revokeToolToken = (reason) => {
+      if (toolTokenRevoked || !toolTokenGrant) return;
+      toolTokenRevoked = true;
+      toolTokenRegistry.revokeToken(toolTokenGrant.token, reason);
+    };
+    const runtimeToolPrompt = createAgentRuntimeToolPrompt(
+      `http://127.0.0.1:${resolvedPort}`,
+      toolTokenGrant,
+    );
     const commentHint = renderCommentAttachmentHint(safeCommentAttachments);
     const daemonSystemPrompt = await composeDaemonSystemPrompt({
       projectId,
       skillId,
       designSystemId,
     });
-    const instructionPrompt = [daemonSystemPrompt, systemPrompt]
+    const instructionPrompt = [daemonSystemPrompt, runtimeToolPrompt, systemPrompt]
       .map((part) => (typeof part === 'string' ? part.trim() : ''))
       .filter(Boolean)
       .join('\n\n---\n\n');
@@ -2327,6 +3216,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     // spawn(def.bin) — that fallback re-introduces the exact ENOENT symptom
     // from issue #10.
     if (!resolvedBin) {
+      revokeToolToken('child_exit');
       design.runs.emit(
         run,
         'error',
@@ -2348,10 +3238,20 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       { cwd },
     );
     const send = (event, data) => design.runs.emit(run, event, data);
+    const unregisterChatAgentEventSink = () => {
+      activeChatAgentEventSinks.delete(toolTokenGrant?.runId ?? runId);
+    };
+    if (toolTokenGrant?.runId) {
+      activeChatAgentEventSinks.set(toolTokenGrant.runId, (payload) =>
+        send('agent', payload),
+      );
+    }
 
     const odMediaEnv = {
+      PIXELPITCH_NODE_BIN: process.execPath,
       PIXELPITCH_BIN,
       PIXELPITCH_DAEMON_URL: `http://127.0.0.1:${resolvedPort}`,
+      ...(toolTokenGrant ? { PIXELPITCH_TOOL_TOKEN: toolTokenGrant.token } : {}),
       ...(typeof projectId === 'string' && projectId && cwd
         ? {
             PIXELPITCH_PROJECT_ID: projectId,
@@ -2360,12 +3260,16 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
         : {}),
     };
 
-    if (run.cancelRequested || design.runs.isTerminal(run.status)) return;
+    if (run.cancelRequested || design.runs.isTerminal(run.status)) {
+      revokeToolToken('child_exit');
+      unregisterChatAgentEventSink();
+      return;
+    }
 
     run.status = 'running';
     run.updatedAt = Date.now();
     send('start', {
-      runId: run.id,
+      runId,
       agentId,
       bin: resolvedBin,
       streamFormat: def.streamFormat ?? 'plain',
@@ -2384,7 +3288,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
         def.promptViaStdin || def.streamFormat === 'acp-json-rpc'
           ? 'pipe'
           : 'ignore';
-      const env = { ...process.env, ...odMediaEnv };
+      const env = spawnEnvForAgent(agentId, { ...process.env, ...odMediaEnv });
       const invocation = createCommandInvocation({
         command: resolvedBin,
         args,
@@ -2420,6 +3324,8 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
         child.stdin.end(composed, 'utf8');
       }
     } catch (err) {
+      revokeToolToken('child_exit');
+      unregisterChatAgentEventSink();
       design.runs.emit(
         run,
         'error',
@@ -2433,6 +3339,67 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
 
     child.stdout.setEncoding('utf8');
     child.stderr.setEncoding('utf8');
+
+    if (critiqueCfg.enabled) {
+      const adapterStreamFormat = def.streamFormat ?? 'plain';
+      if (adapterStreamFormat !== 'plain') {
+        if (!critiqueWarnedAdapters.has(adapterStreamFormat)) {
+          critiqueWarnedAdapters.add(adapterStreamFormat);
+          console.warn(`[critique] adapter format=${adapterStreamFormat} is not plain-stream; skipping orchestrator and falling through to legacy generation`);
+        }
+      } else {
+        const critiqueRunId = run.id;
+        const critiqueProjectKey =
+          typeof projectId === 'string' && projectId ? projectId : critiqueRunId;
+        const critiqueArtifactDir = path.join(ARTIFACTS_DIR, critiqueProjectKey, critiqueRunId);
+        const stdoutIterable = (async function* () {
+          for await (const chunk of child.stdout) yield String(chunk);
+        })();
+        child.stderr.on('data', (chunk) => send('stderr', { chunk }));
+        child.on('error', (err) => {
+          revokeToolToken('child_exit');
+          unregisterChatAgentEventSink();
+          send('error', createSseErrorPayload('AGENT_EXECUTION_FAILED', err.message));
+        });
+        const childExitPromise = new Promise((resolve) => {
+          child.once('close', (code, signal) => resolve({ code, signal }));
+        });
+        try {
+          const orchestratorResult = await runOrchestrator({
+            runId: critiqueRunId,
+            projectId: typeof projectId === 'string' ? projectId : critiqueRunId,
+            conversationId: typeof conversationId === 'string' ? conversationId : null,
+            artifactId: critiqueRunId,
+            artifactDir: critiqueArtifactDir,
+            adapter: typeof agentId === 'string' ? agentId : 'unknown',
+            cfg: critiqueCfg,
+            db,
+            bus: { emit: (event) => send('agent', event) },
+            stdout: stdoutIterable,
+            child,
+            childExitPromise,
+          });
+          revokeToolToken('child_exit');
+          unregisterChatAgentEventSink();
+          const succeeded =
+            orchestratorResult.status === 'shipped' ||
+            orchestratorResult.status === 'below_threshold';
+          if (run.cancelRequested) {
+            design.runs.finish(run, 'canceled', 1, null);
+          } else if (succeeded) {
+            design.runs.finish(run, 'succeeded', 0, null);
+          } else {
+            design.runs.finish(run, 'failed', 1, null);
+          }
+        } catch (err) {
+          revokeToolToken('child_exit');
+          unregisterChatAgentEventSink();
+          send('error', createSseErrorPayload('AGENT_EXECUTION_FAILED', err instanceof Error ? err.message : String(err)));
+          design.runs.finish(run, 'failed', 1, null);
+        }
+        return;
+      }
+    }
 
     // Structured streams (Claude Code) go through a line-delimited JSON
     // parser that turns stream_event objects into UI-friendly events. For
@@ -2475,6 +3442,8 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     child.stderr.on('data', (chunk) => send('stderr', { chunk }));
 
     child.on('error', (err) => {
+      revokeToolToken('child_exit');
+      unregisterChatAgentEventSink();
       send(
         'error',
         createSseErrorPayload('AGENT_EXECUTION_FAILED', err.message),
@@ -2482,6 +3451,8 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       design.runs.finish(run, 'failed', 1, null);
     });
     child.on('close', (code, signal) => {
+      revokeToolToken('child_exit');
+      unregisterChatAgentEventSink();
       if (acpSession?.hasFatalError()) {
         return design.runs.finish(run, 'failed', code ?? 1, signal ?? null);
       }

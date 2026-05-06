@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Palette — Framer</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'GT Walsheim', sans-serif);
+      background: var(--paper, #000000);
+      color: var(--ink, #ffffff);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 32px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 96px;
+      border-bottom: 1px solid var(--border, #0099ff);
+      padding-bottom: 48px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'Azeret Mono', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #a6a6a6);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'GT Walsheim', sans-serif);
+      font-size: 110px;
+      font-weight: 500;
+      line-height: 0.85;
+      letter-spacing: -5.5px;
+      color: var(--ink, #ffffff);
+      margin-bottom: 12px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'GT Walsheim', sans-serif);
+      font-size: 18px;
+      line-height: 1.5;
+      color: var(--slate, #a6a6a6);
+      max-width: 680px;
+      margin-bottom: 24px;
+      font-weight: 400;
+    }
+
+    .header__meta {
+      font-family: var(--font-mono, 'Azeret Mono', monospace);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      color: var(--slate, #a6a6a6);
+      text-transform: uppercase;
+    }
+
+    /* Section labels */
+    .section-label {
+      font-family: var(--font-mono, 'Azeret Mono', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--border, #0099ff);
+      margin-bottom: 40px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--bone, #090909);
+    }
+
+    /* Swatch grid */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 80px;
+    }
+
+    .swatch {
+      background: var(--bone, #090909);
+      border: 1px solid var(--bone, #090909);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .swatch:hover {
+      border-color: var(--border, #0099ff);
+      background: rgba(0, 153, 255, 0.05);
+    }
+
+    .swatch__chip {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      position: relative;
+    }
+
+    .swatch__chip-contrast {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      font-family: var(--font-mono, 'Azeret Mono', monospace);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 999px;
+      line-height: 1.4;
+      text-transform: uppercase;
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .swatch__meta {
+      padding: 24px;
+    }
+
+    .swatch__var {
+      font-family: var(--font-mono, 'Azeret Mono', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--border, #0099ff);
+      word-break: break-all;
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .swatch__hex {
+      font-family: var(--font-mono, 'Azeret Mono', monospace);
+      font-size: 12px;
+      color: var(--slate, #a6a6a6);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 400;
+    }
+
+    .swatch__role {
+      font-family: var(--font-body, 'GT Walsheim', sans-serif);
+      font-size: 15px;
+      line-height: 1.4;
+      color: var(--ink, #ffffff);
+      margin-bottom: 12px;
+      font-weight: 400;
+    }
+
+    .swatch__contrast-label {
+      font-family: var(--font-mono, 'Azeret Mono', monospace);
+      font-size: 10px;
+      font-weight: 600;
+      margin-top: 8px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .contrast-pass { color: #4ade80; }
+    .contrast-fail { color: #ff5a5a; }
+    .contrast-aa-large { color: #fbbf24; }
+
+    /* Usage pattern section */
+    .usage-section {
+      margin-bottom: 80px;
+      padding: 48px;
+      background: var(--bone, #090909);
+      border: 1px solid rgba(0, 153, 255, 0.2);
+      border-radius: 10px;
+    }
+
+    .usage-section h2 {
+      font-family: var(--font-display, 'GT Walsheim', sans-serif);
+      font-size: 62px;
+      font-weight: 500;
+      line-height: 1.0;
+      letter-spacing: -3.1px;
+      color: var(--ink, #ffffff);
+      margin-bottom: 24px;
+    }
+
+    .usage-section p {
+      font-family: var(--font-body, 'GT Walsheim', sans-serif);
+      font-size: 18px;
+      line-height: 1.5;
+      color: var(--slate, #a6a6a6);
+      margin-bottom: 32px;
+      max-width: 720px;
+      font-weight: 400;
+    }
+
+    .rule-of-one {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 40px;
+      align-items: start;
+    }
+
+    .rule-example {
+      padding: 32px;
+      background: rgba(0, 153, 255, 0.03);
+      border: 1px solid rgba(0, 153, 255, 0.15);
+      border-radius: 10px;
+    }
+
+    .rule-example h3 {
+      font-family: var(--font-display, 'GT Walsheim', sans-serif);
+      font-size: 32px;
+      font-weight: 500;
+      line-height: 1.2;
+      letter-spacing: -1px;
+      color: var(--ink, #ffffff);
+      margin-bottom: 16px;
+    }
+
+    .rule-example p {
+      font-family: var(--font-body, 'GT Walsheim', sans-serif);
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--slate, #a6a6a6);
+      margin-bottom: 0;
+      font-weight: 400;
+    }
+
+    .correct {
+      border: 2px solid #4ade80 !important;
+    }
+
+    .correct::before {
+      content: '✓ CORRECT';
+      display: block;
+      font-family: var(--font-mono, 'Azeret Mono', monospace);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: #4ade80;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #4ade80;
+    }
+
+    .incorrect {
+      border: 2px solid #ff5a5a !important;
+    }
+
+    .incorrect::before {
+      content: '✗ INCORRECT';
+      display: block;
+      font-family: var(--font-mono, 'Azeret Mono', monospace);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: #ff5a5a;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #ff5a5a;
+    }
+
+    .blue-demo {
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .blue-demo em {
+      color: var(--border, #0099ff);
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    /* WCAG summary */
+    .wcag-summary {
+      margin-top: 80px;
+      padding: 48px;
+      background: var(--bone, #090909);
+      border: 1px solid rgba(0, 153, 255, 0.2);
+      border-radius: 10px;
+    }
+
+    .wcag-summary h2 {
+      font-family: var(--font-display, 'GT Walsheim', sans-serif);
+      font-size: 62px;
+      font-weight: 500;
+      line-height: 1.0;
+      letter-spacing: -3.1px;
+      margin-bottom: 24px;
+      color: var(--ink, #ffffff);
+    }
+
+    .wcag-summary p {
+      font-family: var(--font-body, 'GT Walsheim', sans-serif);
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--slate, #a6a6a6);
+      margin-bottom: 32px;
+      max-width: 720px;
+      font-weight: 400;
+    }
+
+    .wcag-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(0, 153, 255, 0.1);
+      font-family: var(--font-body, 'GT Walsheim', sans-serif);
+      font-size: 15px;
+      font-weight: 400;
+    }
+
+    .wcag-row:last-child { border-bottom: none; }
+
+    .wcag-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-family: var(--font-mono, 'Azeret Mono', monospace);
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      min-width: 90px;
+      text-align: center;
+      border: 1px solid;
+    }
+
+    .wcag-badge--pass { background: rgba(74, 222, 128, 0.1); color: #4ade80; border-color: #4ade80; }
+    .wcag-badge--fail { background: rgba(255, 90, 90, 0.1); color: #ff5a5a; border-color: #ff5a5a; }
+    .wcag-badge--aa-large { background: rgba(251, 191, 36, 0.1); color: #fbbf24; border-color: #fbbf24; }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #a6a6a6);
+      font-family: var(--font-body, 'GT Walsheim', sans-serif);
+      font-size: 15px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 32px auto 0;
+      border: 2px solid var(--slate, #a6a6a6);
+      border-top-color: var(--border, #0099ff);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .page { padding: 60px 20px; }
+      .header { padding-bottom: 32px; margin-bottom: 64px; }
+      .header__title { font-size: 56px; letter-spacing: -2.8px; }
+      .swatch-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+      .rule-of-one { grid-template-columns: 1fr; gap: 20px; }
+      .usage-section { padding: 32px; }
+      .usage-section h2 { font-size: 42px; letter-spacing: -2.1px; }
+      .wcag-summary h2 { font-size: 42px; letter-spacing: -2.1px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    /* ───────────────────────────────────────────────────────────── */
+    /* Contrast ratio calculation (WCAG 2.1 relative luminance)      */
+    /* ───────────────────────────────────────────────────────────── */
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function luminance([r, g, b]) {
+      const [rs, gs, bs] = [r, g, b].map(c => {
+        c /= 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    }
+
+    function contrastRatio(hex1, hex2) {
+      const l1 = luminance(hexToRgb(hex1));
+      const l2 = luminance(hexToRgb(hex2));
+      const lighter = Math.max(l1, l2);
+      const darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function wcagLevel(ratio) {
+      if (ratio >= 7) return { label: 'AAA', cls: 'pass' };
+      if (ratio >= 4.5) return { label: 'AA', cls: 'pass' };
+      if (ratio >= 3) return { label: 'AA Large', cls: 'aa-large' };
+      return { label: 'Fail', cls: 'fail' };
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Core color roles and descriptions                             */
+    /* ───────────────────────────────────────────────────────────── */
+    const CORE_ROLES = {
+      paper:  'Pure black void. The cinematic canvas that makes every element float.',
+      ink:    'Pure white text on dark. High contrast, unflinching legibility.',
+      slate:  'Muted silver. Secondary text, labels, dimmed descriptions.',
+      signal: 'Pure white accent. Used sparingly for interactive highlights.',
+      bone:   'Elevated dark surface. Card backgrounds, subtle depth separation.',
+    };
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Render from tokens.json                                       */
+    /* ───────────────────────────────────────────────────────────── */
+    (window.__DESIGN_TOKENS__ 
+      ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) 
+      : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:var(--border,#0099ff)">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const rawColors = tokens.colors || {};
+      const paperHex = rawColors.paper || '#000000';
+
+      /* Flatten nested color structure */
+      const colors = {};
+      for (const [k, v] of Object.entries(rawColors)) {
+        if (typeof v === 'string') {
+          colors[k] = v;
+        } else if (v && typeof v === 'object') {
+          for (const [sk, sv] of Object.entries(v)) {
+            if (typeof sv === 'string') colors[k + '-' + sk] = sv;
+          }
+        }
+      }
+
+      /* Split core and extended */
+      const coreKeys = Object.keys(CORE_ROLES).filter(k => colors[k]);
+      const extendedKeys = Object.keys(colors)
+        .filter(k => !CORE_ROLES[k] && typeof colors[k] === 'string')
+        .sort();
+
+      let html = '';
+
+      /* ─ Stage head header ─ */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Color System</div>';
+      html += '  <h1 class="header__title">Electric<br>Void</h1>';
+      html += '  <p class="header__subtitle">Pure black canvas with Framer Blue as the singular accent. Crisp white for text. Muted silver for secondary information. Every color serves the product, never the decoration.</p>';
+      html += '  <div class="header__meta">Core Palette + Extended Values &mdash; ' + (coreKeys.length + extendedKeys.length) + ' Tokens</div>';
+      html += '</header>';
+
+      /* ─ Core Palette ─ */
+      if (coreKeys.length) {
+        html += '<div class="section-label">Core Palette</div>';
+        html += '<div class="swatch-grid">';
+        coreKeys.forEach(key => {
+          html += swatchCard(key, colors[key], paperHex, CORE_ROLES[key]);
+        });
+        html += '</div>';
+      }
+
+      /* ─ Extended Palette ─ */
+      if (extendedKeys.length) {
+        html += '<div class="section-label">Extended Palette</div>';
+        html += '<div class="swatch-grid">';
+        extendedKeys.forEach(key => {
+          const role = formatRole(key);
+          html += swatchCard(key, colors[key], paperHex, role);
+        });
+        html += '</div>';
+      }
+
+      /* ─ Accent Strategy ─ */
+      html += accentStrategySection(paperHex);
+
+      /* ─ WCAG Summary ─ */
+      html += wcagSummary(colors, paperHex);
+
+      app.innerHTML = html;
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Swatch card builder                                           */
+    /* ───────────────────────────────────────────────────────────── */
+    function swatchCard(key, hex, paperHex, role) {
+      const ratio = contrastRatio(hex, paperHex);
+      const level = wcagLevel(ratio);
+      const lum = luminance(hexToRgb(hex));
+      const chipTextColor = lum > 0.5 ? '#000000' : '#ffffff';
+
+      return '' +
+        '<div class="swatch">' +
+        '  <div class="swatch__chip" style="background:' + hex + '">' +
+        '    <span class="swatch__chip-contrast" style="color:' + chipTextColor + '">' + ratio.toFixed(2) + ':1</span>' +
+        '  </div>' +
+        '  <div class="swatch__meta">' +
+        '    <div class="swatch__var">--' + esc(key) + '</div>' +
+        '    <div class="swatch__hex">' + esc(hex.toUpperCase()) + '</div>' +
+        '    <div class="swatch__role">' + esc(role) + '</div>' +
+        '    <div class="swatch__contrast-label contrast-' + level.cls + '">' +
+             'WCAG ' + level.label + '</div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Accent strategy section                                       */
+    /* ───────────────────────────────────────────────────────────── */
+    function accentStrategySection(paperHex) {
+      let html = '<section class="usage-section">';
+      html += '<h2>Blue Accent Strategy</h2>';
+      html += '<p>Framer Blue (#0099ff) is deployed with surgical precision. Border accents, focus rings, link colors, and interactive states. Never as a fill. Never in typography. The blue glow exists in shadow space — subtle halos around elements that demand attention. This cold, electric accent cuts through the absolute black like neon in a nightclub.</p>';
+
+      html += '<div class="rule-of-one">';
+
+      /* Correct example */
+      html += '<div class="rule-example correct">';
+      html += '<h3>Electric Accent</h3>';
+      html += '<p class="blue-demo">';
+      html += 'Focus states use a <em>hairline border</em> in Framer Blue with a subtle shadow glow. Link text wraps in the accent color. Interactive elements respond with blue—a flash of electric precision against the void.';
+      html += '</p>';
+      html += '</div>';
+
+      /* Incorrect example */
+      html += '<div class="rule-example incorrect">';
+      html += '<h3>Over-Application</h3>';
+      html += '<p class="blue-demo">';
+      html += 'Using blue for background fills, text runs, or decorative glows dilutes the signal. The power of Framer Blue lives in its scarcity. Deploy it in chrome. Deploy it in state. Never as content.';
+      html += '</p>';
+      html += '</div>';
+
+      html += '</div>';
+      html += '</section>';
+      return html;
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* WCAG compliance summary                                       */
+    /* ───────────────────────────────────────────────────────────── */
+    function wcagSummary(colors, paperHex) {
+      const keys = Object.keys(colors);
+      let passAAA = 0, passAA = 0, passAALarge = 0, fail = 0;
+
+      keys.forEach(k => {
+        const ratio = contrastRatio(colors[k], paperHex);
+        if (ratio >= 7) passAAA++;
+        else if (ratio >= 4.5) passAA++;
+        else if (ratio >= 3) passAALarge++;
+        else fail++;
+      });
+
+      let html = '<div class="wcag-summary">';
+      html += '<h2>WCAG 2.1 Compliance</h2>';
+      html += '<p>Contrast ratios measured against the pure black canvas (#000000). Framer prioritizes legibility across body text, navigation, and interactive elements. Framer Blue is approved for focus rings and border accents, where context ensures clarity.</p>';
+      html += row('AAA (7:1+)', passAAA, 'pass');
+      html += row('AA (4.5:1+)', passAA, 'pass');
+      html += row('AA Large Text (3:1+)', passAALarge, 'aa-large');
+      html += row('Below threshold', fail, fail > 0 ? 'fail' : 'pass');
+      html += '</div>';
+      return html;
+
+      function row(label, count, badge) {
+        return '<div class="wcag-row">' +
+               '<span class="wcag-badge wcag-badge--' + badge + '">' + count + '</span>' +
+               '<span>' + label + '</span>' +
+               '</div>';
+      }
+    }
+
+    /* ───────────────────────────────────────────────────────────── */
+    /* Utilities                                                      */
+    /* ───────────────────────────────────────────────────────────── */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function formatRole(key) {
+      return key
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/[-_]/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase())
+        .trim();
+    }
+  </script>
+</body>
+</html>

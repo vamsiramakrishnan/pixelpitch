@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bold — Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-8) var(--s-5);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--s-4);
+      margin-bottom: var(--s-7);
+      border-bottom: 3px solid var(--ink);
+      border-top: 3px solid var(--ink);
+      padding-top: var(--s-4);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-display);
+      font-size: 56px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-5);
+      border-bottom: 4px solid var(--signal);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+      text-transform: uppercase;
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 19px;
+      font-weight: 500;
+      line-height: 1.55;
+      color: var(--slate);
+      max-width: 720px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 2px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: var(--s-5);
+      text-transform: uppercase;
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-4);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--slate);
+      margin-right: var(--s-3);
+      min-width: 160px;
+      text-transform: uppercase;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      line-height: 1;
+      border: 2px solid var(--ink);
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.18s ease;
+      text-decoration: none;
+      gap: var(--s-2);
+    }
+
+    .btn:hover {
+      background: var(--ink);
+      color: var(--paper);
+      transform: translateY(-2px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn--primary {
+      background: var(--signal);
+      color: var(--paper);
+      border-color: var(--signal);
+    }
+
+    .btn--primary:hover {
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+
+    .btn--secondary {
+      background: var(--bone);
+      color: var(--ink);
+      border-color: var(--bone);
+    }
+
+    .btn--secondary:hover {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    .btn--ghost {
+      border: 2px solid var(--ink);
+      background: transparent;
+      color: var(--ink);
+    }
+
+    .btn--ghost:hover {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .btn--sm {
+      padding: 8px 16px;
+      font-size: 12px;
+    }
+
+    .btn--lg {
+      padding: 14px 28px;
+      font-size: 15px;
+    }
+
+    /* ──── CARDS ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .card {
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      padding: var(--s-4);
+      background: var(--paper);
+      transition: all 0.18s ease;
+    }
+
+    .card:hover {
+      border-color: var(--signal);
+      transform: translateY(-2px);
+    }
+
+    .card__headline {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+      text-transform: uppercase;
+    }
+
+    .card__body {
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+    }
+
+    .card--elevated {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border-color: transparent;
+    }
+
+    .card--elevated:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .card--signal {
+      border-color: var(--signal);
+      border-width: 2px;
+    }
+
+    /* ──── INPUT FIELDS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      text-transform: uppercase;
+    }
+
+    .input {
+      padding: var(--s-3) var(--s-3);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    /* ──── BADGES / PILLS ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2);
+      margin-bottom: var(--s-4);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-1);
+      padding: 6px 14px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      line-height: 1.4;
+      border-radius: var(--radius-full);
+      background: var(--bone);
+      color: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    .badge--signal {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--signal);
+      border-color: var(--signal);
+    }
+
+    .badge--success {
+      background: rgba(34, 197, 94, 0.15);
+      color: #22c55e;
+      border-color: #22c55e;
+    }
+
+    .badge--danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border-color: #ef4444;
+    }
+
+    .badge--inactive {
+      background: transparent;
+      color: var(--slate);
+      border-color: var(--border);
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    /* ──── PULL QUOTE ──── */
+    .pullquote {
+      border-left: 6px solid var(--signal);
+      padding-left: var(--s-4);
+      margin: var(--s-6) 0;
+    }
+
+    .pullquote__text {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      line-height: 1.25;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+      text-transform: uppercase;
+    }
+
+    .pullquote__attribution {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── NUMBERED LIST ──── */
+    .numbered-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--s-4);
+    }
+
+    .numbered-list__item {
+      padding-bottom: var(--s-4);
+      border-bottom: 2px solid var(--border);
+    }
+
+    .numbered-list__item:nth-child(odd):last-child {
+      grid-column: 1 / -1;
+      max-width: 50%;
+      border-bottom: none;
+    }
+
+    .numbered-list__number {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--ink);
+      display: block;
+      margin-bottom: var(--s-2);
+      text-transform: uppercase;
+    }
+
+    .numbered-list__number--signal {
+      color: var(--signal);
+    }
+
+    .numbered-list__headline {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+      text-transform: uppercase;
+    }
+
+    .numbered-list__body {
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate);
+    }
+
+    /* ──── TABLE / SCORECARD ──── */
+    .scorecard {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: var(--s-5);
+      border: 2px solid var(--ink);
+    }
+
+    .scorecard__header {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .scorecard__header-cell {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--paper);
+      text-align: left;
+      padding: var(--s-3);
+      border-right: 2px solid var(--paper);
+    }
+
+    .scorecard__header-cell:last-child {
+      border-right: none;
+    }
+
+    .scorecard__row {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .scorecard__row:last-child {
+      border-bottom: none;
+    }
+
+    .scorecard__cell {
+      padding: var(--s-3);
+      text-align: left;
+      border-right: 1px solid var(--border);
+    }
+
+    .scorecard__cell:last-child {
+      border-right: none;
+    }
+
+    .scorecard__capability {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      color: var(--ink);
+      text-transform: uppercase;
+    }
+
+    .scorecard__diagnostic {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.45;
+      color: var(--slate);
+    }
+
+    .score-blocks {
+      display: flex;
+      gap: 6px;
+    }
+
+    .score-block {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--ink);
+      background: transparent;
+      border-radius: 0;
+    }
+
+    .score-block--filled {
+      background: var(--ink);
+    }
+
+    .score-block--signal {
+      background: var(--signal);
+      border-color: var(--signal);
+    }
+
+    /* ──── SUBSECTION LABEL ──── */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+      margin-top: var(--s-4);
+      text-transform: uppercase;
+    }
+
+    .divider {
+      border: none;
+      border-top: 2px solid var(--ink);
+      margin: var(--s-5) 0;
+    }
+
+    /* ──── FOLIO ──── */
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-4) 0;
+      margin-top: var(--s-8);
+      border-top: 2px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── RESPONSIVE ──── */
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-6) var(--s-3);
+      }
+
+      .stage-head__title {
+        font-size: 42px;
+      }
+
+      .section__title {
+        font-size: 32px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .numbered-list {
+        grid-template-columns: 1fr;
+      }
+
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+
+      .pullquote__text {
+        font-size: 24px;
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: var(--s-3);
+      }
+
+      .numbered-list__item:nth-child(odd):last-child {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">Bold</div>
+      <div class="masthead__tagline">
+        Strong &<br>Expressive
+      </div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Component Vocabulary</h1>
+      <p class="stage-head__subtitle">
+        Bold is a heavyweight design system for commanding visual presence. Heavy typography, high-contrast colors, and direct interaction patterns make every interface unmistakable and responsive.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Buttons</div>
+      <h2 class="section__title">Button States</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Default (Outline)</span>
+        <button class="btn">Action</button>
+        <button class="btn btn--sm">Small</button>
+        <button class="btn btn--lg">Large Button</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary (Signal)</span>
+        <button class="btn btn--primary">Action</button>
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary btn--lg">Large Primary</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Secondary</span>
+        <button class="btn btn--secondary">Action</button>
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary btn--lg">Large Secondary</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Ghost</span>
+        <button class="btn btn--ghost">Action</button>
+        <button class="btn btn--ghost btn--sm">Small</button>
+        <button class="btn btn--ghost btn--lg">Large Ghost</button>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Cards</div>
+      <h2 class="section__title">Card Patterns</h2>
+      <p style="font-size: 16px; line-height: 1.55; color: var(--slate); margin-bottom: var(--s-5);">Standard cards with border and shadow variants. Cards respond to interaction with lift and accent-color border.</p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <h3 class="card__headline">Standard Card</h3>
+          <p class="card__body">Bordered card with soft shadow. Hover effect lifts the card and highlights the border with signal blue.</p>
+          <button class="btn btn--sm">Learn More</button>
+        </div>
+
+        <div class="card card--elevated">
+          <h3 class="card__headline">Elevated Card</h3>
+          <p class="card__body">Shadow card with no visible border. Enhances the elevated appearance on hover with increased shadow depth.</p>
+          <button class="btn btn--sm btn--secondary">Learn More</button>
+        </div>
+
+        <div class="card card--signal">
+          <h3 class="card__headline">Accent Card</h3>
+          <p class="card__body">Highlighted card with signal-blue 2px border. Use this for featured content or call-to-action destinations.</p>
+          <button class="btn btn--sm btn--primary">Learn More</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Input Fields Section -->
+    <section class="section">
+      <div class="section__kicker">Forms</div>
+      <h2 class="section__title">Input Fields</h2>
+      <p style="font-size: 16px; line-height: 1.55; color: var(--slate); margin-bottom: var(--s-5);">Text inputs with focus ring highlight. All inputs use 2px border with signal-blue accent on focus.</p>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">First Name</label>
+          <input type="text" class="input" placeholder="Your first name">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input type="email" class="input" placeholder="name@example.com">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Company</label>
+          <input type="text" class="input" placeholder="Your company">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Phone Number</label>
+          <input type="tel" class="input" placeholder="+1 (555) 000-0000">
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="section">
+      <div class="section__kicker">Status</div>
+      <h2 class="section__title">Badges & Pills</h2>
+      <p style="font-size: 16px; line-height: 1.55; color: var(--slate); margin-bottom: var(--s-5);">Inline status indicators with semantic color variants. All badges use full-radius border-radius and uppercase text.</p>
+
+      <div class="subsection-label">Default Badges</div>
+      <div class="badge-row">
+        <span class="badge"><span class="badge__dot"></span>New</span>
+        <span class="badge"><span class="badge__dot"></span>Live</span>
+        <span class="badge"><span class="badge__dot"></span>Active</span>
+      </div>
+
+      <div class="subsection-label">Semantic Variants</div>
+      <div class="badge-row">
+        <span class="badge badge--signal"><span class="badge__dot"></span>Alert</span>
+        <span class="badge badge--success"><span class="badge__dot"></span>Success</span>
+        <span class="badge badge--danger"><span class="badge__dot"></span>Error</span>
+        <span class="badge badge--inactive">Inactive</span>
+      </div>
+    </section>
+
+    <!-- Pull Quote Section -->
+    <section class="section">
+      <div class="section__kicker">Featured</div>
+      <h2 class="section__title">Pull Quote Pattern</h2>
+
+      <div class="pullquote">
+        <blockquote class="pullquote__text">Bold design compounds impact through decisive choices.</blockquote>
+        <p class="pullquote__attribution">Bold Design Manifesto</p>
+      </div>
+    </section>
+
+    <!-- Numbered List Section -->
+    <section class="section">
+      <div class="section__kicker">Lists</div>
+      <h2 class="section__title">Numbered List</h2>
+      <p style="font-size: 16px; line-height: 1.55; color: var(--slate); margin-bottom: var(--s-5);">Two-column grid layout with optional signal-orange number accent. Use the third or fourth item to highlight a key capability.</p>
+
+      <div class="numbered-list">
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">1</span>
+          <h4 class="numbered-list__headline">Heavy Typography</h4>
+          <p class="numbered-list__body">900-weight display faces command attention. Every headline demands visual presence at 48pt and above.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">2</span>
+          <h4 class="numbered-list__headline">High Contrast</h4>
+          <p class="numbered-list__body">Ink on paper. Signal blue for accents. No ambiguity. Every element earns its visual real estate.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number" style="color: var(--signal);">3</span>
+          <h4 class="numbered-list__headline">Direct Interaction</h4>
+          <p class="numbered-list__body">Buttons respond with transform and color inversion. 2px borders and 8px radius. Feedback is immediate and visual.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">4</span>
+          <h4 class="numbered-list__headline">Commanding Layouts</h4>
+          <p class="numbered-list__body">Grid-based composition with generous whitespace. Vertical rhythm guides the eye. Every margin intentional.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">5</span>
+          <h4 class="numbered-list__headline">Predictable Spacing</h4>
+          <p class="numbered-list__body">4/8/12/16/24/32/48/64/96px scale. No ad-hoc offsets. Alignment compounds across sections and modules.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">6</span>
+          <h4 class="numbered-list__headline">Semantic Color</h4>
+          <p class="numbered-list__body">Signal blue for primary actions. Bone for secondary. Slate for muted text. Green/Red for success/danger states.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scorecard Section -->
+    <section class="section">
+      <div class="section__kicker">Evaluation</div>
+      <h2 class="section__title">Scorecard Table</h2>
+      <p style="font-size: 16px; line-height: 1.55; color: var(--slate); margin-bottom: var(--s-5);">Dark header with paper text. 2px borders on header and outer edges. Single-cell borders are 1px. Score blocks show maturity level with optional signal-blue fill.</p>
+
+      <table class="scorecard">
+        <thead class="scorecard__header">
+          <tr>
+            <th class="scorecard__header-cell">Capability</th>
+            <th class="scorecard__header-cell">Diagnostic</th>
+            <th class="scorecard__header-cell" style="width: 140px;">Maturity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="scorecard__row">
+            <td class="scorecard__cell scorecard__capability">Typography</td>
+            <td class="scorecard__cell scorecard__diagnostic">Heavy display faces at every scale. System UI body. Mono for labels and tags.</td>
+            <td class="scorecard__cell">
+              <div class="score-blocks">
+                <div class="score-block score-block--filled"></div>
+                <div class="score-block score-block--filled"></div>
+                <div class="score-block score-block--filled"></div>
+                <div class="score-block score-block--filled"></div>
+                <div class="score-block score-block--filled"></div>
+              </div>
+            </td>
+          </tr>
+          <tr class="scorecard__row">
+            <td class="scorecard__cell scorecard__capability">Color</td>
+            <td class="scorecard__cell scorecard__diagnostic">6-color palette with semantic mapping. Signal blue for all primary interactions. Strong contrast ratios.</td>
+            <td class="scorecard__cell">
+              <div class="score-blocks">
+                <div class="score-block score-block--signal"></div>
+                <div class="score-block score-block--signal"></div>
+                <div class="score-block score-block--signal"></div>
+                <div class="score-block score-block--signal"></div>
+                <div class="score-block"></div>
+              </div>
+            </td>
+          </tr>
+          <tr class="scorecard__row">
+            <td class="scorecard__cell scorecard__capability">Components</td>
+            <td class="scorecard__cell scorecard__diagnostic">Buttons, cards, inputs, badges, tables. All with clear states and hover effects. Documented with CSS custom properties.</td>
+            <td class="scorecard__cell">
+              <div class="score-blocks">
+                <div class="score-block score-block--filled"></div>
+                <div class="score-block score-block--filled"></div>
+                <div class="score-block score-block--filled"></div>

@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cohere — Component Library</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-15) var(--s-11);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: var(--s-11);
+      margin-bottom: var(--s-15);
+      border-bottom: 1px solid var(--color-border-light);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 400;
+      letter-spacing: -0.96px;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .masthead__meta {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.24px;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-15);
+      padding-bottom: var(--s-11);
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.24px;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-5);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 72px;
+      font-weight: 400;
+      letter-spacing: -1.44px;
+      line-height: 1;
+      color: var(--ink);
+      margin-bottom: var(--s-7);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--slate);
+      max-width: 720px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-15);
+      padding-bottom: var(--s-11);
+      border-bottom: 1px solid var(--color-border-light);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.24px;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-5);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 400;
+      letter-spacing: -0.48px;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: var(--s-11);
+    }
+
+    .section__description {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate);
+      margin-bottom: var(--s-11);
+      max-width: 720px;
+    }
+
+    /* ──── BUTTONS ──── */
+    .btn-demo-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-6);
+      align-items: center;
+      margin-bottom: var(--s-11);
+    }
+
+    .btn-demo-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate);
+      min-width: 120px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      background: transparent;
+      color: var(--ink);
+      border: none;
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn:hover,
+    .btn:focus {
+      color: var(--signal);
+    }
+
+    .btn:focus {
+      outline: 2px solid var(--signal);
+      outline-offset: 2px;
+    }
+
+    .btn--dark {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .btn--dark:hover,
+    .btn--dark:focus {
+      background: var(--color-deep-dark);
+      color: var(--paper);
+      outline: none;
+    }
+
+    .btn--outline {
+      border: 1px solid var(--ink);
+      color: var(--ink);
+    }
+
+    .btn--outline:hover,
+    .btn--outline:focus {
+      background: var(--color-lightest-gray);
+      outline: none;
+    }
+
+    .btn--sm {
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .btn--lg {
+      padding: 12px 28px;
+      font-size: 18px;
+    }
+
+    /* ──── CARDS ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-11);
+      margin-bottom: var(--s-11);
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--color-border-light);
+      border-radius: 22px;
+      padding: var(--s-11);
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--color-border-cool);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .card__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.24px;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-4);
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: var(--s-5);
+    }
+
+    .card__body {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate);
+      margin-bottom: var(--s-6);
+    }
+
+    .card__accent {
+      width: 4px;
+      height: 24px;
+      background: var(--signal);
+      border-radius: var(--radius-sm);
+      display: inline-block;
+      margin-right: var(--s-3);
+    }
+
+    /* ──── INPUT FIELDS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-9);
+      margin-bottom: var(--s-11);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-4);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink);
+    }
+
+    .input {
+      padding: var(--s-4) var(--s-6);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--button-radius);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: 0 0 0 2px rgba(24, 99, 220, 0.1);
+    }
+
+    .input:disabled {
+      background: var(--color-snow);
+      color: var(--slate);
+      cursor: not-allowed;
+    }
+
+    /* ──── BADGES & TAGS ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-5);
+      margin-bottom: var(--s-11);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-2);
+      padding: var(--s-2) var(--s-5);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.4;
+      border-radius: var(--radius-full);
+      background: var(--color-lightest-gray);
+      color: var(--ink);
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    .badge--signal {
+      background: rgba(24, 99, 220, 0.1);
+      color: var(--signal);
+    }
+
+    .badge--dark {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .badge--outline {
+      border: 1px solid var(--color-border-cool);
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    /* ──── STATUS PILLS ──── */
+    .status-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-6);
+      align-items: center;
+      margin-bottom: var(--s-11);
+    }
+
+    .status-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--slate);
+      min-width: 100px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-3);
+      padding: var(--s-3) var(--s-6);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.4;
+      border-radius: var(--radius-full);
+      background: var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--color-border-cool);
+    }
+
+    .pill__dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .pill--active {
+      background: var(--color-snow);
+      border-color: var(--signal);
+      color: var(--signal);
+    }
+
+    .pill--inactive {
+      color: var(--slate);
+    }
+
+    .pill--error {
+      border-color: #d32f2f;
+      color: #d32f2f;
+    }
+
+    /* ──── SUBSECTION ──── */
+    .subsection {
+      margin-top: var(--s-11);
+      margin-bottom: var(--s-11);
+    }
+
+    .subsection__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate);
+      margin-bottom: var(--s-6);
+    }
+
+    /* ──── DEMO SECTION ──── */
+    .demo-section {
+      background: var(--color-snow);
+      border: 1px solid var(--color-border-light);
+      border-radius: 22px;
+      padding: var(--s-11);
+      margin-bottom: var(--s-11);
+    }
+
+    .demo-section__title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: var(--s-6);
+    }
+
+    /* ──── INTERACTIVE STATE DEMO ──── */
+    .interactive-demo {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-9);
+    }
+
+    .interactive-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-6);
+      align-items: center;
+    }
+
+    .interactive-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--slate);
+      min-width: 160px;
+    }
+
+    /* ──── UTILITY ──── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--color-border-light);
+      margin: var(--s-11) 0;
+    }
+
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-6) 0;
+      margin-top: var(--s-15);
+      border-top: 1px solid var(--color-border-light);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.24px;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-11) var(--s-6);
+      }
+
+      .masthead {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--s-6);
+      }
+
+      .masthead__logo {
+        font-size: 40px;
+        letter-spacing: -0.8px;
+      }
+
+      .stage-head__title {
+        font-size: 52px;
+        letter-spacing: -1.04px;
+      }
+
+      .section__title {
+        font-size: 36px;
+        letter-spacing: -0.36px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+
+      .btn-demo-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">Cohere</div>
+      <div class="masthead__meta">
+        Component<br>Library
+      </div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Enterprise Vocabulary</h1>
+      <p class="stage-head__subtitle">
+        The Cohere component system is built on enterprise-grade patterns: transparent buttons that activate on hover, generously rounded cards (22px), and a chromatic restraint that lets content and interaction shine through.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Buttons</div>
+      <h2 class="section__title">Button States</h2>
+      <p class="section__description">
+        Cohere's button system prioritizes clarity and confidence. Transparent (ghost) buttons are the default—text shifts to blue on hover. Dark solid buttons anchor call-to-action surfaces. Outlined variants provide secondary affordance.
+      </p>
+
+      <div class="subsection">
+        <div class="subsection__label">Ghost / Transparent (Default)</div>
+        <div class="btn-demo-row">
+          <span class="btn-demo-label">Default</span>
+          <button class="btn">Learn more</button>
+          <button class="btn">Documentation</button>
+          <button class="btn">View example</button>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection__label">Dark Solid (Primary CTA)</div>
+        <div class="btn-demo-row">
+          <span class="btn-demo-label">Default</span>
+          <button class="btn btn--dark">Get started</button>
+          <button class="btn btn--dark btn--sm">Small</button>
+          <button class="btn btn--dark btn--lg">Large</button>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection__label">Outlined (Secondary)</div>
+        <div class="btn-demo-row">
+          <span class="btn-demo-label">Default</span>
+          <button class="btn btn--outline">Explore</button>
+          <button class="btn btn--outline btn--sm">Small</button>
+          <button class="btn btn--outline btn--lg">Large</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Cards</div>
+      <h2 class="section__title">Card Components</h2>
+      <p class="section__description">
+        The 22px border-radius is Cohere's signature card language. Cards use minimal borders (cool gray #d9d9dd) and rely on white backgrounds and subtle hover states for hierarchy.
+      </p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card__kicker">
+            <span class="card__accent"></span>Feature
+          </div>
+          <h3 class="card__title">Real-time Inference</h3>
+          <p class="card__body">
+            Deploy language models with sub-millisecond latency. Enterprise infrastructure that scales with demand.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card__kicker">Capability</div>
+          <h3 class="card__title">Fine-tuning</h3>
+          <p class="card__body">
+            Customize models to your domain. Proprietary datasets stay on-premise. Enterprise-grade security.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card__kicker">Integration</div>
+          <h3 class="card__title">API-First Design</h3>
+          <p class="card__body">
+            Plug into your existing stack. REST, gRPC, or streaming. Six lines of Python to production.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card__kicker">
+            <span class="card__accent"></span>Security
+          </div>
+          <h3 class="card__title">SOC 2 Certified</h3>
+          <p class="card__body">
+            Meets enterprise compliance requirements. Data isolation, audit trails, role-based access control.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card__kicker">Support</div>
+          <h3 class="card__title">24/7 SLAs</h3>
+          <p class="card__body">
+            Dedicated account team. Technical escalation within 15 minutes. Proactive monitoring and optimization.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card__kicker">Foundation</div>
+          <h3 class="card__title">Multi-Model</h3>
+          <p class="card__body">
+            Command-R, Embed, Rerank. Unified API. Switch models without rewriting your integration.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Input Fields Section -->
+    <section class="section">
+      <div class="section__kicker">Forms</div>
+      <h2 class="section__title">Input Fields</h2>
+      <p class="section__description">
+        Inputs use the enterprise gray palette. Focus state activates signal blue (#1863dc). Disabled states fade to snow. All inputs share the 8px button radius.
+      </p>
+
+      <div class="subsection">
+        <div class="subsection__label">Text Inputs</div>
+        <div class="input-group">
+          <div class="input-wrap">
+            <label class="input-label">API Key</label>
+            <input class="input" type="text" placeholder="sk-..." />
+          </div>
+          <div class="input-wrap">
+            <label class="input-label">Model</label>
+            <input class="input" type="text" placeholder="command-r-plus" />
+          </div>
+          <div class="input-wrap">
+            <label class="input-label">Email</label>
+            <input class="input" type="email" placeholder="name@company.com" />
+          </div>
+          <div class="input-wrap">
+            <label class="input-label">Disabled State</label>
+            <input class="input" type="text" placeholder="Read-only content" disabled />
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection__label">Textarea</div>
+        <div class="input-wrap" style="max-width: 400px;">
+          <label class="input-label">Prompt Instructions</label>
+          <textarea class="input" placeholder="Enter your system prompt here..." style="min-height: 120px; font-family: var(--font-mono); font-size: 13px;"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="section">
+      <div class="section__kicker">Badges</div>
+      <h2 class="section__title">Status & Status Pills</h2>
+      <p class="section__description">
+        Badges provide lightweight categorization. Pills indicate active/inactive state with colored dots. The signal blue (#1863dc) carries emphasis.
+      </p>
+
+      <div class="subsection">
+        <div class="subsection__label">Badge Variants</div>
+        <div class="badge-row">
+          <span class="badge">
+            <span class="badge__dot"></span>
+            Enterprise
+          </span>
+          <span class="badge badge--signal">
+            <span class="badge__dot"></span>
+            New Feature
+          </span>
+          <span class="badge badge--dark">
+            <span class="badge__dot"></span>
+            Recommended
+          </span>
+          <span class="badge badge--outline">
+            <span class="badge__dot"></span>
+            Coming soon
+          </span>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection__label">Status Pills</div>
+        <div class="status-row">
+          <span class="status-label">States</span>
+          <div class="pill pill--active">
+            <span class="pill__dot"></span>
+            Active
+          </div>
+          <div class="pill pill--inactive">
+            <span class="pill__dot"></span>
+            Inactive
+          </div>
+          <div class="pill pill--error">
+            <span class="pill__dot"></span>
+            Error
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Demo Section -->
+    <section class="section">
+      <div class="section__kicker">Interaction</div>
+      <h2 class="section__title">Button Focus States</h2>
+      <p class="section__description">
+        All interactive elements respond to focus and hover. Transparent buttons shift text to signal blue. Solid buttons maintain dark background. Focus ring appears at 2px signal blue offset.
+      </p>
+
+      <div class="demo-section">
+        <div class="demo-section__title">Try Tab or Hover</div>
+        <div class="interactive-demo">
+          <div class="interactive-row">
+            <span class="interactive-label">Focus state</span>
+            <button class="btn">Hover or tab here</button>
+          </div>
+          <div class="interactive-row">
+            <span class="interactive-label">Dark variant</span>
+            <button class="btn btn--dark">Tab to see focus ring</button>
+          </div>
+          <div class="interactive-row">
+            <span class="interactive-label">Outlined variant</span>
+            <button class="btn btn--outline">Press Tab + Enter</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Typography Section -->
+    <section class="section">
+      <div class="section__kicker">Typography</div>
+      <h2 class="section__title">Type System</h2>
+      <p class="section__description">
+        Cohere uses a dual-typeface system: CohereText (display serif) for headlines and authority, CohereMono for labels and technical content. Tight tracking on display keeps headlines punchy.
+      </p>
+
+      <div class="demo-section">
+        <h3 class="demo-section__title">Display Hero (72px)</h3>
+        <p style="font-family: var(--font-display); font-size: 72px; font-weight: 400; letter-spacing: -1.44px; line-height: 1; color: var(--ink); margin: 0;">
+          The future of AI is enterprise
+        </p>
+      </div>
+
+      <div class="demo-section" style="margin-top: var(--s-11);">
+        <h3 class="demo-section__title">Section Heading (48px)</h3>
+        <p style="font-family: var(--font-display); font-size: 48px; font-weight: 400; letter-spacing: -0.48px; line-height: 1.2; color: var(--ink); margin: 0;">
+          Unlock your data with Cohere
+        </p>
+      </div>
+
+      <div class="demo-section" style="margin-top: var(--s-11);">
+        <h3 class="demo-section__title">Body Large (18px)</h3>
+        <p style="font-family: var(--font-body); font-size: 18px; font-weight: 400; line-height: 1.4; color: var(--ink); margin: 0; max-width: 600px;">
+          Our platform provides enterprise-grade language models with industry-leading latency, customization, and compliance. Deploy with confidence at scale.
+        </p>
+      </div>
+
+      <div class="demo-section" style="margin-top: var(--s-11);">
+        <h3 class="demo-section__title">Uppercase Label (CohereMono, 12px)</h3>
+        <p style="font-family: var(--font-mono); font-size: 12px; font-weight: 400; letter-spacing: 0.24px; text-transform: uppercase; color: var(--slate); margin: 0;">
+          API Documentation
+        </p>
+      </div>
+    </section>
+
+    <!-- Spacing & Radius Section -->
+    <section class="section">
+      <div class="section__kicker">Foundations</div>
+      <h2 class="section__title">Spacing & Radius Scale</h2>
+      <p class="section__description">
+        The Cohere spacing scale is base-8. The signature card radius is 22px (--s-8). Buttons use 8px. Smaller elements step down through 4px and 0px.
+      </p>
+
+      <div class="subsection">
+        <div class="subsection__label">Radius Examples</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: var(--s-9); margin-top: var(--s-6);">
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <div style="width: 80px; height: 80px; background: var(--color-lightest-gray); border: 1px solid var(--color-border-light); border-radius: 0; margin-bottom: var(--s-5);"></div>
+            <p style="font-size: 12px; color: var(--slate); text-align: center;">0px (none)</p>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <div style="width: 80px; height: 80px; background: var(--color-lightest-gray); border: 1px solid var(--color-border-light); border-radius: 4px; margin-bottom: var(--s-5);"></div>
+            <p style="font-size: 12px; color: var(--slate); text-align: center;">4px (--radius-sm)</p>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <div style="width: 80px; height: 80px; background: var(--color-lightest-gray); border: 1px solid var(--color-border-light); border-radius: 8px; margin-bottom: var(--s-5);"></div>
+            <p style="font-size: 12px; color: var(--slate); text-align: center;">8px (--radius-md)</p>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <div style="width: 80px; height: 80px; background: var(--color-lightest-gray); border: 1px solid var(--color-border-light); border-radius: 22px; margin-bottom: var(--s-5);"></div>
+            <p style="font-size: 12px; color: var(--slate); text-align: center;">22px (card)</p>
+          </div>
+          <div style="

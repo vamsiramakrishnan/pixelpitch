@@ -40,7 +40,7 @@ The shape system is uniformly soft: 8px–12px radii, 9999px pills for tags and 
 ### Neutrals & Text
 - **Graphite** (`#3c3c3c`): Body text, default reading color.
 - **Slate** (`#6e6e6e`): Secondary text, captions, metadata.
-- **Ash** (`#9b9b9b`): Tertiary text, placeholder, disabled label.
+- **Ash** (`#777777`): Tertiary text, placeholder, disabled label.
 - **Stone** (`#c4c4c4`): Decorative dividers, faint icons.
 
 ### Semantic & Border

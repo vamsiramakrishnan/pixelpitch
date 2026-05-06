@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Lovable</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #f7f4ed);
+      color: var(--ink, #1c1c1c);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 64px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 96px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #5f5f5d);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 60px;
+      font-weight: 600;
+      line-height: 1.0;
+      letter-spacing: -1.5px;
+      color: var(--ink, #1c1c1c);
+      margin-bottom: 8px;
+      max-width: 90%;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #5f5f5d);
+      max-width: 70%;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 96px;
+      height: 2px;
+      background: var(--ink, #1c1c1c);
+      border: none;
+      margin-top: 24px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 96px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #5f5f5d);
+      margin-bottom: 48px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #eceae4);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 100px;
+      gap: 24px;
+      align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(28, 28, 28, 0.06);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink, #1c1c1c);
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      color: var(--slate, #5f5f5d);
+      margin-top: 4px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 2px;
+      background: var(--ink, #1c1c1c);
+      min-width: 2px;
+      transition: opacity 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.5;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink, #1c1c1c);
+      text-align: right;
+    }
+
+    /* Rule weights */
+    .rule-demo {
+      padding: 32px 0;
+      border-bottom: 1px solid rgba(28, 28, 28, 0.06);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink, #1c1c1c);
+    }
+
+    .rule-demo__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      color: var(--slate, #5f5f5d);
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      color: var(--slate, #5f5f5d);
+    }
+
+    .rule-demo__container {
+      width: 100%;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 0;
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 64px;
+      margin-bottom: 48px;
+    }
+
+    .radius-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .radius-item__box {
+      width: 120px;
+      height: 120px;
+      background: var(--paper, #f7f4ed);
+      border: 1px solid var(--border, #eceae4);
+      flex-shrink: 0;
+    }
+
+    .radius-item__info {
+      flex: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink, #1c1c1c);
+      margin-bottom: 4px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      color: var(--slate, #5f5f5d);
+      margin-bottom: 12px;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--slate, #5f5f5d);
+    }
+
+    /* Philosophy block */
+    .philosophy {
+      background: rgba(28, 28, 28, 0.03);
+      padding: 48px;
+      border: 1px solid var(--border, #eceae4);
+      border-radius: var(--radius-md, 8px);
+      margin-bottom: 64px;
+    }
+
+    .philosophy__title {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #5f5f5d);
+      margin-bottom: 16px;
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      line-height: 1.55;
+      color: var(--ink, #1c1c1c);
+    }
+
+    .philosophy__text strong {
+      font-weight: 600;
+    }
+
+    .philosophy__text em {
+      font-style: italic;
+    }
+
+    .philosophy__text code {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      background: rgba(28, 28, 28, 0.08);
+      padding: 2px 6px;
+      font-size: 0.95em;
+      border-radius: 2px;
+    }
+
+    /* Depth hierarchy */
+    .depth-demo {
+      padding: 32px 0;
+      border-bottom: 1px solid rgba(28, 28, 28, 0.06);
+    }
+
+    .depth-demo:last-child {
+      border-bottom: none;
+    }
+
+    .depth-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+    }
+
+    .depth-demo__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink, #1c1c1c);
+    }
+
+    .depth-demo__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      color: var(--slate, #5f5f5d);
+    }
+
+    .depth-demo__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      color: var(--slate, #5f5f5d);
+    }
+
+    .depth-demo__container {
+      width: 100%;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      background: var(--paper, #f7f4ed);
+      border-radius: var(--radius-md, 8px);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      color: var(--slate, #5f5f5d);
+    }
+
+    /* Grid demo */
+    .grid-demo {
+      background: rgba(28, 28, 28, 0.03);
+      padding: 48px;
+      border: 1px solid var(--border, #eceae4);
+      border-radius: var(--radius-md, 8px);
+      margin-bottom: 64px;
+    }
+
+    .grid-demo__title {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #5f5f5d);
+      margin-bottom: 24px;
+    }
+
+    .grid-demo__visual {
+      width: 100%;
+      height: 200px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+      background-image: linear-gradient(90deg, rgba(28, 28, 28, 0.08) 1px, transparent 1px);
+      background-size: calc(100% / 12) 100%;
+      padding: 24px;
+      border: 1px dashed rgba(28, 28, 28, 0.12);
+      border-radius: 4px;
+    }
+
+    .grid-demo__column {
+      background: rgba(28, 28, 28, 0.08);
+      border: 1px solid rgba(28, 28, 28, 0.12);
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--slate, #5f5f5d);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 8px;
+      border-radius: 2px;
+    }
+
+    .grid-demo__info {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .grid-demo__stat {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      color: var(--ink, #1c1c1c);
+    }
+
+    .grid-demo__stat-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #5f5f5d);
+      margin-bottom: 6px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #5f5f5d);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 2px solid rgba(28, 28, 28, 0.12);
+      border-top-color: var(--ink, #1c1c1c);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 900px) {
+      .page {
+        padding: 64px 32px;
+      }
+
+      .header {
+        margin-bottom: 64px;
+      }
+
+      .header__title {
+        font-size: 48px;
+      }
+
+      .section {
+        margin-bottom: 64px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 100px 1fr 80px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .radius-item {
+        grid-template-columns: 120px 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '8px', label: 'xs' },
+      's-2': { value: '10px', label: 'sm' },
+      's-3': { value: '12px', label: 'sm+' },
+      's-4': { value: '16px', label: 'md' },
+      's-5': { value: '24px', label: 'lg' },
+      's-6': { value: '32px', label: 'xl' },
+      's-7': { value: '40px', label: '2xl' },
+      's-8': { value: '56px', label: '3xl' },
+      's-9': { value: '80px', label: '4xl' },
+      's-10': { value: '96px', label: '5xl' },
+      's-11': { value: '128px', label: '6xl' },
+      's-12': { value: '176px', label: '7xl' },
+      's-13': { value: '192px', label: '8xl' },
+      's-14': { value: '208px', label: '9xl' }
+    };
+
+    const DEFAULT_DEPTH = {
+      'flat': { name: 'Flat (Level 0)', treatment: 'No shadow, cream background', use: 'Page surface, most content areas' },
+      'bordered': { name: 'Bordered (Level 1)', treatment: '1px solid #eceae4', use: 'Cards, images, dividers, light containers' },
+      'inset': { name: 'Inset (Level 2)', treatment: 'rgba(255,255,255,0.2) inset top, rgba(0,0,0,0.2) inset ring', use: 'Dark buttons, primary actions, pressed states' },
+      'focus': { name: 'Focus (Level 3)', treatment: 'rgba(0,0,0,0.1) 0px 4px 12px', use: 'Active/focus states, hover elevation' },
+      'ring': { name: 'Ring (Accessibility)', treatment: 'rgba(59,130,246,0.5) 2px ring', use: 'Keyboard focus on inputs, a11y states' }
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'Grid components, structural elements' },
+      'sm': { value: '32px', use: 'Pill buttons, icon buttons, toggles' },
+      'md': { value: '8px', use: 'Buttons, inputs, cards, containers — the default rhythm' },
+      'lg': { value: '80px', use: 'Large hero containers, special feature sections' },
+      'full': { value: '9999px', use: 'Action pill buttons, icon badges, toggles' }
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const depth = DEFAULT_DEPTH;
+      const radius = DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Spacing &amp; Rules</div>';
+      html += '  <h1 class="header__title">Warm spacing.<br>Gentle depth.</h1>';
+      html += '  <p class="header__subtitle">The spacing and elevation system for Lovable — where cream-colored breathing room and opacity-driven depth create a playful, approachable interface for AI full-stack builders.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Philosophy block */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Depth Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Lovable uses <strong>zero traditional shadows</strong>. Depth is communicated through <strong>opacity-driven borders</strong> (1px <code>#eceae4</code> for light dividers, <code>rgba(28,28,28,0.4)</code> for interactive boundaries) and <strong>soft inset highlights</strong> on action buttons. Every gray on the page derives from <code>#1c1c1c</code> at varying transparency — creating visual coherence across the warm cream canvas. <em>Buttons feel gently pressed, not floating.</em>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale (Base Unit: 8px)</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        const label = obj.label || key;
+
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Grid visualization */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Layout Grid (Centered, ~1200px max)</div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__title">12-Column Grid</div>';
+      html += '    <div class="grid-demo__visual">';
+      for (let i = 1; i <= 12; i++) {
+        html += '      <div class="grid-demo__column">' + i + '</div>';
+      }
+      html += '    </div>';
+      html += '    <div class="grid-demo__info">';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Max Content Width</div>';
+      html += '        <div class="grid-demo__stat">~1200px centered</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Gutter &amp; Margins</div>';
+      html += '        <div class="grid-demo__stat">12px gaps, flexible outer padding</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Section Spacing</div>';
+      html += '        <div class="grid-demo__stat">80px–208px vertical (editorial rhythm)</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Body Copy Measure</div>';
+      html += '        <div class="grid-demo__stat">6–8 columns for optimal readability</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Depth hierarchy */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Elevation Levels</div>';
+
+      Object.entries(depth).forEach(([key, item]) => {
+        html += '<div class="depth-demo">';
+        html += '  <div class="depth-demo__header">';
+        html += '    <div>';
+        html += '      <div class="depth-demo__name">' + esc(item.name) + '</div>';
+        html += '      <div class="depth-demo__label">' + esc(item.use) + '</div>';
+        html += '    </div>';
+        html += '    <div class="depth-demo__spec">' + esc(item.treatment) + '</div>';
+        html += '  </div>';
+
+        if (key === 'flat') {
+          html += '  <div class="depth-demo__container" style="background: var(--paper); border: 1px dashed rgba(28,28,28,0.12);">';
+          html += '    No elevation — page surface';
+          html += '  </div>';
+        } else if (key === 'bordered') {
+          html += '  <div class="depth-demo__container" style="border: 1px solid var(--border);">';
+          html += '    Light border divider';
+          html += '  </div>';
+        } else if (key === 'inset') {
+          html += '  <div class="depth-demo__container" style="background: rgba(28,28,28,0.08); box-shadow: rgba(255,255,255,0.2) 0px 0.5px 0px 0px inset, rgba(0,0,0,0.2) 0px 0px 0px 0.5px inset, rgba(0,0,0,0.05) 0px 1px 2px inset; border-radius: 4px;">';
+          html += '    Inset highlight & ring';
+          html += '  </div>';
+        } else if (key === 'focus') {
+          html += '  <div class="depth-demo__container" style="box-shadow: rgba(0,0,0,0.1) 0px 4px 12px; border-radius: 4px;">';
+          html += '    Soft warm focus glow';
+          html += '  </div>';
+        } else if (key === 'ring') {
+          html += '  <div class="depth-demo__container" style="outline: 2px solid rgba(59,130,246,0.5); border-radius: 4px;">';
+          html += '    Blue a11y ring focus state';
+          html += '  </div>';
+        }
+
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius Scale</div>';
+
+      Object.entries(radius).forEach(([key, obj]) => {
+        const radiusValue = obj.value;
+
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__demo">';
+        html += '    <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '  </div>';
+        html += '  <div class="radius-item__info">';
+        html += '    <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '    <div class="radius-item__value">' + esc(radiusValue) + '</div>';
+        html += '    <div class="radius-item__description">' + esc(obj.use) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Whitespace philosophy */
+      html += '<div class="philosophy" style="margin-top: 96px; margin-bottom: 0;">';
+      html += '  <div class="philosophy__title">Whitespace &amp; Editorial Pacing</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    <strong>Generous breathing room at section boundaries</strong> (80px–208px) creates distinct visual zones. <strong>Tight internal spacing</strong> within cards (8–24px) contrasts with vast empty space around them, establishing a rhythm of focused content followed by visual rest. The warm cream background transforms whitespace from "empty" into "cozy." <strong>Density in content, void in structure</strong> — the system trusts negative space to guide the eye. Sections separate through spacing alone, never harsh dividers.';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

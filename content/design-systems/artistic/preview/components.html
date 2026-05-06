@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Component Inventory — Artistic</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: var(--s-7, 64px) var(--s-5, 32px);
+    }
+
+    /* Header / Stage Head */
+    .header {
+      margin-bottom: var(--s-7, 64px);
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 52px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      color: var(--ink, #111111);
+      margin-bottom: var(--s-3, 16px);
+    }
+
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate, #666666);
+      font-weight: 400;
+      margin-bottom: var(--s-5, 32px);
+    }
+
+    .header__rule {
+      display: block;
+      width: 72px;
+      height: 4px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin-top: var(--s-4, 24px);
+      border-radius: var(--radius-sm, 4px);
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: var(--s-7, 64px);
+    }
+
+    .section__label {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink, #111111);
+      margin-bottom: var(--s-4, 24px);
+      padding-bottom: var(--s-3, 16px);
+      border-bottom: 2px solid var(--signal, #3b82f6);
+    }
+
+    .component-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3, 16px);
+      align-items: flex-start;
+      margin-bottom: var(--s-4, 24px);
+    }
+
+    .sub-heading {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      margin-bottom: var(--s-3, 16px);
+      margin-top: var(--s-2, 8px);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─────── BUTTONS ─────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--s-2, 8px);
+      padding: var(--button-py, 10px) var(--button-px, 20px);
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.4;
+      border-radius: var(--button-radius, 8px);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      border: none;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .btn--primary {
+      background: var(--signal, #3b82f6);
+      color: var(--paper, #ffffff);
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn--primary:hover {
+      background: #2563eb;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .btn--primary:active {
+      transform: translateY(0);
+      box-shadow: 0 1px 4px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn--secondary {
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      border: 2px solid var(--ink, #111111);
+    }
+
+    .btn--secondary:hover {
+      background: var(--ink, #111111);
+      color: var(--paper, #ffffff);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--signal, #3b82f6);
+      padding: 10px 8px;
+      text-decoration: none;
+      border-bottom: 2px solid var(--signal, #3b82f6);
+      border-radius: 0;
+      text-transform: none;
+      letter-spacing: normal;
+      font-weight: 500;
+    }
+
+    .btn--ghost:hover {
+      color: var(--ink, #111111);
+      border-bottom-color: var(--ink, #111111);
+    }
+
+    .btn--sm {
+      padding: 8px 14px;
+      font-size: 12px;
+    }
+
+    .btn--lg {
+      padding: 14px 32px;
+      font-size: 16px;
+    }
+
+    /* ─────── CARDS ─────── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-4, 24px);
+    }
+
+    .card {
+      background: var(--paper, #ffffff);
+      border-radius: var(--card-radius, 8px);
+      padding: var(--s-4, 24px);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border: var(--card-border, 1px solid var(--border));
+      position: relative;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--signal, #3b82f6);
+      border-radius: var(--card-radius, 8px) var(--card-radius, 8px) 0 0;
+    }
+
+    .card--bordered {
+      border: 2px solid var(--ink, #111111);
+    }
+
+    .card--bordered:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(17, 17, 17, 0.12);
+    }
+
+    .card--elevated {
+      border: 1px solid var(--border, #e5e5e5);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .card--elevated:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    .card__eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: var(--s-2, 8px);
+      margin-top: var(--s-1, 4px);
+    }
+
+    .card__title {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--ink, #111111);
+      margin-bottom: var(--s-2, 8px);
+    }
+
+    .card__body {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+      margin-bottom: var(--s-3, 16px);
+    }
+
+    .card__footer {
+      display: flex;
+      gap: var(--s-2, 8px);
+      align-items: center;
+      margin-top: var(--s-3, 16px);
+    }
+
+    /* ─────── INPUTS ─────── */
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-4, 24px);
+      align-items: flex-start;
+    }
+
+    .input-wrap {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      margin-bottom: var(--s-2, 8px);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .input {
+      display: block;
+      width: 100%;
+      padding: 10px 14px;
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink, #111111);
+      background: var(--paper, #ffffff);
+      border: 2px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      outline: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .input::placeholder {
+      color: var(--slate, #666666);
+    }
+
+    .input:focus {
+      border-color: var(--signal, #3b82f6);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      background: rgba(59, 130, 246, 0.02);
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3, 16px);
+      padding: 12px var(--s-3, 16px);
+      background: var(--paper, #ffffff);
+      border: 2px solid var(--ink, #111111);
+      border-radius: var(--radius-lg, 16px);
+      max-width: 480px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .search-bar:focus-within {
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+      border-color: var(--signal, #3b82f6);
+    }
+
+    .search-bar__icon {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      color: var(--slate, #666666);
+      stroke-width: 2.5;
+    }
+
+    .search-bar__input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 14px;
+      color: var(--ink, #111111);
+    }
+
+    .search-bar__input::placeholder {
+      color: var(--slate, #666666);
+    }
+
+    /* ─────── BADGES & TAGS ─────── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2, 8px);
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-1, 4px);
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: var(--radius-full, 999px);
+      line-height: 1.4;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge--signal {
+      background: var(--signal, #3b82f6);
+      color: var(--paper, #ffffff);
+    }
+
+    .badge--success {
+      background: #10b981;
+      color: var(--paper, #ffffff);
+    }
+
+    .badge--warning {
+      background: #f59e0b;
+      color: var(--paper, #ffffff);
+    }
+
+    .badge--danger {
+      background: #ef4444;
+      color: var(--paper, #ffffff);
+    }
+
+    .badge--neutral {
+      background: var(--bone, #f5f5f5);
+      color: var(--ink, #111111);
+      border: 1px solid var(--ink, #111111);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-1, 4px);
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: var(--radius-md, 8px);
+      background: var(--bone, #f5f5f5);
+      color: var(--ink, #111111);
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .tag:hover {
+      background: var(--ink, #111111);
+      color: var(--paper, #ffffff);
+      border-color: var(--signal, #3b82f6);
+    }
+
+    .tag--active {
+      background: var(--signal, #3b82f6);
+      color: var(--paper, #ffffff);
+      border-color: var(--signal, #3b82f6);
+    }
+
+    /* Divider */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border, #e5e5e5);
+      margin: var(--s-4, 24px) 0;
+    }
+
+    /* Utility */
+    .text-sm {
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Header -->
+    <header class="header" id="header">
+      <h1 class="header__title">Component<br>Vocabulary</h1>
+      <p class="header__subtitle">A bold, high-contrast interface palette designed for visual impact and creative expression.</p>
+      <hr class="header__rule">
+    </header>
+
+    <!-- Buttons Section -->
+    <div class="section">
+      <div class="section__label">Buttons</div>
+
+      <div class="sub-heading">Primary Action</div>
+      <div class="component-row">
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary">Default</button>
+        <button class="btn btn--primary btn--lg">Large Primary</button>
+      </div>
+
+      <div class="sub-heading">Secondary Action</div>
+      <div class="component-row">
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary">Default</button>
+        <button class="btn btn--secondary btn--lg">Large Secondary</button>
+      </div>
+
+      <div class="sub-heading">Ghost / Text Link</div>
+      <div class="component-row">
+        <a href="#" class="btn btn--ghost">Learn more</a>
+        <a href="#" class="btn btn--ghost">View documentation</a>
+        <a href="#" class="btn btn--ghost">Explore patterns</a>
+      </div>
+    </div>
+
+    <!-- Cards Section -->
+    <div class="section">
+      <div class="section__label">Cards</div>
+
+      <div class="cards-grid">
+        <div class="card card--bordered">
+          <div class="card__eyebrow">Bold Border</div>
+          <div class="card__title">High-Contrast Card</div>
+          <div class="card__body">
+            A striking card with bold border treatment and accent bar. Perfect for content that demands attention and visual clarity.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Action</button>
+            <button class="btn btn--secondary btn--sm">Cancel</button>
+          </div>
+        </div>
+
+        <div class="card card--elevated">
+          <div class="card__eyebrow">Elevated Depth</div>
+          <div class="card__title">Shadow &amp; Dimension</div>
+          <div class="card__body">
+            An elevated card with shadow treatment for layered hierarchy. Responds dynamically to interaction with enhanced elevation.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Explore</button>
+            <a href="#" class="btn btn--ghost btn--sm" style="border:none;padding:8px 6px">Details</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inputs Section -->
+    <div class="section">
+      <div class="section__label">Inputs &amp; Forms</div>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Full Name</label>
+          <input class="input" type="text" placeholder="Enter your name">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input class="input" type="email" placeholder="you@example.com">
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="sub-heading">Search Interface</div>
+      <div class="search-bar">
+        <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input class="search-bar__input" type="text" placeholder="Search components, patterns, tokens...">
+      </div>
+    </div>
+
+    <!-- Badges & Tags Section -->
+    <div class="section">
+      <div class="section__label">Badges &amp; Tags</div>
+
+      <div class="sub-heading">Status Indicators</div>
+      <div class="badge-row" style="margin-bottom:var(--s-4, 24px)">
+        <span class="badge badge--signal">Active</span>
+        <span class="badge badge--success">Complete</span>
+        <span class="badge badge--warning">Pending</span>
+        <span class="badge badge--danger">Critical</span>
+        <span class="badge badge--neutral">Inactive</span>
+      </div>
+
+      <div class="sub-heading">Category Tags</div>
+      <div class="badge-row">
+        <span class="tag tag--active">All</span>
+        <span class="tag">Typography</span>
+        <span class="tag">Color</span>
+        <span class="tag">Spacing</span>
+        <span class="tag">Components</span>
+        <span class="tag">Patterns</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* Load tokens.json for dynamic header customization */
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => r.ok ? r.json() : null)
+      .then(tokens => {
+        if (!tokens) return;
+        const title = tokens.meta?.title || tokens.title || 'Artistic';
+        if (title && document.getElementById('header')) {
+          const headerTitle = document.getElementById('header').querySelector('.header__title');
+          if (headerTitle) {
+            headerTitle.textContent = title + ' Components';
+          }
+        }
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>

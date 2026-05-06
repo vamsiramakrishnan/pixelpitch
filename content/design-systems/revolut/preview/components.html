@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      background: var(--color-paper, #fafafa);
+      color: var(--color-ink, #111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+    }
+    .header__title {
+      font-family: var(--font-display, var(--font-body, 'Inter', system-ui, sans-serif));
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--color-ink, #111);
+      margin-bottom: 12px;
+    }
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--color-slate, #6b6b6b);
+    }
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 3px;
+      background: var(--color-signal, #2f6feb);
+      border: none;
+      margin-top: 24px;
+      border-radius: 2px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 56px;
+    }
+    .section__label {
+      font-family: var(--font-display, var(--font-body, 'Inter', system-ui, sans-serif));
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-slate, #6b6b6b);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--color-border, #e5e5e5);
+    }
+
+    .component-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+
+    .component-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--color-slate, #6b6b6b);
+      margin-bottom: 8px;
+    }
+
+    /* ------- BUTTONS ------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 24px;
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.4;
+      border-radius: var(--radius-md, 8px);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      border: none;
+    }
+
+    .btn--primary {
+      background: var(--color-signal, #2f6feb);
+      color: var(--color-paper, #fff);
+    }
+    .btn--primary:hover {
+      filter: brightness(1.08);
+    }
+
+    .btn--secondary {
+      background: var(--color-paper, #fff);
+      color: var(--color-ink, #111);
+      border: 1px solid var(--color-border, #e5e5e5);
+    }
+    .btn--secondary:hover {
+      background: var(--color-bone, #f5f5f5);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--color-signal, #2f6feb);
+      padding: 10px 8px;
+      text-decoration: none;
+      border-bottom: 1px solid var(--color-signal, #2f6feb);
+      border-radius: 0;
+    }
+    .btn--ghost:hover {
+      opacity: 0.8;
+    }
+
+    .btn--sm {
+      padding: 6px 14px;
+      font-size: 13px;
+    }
+    .btn--lg {
+      padding: 14px 32px;
+      font-size: 16px;
+    }
+
+    /* ------- CARDS ------- */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--color-surface, #fff);
+      border-radius: var(--radius-lg, 12px);
+      padding: 28px 24px;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .card--bordered {
+      border: 1px solid var(--color-border, #e5e5e5);
+    }
+    .card--bordered:hover {
+      border-color: var(--color-slate, #ccc);
+    }
+
+    .card--elevated {
+      border: 1px solid var(--color-border, #e5e5e5);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
+    }
+    .card--elevated:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06), 0 12px 32px rgba(0,0,0,0.1);
+    }
+
+    .card__eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-signal, #2f6feb);
+      margin-bottom: 8px;
+    }
+    .card__title {
+      font-family: var(--font-display, var(--font-body, 'Inter', system-ui, sans-serif));
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--color-ink, #111);
+      margin-bottom: 8px;
+    }
+    .card__body {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--color-slate, #6b6b6b);
+      margin-bottom: 16px;
+    }
+    .card__footer {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* ------- INPUTS ------- */
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      align-items: flex-start;
+    }
+    .input-wrap {
+      flex: 1;
+      min-width: 260px;
+    }
+    .input-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-ink, #111);
+      margin-bottom: 6px;
+    }
+    .input {
+      display: block;
+      width: 100%;
+      padding: 10px 14px;
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--color-ink, #111);
+      background: var(--color-surface, #fff);
+      border: 1px solid var(--color-border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .input::placeholder {
+      color: var(--color-slate, #999);
+    }
+    .input:focus {
+      border-color: var(--color-signal, #2f6feb);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-signal, #2f6feb) 15%, transparent);
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: var(--color-surface, #fff);
+      border: 1px solid var(--color-border, #e5e5e5);
+      border-radius: var(--radius-lg, 12px);
+      max-width: 480px;
+    }
+    .search-bar__icon {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      color: var(--color-slate, #999);
+    }
+    .search-bar__input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+      font-size: 14px;
+      color: var(--color-ink, #111);
+    }
+    .search-bar__input::placeholder {
+      color: var(--color-slate, #999);
+    }
+
+    /* ------- BADGES & TAGS ------- */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 999px;
+      line-height: 1.4;
+    }
+
+    .badge--signal {
+      background: color-mix(in srgb, var(--color-signal, #2f6feb) 12%, transparent);
+      color: var(--color-signal, #2f6feb);
+    }
+    .badge--success {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .badge--warning {
+      background: #fef9c3;
+      color: #854d0e;
+    }
+    .badge--danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .badge--neutral {
+      background: var(--color-bone, #f5f5f5);
+      color: var(--color-ink, #111);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: var(--radius-md, 8px);
+      background: var(--color-bone, #f5f5f5);
+      color: var(--color-ink, #111);
+      border: 1px solid var(--color-border, #e5e5e5);
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .tag:hover {
+      background: var(--color-border, #e5e5e5);
+    }
+    .tag--active {
+      background: var(--color-signal, #2f6feb);
+      color: var(--color-paper, #fff);
+      border-color: var(--color-signal, #2f6feb);
+    }
+
+    /* Subsection heading */
+    .sub-heading {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-ink, #111);
+      margin-bottom: 12px;
+      margin-top: 4px;
+    }
+
+    /* Divider */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--color-border, #e5e5e5);
+      margin: 24px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Header -->
+    <header class="header" id="header">
+      <h1 class="header__title">Component Inventory</h1>
+      <p class="header__subtitle">Interactive components styled with CSS custom properties.</p>
+      <hr class="header__rule">
+    </header>
+
+    <!-- Buttons -->
+    <div class="section">
+      <div class="section__label">Buttons</div>
+
+      <div class="sub-heading">Primary</div>
+      <div class="component-row">
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary">Default</button>
+        <button class="btn btn--primary btn--lg">Large Primary</button>
+      </div>
+
+      <div class="sub-heading">Secondary</div>
+      <div class="component-row">
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary">Default</button>
+        <button class="btn btn--secondary btn--lg">Large Secondary</button>
+      </div>
+
+      <div class="sub-heading">Ghost</div>
+      <div class="component-row">
+        <a href="#" class="btn btn--ghost">Learn more</a>
+        <a href="#" class="btn btn--ghost">View documentation</a>
+        <a href="#" class="btn btn--ghost">See all features</a>
+      </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="section">
+      <div class="section__label">Cards</div>
+
+      <div class="cards-grid">
+        <div class="card card--bordered">
+          <div class="card__eyebrow">Standard Card</div>
+          <div class="card__title">Clean Border Treatment</div>
+          <div class="card__body">
+            A standard card with a subtle border. Useful for content grouping
+            where elevation is not needed. Hover to see the border darken.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Action</button>
+            <button class="btn btn--secondary btn--sm">Cancel</button>
+          </div>
+        </div>
+
+        <div class="card card--elevated">
+          <div class="card__eyebrow">Elevated Card</div>
+          <div class="card__title">Shadow &amp; Depth</div>
+          <div class="card__body">
+            An elevated card with a layered box-shadow for visual hierarchy.
+            Hover to see the shadow deepen, indicating interactivity.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Action</button>
+            <button class="btn btn--ghost btn--sm" style="border:none;padding:6px 8px">Learn more</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inputs -->
+    <div class="section">
+      <div class="section__label">Inputs</div>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Full Name</label>
+          <input class="input" type="text" placeholder="Enter your name">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input class="input" type="email" placeholder="you@example.com">
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="sub-heading">Search Bar</div>
+      <div class="search-bar">
+        <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input class="search-bar__input" type="text" placeholder="Search components, tokens, patterns...">
+      </div>
+    </div>
+
+    <!-- Badges & Tags -->
+    <div class="section">
+      <div class="section__label">Badges &amp; Tags</div>
+
+      <div class="sub-heading">Status Pills</div>
+      <div class="badge-row" style="margin-bottom:20px">
+        <span class="badge badge--signal">Active</span>
+        <span class="badge badge--success">Shipped</span>
+        <span class="badge badge--warning">In Review</span>
+        <span class="badge badge--danger">Blocked</span>
+        <span class="badge badge--neutral">Draft</span>
+      </div>
+
+      <div class="sub-heading">Category Tags</div>
+      <div class="badge-row">
+        <span class="tag tag--active">All</span>
+        <span class="tag">Typography</span>
+        <span class="tag">Color</span>
+        <span class="tag">Spacing</span>
+        <span class="tag">Components</span>
+        <span class="tag">Layout</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* Load tokens.json for the header title */
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => r.ok ? r.json() : null)
+      .then(tokens => {
+        if (!tokens) return;
+        const name = tokens.meta?.name || tokens.name || '';
+        if (name) {
+          document.getElementById('header').querySelector('.header__title').textContent = name + ' Components';
+        }
+        /* Load Google Fonts if specified */
+        const gfUrl = tokens.googleFontsUrl || (tokens.fonts && tokens.fonts.googleUrl);
+        if (gfUrl) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = gfUrl;
+          document.head.appendChild(link);
+        }
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>

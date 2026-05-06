@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>D&A Force Multipliers — Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-8) var(--s-5);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--s-4);
+      margin-bottom: var(--s-7);
+      border-bottom: 1px solid var(--ink);
+      border-top: 4px solid var(--ink);
+      padding-top: var(--s-4);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .masthead__ampersand {
+      color: var(--signal);
+      font-style: italic;
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-5);
+      border-bottom: 3px solid var(--ink);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 72px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 0.95;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate);
+      max-width: 720px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 54px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: var(--s-5);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-4);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--slate);
+      margin-right: var(--s-3);
+      min-width: 140px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      line-height: 1;
+      border: 2px solid var(--ink);
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: 0;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      gap: var(--s-2);
+    }
+
+    .btn:hover {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .btn--primary {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .btn--primary:hover {
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    .btn--ghost {
+      border: none;
+      background: transparent;
+      color: var(--ink);
+      padding: 0;
+      text-decoration: underline;
+      text-decoration-color: var(--signal);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .btn--ghost:hover {
+      opacity: 0.75;
+    }
+
+    .btn--sm {
+      padding: 6px 14px;
+      font-size: 12px;
+    }
+
+    .btn--lg {
+      padding: 14px 32px;
+      font-size: 15px;
+    }
+
+    /* ──── CONTAINERS / RIBBONS ──── */
+    .ribbon {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      line-height: 1;
+      border-radius: 0;
+    }
+
+    .ribbon--signal {
+      background: var(--signal);
+      color: var(--paper);
+    }
+
+    /* ──── CARDS / STORY TILES ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: var(--s-5);
+      margin-bottom: var(--s-5);
+    }
+
+    .story-tile {
+      border-bottom: 1px solid var(--ink);
+      padding-bottom: var(--s-4);
+    }
+
+    .story-tile__image {
+      display: block;
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      background: var(--bone);
+      margin-bottom: var(--s-4);
+      filter: grayscale(1) contrast(1.12) brightness(0.95) sepia(0.18);
+      border-radius: 0;
+    }
+
+    .story-tile__kicker {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-1);
+    }
+
+    .story-tile__headline {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: -0.015em;
+      line-height: 1.35;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .story-tile__deck {
+      font-family: var(--font-body);
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.45;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .story-tile__meta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── PULL QUOTE ──── */
+    .pullquote {
+      border-top: 3px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+      padding: var(--s-5) 0;
+      margin: var(--s-6) 0;
+    }
+
+    .pullquote__mark {
+      font-family: var(--font-display);
+      font-size: 96px;
+      font-weight: 400;
+      line-height: 0.8;
+      color: var(--signal);
+      display: block;
+      margin-bottom: var(--s-2);
+    }
+
+    .pullquote__text {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: var(--s-4);
+    }
+
+    .pullquote__attribution {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── NUMBERED LIST ──── */
+    .numbered-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--s-4);
+    }
+
+    .numbered-list__item {
+      padding-bottom: var(--s-4);
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .numbered-list__item:nth-child(odd):last-child {
+      grid-column: 1 / -1;
+      max-width: 50%;
+    }
+
+    .numbered-list__number {
+      font-family: var(--font-display);
+      font-size: 56px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 0.85;
+      color: var(--ink);
+      display: block;
+      margin-bottom: var(--s-2);
+    }
+
+    .numbered-list__number--signal {
+      color: var(--signal);
+    }
+
+    .numbered-list__headline {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .numbered-list__body {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+
+    /* ──── SCORECARD / TABLE ──── */
+    .scorecard {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: var(--s-5);
+    }
+
+    .scorecard__header {
+      background: var(--paper);
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .scorecard__header-cell {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: left;
+      padding: var(--s-3);
+      border-right: 1px solid var(--ink);
+    }
+
+    .scorecard__header-cell:last-child {
+      border-right: none;
+    }
+
+    .scorecard__row {
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .scorecard__row:last-child {
+      border-bottom: none;
+    }
+
+    .scorecard__cell {
+      padding: var(--s-3);
+      text-align: left;
+      border-right: 1px solid var(--ink);
+    }
+
+    .scorecard__cell:last-child {
+      border-right: none;
+    }
+
+    .scorecard__capability {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: 1.15;
+      color: var(--ink);
+    }
+
+    .scorecard__diagnostic {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+
+    .score-blocks {
+      display: flex;
+      gap: 4px;
+    }
+
+    .score-block {
+      width: 14px;
+      height: 14px;
+      border: 1px solid var(--ink);
+      background: transparent;
+      border-radius: 0;
+    }
+
+    .score-block--filled {
+      background: var(--ink);
+    }
+
+    .score-block--signal {
+      background: var(--signal);
+      border-color: var(--signal);
+    }
+
+    /* ──── INPUTS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .input {
+      padding: 10px 14px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--ink);
+      border-radius: 0;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: inset 0 0 0 2px rgba(217, 79, 27, 0.1);
+    }
+
+    /* ──── BADGES ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      margin-bottom: var(--s-4);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      line-height: 1.4;
+      border-radius: 999px;
+      background: var(--bone);
+      color: var(--ink);
+    }
+
+    .badge--signal {
+      background: rgba(217, 79, 27, 0.15);
+      color: var(--signal);
+    }
+
+    .badge--inactive {
+      background: var(--bone);
+      color: var(--slate);
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: currentColor;
+      border-radius: 0;
+    }
+
+    /* ──── ICONS ──── */
+    .icon {
+      display: inline-block;
+      width: 48px;
+      height: 48px;
+      stroke: var(--ink);
+      stroke-width: 1.5px;
+      fill: none;
+      stroke-linecap: square;
+      stroke-linejoin: miter;
+    }
+
+    .icon--lg {
+      width: 64px;
+      height: 64px;
+    }
+
+    .icon--signal-accent .icon-dot {
+      fill: var(--signal);
+    }
+
+    /* ──── UTILITY ──– */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+      margin-top: var(--s-4);
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--ink);
+      margin: var(--s-5) 0;
+    }
+
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-3) 0;
+      margin-top: var(--s-8);
+      border-top: 1px solid var(--ink);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    .folio__chapter {
+      /* left */
+    }
+
+    .folio__page {
+      /* right */
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-6) var(--s-3);
+      }
+
+      .stage-head__title {
+        font-size: 48px;
+      }
+
+      .section__title {
+        font-size: 36px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .numbered-list {
+        grid-template-columns: 1fr;
+      }
+
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+
+      .pullquote__text {
+        font-size: 36px;
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: var(--s-3);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">
+        D<span class="masthead__ampersand">&</span>A
+      </div>
+      <div class="masthead__tagline">
+        Force<br>Multipliers
+      </div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Editorial Vocabulary</h1>
+      <p class="stage-head__subtitle">
+        The D&A Force Multipliers system comprises field-tested components for editorial sales artifacts—decks, journals, scorecards. Each pattern is documented in its strictest form, optimized for the printed page aesthetic.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Buttons</div>
+      <h2 class="section__title">Button States</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Default</span>
+        <button class="btn">Action</button>
+        <button class="btn btn--sm">Small</button>
+        <button class="btn btn--lg">Large Button</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary (Ink)</span>
+        <button class="btn btn--primary">Action</button>
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary btn--lg">Large Primary</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Ghost (Underlined)</span>
+        <a href="#" class="btn btn--ghost">Learn more</a>
+        <a href="#" class="btn btn--ghost">View documentation</a>
+        <a href="#" class="btn btn--ghost">Read the playbook</a>
+      </div>
+    </section>
+
+    <!-- Ribbons & Containers Section -->
+    <section class="section">
+      <div class="section__kicker">Containers</div>
+      <h2 class="section__title">Ribbon Labels</h2>
+
+      <div class="subsection-label">Standard Ribbon</div>
+      <div class="button-group">
+        <span class="ribbon">Live Metrics</span>
+        <span class="ribbon">Chapter One</span>
+        <span class="ribbon">Data Foundation</span>
+      </div>
+
+      <div class="subsection-label">Signal Variant (One Per Slide)</div>
+      <div class="button-group">
+        <span class="ribbon ribbon--signal">Breaking</span>
+      </div>
+    </section>
+
+    <!-- Story Tiles Section -->
+    <section class="section">
+      <div class="section__kicker">Story Tiles</div>
+      <h2 class="section__title">Editorial Story Cards</h2>
+      <p style="font-size: 17px; line-height: 1.45; color: var(--slate); margin-bottom: var(--s-5);">Story tiles combine image, kicker, headline, and body text in a strict vertical rhythm. Images are always grayscale with editorial treatment. One tile may carry the signal-orange accent.</p>
+
+      <div class="cards-grid">
+        <article class="story-tile">
+          <svg class="story-tile__image" viewBox="0 0 400 240" style="background: linear-gradient(135deg, #e6e0d2 0%, #d4cfc2 100%); filter: grayscale(1) contrast(1.12) brightness(0.95) sepia(0.18);">
+            <rect width="400" height="240" fill="currentColor"/>
+          </svg>
+          <div class="story-tile__kicker">Analytics</div>
+          <h3 class="story-tile__headline">Building Your Data Foundation</h3>
+          <p class="story-tile__deck">Discover how Google Cloud's analytics platform compounds advantage through real-time insights and end-to-end governance.</p>
+          <div class="story-tile__meta">Source: Google Cloud, Q4 2024</div>
+        </article>
+
+        <article class="story-tile">
+          <svg class="story-tile__image" viewBox="0 0 400 240" style="background: linear-gradient(135deg, #e6e0d2 0%, #d4cfc2 100%); filter: grayscale(1) contrast(1.12) brightness(0.95) sepia(0.18);">
+            <rect width="400" height="240" fill="currentColor"/>
+          </svg>
+          <div class="story-tile__kicker" style="color: var(--signal);">Operations</div>
+          <h3 class="story-tile__headline">Cycle Time Acceleration</h3>
+          <p class="story-tile__deck">From insight to deployment in weeks, not quarters. See how compounding automation transforms analytics operations.</p>
+          <div class="story-tile__meta">Source: Google Cloud, Case Study 2024</div>
+        </article>
+
+        <article class="story-tile">
+          <svg class="story-tile__image" viewBox="0 0 400 240" style="background: linear-gradient(135deg, #e6e0d2 0%, #d4cfc2 100%); filter: grayscale(1) contrast(1.12) brightness(0.95) sepia(0.18);">
+            <rect width="400" height="240" fill="currentColor"/>
+          </svg>
+          <div class="story-tile__kicker">Governance</div>
+          <h3 class="story-tile__headline">Confidence in Your Data Inventory</h3>
+          <p class="story-tile__deck">Enterprise-grade lineage, access controls, and audit trails eliminate data risk at scale. Trust compounds advantage.</p>
+          <div class="story-tile__meta">Source: Forrester, Data Governance Study</div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Pull Quote Section -->
+    <section class="section">
+      <div class="section__kicker">Featured</div>
+      <h2 class="section__title">Pull Quote Pattern</h2>
+
+      <div class="pullquote">
+        <span class="pullquote__mark">"</span>
+        <blockquote class="pullquote__text">Data compounds advantage when it flows at the speed of decision-making.</blockquote>
+        <p class="pullquote__attribution">Urs Hölzle, Google Cloud Infrastructure</p>
+      </div>
+    </section>
+
+    <!-- Numbered List Section -->
+    <section class="section">
+      <div class="section__kicker">Lists</div>
+      <h2 class="section__title">Numbered List (Most Cited)</h2>
+      <p style="font-size: 17px; line-height: 1.45; color: var(--slate); margin-bottom: var(--s-5);">A two-column grid layout for six-item citation lists. One entry may carry signal-orange numerals as the slide's sole accent.</p>
+
+      <div class="numbered-list">
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">1</span>
+          <h4 class="numbered-list__headline">Real-Time Insights</h4>
+          <p class="numbered-list__body">Stream analytics across all data sources in milliseconds, enabling live decision-making at scale.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">2</span>
+          <h4 class="numbered-list__headline">End-to-End Lineage</h4>
+          <p class="numbered-list__body">Track data provenance from ingestion through transformation. Know every source, every downstream consumer.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number" style="color: var(--signal);">3</span>
+          <h4 class="numbered-list__headline">Unified Governance</h4>
+          <p class="numbered-list__body">Single source of truth for access controls, data quality, and compliance across your entire analytics platform.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">4</span>
+          <h4 class="numbered-list__headline">Compounding Automation</h4>
+          <p class="numbered-list__body">Each decision automated accelerates the next. Watch your analytics velocity compound quarter after quarter.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">5</span>
+          <h4 class="numbered-list__headline">Warehouse at Scale</h4>
+          <p class="numbered-list__body">From terabytes to exabytes. BigQuery grows with your business. No capacity planning, no slowdown.</p>
+        </div>
+
+        <div class="numbered-list__item">
+          <span class="numbered-list__number">6</span>
+          <h4 class="numbered-list__headline">Field Proven</h4>
+          <p class="numbered-list__body">Deploy confidence. Our system ships with templates from 200+ enterprise deployments. Start winning today.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scorecard Section -->
+    <section class="section">
+      <div class="section__kicker">Evaluation</div>
+      <h2 class="section__title">Rubric Scorecard</h2>
+      <p style="font-size: 17px; line-height: 1.45; color: var(--slate); margin-bottom: var(--s-5);">Hairline-ruled table with visual score indicators. Bold 2px rule under header. One row may carry signal-orange fill blocks.</p>
+
+      <table class="scorecard">
+        <thead class="scorecard__header">
+          <tr>
+            <th class="scorecard__header-cell">Capability</th>
+            <th class="scorecard__header-cell">Diagnostic</th>
+            <th class="scorecard__header-cell" style="width: 120px;">Maturity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="scorecard__row">
+            <td class="scorecard__cell scorecard__capability">Ingestion</td>
+            <td class="scorecard__cell scorecard__diagnostic">Can you ingest all source formats at target SLA?</td>
+            <td class="scorecard__cell">
+              <div class="score-blocks">
+                <div class="score-block score-block--filled"></div>
+                <div class="score-block score-block--filled"></div>
+                <div class="score-block score-block--filled"></div>
+                <div class="score-block"></div>
+                <div class="score-block"></div>
+              </div>
+            </td>
+          </tr>
+          <tr class="scorecard__row">
+            <td class="scorecard__cell scorecard__capability">Transformation</td>
+            <td class="scorecard__cell scorecard__diagnostic">How quickly can you reshape data to answer new questions?</td>
+            <td class="scorecard__cell">
+              <div class="score-blocks">
+                <div class="score-block score-block--signal"></div>
+                <div class="score-block score-block--signal"></div>
+                <div class="score-block score-block--signal"></div>
+                <div class="score-block score-block--signal"></div>
+                <div class="score-block"></div>
+              </div>
+            </td>
+          </tr>
+          <tr class="scorecard__row">
+            <td class="scorecard__cell scorecard__capability">Governance</td>
+            <td class="scorecard__cell scorecard__diagnostic">Do you have enterprise-grade lineage and access

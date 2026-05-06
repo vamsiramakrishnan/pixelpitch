@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Cosmic</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 64px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 96px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui);
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: 8px;
+      max-width: 90%;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui);
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+      max-width: 70%;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 96px;
+      height: 3px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin-top: 24px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 96px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 48px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 100px;
+      gap: 24px;
+      align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, ui-monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink, #111111);
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body, system-ui);
+      font-size: 13px;
+      color: var(--slate, #666666);
+      margin-top: 4px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 2px;
+      background: linear-gradient(90deg, var(--signal, #3b82f6), var(--ink, #111111));
+      min-width: 2px;
+      transition: opacity 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.7;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, ui-monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink, #111111);
+      text-align: right;
+    }
+
+    /* Depth / Elevation */
+    .depth-demo {
+      padding: 32px 0;
+      border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+    }
+
+    .depth-demo:last-child {
+      border-bottom: none;
+    }
+
+    .depth-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+    }
+
+    .depth-demo__name {
+      font-family: var(--font-mono, ui-monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink, #111111);
+    }
+
+    .depth-demo__label {
+      font-family: var(--font-body, system-ui);
+      font-size: 13px;
+      color: var(--slate, #666666);
+    }
+
+    .depth-demo__spec {
+      font-family: var(--font-mono, ui-monospace);
+      font-size: 13px;
+      color: var(--slate, #666666);
+    }
+
+    .depth-demo__container {
+      width: 100%;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: var(--surface, #f5f5f5);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+    }
+
+    .depth-demo__box {
+      width: 200px;
+      height: 80px;
+      background: var(--paper, #ffffff);
+      border-radius: var(--card-radius, 8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono, ui-monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      font-weight: 500;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 64px;
+      margin-bottom: 48px;
+    }
+
+    .radius-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .radius-item__box {
+      width: 120px;
+      height: 120px;
+      background: var(--surface, #f5f5f5);
+      border: 2px solid var(--signal, #3b82f6);
+      flex-shrink: 0;
+    }
+
+    .radius-item__info {
+      flex: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, ui-monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink, #111111);
+      margin-bottom: 4px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, ui-monospace);
+      font-size: 13px;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body, system-ui);
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--slate, #666666);
+    }
+
+    /* Composition block */
+    .composition {
+      background: var(--surface, #f5f5f5);
+      padding: 48px;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-lg, 16px);
+      margin-bottom: 64px;
+    }
+
+    .composition__title {
+      font-family: var(--font-mono, ui-monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 16px;
+    }
+
+    .composition__text {
+      font-family: var(--font-body, system-ui);
+      font-size: 18px;
+      line-height: 1.55;
+      color: var(--ink, #111111);
+    }
+
+    .composition__text strong {
+      font-weight: 600;
+    }
+
+    .composition__text em {
+      font-style: italic;
+    }
+
+    .composition__text code {
+      font-family: var(--font-mono, ui-monospace);
+      background: rgba(59, 130, 246, 0.08);
+      color: var(--signal, #3b82f6);
+      padding: 2px 6px;
+      border-radius: var(--radius-sm, 4px);
+    }
+
+    /* Grid demo */
+    .grid-demo {
+      background: var(--surface, #f5f5f5);
+      padding: 48px;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-lg, 16px);
+      margin-bottom: 64px;
+    }
+
+    .grid-demo__title {
+      font-family: var(--font-mono, ui-monospace);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+    }
+
+    .grid-demo__visual {
+      width: 100%;
+      height: 240px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 8px;
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.06) 1px, transparent 1px);
+      background-size: calc(100% / 12) 100%;
+      padding: 24px;
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      margin-bottom: 24px;
+    }
+
+    .grid-demo__column {
+      background: linear-gradient(180deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05));
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: var(--radius-sm, 4px);
+      font-family: var(--font-mono, ui-monospace);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--signal, #3b82f6);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 8px;
+    }
+
+    .grid-demo__info {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+
+    .grid-demo__stat {
+      font-family: var(--font-body, system-ui);
+      font-size: 13px;
+      color: var(--slate, #666666);
+      line-height: 1.55;
+    }
+
+    .grid-demo__stat-label {
+      font-family: var(--font-mono, ui-monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 6px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 2px solid rgba(59, 130, 246, 0.2);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 900px) {
+      .page {
+        padding: 64px 32px;
+      }
+
+      .header {
+        margin-bottom: 64px;
+      }
+
+      .header__title {
+        font-size: 54px;
+      }
+
+      .section {
+        margin-bottom: 64px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 100px 1fr 80px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .radius-item {
+        grid-template-columns: 120px 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '4px', label: 'xs' },
+      's-2': { value: '8px', label: 'sm' },
+      's-3': { value: '16px', label: 'md' },
+      's-4': { value: '24px', label: 'lg' },
+      's-5': { value: '32px', label: 'xl' },
+      's-6': { value: '48px', label: '2xl' },
+      's-7': { value: '64px', label: '3xl' },
+      's-8': { value: '96px', label: '4xl' }
+    };
+
+    const DEFAULT_DEPTH = {
+      'flat': { name: 'Flat', treatment: 'none', use: 'Base background, default state' },
+      'border': { name: 'Border', treatment: '1px solid var(--border)', use: 'Cards, inputs, containers' },
+      'elevated': { name: 'Elevated', treatment: '0 2px 8px rgba(0,0,0,0.08)', use: 'Floating elements, modals, dropdowns' }
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'Rarely used — reserved for edge cases only' },
+      'sm': { value: '4px', use: 'Small elements, inputs, tight controls' },
+      'md': { value: '8px', use: 'Buttons, standard cards, most UI components' },
+      'lg': { value: '16px', use: 'Large cards, containers, prominent sections' },
+      'full': { value: '999px', use: 'Pill shapes, badges, avatars' }
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const depth = DEFAULT_DEPTH;
+      const radius = DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">SPACING &amp; RULES</div>';
+      html += '  <h1 class="header__title">Grid &amp; Rhythm.<br>Clear &amp; Intentional.</h1>';
+      html += '  <p class="header__subtitle">The spacing and depth system for Cosmic — a modular scale built on 8px increments, where every interval earns clarity through consistent, predictable rhythm.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Composition philosophy block */
+      html += '<div class="composition">';
+      html += '  <div class="composition__title">Layout Philosophy</div>';
+      html += '  <div class="composition__text">';
+      html += '    <strong>Content blocks with consistent padding</strong>. Every container follows the same internal spacing rules, making layout predictable and scannable. <strong>Hierarchy before decoration</strong>: spacing, typography, and color establish hierarchy long before borders or shadows appear. <strong>Whitespace is structure</strong>: generous gaps between sections (48–96px) create natural reading zones, while tighter internal spacing (8–24px) keeps related content grouped. The system is <em>grid-based, responsive-friendly, and accessible by design</em>.';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        const label = obj.label || key;
+        
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Grid visualization */
+      html += '<div class="section">';
+      html += '  <div class="section__label">12-Column Grid System</div>';
+      html += '  <div class="grid-demo">';
+      html += '    <div class="grid-demo__title">Base Layout Grid</div>';
+      html += '    <div class="grid-demo__visual">';
+      for (let i = 1; i <= 12; i++) {
+        html += '      <div class="grid-demo__column">' + i + '</div>';
+      }
+      html += '    </div>';
+      html += '    <div class="grid-demo__info">';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Column Gutter</div>';
+      html += '        <div class="grid-demo__stat">8px between columns for breathing room</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Margin Strategy</div>';
+      html += '        <div class="grid-demo__stat">Consistent padding based on --s-* tokens</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Content Width</div>';
+      html += '        <div class="grid-demo__stat">6 columns for body text, 12 for full width</div>';
+      html += '      </div>';
+      html += '      <div>';
+      html += '        <div class="grid-demo__stat-label">Responsiveness</div>';
+      html += '        <div class="grid-demo__stat">Graceful adaptation through CSS Grid</div>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Depth / Elevation */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth &amp; Elevation</div>';
+
+      Object.entries(depth).forEach(([key, depthObj]) => {
+        const treatment = depthObj.treatment;
+
+        html += '<div class="depth-demo">';
+        html += '  <div class="depth-demo__header">';
+        html += '    <div>';
+        html += '      <div class="depth-demo__name">' + esc(depthObj.name) + '</div>';
+        html += '      <div class="depth-demo__label">' + esc(depthObj.use) + '</div>';
+        html += '    </div>';
+        html += '    <div class="depth-demo__spec">' + esc(treatment) + '</div>';
+        html += '  </div>';
+        
+        html += '  <div class="depth-demo__container">';
+        
+        if (treatment === 'none') {
+          html += '    <div class="depth-demo__box" style="border: none; box-shadow: none; background: var(--paper);">No elevation</div>';
+        } else if (treatment.includes('shadow')) {
+          html += '    <div class="depth-demo__box" style="box-shadow: ' + treatment + '">Elevated card</div>';
+        } else if (treatment.includes('solid')) {
+          html += '    <div class="depth-demo__box" style="border: ' + treatment + '">Bordered card</div>';
+        } else {
+          html += '    <div class="depth-demo__box">' + esc(treatment) + '</div>';
+        }
+        
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+
+      Object.entries(radius).forEach(([key, obj]) => {
+        const radiusValue = obj.value;
+
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__demo">';
+        html += '    <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '  </div>';
+        html += '  <div class="radius-item__info">';
+        html += '    <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '    <div class="radius-item__value">' + esc(radiusValue) + '</div>';
+        html += '    <div class="radius-item__description">' + esc(obj.use) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Spacing guidelines */
+      html += '<div class="composition" style="margin-top: 96px; margin-bottom: 0;">';
+      html += '  <div class="composition__title">Spacing Guidelines</div>';
+      html += '  <div class="composition__text">';
+      html += '    <strong>Internal padding</strong> uses <code>--s-3</code> (16px) for cards and buttons, <code>--s-4</code> (24px) for larger sections. <strong>Margin between blocks</strong> scales from <code>--s-4</code> (24px) for tightly related items to <code>--s-8</code> (96px) for major section breaks. <strong>Rhythm over randomness</strong>: every space is a multiple of the 8px base, ensuring visual harmony and predictable layouts. Use the spacing scale consistently — avoid arbitrary pixel values that break the grid.';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

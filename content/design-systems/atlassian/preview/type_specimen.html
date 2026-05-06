@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — Atlassian</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--bone, #ffffff);
+      color: var(--color-n800, #172b4d);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+      border-bottom: 1px solid var(--border, #ebecf0);
+      padding-bottom: 48px;
+    }
+
+    .header__title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--color-n800, #172b4d);
+      margin-bottom: 12px;
+    }
+
+    .header__subtitle {
+      font-size: 16px;
+      color: var(--color-n500, #42526e);
+      max-width: 600px;
+      line-height: 1.5;
+    }
+
+    .header__meta {
+      display: flex;
+      gap: 32px;
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--color-n300, #5e6c84);
+      font-family: var(--font-mono, "SFMono-Medium", monospace);
+    }
+
+    .header__meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .header__meta-label {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      color: var(--color-n500, #42526e);
+    }
+
+    /* Font families */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-bottom: 56px;
+    }
+
+    .font-card {
+      background: var(--color-n10, #fafbfc);
+      border: 1px solid var(--border, #ebecf0);
+      border-radius: var(--radius-sm, 8px);
+      padding: 28px 24px;
+    }
+
+    .font-card__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-n500, #42526e);
+      margin-bottom: 8px;
+    }
+
+    .font-card__name {
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 1.3;
+      margin-bottom: 4px;
+      color: var(--color-n800, #172b4d);
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono, "SFMono-Medium", monospace);
+      font-size: 11px;
+      color: var(--color-n300, #5e6c84);
+      word-break: break-all;
+      line-height: 1.4;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-n500, #42526e);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #ebecf0);
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 40px;
+      align-items: baseline;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border, #ebecf0);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 720px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-n800, #172b4d);
+      margin-bottom: 8px;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, "SFMono-Medium", monospace);
+      font-size: 11px;
+      line-height: 1.7;
+      color: var(--color-n300, #5e6c84);
+      white-space: pre;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--color-n800, #172b4d);
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    /* Ramp section */
+    .ramp-section {
+      margin-bottom: 56px;
+    }
+
+    /* Character set block */
+    .pangram-block {
+      background: var(--color-n10, #fafbfc);
+      border: 1px solid var(--border, #ebecf0);
+      border-radius: var(--radius-sm, 8px);
+      padding: 40px 32px;
+      margin-bottom: 56px;
+    }
+
+    .pangram-block__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-n500, #42526e);
+      margin-bottom: 20px;
+    }
+
+    .pangram-block__chars {
+      font-size: 24px;
+      line-height: 1.6;
+      letter-spacing: 0.02em;
+      color: var(--color-n800, #172b4d);
+      word-break: break-all;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--color-n500, #42526e);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border, #ebecf0);
+      border-top-color: var(--ink, #0052cc);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Enterprise teams live inside their tools. The interface should disappear.',
+      'Information density without cognitive overload is the design challenge.',
+      'Jira boards organize work. Confluence captures decisions. Bitbucket ships code.',
+      'Blue is the color of action. Everything else recedes into neutral gray.',
+      'On an 8-pixel grid, every pixel is accounted for.',
+      'Semibold at 600 weight anchors the visual hierarchy without fussiness.',
+      'The type scale runs compact: from 11 pixels up through 48 pixels.',
+      'Lozenges convey status. Avatars stack with overflow. Cards hold context.',
+      'A calm, productive interface built for eight-hour sessions.',
+      'Dense but breathable. Structured but flexible. Utilitarian but human.',
+      'Type choices speak to enterprise values: clarity, reliability, scale.',
+      'The neutral scale holds 11 distinct luminance steps from white to near-black.',
+    ];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || tokens.name || 'Design System';
+      const category = tokens.meta?.category || '';
+      const summary = tokens.meta?.summary || '';
+
+      const fonts = tokens.fonts || {};
+      const ramp = tokens.typography?.ramp || tokens.typeRamp || tokens.typography || [];
+      const rampEntries = Array.isArray(ramp)
+        ? ramp
+        : Object.entries(ramp).map(([role, v]) =>
+            typeof v === 'object' ? { role, ...v } : { role, size: v });
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Type Specimen</h1>';
+      html += '  <p class="header__subtitle">' + esc(title) + ' — ' + rampEntries.length + ' typographic roles designed for enterprise.</p>';
+      if (category || summary) {
+        html += '  <div class="header__meta">';
+        if (category) html += '    <div class="header__meta-item"><span class="header__meta-label">Category</span>' + esc(category) + '</div>';
+        if (summary) html += '    <div class="header__meta-item"><span class="header__meta-label">Focus</span>' + esc(summary.split('.')[0]) + '</div>';
+        html += '  </div>';
+      }
+      html += '</header>';
+
+      /* Font info */
+      const families = [];
+      if (tokens.typography?.fontBody) {
+        families.push({
+          label: 'Body · UI Text',
+          name: 'Inter',
+          fallback: tokens.typography.fontBody
+        });
+      }
+      if (tokens.typography?.fontDisplay) {
+        families.push({
+          label: 'Display · Marketing Headlines',
+          name: 'Charlie Display',
+          fallback: tokens.typography.fontDisplay
+        });
+      }
+      if (tokens.typography?.fontMono) {
+        families.push({
+          label: 'Monospace · Code',
+          name: 'SFMono-Medium',
+          fallback: tokens.typography.fontMono
+        });
+      }
+
+      if (families.length) {
+        html += '<div class="font-families">';
+        families.forEach(f => {
+          html += '<div class="font-card">';
+          html += '  <div class="font-card__label">' + esc(f.label) + '</div>';
+          html += '  <div class="font-card__name">' + esc(f.name) + '</div>';
+          if (f.fallback) html += '  <div class="font-card__fallback">' + esc(f.fallback) + '</div>';
+          html += '</div>';
+        });
+        html += '</div>';
+      }
+
+      /* Character set */
+      html += '<div class="pangram-block">';
+      html += '  <div class="pangram-block__label">Character Set</div>';
+      html += '  <div class="pangram-block__chars">AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>0123456789 !@#$%&amp;*()–—''"&rdquo;<br>[ ] { } &lt; &gt; / \ | ` ~ ^ &amp;</div>';
+      html += '</div>';
+
+      /* Type ramp */
+      if (rampEntries.length) {
+        html += '<div class="ramp-section">';
+        html += '<div class="section-label">Type Ramp</div>';
+        rampEntries.forEach((entry, i) => {
+          html += rampRow(entry, i);
+        });
+        html += '</div>';
+      }
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(entry, idx) {
+      const role = entry.role || entry.name || 'Role ' + (idx + 1);
+      const size = entry.size || entry.fontSize || '16px';
+      const weight = entry.weight || entry.fontWeight || '400';
+      const lh = entry.lineHeight || entry.lh || '1.5';
+      const ls = entry.letterSpacing || entry.ls || 'normal';
+      const fontKey = entry.fontKey || 'body';
+
+      const sizeNum = parseFloat(size);
+      const sampleIdx = idx % EDITORIAL_SAMPLES.length;
+      let sample = EDITORIAL_SAMPLES[sampleIdx];
+
+      /* Truncate very large samples */
+      if (sizeNum >= 40) {
+        sample = sample.split('.')[0] + '.';
+      }
+
+      let fontFamily = 'var(--font-body, system-ui, sans-serif)';
+      if (fontKey === 'display') {
+        fontFamily = 'var(--font-display, system-ui, sans-serif)';
+      } else if (fontKey === 'mono') {
+        fontFamily = 'var(--font-mono, "SFMono-Medium", monospace)';
+      }
+
+      let fontStyle = 'font-family:' + fontFamily + ';font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + ';';
+      if (ls !== 'normal') fontStyle += 'letter-spacing:' + ls + ';';
+
+      let meta = '';
+      meta += esc(role) + '\n';
+      meta += esc(size) + ' / ' + esc(String(weight));
+      meta += '\nline-height: ' + esc(String(lh));
+      if (ls !== 'normal') meta += '\nletters-pace: ' + esc(ls);
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(sample) + '</div>' +
+        '</div>';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

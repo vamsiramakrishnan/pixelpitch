@@ -1,0 +1,115 @@
+/* Atlassian — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #deebff;
+  --ink:     #0052cc;
+  --slate:   #7a869a;
+  --signal:  #6554c0;
+  --bone:    #ffffff;
+  --border:  #ebecf0;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-blue-400: #0065ff;
+  --color-blue-600: #0747a6;
+  --color-blue-700: #003884;
+  --color-blue-75: #b3d4ff;
+  --color-blue-50: #e6effc;
+  --color-green-500: #00875a;
+  --color-green-400: #36b37e;
+  --color-green-100: #e3fcef;
+  --color-red-500: #ff5630;
+  --color-red-400: #ff7452;
+  --color-red-100: #ffebe6;
+  --color-yellow-500: #ffab00;
+  --color-yellow-400: #ffc400;
+  --color-yellow-100: #fff0b3;
+  --color-teal-500: #00b8d9;
+  --color-teal-100: #e6fcff;
+  --color-purple-100: #eae6ff;
+  --color-n10: #fafbfc;
+  --color-n20: #f4f5f7;
+  --color-n40: #dfe1e6;
+  --color-n50: #c1c7d0;
+  --color-n60: #b3bac5;
+  --color-n80: #6f7786;
+  --color-n200: #6b778c;
+  --color-n300: #5e6c84;
+  --color-n500: #42526e;
+  --color-n700: #253858;
+  --color-n800: #172b4d;
+
+  /* Semantic */
+  --success: #00875a;
+  --warning: #ffab00;
+  --danger:  #ff5630;
+  --info:    #deebff;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    "SFMono-Medium", "SF Mono", "Segoe UI Mono", "Roboto Mono", "Ubuntu Mono", Menlo, Consolas, Courier, monospace;
+
+  /* Type ramp */
+  --t-marketing-display: 48px;
+  --t-marketing-heading: 36px;
+  --t-page-title-h700: 29px;
+  --t-section-title-h600: 24px;
+  --t-subsection-h500: 20px;
+  --t-card-title-h400: 16px;
+  --t-label-h300: 14px;
+  --t-overline-h200: 12px;
+  --t-subtitle-h100: 11px;
+  --t-body-large: 16px;
+  --t-body: 14px;
+  --t-body-small: 12px;
+  --t-caption: 11px;
+  --t-code-block: 12px;
+  --t-code-inline: 12px;
+
+  /* ── Spacing ── */
+  --s-1: 2px;
+  --s-2: 4px;
+  --s-3: 8px;
+  --s-4: 12px;
+  --s-5: 16px;
+  --s-6: 20px;
+  --s-7: 24px;
+  --s-8: 32px;
+  --s-9: 40px;
+  --s-10: 48px;
+  --s-11: 64px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   8px;
+  --radius-md:   4px;
+  --radius-lg:   20px;
+  --radius-full: 16px;
+
+  /* ── Components ── */
+  --button-radius:  3px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    4px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

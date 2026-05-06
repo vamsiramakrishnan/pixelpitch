@@ -88,6 +88,7 @@ export interface ComposeInput {
     | undefined;
   designSystemBody?: string | undefined;
   designSystemTitle?: string | undefined;
+  designSystemCss?: string | undefined;
   // Craft references the active skill opted into via `od.craft.requires`.
   // The daemon resolves the slug list to file contents and concatenates
   // them with section headers; we inject them between the DESIGN.md and
@@ -112,6 +113,7 @@ export function composeSystemPrompt({
   skillMode,
   designSystemBody,
   designSystemTitle,
+  designSystemCss,
   craftBody,
   craftSections,
   metadata,
@@ -128,8 +130,12 @@ export function composeSystemPrompt({
   ];
 
   if (designSystemBody && designSystemBody.trim().length > 0) {
+    let cssBlock = '';
+    if (designSystemCss) {
+      cssBlock = `\n### CSS Custom Properties (authoritative token values)\n\n\`\`\`css\n${designSystemCss}\n\`\`\`\n\n`;
+    }
     parts.push(
-      `\n\n## Active design system${designSystemTitle ? ` — ${designSystemTitle}` : ''}\n\nTreat the following DESIGN.md as authoritative for color, typography, spacing, and component rules. Do not invent tokens outside this palette. When you copy the active skill's seed template, bind these tokens into its \`:root\` block before generating any layout.\n\n${designSystemBody.trim()}`,
+      `\n\n## Active design system${designSystemTitle ? ` — ${designSystemTitle}` : ''}${cssBlock}\n\nTreat the following DESIGN.md as authoritative for color, typography, spacing, and component rules. Do not invent tokens outside this palette. When you copy the active skill's seed template, bind these tokens into its \`:root\` block before generating any layout.\n\n${designSystemBody.trim()}`,
     );
   }
 

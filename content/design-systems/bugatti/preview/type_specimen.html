@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bugatti Type Specimen</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #000000);
+      color: var(--signal, #ffffff);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 32px;
+      }
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 96px;
+      border-bottom: 1px solid var(--border, #ffffff);
+      padding-bottom: 64px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 96px;
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: var(--signal, #ffffff);
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 1.4px;
+      color: var(--color-silver-mist, #999999);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .header__description {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate, #666666);
+      max-width: 720px;
+      margin-top: 24px;
+    }
+
+    /* Font families grid */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 48px;
+      margin-bottom: 96px;
+    }
+
+    .font-card {
+      background: transparent;
+      border: 1px solid var(--border, #ffffff);
+      border-radius: 0;
+      padding: 40px;
+    }
+
+    .font-card__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--color-silver-mist, #999999);
+      margin-bottom: 16px;
+    }
+
+    .font-card__name {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 32px;
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--signal, #ffffff);
+      margin-bottom: 12px;
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--color-silver-mist, #999999);
+      word-break: break-all;
+      line-height: 1.5;
+    }
+
+    /* Character set */
+    .char-set {
+      background: transparent;
+      border: 1px solid var(--border, #ffffff);
+      border-radius: 0;
+      padding: 60px 40px;
+      margin-bottom: 96px;
+    }
+
+    .char-set__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--color-silver-mist, #999999);
+      margin-bottom: 24px;
+    }
+
+    .char-set__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 400;
+      line-height: 1.6;
+      letter-spacing: -0.01em;
+      color: var(--signal, #ffffff);
+      word-break: break-all;
+    }
+
+    .char-set__mono {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 32px;
+      font-weight: 400;
+      line-height: 1.8;
+      letter-spacing: 0.05em;
+      color: var(--signal, #ffffff);
+      word-break: break-all;
+      margin-top: 40px;
+      padding-top: 40px;
+      border-top: 1px solid var(--color-silver-mist, #999999);
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--color-silver-mist, #999999);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #ffffff);
+    }
+
+    /* Ramp container */
+    .ramp-section {
+      margin-bottom: 96px;
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--color-silver-mist, #999999);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 768px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--signal, #ffffff);
+      margin-bottom: 12px;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      line-height: 1.8;
+      color: var(--color-silver-mist, #999999);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--signal, #ffffff);
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+    }
+
+    .ramp-sample--hero {
+      font-size: 288px;
+      font-weight: 400;
+      line-height: 1.0;
+      font-family: var(--font-display, system-ui, sans-serif);
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+    }
+
+    .ramp-sample--60-wide {
+      font-size: 60px;
+      font-weight: 400;
+      line-height: 1.0;
+      font-family: var(--font-display, system-ui, sans-serif);
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
+
+    .ramp-sample--60-tight {
+      font-size: 60px;
+      font-weight: 400;
+      line-height: 1.0;
+      font-family: var(--font-display, system-ui, sans-serif);
+    }
+
+    .ramp-sample--mono-60 {
+      font-size: 60px;
+      font-weight: 400;
+      line-height: 1.0;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      text-transform: uppercase;
+    }
+
+    /* Drop cap demo */
+    .drop-cap-section {
+      margin-top: 96px;
+      padding-top: 64px;
+      border-top: 1px solid var(--border, #ffffff);
+    }
+
+    .drop-cap-text {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 24px;
+      line-height: 1.5;
+      color: var(--signal, #ffffff);
+      max-width: 720px;
+      position: relative;
+    }
+
+    .drop-cap-text::first-letter {
+      font-size: 120px;
+      float: left;
+      line-height: 0.8;
+      padding-right: 12px;
+      font-weight: 400;
+    }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--color-silver-mist, #999999);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 20px auto 0;
+      border: 2px solid var(--color-silver-mist, #999999);
+      border-top-color: var(--signal, #ffffff);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading type specimen&hellip;</div>
+  </div>
+
+  <script>
+    const DISPLAY_SAMPLES = [
+      'MONUMENTAL',
+      'ARCHITECTURAL',
+      'PRESENCE',
+      'SHOWROOM',
+      'SCULPTURE',
+      'HERITAGE',
+      'VELOCITY',
+      'CRAFT',
+    ];
+
+    const BODY_SAMPLES = [
+      'The entire page is carried by full-bleed hero video and photography with typographic moments laid across the canvas.',
+      'Scale is the single most distinctive move in this system — headlines render at 288 pixels, architectural in presence.',
+      'Bugatti refuses to compete with its own product, using only black, white, and silver for the display stand.',
+      'Monochromatic austerity: the page is a black velvet stage, and only the car paint itself carries color.',
+      'Every UI label runs in uppercase monospace with tracking between 1.2 and 1.4 pixels, like a technical dossier.',
+      'The display face is drawn from early Grand Prix typography without ever becoming nostalgic or retro.',
+    ];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || 'Bugatti';
+
+      const fonts = tokens.typography || {};
+      const ramp = tokens.typography?.ramp || [];
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__subtitle">Type Specimen</div>';
+      html += '  <h1 class="header__title">Monumental Scale</h1>';
+      html += '  <p class="header__description">Three custom typefaces in a monochromatic palette. The display face scales to 288 pixels at hero moments — architectural, not textual. Every UI label in uppercase monospace with precise letter-spacing, like a technical dossier printed on a black velvet background.</p>';
+      html += '</header>';
+
+      /* Font families */
+      html += '<div class="font-families">';
+      html += '<div class="font-card">';
+      html += '  <div class="font-card__label">Display</div>';
+      html += '  <div class="font-card__name">Bugatti Display</div>';
+      html += '  <div class="font-card__fallback">system-ui, sans-serif</div>';
+      html += '</div>';
+      html += '<div class="font-card">';
+      html += '  <div class="font-card__label">Body</div>';
+      html += '  <div class="font-card__name">Bugatti Text</div>';
+      html += '  <div class="font-card__fallback">system-ui, sans-serif</div>';
+      html += '</div>';
+      html += '<div class="font-card">';
+      html += '  <div class="font-card__label">Monospace</div>';
+      html += '  <div class="font-card__name">Bugatti Mono</div>';
+      html += '  <div class="font-card__fallback">ui-monospace, monospace</div>';
+      html += '</div>';
+      html += '</div>';
+
+      /* Character set */
+      html += '<div class="char-set">';
+      html += '  <div class="char-set__label">Display Character Set</div>';
+      html += '  <div class="char-set__display">AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>0123456789</div>';
+      html += '  <div class="char-set__mono">! @ # $ % &amp; * ( ) &ndash; &mdash; &lsquo; &rsquo; &ldquo; &rdquo;</div>';
+      html += '</div>';
+
+      /* Type ramp */
+      if (ramp.length) {
+        html += '<div class="ramp-section">';
+        html += '<div class="section-label">Complete Type Ramp</div>';
+        ramp.forEach((entry, i) => {
+          html += rampRow(entry, i);
+        });
+        html += '</div>';
+      }
+
+      /* Drop cap demo */
+      html += '<div class="drop-cap-section">';
+      html += '  <div class="section-label">Display Face at Scale</div>';
+      html += '  <p class="drop-cap-text">The show-stopping moment is 288 pixels of monumental display type, rendered in all capitals with a line-height of 1.0. At this scale, the geometry of the letterforms doubles as visual architecture. The secondary scale of 60 pixels becomes almost miniature by comparison. This extreme hierarchy is what gives Bugatti its sculptural, couture-showroom presence.</p>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(entry, idx) {
+      const role = entry.role || 'Role ' + (idx + 1);
+      const size = entry.size || '16px';
+      const weight = entry.weight || 400;
+      const lh = entry.lineHeight || '1.5';
+      const ls = entry.letterSpacing || '0';
+      const fontKey = entry.fontKey || 'body';
+
+      /* Map fontKey to family */
+      let family = 'system-ui, sans-serif';
+      if (fontKey === 'display') family = 'var(--font-display, system-ui, sans-serif)';
+      if (fontKey === 'mono') family = 'var(--font-mono, ui-monospace, monospace)';
+      if (fontKey === 'body') family = 'var(--font-body, system-ui, sans-serif)';
+
+      /* Sample text */
+      const sampleIdx = idx % BODY_SAMPLES.length;
+      let sample = BODY_SAMPLES[sampleIdx];
+
+      /* For very large sizes, use shorter sample */
+      const sizeNum = parseFloat(size);
+      if (sizeNum >= 60) {
+        sample = DISPLAY_SAMPLES[idx % DISPLAY_SAMPLES.length];
+      }
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + ';font-family:' + family + ';';
+      if (ls !== '0') fontStyle += 'letter-spacing:' + ls + ';';
+
+      /* Add class for special styling */
+      let sampleClass = 'ramp-sample';
+      if (size === '288px') sampleClass += ' ramp-sample--hero';
+      else if (size === '60px' && fontKey === 'display' && (ls === '1.4px' || ls === '1.4px')) sampleClass += ' ramp-sample--60-wide';
+      else if (size === '60px' && fontKey === 'display') sampleClass += ' ramp-sample--60-tight';
+      else if (size === '60px' && fontKey === 'mono') sampleClass += ' ramp-sample--mono-60';
+
+      let meta = '';
+      meta += size + ' / ' + weight;
+      if (fontKey === 'display') meta += '\nBugatti Display';
+      else if (fontKey === 'mono') meta += '\nBugatti Monospace';
+      else meta += '\nBugatti Text';
+      meta += '\nLine-height: ' + lh;
+      if (ls !== '0') meta += '\nTracking: ' + ls;
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="' + sampleClass + '" style="' + fontStyle + '">' + esc(sample) + '</div>' +
+        '</div>';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

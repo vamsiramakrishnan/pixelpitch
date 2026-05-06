@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ant — Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: var(--s-8) var(--s-5);
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: var(--s-8);
+    }
+    .header__title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate);
+    }
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 3px;
+      background: var(--signal);
+      border: none;
+      margin-top: var(--s-4);
+      border-radius: var(--radius-sm);
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: var(--s-7);
+    }
+    .section__label {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-4);
+      padding-bottom: var(--s-2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .component-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2);
+      align-items: flex-start;
+      margin-bottom: var(--s-4);
+    }
+
+    .component-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    /* ------- BUTTONS ------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--s-2);
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.4;
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      border: none;
+    }
+
+    .btn--primary {
+      background: var(--signal);
+      color: var(--paper);
+    }
+    .btn--primary:hover {
+      filter: brightness(0.95);
+    }
+    .btn--primary:active {
+      filter: brightness(0.92);
+    }
+
+    .btn--secondary {
+      background: var(--bone);
+      color: var(--ink);
+      border: var(--card-border);
+    }
+    .btn--secondary:hover {
+      background: var(--border);
+    }
+    .btn--secondary:active {
+      background: var(--slate);
+      color: var(--paper);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--signal);
+      padding: var(--button-py) 8px;
+      text-decoration: none;
+      border-bottom: 1px solid var(--signal);
+      border-radius: 0;
+    }
+    .btn--ghost:hover {
+      opacity: 0.8;
+    }
+
+    .btn--sm {
+      padding: 6px 14px;
+      font-size: 13px;
+    }
+    .btn--lg {
+      padding: 14px 32px;
+      font-size: 16px;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ------- CARDS ------- */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--s-4);
+    }
+
+    .card {
+      background: var(--paper);
+      border-radius: var(--card-radius);
+      padding: var(--s-4);
+      transition: all 0.2s ease;
+    }
+
+    .card--bordered {
+      border: var(--card-border);
+    }
+    .card--bordered:hover {
+      border-color: var(--slate);
+    }
+
+    .card--elevated {
+      border: var(--card-border);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    .card--elevated:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .card__eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+    .card__body {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+    }
+    .card__footer {
+      display: flex;
+      gap: var(--s-2);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* ------- INPUTS ------- */
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-4);
+      align-items: flex-start;
+    }
+    .input-wrap {
+      flex: 1;
+      min-width: 260px;
+    }
+    .input-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: var(--s-1);
+    }
+    .input {
+      display: block;
+      width: 100%;
+      padding: 10px 14px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      border: var(--card-border);
+      border-radius: var(--radius-md);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .input::placeholder {
+      color: var(--slate);
+    }
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    .input:disabled {
+      background: var(--bone);
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2);
+      padding: 10px 16px;
+      background: var(--paper);
+      border: var(--card-border);
+      border-radius: var(--radius-md);
+      max-width: 480px;
+      transition: border-color 0.15s ease;
+    }
+    .search-bar:focus-within {
+      border-color: var(--signal);
+    }
+    .search-bar__icon {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      color: var(--slate);
+    }
+    .search-bar__input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--ink);
+    }
+    .search-bar__input::placeholder {
+      color: var(--slate);
+    }
+
+    /* ------- BADGES & TAGS ------- */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2);
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: var(--radius-full);
+      line-height: 1.4;
+    }
+
+    .badge--signal {
+      background: rgba(59, 130, 246, 0.12);
+      color: var(--signal);
+    }
+    .badge--success {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .badge--warning {
+      background: #fef9c3;
+      color: #854d0e;
+    }
+    .badge--danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .badge--neutral {
+      background: var(--bone);
+      color: var(--ink);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: var(--radius-md);
+      background: var(--bone);
+      color: var(--ink);
+      border: var(--card-border);
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    .tag:hover {
+      background: var(--border);
+    }
+    .tag--active {
+      background: var(--signal);
+      color: var(--paper);
+      border-color: var(--signal);
+    }
+
+    /* Subsection heading */
+    .sub-heading {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+      margin-top: var(--s-2);
+    }
+
+    /* Divider */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: var(--s-4) 0;
+    }
+
+    /* Checkbox & Radio */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+    .form-item {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2);
+    }
+    .checkbox,
+    .radio {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--signal);
+    }
+    .form-label {
+      font-size: 14px;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    /* Select */
+    .select {
+      display: block;
+      width: 100%;
+      padding: 10px 14px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      border: var(--card-border);
+      border-radius: var(--radius-md);
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+    .select:focus {
+      border-color: var(--signal);
+    }
+    .select:disabled {
+      background: var(--bone);
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Header -->
+    <header class="header" id="header">
+      <h1 class="header__title">Ant Components</h1>
+      <p class="header__subtitle">Structured component vocabulary for enterprise applications. Clarity, consistency, and efficiency.</p>
+      <hr class="header__rule">
+    </header>
+
+    <!-- Buttons -->
+    <div class="section">
+      <div class="section__label">Buttons</div>
+
+      <div class="sub-heading">Primary</div>
+      <div class="component-row">
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary">Default</button>
+        <button class="btn btn--primary btn--lg">Large</button>
+        <button class="btn btn--primary" disabled>Disabled</button>
+      </div>
+
+      <div class="sub-heading">Secondary</div>
+      <div class="component-row">
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary">Default</button>
+        <button class="btn btn--secondary btn--lg">Large</button>
+        <button class="btn btn--secondary" disabled>Disabled</button>
+      </div>
+
+      <div class="sub-heading">Ghost</div>
+      <div class="component-row">
+        <a href="#" class="btn btn--ghost">Learn more</a>
+        <a href="#" class="btn btn--ghost">View docs</a>
+        <a href="#" class="btn btn--ghost">Explore</a>
+      </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="section">
+      <div class="section__label">Cards</div>
+
+      <div class="cards-grid">
+        <div class="card card--bordered">
+          <div class="card__eyebrow">Standard</div>
+          <div class="card__title">Bordered Card</div>
+          <div class="card__body">
+            Clean border treatment ideal for content grouping and data display.
+            Maintains visual hierarchy through consistent spacing and typography.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Action</button>
+            <button class="btn btn--secondary btn--sm">Secondary</button>
+          </div>
+        </div>
+
+        <div class="card card--elevated">
+          <div class="card__eyebrow">Elevated</div>
+          <div class="card__title">Shadow Depth</div>
+          <div class="card__body">
+            Subtle shadow elevation creates visual separation and
+            establishes hierarchy in complex layouts.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Action</button>
+            <a href="#" class="btn btn--ghost btn--sm" style="border:none;padding:6px 8px">Details</a>
+          </div>
+        </div>
+
+        <div class="card card--bordered">
+          <div class="card__eyebrow">Minimal</div>
+          <div class="card__title">Data Container</div>
+          <div class="card__body">
+            Designed for dense data presentation. Consistent padding ensures
+            readability without sacrificing information density.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--secondary btn--sm">View</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inputs -->
+    <div class="section">
+      <div class="section__label">Inputs</div>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Full Name</label>
+          <input class="input" type="text" placeholder="Enter your full name">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input class="input" type="email" placeholder="you@example.com">
+        </div>
+      </div>
+
+      <div class="input-group" style="margin-top: var(--s-4);">
+        <div class="input-wrap">
+          <label class="input-label">Message</label>
+          <textarea class="input" placeholder="Your message here..." rows="4"></textarea>
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Select Option</label>
+          <select class="select">
+            <option value="">Choose an option</option>
+            <option value="1">Option One</option>
+            <option value="2">Option Two</option>
+            <option value="3">Option Three</option>
+          </select>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="sub-heading">Search Input</div>
+      <div class="search-bar">
+        <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input class="search-bar__input" type="text" placeholder="Search data, filters, and more...">
+      </div>
+    </div>
+
+    <!-- Form Controls -->
+    <div class="section">
+      <div class="section__label">Form Controls</div>
+
+      <div class="sub-heading">Checkboxes</div>
+      <div class="form-group">
+        <div class="form-item">
+          <input class="checkbox" type="checkbox" id="check1" checked>
+          <label class="form-label" for="check1">Enable notifications</label>
+        </div>
+        <div class="form-item">
+          <input class="checkbox" type="checkbox" id="check2">
+          <label class="form-label" for="check2">Subscribe to updates</label>
+        </div>
+        <div class="form-item">
+          <input class="checkbox" type="checkbox" id="check3" disabled checked>
+          <label class="form-label" for="check3">Disabled option</label>
+        </div>
+      </div>
+
+      <div class="sub-heading" style="margin-top: var(--s-4);">Radio Buttons</div>
+      <div class="form-group">
+        <div class="form-item">
+          <input class="radio" type="radio" name="priority" id="radio1" value="high" checked>
+          <label class="form-label" for="radio1">High Priority</label>
+        </div>
+        <div class="form-item">
+          <input class="radio" type="radio" name="priority" id="radio2" value="medium">
+          <label class="form-label" for="radio2">Medium Priority</label>
+        </div>
+        <div class="form-item">
+          <input class="radio" type="radio" name="priority" id="radio3" value="low">
+          <label class="form-label" for="radio3">Low Priority</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Badges & Tags -->
+    <div class="section">
+      <div class="section__label">Badges &amp; Tags</div>
+
+      <div class="sub-heading">Status Badges</div>
+      <div class="badge-row" style="margin-bottom: var(--s-4);">
+        <span class="badge badge--signal">Active</span>
+        <span class="badge badge--success">Success</span>
+        <span class="badge badge--warning">Warning</span>
+        <span class="badge badge--danger">Danger</span>
+        <span class="badge badge--neutral">Neutral</span>
+      </div>
+
+      <div class="sub-heading">Category Tags</div>
+      <div class="badge-row">
+        <span class="tag tag--active">All</span>
+        <span class="tag">Components</span>
+        <span class="tag">Typography</span>
+        <span class="tag">Colors</span>
+        <span class="tag">Spacing</span>
+        <span class="tag">Layout</span>
+        <span class="tag">Depth</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => r.ok ? r.json() : null)
+      .then(tokens => {
+        if (!tokens) return;
+        const title = tokens.meta?.title || tokens.title || 'Ant';
+        if (title) {
+          document.getElementById('header').querySelector('.header__title').textContent = title + ' Components';
+        }
+        const gfUrl = tokens.googleFontsUrl || (tokens.fonts && tokens.fonts.googleUrl);
+        if (gfUrl) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = gfUrl;
+          document.head.appendChild(link);
+        }
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>

@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Bugatti</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #000000);
+      color: var(--signal, #ffffff);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1720px;
+      margin: 0 auto;
+      padding: var(--s-7) var(--s-6);
+    }
+
+    /* ── Header (Stage Head) ── */
+    .header {
+      margin-bottom: var(--s-7);
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 60px;
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: 0;
+      color: var(--signal, #ffffff);
+      margin-bottom: var(--s-3);
+      text-transform: uppercase;
+    }
+
+    .header__subtitle {
+      font-size: 16px;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      color: var(--color-silver-mist, #999999);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      line-height: 1.43;
+    }
+
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 1px;
+      background: var(--signal, #ffffff);
+      border: none;
+      margin-top: var(--s-4);
+    }
+
+    /* ── Section ── */
+    .section {
+      margin-bottom: var(--s-7);
+    }
+
+    .section__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--color-silver-mist, #999999);
+      margin-bottom: var(--s-4);
+      padding-bottom: var(--s-3);
+      border-bottom: 1px solid var(--color-silver-mist, #999999);
+    }
+
+    /* ── Spacing Scale ── */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 100px;
+      gap: var(--s-3);
+      align-items: center;
+      padding: var(--s-2) 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      color: var(--signal, #ffffff);
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 1px;
+      background: var(--signal, #ffffff);
+      border-radius: 0;
+      opacity: 0.4;
+      min-width: 2px;
+      transition: opacity 0.15s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.8;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      color: var(--color-silver-mist, #999999);
+      text-align: left;
+      letter-spacing: 0;
+    }
+
+    /* ── Rule Weights (Depth Levels) ── */
+    .rule-demo {
+      padding: var(--s-4) 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: var(--s-3);
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--signal, #ffffff);
+      letter-spacing: 0;
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--color-silver-mist, #999999);
+      letter-spacing: 0;
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      background: var(--signal, #ffffff);
+    }
+
+    .rule-demo__treatment {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      color: var(--color-silver-mist, #999999);
+      margin-top: var(--s-2);
+      line-height: 1.43;
+    }
+
+    /* ── Border Radius ── */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: var(--s-6);
+    }
+
+    .radius-item {
+      text-align: center;
+    }
+
+    .radius-item__box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 140px;
+      margin: 0 auto var(--s-3);
+      background: transparent;
+      border: 1px solid var(--signal, #ffffff);
+      opacity: 0.5;
+      transition: opacity 0.15s ease;
+    }
+
+    .radius-item:hover .radius-item__box {
+      opacity: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--signal, #ffffff);
+      margin-bottom: var(--s-1);
+      letter-spacing: 0;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--color-silver-mist, #999999);
+      letter-spacing: 0;
+    }
+
+    /* ── Vignette Demo ── */
+    .vignette-demo {
+      position: relative;
+      width: 100%;
+      height: 320px;
+      background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+      border-radius: 0;
+      overflow: hidden;
+      margin-bottom: var(--s-4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .vignette-demo__content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .vignette-demo__headline {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 400;
+      line-height: 1.0;
+      color: var(--signal, #ffffff);
+      letter-spacing: 0;
+      margin-bottom: var(--s-3);
+      text-transform: uppercase;
+    }
+
+    .vignette-demo__caption {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--color-silver-mist, #999999);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+
+    .vignette-demo::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 60%;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4));
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── Spacer Philosophy ── */
+    .philosophy {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: var(--s-6);
+      margin-bottom: var(--s-7);
+      border-radius: 0;
+    }
+
+    .philosophy__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--color-silver-mist, #999999);
+      margin-bottom: var(--s-3);
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--signal, #ffffff);
+    }
+
+    .philosophy__highlight {
+      color: var(--color-silver-mist, #999999);
+      font-family: var(--font-mono, ui-monospace, monospace);
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Loading ── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--color-silver-mist, #999999);
+      font-size: 14px;
+      font-family: var(--font-mono, ui-monospace, monospace);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: var(--s-4) auto 0;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-top-color: var(--signal, #ffffff);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-6) var(--s-4);
+      }
+
+      .spacing-row {
+        grid-template-columns: 80px 1fr 80px;
+        gap: var(--s-2);
+      }
+
+      .header__title {
+        font-size: 40px;
+      }
+
+      .radius-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: var(--s-4);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': '4px',
+      's-2': '8px',
+      's-3': '16px',
+      's-4': '24px',
+      's-5': '32px',
+      's-6': '48px',
+      's-7': '64px',
+      's-8': '96px',
+    };
+
+    const DEFAULT_DEPTH = [
+      { level: 0, name: '0', treatment: 'No shadow, no border' },
+      { level: 1, name: '1', treatment: '1px solid #999999' },
+      { level: 2, name: '2', treatment: '1px solid #ffffff' },
+      { level: 3, name: '3', treatment: 'Bottom-to-top vignette gradient' },
+    ];
+
+    const DEFAULT_RADIUS = {
+      'none': '0',
+      'sm': '20px',
+      'md': '8px',
+      'lg': '12px',
+      'full': '9px',
+    };
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.title || 'Design System';
+
+      const spacing = (tokens.spacing && tokens.spacing.scale) || DEFAULT_SPACING;
+      const depth = tokens.depth || DEFAULT_DEPTH;
+      const radius = (tokens.radii || tokens.radius || DEFAULT_RADIUS);
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Spacing &amp; Rules</h1>';
+      html += '  <p class="header__subtitle">Monochromatic austerity. Every pixel matters.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Philosophy */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__label">Spacing Philosophy</div>';
+      html += '  <p class="philosophy__text">Bugatti uses a <span class="philosophy__highlight">six-value spacing scale</span> — no in-between values. Sections breathe with <span class="philosophy__highlight">48–64px</span> padding. The page is 90% empty, because the content is the car. Every gap serves the cinema.</p>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, v]) => parseFloat(v) || 0), 1);
+
+      spacingEntries.forEach(([key, value]) => {
+        const px = parseFloat(value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        html += '<div class="spacing-row">';
+        html += '  <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Rule Weights (Depth) */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth Levels</div>';
+
+      depth.forEach(item => {
+        const name = item.name || String(item.level);
+        const treatment = item.treatment || '';
+        let ruleStyle = 'height: 1px; background: var(--signal, #ffffff);';
+
+        if (name === '1') {
+          ruleStyle = 'height: 1px; background: #999999;';
+        } else if (name === '2') {
+          ruleStyle = 'height: 1px; background: var(--signal, #ffffff);';
+        } else if (name === '3') {
+          ruleStyle = 'height: 3px; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), transparent);';
+        }
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <span class="rule-demo__name">Level ' + esc(name) + '</span>';
+        html += '  </div>';
+        html += '  <hr class="rule-demo__line" style="' + ruleStyle + '">';
+        if (treatment) {
+          html += '  <div class="rule-demo__treatment">' + esc(treatment) + '</div>';
+        }
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Vignette Demo */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Text Legibility Vignette (Depth 3)</div>';
+      html += '  <div class="vignette-demo">';
+      html += '    <div class="vignette-demo__content">';
+      html += '      <div class="vignette-demo__headline">La Voiture Noire</div>';
+      html += '      <div class="vignette-demo__caption">Vignette gradient ensures text reads over video</div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Border Radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+      html += '  <div class="radius-grid">';
+
+      Object.entries(radius).forEach(([key, value]) => {
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__box" style="border-radius:' + esc(value) + '"></div>';
+        html += '  <div class="radius-item__name">' + esc(key) + '</div>';
+        html += '  <div class="radius-item__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

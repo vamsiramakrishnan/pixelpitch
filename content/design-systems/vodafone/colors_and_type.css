@@ -1,0 +1,95 @@
+/* Vodafone — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #3860be;
+  --slate:   #7e7e7e;
+  --signal:  #3860be;
+  --bone:    #bebebe;
+  --border:  #333333;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-vodafone-red: #e60000;
+  --color-deep-brand-red-shade: #ac1811;
+  --color-light-neutral: #f2f2f2;
+  --color-charcoal-institutional-panel: #25282b;
+
+  /* Semantic */
+  --danger:  #e60000;
+  --info:    #3860be;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero-xl: 144px;
+  --t-display-hero-l: 126px;
+  --t-display-hero-m: 90px;
+  --t-display-impact: 70px;
+  --t-h1--light: 48px;
+  --t-h1--bold: 48px;
+  --t-h2--light: 40px;
+  --t-h2--bold: 40px;
+  --t-h3--bold: 32px;
+  --t-h4--bold: 24px;
+  --t-h4--light: 24px;
+  --t-h5--bold: 20px;
+  --t-lead-body: 20px;
+  --t-body-large: 18px;
+  --t-body-bold: 18px;
+  --t-body-base: 16px;
+  --t-label-uppercase: 16px;
+  --t-eyebrow-date: 14px;
+  --t-tag-pill: 14px;
+  --t-caption-uppercase: 14px;
+  --t-caption: 12px;
+  --t-micro-label: 12px;
+  --t-button-primary: 14.4px;
+  --t-button-compact: 12px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   16px;
+  --radius-md:   1px;
+  --radius-lg:   16px;
+  --radius-full: 24px;
+
+  /* ── Components ── */
+  --button-radius:  1px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    1px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

@@ -1,0 +1,86 @@
+/* Cal.com — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #0099ff;
+  --slate:   #898989;
+  --signal:  #0000ee;
+  --bone:    #111111;
+  --border:  #e5e5e5;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-charcoal: #242424;
+  --color-focus-ring: #3b82f6;
+  --color-pure-black: #000000;
+
+  /* Semantic */
+  --info:    #0099ff;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: Cal Sans;
+  --font-body:    Inter;
+  --font-mono:    Roboto Mono;
+
+  /* Type ramp */
+  --t-display-hero: 64px;
+  --t-section-heading: 48px;
+  --t-feature-heading: 24px;
+  --t-sub-heading: 20px;
+  --t-sub-heading-alt: 20px;
+  --t-card-title: 16px;
+  --t-caption-label: 12px;
+  --t-body-light: 18px;
+  --t-body-light-standard: 16px;
+  --t-caption-light: 14px;
+  --t-ui-label: 16px;
+  --t-caption-inter: 14px;
+  --t-micro: 12px;
+  --t-code: 14px;
+  --t-body-matter: 14px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   6px;
+  --radius-md:   12px;
+  --radius-lg:   20px;
+  --radius-full: 9px;
+
+  /* ── Components ── */
+  --button-radius:  12px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    12px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

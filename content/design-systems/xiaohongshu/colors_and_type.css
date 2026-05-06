@@ -1,0 +1,73 @@
+/* Xiaohongshu — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #f5f5f5;
+  --ink:     #133667;
+  --slate:   #666666;
+  --signal:  #ff2e4d;
+  --bone:    #fafafa;
+  --border:  #eaeaea;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-star-yellow: #fdbc5f;
+  --color-success: #02b940;
+  --color-warning: #ff7d03;
+  --color-info: #3d8af5;
+  --color-surface: #19191e;
+  --color-canvas: #0e0e11;
+
+  /* Semantic */
+  --success: #02b940;
+  --warning: #ff7d03;
+  --danger:  #133667;
+  --info:    #fafafa;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   240px;
+  --radius-lg:   16px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  240px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    240px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apple – Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+
+    /* ─── HEADER ─── */
+    .header {
+      margin-bottom: 96px;
+    }
+
+    .header__title {
+      font-family: var(--font-display);
+      font-size: 56px;
+      font-weight: 600;
+      line-height: 1.07;
+      letter-spacing: -0.28px;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .header__subtitle {
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.47;
+      letter-spacing: -0.374px;
+      color: var(--slate);
+      max-width: 600px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--signal);
+      border: none;
+      margin-top: 32px;
+      border-radius: 1px;
+    }
+
+    /* ─── SECTION ─── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .subsection {
+      margin-bottom: 32px;
+    }
+
+    .subsection__label {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 16px;
+      letter-spacing: -0.224px;
+    }
+
+    /* ─── BUTTONS ─── */
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.29;
+      letter-spacing: -0.224px;
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      border: none;
+      text-align: center;
+    }
+
+    .btn--primary {
+      background: var(--signal);
+      color: var(--paper);
+    }
+
+    .btn--primary:active {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
+
+    .btn--dark {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .btn--dark:active {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--signal);
+      padding: var(--button-py) 0;
+      text-decoration: underline;
+      border-radius: 0;
+    }
+
+    .btn--ghost:active {
+      opacity: 0.7;
+    }
+
+    .btn--secondary {
+      background: var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--bone);
+    }
+
+    .btn--secondary:active {
+      background: var(--color-pale-apple-gray);
+      border-color: var(--color-mid-border-gray);
+    }
+
+    .btn--utility {
+      background: rgba(255, 255, 255, 0.8);
+      color: var(--ink);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 8px 16px;
+      font-size: 13px;
+    }
+
+    .btn--utility:active {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .btn--sm {
+      padding: 8px 16px;
+      font-size: 13px;
+    }
+
+    .btn--lg {
+      padding: 16px 32px;
+      font-size: 16px;
+    }
+
+    /* ─── CARDS ─── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: var(--paper);
+      border-radius: var(--card-radius);
+      border: var(--card-border);
+      padding: 24px;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .card--elevated {
+      background: var(--color-pale-apple-gray);
+      border: none;
+    }
+
+    .card--dark {
+      background: var(--color-graphite-surface-d);
+      border: 1px solid var(--color-graphite-surface-c);
+      color: var(--paper);
+    }
+
+    .card__eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: 8px;
+    }
+
+    .card--dark .card__eyebrow {
+      color: var(--color-high-luminance-link-blue);
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1.14;
+      letter-spacing: 0.196px;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .card--dark .card__title {
+      color: var(--paper);
+    }
+
+    .card__body {
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.47;
+      letter-spacing: -0.374px;
+      color: var(--slate);
+      margin-bottom: 20px;
+    }
+
+    .card--dark .card__body {
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .card__footer {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* ─── INPUTS ─── */
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 28px;
+      margin-bottom: 24px;
+    }
+
+    .input-wrap {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.224px;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+
+    .input {
+      display: block;
+      width: 100%;
+      padding: 10px 12px;
+      font-family: var(--font-body);
+      font-size: 17px;
+      line-height: 1.47;
+      letter-spacing: -0.374px;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--color-mid-border-gray);
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--color-secondary-neutral-gray);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.1);
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: var(--paper);
+      border: 1px solid var(--bone);
+      border-radius: 20px;
+      max-width: 480px;
+      transition: border-color 0.15s ease;
+    }
+
+    .search-bar:focus-within {
+      border-color: var(--signal);
+    }
+
+    .search-bar__icon {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      color: var(--color-secondary-neutral-gray);
+    }
+
+    .search-bar__input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--ink);
+    }
+
+    .search-bar__input::placeholder {
+      color: var(--color-secondary-neutral-gray);
+    }
+
+    /* ─── BADGES & TAGS ─── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: -0.12px;
+      border-radius: var(--radius-full);
+      line-height: 1;
+    }
+
+    .badge--signal {
+      background: rgba(0, 113, 227, 0.1);
+      color: var(--signal);
+    }
+
+    .badge--success {
+      background: rgba(92, 184, 92, 0.1);
+      color: #5cb85c;
+    }
+
+    .badge--warning {
+      background: rgba(240, 173, 78, 0.1);
+      color: #f0ad4e;
+    }
+
+    .badge--danger {
+      background: rgba(217, 83, 79, 0.1);
+      color: #d9534f;
+    }
+
+    .badge--neutral {
+      background: var(--color-pale-apple-gray);
+      color: var(--ink);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 8px;
+      background: var(--color-pale-apple-gray);
+      color: var(--ink);
+      border: 1px solid var(--bone);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .tag:hover {
+      background: var(--bone);
+    }
+
+    .tag--active {
+      background: var(--signal);
+      color: var(--paper);
+      border-color: var(--signal);
+    }
+
+    .tag--active:hover {
+      opacity: 0.9;
+    }
+
+    /* ─── CONFIGURATOR ─── */
+    .configurator {
+      background: var(--color-pale-apple-gray);
+      border-radius: 18px;
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    .option-stack {
+      margin-bottom: 24px;
+    }
+
+    .option-label {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.224px;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .option-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 8px;
+    }
+
+    .option-chip {
+      padding: 10px 14px;
+      background: var(--paper);
+      border: 1px solid var(--bone);
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: center;
+    }
+
+    .option-chip:hover {
+      border-color: var(--signal);
+      background: rgba(0, 113, 227, 0.03);
+    }
+
+    .option-chip--active {
+      background: var(--signal);
+      color: var(--paper);
+      border-color: var(--signal);
+    }
+
+    /* ─── DIVIDERS ─── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 32px 0;
+    }
+
+    /* ─── FOCUS RING ─── */
+    .focus-demo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--signal);
+      color: var(--paper);
+      font-weight: 600;
+      font-size: 20px;
+      outline: 2px solid var(--signal);
+      outline-offset: 4px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 24px;
+      }
+
+      .header__title {
+        font-size: 40px;
+      }
+
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .input-group {
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .input-wrap {
+        min-width: unset;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- ━━━ HEADER ━━━ -->
+    <header class="header" id="header">
+      <h1 class="header__title">Component Library</h1>
+      <p class="header__subtitle">Precision UI elements engineered for premium digital experiences. Every interaction, refined.</p>
+      <hr class="header__rule">
+    </header>
+
+    <!-- ━━━ BUTTONS ━━━ -->
+    <section class="section">
+      <h2 class="section__label">Buttons</h2>
+
+      <div class="subsection">
+        <h3 class="subsection__label">Primary Action</h3>
+        <div class="button-row">
+          <button class="btn btn--primary">Learn more</button>
+          <button class="btn btn--primary btn--lg">Buy now</button>
+          <button class="btn btn--primary btn--sm">Select</button>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__label">Secondary & Dark</h3>
+        <div class="button-row">
+          <button class="btn btn--secondary">Cancel</button>
+          <button class="btn btn--dark">Continue</button>
+          <button class="btn btn--dark btn--sm">Confirm</button>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__label">Utility & Filter</h3>
+        <div class="button-row">
+          <button class="btn btn--utility">Filter</button>
+          <button class="btn btn--utility btn--sm">Sort</button>
+          <button class="btn btn--utility btn--sm">View all</button>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__label">Text Link</h3>
+        <div class="button-row">
+          <a href="#" class="btn btn--ghost">Explore more</a>
+          <a href="#" class="btn btn--ghost">See the story</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ━━━ CARDS ━━━ -->
+    <section class="section">
+      <h2 class="section__label">Cards & Containers</h2>
+
+      <div class="subsection">
+        <h3 class="subsection__label">Standard & Elevated</h3>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card__eyebrow">Editorial Card</div>
+            <div class="card__title">Precision Design</div>
+            <div class="card__body">
+              A restrained card with minimal framing. Image-first composition keeps the hardware and materials as the visual foreground.
+            </div>
+            <div class="card__footer">
+              <button class="btn btn--primary btn--sm">Explore</button>
+            </div>
+          </div>
+
+          <div class="card card--elevated">
+            <div class="card__eyebrow">Elevated Card</div>
+            <div class="card__title">Refined Surfaces</div>
+            <div class="card__body">
+              Pale neutral background provides subtle hierarchy without visual noise. Perfect for merchandising and feature highlights.
+            </div>
+            <div class="card__footer">
+              <button class="btn btn--primary btn--sm">Learn</button>
+              <a href="#" class="btn btn--ghost btn--sm">Details</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__label">Dark Utility Card</h3>
+        <div class="card-grid">
+          <div class="card card--dark">
+            <div class="card__eyebrow">Overlay Surface</div>
+            <div class="card__title">Dark Context</div>
+            <div class="card__body">
+              Graphite surfaces for media controls and overlay modules. Used when light context needs restrained high-contrast UI.
+            </div>
+            <div class="card__footer">
+              <button class="btn btn--primary btn--sm">Action</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ━━━ INPUTS ━━━ -->
+    <section class="section">
+      <h2 class="section__label">Inputs & Forms</h2>
+
+      <div class="subsection">
+        <h3 class="subsection__label">Text Input Fields</h3>
+        <div class="input-group">
+          <div class="input-wrap">
+            <label class="input-label">Full Name</label>
+            <input class="input" type="text" placeholder="Enter your name">
+          </div>
+          <div class="input-wrap">
+            <label class="input-label">Email Address</label>
+            <input class="input" type="email" placeholder="you@example.com">
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="subsection">
+        <h3 class="subsection__label">Search Input</h3>
+        <div class="search-bar">
+          <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input class="search-bar__input" type="text" placeholder="Search for products, specs, support...">
+        </div>
+      </div>
+    </section>
+
+    <!-- ━━━ BADGES ━━━ -->
+    <section class="section">
+      <h2 class="section__label">Badges & Status</h2>
+
+      <div class="subsection">
+        <h3 class="subsection__label">Status Pills</h3>
+        <div class="badge-row">
+          <span class="badge badge--signal">In Stock</span>
+          <span class="badge badge--success">Shipped</span>
+          <span class="badge badge--warning">Pre-Order</span>
+          <span class="badge badge--danger">Unavailable</span>
+          <span class="badge badge--neutral">Coming Soon</span>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__label">Filter Tags</h3>
+        <div class="badge-row">
+          <span class="tag tag--active">All</span>
+          <span class="tag">Mac</span>
+          <span class="tag">iPad</span>
+          <span class="tag">iPhone</span>
+          <span class="tag">Accessories</span>
+          <span class="tag">AppleCare</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ━━━ CONFIGURATOR ━━━ -->
+    <section class="section">
+      <h2 class="section__label">Product Configurator</h2>
+
+      <div class="configurator">
+        <div class="option-stack">
+          <div class="option-label">Storage Capacity</div>
+          <div class="option-grid">
+            <button class="option-chip option-chip--active">256GB</button>
+            <button class="option-chip">512GB</button>
+            <button class="option-chip">1TB</button>
+            <button class="option-chip">2TB</button>
+          </div>
+        </div>
+
+        <div class="option-stack">
+          <div class="option-label">Color</div>
+          <div class="option-grid">
+            <button class="option-chip" style="border-color: #000; background: #000; color: #fff;">Space Black</button>
+            <button class="option-chip" style="border-color: #d4d4d6; background: #f5f5f7;">Silver</button>
+            <button class="option-chip" style="border-color: #ccc; background: #f9f7f4;">Gold</button>
+            <button class="option-chip" style="border-color: #999; background: #e6ddd9;">Deep Purple</button>
+          </div>
+        </div>
+
+        <div class="option-stack">
+          <div class="option-label">Memory</div>
+          <div class="option-grid">
+            <button class="option-chip option-chip--active">8GB</button>
+            <button class="option-chip">16GB</button>
+            <button class="option-chip">24GB</button>
+            <button class="option-chip">32GB</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ━━━ INTERACTIVE STATES ━━━ -->
+    <section class="section">
+      <h2 class="section__label">Interactive States</h2>
+
+      <div class="subsection">
+        <h3 class="subsection__label">Focus Ring (Accessibility)</h3>
+        <div style="padding: 32px; background: var(--color-pale-apple-gray); border-radius: 18px;">
+          <div class="focus-demo">✓</div>
+          <p style="font-size: 12px; color: var(--slate); margin-top: 16px;">Blue focus signal with 4px offset for accessibility compliance</p>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__label">Interactive Feedback</h3>
+        <p style="font-size: 14px; color: var(--slate); margin-bottom: 16px;">Press and hold buttons above to see active state scaling and opacity feedback.</p>
+        <div class="button-row">
+          <button class="btn btn--primary">Press me</button>
+          <button class="btn btn--secondary">Press me</button>
+          <button class="btn btn--dark">Press me</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /* Load tokens for dynamic header */
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => r.ok ? r.json() : null)
+      .then(tokens => {
+        if (!tokens) return;
+        const name = tokens.meta?.title || tokens.meta?.id || '';
+        if (name) {
+          document.getElementById('header').querySelector('.header__title').textContent = name + ' – Components';
+        }
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>

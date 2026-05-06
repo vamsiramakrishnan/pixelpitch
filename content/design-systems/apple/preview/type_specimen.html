@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — Apple Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #1d1d1f);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 48px 24px;
+      }
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 72px;
+      font-weight: 600;
+      line-height: 1.05;
+      letter-spacing: -0.8px;
+      color: var(--ink, #1d1d1f);
+      margin-bottom: 16px;
+    }
+
+    .header__subtitle {
+      font-size: 21px;
+      font-weight: 400;
+      line-height: 1.38;
+      color: var(--slate, #666666);
+      max-width: 720px;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--signal, #0071e3);
+      border: none;
+      margin: 0;
+      border-radius: 1px;
+    }
+
+    @media (max-width: 768px) {
+      .header__title {
+        font-size: 48px;
+        letter-spacing: -0.28px;
+      }
+      .header__subtitle {
+        font-size: 18px;
+      }
+    }
+
+    /* Font family summary */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-bottom: 80px;
+    }
+
+    .font-card {
+      background: var(--pale-apple-gray, #f5f5f7);
+      border-radius: 12px;
+      padding: 32px;
+      border: 1px solid var(--bone, #d2d2d7);
+    }
+
+    .font-card__label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .font-card__name {
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1.14;
+      color: var(--ink, #1d1d1f);
+      margin-bottom: 8px;
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      line-height: 1.5;
+      color: var(--slate, #666666);
+      word-break: break-all;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--bone, #d2d2d7);
+    }
+
+    /* Character set block */
+    .pangram-block {
+      background: var(--pale-apple-gray, #f5f5f7);
+      border: 1px solid var(--bone, #d2d2d7);
+      border-radius: 12px;
+      padding: 48px 40px;
+      margin-bottom: 80px;
+    }
+
+    .pangram-block__label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+    }
+
+    .pangram-block__chars {
+      font-size: 32px;
+      font-weight: 400;
+      line-height: 1.5;
+      letter-spacing: 0.02em;
+      color: var(--ink, #1d1d1f);
+      word-break: break-all;
+      font-family: var(--font-display, system-ui, sans-serif);
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--bone, #d2d2d7);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 820px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.47;
+      color: var(--ink, #1d1d1f);
+      margin-bottom: 12px;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--ink, #1d1d1f);
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    /* Ramp section container */
+    .ramp-section {
+      margin-bottom: 80px;
+    }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 18px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 20px auto 0;
+      border: 3px solid var(--bone, #d2d2d7);
+      border-top-color: var(--signal, #0071e3);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'Innovation is the ability to see change as an opportunity, not a threat.',
+      'Design is where science and art break even.',
+      'The intersection of technology and humanity. That\'s where the magic happens.',
+      'We don\'t make hardware. We make experiences that connect people.',
+      'Every detail matters when you\'re crafting something beautiful.',
+      'Technology should be intuitive, invisible, and incredibly personal.',
+      'The best way to predict the future is to invent it.',
+      'Simplicity is the ultimate sophistication.',
+      'One more thing—attention to detail defines excellence.',
+      'We believe great design means getting out of the way.',
+      'Precision engineering meets human intuition.',
+      'Our products are designed to be effortless.',
+      'Form follows function. And function is beautiful.',
+      'We make products with the care of a master craftsman.',
+      'The customer\'s delight is what truly matters.',
+    ];
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#ef4444">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.name || 'Design System';
+
+      const typography = tokens.typography || {};
+      const ramp = typography.ramp || [];
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Type Specimen</h1>';
+      html += '  <p class="header__subtitle">The complete typographic hierarchy of ' + esc(name) + ', engineered for cinematic scale and retail precision.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      const families = [];
+      const displayFont = typography.fontDisplay || 'SF Pro Display';
+      const bodyFont = typography.fontBody || 'SF Pro Text';
+      const monoFont = typography.fontMono || 'System Monospace';
+
+      families.push({
+        label: 'Display',
+        name: 'SF Pro Display',
+        fallback: 'system-ui, sans-serif'
+      });
+      families.push({
+        label: 'Body',
+        name: 'SF Pro Text',
+        fallback: 'system-ui, sans-serif'
+      });
+      families.push({
+        label: 'Monospace',
+        name: 'System Monospace',
+        fallback: 'ui-monospace, monospace'
+      });
+
+      if (families.length) {
+        html += '<div class="font-families">';
+        families.forEach(f => {
+          html += '<div class="font-card">';
+          html += '  <div class="font-card__label">' + esc(f.label) + '</div>';
+          html += '  <div class="font-card__name">' + esc(f.name) + '</div>';
+          html += '  <div class="font-card__fallback">' + esc(f.fallback) + '</div>';
+          html += '</div>';
+        });
+        html += '</div>';
+      }
+
+      /* Character set block */
+      html += '<div class="pangram-block">';
+      html += '  <div class="pangram-block__label">Character Set</div>';
+      html += '  <div class="pangram-block__chars">AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>0123456789 !@#$%&amp;*()–—''""</div>';
+      html += '</div>';
+
+      /* Type ramp */
+      if (ramp.length) {
+        html += '<div class="ramp-section">';
+        html += '<div class="section-label">Type Ramp</div>';
+        ramp.forEach((entry, i) => {
+          html += rampRow(entry, i);
+        });
+        html += '</div>';
+      }
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(entry, idx) {
+      const role = entry.role || 'Role ' + (idx + 1);
+      const size = entry.size || '16px';
+      const weight = entry.weight || 400;
+      const lineHeight = entry.lineHeight || '1.5';
+      const letterSpacing = entry.letterSpacing || '0';
+      const fontKey = entry.fontKey || 'display';
+
+      const sampleIdx = idx % EDITORIAL_SAMPLES.length;
+      const sample = EDITORIAL_SAMPLES[sampleIdx];
+
+      const sizeNum = parseFloat(size);
+      const displaySample = sizeNum >= 56
+        ? sample.split(' ').slice(0, 4).join(' ') + '…'
+        : sample;
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lineHeight + ';';
+      if (letterSpacing && letterSpacing !== '0') {
+        fontStyle += 'letter-spacing:' + letterSpacing + ';';
+      }
+
+      /* Apply font family based on fontKey */
+      if (fontKey === 'display') {
+        fontStyle += 'font-family:var(--font-display,system-ui,sans-serif);';
+      } else if (fontKey === 'body') {
+        fontStyle += 'font-family:var(--font-body,system-ui,sans-serif);';
+      } else if (fontKey === 'mono' || fontKey === 'ui') {
+        fontStyle += 'font-family:var(--font-mono,ui-monospace,monospace);';
+      } else {
+        fontStyle += 'font-family:var(--font-display,system-ui,sans-serif);';
+      }
+
+      let meta = '';
+      meta += esc(size) + ' / ' + weight;
+      meta += '\nline-height: ' + esc(String(lineHeight));
+      if (letterSpacing && letterSpacing !== '0') {
+        meta += '\nletter-spacing: ' + esc(letterSpacing);
+      }
+      meta += '\nfont: ' + (fontKey === 'mono' || fontKey === 'ui' ? 'monospace' : fontKey === 'body' ? 'body' : 'display');
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(displaySample) + '</div>' +
+        '</div>';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

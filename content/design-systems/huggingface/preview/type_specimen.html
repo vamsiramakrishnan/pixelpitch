@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — Hugging Face</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Source Sans Pro', 'Inter', system-ui, sans-serif);
+      background: var(--bone, #fafafa);
+      color: var(--ink, #374151);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 56px 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 40px 24px;
+      }
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 80px;
+      background: var(--paper, #ffffff);
+      padding: 48px;
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: var(--radius-md, 8px);
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .header__title {
+      font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink, #374151);
+      margin-bottom: 16px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, 'Source Sans Pro', 'Inter', system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+      max-width: 720px;
+      margin-bottom: 24px;
+    }
+
+    .header__emoji {
+      display: inline-block;
+      font-size: 48px;
+      margin-right: 12px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: var(--signal, #ffd21e);
+      border: none;
+      margin: 24px 0 0 0;
+    }
+
+    /* Font families section */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 80px;
+    }
+
+    .font-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: var(--radius-md, 8px);
+      padding: 32px;
+    }
+
+    .font-card__label {
+      font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 12px;
+    }
+
+    .font-card__name {
+      font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1.2;
+      color: var(--ink, #374151);
+      margin-bottom: 8px;
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+      font-size: 11px;
+      color: var(--slate, #666666);
+      word-break: break-word;
+      line-height: 1.5;
+    }
+
+    /* Character set block */
+    .charmap-block {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: var(--radius-md, 8px);
+      padding: 48px;
+      margin-bottom: 80px;
+    }
+
+    .charmap-block__label {
+      font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #e5e7eb);
+    }
+
+    .charmap-block__chars {
+      font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 2;
+      letter-spacing: 0.01em;
+      color: var(--ink, #374151);
+      word-break: break-word;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--signal, #ffd21e);
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border, #e5e7eb);
+      background: var(--paper, #ffffff);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    .ramp-row:hover {
+      background: var(--bone, #fafafa);
+    }
+
+    @media (max-width: 800px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink, #374151);
+      margin-bottom: 8px;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+      letter-spacing: 0;
+      white-space: pre-wrap;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--ink, #374151);
+      overflow-wrap: break-word;
+      word-spacing: 0.1em;
+    }
+
+    /* Ramp section */
+    .ramp-section {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: var(--radius-md, 8px);
+      padding: 0;
+      margin-bottom: 80px;
+      overflow: hidden;
+    }
+
+    .ramp-section__content {
+      padding: 32px 48px;
+    }
+
+    .ramp-section__label {
+      padding: 32px 48px 16px 48px;
+      border-bottom: 2px solid var(--signal, #ffd21e);
+      font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      background: var(--bone, #fafafa);
+      margin: 0;
+    }
+
+    /* Tag demo */
+    .tag-demo {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: var(--radius-md, 8px);
+      padding: 48px;
+      margin-bottom: 80px;
+    }
+
+    .tag-demo__label {
+      font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--signal, #ffd21e);
+    }
+
+    .tag-demo__grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .tag {
+      font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm, 4px);
+      border: 1px solid var(--border, #e5e7eb);
+      background: var(--bone, #fafafa);
+      color: var(--ink, #374151);
+      display: inline-block;
+    }
+
+    .tag--nlp {
+      border-color: var(--color-nlp-blue, #2563eb);
+      color: var(--color-nlp-blue, #2563eb);
+      background: rgba(37, 99, 235, 0.06);
+    }
+
+    .tag--vision {
+      border-color: var(--color-vision-green, #16a34a);
+      color: var(--color-vision-green, #16a34a);
+      background: rgba(22, 163, 74, 0.06);
+    }
+
+    .tag--audio {
+      border-color: var(--color-audio-purple, #9333ea);
+      color: var(--color-audio-purple, #9333ea);
+      background: rgba(147, 51, 234, 0.06);
+    }
+
+    .tag--multimodal {
+      border-color: var(--color-multimodal-pink, #db2777);
+      color: var(--color-multimodal-pink, #db2777);
+      background: rgba(219, 39, 119, 0.06);
+    }
+
+    /* Model card demo */
+    .model-card {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: var(--radius-md, 8px);
+      margin-bottom: 80px;
+      overflow: hidden;
+    }
+
+    .model-card__header {
+      background: var(--signal, #ffd21e);
+      padding: 24px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .model-card__title {
+      font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--ink, #374151);
+      margin: 0;
+    }
+
+    .model-card__body {
+      padding: 32px 24px;
+    }
+
+    .model-card__row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #e5e7eb);
+    }
+
+    .model-card__row:last-child {
+      border-bottom: none;
+    }
+
+    .model-card__label {
+      font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+    }
+
+    .model-card__value {
+      font-family: var(--font-body, 'Source Sans Pro', 'Inter', system-ui, sans-serif);
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--ink, #374151);
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 160px 48px;
+      color: var(--slate, #666666);
+      font-family: var(--font-body, 'Source Sans Pro', 'Inter', system-ui, sans-serif);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 24px auto 0;
+      border: 2px solid var(--border, #e5e7eb);
+      border-top-color: var(--signal, #ffd21e);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Code sample */
+    .code-demo {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: var(--radius-md, 8px);
+      padding: 48px;
+      margin-bottom: 80px;
+    }
+
+    .code-demo__label {
+      font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--signal, #ffd21e);
+    }
+
+    .code-block {
+      font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--color-canvas-dark, #0d1117);
+      background: var(--bone, #fafafa);
+      padding: 16px;
+      border-radius: var(--radius-sm, 4px);
+      overflow-x: auto;
+      border: 1px solid var(--border, #e5e7eb);
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const SAMPLES = [
+      'The hub brings together thousands of pre-trained models.',
+      'Deploy with a single line of Python code.',
+      'Fine-tune models on your own datasets instantly.',
+      'Share your work with the ML community freely.',
+      'Access datasets, models, and spaces in one place.',
+      'Collaborate with researchers and engineers globally.',
+      'Train and evaluate models without GPU costs.',
+      'Make machine learning more accessible to everyone.',
+      'Open source is the future of AI development.',
+      'Build together. Share everything. Break nothing.',
+    ];
+
+    const MODEL_CARD_TEXT = 'This model is a fine-tuned version of bert-base-uncased on the mrpc dataset. It achieves an accuracy of 89.2% on the validation set.';
+
+    fetch('../tokens.json')
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:var(--signal, #ffd21e)">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Design System';
+      const summary = tokens.meta?.summary || '';
+
+      const ramp = tokens.typography?.ramp || [];
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__emoji">🤗</div>';
+      html += '  <div class="header__kicker">Type Specimen</div>';
+      html += '  <h1 class="header__title">' + esc(title) + '</h1>';
+      html += '  <p class="header__subtitle">' + esc(summary) + '</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      const families = [
+        { label: 'Headings & UI', name: 'IBM Plex Mono', fallback: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace', note: 'Monospace identity—tags, headings, metadata' },
+        { label: 'Body Text', name: 'Source Sans Pro', fallback: 'Inter, system-ui, -apple-system, sans-serif', note: 'Prose and paragraph copy' },
+        { label: 'Editorial (Blog)', name: 'Source Serif Pro', fallback: 'Georgia, serif', note: 'Rare—blog posts and long-form only' }
+      ];
+
+      html += '<div class="font-families">';
+      families.forEach(f => {
+        html += '<div class="font-card">';
+        html += '  <div class="font-card__label">' + esc(f.label) + '</div>';
+        html += '  <div class="font-card__name">' + esc(f.name) + '</div>';
+        html += '  <div class="font-card__fallback">' + esc(f.fallback) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      /* Character set */
+      html += '<div class="charmap-block">';
+      html += '  <div class="charmap-block__label">Character Set · IBM Plex Mono</div>';
+      html += '  <div class="charmap-block__chars" style="font-family:\'IBM Plex Mono\',ui-monospace,monospace">';
+      html += '    ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz<br>';
+      html += '    0123456789 !@#$%&amp;*()_+-={}[] | :;&quot;\'&lt;&gt;,.?/<br>';
+      html += '    → ← ↑ ↓ ✓ ✗ ★ ◆ ■ ● … — – ' + "'" + '"';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Type ramp */
+      if (ramp.length) {
+        html += '<div class="ramp-section">';
+        html += '<div class="ramp-section__label">Type Ramp</div>';
+        html += '<div class="ramp-section__content">';
+        ramp.forEach((entry, i) => {
+          html += rampRow(entry, i);
+        });
+        html += '</div>';
+        html += '</div>';
+      }
+
+      /* Tag demo */
+      html += '<div class="tag-demo">';
+      html += '<div class="tag-demo__label">Model Category Tags</div>';
+      html += '<div class="tag-demo__grid">';
+      html += '  <span class="tag tag--nlp">NLP</span>';
+      html += '  <span class="tag tag--vision">Vision</span>';
+      html += '  <span class="tag tag--audio">Audio</span>';
+      html += '  <span class="tag tag--multimodal">Multimodal</span>';
+      html += '  <span class="tag">Tabular</span>';
+      html += '  <span class="tag">Reinforcement Learning</span>';
+      html += '  <span class="tag">Zero-Shot</span>';
+      html += '  <span class="tag">Few-Shot</span>';
+      html += '</div>';
+      html += '</div>';
+
+      /* Model card demo */
+      html += '<div class="model-card">';
+      html += '<div class="model-card__header">';
+      html += '  <h2 class="model-card__title">bert-base-uncased · fine-tuned</h2>';
+      html += '</div>';
+      html += '<div class="model-card__body">';
+      html += '<div class="model-card__row">';
+      html += '  <div class="model-card__label">Task</div>';
+      html += '  <div class="model-card__value">Text Classification</div>';
+      html += '</div>';
+      html += '<div class="model-card__row">';
+      html += '  <div class="model-card__label">License</div>';
+      html += '  <div class="model-card__value">Apache 2.0</div>';
+      html += '</div>';
+      html += '<div class="model-card__row">';
+      html += '  <div class="model-card__label">Downloads</div>';
+      html += '  <div class="model-card__value">24.3M monthly</div>';
+      html += '</div>';
+      html += '<div class="model-card__row">';
+      html += '  <div class="model-card__label">Description</div>';
+      html += '  <div class="model-card__value">' + esc(MODEL_CARD_TEXT) + '</div>';
+      html += '</div>';
+      html += '</div>';
+      html += '</div>';
+
+      /* Code demo */
+      html += '<div class="code-demo">';
+      html += '<div class="code-demo__label">Code Block · IBM Plex Mono</div>';
+      html += '<pre class="code-block">from transformers import pipeline\n\nclassify = pipeline("zero-shot-classification")\nresult = classify(\n  "I love this movie!",\n  ["positive", "negative"]\n)\nprint(result)</pre>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(entry, idx) {
+      const role = entry.role || 'Role ' + (idx + 1);
+      const size = entry.size || '16px';
+      const weight = entry.weight || 400;
+      const lh = entry.lineHeight || '1.5';
+      const ls = entry.letterSpacing || '0';
+
+      let fontFamily = 'var(--font-body)';
+      if (entry.fontKey === 'mono') fontFamily = 'var(--font-mono)';
+      else if (entry.fontKey === 'ui') fontFamily = 'var(--font-body)';
+
+      const sizeNum = parseFloat(size);
+      const sampleIdx = idx % SAMPLES.length;
+      let sample = SAMPLES[sampleIdx];
+
+      /* Truncate very large samples */
+      if (sizeNum >= 40) {
+        sample = sample.split('.')[0].slice(0, 35);
+        if (!sample.endsWith('.')) sample += '.';
+      }
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + ';';
+      fontStyle += 'font-family:' + fontFamily + ';';
+      if (ls && ls !== '0' && ls !== 'normal') fontStyle += 'letter-spacing:' + ls + ';';
+
+      let meta = esc(size) + ' / ' + esc(String(weight));
+      meta += '\n' + fontFamilyLabel(entry.fontKey);
+      meta += '\nline-height: ' + esc(String(lh));
+      if (ls && ls !== '0' && ls !== 'normal') meta += '\nletter-spacing: ' + esc(ls);
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(sample) + '</div>' +
+        '</div>';
+    }
+
+    function fontFamilyLabel(key) {
+      const map = {
+        'mono': 'IBM Plex Mono',
+        'ui': 'Source Sans Pro',
+        'body': 'Source Sans Pro'
+      };
+      return map[key] || 'Unknown';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

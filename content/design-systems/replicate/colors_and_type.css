@@ -1,0 +1,95 @@
+/* Replicate — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #2b9a66;
+  --ink:     #202020;
+  --slate:   #646464;
+  --signal:  #ea2804;
+  --bone:    #f5f5f5;
+  --border:  #202020;
+  --surface: #202020;
+
+  /* Extended palette */
+  --color-secondary-red: #dd4425;
+  --color-github-dark: #24292e;
+  --color-pure-white: #ffffff;
+  --color-near-white: #fcfcfc;
+  --color-warm-gray: #4e4e4e;
+  --color-mid-silver: #8d8d8d;
+  --color-light-silver: #bbbbbb;
+  --color-pure-black: #000000;
+
+  /* Semantic */
+  --success: #2b9a66;
+  --danger:  #ea2804;
+  --info:    #24292e;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: rb-freigeist-neue;
+  --font-body:    rb-freigeist-neue;
+  --font-mono:    jetbrains-mono;
+
+  /* Type ramp */
+  --t-display-mega: 128px;
+  --t-display-hero: 72px;
+  --t-section-heading: 48px;
+  --t-sub-heading: 30px;
+  --t-sub-heading-sans: 38.4px;
+  --t-feature-title: 18px;
+  --t-body-large: 20px;
+  --t-body-button: 18px;
+  --t-caption: 14px;
+  --t-small-tag: 12px;
+  --t-code: 14px;
+  --t-code-small: 11px;
+
+  /* ── Spacing ── */
+  --s-1: 1px;
+  --s-2: 2px;
+  --s-3: 4px;
+  --s-4: 6px;
+  --s-5: 8px;
+  --s-6: 10px;
+  --s-7: 12px;
+  --s-8: 16px;
+  --s-9: 24px;
+  --s-10: 32px;
+  --s-11: 48px;
+  --s-12: 64px;
+  --s-13: 96px;
+  --s-14: 160px;
+  --s-15: 192px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   192px;
+  --radius-full: 9999px;
+
+  /* ── Components ── */
+  --button-radius:  10px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    10px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

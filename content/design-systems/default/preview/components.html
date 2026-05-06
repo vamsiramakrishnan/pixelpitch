@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neutral Modern — Components</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-6);
+    }
+
+    /* ──── Header / Masthead ──── */
+    .masthead {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: var(--s-5);
+      margin-bottom: var(--s-8);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .masthead__logo {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: right;
+    }
+
+    /* ──── Stage Head ──── */
+    .stage-head {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      margin: 0 0 var(--s-3) 0;
+    }
+
+    .stage-head__subtitle {
+      font-size: 18px;
+      line-height: 1.5;
+      color: var(--slate);
+      max-width: 720px;
+      margin: 0;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-2);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      margin: 0 0 var(--s-4) 0;
+    }
+
+    .section__description {
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--slate);
+      margin-bottom: var(--s-4);
+      max-width: 720px;
+    }
+
+    /* ──── Demo Groups ──── */
+    .demo-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-5);
+    }
+
+    .demo-row__label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      min-width: 120px;
+    }
+
+    .demo-group {
+      margin-bottom: var(--s-5);
+    }
+
+    /* ──── Buttons ──── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.2;
+      border: none;
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      gap: var(--s-2);
+    }
+
+    .btn--primary {
+      background: var(--signal);
+      color: var(--paper);
+    }
+
+    .btn--primary:hover {
+      opacity: 0.9;
+    }
+
+    .btn--primary:active {
+      opacity: 0.8;
+    }
+
+    .btn--secondary {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    .btn--secondary:hover {
+      border-color: var(--ink);
+      background: var(--bone);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--signal);
+      border: none;
+      padding: var(--s-2) 0;
+      font-weight: 400;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .btn--ghost:hover {
+      opacity: 0.75;
+    }
+
+    .btn--sm {
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+
+    .btn--lg {
+      padding: 14px 28px;
+      font-size: 16px;
+    }
+
+    /* ──── Cards ──── */
+    .card {
+      background: var(--paper);
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      padding: var(--s-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .card--elevated {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.2;
+      margin: 0;
+    }
+
+    .card__body {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--slate);
+      margin: 0;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    /* ──── Input Fields ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .input {
+      padding: 10px var(--s-3);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: inset 0 0 0 1px var(--signal);
+    }
+
+    .input:disabled {
+      background: var(--bone);
+      color: var(--slate);
+      cursor: not-allowed;
+    }
+
+    /* ──── Badges / Status Pills ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2);
+      margin-bottom: var(--s-4);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      line-height: 1.4;
+      border-radius: var(--radius-full);
+      background: var(--bone);
+      color: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    .badge--signal {
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--signal);
+      border-color: var(--signal);
+    }
+
+    .badge--success {
+      background: rgba(23, 163, 74, 0.1);
+      color: #17a34a;
+      border-color: #17a34a;
+    }
+
+    .badge--danger {
+      background: rgba(220, 38, 38, 0.1);
+      color: #dc2626;
+      border-color: #dc2626;
+    }
+
+    .badge--warning {
+      background: rgba(234, 179, 8, 0.1);
+      color: #eab308;
+      border-color: #eab308;
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    /* ──── List Demo ──── */
+    .subsection-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin: var(--s-4) 0 var(--s-2) 0;
+    }
+
+    .component-list {
+      display: grid;
+      gap: var(--s-3);
+    }
+
+    .component-list__item {
+      padding: var(--s-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .component-list__item-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: var(--slate);
+    }
+
+    .component-list__item-value {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    /* ──── Folio ──── */
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-4) 0;
+      margin-top: var(--s-8);
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── Responsive ──── */
+    @media (max-width: 768px) {
+      .container {
+        padding: var(--s-4);
+      }
+
+      .stage-head__title {
+        font-size: 32px;
+      }
+
+      .section__title {
+        font-size: 24px;
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: var(--s-2);
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+
+      .demo-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .demo-row__label {
+        margin-bottom: var(--s-1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">Neutral Modern</div>
+      <div class="masthead__tagline">Design System<br>Components</div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Interactive vocabulary</h1>
+      <p class="stage-head__subtitle">A clean, functional set of patterns for product interfaces. Optimized for clarity and efficiency across all surfaces.</p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Buttons</div>
+      <h2 class="section__title">Button states</h2>
+      <p class="section__description">Three button variants with consistent sizing and clear interaction patterns.</p>
+
+      <div class="demo-group">
+        <div class="demo-row">
+          <span class="demo-row__label">Primary</span>
+          <button class="btn btn--primary">Get started</button>
+          <button class="btn btn--primary" disabled>Disabled</button>
+          <button class="btn btn--primary btn--sm">Small</button>
+          <button class="btn btn--primary btn--lg">Large</button>
+        </div>
+
+        <div class="demo-row">
+          <span class="demo-row__label">Secondary</span>
+          <button class="btn btn--secondary">View docs</button>
+          <button class="btn btn--secondary" disabled>Disabled</button>
+          <button class="btn btn--secondary btn--sm">Small</button>
+          <button class="btn btn--secondary btn--lg">Large</button>
+        </div>
+
+        <div class="demo-row">
+          <span class="demo-row__label">Ghost</span>
+          <a href="#" class="btn btn--ghost">Learn more</a>
+          <a href="#" class="btn btn--ghost">Documentation</a>
+          <a href="#" class="btn btn--ghost">Support</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Cards</div>
+      <h2 class="section__title">Card variants</h2>
+      <p class="section__description">Standard bordered cards and elevated variants with subtle shadows. Use for content containers and grouped information.</p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <h3 class="card__title">Standard card</h3>
+          <p class="card__body">Bordered card with no shadow. Default for most layouts and content grouping.</p>
+        </div>
+
+        <div class="card card--elevated">
+          <h3 class="card__title">Elevated card</h3>
+          <p class="card__body">Same structure with subtle 2px shadow. Use sparingly for floating elements or modals.</p>
+        </div>
+
+        <div class="card">
+          <h3 class="card__title">With controls</h3>
+          <p class="card__body">Cards pair well with buttons and forms for cohesive interaction patterns.</p>
+          <div style="display: flex; gap: var(--s-2); margin-top: var(--s-2);">
+            <button class="btn btn--primary btn--sm">Action</button>
+            <button class="btn btn--secondary btn--sm">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Input Fields Section -->
+    <section class="section">
+      <div class="section__kicker">Inputs</div>
+      <h2 class="section__title">Form inputs</h2>
+      <p class="section__description">Text inputs with clear states and consistent focus behavior. Blue accent on interaction.</p>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Text input (default)</label>
+          <input type="text" class="input" placeholder="Placeholder text">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Text input (focused)</label>
+          <input type="text" class="input" placeholder="Focus state" autofocus>
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Text input (disabled)</label>
+          <input type="text" class="input" placeholder="Disabled state" disabled>
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Email input</label>
+          <input type="email" class="input" placeholder="name@example.com">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Search input</label>
+          <input type="search" class="input" placeholder="Search...">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Password input</label>
+          <input type="password" class="input" placeholder="••••••••">
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="section">
+      <div class="section__kicker">Status indicators</div>
+      <h2 class="section__title">Badges and pills</h2>
+      <p class="section__description">Semantic status badges with color coding. Use for tags, statuses, and labels.</p>
+
+      <h3 class="subsection-label">Neutral and accent</h3>
+      <div class="badge-row">
+        <span class="badge">Default</span>
+        <span class="badge">Beta</span>
+        <span class="badge">New</span>
+        <span class="badge">Featured</span>
+      </div>
+
+      <h3 class="subsection-label">Signal (primary accent)</h3>
+      <div class="badge-row">
+        <span class="badge badge--signal">
+          <span class="badge__dot"></span>
+          Active
+        </span>
+        <span class="badge badge--signal">Pending</span>
+        <span class="badge badge--signal">Review</span>
+      </div>
+
+      <h3 class="subsection-label">Semantic colors</h3>
+      <div class="badge-row">
+        <span class="badge badge--success">
+          <span class="badge__dot"></span>
+          Success
+        </span>
+        <span class="badge badge--warning">
+          <span class="badge__dot"></span>
+          Warning
+        </span>
+        <span class="badge badge--danger">
+          <span class="badge__dot"></span>
+          Error
+        </span>
+      </div>
+    </section>
+
+    <!-- Component Scale Section -->
+    <section class="section">
+      <div class="section__kicker">Typography</div>
+      <h2 class="section__title">Font scale</h2>
+      <p class="section__description">Consistent sizing across display and body text. All using the system typeface.</p>
+
+      <div class="component-list">
+        <div class="component-list__item">
+          <span class="component-list__item-label">Display (H1)</span>
+          <h1 style="font-size: 48px; font-weight: 600; line-height: 1.2; margin: 0;">Heading level one</h1>
+        </div>
+        <div class="component-list__item">
+          <span class="component-list__item-label">Display (H2)</span>
+          <h2 style="font-size: 32px; font-weight: 600; line-height: 1.2; margin: 0;">Heading level two</h2>
+        </div>
+        <div class="component-list__item">
+          <span class="component-list__item-label">Display (H3)</span>
+          <h3 style="font-size: 24px; font-weight: 600; line-height: 1.2; margin: 0;">Heading level three</h3>
+        </div>
+        <div class="component-list__item">
+          <span class="component-list__item-label">Body (16px)</span>
+          <p style="font-size: 16px; font-weight: 400; line-height: 1.5; margin: 0;">Body text large. Comfortable reading measure for main content.</p>
+        </div>
+        <div class="component-list__item">
+          <span class="component-list__item-label">Body (14px)</span>
+          <p style="font-size: 14px; font-weight: 400; line-height: 1.5; margin: 0;">Body text regular. Default for inputs, cards, and secondary content.</p>
+        </div>
+        <div class="component-list__item">
+          <span class="component-list__item-label">Caption (12px)</span>
+          <p style="font-size: 12px; font-weight: 400; line-height: 1.5; margin: 0;">Caption text. Small labels, metadata, and supporting information.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Color Tokens Section -->
+    <section class="section">
+      <div class="section__kicker">Color palette</div>
+      <h2 class="section__title">Semantic colors</h2>
+      <p class="section__description">Seven-color palette with clear semantic roles. Never pure black or white.</p>
+
+      <div class="component-list">
+        <div class="component-list__item">
+          <div style="display: flex; align-items: center; gap: var(--s-3); flex: 1;">
+            <div style="width: 48px; height: 48px; background: var(--paper); border: 1px solid var(--border); border-radius: var(--radius-md);"></div>
+            <div>
+              <div class="component-list__item-label">Paper</div>
+              <div class="component-list__item-value">#ffffff</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="component-list__item">
+          <div style="display: flex; align-items: center; gap: var(--s-3); flex: 1;">
+            <div style="width: 48px; height: 48px; background: var(--ink); border-radius: var(--radius-md);"></div>
+            <div>
+              <div class="component-list__item-label">Ink</div>
+              <div class="component-list__item-value">#111111</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="component-list__item">
+          <div style="display: flex; align-items: center; gap: var(--s-3); flex: 1;">
+            <div style="width: 48px; height: 48px; background: var(--slate); border-radius: var(--radius-md);"></div>
+            <div>
+              <div class="component-list__item-label">Slate</div>
+              <div class="component-list__item-value">#666666</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="component-list__item">
+          <div style="display: flex; align-items: center; gap: var(--s-3); flex: 1;">
+            <div style="width: 48px; height: 48px; background: var(--signal); border-radius: var(--radius-md);"></div>
+            <div>
+              <div class="component-list__item-label">Signal (accent)</div>
+              <div class="component-list__item-value">#3b82f6</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="component-list__item">
+          <div style="display: flex; align-items: center; gap: var(--s-3); flex: 1;">
+            <div style="width: 48px; height: 48px; background: var(--bone); border: 1px solid var(--border); border-radius: var(--radius-md);"></div>
+            <div>
+              <div class="component-list__item-label">Bone (surface)</div>
+              <div class="component-list__item-value">#f5f5f5</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="component-list__item">
+          <div style="display: flex; align-items: center; gap: var(--s-3); flex: 1;">
+            <div style="width: 48px; height: 48px; background: var(--border); border-radius: var(--radius-md);"></div>
+            <div>
+              <div class="component-list__item-label">Border</div>
+              <div class="component-list__item-value">#e5e5e5</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="component-list__item">
+          <div style="display: flex; align-items: center; gap: var(--s-3); flex: 1;">
+            <div style="width: 48px; height: 48px; background: #17a34a; border-radius: var(--radius-md);"></div>
+            <div>
+              <div class="component-list__item-label">Success</div>
+              <div class="component-list__item-value">#17a34a</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Spacing Scale Section -->
+    <section class="section">
+      <div class="section__kicker">Spacing</div>
+      <h2 class="section__title">Scale and rhythm</h2>
+      <p class="section__description">8px base unit with exponential scale from 4px to 96px. Use for padding, gaps, and margins.</p>
+
+      <div class="component-list" style="max-width: 400px;">
+        <div class="component-list__item">
+          <span class="component-list__item-label">s-1</span>
+          <span class="component-list__item-value">4px</span>
+        </div>
+        <div class="component-list__item">
+          <span class="component-list__item-label">s-2</span>
+          <span class="component-list__item-value">8px</span>
+        </div>
+        <div class="component-list__item">
+          <span class="component-list__item-label">s-3</span>
+          <span class="component-list__item-value">16px</span>
+        </div>
+        <div class="component-list__item">
+          <span class="component-list__item-label">s-4</span>
+          <span class="component-list__item-value">24px</span>
+        </div>
+        <div class="component-list__item">
+          <span class="component-list__item-label">s-5</span>
+          <span class="component-list__item-value">32px</span>
+        </div>
+        <div class="component-list__item">
+          <span class="component-list__item-label">s-6</span>
+          <span class="component-list__item-value">48px</span>
+        </div>
+        <div class="component-list__item">
+          <span class="component-list__item-label">s-7</span>
+          <span class="component-list__item-value">64px</span>
+        </div>
+        <div class="component-list__item">
+          <span class="component-list__item-label">s-8</span>
+          <span class="component-list__item-value">96px</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Radii Section -->
+    <section class="section">
+      <div class="section__kicker">Borders</div>
+      <h2 class="section__title">Corner radius scale</h2>
+      <p class="section__description">Four radii values from sharp (none) to fully rounded. Applied consistently to buttons, inputs, and cards.</p>
+
+      <div class="component-list" style="max-width: 600px;">
+        <div class="component-list__item">
+          <div style="display: flex; align-items: center; gap: var(--s-3); flex: 1;">
+            <div style="width: 48px; height: 48px; background: var(--signal); border-radius: 0;"></div>
+            <div>
+              <div class="component-list__item-label">None (0)</div>
+              <div class="component-list__item-value">Sharp corners</div>
+            </div>
+          </div>
+        </div>
+        <div class="component-list__item">
+          <div style="display: flex; align-items: center; gap: var(--s-3); flex: 1;">
+            <div style="width: 48px; height: 48px; background: var(--signal); border-radius: var(--radius-sm);"></div>
+            <div>
+              <div class="component-list__item-label">Small (4px)</div>
+              <div class="component-list__item-value">Subtle softness</div>
+            </div>
+          </div>
+        </div>
+        <div class="component-list__item">
+          <div style="display: flex; align-items: center; gap: var(--s-3); flex: 1;">
+            <div style="width: 48px; height: 48px; background: var(--signal); border-radius: var(--radius-md);"></div>
+            <div>
+              <div class="component-list__item-label">Medium (8px)</div>
+              <div class="component-list__item-value">Default for controls</div>
+            </div>
+          </div>
+        </div>
+        <div class="component-list__item">
+          <div style="display: flex; align-items: center; gap: var(--s-3); flex: 1;">
+            <div style="width: 48px; height: 48px; background: var(--signal); border-radius: var(--radius-full);"></div>
+            <div>
+              <div class="component-list__item-label">Full (999px)</div>
+              <div class="component-list

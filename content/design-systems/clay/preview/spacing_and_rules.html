@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Clay</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #faf9f7);
+      color: var(--ink, #fc7981);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 96px 64px;
+    }
+
+    /* Header / Stage head */
+    .header {
+      margin-bottom: 96px;
+      position: relative;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'Space Mono', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.08px;
+      text-transform: uppercase;
+      color: var(--slate, #77736b);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 80px;
+      font-weight: 600;
+      line-height: 1.0;
+      letter-spacing: -3.2px;
+      color: var(--ink, #fc7981);
+      margin-bottom: 12px;
+      max-width: 90%;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--slate, #77736b);
+      max-width: 75%;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 120px;
+      height: 2px;
+      background: var(--signal, #84e7a5);
+      border: none;
+      margin-top: 24px;
+      border-radius: var(--radius-full, 1584px);
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 96px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, 'Space Mono', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.08px;
+      text-transform: uppercase;
+      color: var(--slate, #77736b);
+      margin-bottom: 48px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #dad4c8);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 140px 1fr 100px;
+      gap: 24px;
+      align-items: center;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border, #dad4c8);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, 'Space Mono', monospace);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink, #fc7981);
+    }
+
+    .spacing-row__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      color: var(--slate, #77736b);
+      margin-top: 4px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 40px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-row__bar {
+      height: 3px;
+      background: var(--signal, #84e7a5);
+      min-width: 2px;
+      border-radius: var(--radius-full, 1584px);
+      transition: opacity 0.2s ease;
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      opacity: 0.7;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, 'Space Mono', monospace);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink, #fc7981);
+      text-align: right;
+    }
+
+    /* Rule weights */
+    .rule-demo {
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border, #dad4c8);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 20px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-mono, 'Space Mono', monospace);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink, #fc7981);
+    }
+
+    .rule-demo__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      color: var(--slate, #77736b);
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, 'Space Mono', monospace);
+      font-size: 13px;
+      color: var(--slate, #77736b);
+    }
+
+    .rule-demo__container {
+      width: 100%;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      padding: 0;
+      background: var(--paper, #faf9f7);
+      border-radius: var(--radius-lg, 40px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    .rule-demo__solid {
+      background: var(--ink, #fc7981);
+      height: 100%;
+      border-radius: var(--radius-lg, 40px);
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 64px;
+      margin-bottom: 48px;
+    }
+
+    .radius-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 32px;
+      align-items: flex-start;
+    }
+
+    .radius-item__demo {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .radius-item__box {
+      width: 140px;
+      height: 140px;
+      background: var(--signal, #84e7a5);
+      border: 2px solid var(--ink, #fc7981);
+      flex-shrink: 0;
+      position: relative;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .radius-item__info {
+      flex: 1;
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, 'Space Mono', monospace);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink, #fc7981);
+      margin-bottom: 4px;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, 'Space Mono', monospace);
+      font-size: 13px;
+      color: var(--slate, #77736b);
+      margin-bottom: 12px;
+    }
+
+    .radius-item__description {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--slate, #77736b);
+    }
+
+    /* Philosophy block */
+    .philosophy {
+      background: var(--color-oat-light, #eee9df);
+      padding: 48px;
+      border: 1px solid var(--border, #dad4c8);
+      border-radius: var(--radius-lg, 40px);
+      margin-bottom: 64px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .philosophy__title {
+      font-family: var(--font-mono, 'Space Mono', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.08px;
+      text-transform: uppercase;
+      color: var(--slate, #77736b);
+      margin-bottom: 16px;
+    }
+
+    .philosophy__text {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--ink, #fc7981);
+    }
+
+    .philosophy__text strong {
+      font-weight: 600;
+    }
+
+    .philosophy__text em {
+      font-style: italic;
+    }
+
+    /* Color showcase */
+    .color-showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      margin-bottom: 96px;
+    }
+
+    .color-item {
+      border-radius: var(--radius-lg, 40px);
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border: 1px solid var(--border, #dad4c8);
+    }
+
+    .color-item__swatch {
+      width: 100%;
+      height: 120px;
+      position: relative;
+    }
+
+    .color-item__info {
+      padding: 16px;
+      background: var(--paper, #faf9f7);
+    }
+
+    .color-item__name {
+      font-family: var(--font-mono, 'Space Mono', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate, #77736b);
+      margin-bottom: 4px;
+    }
+
+    .color-item__hex {
+      font-family: var(--font-mono, 'Space Mono', monospace);
+      font-size: 12px;
+      color: var(--slate, #77736b);
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #77736b);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--signal, #84e7a5);
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 900px) {
+      .page {
+        padding: 64px 32px;
+      }
+
+      .header {
+        margin-bottom: 64px;
+      }
+
+      .header__title {
+        font-size: 54px;
+        letter-spacing: -2.16px;
+      }
+
+      .section {
+        margin-bottom: 64px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 100px 1fr 80px;
+        gap: 16px;
+      }
+
+      .radius-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .radius-item {
+        grid-template-columns: 120px 1fr;
+      }
+
+      .color-showcase {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': { value: '1px', label: 'hairline' },
+      's-2': { value: '2px', label: 'thin' },
+      's-3': { value: '4px', label: 'micro' },
+      's-4': { value: '6.4px', label: 'xs' },
+      's-5': { value: '8px', label: 'sm' },
+      's-6': { value: '12px', label: 'md' },
+      's-7': { value: '12.8px', label: 'md+' },
+      's-8': { value: '16px', label: 'lg' },
+      's-9': { value: '18px', label: 'lg+' },
+      's-10': { value: '20px', label: 'xl' },
+      's-11': { value: '24px', label: '2xl' }
+    };
+
+    const DEFAULT_RULES = {
+      'flat': { name: 'Flat', treatment: 'none', use: 'Page background, no depth' },
+      'border': { name: 'Border', treatment: '1px solid', use: 'Card edges, section dividers' },
+      'shadow-clay': { name: 'Clay Shadow', treatment: 'Multi-layer inset + cast', use: 'Cards, buttons — pressed-into-clay quality' },
+      'shadow-hover': { name: 'Hover Hard', treatment: '-7px 7px hard offset', use: 'Interactive hover state — playful, retro' }
+    };
+
+    const DEFAULT_RADIUS = {
+      'none': { value: '0', use: 'Sharp buttons, inputs' },
+      'sm': { value: '4px', use: 'Ghost buttons, compact inputs' },
+      'md': { value: '8px', use: 'Small cards, images, links' },
+      'lg': { value: '40px', use: 'Feature cards, sections, footer' },
+      'full': { value: '1584px', use: 'Pill-shaped CTAs, button containers' }
+    };
+
+    const DEFAULT_COLORS = {
+      'paper': { hex: '#faf9f7', label: 'Paper', desc: 'Warm cream canvas' },
+      'ink': { hex: '#fc7981', label: 'Ink (Signal)', desc: 'Pomegranate pink' },
+      'slate': { hex: '#77736b', label: 'Slate', desc: 'Text muted, secondary' },
+      'signal': { hex: '#84e7a5', label: 'Signal', desc: 'Matcha success green' },
+      'border': { hex: '#dad4c8', label: 'Border', desc: 'Oat-toned dividers' },
+      'matcha-600': { hex: '#078a52', label: 'Matcha 600', desc: 'Deep green' },
+      'slushie-500': { hex: '#3bd3fd', label: 'Slushie', desc: 'Cyan juice bar' },
+      'lemon-500': { hex: '#fbbd41', label: 'Lemon', desc: 'Warm gold' },
+      'ube-300': { hex: '#c1b0ff', label: 'Ube Light', desc: 'Purple gradient' },
+      'blueberry-800': { hex: '#01418d', label: 'Blueberry', desc: 'Deep navy' }
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#d08a11">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+
+      const spacing = {};
+      if (tokens.spacing?.scale) {
+        Object.entries(tokens.spacing.scale).forEach(([k, v]) => {
+          spacing[k] = { value: v, label: k };
+        });
+      } else {
+        Object.assign(spacing, DEFAULT_SPACING);
+      }
+
+      const rules = DEFAULT_RULES;
+      const radius = DEFAULT_RADIUS;
+      const colors = DEFAULT_COLORS;
+
+      let html = '';
+
+      /* Header / Stage head */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Spacing &amp; Rules</div>';
+      html += '  <h1 class="header__title">Craft-like<br>breathing room.</h1>';
+      html += '  <p class="header__subtitle">The spacing and depth system for Clay — where generous whitespace wraps around compact, craft-like content density. Everything rotates on hover.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Philosophy block */
+      html += '<div class="philosophy">';
+      html += '  <div class="philosophy__title">Whitespace Philosophy</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    <strong>Warm, generous breathing</strong>: The cream background (#faf9f7) provides a tactile rest between content blocks. Spacing feels inviting, like a well-set table. <strong>Color as spatial rhythm</strong>: Full-width swatch-colored sections (Matcha, Slushie, Lemon, Ube) create visual rhythm through hue rather than whitespace alone. Each color is its own "room." <strong>Craft-like density inside</strong>: Within cards, content is compact and well-organized, contrasting with generous outer spacing. <strong>The 8px base</strong>: Every interval — 4px, 8px, 12px, 16px, 24px — earns its place. No arbitrary gaps. Play. Rotate. Delight.';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Color showcase */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Named Swatch Palette</div>';
+      html += '  <div class="color-showcase">';
+
+      Object.entries(colors).forEach(([key, obj]) => {
+        html += '<div class="color-item">';
+        html += '  <div class="color-item__swatch" style="background: ' + esc(obj.hex) + '"></div>';
+        html += '  <div class="color-item__info">';
+        html += '    <div class="color-item__name">' + esc(obj.label) + '</div>';
+        html += '    <div class="color-item__hex">' + esc(obj.hex) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* Spacing scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale (8px Base)</div>';
+
+      const spacingEntries = Object.entries(spacing).sort((a, b) => parseFloat(a[1].value) - parseFloat(b[1].value));
+      const maxPx = Math.max(...spacingEntries.map(([, o]) => parseFloat(o.value) || 0), 1);
+
+      spacingEntries.forEach(([key, obj]) => {
+        const px = parseFloat(obj.value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        const label = obj.label || key;
+        
+        html += '<div class="spacing-row">';
+        html += '  <div>';
+        html += '    <div class="spacing-row__name">--' + esc(key) + '</div>';
+        html += '    <div class="spacing-row__label">' + esc(label) + '</div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(obj.value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Rule weights */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth &amp; Shadow System</div>';
+
+      html += '<div class="philosophy" style="background: var(--color-lemon-400, #f8cc65); border-color: var(--border, #dad4c8);">';
+      html += '  <div class="philosophy__title">No Rounded Corners on Shadows</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Clay\'s shadow system is three-layered: a downward cast (0px 1px 1px), an upward inset highlight (0px -1px inset), and a subtle edge (0px -0.5px). This creates a "pressed into clay" quality where elements feel both raised AND embedded — like a clay tablet where content is stamped into the surface. The hover hard shadow (-7px 7px) is deliberately retro-graphic, referencing print-era drop shadows. All elements rotate slightly on hover: rotateZ(-8deg) + translateY(-80%) + hard offset shadow.';
+      html += '  </div>';
+      html += '</div>';
+
+      Object.entries(rules).forEach(([key, rule]) => {
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <div>';
+        html += '      <div class="rule-demo__name">' + esc(rule.name) + '</div>';
+        html += '      <div class="rule-demo__label">' + esc(rule.use) + '</div>';
+        html += '    </div>';
+        html += '    <div class="rule-demo__spec">' + esc(rule.treatment) + '</div>';
+        html += '  </div>';
+        
+        if (rule.treatment === 'none') {
+          html += '  <div class="rule-demo__container" style="background: transparent; border: 1px dashed var(--border, #dad4c8); box-shadow: none;">';
+          html += '    <div style="font-family: var(--font-mono); font-size: 12px; color: var(--slate); margin: auto; text-align: center;">No shadow or border</div>';
+          html += '  </div>';
+        } else if (rule.treatment === '1px solid') {
+          html += '  <div class="rule-demo__container" style="border: 1px solid var(--border, #dad4c8); box-shadow: none; background: var(--paper, #faf9f7);">';
+          html += '  </div>';
+        } else if (rule.treatment === 'Multi-layer inset + cast') {
+          html += '  <div class="rule-demo__container" style="box-shadow: rgba(0,0,0,0.1) 0px 1px 1px, rgba(0,0,0,0.04) 0px -1px inset, rgba(0,0,0,0.05) 0px -0.5px;">';
+          html += '  </div>';
+        } else if (rule.treatment === '-7px 7px hard offset') {
+          html += '  <div class="rule-demo__container" style="box-shadow: rgb(0,0,0) -7px 7px; transform: translateY(-8px);">';
+          html += '  </div>';
+        }
+        
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Border radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius Scale</div>';
+
+      Object.entries(radius).forEach(([key, obj]) => {
+        const radiusValue = obj.value;
+
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__demo">';
+        html += '    <div class="radius-item__box" style="border-radius: ' + esc(radiusValue) + '"></div>';
+        html += '  </div>';
+        html += '  <div class="radius-item__info">';
+        html += '    <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '    <div class="radius-item__value">' + esc(radiusValue) + '</div>';
+        html += '    <div class="radius-item__description">' + esc(obj.use) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Hover behavior */
+      html += '<div class="philosophy" style="background: var(--color-slushie-500, #3bd3fd); border-color: var(--border, #dad4c8);">';
+      html += '  <div class="philosophy__title">Interactive Hover Behavior</div>';
+      html += '  <div class="philosophy__text">';
+      html += '    Buttons and interactive elements on hover: <strong>rotate slightly</strong> (rotateZ(-8deg)), <strong>translate upward</strong> (translateY(-80%)), <strong>change background to a contrasting swatch</strong> (Matcha, Slushie, Lemon, Ube, Blueberry), and <strong>cast a hard offset shadow</strong> (rgb(0,0,0) -7px 7px). This playful hover behavior — where an element literally tilts and jumps on interaction — creates a sense of physical delight. <em>Craft, not chrome.</em>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Grid info */
+      html += '<div class="section" style="margin-bottom: 0;">';
+      html += '  <div class="section__label">Grid &amp; Container Philosophy</div>';
+      html += '  <div class="philosophy">';
+      html += '    <div class="philosophy__title">Layout Structure</div>';
+      html += '    <div class="philosophy__text">';
+      html += '      <strong>Max content width centered</strong>: Feature sections alternate between white cards and colorful swatch backgrounds. Card grids are 2–3 columns on desktop. <strong>Full-width color sections break the grid</strong>: Matcha, Slushie, Lemon, Ube sections run edge-to-edge, creating dramatic depth through color contrast. <strong>Footer with generous radius</strong>: 40px border-radius container anchors the page. <strong>Card spacing</strong>: 24px padding inside cards, with 16px gap between card items in grids. <strong>Typography hierarchy</strong>: Display Hero (80px, -3.2px letter-spacing) headlines punch through color; Body text (18px, 1.6 line-height) reads at 62ch measure within white cards.';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

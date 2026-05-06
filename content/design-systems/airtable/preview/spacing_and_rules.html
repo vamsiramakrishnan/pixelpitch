@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Airtable Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Haas Groot Disp', system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #181d26);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 64px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid var(--border, #e0e2e6);
+    }
+    .header__title {
+      font-family: var(--font-display, 'Haas Groot Disp', system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--ink, #181d26);
+      margin-bottom: 16px;
+    }
+    .header__subtitle {
+      font-size: 18px;
+      letter-spacing: 0.18px;
+      color: var(--slate, #333333);
+      font-weight: 400;
+    }
+    .header__accent {
+      display: block;
+      width: 40px;
+      height: 3px;
+      background: var(--signal, #254fad);
+      border: none;
+      margin-top: 24px;
+      border-radius: 2px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 72px;
+    }
+    .section__label {
+      font-family: var(--font-body, 'Haas Groot Disp', system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.28px;
+      text-transform: uppercase;
+      color: var(--slate, #333333);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #e0e2e6);
+    }
+
+    /* Spacing scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 100px;
+      gap: 24px;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border, #e0e2e6);
+    }
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      color: var(--ink, #181d26);
+      font-weight: 500;
+      letter-spacing: 0.08px;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      background: var(--bone, #f8fafc);
+      border-radius: 4px;
+      padding: 0 8px;
+    }
+    .spacing-row__bar {
+      height: 4px;
+      background: var(--signal, #254fad);
+      border-radius: 2px;
+      min-width: 2px;
+      transition: all 0.2s ease;
+    }
+    .spacing-row:hover .spacing-row__bar {
+      height: 6px;
+      opacity: 0.9;
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      color: var(--slate, #333333);
+      text-align: right;
+      letter-spacing: 0.08px;
+    }
+
+    /* Role description */
+    .spacing-row__role {
+      font-size: 13px;
+      color: var(--slate, #333333);
+      letter-spacing: 0.16px;
+      margin-top: 4px;
+      grid-column: 1;
+    }
+
+    /* Rule weights */
+    .rule-demo {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border, #e0e2e6);
+    }
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+    }
+    .rule-demo__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink, #181d26);
+      letter-spacing: 0.08px;
+    }
+    .rule-demo__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      color: var(--slate, #333333);
+      letter-spacing: 0.08px;
+    }
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 1px;
+    }
+
+    /* Border radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 32px;
+    }
+    .radius-item {
+      text-align: center;
+    }
+    .radius-item__box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 140px;
+      margin: 0 auto 16px;
+      background: var(--bone, #f8fafc);
+      border: 2px solid var(--signal, #254fad);
+      opacity: 0.7;
+      transition: all 0.2s ease;
+    }
+    .radius-item:hover .radius-item__box {
+      opacity: 1;
+      transform: scale(1.02);
+    }
+    .radius-item__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink, #181d26);
+      margin-bottom: 4px;
+      letter-spacing: 0.08px;
+    }
+    .radius-item__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      color: var(--slate, #333333);
+      letter-spacing: 0.08px;
+    }
+
+    /* Depth / Shadow demos */
+    .depth-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 28px;
+    }
+    .depth-item {
+      padding: 28px 24px;
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e0e2e6);
+      border-radius: 8px;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    .depth-item--elevated {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .depth-item:hover {
+      transform: translateY(-2px);
+      border-color: var(--signal, #254fad);
+    }
+    .depth-item__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink, #181d26);
+      margin-bottom: 8px;
+      letter-spacing: 0.08px;
+    }
+    .depth-item__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #333333);
+      word-break: break-all;
+      letter-spacing: 0.04px;
+    }
+
+    /* Role callout */
+    .role-callout {
+      background: var(--bone, #f8fafc);
+      border-left: 3px solid var(--signal, #254fad);
+      padding: 20px 24px;
+      margin-bottom: 40px;
+      border-radius: 4px;
+    }
+    .role-callout__title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink, #181d26);
+      letter-spacing: 0.08px;
+      margin-bottom: 6px;
+    }
+    .role-callout__text {
+      font-size: 14px;
+      color: var(--slate, #333333);
+      letter-spacing: 0.16px;
+      line-height: 1.5;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #333333);
+      font-size: 16px;
+      letter-spacing: 0.16px;
+    }
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border, #e0e2e6);
+      border-top-color: var(--signal, #254fad);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 700px) {
+      .page { padding: 40px 20px; }
+      .spacing-row {
+        grid-template-columns: 100px 1fr 70px;
+        gap: 12px;
+      }
+      .radius-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 20px;
+      }
+      .depth-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    /* Default spacing scale */
+    const DEFAULT_SPACING = {
+      's-1': '4px',
+      's-2': '8px',
+      's-3': '16px',
+      's-4': '24px',
+      's-5': '32px',
+      's-6': '48px',
+      's-7': '64px',
+      's-8': '96px',
+    };
+
+    const SPACING_ROLES = {
+      's-1': 'Hairline gaps, micro-interactions',
+      's-2': 'Touch targets, tight spacing',
+      's-3': 'Controls, component padding',
+      's-4': 'Section spacing, medium gaps',
+      's-5': 'Feature spacing, prominent gaps',
+      's-6': 'Large sections, major grouping',
+      's-7': 'Page sections, hero spacing',
+      's-8': 'Full-screen spacing, max margins',
+    };
+
+    /* Default depth levels */
+    const DEFAULT_DEPTH = [
+      { name: 'Flat', level: 0, treatment: 'none' },
+      { name: 'Border', level: 1, treatment: '1px solid var(--border)' },
+      { name: 'Elevated', level: 2, treatment: '0 2px 8px rgba(0,0,0,0.08)' },
+    ];
+
+    /* Default border radius */
+    const DEFAULT_RADIUS = {
+      'none': '0',
+      'md': '8px',
+      'sm': '12px',
+      'lg': '24px',
+      'full': '999px',
+    };
+
+    ( window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json') )
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const systemName = tokens.meta?.title || tokens.title || 'Design System';
+
+      /* Load Google Fonts */
+      const gfUrl = tokens.googleFontsUrl || (tokens.fonts && tokens.fonts.googleUrl);
+      if (gfUrl) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = gfUrl;
+        document.head.appendChild(link);
+      }
+
+      const spacing = tokens.spacing?.scale || tokens.spacing || DEFAULT_SPACING;
+      const depthList = tokens.depth || DEFAULT_DEPTH;
+      const radius = tokens.radii || DEFAULT_RADIUS;
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Eight Pixels</h1>';
+      html += '  <p class="header__subtitle">Airtable's spacing, depth, and precision grid system.</p>';
+      html += '  <hr class="header__accent">';
+      html += '</header>';
+
+      /* ---- Spacing Philosophy ---- */
+      html += '<div class="role-callout">';
+      html += '  <div class="role-callout__title">Spacing Philosophy</div>';
+      html += '  <div class="role-callout__text">8px is the fundamental unit. All spacing follows multiples of this increment: 4, 8, 16, 24, 32, 48, 64, 96. This creates a predictable, scannable rhythm across all surfaces.</div>';
+      html += '</div>';
+
+      /* ---- Spacing scale ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, v]) => parseFloat(v) || 0), 1);
+
+      spacingEntries.forEach(([key, value]) => {
+        const px = parseFloat(value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        const role = SPACING_ROLES[key] || '';
+
+        html += '<div class="spacing-row">';
+        html += '  <div class="spacing-row__name">--' + esc(key) + '</div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(value) + '</div>';
+        if (role) {
+          html += '  <div class="spacing-row__role">' + esc(role) + '</div>';
+        }
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* ---- Depth / Rules ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth Levels</div>';
+
+      const depthArray = Array.isArray(depthList) ? depthList : Object.entries(depthList).map(([name, obj]) => ({ name, ...obj }));
+      depthArray.forEach(depth => {
+        const name = depth.name || depth.level || 'Unknown';
+        const treatment = depth.treatment || 'none';
+        const level = depth.level || 0;
+
+        /* Parse shadow/border from treatment string */
+        let demoHtml = '';
+        let demoClass = '';
+        if (treatment.includes('shadow')) {
+          demoClass = 'depth-item--elevated';
+        }
+
+        html += '<div class="rule-demo">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <span class="rule-demo__name">' + esc(String(name)) + '</span>';
+        html += '    <span class="rule-demo__spec">Level ' + level + '</span>';
+        html += '  </div>';
+        html += '  <div class="depth-item ' + demoClass + '" style="' + getTreatmentStyle(treatment) + '">';
+        html += '    <div class="depth-item__name">Preview</div>';
+        html += '    <div class="depth-item__spec">' + esc(treatment) + '</div>';
+        html += '  </div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* ---- Border radius ---- */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+      html += '  <div class="radius-grid">';
+
+      Object.entries(radius).forEach(([key, value]) => {
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__box" style="border-radius:' + esc(value) + '"></div>';
+        html += '  <div class="radius-item__name">--radius-' + esc(key) + '</div>';
+        html += '  <div class="radius-item__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function getTreatmentStyle(treatment) {
+      if (treatment === 'none') {
+        return 'background: var(--bone); border: 1px solid var(--border);';
+      } else if (treatment.includes('shadow')) {
+        /* Extract shadow value from string like "0 2px 8px rgba(...)" */
+        const match = treatment.match(/[\d\s\w(),.-]+$/);
+        if (match) {
+          return 'box-shadow: ' + match[0] + '; border: none;';
+        }
+      } else if (treatment.includes('solid') || treatment.includes('border')) {
+        return 'border: ' + treatment + '; background: var(--paper);';
+      }
+      return 'border: 1px solid var(--border);';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

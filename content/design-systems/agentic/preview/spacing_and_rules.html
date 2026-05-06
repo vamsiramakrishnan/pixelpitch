@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing &amp; Rules — Agentic</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* Header / Stage Head */
+    .header {
+      margin-bottom: 64px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 52px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+      color: var(--ink, #111111);
+      margin-bottom: 12px;
+    }
+
+    .header__subtitle {
+      font-size: 18px;
+      line-height: 1.4;
+      color: var(--slate, #666666);
+      font-weight: 400;
+      max-width: 620px;
+    }
+
+    .header__meta {
+      margin-top: 32px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border, #e5e5e5);
+      display: flex;
+      gap: 48px;
+      font-size: 13px;
+      font-family: var(--font-mono, ui-monospace, monospace);
+      color: var(--slate, #666666);
+    }
+
+    .header__meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .header__meta-label {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--slate, #666666);
+    }
+
+    .header__meta-value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      color: var(--ink, #111111);
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 64px;
+    }
+
+    .section__label {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    /* Spacing Scale */
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 90px;
+      gap: 20px;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .spacing-row:last-child {
+      border-bottom: none;
+    }
+
+    .spacing-row__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      letter-spacing: 0.02em;
+    }
+
+    .spacing-row__bar-wrap {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+
+    .spacing-row__bar {
+      height: 6px;
+      background: linear-gradient(90deg, var(--signal, #3b82f6) 0%, rgba(59, 130, 246, 0.5) 100%);
+      border-radius: 3px;
+      min-width: 2px;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(59, 130, 246, 0.12);
+    }
+
+    .spacing-row:hover .spacing-row__bar {
+      height: 8px;
+      box-shadow: 0 2px 6px rgba(59, 130, 246, 0.16);
+    }
+
+    .spacing-row__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--slate, #666666);
+      text-align: right;
+      letter-spacing: 0.01em;
+    }
+
+    /* Rule Weights / Depth */
+    .rule-demo {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .rule-demo:last-child {
+      border-bottom: none;
+    }
+
+    .rule-demo__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+      gap: 20px;
+    }
+
+    .rule-demo__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      letter-spacing: 0.02em;
+      flex-shrink: 0;
+    }
+
+    .rule-demo__spec {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .rule-demo__line {
+      width: 100%;
+      border: none;
+      border-radius: 1px;
+      display: block;
+      background: var(--border, #e5e5e5);
+    }
+
+    .rule-demo.flat .rule-demo__line {
+      display: none;
+    }
+
+    .rule-demo.flat .rule-demo__preview {
+      height: 120px;
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--slate, #666666);
+      font-size: 13px;
+    }
+
+    .rule-demo.elevated .rule-demo__line {
+      display: none;
+    }
+
+    .rule-demo.elevated .rule-demo__preview {
+      height: 120px;
+      background: var(--paper, #ffffff);
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--slate, #666666);
+      font-size: 13px;
+    }
+
+    .rule-demo.border .rule-demo__line {
+      height: 1px;
+      background: var(--border, #e5e5e5);
+      margin-bottom: 16px;
+    }
+
+    /* Border Radius */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 32px;
+    }
+
+    .radius-item {
+      text-align: center;
+      cursor: default;
+      transition: transform 0.2s ease;
+    }
+
+    .radius-item:hover {
+      transform: translateY(-2px);
+    }
+
+    .radius-item__box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 140px;
+      margin: 0 auto 16px;
+      background: var(--bone, #f5f5f5);
+      border: 2px solid var(--signal, #3b82f6);
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(59, 130, 246, 0.08);
+    }
+
+    .radius-item:hover .radius-item__box {
+      box-shadow: 0 2px 6px rgba(59, 130, 246, 0.16);
+      border-color: var(--signal, #3b82f6);
+    }
+
+    .radius-item__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      margin-bottom: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .radius-item__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--slate, #666666);
+    }
+
+    /* Component Specs */
+    .component-spec {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 20px;
+      background: var(--bone, #f5f5f5);
+      border-radius: var(--radius-md, 8px);
+      border: 1px solid var(--border, #e5e5e5);
+      margin-bottom: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .component-spec:hover {
+      border-color: var(--signal, #3b82f6);
+      background: rgba(59, 130, 246, 0.02);
+    }
+
+    .component-spec__name {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      margin-bottom: 4px;
+    }
+
+    .component-spec__value {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 13px;
+      color: var(--slate, #666666);
+      word-break: break-all;
+    }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #666666);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 24px auto 0;
+      border: 3px solid var(--border, #e5e5e5);
+      border-top-color: var(--signal, #3b82f6);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 48px 20px;
+      }
+
+      .header__title {
+        font-size: 40px;
+      }
+
+      .spacing-row {
+        grid-template-columns: 100px 1fr 70px;
+        gap: 12px;
+      }
+
+      .radius-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 24px;
+      }
+
+      .component-spec {
+        grid-template-columns: 1fr;
+      }
+
+      .header__meta {
+        flex-direction: column;
+        gap: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const DEFAULT_SPACING = {
+      's-1': '4px',
+      's-2': '8px',
+      's-3': '16px',
+      's-4': '24px',
+      's-5': '32px',
+      's-6': '48px',
+      's-7': '64px',
+      's-8': '96px',
+    };
+
+    const DEFAULT_RADII = {
+      'none': '0',
+      'sm':   '4px',
+      'md':   '8px',
+      'lg':   '16px',
+      'full': '999px',
+    };
+
+    const DEFAULT_DEPTH = [
+      { level: 0, name: 'Flat', treatment: 'none' },
+      { level: 1, name: 'Border', treatment: '1px solid var(--border)' },
+      { level: 2, name: 'Elevated', treatment: '0 2px 8px rgba(0,0,0,0.08)' },
+    ];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#dc2626">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const systemName = tokens.meta?.title || tokens.meta?.id || 'Design System';
+      const systemSummary = tokens.meta?.summary || 'Spacing, rules, and depth tokens.';
+      const systemCategory = tokens.meta?.category || 'Design System';
+
+      const spacing = tokens.spacing?.scale || DEFAULT_SPACING;
+      const radii = tokens.radii || DEFAULT_RADII;
+      const depth = tokens.depth || DEFAULT_DEPTH;
+      const components = tokens.components || {};
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <h1 class="header__title">Eight pixels.<br>One system.</h1>';
+      html += '  <p class="header__subtitle">' + esc(systemSummary) + '</p>';
+      html += '  <div class="header__meta">';
+      html += '    <div class="header__meta-item">';
+      html += '      <span class="header__meta-label">System</span>';
+      html += '      <span class="header__meta-value">' + esc(systemName) + '</span>';
+      html += '    </div>';
+      html += '    <div class="header__meta-item">';
+      html += '      <span class="header__meta-label">Category</span>';
+      html += '      <span class="header__meta-value">' + esc(systemCategory) + '</span>';
+      html += '    </div>';
+      html += '    <div class="header__meta-item">';
+      html += '      <span class="header__meta-label">Base Unit</span>';
+      html += '      <span class="header__meta-value">8px</span>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</header>';
+
+      /* Spacing Scale */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Spacing Scale</div>';
+
+      const spacingEntries = Object.entries(spacing);
+      const maxPx = Math.max(...spacingEntries.map(([, v]) => parseFloat(v) || 0), 1);
+
+      spacingEntries.forEach(([key, value]) => {
+        const px = parseFloat(value) || 0;
+        const pct = Math.max((px / maxPx) * 100, 2);
+        html += '<div class="spacing-row">';
+        html += '  <div class="spacing-row__name">' + esc(key) + '</div>';
+        html += '  <div class="spacing-row__bar-wrap">';
+        html += '    <div class="spacing-row__bar" style="width:' + pct + '%"></div>';
+        html += '  </div>';
+        html += '  <div class="spacing-row__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Depth / Rules */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Depth &amp; Elevation</div>';
+
+      depth.forEach((d) => {
+        const depthClass = d.name.toLowerCase().replace(/\s+/g, '-');
+        const treatment = d.treatment || 'none';
+
+        html += '<div class="rule-demo ' + depthClass + '">';
+        html += '  <div class="rule-demo__header">';
+        html += '    <span class="rule-demo__name">' + esc(d.name) + '</span>';
+        html += '    <span class="rule-demo__spec">' + esc(treatment) + '</span>';
+        html += '  </div>';
+
+        if (treatment === 'none') {
+          html += '  <div class="rule-demo__preview">No shadow or border</div>';
+        } else if (treatment.includes('solid')) {
+          html += '  <hr class="rule-demo__line">';
+        } else if (treatment.includes('rgba')) {
+          html += '  <div class="rule-demo__preview"></div>';
+        }
+
+        html += '</div>';
+      });
+
+      html += '</div>';
+
+      /* Border Radius */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Border Radius</div>';
+      html += '  <div class="radius-grid">';
+
+      Object.entries(radii).forEach(([key, value]) => {
+        html += '<div class="radius-item">';
+        html += '  <div class="radius-item__box" style="border-radius:' + esc(value) + '"></div>';
+        html += '  <div class="radius-item__name">' + esc(key) + '</div>';
+        html += '  <div class="radius-item__value">' + esc(value) + '</div>';
+        html += '</div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* Component Specs */
+      if (Object.keys(components).length > 0) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Component Specifications</div>';
+
+        Object.entries(components).forEach(([key, value]) => {
+          html += '<div class="component-spec">';
+          html += '  <div>';
+          html += '    <div class="component-spec__name">' + esc(key) + '</div>';
+          html += '    <div class="component-spec__value">' + esc(String(value)) + '</div>';
+          html += '  </div>';
+          html += '</div>';
+        });
+
+        html += '</div>';
+      }
+
+      app.innerHTML = html;
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

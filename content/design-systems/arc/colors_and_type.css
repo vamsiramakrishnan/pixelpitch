@@ -1,0 +1,88 @@
+/* Arc Browser — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #1a1a1f;
+  --slate:   #54545a;
+  --signal:  #b794f4;
+  --bone:    #f5f5f5;
+  --border:  #e5e5e5;
+  --surface: #1a1a1f;
+
+  /* Extended palette */
+  --color-sunset-start: #ff7e5f;
+  --color-sunset-end: #feb47b;
+  --color-twilight-start: #7f5af0;
+  --color-twilight-end: #e84393;
+  --color-aurora-start: #16f2b3;
+  --color-aurora-end: #0db4f7;
+  --color-ink-muted: #8c8c93;
+  --color-ink-inverse: #fafafa;
+  --color-arc-coral: #ff5f5f;
+  --color-success: #48bb78;
+  --color-warning: #f6ad55;
+  --color-error: #f56565;
+
+  /* Semantic */
+  --success: #48bb78;
+  --warning: #f6ad55;
+  --danger:  #f56565;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-marketing-hero: 72px;
+  --t-section-heading: 40px;
+  --t-page-h1: 32px;
+  --t-page-h2: 22px;
+  --t-tab-title: 13px;
+  --t-body: 15px;
+  --t-caption: 12px;
+  --t-code: 13px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   16px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  8px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    8px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

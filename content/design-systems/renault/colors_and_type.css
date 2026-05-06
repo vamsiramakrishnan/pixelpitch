@@ -1,0 +1,95 @@
+/* Renault — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #efdf00;
+  --ink:     #efdf00;
+  --slate:   #666666;
+  --signal:  #1883fd;
+  --bone:    #777774;
+  --border:  #777774;
+  --surface: #f2f2f2;
+
+  /* Extended palette */
+  --color-absolute-black: #000000;
+  --color-pure-white: #ffffff;
+  --color-soft-yellow: #f8eb4c;
+  --color-charcoal: #222222;
+  --color-border-gray: #d1d1d1;
+  --color-success-green: #8dc572;
+  --color-error-rose: #be6464;
+  --color-warning-amber: #f0ad4e;
+  --color-info-blue: #337ab7;
+
+  /* Semantic */
+  --success: #8dc572;
+  --warning: #be6464;
+  --danger:  #be6464;
+  --info:    #337ab7;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-hero-title: 56px;
+  --t-section-heading: 40px;
+  --t-card-heading: 32px;
+  --t-subheading: 24px;
+  --t-module-title: 21.92px;
+  --t-content-title: 20px;
+  --t-ui-heading: 19.2px;
+  --t-emphasis: 18px;
+  --t-body-heading: 16px;
+  --t-body-text: 14px;
+  --t-body-bold: 14px;
+  --t-button-label: 14.4px;
+  --t-nav-link: 13px;
+  --t-caption: 12.8px;
+  --t-small-label: 12px;
+  --t-micro-text: 10px;
+  --t-micro-caption: 8.5px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   5px;
+  --radius-md:   10px;
+  --radius-lg:   80px;
+  --radius-full: 40px;
+
+  /* ── Components ── */
+  --button-radius:  10px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    10px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

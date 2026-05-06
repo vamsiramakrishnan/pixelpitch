@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Clay</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #faf9f7);
+      color: var(--ink, #fc7981);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 80px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.08px;
+      text-transform: uppercase;
+      color: var(--slate, #77736b);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 80px;
+      font-weight: 600;
+      line-height: 1.0;
+      letter-spacing: -3.2px;
+      color: var(--ink, #fc7981);
+      margin-bottom: 20px;
+      font-feature-settings: "ss01", "ss03", "ss10", "ss11", "ss12";
+    }
+
+    .header__title span {
+      color: var(--signal, #84e7a5);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--slate, #77736b);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 120px;
+      height: 2px;
+      background: var(--ink, #fc7981);
+      border: none;
+      margin-top: 32px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section__label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.08px;
+      text-transform: uppercase;
+      color: var(--slate, #77736b);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--ink, #fc7981);
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 24px 0 24px 32px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--ink, #fc7981);
+      border-bottom: 1px dashed var(--border, #dad4c8);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 28px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--signal, #84e7a5);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--paper, #faf9f7);
+      border: 2px solid var(--border, #dad4c8);
+      border-radius: var(--radius-lg, 40px);
+      padding: 40px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.08px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--signal, #84e7a5);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--ink, #fc7981);
+    }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--signal, #84e7a5);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--ink, #fc7981);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--ink, #fc7981);
+      padding: 12px 0;
+      border-bottom: 1px dashed var(--border, #dad4c8);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: var(--radius-lg, 40px);
+      overflow: hidden;
+      height: 140px;
+      border: 2px solid var(--border, #dad4c8);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: default;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 16px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.5;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, 'Space Mono', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--paper, #faf9f7);
+      border: 2px solid var(--border, #dad4c8);
+      border-radius: var(--radius-lg, 40px);
+      padding: 48px 40px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.08px;
+      text-transform: uppercase;
+      color: var(--slate, #77736b);
+      margin-bottom: 16px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 60px;
+      font-weight: 600;
+      line-height: 1.0;
+      letter-spacing: -2.4px;
+      color: var(--ink, #fc7981);
+      margin-bottom: 24px;
+      font-feature-settings: "ss01", "ss03", "ss10", "ss11", "ss12";
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #84e7a5);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--ink, #fc7981);
+      max-width: 720px;
+      margin-bottom: 32px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 20px;
+      border-top: 2px dashed var(--border, #dad4c8);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--slate, #77736b);
+      line-height: 1.5;
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--ink, #fc7981);
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      letter-spacing: 1.08px;
+      text-transform: uppercase;
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--signal, #84e7a5);
+      border: 2px solid var(--border, #dad4c8);
+      border-radius: var(--radius-lg, 40px);
+      padding: 40px;
+      max-width: 920px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: #02492a;
+    }
+
+    /* ──── Hover Animation Demo ──── */
+    .hover-demo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .hover-demo-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .hover-demo-card {
+      background: var(--paper, #faf9f7);
+      border: 2px solid var(--border, #dad4c8);
+      border-radius: var(--radius-lg, 40px);
+      padding: 32px;
+      text-align: center;
+      position: relative;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hover-demo-btn {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: -0.16px;
+      padding: 10px 20px;
+      border: 2px solid var(--ink, #fc7981);
+      border-radius: var(--button-radius, 8px);
+      background: var(--ink, #fc7981);
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      transform-origin: center bottom;
+    }
+
+    .hover-demo-btn:hover {
+      transform: rotateZ(-8deg) translateY(-8px);
+      box-shadow: -7px 7px 0 rgba(0,0,0,0.12);
+    }
+
+    .hover-demo-label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.08px;
+      text-transform: uppercase;
+      color: var(--slate, #77736b);
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    /* ──── Swatch Palette Grid ──── */
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .palette-swatch {
+      border-radius: var(--radius-lg, 40px);
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 16px;
+      border: 2px solid var(--border, #dad4c8);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .palette-swatch:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .palette-swatch__name {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.08px;
+      text-transform: uppercase;
+      color: rgba(0,0,0,0.6);
+    }
+
+    .palette-swatch__hex {
+      font-family: var(--font-mono, 'Space Mono', monospace);
+      font-size: 11px;
+      font-weight: 400;
+      color: rgba(0,0,0,0.5);
+      margin-top: 2px;
+    }
+
+    /* ──── Type Ramp Section ──── */
+    .type-ramp-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      border: 2px solid var(--border, #dad4c8);
+      border-radius: var(--radius-lg, 40px);
+      overflow: hidden;
+      background: var(--paper, #faf9f7);
+    }
+
+    .type-ramp-item {
+      padding: 28px 32px;
+      border-bottom: 1px dashed var(--border, #dad4c8);
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+    }
+
+    .type-ramp-item:last-child {
+      border-bottom: none;
+    }
+
+    .type-ramp-item__meta {
+      flex: 0 0 180px;
+    }
+
+    .type-ramp-item__meta-label {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.08px;
+      text-transform: uppercase;
+      color: var(--slate, #77736b);
+      margin-bottom: 4px;
+    }
+
+    .type-ramp-item__meta-detail {
+      font-family: var(--font-mono, 'Space Mono', monospace);
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--slate, #77736b);
+      line-height: 1.6;
+    }
+
+    .type-ramp-item__sample {
+      flex: 1;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--ink, #fc7981);
+    }
+
+    .type-ramp-item__sample--display {
+      font-feature-settings: "ss01", "ss03", "ss10", "ss11", "ss12";
+      font-weight: 600;
+      letter-spacing: -0.4px;
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #77736b);
+      font-size: 18px;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--border, #dad4c8);
+      border-top-color: var(--signal, #84e7a5);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'ink', 'slate', 'signal', 'bone', 'border'];
+    const EXTENDED_COLORS = {
+      'matcha': '#078a52',
+      'slushie': '#3bd3fd',
+      'lemon': '#fbbd41',
+      'ube': '#c1b0ff',
+      'pomegranate': '#fc7981',
+      'blueberry': '#01418d',
+      'dragonfruit': '#ff1b6d'
+    };
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#fc7981">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">The <span>Craft</span> of Clay</h1>';
+      html += '  <p class="header__subtitle">Warm cream canvas, playful interactions, and a named swatch palette that feels like a juice bar. Every color, every curve, every hover tells you this was made by people who love making things.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Clay trades clinical UI for artisanal warmth. The warm cream canvas (#FAF9F7) feels like handmade paper. Oat-toned borders (#DAD4C8) frame every surface. The swatch palette — Matcha, Slushie, Lemon, Ube, Blueberry — reads like a juice menu, not an enterprise palette. Roobert headlines use five OpenType stylistic sets that give the text a distinctive, slightly quirky geometry. On hover, buttons rotate (-8deg), jump up (-80% translateY), and cast a hard offset shadow. This playfulness is the signature move — it says "we enjoy making this too."</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Warm cream canvas (#FAF9F7) evoking handmade paper, not clinical screens</li>';
+      html += '    <li>Oat-toned borders (#DAD4C8) for a warm, tactile perimeter</li>';
+      html += '    <li>Named swatch palette: Matcha, Slushie, Lemon, Ube, Pomegranate, Blueberry, Dragonfruit</li>';
+      html += '    <li>Roobert font with 5 OpenType stylistic sets (ss01, ss03, ss10, ss11, ss12) — quirky geometry</li>';
+      html += '    <li>Space Mono for code and technical labels — craft meets tech duality</li>';
+      html += '    <li>Playful hover animations: rotateZ(-8deg) + translateY(-80%) + hard offset shadow</li>';
+      html += '    <li>Generous border radius: 24px cards, 40px sections, 1584px pills</li>';
+      html += '    <li>Mixed border styles: solid + dashed borders in the same interface</li>';
+      html += '    <li>Multi-layer shadow system with inset highlights and hard offsets</li>';
+      html += '    <li>Weight 600 for headlines, 500 for UI elements, 400 for body text</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use warm cream (#FAF9F7) as the page background — the warmth is identity</li>';
+      html += '      <li>Apply all 5 OpenType stylistic sets on Roobert headings</li>';
+      html += '      <li>Use the named swatch palette for section backgrounds and accents</li>';
+      html += '      <li>Apply playful hover: rotateZ(-8deg) + translateY(-80%) + hard shadow</li>';
+      html += '      <li>Use warm oat borders (#DAD4C8) — never neutral gray</li>';
+      html += '      <li>Mix solid and dashed borders for visual variety</li>';
+      html += '      <li>Use generous radius: 24px cards, 40px sections, 1584px pills</li>';
+      html += '      <li>Use weight 600 for headings, 500 for UI, 400 for body</li>';
+      html += '      <li>Write uppercase labels with 1.08px tracking for wayfinding</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Don\'t use cool gray backgrounds — warm cream is non-negotiable</li>';
+      html += '      <li>Don\'t use neutral gray borders (#ccc, #ddd) — use warm oat tones</li>';
+      html += '      <li>Don\'t mix more than 2 swatch colors in the same section</li>';
+      html += '      <li>Don\'t skip the OpenType stylistic sets — they define Roobert</li>';
+      html += '      <li>Don\'t use subtle hover effects — rotation + hard shadow is signature</li>';
+      html += '      <li>Don\'t use small border radius (<12px) — generous rounding is structural</li>';
+      html += '      <li>Don\'t use standard blur-based shadows — use hard offset + inset</li>';
+      html += '      <li>Don\'t forget uppercase labels with 1.08px tracking</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Hover Animation Demo ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Hover Animation: The Signature Move</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.6; color: var(--slate); margin-bottom: 24px; max-width: 920px;">Buttons on hover rotate slightly (rotateZ -8deg), translate upward (translateY -80%), change background to a contrasting swatch, and cast a hard offset shadow (rgb(0,0,0) -7px 7px). This playful physical delight is what makes Clay feel alive.</p>';
+      html += '  <div class="hover-demo-grid">';
+
+      html += '    <div class="hover-demo-card">';
+      html += '      <div class="hover-demo-label">Hover to interact</div>';
+      html += '      <button class="hover-demo-btn" style="background: ' + esc('#078a52') + '; border-color: ' + esc('#078a52') + ';">Matcha Button</button>';
+      html += '    </div>';
+
+      html += '    <div class="hover-demo-card">';
+      html += '      <div class="hover-demo-label">Playful rotation</div>';
+      html += '      <button class="hover-demo-btn" style="background: ' + esc('#3bd3fd') + '; border-color: ' + esc('#3bd3fd') + ';">Slushie Button</button>';
+      html += '    </div>';
+
+      html += '    <div class="hover-demo-card">';
+      html += '      <div class="hover-demo-label">Hard offset shadow</div>';
+      html += '      <button class="hover-demo-btn" style="background: ' + esc('#fbbd41') + '; border-color: ' + esc('#fbbd41') + '; color: #333;">Lemon Button</button>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Core Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#333333' : '#faf9f7';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Named Swatch Palette ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Named Swatch Palette</div>';
+      html += '  <p style="font-family: var(--font-body); font-size: 16px; line-height: 1.6; color: var(--ink); margin-bottom: 24px; max-width: 920px;">Seven named colors, each with personality. The palette reads like a juice bar menu — Matcha, Slushie, Lemon, Ube, Pomegranate, Blueberry, Dragonfruit. Use these for section backgrounds, accent highlights, and data visualization. Never more than 2 in the same section.</p>';
+      html += '  <div class="palette-grid">';
+
+      Object.entries(EXTENDED_COLORS).forEach(([name, hex]) => {
+        html += '    <div class="palette-swatch" style="background: ' + esc(hex) + ';">';
+        html += '      <div class="palette-swatch__name">' + esc(name) + '</div>';
+        html += '      <div class="palette-swatch__hex">' + esc(hex) + '</div>';
+        html += '    </div>';
+      });
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Typography Pairing ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Roobert + Space Mono</div>';
+      html += '    <div class="type-pairing__display">Tight headlines, <span>open body</span></div>';
+
+      html += '    <div class="type-pairing__body">Roobert headlines use aggressive negative letter-spacing and five OpenType stylistic sets that compress text into punchy, billboard-like statements. Body text in Roobert opens to 1.4–1.6 line height for readability. Space Mono serves code and technical labels. The pairing is geometric-meets-organic — quirky geometry paired with human warmth.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Display Font</span>';
+      html += '        Roobert, 600

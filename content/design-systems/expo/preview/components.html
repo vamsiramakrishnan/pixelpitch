@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expo — Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: var(--s-9) var(--s-6);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--s-6);
+      margin-bottom: var(--s-12);
+      border-bottom: 1px solid var(--slate);
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .masthead__logo {
+      font-family: var(--font-body);
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-13);
+      padding-bottom: var(--s-9);
+      border-bottom: 1px solid var(--slate);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-4);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-body);
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -1.6px;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: var(--s-6);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate);
+      max-width: 800px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-14);
+      padding-bottom: var(--s-12);
+      border-bottom: 1px solid var(--slate);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: var(--s-5);
+    }
+
+    .section__title {
+      font-family: var(--font-body);
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: var(--s-8);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-5);
+      align-items: center;
+      margin-bottom: var(--s-7);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-5);
+      align-items: center;
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-7);
+      border-bottom: 1px solid var(--color-border-lavender);
+    }
+
+    .button-row:last-of-type {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate);
+      min-width: 160px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 0;
+      line-height: 1.25;
+      border: 1px solid var(--color-input-border);
+      background: var(--surface);
+      color: var(--ink);
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      gap: var(--s-3);
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      border-color: var(--ink);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn--primary {
+      background: var(--ink);
+      color: var(--surface);
+      border-color: var(--ink);
+    }
+
+    .btn--primary:hover {
+      background: var(--bone);
+      border-color: var(--bone);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn--pill {
+      border-radius: var(--radius-full);
+      padding: var(--button-py) 24px;
+    }
+
+    .btn--ghost {
+      border: none;
+      background: transparent;
+      color: var(--ink);
+      padding: 0;
+      text-decoration: underline;
+      text-decoration-color: var(--slate);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      letter-spacing: 0;
+    }
+
+    .btn--ghost:hover {
+      text-decoration-color: var(--ink);
+      opacity: 0.8;
+    }
+
+    .btn--sm {
+      padding: 6px 14px;
+      font-size: 14px;
+    }
+
+    .btn--lg {
+      padding: 14px 32px;
+      font-size: 18px;
+    }
+
+    /* ──── STATUS BADGE ──── */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-3);
+      padding: var(--s-4) var(--s-6);
+      background: var(--surface);
+      border: 1px solid var(--color-border-lavender);
+      border-radius: var(--radius-full);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .status-badge__dot {
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* ──── CARDS ──── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--color-border-lavender);
+      border-radius: 8px;
+      padding: var(--s-6);
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--border);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .card--elevated {
+      border: none;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .card--featured {
+      border-radius: 24px;
+      padding: var(--s-8);
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-8);
+      margin-bottom: var(--s-8);
+    }
+
+    /* ──── INPUTS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-7);
+      margin-bottom: var(--s-8);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-3);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .input {
+      padding: 10px 14px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.25;
+      color: var(--ink);
+      background: var(--surface);
+      border: 1px solid var(--color-input-border);
+      border-radius: var(--button-radius);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      box-shadow: 0 0 0 3px rgba(71, 194, 255, 0.1);
+    }
+
+    /* ──── BADGES / TAGS ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-4);
+      margin-bottom: var(--s-7);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      line-height: 1;
+      border-radius: var(--radius-full);
+      background: var(--color-border-lavender);
+      color: var(--ink);
+    }
+
+    .badge--signal {
+      background: rgba(71, 194, 255, 0.15);
+      color: var(--color-link-cobalt);
+    }
+
+    .badge--success {
+      background: rgba(34, 197, 94, 0.15);
+      color: #16a34a;
+    }
+
+    .badge--warning {
+      background: rgba(171, 100, 0, 0.15);
+      color: var(--warning);
+    }
+
+    .badge--danger {
+      background: rgba(235, 142, 144, 0.15);
+      color: var(--danger);
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    /* ──── TYPOGRAPHY SHOWCASE ──── */
+    .type-row {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-7);
+      border-bottom: 1px solid var(--color-border-lavender);
+    }
+
+    .type-row:last-child {
+      border-bottom: none;
+    }
+
+    .type-row__label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate);
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .type-row__sample {
+      font-size: inherit;
+      line-height: inherit;
+      letter-spacing: inherit;
+      color: var(--ink);
+    }
+
+    /* ──── FORM SHOWCASE ──── */
+    .form-demo {
+      background: var(--surface);
+      border: 1px solid var(--color-border-lavender);
+      border-radius: 8px;
+      padding: var(--s-7);
+      margin-bottom: var(--s-8);
+    }
+
+    .form-demo__title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: var(--s-6);
+    }
+
+    .form-fields {
+      display: grid;
+      gap: var(--s-6);
+      margin-bottom: var(--s-7);
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .form-field__label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .form-field__helper {
+      font-size: 12px;
+      color: var(--slate);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: var(--s-4);
+    }
+
+    /* ──── UTILITY ──── */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate);
+      margin-bottom: var(--s-4);
+      margin-top: var(--s-6);
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--color-border-lavender);
+      margin: var(--s-9) 0;
+    }
+
+    .code-sample {
+      background: var(--color-widget-dark);
+      border: 1px solid var(--color-banner-dark);
+      border-radius: 8px;
+      padding: var(--s-5);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--signal);
+      line-height: 1.6;
+      overflow-x: auto;
+      margin: var(--s-5) 0;
+    }
+
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-6) 0;
+      margin-top: var(--s-12);
+      border-top: 1px solid var(--slate);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── COMPONENT SHOWCASE GRID ──── */
+    .component-showcase {
+      background: var(--surface);
+      border: 1px solid var(--color-border-lavender);
+      border-radius: 8px;
+      padding: var(--s-7);
+      margin-bottom: var(--s-8);
+    }
+
+    .component-showcase__title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: var(--s-5);
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .component-showcase__content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-5);
+      align-items: center;
+    }
+
+    /* ──── RESPONSIVE ──── */
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-6) var(--s-4);
+      }
+
+      .stage-head__title {
+        font-size: 40px;
+        letter-spacing: -1.2px;
+      }
+
+      .section__title {
+        font-size: 32px;
+        letter-spacing: -1.2px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .masthead {
+        flex-direction: column;
+        gap: var(--s-4);
+        align-items: flex-start;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+      }
+
+      .button-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .button-row__label {
+        min-width: auto;
+      }
+
+      .folio {
+        flex-direction: column;
+        gap: var(--s-4);
+        text-align: left;
+      }
+
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">Expo</div>
+      <div class="masthead__tagline">Design System<br>Components</div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Interface Patterns</h1>
+      <p class="stage-head__subtitle">
+        The Expo component library provides the foundational building blocks for developer-focused interfaces. Each component is crafted for clarity, accessibility, and the premium feel that sets developer tools apart.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Buttons</div>
+      <h2 class="section__title">Button States</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Default (White)</span>
+        <button class="btn">Button</button>
+        <button class="btn btn--sm">Small</button>
+        <button class="btn btn--lg">Large Button</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary (Black)</span>
+        <button class="btn btn--primary">Get Started</button>
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary btn--lg">Primary Action</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Pill Buttons (Hero CTAs)</span>
+        <button class="btn btn--pill">Learn More</button>
+        <button class="btn btn--primary btn--pill">Start Building</button>
+        <button class="btn btn--pill btn--lg">Explore Documentation</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Ghost (Text Link)</span>
+        <a href="#" class="btn btn--ghost">View guides</a>
+        <a href="#" class="btn btn--ghost">Read docs</a>
+        <a href="#" class="btn btn--ghost">See examples</a>
+      </div>
+    </section>
+
+    <!-- Status Badge Section -->
+    <section class="section">
+      <div class="section__kicker">Indicators</div>
+      <h2 class="section__title">Status Badges</h2>
+
+      <div class="subsection-label">Operational Status</div>
+      <div class="badge-row">
+        <div class="status-badge">
+          <span class="status-badge__dot"></span>
+          All Systems Operational
+        </div>
+      </div>
+
+      <div class="subsection-label">Tag Variants</div>
+      <div class="badge-row">
+        <span class="badge">Default</span>
+        <span class="badge badge--signal">
+          <span class="badge__dot"></span>
+          Active
+        </span>
+        <span class="badge badge--success">
+          <span class="badge__dot"></span>
+          Success
+        </span>
+        <span class="badge badge--warning">
+          <span class="badge__dot"></span>
+          Warning
+        </span>
+        <span class="badge badge--danger">
+          <span class="badge__dot"></span>
+          Danger
+        </span>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Containers</div>
+      <h2 class="section__title">Card Patterns</h2>
+
+      <div class="subsection-label">Standard Card</div>
+      <div class="cards-grid">
+        <div class="card">
+          <h3 style="font-size: 18px; font-weight: 600; margin-bottom: var(--s-3); color: var(--ink);">Feature Card</h3>
+          <p style="font-size: 16px; line-height: 1.5; color: var(--slate); margin-bottom: var(--s-4);">Cards provide a clean container for related content with subtle border and optional hover elevation.</p>
+          <button class="btn btn--sm">Learn more</button>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size: 18px; font-weight: 600; margin-bottom: var(--s-3); color: var(--ink);">Interactive Card</h3>
+          <p style="font-size: 16px; line-height: 1.5; color: var(--slate); margin-bottom: var(--s-4);">Hover states provide visual feedback without disrupting the interface. Subtle shadows lift on interaction.</p>
+          <button class="btn btn--sm">Explore</button>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size: 18px; font-weight: 600; margin-bottom: var(--s-3); color: var(--ink);">Developer Tools</h3>
+          <p style="font-size: 16px; line-height: 1.5; color: var(--slate); margin-bottom: var(--s-4);">Built for developers who demand clarity and performance from their interface patterns.</p>
+          <button class="btn btn--sm">View docs</button>
+        </div>
+      </div>
+
+      <div class="subsection-label">Elevated Card (Featured)</div>
+      <div class="card card--featured card--elevated">
+        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: var(--s-4); color: var(--ink);">Premium Featured Container</h3>
+        <p style="font-size: 18px; line-height: 1.6; color: var(--slate); margin-bottom: var(--s-6);">Elevated cards use stronger shadows and generous radius for hero content. Reserved for primary calls-to-action and featured announcements.</p>
+        <div style="display: flex; gap: var(--s-4);">
+          <button class="btn btn--primary btn--pill">Start Now</button>
+          <button class="btn btn--pill">Learn More</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Input Fields Section -->
+    <section class="section">
+      <div class="section__kicker">Forms</div>
+      <h2 class="section__title">Input Fields</h2>
+
+      <div class="form-demo">
+        <h3 class="form-demo__title">Sign Up Form Example</h3>
+        <form class="form-fields">
+          <div class="form-field">
+            <label class="form-field__label">Email Address</label>
+            <input type="email" class="input" placeholder="your@email.com">
+            <span class="form-field__helper">We'll never share your email</span>
+          </div>
+
+          <div class="form-field">
+            <label class="form-field__label">Full Name</label>
+            <input type="text" class="input" placeholder="Jane Developer">
+          </div>
+
+          <div class="form-field">
+            <label class="form-field__label">Message</label>
+            <textarea class="input" placeholder="Tell us about your project..." style="font-family: var(--font-body); min-height: 120px; resize: vertical;"></textarea>
+          </div>
+        </form>
+
+        <div class="form-actions">
+          <button class="btn btn--primary">Send Message</button>
+          <button class="btn">Cancel</button>
+        </div>
+      </div>
+
+      <div class="subsection-label">Input States</div>
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Default State</label>
+          <input type="text" class="input" placeholder="Enter text...">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Focus State</label>
+          <input type="text" class="input" placeholder="Click to focus..." autofocus>
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Filled State</label>
+          <input type="text" class="input" value="Entered value">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Disabled State</label>
+          <input type="text" class="input" disabled value="Disabled input">
+        </div>
+      </div>
+    </section>
+
+    <!-- Typography Section -->
+    <section class="section">
+      <div class="section__kicker">Typography</div>
+      <h2 class="section__title">Type Ramp</h2>
+
+      <div class="type-row">
+        <span class="type-row__label">Display / Hero — 64px, Weight 700, -1.6px letter-spacing</span>
+        <div class="type-row__sample" style="font-size: 64px; font-weight: 700; letter-spacing: -1.6px; line-height: 1.1;">
+          Build native apps with React
+        </div>
+      </div>
+
+      <div class="type-row">
+        <span class="type-row__label">Section Heading — 48px, Weight 600, -2px letter-spacing</span>
+        <div class="type-row__sample" style="font-size: 48px; font-weight: 600; letter-spacing: -2px; line-height: 1.1;">
+          Component Inventory
+        </div>
+      </div>
+
+      <div class="type-row">
+        <span class="type-row__label">Sub-heading — 20px, Weight 600, -0.25px letter-spacing</span>
+        <div class="type-row__sample" style="font-size: 20px; font-weight: 600; letter-spacing: -0.25px; line-height: 1.2;">
+          The foundation for professional interfaces
+        </div>
+      </div>
+
+      <div class="type-row">
+        <span class="type-row__label">Body Large — 18px, Weight 400, Regular line-height</span>
+        <div class="type-row__sample" style="font-size: 18px; font-weight: 400; line-height: 1.4;">
+          Expo is a framework and a platform for universal React applications. Build once and deploy to iOS, Android, and the web from the same JavaScript codebase.
+        </div>
+      </div>
+
+      <div class="type-row">
+        <span class="type-row__label">Body / Button — 16px, Weight 400</span>
+        <div class="type-row__sample" style="font-size: 16px; font-weight: 400; line-height: 1.25;">
+          Standard interface text and button labels use this weight and size for optimal readability.
+        </div>
+      </div>
+
+      <div class="type-row">
+        <span class="type-row__label">Caption / Label — 14px, Weight 400</span>
+        <div class="type-row__sample" style="font-size: 14px; font-weight: 400; line-height: 1;">
+          Secondary text, form labels, and captions use this compact size.
+        </div>
+      </div>
+
+      <div class="type-row">
+        <span class="type-row__label">Tag / Small — 12px, Weight 500</span>
+        <div class="type-row__sample" style="font-size: 12px; font-weight: 500; line-height: 1;">
+          Small labels and badges. Upper-cased for emphasis.
+        </div>
+      </div>
+
+      <div class="type-row">
+        <span class="type-row__label">Code Body — 16px, JetBrains Mono, Weight 400</span>
+        <div class="type-row__sample" style="font-family: var(--font-mono); font-size: 16px; font-weight: 400; line-height: 1.4; background: var(--color-widget-dark); color: var(--signal); padding: var(--s-4); border-radius: 6px;">
+          const [count, setCount] = useState(0);
+        </div>
+      </div>
+
+      <div class="type-row">
+        <span class="type-row__label">Code Caption — 14px, JetBrains Mono</span>
+        <div class="type-row__sample" style="font-family: var(--font-mono); font-size: 14px; font-weight: 400; line-height: 1.4; background: var(--color-widget-dark); color: var(--signal); padding: var(--s-4); border-radius: 6px;">
+          npx create-expo-app MyApp
+        </div>
+      </div>
+    </section>
+
+    <!-- Color Palette Section -->
+    <section class="section">
+      <div class="section__kicker">Colors</div>
+      <h2 class="section__title">Color System</h2>
+
+      <div class="subsection-label">Semantic Colors</div>
+      <div class="cards-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+        <div style="display: flex; flex-direction: column; gap: var(--s-3);">
+          <div style="width: 100%; height: 120px; background: var(--paper); border: 1px solid var(--slate); border-radius: 8px;"></div>
+          <span style="font-size: 14px; font-weight: 600; color: var(--ink);">Paper</span>
+          <span style="font-size: 12px; color: var(--slate);">#f0f0f3</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: var(--s-3);">
+          <div style="width: 100%; height:

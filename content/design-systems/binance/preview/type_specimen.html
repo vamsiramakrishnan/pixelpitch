@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Specimen — Binance.US</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--color-snow, #f5f5f5);
+      color: var(--color-ink, #1e2026);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 48px 24px;
+      }
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 96px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--color-muted, #777e90);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 96px;
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--signal, #f0b90b);
+      margin-bottom: 24px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 1.55;
+      color: var(--color-secondary-text, #32313a);
+      max-width: 680px;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 96px;
+      height: 2px;
+      background: var(--signal, #f0b90b);
+      border: none;
+      margin: 0;
+    }
+
+    /* Font families section */
+    .font-families {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+      margin-bottom: 96px;
+      margin-top: 64px;
+    }
+
+    .font-card {
+      background: var(--bone, #ffffff);
+      border: 1px solid var(--color-border-light, #e6e8ea);
+      border-radius: var(--radius-md, 8px);
+      padding: 32px;
+      box-shadow: var(--card-shadow, 0 2px 8px rgba(0,0,0,0.08));
+    }
+
+    .font-card__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-muted, #777e90);
+      margin-bottom: 12px;
+    }
+
+    .font-card__name {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--color-ink, #1e2026);
+      margin-bottom: 8px;
+    }
+
+    .font-card__fallback {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      color: var(--color-steel, #686a6c);
+      word-break: break-word;
+      line-height: 1.4;
+    }
+
+    /* Character set block */
+    .charmap-block {
+      background: var(--bone, #ffffff);
+      border: 1px solid var(--color-border-light, #e6e8ea);
+      border-radius: var(--radius-md, 8px);
+      padding: 48px;
+      margin-bottom: 96px;
+      box-shadow: var(--card-shadow, 0 2px 8px rgba(0,0,0,0.08));
+    }
+
+    .charmap-block__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-muted, #777e90);
+      margin-bottom: 24px;
+    }
+
+    .charmap-block__chars {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.8;
+      letter-spacing: 0.02em;
+      color: var(--color-ink, #1e2026);
+      word-break: break-word;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-muted, #777e90);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--signal, #f0b90b);
+    }
+
+    /* Ramp row */
+    .ramp-row {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 48px;
+      align-items: baseline;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--color-border-light, #e6e8ea);
+    }
+
+    .ramp-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 800px) {
+      .ramp-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* Left meta column */
+    .ramp-meta__role {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-ink, #1e2026);
+      margin-bottom: 8px;
+    }
+
+    .ramp-meta__detail {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.8;
+      color: var(--color-steel, #686a6c);
+      letter-spacing: 0.02em;
+    }
+
+    /* Right sample column */
+    .ramp-sample {
+      color: var(--color-ink, #1e2026);
+      overflow-wrap: break-word;
+      word-spacing: 0.1em;
+    }
+
+    /* Ramp section */
+    .ramp-section {
+      margin-bottom: 96px;
+      background: var(--bone, #ffffff);
+      border: 1px solid var(--color-border-light, #e6e8ea);
+      border-radius: var(--radius-md, 8px);
+      padding: 48px;
+      box-shadow: var(--card-shadow, 0 2px 8px rgba(0,0,0,0.08));
+    }
+
+    /* Weights showcase */
+    .weights-demo {
+      margin-bottom: 96px;
+      background: var(--bone, #ffffff);
+      border: 1px solid var(--color-border-light, #e6e8ea);
+      border-radius: var(--radius-md, 8px);
+      padding: 48px;
+      box-shadow: var(--card-shadow, 0 2px 8px rgba(0,0,0,0.08));
+    }
+
+    .weights-demo__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-muted, #777e90);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--signal, #f0b90b);
+    }
+
+    .weight-row {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 32px;
+      align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--color-border-light, #e6e8ea);
+    }
+
+    .weight-row:last-child {
+      border-bottom: none;
+    }
+
+    .weight-label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-steel, #686a6c);
+      text-transform: uppercase;
+    }
+
+    .weight-sample {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 24px;
+      line-height: 1.4;
+      color: var(--color-ink, #1e2026);
+    }
+
+    /* Crypto ticker demo */
+    .ticker-demo {
+      margin-bottom: 96px;
+      background: var(--color-binance-dark, #222126);
+      border-radius: var(--radius-md, 8px);
+      padding: 48px;
+      box-shadow: var(--card-shadow, 0 2px 8px rgba(0,0,0,0.08));
+    }
+
+    .ticker-demo__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--signal, #f0b90b);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--signal, #f0b90b);
+    }
+
+    .ticker-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      margin-bottom: 24px;
+    }
+
+    .ticker-item {
+      padding: 16px;
+      background: var(--color-dark-card, #2b2f36);
+      border-radius: var(--radius-sm, 4px);
+      border: 1px solid var(--color-steel, #686a6c);
+    }
+
+    .ticker-symbol {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate, #848e9c);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .ticker-price {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--bone, #ffffff);
+      margin-bottom: 8px;
+    }
+
+    .ticker-change {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .ticker-change.positive {
+      color: var(--success, #0ecb81);
+    }
+
+    .ticker-change.negative {
+      color: var(--danger, #f6465d);
+    }
+
+    /* Button demo */
+    .button-demo {
+      margin-bottom: 96px;
+      background: var(--bone, #ffffff);
+      border: 1px solid var(--color-border-light, #e6e8ea);
+      border-radius: var(--radius-md, 8px);
+      padding: 48px;
+      box-shadow: var(--card-shadow, 0 2px 8px rgba(0,0,0,0.08));
+    }
+
+    .button-demo__label {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-muted, #777e90);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--signal, #f0b90b);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .demo-btn {
+      font-family: var(--font-display, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.16px;
+      line-height: 1.25;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .demo-btn.primary {
+      background: var(--signal, #f0b90b);
+      color: var(--color-ink, #1e2026);
+    }
+
+    .demo-btn.primary:hover {
+      background: var(--color-active-yellow, #d0980b);
+    }
+
+    .demo-btn.secondary {
+      background: transparent;
+      color: var(--signal, #f0b90b);
+      border: 2px solid var(--signal, #f0b90b);
+    }
+
+    .demo-btn.secondary:hover {
+      background: var(--signal, #f0b90b);
+      color: var(--color-ink, #1e2026);
+    }
+
+    .demo-btn.dark {
+      background: var(--color-binance-dark, #222126);
+      color: var(--signal, #f0b90b);
+      border: 2px solid var(--signal, #f0b90b);
+    }
+
+    .demo-btn.dark:hover {
+      background: var(--signal, #f0b90b);
+      color: var(--color-ink, #1e2026);
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 160px 48px;
+      color: var(--color-steel, #686a6c);
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 24px auto 0;
+      border: 2px solid var(--color-border-light, #e6e8ea);
+      border-top-color: var(--signal, #f0b90b);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens&hellip;</div>
+  </div>
+
+  <script>
+    const EDITORIAL_SAMPLES = [
+      'The trading floor never sleeps.',
+      'Real-time data. Real-time decisions.',
+      'Every second counts in crypto markets.',
+      'Trust is built on transparency and speed.',
+      'Move fast. Trade faster.',
+      'Your portfolio. Your rules. Your platform.',
+      'Gold standard in digital assets.',
+      'Secure, transparent, always on.',
+      'Trading floor meets mobile wallet.',
+      'Where traders become leaders.'
+    ];
+
+    fetch('../tokens.json')
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#f6465d">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const title = tokens.meta?.title || 'Design System';
+      const summary = tokens.meta?.summary || '';
+      const ramp = tokens.typography?.ramp || [];
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Type Specimen</div>';
+      html += '  <h1 class="header__title">' + esc(title) + '</h1>';
+      html += '  <p class="header__subtitle">' + esc(summary) + '</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Font families */
+      const families = [
+        { label: 'Display & UI', name: 'System UI', fallback: 'system-ui, -apple-system, Segoe UI, Roboto, sans-serif' },
+        { label: 'Body', name: 'System UI', fallback: 'system-ui, -apple-system, Segoe UI, Roboto, sans-serif' },
+        { label: 'Monospace', name: 'UI Monospace', fallback: 'ui-monospace, SF Mono, Menlo, monospace' }
+      ];
+
+      html += '<div class="font-families">';
+      families.forEach(f => {
+        html += '<div class="font-card">';
+        html += '  <div class="font-card__label">' + esc(f.label) + '</div>';
+        html += '  <div class="font-card__name">' + esc(f.name) + '</div>';
+        html += '  <div class="font-card__fallback">' + esc(f.fallback) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      /* Character set */
+      html += '<div class="charmap-block">';
+      html += '  <div class="charmap-block__label">Character Set — System UI</div>';
+      html += '  <div class="charmap-block__chars">';
+      html += '    AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz<br>';
+      html += '    0123456789 !@#$%&amp;*()&ndash;&mdash;&lsquo;&rsquo;&ldquo;&rdquo;';
+      html += '  </div>';
+      html += '</div>';
+
+      /* Weights showcase */
+      html += '<div class="weights-demo">';
+      html += '<div class="weights-demo__label">Font Weights — System UI</div>';
+      const weights = [
+        { weight: 500, label: 'Regular (500)', text: 'The trading floor never sleeps. Real-time data powers every decision.' },
+        { weight: 600, label: 'SemiBold (600)', text: 'Bold moves require bold typography. Stand out with confidence.' },
+        { weight: 700, label: 'Bold (700)', text: 'Maximum impact. Unmissable headlines and critical alerts.' }
+      ];
+      weights.forEach(w => {
+        html += '<div class="weight-row">';
+        html += '  <div class="weight-label">' + esc(w.label) + '</div>';
+        html += '  <div class="weight-sample" style="font-weight:' + w.weight + '">' + esc(w.text) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      /* Type ramp */
+      if (ramp.length) {
+        html += '<div class="ramp-section">';
+        html += '<div class="section-label">Type Ramp — All Sizes</div>';
+        ramp.forEach((entry, i) => {
+          html += rampRow(entry, i);
+        });
+        html += '</div>';
+      }
+
+      /* Crypto ticker demo */
+      html += '<div class="ticker-demo">';
+      html += '<div class="ticker-demo__label">Trading Floor — Dark Theme</div>';
+      html += '<div class="ticker-row">';
+      html += '<div class="ticker-item">';
+      html += '  <div class="ticker-symbol">BTC</div>';
+      html += '  <div class="ticker-price">$43,821</div>';
+      html += '  <div class="ticker-change positive">+5.28%</div>';
+      html += '</div>';
+      html += '<div class="ticker-item">';
+      html += '  <div class="ticker-symbol">ETH</div>';
+      html += '  <div class="ticker-price">$2,319</div>';
+      html += '  <div class="ticker-change positive">+3.14%</div>';
+      html += '</div>';
+      html += '<div class="ticker-item">';
+      html += '  <div class="ticker-symbol">USDC</div>';
+      html += '  <div class="ticker-price">$1.00</div>';
+      html += '  <div class="ticker-change">+0.02%</div>';
+      html += '</div>';
+      html += '<div class="ticker-item">';
+      html += '  <div class="ticker-symbol">XRP</div>';
+      html += '  <div class="ticker-price">$2.14</div>';
+      html += '  <div class="ticker-change negative">−2.93%</div>';
+      html += '</div>';
+      html += '</div>';
+      html += '</div>';
+
+      /* Button demo */
+      html += '<div class="button-demo">';
+      html += '<div class="button-demo__label">Primary Actions — Button Styles</div>';
+      html += '<div class="button-group">';
+      html += '<button class="demo-btn primary">Buy Now</button>';
+      html += '<button class="demo-btn secondary">Learn More</button>';
+      html += '<button class="demo-btn dark">Trade on App</button>';
+      html += '</div>';
+      html += '</div>';
+
+      app.innerHTML = html;
+    }
+
+    function rampRow(entry, idx) {
+      const role = entry.role || 'Role ' + (idx + 1);
+      const size = entry.size || '16px';
+      const weight = entry.weight || 400;
+      const lh = entry.lineHeight || '1.5';
+      const ls = entry.letterSpacing || '0';
+
+      let fontFamily = 'var(--font-body)';
+      if (entry.fontKey === 'display') fontFamily = 'var(--font-display)';
+      else if (entry.fontKey === 'mono') fontFamily = 'var(--font-mono)';
+      else if (entry.fontKey === 'ui') fontFamily = 'var(--font-display)';
+
+      const sizeNum = parseFloat(size);
+      const sampleIdx = idx % EDITORIAL_SAMPLES.length;
+      let sample = EDITORIAL_SAMPLES[sampleIdx];
+
+      if (sizeNum >= 60) {
+        sample = sample.split('.')[0].slice(0, 35);
+        if (!sample.endsWith('.')) sample += '.';
+      }
+
+      let fontStyle = 'font-size:' + size + ';font-weight:' + weight + ';line-height:' + lh + ';';
+      fontStyle += 'font-family:' + fontFamily + ';';
+      if (ls && ls !== '0' && ls !== 'normal') fontStyle += 'letter-spacing:' + ls + ';';
+
+      let meta = esc(size) + ' / ' + esc(String(weight));
+      meta += '\nsystem-ui sans-serif';
+      meta += '\nline-height: ' + esc(String(lh));
+      if (ls && ls !== '0' && ls !== 'normal') meta += '\nletter-spacing: ' + esc(ls);
+
+      return '' +
+        '<div class="ramp-row">' +
+        '  <div class="ramp-meta">' +
+        '    <div class="ramp-meta__role">' + esc(role) + '</div>' +
+        '    <pre class="ramp-meta__detail">' + meta + '</pre>' +
+        '  </div>' +
+        '  <div class="ramp-sample" style="' + fontStyle + '">' + esc(sample) + '</div>' +
+        '</div>';
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

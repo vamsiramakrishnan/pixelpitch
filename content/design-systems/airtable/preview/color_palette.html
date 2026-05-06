@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Palette — Airtable Design System</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'Haas Groot Disp', system-ui, sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #181d26);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    /* ── Header ── */
+    .header {
+      margin-bottom: 64px;
+    }
+
+    .header__stage {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.28px;
+      text-transform: uppercase;
+      color: var(--slate, #333333);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'Haas Groot Disp', system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: 0;
+      color: var(--ink, #181d26);
+      margin-bottom: 8px;
+    }
+
+    .header__subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      letter-spacing: 0.18px;
+      color: var(--slate, #333333);
+      max-width: 640px;
+      margin-bottom: 24px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 2px;
+      background: var(--signal, #254fad);
+      border: none;
+      margin: 0;
+      border-radius: 0;
+    }
+
+    /* ── Section Labels ── */
+    .section-label {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.28px;
+      text-transform: uppercase;
+      color: var(--slate, #333333);
+      margin: 56px 0 28px 0;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border, #e0e2e6);
+    }
+
+    .section-label:first-of-type {
+      margin-top: 0;
+    }
+
+    /* ── Swatch Grid ── */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+      margin-bottom: 8px;
+    }
+
+    .swatch {
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e0e2e6);
+      border-radius: var(--card-radius, 8px);
+      overflow: hidden;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .swatch:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .swatch__chip {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 12px;
+    }
+
+    .swatch__chip-contrast {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 8px;
+      border-radius: 4px;
+      line-height: 1.4;
+      backdrop-filter: blur(4px);
+    }
+
+    .swatch__meta {
+      padding: 16px;
+    }
+
+    .swatch__var {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink, #181d26);
+      word-break: break-all;
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    .swatch__hex {
+      font-family: var(--font-mono, 'ui-monospace', monospace);
+      font-size: 12px;
+      color: var(--slate, #333333);
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    .swatch__role {
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.28px;
+      line-height: 1.35;
+      color: var(--slate, #333333);
+      margin-bottom: 8px;
+    }
+
+    .swatch__contrast-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    .contrast-pass { color: #006400; }
+    .contrast-fail { color: #c41e3a; }
+    .contrast-aa-large { color: #b8860b; }
+
+    /* ── Usage Demo ── */
+    .demo-section {
+      margin: 56px 0;
+      padding: 40px;
+      background: var(--bone, #f8fafc);
+      border: 1px solid var(--border, #e0e2e6);
+      border-radius: var(--card-radius, 8px);
+    }
+
+    .demo-section h2 {
+      font-size: 24px;
+      font-weight: 400;
+      letter-spacing: 0.12px;
+      color: var(--ink, #181d26);
+      margin-bottom: 16px;
+    }
+
+    .demo-section p {
+      font-size: 18px;
+      font-weight: 400;
+      letter-spacing: 0.18px;
+      color: var(--slate, #333333);
+      margin-bottom: 24px;
+      max-width: 640px;
+    }
+
+    .demo-box {
+      display: flex;
+      gap: 24px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .demo-item {
+      flex: 0 1 auto;
+    }
+
+    .demo-button {
+      display: inline-block;
+      padding: var(--button-py, 10px) var(--button-px, 20px);
+      background: var(--signal, #254fad);
+      color: var(--paper, #ffffff);
+      border: none;
+      border-radius: var(--button-radius, 8px);
+      font-family: var(--font-body, 'Haas Groot Disp', system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 0.08px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .demo-button:hover {
+      background: #1e3a8a;
+    }
+
+    .demo-button--secondary {
+      background: transparent;
+      color: var(--signal, #254fad);
+      border: 1px solid var(--signal, #254fad);
+    }
+
+    .demo-button--secondary:hover {
+      background: rgba(37, 79, 173, 0.04);
+    }
+
+    .demo-button--success {
+      background: var(--success, #006400);
+    }
+
+    .demo-button--success:hover {
+      background: #004d00;
+    }
+
+    /* ── WCAG Summary ── */
+    .wcag-summary {
+      margin-top: 56px;
+      padding: 40px;
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e0e2e6);
+      border-radius: var(--card-radius, 8px);
+    }
+
+    .wcag-summary h2 {
+      font-family: var(--font-display, 'Haas Groot Disp', system-ui, sans-serif);
+      font-size: 24px;
+      font-weight: 400;
+      letter-spacing: 0.12px;
+      margin-bottom: 8px;
+      color: var(--ink, #181d26);
+    }
+
+    .wcag-summary > p {
+      font-size: 14px;
+      color: var(--slate, #333333);
+      margin-bottom: 24px;
+      letter-spacing: 0.28px;
+    }
+
+    .wcag-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .wcag-card {
+      padding: 20px;
+      background: var(--bone, #f8fafc);
+      border: 1px solid var(--border, #e0e2e6);
+      border-radius: var(--card-radius, 8px);
+    }
+
+    .wcag-card h3 {
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 0.08px;
+      color: var(--ink, #181d26);
+      margin-bottom: 12px;
+    }
+
+    .wcag-card p {
+      font-size: 14px;
+      color: var(--slate, #333333);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .wcag-count {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 0;
+      margin-bottom: 4px;
+    }
+
+    .wcag-count--pass { color: #006400; }
+    .wcag-count--aa-large { color: #b8860b; }
+    .wcag-count--fail { color: #c41e3a; }
+
+    /* ── Loading ── */
+    .loading {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--slate, #333333);
+      font-size: 16px;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 16px auto 0;
+      border: 3px solid var(--border, #e0e2e6);
+      border-top-color: var(--signal, #254fad);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    /* ─────────────────────────────────────────────────────────────── */
+    /* Contrast-ratio helpers (WCAG 2.1 relative luminance)              */
+    /* ─────────────────────────────────────────────────────────────── */
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function luminance([r, g, b]) {
+      const [rs, gs, bs] = [r, g, b].map(c => {
+        c /= 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    }
+
+    function contrastRatio(hex1, hex2) {
+      const l1 = luminance(hexToRgb(hex1));
+      const l2 = luminance(hexToRgb(hex2));
+      const lighter = Math.max(l1, l2);
+      const darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function wcagLevel(ratio) {
+      if (ratio >= 7) return { label: 'AAA', cls: 'pass' };
+      if (ratio >= 4.5) return { label: 'AA', cls: 'pass' };
+      if (ratio >= 3) return { label: 'AA Large', cls: 'aa-large' };
+      return { label: 'Fail', cls: 'fail' };
+    }
+
+    /* ─────────────────────────────────────────────────────────────── */
+    /* Core token roles and descriptions                                 */
+    /* ─────────────────────────────────────────────────────────────── */
+    const CORE_ROLES = {
+      paper:   'Primary canvas background',
+      ink:     'Primary text color',
+      slate:   'Secondary text and muted content',
+      signal:  'Interactive accents and links',
+      bone:    'Subtle background tint',
+      border:  'Dividers and card borders',
+      surface: 'Card and container surfaces',
+    };
+
+    /* ─────────────────────────────────────────────────────────────── */
+    /* Fetch and render                                                  */
+    /* ─────────────────────────────────────────────────────────────── */
+    (window.__DESIGN_TOKENS__ 
+      ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) 
+      : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#c41e3a">' +
+          'Could not load tokens.json &mdash; ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const name = tokens.meta?.title || tokens.meta?.name || 'Design System';
+      const rawColors = tokens.colors || {};
+      const paperHex = rawColors.paper || '#ffffff';
+
+      /* Flatten nested structure into a flat map */
+      const colors = {};
+      for (const [k, v] of Object.entries(rawColors)) {
+        if (typeof v === 'string') { 
+          colors[k] = v; 
+        } else if (v && typeof v === 'object') {
+          for (const [sk, sv] of Object.entries(v)) {
+            if (typeof sv === 'string') colors[k + '-' + sk] = sv;
+          }
+        }
+      }
+
+      /* Split into core and extended */
+      const coreKeys = Object.keys(CORE_ROLES).filter(k => colors[k]);
+      const extendedKeys = Object.keys(colors).filter(k => !CORE_ROLES[k] && typeof colors[k] === 'string');
+
+      let html = '';
+
+      /* Header */
+      html += '<header class="header">';
+      html += '  <div class="header__stage">Color Palette</div>';
+      html += '  <h1 class="header__title">' + esc(name) + '</h1>';
+      html += '  <p class="header__subtitle">Enterprise-friendly palette system with semantic color tokens for text, surfaces, and interactive elements.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* Core palette */
+      if (coreKeys.length) {
+        html += '<div class="section-label">Core Palette</div>';
+        html += '<div class="swatch-grid">';
+        coreKeys.forEach(key => {
+          html += swatchCard(key, colors[key], paperHex, CORE_ROLES[key]);
+        });
+        html += '</div>';
+      }
+
+      /* Extended palette */
+      if (extendedKeys.length) {
+        html += '<div class="section-label">Extended Palette</div>';
+        html += '<div class="swatch-grid">';
+        extendedKeys.forEach(key => {
+          const role = (tokens.colorRoles && tokens.colorRoles[key]) || formatRole(key);
+          html += swatchCard(key, colors[key], paperHex, role);
+        });
+        html += '</div>';
+      }
+
+      /* Usage demo */
+      html += demoSection();
+
+      /* WCAG summary */
+      html += wcagSummary(colors, paperHex);
+
+      app.innerHTML = html;
+    }
+
+    /* ─────────────────────────────────────────────────────────────── */
+    /* Swatch card builder                                               */
+    /* ─────────────────────────────────────────────────────────────── */
+    function swatchCard(key, hex, paperHex, role) {
+      const ratio = contrastRatio(hex, paperHex);
+      const level = wcagLevel(ratio);
+      const chipTextColor = luminance(hexToRgb(hex)) > 0.5 ? '#181d26' : '#ffffff';
+      const chipBadgeBg = luminance(hexToRgb(hex)) > 0.5
+        ? 'rgba(24, 29, 38, 0.1)' 
+        : 'rgba(255, 255, 255, 0.2)';
+
+      return '' +
+        '<div class="swatch">' +
+        '  <div class="swatch__chip" style="background:' + hex + '">' +
+        '    <span class="swatch__chip-contrast" style="color:' + chipTextColor +
+             ';background:' + chipBadgeBg + '">' + ratio.toFixed(2) + ':1</span>' +
+        '  </div>' +
+        '  <div class="swatch__meta">' +
+        '    <div class="swatch__var">--' + esc(key) + '</div>' +
+        '    <div class="swatch__hex">' + esc(hex) + '</div>' +
+        '    <div class="swatch__role">' + esc(role) + '</div>' +
+        '    <div class="swatch__contrast-label contrast-' + level.cls + '">' +
+             'WCAG ' + level.label + '</div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ─────────────────────────────────────────────────────────────── */
+    /* Usage demonstration section                                       */
+    /* ─────────────────────────────────────────────────────────────── */
+    function demoSection() {
+      return '' +
+        '<div class="demo-section">' +
+        '  <h2>Interactive Color Usage</h2>' +
+        '  <p>Primary signal color powers CTAs, links, and focus states. Secondary text and semantic colors support hierarchy and status messaging.</p>' +
+        '  <div class="demo-box">' +
+        '    <div class="demo-item">' +
+        '      <button class="demo-button">Primary Action</button>' +
+        '    </div>' +
+        '    <div class="demo-item">' +
+        '      <button class="demo-button demo-button--secondary">Secondary</button>' +
+        '    </div>' +
+        '    <div class="demo-item">' +
+        '      <button class="demo-button demo-button--success">Success</button>' +
+        '    </div>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    /* ─────────────────────────────────────────────────────────────── */
+    /* WCAG compliance summary                                           */
+    /* ─────────────────────────────────────────────────────────────── */
+    function wcagSummary(colors, paperHex) {
+      const keys = Object.keys(colors);
+      let passAAA = 0, passAA = 0, passAALarge = 0, fail = 0;
+
+      keys.forEach(k => {
+        const ratio = contrastRatio(colors[k], paperHex);
+        if (ratio >= 7) passAAA++;
+        else if (ratio >= 4.5) passAA++;
+        else if (ratio >= 3) passAALarge++;
+        else fail++;
+      });
+
+      let html = '<div class="wcag-summary">';
+      html += '<h2>WCAG 2.1 Compliance</h2>';
+      html += '<p>Contrast ratios measured against paper background (' + esc(paperHex) + ')</p>';
+      html += '<div class="wcag-grid">';
+      html += wcagCard('AAA (7.0+)', passAAA, 'pass', 'Passes AAA level for all text sizes');
+      html += wcagCard('AA (4.5+)', passAA, 'pass', 'Passes AA level for normal text');
+      html += wcagCard('AA Large (3.0+)', passAALarge, 'aa-large', 'Passes AA for large text only');
+      html += wcagCard('Below Threshold', fail, fail > 0 ? 'fail' : 'pass', 'Does not meet WCAG standards');
+      html += '</div>';
+      html += '</div>';
+      return html;
+    }
+
+    function wcagCard(label, count, level, desc) {
+      return '' +
+        '<div class="wcag-card">' +
+        '  <div class="wcag-count wcag-count--' + level + '">' + count + '</div>' +
+        '  <h3>' + label + '</h3>' +
+        '  <p>' + desc + '</p>' +
+        '</div>';
+    }
+
+    /* ─────────────────────────────────────────────────────────────── */
+    /* Utilities                                                         */
+    /* ─────────────────────────────────────────────────────────────── */
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+
+    function formatRole(key) {
+      return key
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/[-_]/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase())
+        .trim();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+/* NVIDIA — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #000000;
+  --ink:     #1a1a1a;
+  --slate:   #a7a7a7;
+  --signal:  #bff230;
+  --bone:    #ffffff;
+  --border:  #76b900;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-orange-400: #df6500;
+  --color-yellow-300: #ef9100;
+  --color-yellow-050: #feeeb2;
+  --color-red-500: #e52020;
+  --color-red-800: #650b0b;
+  --color-green-500: #3f8500;
+  --color-blue-700: #0046a4;
+  --color-purple-800: #4d1368;
+  --color-purple-100: #f9d4ff;
+  --color-fuchsia-700: #8c1c55;
+  --color-gray-400: #898989;
+  --color-gray-500: #757575;
+  --color-gray-border: #5e5e5e;
+  --color-link-hover: #3860be;
+  --color-button-hover: #1eaedb;
+  --color-button-active: #007fff;
+
+  /* Semantic */
+  --success: #3f8500;
+  --warning: #650b0b;
+  --danger:  #e52020;
+  --info:    #0046a4;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-hero: 36px;
+  --t-section-heading: 24px;
+  --t-sub-heading: 22px;
+  --t-card-title: 20px;
+  --t-body-large: 18px;
+  --t-body: 16px;
+  --t-body-bold: 16px;
+  --t-body-small: 15px;
+  --t-body-small-bold: 15px;
+  --t-button-large: 18px;
+  --t-button: 16px;
+  --t-button-compact: 14.4px;
+  --t-link: 14px;
+  --t-link-uppercase: 14px;
+  --t-caption: 14px;
+  --t-caption-small: 12px;
+  --t-micro-label: 10px;
+  --t-micro: 11px;
+
+  /* ── Spacing ── */
+  --s-1: 1px;
+  --s-2: 2px;
+  --s-3: 3px;
+  --s-4: 4px;
+  --s-5: 5px;
+  --s-6: 6px;
+  --s-7: 7px;
+  --s-8: 8px;
+  --s-9: 9px;
+  --s-10: 10px;
+  --s-11: 11px;
+  --s-12: 12px;
+  --s-13: 13px;
+  --s-14: 15px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   5px;
+  --radius-md:   2px;
+  --radius-lg:   24px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  2px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    2px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    0 2px 8px rgba(0,0,0,0.08);
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

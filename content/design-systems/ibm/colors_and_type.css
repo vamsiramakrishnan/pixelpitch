@@ -1,0 +1,99 @@
+/* IBM — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap');
+
+:root {
+  /* ── Colors ── */
+  --paper:   #ffffff;
+  --ink:     #161616;
+  --slate:   #525252;
+  --signal:  #0f62fe;
+  --bone:    #f4f4f4;
+  --border:  #c6c6c6;
+  --surface: #ffffff;
+
+  /* Extended palette */
+  --color-gray-90: #262626;
+  --color-gray-80: #393939;
+  --color-gray-60: #6f6f6f;
+  --color-gray-50: #8d8d8d;
+  --color-gray-20: #e0e0e0;
+  --color-gray-10-hover: #e8e8e8;
+  --color-blue-70: #0043ce;
+  --color-blue-80: #002d9c;
+  --color-blue-10: #edf5ff;
+  --color-red-60: #da1e28;
+  --color-green-50: #24a148;
+  --color-yellow-30: #f1c21b;
+
+  /* Semantic */
+  --success: #24a148;
+  --warning: #f1c21b;
+  --danger:  #da1e28;
+  --info:    #0f62fe;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: system-ui, sans-serif;
+  --font-body:    system-ui, sans-serif;
+  --font-mono:    IBM Plex Mono;
+
+  /* Type ramp */
+  --t-display-01: 60px;
+  --t-display-02: 48px;
+  --t-heading-01: 42px;
+  --t-heading-02: 32px;
+  --t-heading-03: 24px;
+  --t-heading-04: 20px;
+  --t-heading-05: 20px;
+  --t-body-long-01: 16px;
+  --t-body-long-02: 16px;
+  --t-body-short-01: 14px;
+  --t-body-short-02: 14px;
+  --t-caption-01: 12px;
+  --t-code-01: 14px;
+  --t-code-02: 16px;
+  --t-mono-display: 42px;
+
+  /* ── Spacing ── */
+  --s-1: 2px;
+  --s-2: 4px;
+  --s-3: 8px;
+  --s-4: 12px;
+  --s-5: 16px;
+  --s-6: 24px;
+  --s-7: 32px;
+  --s-8: 40px;
+  --s-9: 48px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   24px;
+  --radius-full: 999px;
+
+  /* ── Components ── */
+  --button-radius:  12px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    12px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cafe — Component Inventory</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: var(--s-7, 64px) var(--s-5, 32px);
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: var(--s-7, 64px);
+    }
+
+    .header__title {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--ink, #111111);
+      margin-bottom: var(--s-2, 8px);
+    }
+
+    .header__subtitle {
+      font-size: 18px;
+      color: var(--slate, #666666);
+      max-width: 600px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 64px;
+      height: 3px;
+      background: var(--signal, #3b82f6);
+      border: none;
+      margin-top: var(--s-4, 24px);
+      border-radius: 2px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: var(--s-6, 48px);
+    }
+
+    .section__label {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #666666);
+      margin-bottom: var(--s-4, 24px);
+      padding-bottom: var(--s-2, 8px);
+      border-bottom: 1px solid var(--border, #e5e5e5);
+    }
+
+    .component-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3, 16px);
+      align-items: flex-start;
+      margin-bottom: var(--s-4, 24px);
+    }
+
+    .component-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--slate, #666666);
+      margin-bottom: var(--s-2, 8px);
+    }
+
+    /* ------- BUTTONS ------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--s-2, 8px);
+      padding: var(--button-py, 10px) var(--button-px, 20px);
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.4;
+      border-radius: var(--button-radius, 8px);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      border: none;
+    }
+
+    .btn--primary {
+      background: var(--signal, #3b82f6);
+      color: var(--paper, #ffffff);
+    }
+
+    .btn--primary:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+
+    .btn--secondary {
+      background: var(--paper, #ffffff);
+      color: var(--ink, #111111);
+      border: 1px solid var(--border, #e5e5e5);
+    }
+
+    .btn--secondary:hover {
+      background: var(--bone, #f5f5f5);
+      border-color: var(--slate, #666666);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--signal, #3b82f6);
+      padding: var(--button-py, 10px) var(--s-2, 8px);
+      text-decoration: none;
+      border-bottom: 1px solid var(--signal, #3b82f6);
+      border-radius: 0;
+    }
+
+    .btn--ghost:hover {
+      opacity: 0.8;
+    }
+
+    .btn--sm {
+      padding: var(--s-1, 4px) var(--s-3, 16px);
+      font-size: 13px;
+    }
+
+    .btn--lg {
+      padding: var(--s-3, 16px) var(--s-5, 32px);
+      font-size: 16px;
+    }
+
+    /* ------- CARDS ------- */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-4, 24px);
+    }
+
+    .card {
+      background: var(--paper, #ffffff);
+      border-radius: var(--card-radius, 8px);
+      padding: var(--s-5, 32px) var(--s-4, 24px);
+      transition: all 0.2s ease;
+    }
+
+    .card--bordered {
+      border: var(--card-border, 1px solid var(--border, #e5e5e5));
+    }
+
+    .card--bordered:hover {
+      border-color: var(--slate, #666666);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    }
+
+    .card--elevated {
+      border: var(--card-border, 1px solid var(--border, #e5e5e5));
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .card--elevated:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .card__eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--signal, #3b82f6);
+      margin-bottom: var(--s-2, 8px);
+    }
+
+    .card__title {
+      font-family: var(--font-display, 'system-ui', sans-serif);
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--ink, #111111);
+      margin-bottom: var(--s-2, 8px);
+    }
+
+    .card__body {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--slate, #666666);
+      margin-bottom: var(--s-4, 24px);
+    }
+
+    .card__footer {
+      display: flex;
+      gap: var(--s-2, 8px);
+      align-items: center;
+    }
+
+    /* ------- INPUTS ------- */
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-4, 24px);
+      align-items: flex-start;
+    }
+
+    .input-wrap {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink, #111111);
+      margin-bottom: var(--s-2, 8px);
+    }
+
+    .input {
+      display: block;
+      width: 100%;
+      padding: var(--button-py, 10px) var(--s-3, 16px);
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink, #111111);
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-md, 8px);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate, #666666);
+    }
+
+    .input:focus {
+      border-color: var(--signal, #3b82f6);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2, 8px);
+      padding: var(--button-py, 10px) var(--s-3, 16px);
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--border, #e5e5e5);
+      border-radius: var(--radius-lg, 16px);
+      max-width: 480px;
+      transition: border-color 0.15s ease;
+    }
+
+    .search-bar:focus-within {
+      border-color: var(--signal, #3b82f6);
+    }
+
+    .search-bar__icon {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      color: var(--slate, #666666);
+    }
+
+    .search-bar__input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-body, 'system-ui', sans-serif);
+      font-size: 14px;
+      color: var(--ink, #111111);
+    }
+
+    .search-bar__input::placeholder {
+      color: var(--slate, #666666);
+    }
+
+    /* ------- BADGES & TAGS ------- */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2, 8px);
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-1, 4px);
+      padding: var(--s-1, 4px) var(--s-3, 16px);
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: var(--radius-full, 999px);
+      line-height: 1.4;
+    }
+
+    .badge--signal {
+      background: rgba(59, 130, 246, 0.12);
+      color: var(--signal, #3b82f6);
+    }
+
+    .badge--success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge--warning {
+      background: #fef9c3;
+      color: #854d0e;
+    }
+
+    .badge--danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge--neutral {
+      background: var(--bone, #f5f5f5);
+      color: var(--ink, #111111);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-1, 4px);
+      padding: var(--s-1, 4px) var(--s-3, 16px);
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: var(--radius-md, 8px);
+      background: var(--bone, #f5f5f5);
+      color: var(--ink, #111111);
+      border: 1px solid var(--border, #e5e5e5);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .tag:hover {
+      background: var(--border, #e5e5e5);
+      transform: translateY(-1px);
+    }
+
+    .tag--active {
+      background: var(--signal, #3b82f6);
+      color: var(--paper, #ffffff);
+      border-color: var(--signal, #3b82f6);
+    }
+
+    .sub-heading {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink, #111111);
+      margin-bottom: var(--s-2, 8px);
+      margin-top: var(--s-2, 8px);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border, #e5e5e5);
+      margin: var(--s-4, 24px) 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Header -->
+    <header class="header" id="header">
+      <h1 class="header__title">Cafe Components</h1>
+      <p class="header__subtitle">A cozy, welcoming vocabulary of interactive elements designed for a relaxed browsing experience.</p>
+      <hr class="header__rule">
+    </header>
+
+    <!-- Buttons -->
+    <div class="section">
+      <div class="section__label">Buttons</div>
+
+      <div class="sub-heading">Primary Action</div>
+      <div class="component-row">
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary">Default</button>
+        <button class="btn btn--primary btn--lg">Large Primary</button>
+      </div>
+
+      <div class="sub-heading">Secondary Action</div>
+      <div class="component-row">
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary">Default</button>
+        <button class="btn btn--secondary btn--lg">Large Secondary</button>
+      </div>
+
+      <div class="sub-heading">Ghost / Text Link</div>
+      <div class="component-row">
+        <a href="#" class="btn btn--ghost">Learn more</a>
+        <a href="#" class="btn btn--ghost">Browse menu</a>
+        <a href="#" class="btn btn--ghost">Explore stories</a>
+      </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="section">
+      <div class="section__label">Cards</div>
+
+      <div class="cards-grid">
+        <div class="card card--bordered">
+          <div class="card__eyebrow">Standard Card</div>
+          <div class="card__title">Quiet Elegance</div>
+          <div class="card__body">
+            A gentle, bordered card perfect for content modules that don't demand immediate attention. The soft border invites exploration without overwhelming the senses.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Explore</button>
+            <button class="btn btn--secondary btn--sm">Later</button>
+          </div>
+        </div>
+
+        <div class="card card--elevated">
+          <div class="card__eyebrow">Elevated Card</div>
+          <div class="card__title">Gentle Depth</div>
+          <div class="card__body">
+            A softly elevated card with subtle shadow. Use for featured content or cards that deserve a touch more presence. Hovers with grace.
+          </div>
+          <div class="card__footer">
+            <button class="btn btn--primary btn--sm">Get started</button>
+            <a href="#" class="btn btn--ghost btn--sm" style="border: none; padding: var(--s-1, 4px) var(--s-2, 8px)">Details</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inputs -->
+    <div class="section">
+      <div class="section__label">Inputs</div>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Full Name</label>
+          <input class="input" type="text" placeholder="Your name">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input class="input" type="email" placeholder="you@example.com">
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="sub-heading">Search</div>
+      <div class="search-bar">
+        <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input class="search-bar__input" type="text" placeholder="Search by flavor, origin, or mood...">
+      </div>
+    </div>
+
+    <!-- Badges & Tags -->
+    <div class="section">
+      <div class="section__label">Badges &amp; Tags</div>
+
+      <div class="sub-heading">Status Indicators</div>
+      <div class="badge-row" style="margin-bottom: var(--s-4, 24px)">
+        <span class="badge badge--signal">Featured</span>
+        <span class="badge badge--success">Available</span>
+        <span class="badge badge--warning">Limited Stock</span>
+        <span class="badge badge--danger">Sold Out</span>
+        <span class="badge badge--neutral">Coming Soon</span>
+      </div>
+
+      <div class="sub-heading">Filter Tags</div>
+      <div class="badge-row">
+        <span class="tag tag--active">All Drinks</span>
+        <span class="tag">Espresso</span>
+        <span class="tag">Cold Brew</span>
+        <span class="tag">Pastries</span>
+        <span class="tag">Seasonal</span>
+        <span class="tag">Local</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* Load tokens for dynamic header */
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => r.ok ? r.json() : null)
+      .then(tokens => {
+        if (!tokens) return;
+        const title = tokens.meta?.title || tokens.title || 'Cafe';
+        if (title) {
+          document.getElementById('header').querySelector('.header__title').textContent = title + ' Components';
+        }
+        const gfUrl = tokens.googleFontsUrl || (tokens.fonts && tokens.fonts.googleUrl);
+        if (gfUrl) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = gfUrl;
+          document.head.appendChild(link);
+        }
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>

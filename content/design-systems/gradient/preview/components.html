@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gradient — Component Vocabulary</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--s-8) var(--s-5);
+    }
+
+    /* ──── MASTHEAD ──── */
+    .masthead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--s-3);
+      margin-bottom: var(--s-7);
+      border-bottom: 1px solid var(--border);
+      border-top: 3px solid var(--signal);
+      padding-top: var(--s-4);
+    }
+
+    .masthead__logo {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1;
+    }
+
+    .masthead__tagline {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    /* ──── STAGE HEAD ──── */
+    .stage-head {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-5);
+      border-bottom: 2px solid var(--border);
+    }
+
+    .stage-head__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .stage-head__title {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .stage-head__subtitle {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--slate);
+      max-width: 680px;
+    }
+
+    /* ──── SECTIONS ──── */
+    .section {
+      margin-bottom: var(--s-8);
+      padding-bottom: var(--s-6);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-2);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: var(--s-5);
+    }
+
+    /* ──── BUTTONS ──── */
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      align-items: center;
+      margin-bottom: var(--s-5);
+    }
+
+    .button-row__label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate);
+      margin-right: var(--s-2);
+      min-width: 120px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--button-py) var(--button-px);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      line-height: 1;
+      border: none;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      gap: var(--s-2);
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2);
+    }
+
+    .btn--secondary {
+      background: linear-gradient(135deg, #f5f5f5 0%, #e5e5e5 100%);
+      color: var(--ink);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    .btn--secondary:hover {
+      background: linear-gradient(135deg, #e5e5e5 0%, #d4d4d4 100%);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--signal);
+      border: 1px solid var(--border);
+      box-shadow: none;
+      font-weight: 600;
+    }
+
+    .btn--ghost:hover {
+      background: var(--bone);
+      border-color: var(--signal);
+    }
+
+    .btn--sm {
+      padding: 8px 16px;
+      font-size: 13px;
+    }
+
+    .btn--lg {
+      padding: 12px 28px;
+      font-size: 15px;
+    }
+
+    /* ──── CARDS ──── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--s-5);
+      margin-bottom: var(--s-5);
+    }
+
+    .card {
+      background: linear-gradient(135deg, var(--paper) 0%, var(--bone) 100%);
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      padding: var(--s-4);
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .card__image {
+      width: 100%;
+      height: 160px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
+      margin-bottom: var(--s-3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--slate);
+      font-weight: 500;
+    }
+
+    .card__kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: var(--s-1);
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .card__body {
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+    }
+
+    .card__meta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── BADGES ──── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2);
+      margin-bottom: var(--s-4);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      line-height: 1;
+      border-radius: var(--radius-full);
+      background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
+      color: var(--signal);
+    }
+
+    .badge--success {
+      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+      color: #16a34a;
+    }
+
+    .badge--warning {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      color: #b45309;
+    }
+
+    .badge--danger {
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+      color: #dc2626;
+    }
+
+    .badge--neutral {
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      color: var(--slate);
+    }
+
+    .badge__dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    /* ──── INPUT FIELDS ──── */
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .input-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .input {
+      padding: 10px 14px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: linear-gradient(135deg, var(--paper) 0%, var(--bone) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .input::placeholder {
+      color: var(--slate);
+    }
+
+    .input:focus {
+      border-color: var(--signal);
+      background: linear-gradient(135deg, var(--paper) 0%, var(--paper) 100%);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    /* ──── FEATURE GRID ──── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .feature-item {
+      padding: var(--s-4);
+      background: linear-gradient(135deg, var(--paper) 0%, var(--bone) 100%);
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      text-align: center;
+    }
+
+    .feature-item__number {
+      font-family: var(--font-display);
+      font-size: 40px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--signal) 0%, #2563eb 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: var(--s-2);
+    }
+
+    .feature-item__title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: var(--s-2);
+    }
+
+    .feature-item__desc {
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--slate);
+    }
+
+    /* ──── GRADIENT SHOWCASE ──── */
+    .gradient-showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--s-4);
+      margin-bottom: var(--s-5);
+    }
+
+    .gradient-item {
+      height: 120px;
+      border-radius: var(--card-radius);
+      border: var(--card-border);
+      display: flex;
+      align-items: flex-end;
+      padding: var(--s-3);
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .gradient-item--primary {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    }
+
+    .gradient-item--secondary {
+      background: linear-gradient(135deg, #f5f5f5 0%, #e5e5e5 100%);
+      color: var(--ink);
+    }
+
+    .gradient-item--accent {
+      background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
+      color: var(--signal);
+    }
+
+    .gradient-item--success {
+      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    }
+
+    .gradient-item--warning {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    }
+
+    .gradient-item--danger {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    }
+
+    /* ──── SUBSECTION LABEL ──── */
+    .subsection-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate);
+      margin-bottom: var(--s-3);
+      margin-top: var(--s-4);
+    }
+
+    /* ──── PULL QUOTE ──── */
+    .pullquote {
+      background: linear-gradient(135deg, var(--bone) 0%, #e5e7eb 100%);
+      border-left: 4px solid var(--signal);
+      padding: var(--s-5);
+      margin: var(--s-6) 0;
+      border-radius: var(--radius-md);
+    }
+
+    .pullquote__text {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: var(--s-3);
+    }
+
+    .pullquote__attribution {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate);
+      letter-spacing: 0.05em;
+    }
+
+    /* ──── FOLIO ──── */
+    .folio {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-3) 0;
+      margin-top: var(--s-8);
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──── RESPONSIVE ──── */
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--s-6) var(--s-3);
+      }
+
+      .stage-head__title {
+        font-size: 40px;
+      }
+
+      .section__title {
+        font-size: 32px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .masthead {
+        flex-direction: column;
+        text-align: left;
+      }
+
+      .masthead__tagline {
+        text-align: left;
+        margin-top: var(--s-2);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead__logo">Gradient</div>
+      <div class="masthead__tagline">
+        Morphism<br>& Effects
+      </div>
+    </div>
+
+    <!-- Stage Head -->
+    <div class="stage-head">
+      <div class="stage-head__kicker">Components</div>
+      <h1 class="stage-head__title">Component Vocabulary</h1>
+      <p class="stage-head__subtitle">
+        A modern, playful component system driven by smooth gradient transitions and soft surfaces. Every interaction rewards with visual depth and motion.
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <section class="section">
+      <div class="section__kicker">Buttons</div>
+      <h2 class="section__title">Button States & Sizes</h2>
+
+      <div class="button-row">
+        <span class="button-row__label">Primary</span>
+        <button class="btn">Get Started</button>
+        <button class="btn btn--sm">Small</button>
+        <button class="btn btn--lg">Large Button</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Secondary</span>
+        <button class="btn btn--secondary">Secondary</button>
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary btn--lg">Large Secondary</button>
+      </div>
+
+      <div class="button-row">
+        <span class="button-row__label">Ghost (Outlined)</span>
+        <button class="btn btn--ghost">Learn More</button>
+        <button class="btn btn--ghost btn--sm">Small Ghost</button>
+        <button class="btn btn--ghost btn--lg">Large Ghost</button>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="section">
+      <div class="section__kicker">Status</div>
+      <h2 class="section__title">Badges & Tags</h2>
+      <p style="font-size: 16px; line-height: 1.5; color: var(--slate); margin-bottom: var(--s-4);">Gradient-backed status pills with semantic color variants. Each badge carries a soft gradient background and animated dot indicator.</p>
+
+      <div class="subsection-label">Primary Variants</div>
+      <div class="badge-row">
+        <span class="badge"><span class="badge__dot"></span>Active</span>
+        <span class="badge badge--success"><span class="badge__dot"></span>Success</span>
+        <span class="badge badge--warning"><span class="badge__dot"></span>Warning</span>
+        <span class="badge badge--danger"><span class="badge__dot"></span>Danger</span>
+        <span class="badge badge--neutral"><span class="badge__dot"></span>Neutral</span>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="section">
+      <div class="section__kicker">Surfaces</div>
+      <h2 class="section__title">Card Components</h2>
+      <p style="font-size: 16px; line-height: 1.5; color: var(--slate); margin-bottom: var(--s-5);">Elevated cards with gradient backgrounds, subtle borders, and smooth hover effects. Each card lifts on interaction with refined shadow depth.</p>
+
+      <div class="cards-grid">
+        <article class="card">
+          <div class="card__image">Gradient Preview</div>
+          <div class="card__kicker">Feature</div>
+          <h3 class="card__title">Smooth Surfaces</h3>
+          <p class="card__body">Gradient-rich backgrounds create visual depth and playfulness. Soft borders keep the interface refined and modern.</p>
+          <div class="card__meta">Read More →</div>
+        </article>
+
+        <article class="card">
+          <div class="card__image">Interaction</div>
+          <div class="card__kicker">Interaction</div>
+          <h3 class="card__title">Responsive Motion</h3>
+          <p class="card__body">Every component elevates and shifts on hover. Smooth transitions reward user interaction with visual feedback.</p>
+          <div class="card__meta">View Details →</div>
+        </article>
+
+        <article class="card">
+          <div class="card__image">System</div>
+          <div class="card__kicker">System</div>
+          <h3 class="card__title">Consistent Rhythm</h3>
+          <p class="card__body">Built on an 8pt baseline grid. Spacing, shadows, and radii align to predictable scales across all components.</p>
+          <div class="card__meta">Explore Grid →</div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Gradients Section -->
+    <section class="section">
+      <div class="section__kicker">Palette</div>
+      <h2 class="section__title">Gradient Color System</h2>
+      <p style="font-size: 16px; line-height: 1.5; color: var(--slate); margin-bottom: var(--s-5);">A curated set of semantic gradients: primary for actions, secondary for neutral surfaces, plus success, warning, and danger variants.</p>
+
+      <div class="gradient-showcase">
+        <div class="gradient-item gradient-item--primary">Primary</div>
+        <div class="gradient-item gradient-item--secondary">Secondary</div>
+        <div class="gradient-item gradient-item--accent">Accent</div>
+        <div class="gradient-item gradient-item--success">Success</div>
+        <div class="gradient-item gradient-item--warning">Warning</div>
+        <div class="gradient-item gradient-item--danger">Danger</div>
+      </div>
+    </section>
+
+    <!-- Input Fields Section -->
+    <section class="section">
+      <div class="section__kicker">Form</div>
+      <h2 class="section__title">Input Fields</h2>
+      <p style="font-size: 16px; line-height: 1.5; color: var(--slate); margin-bottom: var(--s-5);">Gradient-backed text inputs with focus states. Subtle borders and soft shadows maintain visual harmony with the component system.</p>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <label class="input-label">Full Name</label>
+          <input class="input" type="text" placeholder="Enter your name">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Email Address</label>
+          <input class="input" type="email" placeholder="name@example.com">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Project Title</label>
+          <input class="input" type="text" placeholder="Your project here">
+        </div>
+
+        <div class="input-wrap">
+          <label class="input-label">Message</label>
+          <textarea class="input" placeholder="Share your thoughts..." style="min-height: 80px; resize: vertical;"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature Grid Section -->
+    <section class="section">
+      <div class="section__kicker">Features</div>
+      <h2 class="section__title">Design Principles</h2>
+      <p style="font-size: 16px; line-height: 1.5; color: var(--slate); margin-bottom: var(--s-5);">Six core principles shape the Gradient system: smoothness, playfulness, depth, consistency, accessibility, and responsiveness.</p>
+
+      <div class="feature-grid">
+        <div class="feature-item">
+          <div class="feature-item__number">01</div>
+          <h3 class="feature-item__title">Smooth Transitions</h3>
+          <p class="feature-item__desc">All interactions use eased timing curves. Motion feels natural, never jarring or abrupt.</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-item__number">02</div>
+          <h3 class="feature-item__title">Color Gradients</h3>
+          <p class="feature-item__desc">135° angled gradients add depth without overwhelming. Semantic colors maintain clarity across all states.</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-item__number">03</div>
+          <h3 class="feature-item__title">Soft Shadows</h3>
+          <p class="feature-item__desc">Carefully calibrated elevation shadows create visual hierarchy. Shadows lift on hover to indicate interactivity.</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-item__number">04</div>
+          <h3 class="feature-item__title">Responsive Grid</h3>
+          <p class="feature-item__desc">8pt baseline ensures every component aligns to rhythm. Consistent spacing scales from mobile to desktop.</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-item__number">05</div>
+          <h3 class="feature-item__title">Accessibility First</h3>
+          <p class="feature-item__desc">Sufficient contrast on all gradients. Focus states visible and clear. Inclusive by design, not retrofit.</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-item__number">06</div>
+          <h3 class="feature-item__title">Playful Energy</h3>
+          <p class="feature-item__desc">Modern, youthful personality without sacrifice to professionalism. Every component feels fresh and engaging.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pull Quote Section -->
+    <section class="section">
+      <div class="section__kicker">Philosophy</div>
+
+      <div class="pullquote">
+        <p class="pullquote__text">Gradients aren't decoration. They're depth. They're motion. They're the language of modern interfaces that feel alive.</p>
+        <p class="pullquote__attribution">Gradient Design System</p>
+      </div>
+    </section>
+
+    <!-- Folio -->
+    <div class="folio">
+      <span class="folio__chapter">Gradient — Components</span>
+      <span class="folio__page">Morphism & Effects</span>
+    </div>
+  </div>
+</body>
+</html>

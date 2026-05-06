@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Motifs — Expo</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      background: var(--paper, #f0f0f3);
+      color: var(--ink, #1c2024);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 96px 40px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 64px 24px;
+      }
+    }
+
+    /* ──── Header ──── */
+    .header {
+      margin-bottom: 120px;
+    }
+
+    .header__kicker {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #60646c);
+      margin-bottom: 16px;
+    }
+
+    .header__title {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 64px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -1.6px;
+      color: var(--ink, #1c2024);
+      margin-bottom: 20px;
+      max-width: 900px;
+    }
+
+    .header__title span {
+      color: var(--signal, #47c2ff);
+    }
+
+    .header__subtitle {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--slate, #60646c);
+      max-width: 700px;
+      margin-bottom: 32px;
+    }
+
+    .header__rule {
+      display: block;
+      width: 100%;
+      max-width: 100px;
+      height: 2px;
+      background: var(--ink, #1c2024);
+      border: none;
+      margin-top: 40px;
+    }
+
+    /* ──── Section ──── */
+    .section {
+      margin-bottom: 120px;
+    }
+
+    .section__label {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #60646c);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border, #7e8288);
+    }
+
+    /* ──── Atmosphere Card ──── */
+    .atmosphere-card {
+      background: var(--surface, #ffffff);
+      border-radius: 24px;
+      padding: 48px;
+      border: 1px solid var(--border, #7e8288);
+    }
+
+    .atmosphere-card p {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--ink, #1c2024);
+      margin-bottom: 20px;
+    }
+
+    .atmosphere-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ──── Key Characteristics ──── */
+    .traits-list {
+      list-style: none;
+      padding: 0;
+      background: var(--surface, #ffffff);
+      border-radius: 24px;
+      border: 1px solid var(--border, #7e8288);
+      overflow: hidden;
+    }
+
+    .traits-list li {
+      position: relative;
+      padding: 20px 24px 20px 40px;
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--ink, #1c2024);
+      border-bottom: 1px solid var(--border, #7e8288);
+    }
+
+    .traits-list li:last-child {
+      border-bottom: none;
+    }
+
+    .traits-list li::before {
+      content: '';
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--signal, #47c2ff);
+    }
+
+    /* ──── Do's and Don'ts ──── */
+    .dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dd-card {
+      background: var(--surface, #ffffff);
+      border: 1px solid var(--border, #7e8288);
+      border-radius: 24px;
+      padding: 32px;
+    }
+
+    .dd-card__heading {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dd-card__heading--do {
+      color: var(--ink, #1c2024);
+    }
+
+    .dd-card__heading--dont {
+      color: var(--signal, #47c2ff);
+    }
+
+    .dd-card__icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+    }
+
+    .dd-card__icon--do {
+      color: var(--ink, #1c2024);
+    }
+
+    .dd-card__icon--dont {
+      color: var(--signal, #47c2ff);
+    }
+
+    .dd-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dd-list li {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--ink, #1c2024);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border, #7e8288);
+    }
+
+    .dd-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ──── Color Harmony Strip ──── */
+    .harmony-strip {
+      display: flex;
+      border-radius: 24px;
+      overflow: hidden;
+      height: 140px;
+      border: 1px solid var(--border, #7e8288);
+      gap: 0;
+    }
+
+    .harmony-strip__swatch {
+      flex: 1;
+      position: relative;
+      transition: flex 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 16px;
+    }
+
+    .harmony-strip__swatch:hover {
+      flex: 1.3;
+    }
+
+    .harmony-strip__label {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      white-space: nowrap;
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(4px);
+      border-radius: 16px;
+    }
+
+    .harmony-strip__swatch:hover .harmony-strip__label {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* ──── Type Pairing Demo ──── */
+    .type-pairing {
+      background: var(--surface, #ffffff);
+      border: 1px solid var(--border, #7e8288);
+      border-radius: 24px;
+      padding: 56px 48px;
+    }
+
+    .type-pairing__kicker {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #60646c);
+      margin-bottom: 16px;
+    }
+
+    .type-pairing__display {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      color: var(--ink, #1c2024);
+      margin-bottom: 28px;
+    }
+
+    .type-pairing__display span {
+      color: var(--signal, #47c2ff);
+    }
+
+    .type-pairing__body {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--ink, #1c2024);
+      max-width: 760px;
+      margin-bottom: 32px;
+    }
+
+    .type-pairing__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border, #7e8288);
+    }
+
+    @media (max-width: 640px) {
+      .type-pairing__meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-pairing__meta-item {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    .type-pairing__meta-label {
+      font-weight: 600;
+      color: var(--ink, #1c2024);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ──── Geometry Showcase ──── */
+    .geometry-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .geometry-card {
+      background: var(--surface, #ffffff);
+      border: 1px solid var(--border, #7e8288);
+      border-radius: 24px;
+      padding: 32px;
+      text-align: center;
+    }
+
+    .geometry-card__demo {
+      width: 100%;
+      height: 120px;
+      background: linear-gradient(135deg, var(--signal, #47c2ff) 0%, var(--signal, #47c2ff) 100%);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .geometry-card__label {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #60646c);
+    }
+
+    /* ──── Type Ramp Table ──── */
+    .type-ramp {
+      background: var(--surface, #ffffff);
+      border: 1px solid var(--border, #7e8288);
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    .type-ramp__row {
+      display: grid;
+      grid-template-columns: 180px 1fr 120px 80px 100px;
+      gap: 24px;
+      padding: 24px 32px;
+      align-items: center;
+      border-bottom: 1px solid var(--border, #7e8288);
+    }
+
+    .type-ramp__row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 1024px) {
+      .type-ramp__row {
+        grid-template-columns: 140px 1fr 100px;
+        gap: 16px;
+      }
+    }
+
+    .type-ramp__role {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #60646c);
+    }
+
+    .type-ramp__example {
+      font-family: var(--font-body, system-ui, sans-serif);
+      color: var(--ink, #1c2024);
+    }
+
+    .type-ramp__specs {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 12px;
+      color: var(--slate, #60646c);
+      line-height: 1.5;
+    }
+
+    /* ──── Pill Button Showcase ──── */
+    .pill-showcase {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 40px;
+      background: var(--surface, #ffffff);
+      border: 1px solid var(--border, #7e8288);
+      border-radius: 24px;
+    }
+
+    .pill-button {
+      font-family: var(--font-body, system-ui, sans-serif);
+      font-size: 16px;
+      font-weight: 500;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .pill-button--primary {
+      background: var(--ink, #1c2024);
+      color: var(--paper, #f0f0f3);
+    }
+
+    .pill-button--primary:hover {
+      background: var(--slate, #60646c);
+      transform: translateY(-2px);
+    }
+
+    .pill-button--secondary {
+      background: var(--paper, #f0f0f3);
+      color: var(--ink, #1c2024);
+      border: 1px solid var(--border, #7e8288);
+    }
+
+    .pill-button--secondary:hover {
+      background: var(--border, #7e8288);
+      transform: translateY(-2px);
+    }
+
+    .pill-button--accent {
+      background: var(--signal, #47c2ff);
+      color: var(--ink, #1c2024);
+    }
+
+    .pill-button--accent:hover {
+      filter: brightness(0.9);
+      transform: translateY(-2px);
+    }
+
+    .pill-showcase__label {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate, #60646c);
+      width: 100%;
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border, #7e8288);
+    }
+
+    /* ──── Loading ──── */
+    .loading {
+      text-align: center;
+      padding: 120px 24px;
+      color: var(--slate, #60646c);
+      font-size: 18px;
+      font-family: var(--font-body, system-ui, sans-serif);
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 20px auto 0;
+      border: 2px solid var(--border, #7e8288);
+      border-top-color: var(--signal, #47c2ff);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="loading">Loading design tokens…</div>
+  </div>
+
+  <script>
+    const CORE_COLOR_KEYS = ['paper', 'surface', 'ink', 'slate', 'signal'];
+
+    (window.__DESIGN_TOKENS__ ? Promise.resolve({ ok: true, json: () => Promise.resolve(window.__DESIGN_TOKENS__) }) : fetch('../tokens.json'))
+      .then(r => {
+        if (!r.ok) throw new Error('tokens.json not found (' + r.status + ')');
+        return r.json();
+      })
+      .then(render)
+      .catch(err => {
+        document.getElementById('app').innerHTML =
+          '<div class="loading" style="color:#47c2ff">' +
+          'Could not load tokens.json — ' + err.message + '</div>';
+      });
+
+    function render(tokens) {
+      const app = document.getElementById('app');
+      const colors = tokens.colors || {};
+      const meta = tokens.meta || {};
+
+      let html = '';
+
+      /* ──── Header ──── */
+      html += '<header class="header">';
+      html += '  <div class="header__kicker">Brand Identity</div>';
+      html += '  <h1 class="header__title">Luminous, <span>pill-shaped</span>, developer-first</h1>';
+      html += '  <p class="header__subtitle">A monochromatic interface where confidence meets approachability. Extreme compression, organic geometry, and the gallery spacing that defines premium tool design.</p>';
+      html += '  <hr class="header__rule">';
+      html += '</header>';
+
+      /* ──── Atmosphere ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Atmosphere</div>';
+      html += '  <div class="atmosphere-card">';
+      html += '    <p>Expo\'s interface breathes on a luminous, cool-tinted off-white (#f0f0f3) — not the sterile white of enterprise tools, but the airy presence of an Apple product page. The entire design is monochromatic: pure black headlines carry maximum authority against light backgrounds, while a spectrum of cool blue-grays (Slate #60646c, Silver #6a6e74, Pewter #999999) handle all secondary communication. Color is nearly absent from the interface itself, reserved entirely for product screenshots and app icons—making content burst against neutral chrome.</p>';
+      html += '    <p>What distinguishes Expo is its signature pill geometry. Buttons, tabs, video containers, and cards use generously rounded corners (24px) or fully pill-shaped borders (9999px), creating an organic, approachable feel that contradicts the typical sharp-edged developer tool aesthetic. Combined with extreme display headline compression (letter-spacing: -1.6px to -3px at 64px), the result is a design that\'s simultaneously premium and friendly. Vertical spacing between sections is enormous (96px+), creating a gallery-like pacing where each feature gets its own breathing room.</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Key Characteristics ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Key Characteristics</div>';
+      html += '  <ul class="traits-list">';
+      html += '    <li>Luminous cool-white canvas (#f0f0f3) with gallery-like vertical spacing (96px+)</li>';
+      html += '    <li>Strictly monochromatic interface: pure black headlines, cool blue-gray text, no decorative color</li>';
+      html += '    <li>Pill-shaped geometry everywhere—buttons, tabs, containers, cards (24px–9999px radius)</li>';
+      html += '    <li>Massive display headlines (64px) with extreme negative letter-spacing (-1.6px to -3px)</li>';
+      html += '    <li>Inter as the sole typeface, used at full weight range (400–900) for expressive hierarchy</li>';
+      html += '    <li>Whisper-soft shadows that barely lift elements (0 2px 8px rgba(0,0,0,0.08))</li>';
+      html += '    <li>Pure white elevated surfaces (#ffffff) separate from paper (#f0f0f3) for depth</li>';
+      html += '    <li>Product screenshots as the only source of color in the interface chrome</li>';
+      html += '    <li>Borders at 1–2px using the border token (#7e8288), never heavier</li>';
+      html += '  </ul>';
+      html += '</div>';
+
+      /* ──── Do's and Don'ts ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Do\'s and Don\'ts</div>';
+      html += '  <div class="dd-grid">';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--do">';
+      html += '      <span class="dd-card__icon dd-card__icon--do">✓</span> Do';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Use Paper (#f0f0f3) as the page background and Surface (#ffffff) for elevated cards</li>';
+      html += '      <li>Keep display headlines at extreme negative letter-spacing (-1.6px to -3px at 64px)</li>';
+      html += '      <li>Use pill-shaped (9999px) radius for primary CTA buttons—organic shape is core</li>';
+      html += '      <li>Reserve pure black (#000000) for headlines and primary CTAs—maximum authority</li>';
+      html += '      <li>Use Slate Gray (#60646c) for secondary text—readable and intentionally receded</li>';
+      html += '      <li>Maintain enormous vertical spacing between sections (96px+) for premium feel</li>';
+      html += '      <li>Use product screenshots as the primary visual content—interface stays monochrome</li>';
+      html += '      <li>Apply Inter at full weight range (400–900)—weight contrast IS the hierarchy</li>';
+      html += '      <li>Apply subtle shadows (0 2px 8px rgba(0,0,0,0.08)) for elevation only</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  <div class="dd-card">';
+      html += '    <div class="dd-card__heading dd-card__heading--dont">';
+      html += '      <span class="dd-card__icon dd-card__icon--dont">✕</span> Don\'t';
+      html += '    </div>';
+      html += '    <ul class="dd-list">';
+      html += '      <li>Introduce decorative colors into interface chrome—monochromatic is intentional</li>';
+      html += '      <li>Use sharp corners (border-radius &lt; 6px) on interactive elements—pill geometry is signature</li>';
+      html += '      <li>Reduce section spacing below 64px—breathing room defines premium feel</li>';
+      html += '      <li>Use heavy drop shadows—depth comes from background contrast alone</li>';
+      html += '      <li>Mix in additional typefaces—Inter handles everything from display to caption</li>';
+      html += '      <li>Use letter-spacing wider than -0.25px on body text—extreme tracking is display-only</li>';
+      html += '      <li>Use borders heavier than 2px—containment is subtle, achieved through color</li>';
+      html += '      <li>Add gradients to interface—visual richness comes from content, not decoration</li>';
+      html += '      <li>Use saturated colors outside semantic contexts—palette is grayscale + functional blue</li>';
+      html += '    </ul>';
+      html += '  </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Color Harmony Strip ──── */
+      const harmonyKeys = CORE_COLOR_KEYS.filter(k => colors[k]);
+      if (harmonyKeys.length) {
+        html += '<div class="section">';
+        html += '  <div class="section__label">Color Harmony</div>';
+        html += '  <div class="harmony-strip">';
+
+        harmonyKeys.forEach(key => {
+          const hex = colors[key];
+          const lum = relativeLuminance(hex);
+          const labelColor = lum > 0.5 ? '#1c2024' : '#f0f0f3';
+          html += '<div class="harmony-strip__swatch" style="background:' + esc(hex) + '">';
+          html += '  <span class="harmony-strip__label" style="color:' + labelColor + '">' + esc(key.toUpperCase()) + '</span>';
+          html += '</div>';
+        });
+
+        html += '  </div>';
+        html += '</div>';
+      }
+
+      /* ──── Pill Geometry Showcase ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Pill Geometry</div>';
+      html += '  <div class="geometry-grid">';
+
+      html += '    <div class="geometry-card">';
+      html += '      <div class="geometry-card__demo" style="border-radius: 24px;">24px radius</div>';
+      html += '      <div class="geometry-card__label">Cards & Containers</div>';
+      html += '    </div>';
+
+      html += '    <div class="geometry-card">';
+      html += '      <div class="geometry-card__demo" style="border-radius: 12px;">12px radius</div>';
+      html += '      <div class="geometry-card__label">Input Fields</div>';
+      html += '    </div>';
+
+      html += '    <div class="geometry-card">';
+      html += '      <div class="geometry-card__demo" style="border-radius: 9999px;">9999px (Full Pill)</div>';
+      html += '      <div class="geometry-card__label">CTA Buttons</div>';
+      html += '    </div>';
+
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Button Showcase ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Button Patterns</div>';
+      html += '  <div class="pill-showcase">';
+      html += '    <div class="pill-showcase__label">Pill-shaped CTAs with organic geometry</div>';
+      html += '    <button class="pill-button pill-button--primary">Get Started</button>';
+      html += '    <button class="pill-button pill-button--secondary">Learn More</button>';
+      html += '    <button class="pill-button pill-button--accent">Try Now</button>';
+      html += '    <button class="pill-button pill-button--primary">Build App</button>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Typography Pairing ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Typography Pairing</div>';
+      html += '  <div class="type-pairing">';
+
+      html += '    <div class="type-pairing__kicker">Display + Body</div>';
+      html += '    <div class="type-pairing__display">One typeface, <span>full range</span></div>';
+
+      html += '    <div class="type-pairing__body">Inter is the only typeface on the platform, deployed across the full weight spectrum from 400 to 900. Weight contrast creates hierarchy. Display headlines compress at -1.6px to -3px letter-spacing, while body text opens to 0 spacing. The display/body pairing doesn\'t rely on font switching—it\'s pure weight and size contrast. This unified approach reinforces the monolithic, confident character of the system.</div>';
+
+      html += '    <div class="type-pairing__meta">';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Primary Font</span>';
+      html += '        Inter, weights 400–900';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">Mono Font</span>';
+      html += '        JetBrains Mono, 400–700';
+      html += '      </div>';
+      html += '      <div class="type-pairing__meta-item">';
+      html += '        <span class="type-pairing__meta-label">All weights work</span>';
+      html += '        In one cohesive system';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      /* ──── Type Ramp ──── */
+      html += '<div class="section">';
+      html += '  <div class="section__label">Type Ramp</div>';
+      html += '  <div class="type-ramp">';
+
+      const ramp = [
+        { role: 'Display / Hero', size: '64px', weight: '700', lineHeight: '1.10', letterSpacing: '-1.6px', example: 'Luminous, pill-shaped, developer-first' },
+        { role: 'Section Heading', size: '48px', weight: '600', lineHeight: '1.10', letterSpacing: '-2px', example: 'Platform features' },
+        { role: 'Sub-heading', size: '20px', weight: '600', lineHeight: '1.20', letterSpacing: '-0.25px', example: 'Real-time collaboration' },
+        { role: 'Body Large', size: '18px', weight: '400', lineHeight: '1.40', letterSpacing: '0', example: 'Build once, deploy everywhere with React Native.' },
+        { role: 'Body / Button', size: '16px', weight: '400', lineHeight

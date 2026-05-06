@@ -1,0 +1,98 @@
+/* Revolut — Design System Tokens */
+/* Auto-generated from DESIGN.md — do not hand-edit */
+
+:root {
+  /* ── Colors ── */
+  --paper:   #191c1f;
+  --ink:     #376cd5;
+  --slate:   #8d969e;
+  --signal:  #4f55f1;
+  --bone:    #f4f4f4;
+  --border:  #c9c9cd;
+  --surface: #191c1f;
+
+  /* Extended palette */
+  --color-pure-white: #ffffff;
+  --color-revolut-blue: #494fdf;
+  --color-danger-red: #e23b4a;
+  --color-deep-pink: #e61e49;
+  --color-warning-orange: #ec7e00;
+  --color-yellow: #b09000;
+  --color-teal: #00a87e;
+  --color-light-green: #428619;
+  --color-green-text: #006400;
+  --color-light-blue: #007bc2;
+  --color-brown: #936d62;
+  --color-red-text: #8b0000;
+  --color-mid-slate: #7a848e;
+
+  /* Semantic */
+  --success: #00a87e;
+  --warning: #ec7e00;
+  --danger:  #e23b4a;
+  --info:    #007bc2;
+
+  /* Semantic aliases */
+  --canvas:     var(--paper);
+  --text:       var(--ink);
+  --text-muted: var(--slate);
+  --accent:     var(--signal);
+
+  /* ── Typography ── */
+  --font-display: Aeonik Pro;
+  --font-body:    Aeonik Pro;
+  --font-mono:    ui-monospace, monospace;
+
+  /* Type ramp */
+  --t-display-mega: 136px;
+  --t-display-hero: 80px;
+  --t-section-heading: 48px;
+  --t-sub-heading: 40px;
+  --t-card-title: 32px;
+  --t-feature-title: 24px;
+  --t-nav-ui: 20px;
+  --t-body-large: 18px;
+  --t-body: 16px;
+  --t-body-semibold: 16px;
+  --t-body-bold-link: 16px;
+
+  /* ── Spacing ── */
+  --s-1: 4px;
+  --s-2: 6px;
+  --s-3: 8px;
+  --s-4: 14px;
+  --s-5: 16px;
+  --s-6: 20px;
+  --s-7: 24px;
+  --s-8: 32px;
+  --s-9: 40px;
+  --s-10: 48px;
+  --s-11: 80px;
+  --s-12: 88px;
+  --s-13: 120px;
+
+  /* ── Radii ── */
+  --radius-none: 0;
+  --radius-sm:   6px;
+  --radius-md:   12px;
+  --radius-lg:   80px;
+  --radius-full: 9999px;
+
+  /* ── Components ── */
+  --button-radius:  12px;
+  --button-py:      10px;
+  --button-px:      20px;
+  --card-radius:    12px;
+  --card-border:    1px solid var(--border);
+  --card-shadow:    none;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }

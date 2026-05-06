@@ -40,7 +40,7 @@ The green accent (`#3ecf8e`) appears selectively — in the Supabase logo, in li
 - **Mid Border** (`#363636`): Button borders, dividers
 - **Border Light** (`#393939`): Secondary borders
 - **Charcoal** (`#434343`): Tertiary borders, dark accents
-- **Dark Gray** (`#4d4d4d`): Heavy secondary text
+- **Dark Gray** (`#7f7f7f`): Heavy secondary text
 - **Mid Gray** (`#898989`): Muted text, link color
 - **Light Gray** (`#b4b4b4`): Secondary link text
 - **Near White** (`#efefef`): Light border, subtle surface
