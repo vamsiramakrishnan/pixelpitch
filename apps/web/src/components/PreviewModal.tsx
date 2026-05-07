@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useT } from '../i18n';
 import { exportAsHtml, exportAsPdf, exportAsZip } from '../runtime/exports';
 import { buildSrcdoc } from '../runtime/srcdoc';
+import { MotionModal } from './MotionModal';
 
 export interface PreviewView {
   id: string;
@@ -32,6 +33,7 @@ export interface PreviewSidebar {
 }
 
 interface Props {
+  open?: boolean;
   title: string;
   subtitle?: string;
   views: PreviewView[];
@@ -61,6 +63,7 @@ interface Props {
 // open-in-new-tab), and a Fullscreen toggle. Used by both the design-system
 // preview and the example card preview, so the two paths feel identical.
 export function PreviewModal({
+  open = true,
   title,
   subtitle,
   views,
@@ -250,8 +253,15 @@ export function PreviewModal({
   const showTabs = views.length > 1;
 
   return (
-    <div className="ds-modal-backdrop" role="dialog" aria-modal="true" aria-label={`${title} preview`}>
-      <div className={`ds-modal ${fullscreen ? 'ds-modal-fullscreen' : ''}`}>
+    <MotionModal
+      open={open}
+      onClose={onClose}
+      backdropClassName="ds-modal-backdrop"
+      modalClassName={`ds-modal${fullscreen ? ' ds-modal-fullscreen' : ''}`}
+      disableEscapeKey
+      disableBackdropClick
+    >
+      <div role="dialog" aria-modal="true" aria-label={`${title} preview`}>
         <header className="ds-modal-header">
           <div className="ds-modal-title-block">
             <div className="ds-modal-title">{title}</div>
@@ -421,6 +431,6 @@ export function PreviewModal({
           ) : null}
         </div>
       </div>
-    </div>
+    </MotionModal>
   );
 }

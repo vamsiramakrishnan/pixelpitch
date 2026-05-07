@@ -553,12 +553,14 @@ export function EntryView({
       )}
       {previewSystem ? (
         <DesignSystemPreviewModal
+          open
           system={previewSystem}
           onClose={() => setPreviewSystemId(null)}
         />
       ) : null}
       {previewPromptTemplate ? (
         <PromptTemplatePreviewModal
+          open
           summary={previewPromptTemplate}
           onClose={() => setPreviewPromptTemplate(null)}
         />

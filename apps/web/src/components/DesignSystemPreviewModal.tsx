@@ -11,6 +11,7 @@ import { DesignSpecView } from './DesignSpecView';
 import { PreviewModal } from './PreviewModal';
 
 interface Props {
+  open?: boolean;
   system: DesignSystemSummary;
   onClose: () => void;
 }
@@ -23,7 +24,7 @@ const PREVIEW_CARDS = [
   { file: 'brand_motifs.html', label: 'Motifs' },
 ] as const;
 
-export function DesignSystemPreviewModal({ system, onClose }: Props) {
+export function DesignSystemPreviewModal({ open = true, system, onClose }: Props) {
   const t = useT();
   const [showcaseHtml, setShowcaseHtml] = useState<string | null | undefined>(undefined);
   const [tokensHtml, setTokensHtml] = useState<string | null | undefined>(undefined);
@@ -82,6 +83,7 @@ export function DesignSystemPreviewModal({ system, onClose }: Props) {
 
   return (
     <PreviewModal
+      open={open}
       title={system.title}
       subtitle={system.summary || system.category}
       views={views}

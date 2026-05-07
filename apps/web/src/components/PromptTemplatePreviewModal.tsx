@@ -6,8 +6,10 @@ import type {
   PromptTemplateSummary,
 } from '../types';
 import { Icon } from './Icon';
+import { MotionModal } from './MotionModal';
 
 interface Props {
+  open?: boolean;
   summary: PromptTemplateSummary;
   onClose: () => void;
 }
@@ -16,7 +18,7 @@ interface Props {
 // /api/prompt-templates carries enough to render the header (title,
 // description, category, tags, attribution) and the preview asset; the
 // prompt body is fetched lazily so the gallery list stays cheap.
-export function PromptTemplatePreviewModal({ summary, onClose }: Props) {
+export function PromptTemplatePreviewModal({ open = true, summary, onClose }: Props) {
   const t = useT();
   const [detail, setDetail] = useState<PromptTemplateDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -80,15 +82,13 @@ export function PromptTemplatePreviewModal({ summary, onClose }: Props) {
 
   return (
     <>
-    <div
-      className="prompt-template-modal-backdrop"
-      role="dialog"
-      aria-modal="true"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
+    <MotionModal
+      open={open}
+      onClose={onClose}
+      backdropClassName="prompt-template-modal-backdrop"
+      modalClassName="prompt-template-modal"
     >
-      <div className="prompt-template-modal">
+      <div role="dialog" aria-modal="true">
         <header className="prompt-template-modal-head">
           <div className="prompt-template-modal-titles">
             <h2>{summary.title}</h2>
@@ -205,7 +205,7 @@ export function PromptTemplatePreviewModal({ summary, onClose }: Props) {
           ) : null}
         </footer>
       </div>
-    </div>
+    </MotionModal>
     {lightboxOpen && hasAsset ? (
       // Immersive lightbox — full viewport, dark backdrop, centered
       // media. Rendered as a sibling of the modal backdrop so its

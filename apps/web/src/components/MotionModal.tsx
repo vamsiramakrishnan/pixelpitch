@@ -7,36 +7,53 @@ interface Props {
   onClose: () => void;
   children: ReactNode;
   className?: string;
+  backdropClassName?: string;
+  modalClassName?: string;
+  disableEscapeKey?: boolean;
+  disableBackdropClick?: boolean;
 }
 
-export function MotionModal({ open, onClose, children, className }: Props) {
+export function MotionModal({
+  open,
+  onClose,
+  children,
+  className,
+  backdropClassName = 'modal-backdrop',
+  modalClassName = 'modal',
+  disableEscapeKey = false,
+  disableBackdropClick = false,
+}: Props) {
   const backdropRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || disableEscapeKey) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [open, onClose]);
+  }, [open, onClose, disableEscapeKey]);
 
   return (
     <AnimatePresence>
       {open ? (
         <motion.div
           ref={backdropRef}
-          className="modal-backdrop"
+          className={backdropClassName}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, transition: { duration: 0.16 } }}
           exit={{ opacity: 0, transition: { duration: 0.1 } }}
-          onClick={(e) => {
-            if (e.target === backdropRef.current) onClose();
-          }}
+          onClick={
+            disableBackdropClick
+              ? undefined
+              : (e) => {
+                  if (e.target === backdropRef.current) onClose();
+                }
+          }
           style={{ animation: 'none' }}
         >
           <motion.div
-            className={className ? `modal ${className}` : 'modal'}
+            className={className ? `${modalClassName} ${className}` : modalClassName}
             initial={{ opacity: 0, scale: 0.96, y: 6 }}
             animate={{ opacity: 1, scale: 1, y: 0, transition: springs.gentle }}
             exit={{ opacity: 0, scale: 0.98, transition: { duration: 0.12 } }}
