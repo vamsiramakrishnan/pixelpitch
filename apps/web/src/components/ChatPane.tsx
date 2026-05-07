@@ -1,9 +1,21 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState, type CSSProperties } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { springs, variants } from '../motion';
 import { useT } from '../i18n';
 import type { Dict } from '../i18n/types';
 import { projectRawUrl } from '../providers/registry';
 import type { TodoItem } from '../runtime/todos';
-import type { AppConfig, ChatAttachment, ChatCommentAttachment, ChatMessage, Conversation, PreviewComment, ProjectFile } from '../types';
+import type {
+  AppConfig,
+  ChatAttachment,
+  ChatCommentAttachment,
+  ChatMessage,
+  Conversation,
+  DesignSystemSummary,
+  PreviewComment,
+  ProjectFile,
+  SkillSummary,
+} from '../types';
 import { dayKey, dayLabel, exactDateTime, messageTime, relativeTimeLong } from '../utils/chatTime';
 import { commentsToAttachments, simplePositionLabel } from '../comments';
 import { AssistantMessage } from './AssistantMessage';
@@ -49,6 +61,8 @@ interface Props {
   error: string | null;
   projectId: string | null;
   projectFiles: ProjectFile[];
+  skills?: SkillSummary[];
+  designSystems?: DesignSystemSummary[];
   // Names that exist in the project folder. Tool cards and chips use this
   // set to decide whether a path can be opened as a tab.
   projectFileNames?: Set<string>;
@@ -98,6 +112,8 @@ export function ChatPane({
   error,
   projectId,
   projectFiles,
+  skills = [],
+  designSystems = [],
   projectFileNames,
   onEnsureProject,
   previewComments = [],
@@ -128,6 +144,7 @@ export function ChatPane({
   const historyWrapRef = useRef<HTMLDivElement | null>(null);
   const composerRef = useRef<ChatComposerHandle | null>(null);
   const didInitialScrollRef = useRef(false);
+  const seenIdsRef = useRef<Set<string>>(new Set());
   const [tab, setTab] = useState<Tab>('chat');
   const [showConvList, setShowConvList] = useState(false);
   const [scrolledFromBottom, setScrolledFromBottom] = useState(false);
@@ -149,6 +166,10 @@ export function ChatPane({
     }
     return map;
   })();
+
+  useEffect(() => {
+    messages.forEach((m) => seenIdsRef.current.add(m.id));
+  }, []); // mount-only — populate with existing messages so they don't animate
 
   useEffect(() => {
     didInitialScrollRef.current = false;
@@ -221,24 +242,38 @@ export function ChatPane({
   return (
     <div className="pane">
       <div className="chat-header">
-        <div className="chat-header-tabs" role="tablist">
+        <div className="chat-header-segment" role="tablist">
           <button
             type="button"
             role="tab"
             aria-selected={tab === 'chat'}
-            className={`chat-header-tab${tab === 'chat' ? ' active' : ''}`}
+            className={tab === 'chat' ? 'active' : ''}
             onClick={() => setTab('chat')}
           >
             {t('chat.tabChat')}
+            {tab === 'chat' ? (
+              <motion.div
+                className="chat-header-segment-indicator"
+                layoutId="chat-tab-indicator"
+                transition={springs.snappy}
+              />
+            ) : null}
           </button>
           <button
             type="button"
             role="tab"
             aria-selected={tab === 'comments'}
-            className={`chat-header-tab${tab === 'comments' ? ' active' : ''}`}
+            className={tab === 'comments' ? 'active' : ''}
             onClick={() => setTab('comments')}
           >
             {t('chat.tabComments')}
+            {tab === 'comments' ? (
+              <motion.div
+                className="chat-header-segment-indicator"
+                layoutId="chat-tab-indicator"
+                transition={springs.snappy}
+              />
+            ) : null}
           </button>
         </div>
         <div className="chat-header-actions">
@@ -338,18 +373,18 @@ export function ChatPane({
                       {t('chat.startHint')}
                     </span>
                   </div>
-                  <div className="chat-examples" role="list">
+                  <motion.div className="chat-examples" role="list" variants={variants.staggerParent} initial="initial" animate="animate">
                     {EXAMPLE_PROMPT_KEYS.map((ex, i) => {
                       const title = t(ex.titleKey);
                       const tag = t(ex.tagKey);
                       const prompt = t(ex.promptKey);
                       return (
-                        <button
+                        <motion.button
                           key={ex.titleKey}
                           type="button"
                           role="listitem"
                           className="chat-example"
-                          style={{ animationDelay: `${i * 70}ms` }}
+                          variants={variants.fadeUp}
                           onClick={() => composerRef.current?.setDraft(prompt)}
                           title={t('chat.fillInputTitle')}
                         >
@@ -366,45 +401,67 @@ export function ChatPane({
                           <span className="chat-example-cta" aria-hidden>
                             ↵
                           </span>
-                        </button>
+                        </motion.button>
                       );
                     })}
-                  </div>
+                  </motion.div>
                 </div>
               ) : null}
               {messages.map((m, i) => {
+                const isNew = !seenIdsRef.current.has(m.id);
+                if (isNew) seenIdsRef.current.add(m.id);
                 const showDaySeparator = shouldShowDaySeparator(messages[i - 1], m);
+                const prevSameRole = messages[i - 1]?.role === m.role && !showDaySeparator;
+                const nextSameRole = messages[i + 1]?.role === m.role;
+                const groupClass = [
+                  prevSameRole ? 'group-cont' : 'group-start',
+                  nextSameRole ? 'group-open' : 'group-end',
+                  i >= Math.max(0, messages.length - 8) ? 'message-enter' : '',
+                ].filter(Boolean).join(' ');
+                const enterStyle = {
+                  ['--message-enter-delay' as string]: `${Math.min(i, 8) * 28}ms`,
+                };
                 const messageStreaming =
                   m.role === 'assistant' &&
                   ((streaming && m.id === lastAssistantId) || isActiveRunStatus(m.runStatus));
                 return (
                   <Fragment key={m.id}>
                     {showDaySeparator ? <DaySeparator ts={messageTime(m)} /> : null}
-                    {m.role === 'user' ? (
-                      <UserMessage
-                        message={m}
-                        projectId={projectId}
-                        projectFileNames={projectFileNames}
-                        onRequestOpenFile={onRequestOpenFile}
-                        t={t}
-                      />
-                    ) : (
-                      <AssistantMessage
-                        message={m}
-                        streaming={messageStreaming}
-                        projectId={projectId}
-                        projectFileNames={projectFileNames}
-                        onRequestOpenFile={onRequestOpenFile}
-                        isLast={m.id === lastAssistantId}
-                        nextUserContent={nextUserContentByAssistantId.get(m.id)}
-                        onSubmitForm={onSubmitForm}
-                        onContinueRemainingTasks={
-                          m.id === lastAssistantId && onContinueRemainingTasks
-                            ? (todos) => onContinueRemainingTasks(m, todos)
-                            : undefined
-                        }
-                      />
-                    )}
+                    <motion.div
+                      initial={isNew ? { opacity: 0, y: 6 } : false}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={springs.gentle}
+                    >
+                      {m.role === 'user' ? (
+                        <UserMessage
+                          message={m}
+                          className={groupClass}
+                          style={enterStyle}
+                          projectId={projectId}
+                          projectFileNames={projectFileNames}
+                          onRequestOpenFile={onRequestOpenFile}
+                          t={t}
+                        />
+                      ) : (
+                        <AssistantMessage
+                          message={m}
+                          streaming={messageStreaming}
+                          className={groupClass}
+                          style={enterStyle}
+                          projectId={projectId}
+                          projectFileNames={projectFileNames}
+                          onRequestOpenFile={onRequestOpenFile}
+                          isLast={m.id === lastAssistantId}
+                          nextUserContent={nextUserContentByAssistantId.get(m.id)}
+                          onSubmitForm={onSubmitForm}
+                          onContinueRemainingTasks={
+                            m.id === lastAssistantId && onContinueRemainingTasks
+                              ? (todos) => onContinueRemainingTasks(m, todos)
+                              : undefined
+                          }
+                        />
+                      )}
+                    </motion.div>
                   </Fragment>
                 );
               })}
@@ -426,6 +483,8 @@ export function ChatPane({
             ref={composerRef}
             projectId={projectId}
             projectFiles={projectFiles}
+            skills={skills}
+            designSystems={designSystems}
             streaming={streaming || hasActiveRunMessage}
             initialDraft={initialDraft}
             onEnsureProject={onEnsureProject}
@@ -669,12 +728,16 @@ function ConversationRow({
 
 function UserMessage({
   message,
+  className,
+  style,
   projectId,
   projectFileNames,
   onRequestOpenFile,
   t,
 }: {
   message: ChatMessage;
+  className?: string;
+  style?: CSSProperties;
   projectId: string | null;
   projectFileNames?: Set<string>;
   onRequestOpenFile?: (name: string) => void;
@@ -683,7 +746,7 @@ function UserMessage({
   const attachments = message.attachments ?? [];
   const commentAttachments = message.commentAttachments ?? [];
   return (
-    <div className="msg user">
+    <div className={`msg user${className ? ` ${className}` : ''}`} style={style}>
       <div className="role">
         <span>{t('chat.you')}</span>
         <MessageTimestamp message={message} t={t} />
@@ -739,7 +802,7 @@ function DaySeparator({ ts }: { ts: number | undefined }) {
   if (!ts) return null;
   return (
     <div className="chat-day-separator" role="separator">
-      <time dateTime={new Date(ts).toISOString()}>{dayLabel(ts)}</time>
+      <time className="chat-day-separator-text" dateTime={new Date(ts).toISOString()}>{dayLabel(ts)}</time>
     </div>
   );
 }

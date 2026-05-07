@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { ToolCard } from './ToolCard';
 import { renderMarkdown } from '../runtime/markdown';
 import { projectFileUrl } from '../providers/registry';
@@ -17,6 +17,8 @@ type TranslateFn = (key: keyof Dict, vars?: Record<string, string | number>) => 
 interface Props {
   message: ChatMessage;
   streaming: boolean;
+  className?: string;
+  style?: CSSProperties;
   projectId: string | null;
   projectFileNames?: Set<string>;
   onRequestOpenFile?: (name: string) => void;
@@ -46,6 +48,8 @@ interface Props {
 export function AssistantMessage({
   message,
   streaming,
+  className,
+  style,
   projectId,
   projectFileNames,
   onRequestOpenFile,
@@ -70,7 +74,10 @@ export function AssistantMessage({
   const [locallySubmitted, setLocallySubmitted] = useState<Set<string>>(() => new Set());
 
   return (
-    <div className="msg assistant">
+    <div
+      className={`msg assistant${streaming ? ' streaming' : ''}${className ? ` ${className}` : ''}`}
+      style={style}
+    >
       <div className="role">
         <span>{roleLabel}</span>
         <MessageTimestamp message={message} t={t} />
@@ -413,6 +420,7 @@ function ProseBlock({
           />
         );
       })}
+      {streaming ? <span className="streaming-cursor" /> : null}
     </div>
   );
 }
