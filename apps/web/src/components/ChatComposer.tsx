@@ -6,10 +6,19 @@ import {
   useRef,
   useState,
 } from "react";
+import { AnimatePresence, motion } from 'framer-motion';
+import { springs } from '../motion';
 import { useT } from '../i18n';
 import type { Dict } from '../i18n/types';
 import { projectRawUrl, uploadProjectFiles } from "../providers/registry";
-import type { AppConfig, ChatAttachment, ChatCommentAttachment, ProjectFile } from "../types";
+import type {
+  AppConfig,
+  ChatAttachment,
+  ChatCommentAttachment,
+  DesignSystemSummary,
+  ProjectFile,
+  SkillSummary,
+} from "../types";
 import { Icon } from "./Icon";
 import { BUILT_IN_PETS, CUSTOM_PET_ID, resolveActivePet } from "./pet/pets";
 
@@ -25,16 +34,19 @@ interface SlashCommand {
   // "submit immediately" one.
   insert: string;
   // i18n key of the short description shown next to the label.
-  descKey: keyof Dict;
+  descKey?: keyof Dict;
+  descText?: string;
   // Optional argument hint shown after the description.
   argHint?: string;
   // Icon glyph from the project Icon set.
-  icon: 'sparkles' | 'eye' | 'sliders';
+  icon: 'sparkles' | 'eye' | 'sliders' | 'edit';
 }
 
 interface Props {
   projectId: string | null;
   projectFiles: ProjectFile[];
+  skills?: SkillSummary[];
+  designSystems?: DesignSystemSummary[];
   streaming: boolean;
   initialDraft?: string;
   // Lazy ensure — the composer calls this before its first upload, so the
@@ -59,6 +71,74 @@ interface Props {
   onOpenPetSettings?: () => void;
 }
 
+type MentionKind = 'file' | 'skill' | 'design' | 'craft' | 'action';
+
+interface MentionItem {
+  id: string;
+  kind: MentionKind;
+  token: string;
+  title: string;
+  subtitle: string;
+  icon: 'file' | 'image' | 'sparkles' | 'sun-moon' | 'tweaks' | 'edit' | 'comment' | 'present';
+  file?: ProjectFile;
+  skill?: SkillSummary;
+  designSystem?: DesignSystemSummary;
+}
+
+const CRAFT_MENTION_ITEMS: MentionItem[] = [
+  {
+    id: 'craft:typography',
+    kind: 'craft',
+    token: 'craft:typography',
+    title: 'Typography craft',
+    subtitle: 'Type scale, rhythm, fit, and readable hierarchy',
+    icon: 'tweaks',
+  },
+  {
+    id: 'craft:color',
+    kind: 'craft',
+    token: 'craft:color',
+    title: 'Color craft',
+    subtitle: 'Palette roles, restraint, contrast, and accent usage',
+    icon: 'tweaks',
+  },
+  {
+    id: 'craft:anti-ai-slop',
+    kind: 'craft',
+    token: 'craft:anti-ai-slop',
+    title: 'Anti-slop craft',
+    subtitle: 'Avoid generic gradients, fragile spacing, and prompt-default tells',
+    icon: 'tweaks',
+  },
+];
+
+const ACTION_MENTION_ITEMS: MentionItem[] = [
+  {
+    id: 'action:rewrite-prompt',
+    kind: 'action',
+    token: 'rewrite-prompt',
+    title: 'Rewrite prompt first',
+    subtitle: 'Ask the agent to sharpen the brief before implementing',
+    icon: 'edit',
+  },
+  {
+    id: 'action:current-selection',
+    kind: 'action',
+    token: 'selection',
+    title: 'Current selection',
+    subtitle: 'Use the active preview/comment target when one is staged',
+    icon: 'comment',
+  },
+  {
+    id: 'action:current-slide',
+    kind: 'action',
+    token: 'slide:current',
+    title: 'Current slide',
+    subtitle: 'Target the dynamically rendered active deck slide',
+    icon: 'present',
+  },
+];
+
 // Imperative handle so ancestors (e.g. example chips in ChatPane) can
 // push text into the composer without owning its draft state.
 export interface ChatComposerHandle {
@@ -80,6 +160,8 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
     {
       projectId,
       projectFiles,
+      skills = [],
+      designSystems = [],
       streaming,
       initialDraft,
       onEnsureProject,
@@ -109,6 +191,11 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
       cursor: number;
     } | null>(null);
     const [slashIndex, setSlashIndex] = useState(0);
+    const [inspectedContext, setInspectedContext] = useState<MentionItem | null>(null);
+    const [rewritePreview, setRewritePreview] = useState<{
+      original: string;
+      rewritten: string;
+    } | null>(null);
     const [uploading, setUploading] = useState(false);
     const [uploadError, setUploadError] = useState<string | null>(null);
     const [importOpen, setImportOpen] = useState(false);
@@ -120,6 +207,7 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
     const petMenuRef = useRef<HTMLDivElement | null>(null);
     const petTriggerRef = useRef<HTMLButtonElement | null>(null);
     const petEnabled = Boolean(onAdoptPet && onTogglePet);
+    const stagedCommentIdsRef = useRef<Set<string>>(new Set());
     // initialDraft is only honored on the first non-empty value the parent
     // hands us. After we seed once, the composer is fully under user control
     // — re-renders that pass the same prompt back must not reseed. If the
@@ -177,6 +265,20 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
       };
     }, [petOpen]);
 
+    useEffect(() => {
+      const fresh = commentAttachments.filter(
+        (attachment) => !stagedCommentIdsRef.current.has(attachment.id),
+      );
+      if (fresh.length === 0) return;
+      for (const attachment of fresh) stagedCommentIdsRef.current.add(attachment.id);
+      setDraft((current) => {
+        if (/(^|\s)@(selection|current)(\s|$)/.test(current)) return current;
+        const suffix = current.trim().length > 0 ? ' ' : '';
+        return `${current}${suffix}@selection `;
+      });
+      requestAnimationFrame(() => textareaRef.current?.focus());
+    }, [commentAttachments]);
+
     // Catalog of supported slash commands. Each entry shows up in the
     // popover when the user types `/` in the composer. The `insert`
     // value is what we drop into the draft when the user picks the
@@ -218,6 +320,32 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
           },
         );
       }
+      list.push(
+        {
+          id: 'rewrite',
+          label: '/rewrite',
+          insert: '/rewrite ',
+          descText: 'Sharpen the draft into a high-signal agent brief before work starts.',
+          icon: 'edit',
+          argHint: '<rough brief>',
+        },
+        {
+          id: 'critique',
+          label: '/critique',
+          insert: '/critique ',
+          descText: 'Review referenced context before changing it.',
+          icon: 'eye',
+          argHint: '@current | @file',
+        },
+        {
+          id: 'restyle',
+          label: '/restyle',
+          insert: '/restyle ',
+          descText: 'Apply a referenced design system or craft direction.',
+          icon: 'sliders',
+          argHint: '@design:<name>',
+        },
+      );
       return list;
     }, [petEnabled, t]);
 
@@ -269,6 +397,44 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
         '',
         'When the spritesheet is saved, tell me the absolute path and the pet folder name. I will adopt it from Settings → Pets → Recently hatched.',
       ].join('\n');
+    }
+
+    function expandPromptRewriteCommand(input: string): string | null {
+      const trimmed = input.trim();
+      const rewrite = /^\/rewrite(?:\s+([\s\S]*))?$/i.exec(trimmed);
+      if (rewrite) {
+        const rough = rewrite[1]?.trim() ?? '';
+        return [
+          'Rewrite this into a precise Pixelpitch agent brief, then execute it.',
+          '',
+          'Use a prompt-rewrite workflow before implementation:',
+          '- infer the right interaction mode and output shape',
+          '- preserve all user constraints and references',
+          '- add missing context questions only if blocked',
+          '- make the final working prompt concise, concrete, and action-oriented',
+          '',
+          rough ? `Rough brief:\n${rough}` : 'Rough brief: use the current conversation and attached context.',
+        ].join('\n');
+      }
+      const critique = /^\/critique(?:\s+([\s\S]*))?$/i.exec(trimmed);
+      if (critique) {
+        const target = critique[1]?.trim() ?? '@current';
+        return [
+          `Critique ${target} before making changes.`,
+          '',
+          'Focus on interaction quality, mode fit, context gaps, visual hierarchy, responsive behavior, and concrete fixes. Then implement the highest-impact changes you can safely make.',
+        ].join('\n');
+      }
+      const restyle = /^\/restyle(?:\s+([\s\S]*))?$/i.exec(trimmed);
+      if (restyle) {
+        const target = restyle[1]?.trim() ?? '@design:active';
+        return [
+          `Restyle the current artifact using ${target}.`,
+          '',
+          'Keep the structure intact unless the current layout blocks usability. Prioritize interaction clarity, readable hierarchy, and design-system consistency over decorative polish.',
+        ].join('\n');
+      }
+      return null;
     }
 
     // Parse a `/pet [arg]` slash command out of the draft. Recognized
@@ -335,6 +501,8 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
       setUploadError(null);
       setMention(null);
       setSlash(null);
+      setInspectedContext(null);
+      setRewritePreview(null);
     }
 
     async function ensureProject(): Promise<string | null> {
@@ -418,24 +586,25 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
       }
     }
 
-    function insertMention(filePath: string) {
+    function insertMention(item: MentionItem) {
       if (!mention) return;
       const ta = textareaRef.current;
       if (!ta) return;
+      const token = item.token;
       const cursor = mention.cursor;
       const before = draft.slice(0, cursor);
       const after = draft.slice(cursor);
-      const replaced = before.replace(/@([^\s@]*)$/, `@${filePath} `);
+      const replaced = before.replace(/@([^\s@]*)$/, `@${token} `);
       const next = replaced + after;
       setDraft(next);
       setMention(null);
-      if (!staged.some((s) => s.path === filePath)) {
+      if (item.kind === 'file' && !staged.some((s) => s.path === token)) {
         setStaged((s) => [
           ...s,
           {
-            path: filePath,
-            name: filePath.split("/").pop() || filePath,
-            kind: looksLikeImage(filePath) ? "image" : "file",
+            path: token,
+            name: token.split("/").pop() || token,
+            kind: looksLikeImage(token) ? "image" : "file",
           },
         ]);
       }
@@ -466,28 +635,77 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
         reset();
         return;
       }
+      const rewritten = expandPromptRewriteCommand(prompt);
+      if (rewritten) {
+        if (streaming) return;
+        setRewritePreview({ original: prompt, rewritten });
+        return;
+      }
       if ((!prompt && commentAttachments.length === 0) || streaming) return;
       onSend(prompt, staged, commentAttachments);
       reset();
     }
 
-    // The @-picker treats the project listing as path-shaped (path + size).
-    // ProjectFile.path is optional, so fall back to .name for the legacy
-    // flat shape — both ChatComposer and the old code paths see the same
-    // entries.
-    const filteredFiles = mention
-      ? projectFiles
-          .filter((f) => f.type === undefined || f.type === "file")
-          .filter((f) => {
-            const key = f.path ?? f.name;
-            return key.toLowerCase().includes(mention.q.toLowerCase());
-          })
-          .slice(0, 12)
+    const mentionItems = useMemo(() => {
+      const fileItems: MentionItem[] = projectFiles
+        .filter((f) => f.type === undefined || f.type === "file")
+        .map((file) => {
+          const key = file.path ?? file.name;
+          return {
+            id: `file:${key}`,
+            kind: 'file',
+            token: key,
+            title: key,
+            subtitle: file.size != null ? prettySize(file.size) : 'Project file',
+            icon: looksLikeImage(key) ? 'image' : 'file',
+            file,
+          };
+        });
+      const skillItems: MentionItem[] = skills.map((skill) => ({
+        id: `skill:${skill.id}`,
+        kind: 'skill',
+        token: `skill:${skill.id}`,
+        title: skill.name,
+        subtitle: [skill.mode, skill.description].filter(Boolean).join(' · '),
+        icon: 'sparkles',
+        skill,
+      }));
+      const designItems: MentionItem[] = designSystems.map((designSystem) => ({
+        id: `design:${designSystem.id}`,
+        kind: 'design',
+        token: `design:${designSystem.id}`,
+        title: designSystem.title,
+        subtitle: designSystem.summary || designSystem.category,
+        icon: 'sun-moon',
+        designSystem,
+      }));
+      return [...ACTION_MENTION_ITEMS, ...skillItems, ...designItems, ...CRAFT_MENTION_ITEMS, ...fileItems];
+    }, [projectFiles, skills, designSystems]);
+
+    const filteredMentions = mention
+      ? mentionItems
+          .map((item) => ({ item, score: scoreMention(item, mention.q) }))
+          .filter(({ score }) => score > 0)
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 18)
+          .map(({ item }) => item)
       : [];
+    const resolvedContext = useMemo(
+      () => resolveContextItems(draft, mentionItems, staged, commentAttachments),
+      [draft, mentionItems, staged, commentAttachments],
+    );
+
+    useEffect(() => {
+      const ta = textareaRef.current;
+      if (!ta) return;
+      ta.style.height = 'auto';
+      const next = Math.min(220, Math.max(64, ta.scrollHeight));
+      ta.style.height = `${next}px`;
+    }, [draft, resolvedContext.length, rewritePreview]);
 
     return (
       <div
-        className={`composer${dragActive ? " drag-active" : ""}`}
+        className={`composer composer-surface${dragActive ? " drag-active" : ""}${streaming ? " streaming" : ""}`}
         data-testid="chat-composer"
         onDragOver={(e) => {
           e.preventDefault();
@@ -497,6 +715,38 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
         onDrop={handleDrop}
       >
         <div className="composer-shell">
+          {resolvedContext.length > 0 ? (
+            <ContextInspector
+              items={resolvedContext}
+              inspected={inspectedContext}
+              onInspect={setInspectedContext}
+              onClearInspect={() => setInspectedContext(null)}
+              onRemove={(item) => {
+                setDraft((current) => removeMentionToken(current, item.token));
+                if (item.kind === 'file') removeStaged(item.token);
+              }}
+            />
+          ) : null}
+          {rewritePreview ? (
+            <RewritePreview
+              preview={rewritePreview}
+              onUse={() => {
+                if (streaming) return;
+                onSend(rewritePreview.rewritten, staged, commentAttachments);
+                reset();
+              }}
+              onEdit={() => {
+                setDraft(rewritePreview.rewritten);
+                setRewritePreview(null);
+                requestAnimationFrame(() => textareaRef.current?.focus());
+              }}
+              onOriginal={() => {
+                if (streaming) return;
+                onSend(rewritePreview.original.replace(/^\/rewrite\s*/i, ''), staged, commentAttachments);
+                reset();
+              }}
+            />
+          ) : null}
           {staged.length > 0 ? (
             <StagedAttachments
               attachments={staged}
@@ -546,24 +796,23 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
                     return;
                   }
                 }
-                if (mention && filteredFiles.length > 0) {
+                if (mention && filteredMentions.length > 0) {
                   if (e.key === 'ArrowDown') {
                     e.preventDefault();
-                    setMentionIndex((i) => (i + 1) % filteredFiles.length);
+                    setMentionIndex((i) => (i + 1) % filteredMentions.length);
                     return;
                   }
                   if (e.key === 'ArrowUp') {
                     e.preventDefault();
                     setMentionIndex(
-                      (i) => (i - 1 + filteredFiles.length) % filteredFiles.length,
+                      (i) => (i - 1 + filteredMentions.length) % filteredMentions.length,
                     );
                     return;
                   }
                   if (e.key === 'Tab' || (e.key === 'Enter' && !e.shiftKey && !e.metaKey && !e.ctrlKey)) {
                     e.preventDefault();
-                    const safe = Math.min(mentionIndex, filteredFiles.length - 1);
-                    const file = filteredFiles[safe]!;
-                    insertMention(file.path ?? file.name);
+                    const safe = Math.min(mentionIndex, filteredMentions.length - 1);
+                    insertMention(filteredMentions[safe]!);
                     return;
                   }
                 }
@@ -578,10 +827,10 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
                 }
               }}
             />
-            {mention && filteredFiles.length > 0 ? (
+            {mention && filteredMentions.length > 0 ? (
               <MentionPopover
-                files={filteredFiles}
-                activeIndex={Math.min(mentionIndex, filteredFiles.length - 1)}
+                items={filteredMentions}
+                activeIndex={Math.min(mentionIndex, filteredMentions.length - 1)}
                 onPick={insertMention}
               />
             ) : null}
@@ -763,27 +1012,37 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
               </div>
             ) : null}
             <span className="composer-spacer" />
-            {streaming ? (
-              <button
-                type="button"
-                className="composer-send stop"
-                onClick={onStop}
-              >
-                <Icon name="stop" size={13} />
-                <span>{t('chat.stop')}</span>
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="composer-send"
-                data-testid="chat-send"
-                onClick={() => void submit()}
-                disabled={!draft.trim() && commentAttachments.length === 0}
-              >
-                <Icon name="send" size={13} />
-                <span>{t('chat.send')}</span>
-              </button>
-            )}
+            <AnimatePresence mode="wait">
+              {streaming ? (
+                <motion.button
+                  key="stop"
+                  type="button"
+                  className="composer-send stop"
+                  onClick={onStop}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1, transition: springs.snappy }}
+                  exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.1 } }}
+                >
+                  <Icon name="stop" size={13} />
+                  <span>{t('chat.stop')}</span>
+                </motion.button>
+              ) : (
+                <motion.button
+                  key="send"
+                  type="button"
+                  className="composer-send"
+                  data-testid="chat-send"
+                  onClick={() => void submit()}
+                  disabled={!draft.trim() && commentAttachments.length === 0}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1, transition: springs.snappy }}
+                  exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.1 } }}
+                >
+                  <Icon name="send" size={13} />
+                  <span>{t('chat.send')}</span>
+                </motion.button>
+              )}
+            </AnimatePresence>
           </div>
         </div>
         {uploadError ? <span className="composer-hint">{uploadError}</span> : null}
@@ -792,6 +1051,102 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
     );
   }
 );
+
+function ContextInspector({
+  items,
+  inspected,
+  onInspect,
+  onClearInspect,
+  onRemove,
+}: {
+  items: MentionItem[];
+  inspected: MentionItem | null;
+  onInspect: (item: MentionItem) => void;
+  onClearInspect: () => void;
+  onRemove: (item: MentionItem) => void;
+}) {
+  return (
+    <div className="context-inspector" data-testid="context-inspector">
+      <div className="context-inspector-row">
+        <span className="context-inspector-label">Context</span>
+        <AnimatePresence>
+          {items.map((item) => (
+            <motion.span
+              key={`${item.kind}:${item.token}`}
+              className={`context-chip ${item.kind}`}
+              layout
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1, transition: springs.snappy }}
+              exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.1 } }}
+            >
+              <button
+                type="button"
+                className="context-chip-main"
+                onClick={() => onInspect(item)}
+                title={contextHelp(item)}
+              >
+                <Icon name={item.icon} size={12} />
+                <span>{item.title}</span>
+              </button>
+              <button
+                type="button"
+                className="context-chip-remove"
+                onClick={() => onRemove(item)}
+                aria-label={`Remove ${item.title}`}
+              >
+                <Icon name="close" size={10} />
+              </button>
+            </motion.span>
+          ))}
+        </AnimatePresence>
+      </div>
+      {inspected ? (
+        <div className="context-inspector-detail">
+          <div>
+            <strong>@{inspected.token}</strong>
+            <span>{contextHelp(inspected)}</span>
+          </div>
+          <button type="button" className="ghost" onClick={onClearInspect}>
+            Close
+          </button>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function RewritePreview({
+  preview,
+  onUse,
+  onEdit,
+  onOriginal,
+}: {
+  preview: { original: string; rewritten: string };
+  onUse: () => void;
+  onEdit: () => void;
+  onOriginal: () => void;
+}) {
+  return (
+    <div className="rewrite-preview" data-testid="rewrite-preview">
+      <div className="rewrite-preview-head">
+        <strong>Prompt rewrite</strong>
+        <span>Review before sending</span>
+      </div>
+      <pre>{preview.rewritten}</pre>
+      <div className="rewrite-preview-actions">
+        <button type="button" className="ghost" onClick={onOriginal}>
+          Send original
+        </button>
+        <button type="button" className="ghost" onClick={onEdit}>
+          Edit rewrite
+        </button>
+        <button type="button" className="primary" onClick={onUse}>
+          Use rewrite
+        </button>
+      </div>
+    </div>
+  );
+}
 
 function StagedAttachments({
   attachments,
@@ -943,7 +1298,9 @@ function SlashPopover({
                   <span className="slash-item-arg">{cmd.argHint}</span>
                 ) : null}
               </span>
-              <span className="slash-item-desc">{t(cmd.descKey)}</span>
+              <span className="slash-item-desc">
+                {cmd.descKey ? t(cmd.descKey) : cmd.descText}
+              </span>
             </span>
           </button>
         );
@@ -953,18 +1310,19 @@ function SlashPopover({
 }
 
 function MentionPopover({
-  files,
+  items,
   activeIndex,
   onPick,
 }: {
-  files: ProjectFile[];
+  items: MentionItem[];
   activeIndex: number;
-  onPick: (path: string) => void;
+  onPick: (item: MentionItem) => void;
 }) {
   const ref = useRef<HTMLDivElement | null>(null);
+  const grouped = groupMentionItems(items);
   useEffect(() => {
     if (ref.current) ref.current.scrollTop = 0;
-  }, [files]);
+  }, [items]);
   useEffect(() => {
     if (!ref.current) return;
     const active = ref.current.querySelector<HTMLElement>('.mention-item.active');
@@ -977,31 +1335,169 @@ function MentionPopover({
       ref={ref}
       role="listbox"
     >
-      {files.map((f, idx) => {
-        const key = f.path ?? f.name;
-        const active = idx === activeIndex;
-        return (
-          <button
-            key={key}
-            role="option"
-            aria-selected={active}
-            className={`mention-item${active ? ' active' : ''}`}
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={() => onPick(key)}
-          >
-            <code>{key}</code>
-            {f.size != null ? (
-              <span className="mention-meta">{prettySize(f.size)}</span>
-            ) : null}
-          </button>
-        );
-      })}
+      {grouped.map((group) => (
+        <div key={group.kind} className="mention-group">
+          <div className="mention-group-label">{mentionKindLabel(group.kind)}</div>
+          {group.items.map(({ item, index }) => {
+            const active = index === activeIndex;
+            return (
+              <button
+                key={item.id}
+                role="option"
+                aria-selected={active}
+                className={`mention-item ${item.kind}${active ? ' active' : ''}`}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => onPick(item)}
+              >
+                <span className="mention-item-icon" aria-hidden>
+                  <Icon name={item.icon} size={13} />
+                </span>
+                <span className="mention-item-body">
+                  <span className="mention-item-title">{item.title}</span>
+                  <span className="mention-item-subtitle">{item.subtitle}</span>
+                </span>
+                <code>@{item.token}</code>
+              </button>
+            );
+          })}
+        </div>
+      ))}
     </div>
   );
 }
 
 function looksLikeImage(name: string): boolean {
   return /\.(png|jpe?g|gif|webp|svg|avif|bmp)$/i.test(name);
+}
+
+function scoreMention(item: MentionItem, rawQuery: string): number {
+  const q = rawQuery.trim().toLowerCase();
+  if (!q) {
+    if (item.kind === 'action') return 95;
+    if (item.kind === 'skill') return 90;
+    if (item.kind === 'design') return 84;
+    if (item.kind === 'craft') return 78;
+    return 50;
+  }
+  const haystack = [
+    item.token,
+    item.title,
+    item.subtitle,
+    item.kind,
+    item.skill?.triggers?.join(' '),
+    item.skill?.mode,
+    item.designSystem?.category,
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+  if (haystack.includes(q)) {
+    const prefixBonus = item.token.toLowerCase().startsWith(q) || item.title.toLowerCase().startsWith(q) ? 30 : 0;
+    const kindBonus = item.kind === 'skill' ? 18 : item.kind === 'design' ? 12 : item.kind === 'action' ? 10 : 0;
+    return 50 + prefixBonus + kindBonus;
+  }
+  const chars = q.split('');
+  let cursor = 0;
+  for (const ch of chars) {
+    const found = haystack.indexOf(ch, cursor);
+    if (found === -1) return 0;
+    cursor = found + 1;
+  }
+  return 18;
+}
+
+function groupMentionItems(items: MentionItem[]): Array<{
+  kind: MentionKind;
+  items: Array<{ item: MentionItem; index: number }>;
+}> {
+  const order: MentionKind[] = ['action', 'skill', 'design', 'craft', 'file'];
+  return order
+    .map((kind) => ({
+      kind,
+      items: items
+        .map((item, index) => ({ item, index }))
+        .filter(({ item }) => item.kind === kind),
+    }))
+    .filter((group) => group.items.length > 0);
+}
+
+function mentionKindLabel(kind: MentionKind): string {
+  if (kind === 'action') return 'Targets & actions';
+  if (kind === 'skill') return 'Discovered skills';
+  if (kind === 'design') return 'Design systems';
+  if (kind === 'craft') return 'Craft rules';
+  return 'Project files';
+}
+
+function resolveContextItems(
+  draft: string,
+  mentionItems: MentionItem[],
+  staged: ChatAttachment[],
+  commentAttachments: ChatCommentAttachment[],
+): MentionItem[] {
+  const byToken = new Map(mentionItems.map((item) => [item.token, item]));
+  const out: MentionItem[] = [];
+  const push = (item: MentionItem) => {
+    if (!out.some((existing) => existing.kind === item.kind && existing.token === item.token)) {
+      out.push(item);
+    }
+  };
+  for (const match of draft.matchAll(/@([^\s]+)/g)) {
+    const token = match[1]!.replace(/[),.;:!?]+$/g, '');
+    const found = byToken.get(token);
+    if (found) {
+      push(found);
+    } else {
+      push({
+        id: `file:${token}`,
+        kind: token === 'selection' || token === 'current' || token.startsWith('slide:') ? 'action' : 'file',
+        token,
+        title: token,
+        subtitle: token.startsWith('slide:')
+          ? 'Rendered slide target'
+          : token === 'selection' || token === 'current'
+            ? 'Rendered selection target'
+            : 'Project reference',
+        icon: token.startsWith('slide:') ? 'present' : token === 'selection' || token === 'current' ? 'comment' : 'file',
+      });
+    }
+  }
+  for (const attachment of staged) {
+    const found = byToken.get(attachment.path);
+    push(found ?? {
+      id: `file:${attachment.path}`,
+      kind: 'file',
+      token: attachment.path,
+      title: attachment.name,
+      subtitle: 'Staged attachment',
+      icon: attachment.kind === 'image' ? 'image' : 'file',
+    });
+  }
+  if (commentAttachments.length > 0) {
+    push({
+      id: 'action:selection',
+      kind: 'action',
+      token: 'selection',
+      title: `${commentAttachments.length} selected target${commentAttachments.length === 1 ? '' : 's'}`,
+      subtitle: 'Attached rendered element context',
+      icon: 'comment',
+    });
+  }
+  return out;
+}
+
+function removeMentionToken(draft: string, token: string): string {
+  const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return draft.replace(new RegExp(`(^|\\s)@${escaped}(?=\\s|$)`, 'g'), ' ').replace(/\s{2,}/g, ' ').trimStart();
+}
+
+function contextHelp(item: MentionItem): string {
+  if (item.kind === 'skill') return 'Agent receives this skill workflow and treats it as an explicit capability reference.';
+  if (item.kind === 'design') return 'Agent receives this design system as style direction; multiple systems compose as primary plus inspiration.';
+  if (item.kind === 'craft') return 'Agent applies this craft rule-set as a quality bar across the generated asset.';
+  if (item.kind === 'action' && item.token.startsWith('slide:')) return 'Agent targets the dynamically rendered deck slide or matching saved slide context.';
+  if (item.kind === 'action') return 'Agent targets the rendered element/selection context staged from edit or comment mode.';
+  return 'Agent receives this project reference and can read it from the project workspace.';
 }
 
 function prettySize(bytes: number): string {
