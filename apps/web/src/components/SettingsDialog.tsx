@@ -4,6 +4,7 @@ import { LOCALE_LABEL, LOCALES, useI18n } from '../i18n';
 import type { Locale } from '../i18n';
 import { AgentIcon } from './AgentIcon';
 import { Icon } from './Icon';
+import { MotionModal } from './MotionModal';
 import {
   CUSTOM_MODEL_SENTINEL,
   isCustomModel,
@@ -39,6 +40,7 @@ export type SettingsSection =
   | 'about';
 
 interface Props {
+  open: boolean;
   initial: AppConfig;
   agents: AgentInfo[];
   daemonLive: boolean;
@@ -91,6 +93,7 @@ const SUGGESTED_MODELS_BY_PROTOCOL = {
 } as const;
 
 export function SettingsDialog({
+  open,
   initial,
   agents,
   daemonLive,
@@ -216,13 +219,8 @@ export function SettingsDialog({
   const apiModelSelectValue = apiModelCustom || !cfg.model ? CUSTOM_MODEL_SENTINEL : cfg.model;
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div
-        className="modal modal-settings"
-        role="dialog"
-        aria-modal="true"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <MotionModal open={open} onClose={onClose} className="modal-settings">
+      <div role="dialog" aria-modal="true">
         <header className="modal-head">
           {welcome ? (
             <>
@@ -812,7 +810,7 @@ export function SettingsDialog({
           </button>
         </footer>
       </div>
-    </div>
+    </MotionModal>
   );
 }
 

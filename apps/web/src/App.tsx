@@ -522,31 +522,30 @@ export function App() {
         onTuck={handleTuckPet}
         onOpenSettings={openPetSettings}
       />
-      {settingsOpen ? (
-        <SettingsDialog
-          initial={config}
-          agents={agents}
-          daemonLive={daemonLive}
-          appVersionInfo={appVersionInfo}
-          welcome={settingsWelcome}
-          defaultSection={settingsSection}
-          onSave={handleConfigSave}
-          onClose={() => {
-            // Dismissing the welcome modal (Skip for now / backdrop click)
-            // also counts as onboarding-done; we don't want to keep
-            // re-prompting on every refresh just because the user opted
-            // not to save.
-            if (settingsWelcome && !config.onboardingCompleted) {
-              const next: AppConfig = { ...config, onboardingCompleted: true };
-              saveConfig(next);
-              void syncConfigToDaemon(next);
-              setConfig(next);
-            }
-            setSettingsOpen(false);
-          }}
-          onRefreshAgents={refreshAgents}
-        />
-      ) : null}
+      <SettingsDialog
+        open={settingsOpen}
+        initial={config}
+        agents={agents}
+        daemonLive={daemonLive}
+        appVersionInfo={appVersionInfo}
+        welcome={settingsWelcome}
+        defaultSection={settingsSection}
+        onSave={handleConfigSave}
+        onClose={() => {
+          // Dismissing the welcome modal (Skip for now / backdrop click)
+          // also counts as onboarding-done; we don't want to keep
+          // re-prompting on every refresh just because the user opted
+          // not to save.
+          if (settingsWelcome && !config.onboardingCompleted) {
+            const next: AppConfig = { ...config, onboardingCompleted: true };
+            saveConfig(next);
+            void syncConfigToDaemon(next);
+            setConfig(next);
+          }
+          setSettingsOpen(false);
+        }}
+        onRefreshAgents={refreshAgents}
+      />
     </>
   );
 }
