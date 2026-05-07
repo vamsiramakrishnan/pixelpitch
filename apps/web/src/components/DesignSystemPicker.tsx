@@ -1,4 +1,6 @@
 import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { variants } from '../motion';
 import { useT } from '../i18n';
 import type { DesignSystemSummary } from '../types';
 import { Icon } from './Icon';
@@ -156,101 +158,111 @@ export function DesignSystemPicker({
           style={{ transform: open ? 'rotate(180deg)' : undefined }}
         />
       </button>
-      {open ? (
-        <div className="ds-picker-popover" role="listbox">
-          <div className="ds-picker-head">
-            <input
-              ref={searchRef}
-              data-testid="design-system-search"
-              className="ds-picker-search"
-              placeholder={t('newproj.dsSearch')}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            <div
-              className="ds-picker-mode"
-              role="tablist"
-              aria-label={t('newproj.dsModeAria')}
-            >
-              <button
-                type="button"
-                role="tab"
-                aria-selected={!multi}
-                className={`ds-picker-mode-btn${!multi ? ' active' : ''}`}
-                onClick={() => {
-                  onChangeMulti(false);
-                  if (selectedIds.length > 1) onChange(selectedIds.slice(0, 1));
-                }}
+      <AnimatePresence>
+        {open ? (
+          <motion.div
+            className="ds-picker-popover"
+            role="listbox"
+            variants={variants.popoverIn}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            style={{ animation: 'none' }}
+          >
+            <div className="ds-picker-head">
+              <input
+                ref={searchRef}
+                data-testid="design-system-search"
+                className="ds-picker-search"
+                placeholder={t('newproj.dsSearch')}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+              <div
+                className="ds-picker-mode"
+                role="tablist"
+                aria-label={t('newproj.dsModeAria')}
               >
-                {t('newproj.dsModeSingle')}
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={multi}
-                className={`ds-picker-mode-btn${multi ? ' active' : ''}`}
-                onClick={() => onChangeMulti(true)}
-              >
-                {t('newproj.dsModeMulti')}
-              </button>
-            </div>
-          </div>
-          <div className="ds-picker-list">
-            <DsPickerItem
-              active={selectedIds.length === 0}
-              multi={multi}
-              onClick={clearAll}
-              avatar={<NoneAvatar />}
-              title={t('newproj.dsNoneTitle')}
-              subtitle={t('newproj.dsNoneSub')}
-            />
-            {filtered.length === 0 ? (
-              <div className="ds-picker-empty">
-                {t('newproj.dsEmpty', { query })}
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={!multi}
+                  className={`ds-picker-mode-btn${!multi ? ' active' : ''}`}
+                  onClick={() => {
+                    onChangeMulti(false);
+                    if (selectedIds.length > 1) onChange(selectedIds.slice(0, 1));
+                  }}
+                >
+                  {t('newproj.dsModeSingle')}
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={multi}
+                  className={`ds-picker-mode-btn${multi ? ' active' : ''}`}
+                  onClick={() => onChangeMulti(true)}
+                >
+                  {t('newproj.dsModeMulti')}
+                </button>
               </div>
-            ) : (
-              filtered.map((d) => {
-                const active = selectedIds.includes(d.id);
-                const order = active ? selectedIds.indexOf(d.id) : -1;
-                return (
-                  <DsPickerItem
-                    key={d.id}
-                    active={active}
-                    multi={multi}
-                    order={order}
-                    onClick={() => toggle(d.id)}
-                    avatar={<DesignSystemAvatar system={d} />}
-                    title={d.title}
-                    badge={
-                      d.id === defaultDesignSystemId
-                        ? t('newproj.dsBadgeDefault')
-                        : undefined
-                    }
-                    subtitle={d.summary || d.category || ''}
-                  />
-                );
-              })
-            )}
-          </div>
-          {multi && selectedIds.length > 1 ? (
-            <div className="ds-picker-foot">
-              <span className="ds-picker-foot-text">
-                <strong>{primary?.title ?? t('newproj.dsPrimaryFallback')}</strong>{' '}
-                {extraCount === 1
-                  ? t('newproj.dsFootSingular')
-                  : t('newproj.dsFootPlural')}
-              </span>
-              <button
-                type="button"
-                className="ds-picker-clear"
-                onClick={clearAll}
-              >
-                {t('newproj.dsFootClear')}
-              </button>
             </div>
-          ) : null}
-        </div>
-      ) : null}
+            <div className="ds-picker-list">
+              <DsPickerItem
+                active={selectedIds.length === 0}
+                multi={multi}
+                onClick={clearAll}
+                avatar={<NoneAvatar />}
+                title={t('newproj.dsNoneTitle')}
+                subtitle={t('newproj.dsNoneSub')}
+              />
+              {filtered.length === 0 ? (
+                <div className="ds-picker-empty">
+                  {t('newproj.dsEmpty', { query })}
+                </div>
+              ) : (
+                filtered.map((d) => {
+                  const active = selectedIds.includes(d.id);
+                  const order = active ? selectedIds.indexOf(d.id) : -1;
+                  return (
+                    <DsPickerItem
+                      key={d.id}
+                      active={active}
+                      multi={multi}
+                      order={order}
+                      onClick={() => toggle(d.id)}
+                      avatar={<DesignSystemAvatar system={d} />}
+                      title={d.title}
+                      badge={
+                        d.id === defaultDesignSystemId
+                          ? t('newproj.dsBadgeDefault')
+                          : undefined
+                      }
+                      subtitle={d.summary || d.category || ''}
+                    />
+                  );
+                })
+              )}
+            </div>
+            {multi && selectedIds.length > 1 ? (
+              <div className="ds-picker-foot">
+                <span className="ds-picker-foot-text">
+                  <strong>{primary?.title ?? t('newproj.dsPrimaryFallback')}</strong>{' '}
+                  {extraCount === 1
+                    ? t('newproj.dsFootSingular')
+                    : t('newproj.dsFootPlural')}
+                </span>
+                <button
+                  type="button"
+                  className="ds-picker-clear"
+                  onClick={clearAll}
+                >
+                  {t('newproj.dsFootClear')}
+                </button>
+              </div>
+            ) : null}
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 }

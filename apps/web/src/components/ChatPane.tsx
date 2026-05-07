@@ -307,51 +307,61 @@ export function ChatPane({
                 <span className="chat-history-badge">{conversations.length}</span>
               ) : null}
             </button>
-            {showConvList ? (
-              <div className="chat-history-menu" role="menu" data-testid="conversation-history-menu">
-                <div className="chat-history-menu-head">
-                  <span className="chat-history-menu-title">
-                    {t('chat.conversationsHeading')}
-                  </span>
-                  {onNewConversation ? (
-                    <button
-                      type="button"
-                      className="chat-history-new"
-                      data-testid="conversation-history-new"
-                      onClick={() => {
-                        onNewConversation();
-                        setShowConvList(false);
-                      }}
-                    >
-                      <Icon name="plus" size={11} />
-                      <span>{t('chat.new')}</span>
-                    </button>
-                  ) : null}
-                </div>
-                <div className="chat-history-list" data-testid="conversation-list">
-                  {conversations.length === 0 ? (
-                    <div className="chat-history-empty">
-                      {t('chat.emptyConversations')}
-                    </div>
-                  ) : (
-                    conversations.map((c) => (
-                      <ConversationRow
-                        key={c.id}
-                        conversation={c}
-                        active={c.id === activeConversationId}
-                        onSelect={() => {
-                          onSelectConversation(c.id);
+            <AnimatePresence>
+              {showConvList ? (
+                <motion.div
+                  className="chat-history-menu"
+                  role="menu"
+                  data-testid="conversation-history-menu"
+                  variants={variants.popoverIn}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                >
+                  <div className="chat-history-menu-head">
+                    <span className="chat-history-menu-title">
+                      {t('chat.conversationsHeading')}
+                    </span>
+                    {onNewConversation ? (
+                      <button
+                        type="button"
+                        className="chat-history-new"
+                        data-testid="conversation-history-new"
+                        onClick={() => {
+                          onNewConversation();
                           setShowConvList(false);
                         }}
-                        onDelete={() => onDeleteConversation(c.id)}
-                        onRename={onRenameConversation}
-                        t={t}
-                      />
-                    ))
-                  )}
-                </div>
-              </div>
-            ) : null}
+                      >
+                        <Icon name="plus" size={11} />
+                        <span>{t('chat.new')}</span>
+                      </button>
+                    ) : null}
+                  </div>
+                  <div className="chat-history-list" data-testid="conversation-list">
+                    {conversations.length === 0 ? (
+                      <div className="chat-history-empty">
+                        {t('chat.emptyConversations')}
+                      </div>
+                    ) : (
+                      conversations.map((c) => (
+                        <ConversationRow
+                          key={c.id}
+                          conversation={c}
+                          active={c.id === activeConversationId}
+                          onSelect={() => {
+                            onSelectConversation(c.id);
+                            setShowConvList(false);
+                          }}
+                          onDelete={() => onDeleteConversation(c.id)}
+                          onRename={onRenameConversation}
+                          t={t}
+                        />
+                      ))
+                    )}
+                  </div>
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
           </div>
           <button
             type="button"
