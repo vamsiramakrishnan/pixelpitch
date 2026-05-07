@@ -31,6 +31,7 @@ interface Props {
   previewComments?: PreviewComment[];
   onSavePreviewComment?: (target: PreviewCommentTarget, note: string, attachAfterSave: boolean) => Promise<PreviewComment | null>;
   onRemovePreviewComment?: (commentId: string) => Promise<void>;
+  onStageComposerToken?: (token: string) => void;
 }
 
 interface SketchState {
@@ -58,6 +59,7 @@ export function FileWorkspace({
   previewComments = [],
   onSavePreviewComment,
   onRemovePreviewComment,
+  onStageComposerToken,
 }: Props) {
   const t = useT();
   // Persisted tabs come from the parent. Active tab can transiently point
@@ -355,7 +357,7 @@ export function FileWorkspace({
   const activeSketch = activeFile && isActiveSketch ? sketches[activeFile.name] : null;
 
   return (
-    <div className="workspace" data-testid="file-workspace">
+    <div className="pane pane-elevated workspace" data-testid="file-workspace">
       <div className="ws-tabs-bar" role="tablist" aria-label={t('workspace.designFiles')}>
         <button
           type="button"
@@ -447,6 +449,7 @@ export function FileWorkspace({
             previewComments={previewComments.filter((comment) => comment.filePath === activeFile.name)}
             onSavePreviewComment={onSavePreviewComment}
             onRemovePreviewComment={onRemovePreviewComment}
+            onStageComposerToken={onStageComposerToken}
           />
         ) : (
           <div className="viewer-empty">

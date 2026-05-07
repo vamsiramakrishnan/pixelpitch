@@ -102,6 +102,7 @@ interface Props {
   onAdoptPet?: (petId: string) => void;
   onTogglePet?: () => void;
   onOpenPetSettings?: () => void;
+  stageTokenRequest?: { token: string; nonce: number } | null;
 }
 
 type Tab = 'chat' | 'comments';
@@ -138,6 +139,7 @@ export function ChatPane({
   onAdoptPet,
   onTogglePet,
   onOpenPetSettings,
+  stageTokenRequest,
 }: Props) {
   const t = useT();
   const logRef = useRef<HTMLDivElement | null>(null);
@@ -211,6 +213,11 @@ export function ChatPane({
     return () => el.removeEventListener('scroll', onScroll);
   }, []);
 
+  useEffect(() => {
+    if (!stageTokenRequest) return;
+    composerRef.current?.appendToken(stageTokenRequest.token);
+  }, [stageTokenRequest]);
+
   // Close the conversation history dropdown on outside click / Escape.
   useEffect(() => {
     if (!showConvList) return;
@@ -240,7 +247,7 @@ export function ChatPane({
   }
 
   return (
-    <div className="pane">
+    <div className="pane pane-recessed">
       <div className="chat-header">
         <div className="chat-header-segment" role="tablist">
           <button
