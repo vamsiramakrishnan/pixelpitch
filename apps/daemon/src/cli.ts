@@ -3,6 +3,7 @@
 import { startServer } from './server.js';
 import { runMcpStdio } from './mcp.js';
 import { runConnectorsToolCli } from './tools-connectors-cli.js';
+import { runLiveArtifactsToolCli } from './tools-live-artifacts-cli.js';
 
 const argv = process.argv.slice(2);
 
@@ -111,8 +112,13 @@ function printRootHelp() {
       repo to pull project files without exporting a zip.
 
   pixelpitch tools connectors list
+  pixelpitch tools connectors inspect --connector <id> --tool <name>
   pixelpitch tools connectors execute --connector <id> --tool <name> --input input.json
       Invoke connected read-only connector tools from an agent run using
+      PIXELPITCH_DAEMON_URL and PIXELPITCH_TOOL_TOKEN.
+
+  pixelpitch tools live-artifacts <create|list|update|refresh> [options]
+      Manage live artifacts through daemon wrapper commands using
       PIXELPITCH_DAEMON_URL and PIXELPITCH_TOOL_TOKEN.
 
 Options:
@@ -171,6 +177,11 @@ async function runTools(args) {
     if (result.exitCode) process.exit(result.exitCode);
     return;
   }
+  if (sub === 'live-artifacts') {
+    const result = await runLiveArtifactsToolCli(subArgs);
+    if (result.exitCode) process.exit(result.exitCode);
+    return;
+  }
   console.error(`unknown subcommand: pixelpitch tools ${sub}`);
   printToolsHelp();
   process.exit(1);
@@ -179,7 +190,12 @@ async function runTools(args) {
 function printToolsHelp() {
   console.log(`Usage:
   pixelpitch tools connectors list [--format compact|json]
+  pixelpitch tools connectors inspect --connector <id> --tool <name> [--format compact|json]
   pixelpitch tools connectors execute --connector <id> --tool <name> --input input.json [--format compact|json]
+  pixelpitch tools live-artifacts create --input artifact.json
+  pixelpitch tools live-artifacts list [--format compact|json]
+  pixelpitch tools live-artifacts refresh --artifact-id <id>
+  pixelpitch tools live-artifacts update --artifact-id <id> --input artifact.json
 
 Environment:
   PIXELPITCH_DAEMON_URL  Daemon base URL injected into agent runs.

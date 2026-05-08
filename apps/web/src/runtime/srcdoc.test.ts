@@ -52,7 +52,19 @@ describe('buildSrcdoc', () => {
     expect(srcdoc).toContain("type: 'od:comment-hover'");
     expect(srcdoc).toContain("type: 'od:comment-leave'");
     expect(srcdoc).toContain("type: 'od:comment-targets'");
+    expect(srcdoc).toContain("type === 'od:preview-target-mode'");
+    expect(srcdoc).toContain("document.documentElement.setAttribute('data-od-target-mode', targetMode)");
     expect(srcdoc).toContain("document.addEventListener('scroll', schedulePostTargets, true);");
     expect(srcdoc).toContain('data-od-comment-bridge-style');
+  });
+
+  it('targets common rendered HTML elements for inspect and edit mode', () => {
+    const srcdoc = buildSrcdoc('<div><p>Hello</p><button>Go</button></div>', {
+      inspectBridge: true,
+    });
+
+    expect(srcdoc).toContain('p, li, figure, figcaption, img, video, canvas, svg, table');
+    expect(srcdoc).toContain('event.composedPath');
+    expect(srcdoc).toContain('data-od-target-mode');
   });
 });

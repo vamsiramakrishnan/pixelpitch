@@ -46,7 +46,10 @@ export interface DaemonStreamOptions {
   assistantMessageId?: string | null;
   clientRequestId?: string | null;
   skillId?: string | null;
+  skillIds?: string[];
   designSystemId?: string | null;
+  designSystemIds?: string[];
+  craftIds?: string[];
   // Project-relative paths the user has staged for this turn. The
   // daemon resolves them inside the project folder, validates they
   // exist, and stitches them into the user message as `@<path>` hints.
@@ -84,7 +87,10 @@ export async function streamViaDaemon({
   assistantMessageId,
   clientRequestId,
   skillId,
+  skillIds,
   designSystemId,
+  designSystemIds,
+  craftIds,
   attachments,
   commentAttachments,
   model,
@@ -108,7 +114,10 @@ export async function streamViaDaemon({
     assistantMessageId: assistantMessageId ?? null,
     clientRequestId: clientRequestId ?? null,
     skillId: skillId ?? null,
+    skillIds: skillIds ?? [],
     designSystemId: designSystemId ?? null,
+    designSystemIds: designSystemIds ?? [],
+    craftIds: craftIds ?? [],
     attachments: attachments ?? [],
     commentAttachments: commentAttachments ?? [],
     model: model ?? null,

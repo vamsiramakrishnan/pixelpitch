@@ -26,6 +26,7 @@ interface ParsedOptions {
 
 const CONNECTORS_USAGE = `Usage:
   pixelpitch tools connectors list [--format compact]
+  pixelpitch tools connectors inspect --connector <id> --tool <name> [--format compact]
   pixelpitch tools connectors execute --connector <id> --tool <name> --input input.json
 
 Environment:
@@ -36,6 +37,7 @@ Environment:
 
 Agent runtime invocation:
   "$PIXELPITCH_NODE_BIN" "$PIXELPITCH_BIN" tools connectors list --format compact
+  "$PIXELPITCH_NODE_BIN" "$PIXELPITCH_BIN" tools connectors inspect --connector <id> --tool <name> --format compact
 `;
 
 function writeJson(value: unknown, stream: NodeJS.WriteStream = process.stdout): void {
@@ -197,6 +199,17 @@ function compactExecution(value: unknown): unknown {
   };
 }
 
+function compactInspection(value: unknown): unknown {
+  if (!value || typeof value !== 'object') return value;
+  const response = value as JsonObject;
+  const connector = response.connector && typeof response.connector === 'object' ? response.connector as JsonObject : undefined;
+  const tool = response.tool && typeof response.tool === 'object' ? response.tool as JsonObject : undefined;
+  return {
+    ...(connector === undefined ? {} : { connector }),
+    ...(tool === undefined ? {} : { tool: compactTool(tool) }),
+  };
+}
+
 function compactValidationDetails(details: unknown): unknown {
   if (!details || typeof details !== 'object') return details;
   const record = details as JsonObject;
@@ -259,6 +272,18 @@ export async function runConnectorsToolCli(args: string[]): Promise<ToolCliResul
       return await printApiResult(
         await requestJson(baseUrl, token, '/api/tools/connectors/list', { method: 'GET' }),
         options.format === 'compact' ? compactList : (body) => body,
+      );
+    }
+
+    if (options.command === 'inspect') {
+      if (!options.connectorId) return fail('inspect requires --connector <id>');
+      if (!options.toolName) return fail('inspect requires --tool <name>');
+      return await printApiResult(
+        await requestJson(baseUrl, token, '/api/tools/connectors/inspect', {
+          method: 'POST',
+          body: JSON.stringify({ connectorId: options.connectorId, toolName: options.toolName }),
+        }),
+        options.format === 'compact' ? compactInspection : (body) => body,
       );
     }
 

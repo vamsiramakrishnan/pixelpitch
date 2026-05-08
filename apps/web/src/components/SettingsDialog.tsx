@@ -29,6 +29,7 @@ import {
   requestNotificationPermission,
   showCompletionNotification,
 } from '../utils/notifications';
+import { testExecutionConfig, type ExecutionTestResult } from '../providers/registry';
 
 export type SettingsSection =
   | 'execution'
@@ -92,6 +93,30 @@ const SUGGESTED_MODELS_BY_PROTOCOL = {
   ],
 } as const;
 
+function normalizeAccentColor(value: string | undefined): string | null {
+  if (!value) return null;
+  const trimmed = value.trim();
+  return /^#[0-9a-f]{6}$/i.test(trimmed) ? trimmed : null;
+}
+
+function applyAccentColor(value: string | undefined): void {
+  const accent = normalizeAccentColor(value);
+  const root = document.documentElement;
+  if (!accent) {
+    root.style.removeProperty('--accent');
+    root.style.removeProperty('--accent-strong');
+    root.style.removeProperty('--accent-hover');
+    root.style.removeProperty('--accent-soft');
+    root.style.removeProperty('--accent-tint');
+    return;
+  }
+  root.style.setProperty('--accent', accent);
+  root.style.setProperty('--accent-strong', `color-mix(in srgb, ${accent} 88%, #000)`);
+  root.style.setProperty('--accent-hover', `color-mix(in srgb, ${accent} 86%, #000)`);
+  root.style.setProperty('--accent-soft', `color-mix(in srgb, ${accent} 18%, transparent)`);
+  root.style.setProperty('--accent-tint', `color-mix(in srgb, ${accent} 8%, transparent)`);
+}
+
 export function SettingsDialog({
   open,
   initial,
@@ -112,16 +137,20 @@ export function SettingsDialog({
   // saved theme, so this cleanup is effectively a no-op in that path.
   useLayoutEffect(() => {
     const saved = initial.theme ?? 'system';
+    const savedAccent = initial.accentColor;
     return () => {
       if (saved === 'system') {
         document.documentElement.removeAttribute('data-theme');
       } else {
         document.documentElement.setAttribute('data-theme', saved);
       }
+      applyAccentColor(savedAccent);
     };
-  }, [initial.theme]);
+  }, [initial.theme, initial.accentColor]);
   const [showApiKey, setShowApiKey] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
+  const [executionTest, setExecutionTest] = useState<ExecutionTestResult | null>(null);
+  const [testingExecution, setTestingExecution] = useState(false);
   const [activeSection, setActiveSection] = useState<SettingsSection>(
     defaultSection ?? 'execution',
   );
@@ -217,6 +246,29 @@ export function SettingsDialog({
   );
   const apiModelCustom = Boolean(cfg.model) && !apiModelOptions.includes(cfg.model);
   const apiModelSelectValue = apiModelCustom || !cfg.model ? CUSTOM_MODEL_SENTINEL : cfg.model;
+
+  async function runExecutionTest() {
+    setTestingExecution(true);
+    setExecutionTest(null);
+    try {
+      setExecutionTest(await testExecutionConfig({
+        mode: cfg.mode,
+        agentId: cfg.agentId,
+        apiProtocol: cfg.apiProtocol,
+        apiKey: cfg.apiKey,
+        baseUrl: cfg.baseUrl,
+        model: cfg.model,
+      }));
+    } catch (err) {
+      setExecutionTest({
+        ok: false,
+        mode: cfg.mode === 'daemon' ? 'daemon' : 'api',
+        message: err instanceof Error ? err.message : 'Connection test failed.',
+      });
+    } finally {
+      setTestingExecution(false);
+    }
+  }
 
   return (
     <MotionModal open={open} onClose={onClose} className="modal-settings">
@@ -387,7 +439,26 @@ export function SettingsDialog({
                   <span className="seg-meta">/v1/chat/completions</span>
                 </button>
               </div>
-          {cfg.mode === 'daemon' ? (
+              <div className={`settings-test-card${executionTest ? (executionTest.ok ? ' ok' : ' fail') : ''}`}>
+                <div>
+                  <strong>Connection test</strong>
+                  <span>
+                    {executionTest
+                      ? executionTest.message
+                      : 'Run a real local CLI or API reachability check before saving.'}
+                  </span>
+                  {executionTest?.details ? <small>{executionTest.details}</small> : null}
+                </div>
+                <button
+                  type="button"
+                  className="ghost"
+                  onClick={runExecutionTest}
+                  disabled={testingExecution || (cfg.mode === 'daemon' && !daemonLive)}
+                >
+                  {testingExecution ? 'Testing...' : 'Test'}
+                </button>
+              </div>
+              {cfg.mode === 'daemon' ? (
             <section className="settings-section">
               <div className="section-head">
                 <div>
@@ -828,21 +899,21 @@ function MediaProvidersSection({
     .sort((a, b) => {
       const aEntry = cfg.mediaProviders?.[a.id];
       const bEntry = cfg.mediaProviders?.[b.id];
-      const aConfigured = Boolean(aEntry?.apiKey.trim() || aEntry?.baseUrl.trim());
-      const bConfigured = Boolean(bEntry?.apiKey.trim() || bEntry?.baseUrl.trim());
+      const aConfigured = Boolean(aEntry?.apiKey.trim() || aEntry?.baseUrl.trim() || aEntry?.model?.trim());
+      const bConfigured = Boolean(bEntry?.apiKey.trim() || bEntry?.baseUrl.trim() || bEntry?.model?.trim());
       if (aConfigured !== bConfigured) return aConfigured ? -1 : 1;
       if (a.integrated !== b.integrated) return a.integrated ? -1 : 1;
       return a.label.localeCompare(b.label);
     });
   const updateProvider = (
     provider: MediaProvider,
-    patch: { apiKey?: string; baseUrl?: string },
+    patch: { apiKey?: string; baseUrl?: string; model?: string },
   ) => {
     setCfg((curr) => {
-      const prev = curr.mediaProviders?.[provider.id] ?? { apiKey: '', baseUrl: '' };
+      const prev = curr.mediaProviders?.[provider.id] ?? { apiKey: '', baseUrl: '', model: '' };
       const next = { ...prev, ...patch };
       const map = { ...(curr.mediaProviders ?? {}) };
-      if (!next.apiKey.trim() && !next.baseUrl.trim()) {
+      if (!next.apiKey.trim() && !next.baseUrl.trim() && !next.model?.trim()) {
         delete map[provider.id];
       } else {
         map[provider.id] = next;
@@ -861,8 +932,8 @@ function MediaProvidersSection({
       </div>
       <div className="media-provider-list">
         {providers.map((provider) => {
-          const entry = cfg.mediaProviders?.[provider.id] ?? { apiKey: '', baseUrl: '' };
-          const configured = Boolean(entry.apiKey.trim() || entry.baseUrl.trim());
+          const entry = cfg.mediaProviders?.[provider.id] ?? { apiKey: '', baseUrl: '', model: '' };
+          const configured = Boolean(entry.apiKey.trim() || entry.baseUrl.trim() || entry.model?.trim());
           const disabled = !provider.integrated;
           return (
             <div key={provider.id} className={`media-provider-row${provider.integrated ? '' : ' pending'}`}>
@@ -898,11 +969,20 @@ function MediaProvidersSection({
                   disabled={disabled}
                   onChange={(e) => updateProvider(provider, { baseUrl: e.target.value })}
                 />
+                {provider.supportsCustomModel ? (
+                  <input
+                    value={entry.model ?? ''}
+                    placeholder="Model override"
+                    aria-label={`${provider.label} model override`}
+                    disabled={disabled}
+                    onChange={(e) => updateProvider(provider, { model: e.target.value })}
+                  />
+                ) : null}
                 <button
                   type="button"
                   className="ghost"
                   disabled={!configured}
-                  onClick={() => updateProvider(provider, { apiKey: '', baseUrl: '' })}
+                  onClick={() => updateProvider(provider, { apiKey: '', baseUrl: '', model: '' })}
                 >
                   {t('settings.mediaProviderClear')}
                 </button>
@@ -930,6 +1010,7 @@ function AppearanceSection({
 }) {
   const { t } = useI18n();
   const current = cfg.theme ?? 'system';
+  const accent = normalizeAccentColor(cfg.accentColor) ?? '#ed6f5c';
 
   // Apply the draft theme immediately so the user sees a live preview
   // before hitting Save. SettingsDialog's cleanup reverts this on cancel.
@@ -939,7 +1020,8 @@ function AppearanceSection({
     } else {
       document.documentElement.setAttribute('data-theme', current);
     }
-  }, [current]);
+    applyAccentColor(accent);
+  }, [current, accent]);
 
   return (
     <section className="settings-section">
@@ -962,6 +1044,22 @@ function AppearanceSection({
           </button>
         ))}
       </div>
+      <label className="field accent-field">
+        <span className="field-label">Accent color</span>
+        <div className="field-row">
+          <input
+            type="color"
+            value={accent}
+            aria-label="Accent color"
+            onChange={(event) => setCfg((c) => ({ ...c, accentColor: event.target.value }))}
+          />
+          <input
+            value={cfg.accentColor ?? accent}
+            placeholder="#ed6f5c"
+            onChange={(event) => setCfg((c) => ({ ...c, accentColor: event.target.value }))}
+          />
+        </div>
+      </label>
     </section>
   );
 }

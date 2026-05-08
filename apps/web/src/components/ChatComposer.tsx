@@ -143,6 +143,7 @@ const ACTION_MENTION_ITEMS: MentionItem[] = [
 // push text into the composer without owning its draft state.
 export interface ChatComposerHandle {
   setDraft: (text: string) => void;
+  appendToken: (token: string) => void;
   focus: () => void;
 }
 
@@ -488,6 +489,27 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
             ta.setSelectionRange(pos, pos);
           });
         },
+        appendToken: (token: string) => {
+          if (/^(inspect|edit|draw|slide):/i.test(token) || token.includes('\n')) {
+            setDraft((current) => {
+              const spacer = current.trim().length > 0 && !current.endsWith('\n') ? '\n\n' : '';
+              return `${current}${spacer}${token.trim()} `;
+            });
+            seededRef.current = true;
+            requestAnimationFrame(() => textareaRef.current?.focus());
+            return;
+          }
+          const normalized = token.startsWith('@') ? token.slice(1) : token;
+          setDraft((current) => {
+            if (new RegExp(`(^|\\s)@${escapeRegExp(normalized)}(?=\\s|$)`).test(current)) {
+              return current;
+            }
+            const spacer = current.trim().length > 0 && !current.endsWith(' ') ? ' ' : '';
+            return `${current}${spacer}@${normalized} `;
+          });
+          seededRef.current = true;
+          requestAnimationFrame(() => textareaRef.current?.focus());
+        },
         focus: () => {
           textareaRef.current?.focus();
         },
@@ -715,9 +737,20 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
         onDrop={handleDrop}
       >
         <div className="composer-shell">
+          {commentAttachments.length > 0 ? (
+            <div className="composer-editing-prefix" data-testid="composer-editing-prefix">
+              <Icon name="comment" size={12} />
+              <span>
+                Editing {commentAttachments.length === 1
+                  ? commentAttachments[0]!.elementId
+                  : `${commentAttachments.length} selected elements`}
+              </span>
+            </div>
+          ) : null}
           {resolvedContext.length > 0 ? (
             <ContextInspector
               items={resolvedContext}
+              commentAttachments={commentAttachments}
               inspected={inspectedContext}
               onInspect={setInspectedContext}
               onClearInspect={() => setInspectedContext(null)}
@@ -1054,17 +1087,20 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
 
 function ContextInspector({
   items,
+  commentAttachments,
   inspected,
   onInspect,
   onClearInspect,
   onRemove,
 }: {
   items: MentionItem[];
+  commentAttachments: ChatCommentAttachment[];
   inspected: MentionItem | null;
   onInspect: (item: MentionItem) => void;
   onClearInspect: () => void;
   onRemove: (item: MentionItem) => void;
 }) {
+  const ambiguous = items.some((item) => contextDetailRows(item, commentAttachments).length <= 1);
   return (
     <div className="context-inspector" data-testid="context-inspector">
       <div className="context-inspector-row">
@@ -1102,13 +1138,25 @@ function ContextInspector({
       </div>
       {inspected ? (
         <div className="context-inspector-detail">
-          <div>
+          <div className="context-inspector-detail-copy">
             <strong>@{inspected.token}</strong>
             <span>{contextHelp(inspected)}</span>
+            <dl>
+              {contextDetailRows(inspected, commentAttachments).map(([label, value]) => (
+                <div key={label}>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
           <button type="button" className="ghost" onClick={onClearInspect}>
             Close
           </button>
+        </div>
+      ) : ambiguous ? (
+        <div className="context-inspector-empty">
+          Select a context chip to confirm exactly what the agent will receive.
         </div>
       ) : null}
     </div>
@@ -1498,6 +1546,57 @@ function contextHelp(item: MentionItem): string {
   if (item.kind === 'action' && item.token.startsWith('slide:')) return 'Agent targets the dynamically rendered deck slide or matching saved slide context.';
   if (item.kind === 'action') return 'Agent targets the rendered element/selection context staged from edit or comment mode.';
   return 'Agent receives this project reference and can read it from the project workspace.';
+}
+
+function contextDetailRows(
+  item: MentionItem,
+  commentAttachments: ChatCommentAttachment[],
+): Array<[string, string]> {
+  if (item.kind === 'skill' && item.skill) {
+    return [
+      ['Mode', item.skill.mode],
+      ['Surface', item.skill.surface ?? 'web'],
+      ['Triggers', item.skill.triggers.length > 0 ? item.skill.triggers.join(', ') : 'None declared'],
+      ['Requires design', item.skill.designSystemRequired ? 'Yes' : 'No'],
+    ];
+  }
+  if (item.kind === 'design' && item.designSystem) {
+    return [
+      ['Category', item.designSystem.category],
+      ['Surface', item.designSystem.surface ?? 'web'],
+      ['Swatches', item.designSystem.swatches?.length ? item.designSystem.swatches.join(', ') : 'None declared'],
+      ['Summary', item.designSystem.summary || 'No summary'],
+    ];
+  }
+  if (item.kind === 'file') {
+    return [
+      ['Path', item.token],
+      ['Size', item.file?.size != null ? prettySize(item.file.size) : 'Unknown until read'],
+      ['Kind', looksLikeImage(item.token) ? 'Image reference' : 'Project file'],
+    ];
+  }
+  if (item.kind === 'craft') {
+    return [
+      ['Rule set', item.token.replace(/^craft:/, '')],
+      ['Applies as', 'Quality bar on top of active design systems'],
+    ];
+  }
+  if (item.kind === 'action') {
+    const selection = commentAttachments.length > 0
+      ? commentAttachments.map((attachment) => `${attachment.elementId}: ${attachment.comment}`).join(' | ')
+      : item.token.startsWith('slide:')
+        ? 'Current rendered slide'
+        : 'No rendered target attached yet';
+    return [
+      ['Target', selection],
+      ['Token', `@${item.token}`],
+    ];
+  }
+  return [['Token', `@${item.token}`]];
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function prettySize(bytes: number): string {

@@ -337,6 +337,29 @@ describe('app-config origin guard', () => {
     }
   });
 
+  it('allows GET with a portless loopback Origin header', async () => {
+    const res = await httpRequest(`${baseUrl}/api/app-config`, {
+      headers: {
+        Host: `127.0.0.1:${port}`,
+        Origin: 'http://127.0.0.1',
+      },
+    });
+    expect(res.status).toBe(200);
+  });
+
+  it('rejects PUT with a portless loopback Origin header', async () => {
+    const res = await httpRequest(`${baseUrl}/api/app-config`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Host: `127.0.0.1:${port}`,
+        Origin: 'http://127.0.0.1',
+      },
+      body: JSON.stringify({ onboardingCompleted: true }),
+    });
+    expect(res.status).toBe(403);
+  });
+
   it('still rejects cross-origin even when PIXELPITCH_WEB_PORT is set', async () => {
     process.env.PIXELPITCH_WEB_PORT = String(port + 1);
     try {

@@ -8,6 +8,7 @@ export const CHAT_TOOL_ENDPOINTS = [
   '/api/tools/live-artifacts/refresh',
   '/api/tools/live-artifacts/update',
   '/api/tools/connectors/list',
+  '/api/tools/connectors/inspect',
   '/api/tools/connectors/execute',
 ] as const;
 
@@ -17,6 +18,7 @@ export const CHAT_TOOL_OPERATIONS = [
   'live-artifacts:refresh',
   'live-artifacts:update',
   'connectors:list',
+  'connectors:inspect',
   'connectors:execute',
 ] as const;
 

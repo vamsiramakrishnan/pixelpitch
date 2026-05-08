@@ -521,6 +521,27 @@ describe('connector routes', () => {
     expect(response.body.connectors[0].tools).toEqual(expect.arrayContaining([
       expect.objectContaining({ name: 'github.github_search_repositories', safety: expect.objectContaining({ sideEffect: 'read', approval: 'auto' }) }),
     ]));
+    expect(response.body.connectors[0].tools[0]).not.toHaveProperty('inputSchemaJson');
+    expect(response.body.connectors[0].tools[0]).not.toHaveProperty('outputSchemaJson');
+  });
+
+  it('inspects one connected connector tool schema through run-scoped tool auth', async () => {
+    await jsonFetch(`${baseUrl}/api/connectors/github/connect`, { method: 'POST' });
+    const token = mintConnectorToolToken('connector-inspect-project', 'connector-inspect-run');
+
+    const response = await jsonFetch(`${baseUrl}/api/tools/connectors/inspect`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ connectorId: 'github', toolName: 'github.github_search_repositories' }),
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.body.connector).toMatchObject({ id: 'github', status: 'connected', accountLabel: 'octocat@example.com' });
+    expect(response.body.tool).toMatchObject({
+      name: 'github.github_search_repositories',
+      inputSchemaJson: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'], additionalProperties: false },
+      safety: expect.objectContaining({ sideEffect: 'read', approval: 'auto' }),
+    });
   });
 
   it('executes connected Composio tools through run-scoped tool auth', async () => {
@@ -552,5 +573,14 @@ describe('connector routes', () => {
 
     expect(execute.status).toBe(403);
     expect(execute.body.error.code).toBe('TOOL_ENDPOINT_DENIED');
+
+    const inspect = await jsonFetch(`${baseUrl}/api/tools/connectors/inspect`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${listOnlyToken}` },
+      body: JSON.stringify({ connectorId: 'github', toolName: 'github.github_search_repositories' }),
+    });
+
+    expect(inspect.status).toBe(403);
+    expect(inspect.body.error.code).toBe('TOOL_ENDPOINT_DENIED');
   });
 });

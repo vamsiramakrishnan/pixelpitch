@@ -56,6 +56,7 @@ export const DEFAULT_CONFIG: AppConfig = {
   designSystemId: null,
   onboardingCompleted: false,
   theme: 'system',
+  accentColor: '#ed6f5c',
   mediaProviders: {},
   agentModels: {},
   pet: DEFAULT_PET,
@@ -258,7 +259,7 @@ export function hasAnyConfiguredProvider(
 ): boolean {
   if (!providers) return false;
   return Object.values(providers).some((entry) =>
-    Boolean(entry?.apiKey?.trim() || entry?.baseUrl?.trim()),
+    Boolean(entry?.apiKey?.trim() || entry?.baseUrl?.trim() || entry?.model?.trim()),
   );
 }
 

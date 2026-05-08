@@ -12,7 +12,10 @@ export interface ChatRequest {
   assistantMessageId?: string | null;
   clientRequestId?: string | null;
   skillId?: string | null;
+  skillIds?: string[];
   designSystemId?: string | null;
+  designSystemIds?: string[];
+  craftIds?: string[];
   attachments?: string[];
   commentAttachments?: ChatCommentAttachment[];
   model?: string | null;

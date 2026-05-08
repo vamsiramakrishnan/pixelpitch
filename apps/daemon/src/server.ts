@@ -1,7 +1,6 @@
 // @ts-nocheck
 import express from 'express';
 import multer from 'multer';
-import { spawn } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -9,27 +8,20 @@ import fs from 'node:fs';
 import os from 'node:os';
 import net from 'node:net';
 import { composeSystemPrompt } from './prompts/system.js';
-import { createCommandInvocation } from '@pixelpitch/platform';
 import {
   detectAgents,
   getAgentDef,
   isKnownModel,
   resolveAgentBin,
   sanitizeCustomModel,
-  spawnEnvForAgent,
 } from './agents.js';
 import { listSkills } from './skills.js';
 import { listCodexPets, readCodexPetSpritesheet } from './codex-pets.js';
 import { syncCommunityPets } from './community-pets-sync.js';
 import { listDesignSystems, readDesignSystem, readDesignSystemTokens, listDesignSystemPreviews } from './design-systems.js';
-import { attachAcpSession } from './acp.js';
-import { attachPiRpcSession } from './pi-rpc.js';
-import { createClaudeStreamHandler } from './claude-stream.js';
-import { createCopilotStreamHandler } from './copilot-stream.js';
-import { createJsonEventStreamHandler } from './json-event-stream.js';
+import { createAgentRunService } from './agent-run-service.js';
 import { loadCritiqueConfigFromEnv } from './critique/config.js';
 import { reconcileStaleRuns } from './critique/persistence.js';
-import { runOrchestrator } from './critique/orchestrator.js';
 import { renderDesignSystemPreview } from './design-system-preview.js';
 import { renderDesignSystemShowcase } from './design-system-showcase.js';
 import { createChatRunService } from './runs.js';
@@ -64,6 +56,17 @@ import {
   searchProjectFiles,
   writeProjectFile,
 } from './projects.js';
+
+function uniqueStrings(values) {
+  const out = [];
+  for (const value of values) {
+    if (typeof value !== 'string') continue;
+    const trimmed = value.trim();
+    if (!trimmed || out.includes(trimmed)) continue;
+    out.push(trimmed);
+  }
+  return out;
+}
 import { validateArtifactManifestInput } from './artifact-manifest.js';
 import { readCurrentAppVersionInfo } from './app-version.js';
 import {
@@ -81,7 +84,7 @@ import {
 } from './live-artifacts/store.js';
 import { LiveArtifactRefreshUnavailableError, refreshLiveArtifact } from './live-artifacts/refresh-service.js';
 import { LiveArtifactRefreshAbortError } from './live-artifacts/refresh.js';
-import { CHAT_TOOL_ENDPOINTS, CHAT_TOOL_OPERATIONS, toolTokenRegistry } from './tool-tokens.js';
+import { toolTokenRegistry } from './tool-tokens.js';
 import { registerConnectorRoutes } from './connectors/routes.js';
 import {
   configureConnectorCredentialStore,
@@ -423,6 +426,115 @@ function sanitizeArchiveFilename(raw) {
     .replace(/^-+|-+$/g, '')
     .slice(0, 80);
   return cleaned;
+}
+
+function transcriptTimestamp(value) {
+  const ts = Number(value);
+  if (!Number.isFinite(ts) || ts <= 0) return null;
+  try {
+    return new Date(ts).toISOString();
+  } catch {
+    return null;
+  }
+}
+
+function transcriptRoleLabel(role) {
+  if (role === 'assistant') return 'Assistant';
+  if (role === 'user') return 'User';
+  if (role === 'system') return 'System';
+  return String(role || 'Message');
+}
+
+function summarizeTranscriptList(items, label, readItem) {
+  if (!Array.isArray(items) || items.length === 0) return [];
+  const lines = [`${label}:`];
+  for (const item of items) {
+    const text = readItem(item);
+    if (text) lines.push(`- ${text}`);
+  }
+  return lines.length > 1 ? lines : [];
+}
+
+export function buildConversationTranscriptPayload(project, conversation, messages) {
+  return {
+    version: 1,
+    exportedAt: Date.now(),
+    project: {
+      id: project.id,
+      name: project.name,
+    },
+    conversation: {
+      id: conversation.id,
+      title: conversation.title,
+      createdAt: conversation.createdAt,
+      updatedAt: conversation.updatedAt,
+    },
+    messages: messages.map((message) => ({
+      id: message.id,
+      role: message.role,
+      content: message.content,
+      agentId: message.agentId,
+      agentName: message.agentName,
+      runId: message.runId,
+      runStatus: message.runStatus,
+      attachments: message.attachments ?? [],
+      commentAttachments: message.commentAttachments ?? [],
+      producedFiles: message.producedFiles ?? [],
+      createdAt: message.createdAt,
+      startedAt: message.startedAt,
+      endedAt: message.endedAt,
+    })),
+  };
+}
+
+export function renderConversationTranscriptMarkdown(payload) {
+  const title = payload.conversation.title || 'Untitled conversation';
+  const lines = [
+    `# ${title}`,
+    '',
+    `Project: ${payload.project.name} (${payload.project.id})`,
+    `Conversation: ${payload.conversation.id}`,
+    `Exported: ${transcriptTimestamp(payload.exportedAt) ?? 'unknown'}`,
+  ];
+  const created = transcriptTimestamp(payload.conversation.createdAt);
+  const updated = transcriptTimestamp(payload.conversation.updatedAt);
+  if (created) lines.push(`Created: ${created}`);
+  if (updated) lines.push(`Updated: ${updated}`);
+  lines.push('');
+
+  for (const message of payload.messages) {
+    const messageTime = transcriptTimestamp(message.createdAt || message.startedAt);
+    const heading = [`## ${transcriptRoleLabel(message.role)}`];
+    if (message.agentName) heading.push(`(${message.agentName})`);
+    if (messageTime) heading.push(`- ${messageTime}`);
+    lines.push(heading.join(' '), '');
+    lines.push(String(message.content || '').trim() || '(empty)');
+
+    const attachments = summarizeTranscriptList(
+      message.attachments,
+      'Attachments',
+      (item) => item?.name || item?.fileName || item?.path || '',
+    );
+    const comments = summarizeTranscriptList(
+      message.commentAttachments,
+      'Preview comments',
+      (item) => {
+        const target = item?.elementId || item?.label || item?.selector || '';
+        const comment = item?.comment || '';
+        return [target, comment].filter(Boolean).join(': ');
+      },
+    );
+    const produced = summarizeTranscriptList(
+      message.producedFiles,
+      'Produced files',
+      (item) => item?.name || item?.path || '',
+    );
+    const meta = [...attachments, ...comments, ...produced];
+    if (meta.length) lines.push('', ...meta);
+    lines.push('');
+  }
+
+  return `${lines.join('\n').replace(/\n{4,}/g, '\n\n\n').trim()}\n`;
 }
 
 /**
@@ -822,31 +934,6 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
 
   function requestRunOverride(candidate, grantedRunId) {
     return typeof candidate === 'string' && candidate.length > 0 && candidate !== grantedRunId;
-  }
-
-  function createAgentRuntimeToolPrompt(daemonUrl, grant) {
-    if (!grant) return '';
-    return [
-      '## Pixelpitch runtime tools',
-      '',
-      'You can create and update Live Artifacts for this project through the local daemon.',
-      `Daemon URL: ${daemonUrl}`,
-      'Use the bearer token from `PIXELPITCH_TOOL_TOKEN`; do not print or persist it.',
-      '',
-      'Endpoints:',
-      '- POST /api/tools/live-artifacts/create',
-      '- GET /api/tools/live-artifacts/list',
-      '- POST /api/tools/live-artifacts/update',
-      '- POST /api/tools/live-artifacts/refresh',
-      '- GET /api/tools/connectors/list',
-      '- POST /api/tools/connectors/execute',
-      '',
-      'Connector tools are limited to connected, auto-approved read-only tools. Prefer the CLI wrapper when available:',
-      '- `"$PIXELPITCH_NODE_BIN" "$PIXELPITCH_BIN" tools connectors list --format compact`',
-      '- `"$PIXELPITCH_NODE_BIN" "$PIXELPITCH_BIN" tools connectors execute --connector <id> --tool <name> --input input.json`',
-      '',
-      'Prefer Live Artifacts for dashboards, reports, scorecards, and refreshable views where the data and preview should stay structured.',
-    ].join('\n');
   }
 
   function sendLiveArtifactRouteError(res, err) {
@@ -1261,6 +1348,46 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     }
     deleteConversation(db, req.params.cid);
     res.json({ ok: true });
+  });
+
+  app.get('/api/projects/:id/conversations/:cid/transcript', (req, res) => {
+    const project = getProject(db, req.params.id);
+    const conv = getConversation(db, req.params.cid);
+    if (!project || !conv || conv.projectId !== req.params.id) {
+      return res.status(404).json({ error: 'conversation not found' });
+    }
+
+    const format = String(req.query?.format || 'markdown').toLowerCase();
+    if (!['markdown', 'md', 'json'].includes(format)) {
+      return res.status(400).json({ error: 'format must be markdown or json' });
+    }
+
+    const payload = buildConversationTranscriptPayload(
+      project,
+      conv,
+      listMessages(db, req.params.cid),
+    );
+    const baseSlug =
+      sanitizeArchiveFilename(conv.title || project.name || conv.id) ||
+      'conversation-transcript';
+    const ext = format === 'json' ? 'json' : 'md';
+    const filename = `${baseSlug}-transcript.${ext}`;
+    const asciiFallback =
+      filename.replace(/[^\x20-\x7e]/g, '_').replace(/"/g, '_') ||
+      `conversation-transcript.${ext}`;
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${asciiFallback}"; filename*=UTF-8''${encodeURIComponent(filename)}`,
+    );
+
+    if (format === 'json') {
+      res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      res.send(`${JSON.stringify(payload, null, 2)}\n`);
+      return;
+    }
+
+    res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+    res.send(renderConversationTranscriptMarkdown(payload));
   });
 
   // ---- Messages -------------------------------------------------------------
@@ -2949,45 +3076,116 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
   const design = {
     runs: createChatRunService({ createSseResponse, createSseErrorPayload }),
   };
+  const parallelCritiqueEnabled =
+    ['1', 'true', 'yes'].includes(
+      String(process.env.PIXELPITCH_CRITIQUE_PARALLEL_ENABLED ?? '').trim().toLowerCase(),
+    );
+  const composeCritiquePanelPrompt = ({
+    role,
+    round,
+    prompt,
+    cwd,
+    cfg,
+    runtimeToolPrompt,
+  }) => [
+    '# Pixelpitch Critique Theater panelist',
+    '',
+    'You are a real child agent in a parallel critique panel, not a simulated persona.',
+    `Panel role: ${role}`,
+    `Round: ${round}`,
+    `Score scale: 0-${cfg.scoreScale}`,
+    `Ship threshold: ${cfg.scoreThreshold}`,
+    cwd ? `Project directory to inspect: ${cwd}` : '',
+    runtimeToolPrompt ? `\n${runtimeToolPrompt}` : '',
+    '',
+    'Review independently from your assigned role. Use project files and runtime tools when they help you verify the artifact. Do not modify files.',
+    '',
+    'Return ONLY a JSON object with this exact shape:',
+    '{"role":"critic","score":8,"dimensions":[{"name":"Hierarchy","score":8,"note":"Short note."}],"mustFix":["Specific blocker."]}',
+    '',
+    'Use your assigned role in the JSON role field. Keep notes short and actionable. Put only true blockers in mustFix.',
+    '',
+    '# Artifact/request to review',
+    '',
+    prompt,
+  ].filter(Boolean).join('\n');
+  const agentRunService = createAgentRunService({
+    runs: design.runs,
+    toolTokenRegistry,
+    daemonUrl: `http://127.0.0.1:${resolvedPort}`,
+    pixelpitchBin: PIXELPITCH_BIN,
+    projectRoot: PROJECT_ROOT,
+    artifactsDir: ARTIFACTS_DIR,
+    db,
+    critiqueCfg,
+    parallelCritiqueEnabled,
+    critiqueWarnedAdapters,
+    createSseErrorPayload,
+    composeCritiquePanelPrompt,
+    registerChatAgentEventSink(runId, sink) {
+      activeChatAgentEventSinks.set(runId, sink);
+    },
+    unregisterChatAgentEventSink(runId) {
+      activeChatAgentEventSinks.delete(runId);
+    },
+  });
 
   const composeDaemonSystemPrompt = async ({
     projectId,
     skillId,
+    skillIds,
     designSystemId,
+    designSystemIds,
+    craftIds,
   }) => {
     const project =
       typeof projectId === 'string' && projectId
         ? getProject(db, projectId)
         : null;
-    const effectiveSkillId =
-      typeof skillId === 'string' && skillId ? skillId : project?.skillId;
-    const effectiveDesignSystemId =
-      typeof designSystemId === 'string' && designSystemId
-        ? designSystemId
-        : project?.designSystemId;
+    const effectiveSkillIds = uniqueStrings([
+      ...(Array.isArray(skillIds) ? skillIds : []),
+      typeof skillId === 'string' && skillId ? skillId : null,
+      project?.skillId,
+    ]);
+    const effectiveDesignSystemIds = uniqueStrings([
+      ...(Array.isArray(designSystemIds) ? designSystemIds : []),
+      typeof designSystemId === 'string' && designSystemId ? designSystemId : null,
+      project?.designSystemId,
+    ]);
+    const effectiveCraftIds = uniqueStrings(Array.isArray(craftIds) ? craftIds : []);
     const metadata = project?.metadata;
 
     let skillBody;
     let skillName;
     let skillMode;
     let skillCraftRequires = [];
-    if (effectiveSkillId) {
-      const skill = (await listSkills(SKILLS_DIR)).find(
-        (s) => s.id === effectiveSkillId,
-      );
-      if (skill) {
-        skillBody = skill.body;
-        skillName = skill.name;
-        skillMode = skill.mode;
-        if (Array.isArray(skill.craftRequires))
-          skillCraftRequires = skill.craftRequires;
+    if (effectiveSkillIds.length > 0) {
+      const allSkills = await listSkills(SKILLS_DIR);
+      const selectedSkills = effectiveSkillIds
+        .map((id) => allSkills.find((s) => s.id === id))
+        .filter(Boolean);
+      if (selectedSkills.length > 0) {
+        skillBody = selectedSkills
+          .map((skill) => `# Skill: ${skill.name} (${skill.id})\n\n${skill.body}`)
+          .join('\n\n---\n\n');
+        skillName = selectedSkills.map((skill) => skill.name).join(' + ');
+        skillMode = selectedSkills[0]?.mode;
+        skillCraftRequires = uniqueStrings(
+          selectedSkills.flatMap((skill) =>
+            Array.isArray(skill.craftRequires) ? skill.craftRequires : [],
+          ),
+        );
       }
     }
 
     let craftBody;
     let craftSections;
-    if (skillCraftRequires.length > 0) {
-      const loaded = await loadCraftSections(CRAFT_DIR, skillCraftRequires);
+    const requiredCraftSections = uniqueStrings([
+      ...skillCraftRequires,
+      ...effectiveCraftIds,
+    ]);
+    if (requiredCraftSections.length > 0) {
+      const loaded = await loadCraftSections(CRAFT_DIR, requiredCraftSections);
       if (loaded.body) {
         craftBody = loaded.body;
         craftSections = loaded.sections;
@@ -2997,16 +3195,28 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     let designSystemBody;
     let designSystemTitle;
     let designSystemCss;
-    if (effectiveDesignSystemId) {
+    if (effectiveDesignSystemIds.length > 0) {
       const systems = await listDesignSystems(DESIGN_SYSTEMS_DIR);
-      const summary = systems.find((s) => s.id === effectiveDesignSystemId);
-      designSystemTitle = summary?.title;
-      designSystemBody =
-        (await readDesignSystem(DESIGN_SYSTEMS_DIR, effectiveDesignSystemId)) ??
-        undefined;
+      const loadedSystems = [];
+      for (const id of effectiveDesignSystemIds) {
+        const body = await readDesignSystem(DESIGN_SYSTEMS_DIR, id);
+        if (!body) continue;
+        const summary = systems.find((s) => s.id === id);
+        loadedSystems.push({ id, title: summary?.title ?? id, body });
+      }
+      if (loadedSystems.length > 0) {
+        designSystemTitle = loadedSystems.map((system) => system.title).join(' + ');
+        designSystemBody = loadedSystems
+          .map((system, index) =>
+            index === 0
+              ? `# Primary design system: ${system.title} (${system.id})\n\n${system.body}`
+              : `# Inspiration design system: ${system.title} (${system.id})\n\n${system.body}`,
+          )
+          .join('\n\n---\n\n');
+      }
       // Read colors_and_type.css if it exists alongside the DESIGN.md
       try {
-        const cssPath = path.join(DESIGN_SYSTEMS_DIR, effectiveDesignSystemId, 'colors_and_type.css');
+        const cssPath = path.join(DESIGN_SYSTEMS_DIR, effectiveDesignSystemIds[0], 'colors_and_type.css');
         designSystemCss = await fs.promises.readFile(cssPath, 'utf-8');
       } catch { /* no CSS file */ }
     }
@@ -3043,7 +3253,10 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       assistantMessageId,
       clientRequestId,
       skillId,
+      skillIds = [],
       designSystemId,
+      designSystemIds = [],
+      craftIds = [],
       attachments = [],
       commentAttachments = [],
       model,
@@ -3141,30 +3354,22 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     const attachmentHint = safeAttachments.length
       ? `\n\nAttached project files: ${safeAttachments.map((p) => `\`${p}\``).join(', ')}`
       : '';
-    const toolTokenGrant =
-      cwd && typeof projectId === 'string' && projectId
-        ? toolTokenRegistry.mint({
-            runId,
-            projectId,
-            allowedEndpoints: CHAT_TOOL_ENDPOINTS,
-            allowedOperations: CHAT_TOOL_OPERATIONS,
-          })
-        : null;
-    let toolTokenRevoked = false;
-    const revokeToolToken = (reason) => {
-      if (toolTokenRevoked || !toolTokenGrant) return;
-      toolTokenRevoked = true;
-      toolTokenRegistry.revokeToken(toolTokenGrant.token, reason);
-    };
-    const runtimeToolPrompt = createAgentRuntimeToolPrompt(
-      `http://127.0.0.1:${resolvedPort}`,
-      toolTokenGrant,
-    );
+    const send = (event, data) => design.runs.emit(run, event, data);
+    const toolContext = agentRunService.createToolContext({
+      runId,
+      projectId,
+      cwd,
+      send,
+    });
+    const runtimeToolPrompt = toolContext.runtimeToolPrompt;
     const commentHint = renderCommentAttachmentHint(safeCommentAttachments);
     const daemonSystemPrompt = await composeDaemonSystemPrompt({
       projectId,
       skillId,
+      skillIds,
       designSystemId,
+      designSystemIds,
+      craftIds,
     });
     const instructionPrompt = [daemonSystemPrompt, runtimeToolPrompt, systemPrompt]
       .map((part) => (typeof part === 'string' ? part.trim() : ''))
@@ -3216,7 +3421,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     // spawn(def.bin) — that fallback re-introduces the exact ENOENT symptom
     // from issue #10.
     if (!resolvedBin) {
-      revokeToolToken('child_exit');
+      toolContext.cleanup('child_exit');
       design.runs.emit(
         run,
         'error',
@@ -3237,231 +3442,20 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       agentOptions,
       { cwd },
     );
-    const send = (event, data) => design.runs.emit(run, event, data);
-    const unregisterChatAgentEventSink = () => {
-      activeChatAgentEventSinks.delete(toolTokenGrant?.runId ?? runId);
-    };
-    if (toolTokenGrant?.runId) {
-      activeChatAgentEventSinks.set(toolTokenGrant.runId, (payload) =>
-        send('agent', payload),
-      );
-    }
-
-    const odMediaEnv = {
-      PIXELPITCH_NODE_BIN: process.execPath,
-      PIXELPITCH_BIN,
-      PIXELPITCH_DAEMON_URL: `http://127.0.0.1:${resolvedPort}`,
-      ...(toolTokenGrant ? { PIXELPITCH_TOOL_TOKEN: toolTokenGrant.token } : {}),
-      ...(typeof projectId === 'string' && projectId && cwd
-        ? {
-            PIXELPITCH_PROJECT_ID: projectId,
-            PIXELPITCH_PROJECT_DIR: cwd,
-          }
-        : {}),
-    };
-
-    if (run.cancelRequested || design.runs.isTerminal(run.status)) {
-      revokeToolToken('child_exit');
-      unregisterChatAgentEventSink();
-      return;
-    }
-
-    run.status = 'running';
-    run.updatedAt = Date.now();
-    send('start', {
+    return agentRunService.startPreparedAgentRun({
+      run,
       runId,
       agentId,
-      bin: resolvedBin,
-      streamFormat: def.streamFormat ?? 'plain',
-      projectId: typeof projectId === 'string' ? projectId : null,
+      def,
+      resolvedBin,
+      args,
+      prompt: composed,
       cwd,
-      model: safeModel,
-      reasoning: safeReasoning,
-    });
-
-    let child;
-    let acpSession = null;
-    try {
-      // Prompt delivery via stdin is now the universal default. This bypasses
-      // both the cmd.exe 8KB limit and the CreateProcess 32KB limit.
-      const stdinMode =
-        def.promptViaStdin || def.streamFormat === 'acp-json-rpc'
-          ? 'pipe'
-          : 'ignore';
-      const env = spawnEnvForAgent(agentId, { ...process.env, ...odMediaEnv });
-      const invocation = createCommandInvocation({
-        command: resolvedBin,
-        args,
-        env,
-      });
-      child = spawn(invocation.command, invocation.args, {
-        env,
-        stdio: [stdinMode, 'pipe', 'pipe'],
-        cwd: cwd || undefined,
-        shell: false,
-        // Required when invocation wraps a Windows .cmd/.bat shim through
-        // cmd.exe; without this, Node re-escapes the inner command line and
-        // breaks paths containing spaces (issue #315).
-        windowsVerbatimArguments: invocation.windowsVerbatimArguments,
-      });
-      run.child = child;
-      if (def.promptViaStdin && child.stdin && def.streamFormat !== 'pi-rpc') {
-        // EPIPE from a fast-exiting CLI (bad auth, missing model, exit on
-        // launch) would otherwise surface as an unhandled stream error and
-        // crash the daemon. Swallow it — the regular exit/close handlers
-        // below already route the underlying failure to SSE via stderr.
-        child.stdin.on('error', (err) => {
-          if (err.code !== 'EPIPE') {
-            send(
-              'error',
-              createSseErrorPayload(
-                'AGENT_EXECUTION_FAILED',
-                `stdin: ${err.message}`,
-              ),
-            );
-          }
-        });
-        child.stdin.end(composed, 'utf8');
-      }
-    } catch (err) {
-      revokeToolToken('child_exit');
-      unregisterChatAgentEventSink();
-      design.runs.emit(
-        run,
-        'error',
-        createSseErrorPayload(
-          'AGENT_EXECUTION_FAILED',
-          `spawn failed: ${err.message}`,
-        ),
-      );
-      return design.runs.finish(run, 'failed', 1, null);
-    }
-
-    child.stdout.setEncoding('utf8');
-    child.stderr.setEncoding('utf8');
-
-    if (critiqueCfg.enabled) {
-      const adapterStreamFormat = def.streamFormat ?? 'plain';
-      if (adapterStreamFormat !== 'plain') {
-        if (!critiqueWarnedAdapters.has(adapterStreamFormat)) {
-          critiqueWarnedAdapters.add(adapterStreamFormat);
-          console.warn(`[critique] adapter format=${adapterStreamFormat} is not plain-stream; skipping orchestrator and falling through to legacy generation`);
-        }
-      } else {
-        const critiqueRunId = run.id;
-        const critiqueProjectKey =
-          typeof projectId === 'string' && projectId ? projectId : critiqueRunId;
-        const critiqueArtifactDir = path.join(ARTIFACTS_DIR, critiqueProjectKey, critiqueRunId);
-        const stdoutIterable = (async function* () {
-          for await (const chunk of child.stdout) yield String(chunk);
-        })();
-        child.stderr.on('data', (chunk) => send('stderr', { chunk }));
-        child.on('error', (err) => {
-          revokeToolToken('child_exit');
-          unregisterChatAgentEventSink();
-          send('error', createSseErrorPayload('AGENT_EXECUTION_FAILED', err.message));
-        });
-        const childExitPromise = new Promise((resolve) => {
-          child.once('close', (code, signal) => resolve({ code, signal }));
-        });
-        try {
-          const orchestratorResult = await runOrchestrator({
-            runId: critiqueRunId,
-            projectId: typeof projectId === 'string' ? projectId : critiqueRunId,
-            conversationId: typeof conversationId === 'string' ? conversationId : null,
-            artifactId: critiqueRunId,
-            artifactDir: critiqueArtifactDir,
-            adapter: typeof agentId === 'string' ? agentId : 'unknown',
-            cfg: critiqueCfg,
-            db,
-            bus: { emit: (event) => send('agent', event) },
-            stdout: stdoutIterable,
-            child,
-            childExitPromise,
-          });
-          revokeToolToken('child_exit');
-          unregisterChatAgentEventSink();
-          const succeeded =
-            orchestratorResult.status === 'shipped' ||
-            orchestratorResult.status === 'below_threshold';
-          if (run.cancelRequested) {
-            design.runs.finish(run, 'canceled', 1, null);
-          } else if (succeeded) {
-            design.runs.finish(run, 'succeeded', 0, null);
-          } else {
-            design.runs.finish(run, 'failed', 1, null);
-          }
-        } catch (err) {
-          revokeToolToken('child_exit');
-          unregisterChatAgentEventSink();
-          send('error', createSseErrorPayload('AGENT_EXECUTION_FAILED', err instanceof Error ? err.message : String(err)));
-          design.runs.finish(run, 'failed', 1, null);
-        }
-        return;
-      }
-    }
-
-    // Structured streams (Claude Code) go through a line-delimited JSON
-    // parser that turns stream_event objects into UI-friendly events. For
-    // plain streams (most other CLIs) we forward raw chunks unchanged so
-    // the browser can append them to the assistant's text buffer.
-    if (def.streamFormat === 'claude-stream-json') {
-      const claude = createClaudeStreamHandler((ev) => send('agent', ev));
-      child.stdout.on('data', (chunk) => claude.feed(chunk));
-      child.on('close', () => claude.flush());
-    } else if (def.streamFormat === 'copilot-stream-json') {
-      const copilot = createCopilotStreamHandler((ev) => send('agent', ev));
-      child.stdout.on('data', (chunk) => copilot.feed(chunk));
-      child.on('close', () => copilot.flush());
-    } else if (def.streamFormat === 'pi-rpc') {
-      acpSession = attachPiRpcSession({
-        child,
-        prompt: composed,
-        cwd: cwd || PROJECT_ROOT,
-        model: safeModel,
-        send,
-      });
-    } else if (def.streamFormat === 'acp-json-rpc') {
-      acpSession = attachAcpSession({
-        child,
-        prompt: composed,
-        cwd: cwd || PROJECT_ROOT,
-        model: safeModel,
-        send,
-      });
-    } else if (def.streamFormat === 'json-event-stream') {
-      const handler = createJsonEventStreamHandler(
-        def.eventParser || def.id,
-        (ev) => send('agent', ev),
-      );
-      child.stdout.on('data', (chunk) => handler.feed(chunk));
-      child.on('close', () => handler.flush());
-    } else {
-      child.stdout.on('data', (chunk) => send('stdout', { chunk }));
-    }
-    child.stderr.on('data', (chunk) => send('stderr', { chunk }));
-
-    child.on('error', (err) => {
-      revokeToolToken('child_exit');
-      unregisterChatAgentEventSink();
-      send(
-        'error',
-        createSseErrorPayload('AGENT_EXECUTION_FAILED', err.message),
-      );
-      design.runs.finish(run, 'failed', 1, null);
-    });
-    child.on('close', (code, signal) => {
-      revokeToolToken('child_exit');
-      unregisterChatAgentEventSink();
-      if (acpSession?.hasFatalError()) {
-        return design.runs.finish(run, 'failed', code ?? 1, signal ?? null);
-      }
-      const status = run.cancelRequested
-        ? 'canceled'
-        : code === 0
-          ? 'succeeded'
-          : 'failed';
-      design.runs.finish(run, status, code, signal);
+      projectId,
+      conversationId,
+      safeModel,
+      safeReasoning,
+      toolContext,
     });
   };
 
@@ -3496,6 +3490,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
   app.post('/api/runs/:id/cancel', (req, res) => {
     const run = design.runs.get(req.params.id);
     if (!run) return sendApiError(res, 404, 'NOT_FOUND', 'run not found');
+    agentRunService.cancelChildren(req.params.id);
     design.runs.cancel(run);
     /** @type {import('@pixelpitch/contracts').ChatRunCancelResponse} */
     const body = { ok: true };
@@ -3538,6 +3533,120 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     return { parsed };
   };
 
+  const apiEndpointForProtocol = (baseUrl, protocol) => {
+    const clean = String(baseUrl || '').replace(/\/+$/, '');
+    if (protocol === 'openai') {
+      return /\/v\d+$/.test(clean)
+        ? `${clean}/chat/completions`
+        : `${clean}/v1/chat/completions`;
+    }
+    return /\/v\d+$/.test(clean)
+      ? `${clean}/messages`
+      : `${clean}/v1/messages`;
+  };
+
+  async function testApiExecutionConfig(input) {
+    const protocol = input?.apiProtocol === 'openai' ? 'openai' : 'anthropic';
+    const baseUrl = cleanString(input?.baseUrl);
+    const apiKey = cleanString(input?.apiKey);
+    const model = cleanString(input?.model);
+    if (!baseUrl || !apiKey || !model) {
+      return {
+        ok: false,
+        mode: 'api',
+        message: 'API key, base URL, and model are required.',
+      };
+    }
+    const validated = validateExternalApiBaseUrl(baseUrl);
+    if (validated.error) {
+      return {
+        ok: false,
+        mode: 'api',
+        message: validated.error,
+      };
+    }
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 15_000);
+    const url = apiEndpointForProtocol(baseUrl, protocol);
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: protocol === 'openai'
+          ? {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${apiKey}`,
+            }
+          : {
+              'Content-Type': 'application/json',
+              'x-api-key': apiKey,
+              'anthropic-version': '2023-06-01',
+            },
+        body: JSON.stringify(protocol === 'openai'
+          ? {
+              model,
+              messages: [{ role: 'user', content: 'Reply with ok.' }],
+              max_tokens: 1,
+              stream: false,
+            }
+          : {
+              model,
+              messages: [{ role: 'user', content: 'Reply with ok.' }],
+              max_tokens: 1,
+              stream: false,
+            }),
+        signal: controller.signal,
+      });
+      if (!response.ok) {
+        const details = redactAuthTokens((await response.text().catch(() => '')).slice(0, 500));
+        return {
+          ok: false,
+          mode: 'api',
+          status: response.status,
+          message: `Upstream rejected the test request (${response.status}).`,
+          details,
+        };
+      }
+      return {
+        ok: true,
+        mode: 'api',
+        status: response.status,
+        message: `${protocol === 'openai' ? 'OpenAI-compatible' : 'Anthropic-compatible'} endpoint responded.`,
+      };
+    } catch (err) {
+      return {
+        ok: false,
+        mode: 'api',
+        message:
+          err?.name === 'AbortError'
+            ? 'Connection test timed out after 15 seconds.'
+            : String(err?.message || err),
+      };
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  app.post('/api/execution/test', async (req, res) => {
+    if (!isLocalSameOrigin(req, resolvedPort)) {
+      return res.status(403).json({ error: 'cross-origin request rejected' });
+    }
+    const input = req.body || {};
+    if (input.mode === 'daemon') {
+      const agentId = cleanString(input.agentId);
+      const found = detectAgents().find((agent) => agent.id === agentId);
+      return res.json({
+        ok: Boolean(found?.available),
+        mode: 'daemon',
+        message: found?.available
+          ? `${found.name} is installed and reachable on PATH.`
+          : agentId
+            ? `Agent "${agentId}" is not installed or not on PATH.`
+            : 'Select a local agent first.',
+      });
+    }
+    res.json(await testApiExecutionConfig(input));
+  });
+
   app.post('/api/proxy/anthropic/stream', async (req, res) => {
     /** @type {Partial<ProxyStreamRequest>} */
     const proxyBody = req.body || {};
@@ -3562,10 +3671,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       );
     }
 
-    const clean = baseUrl.replace(/\/+$/, '');
-    const url = /\/v\d+$/.test(clean)
-      ? `${clean}/messages`
-      : `${clean}/v1/messages`;
+    const url = apiEndpointForProtocol(baseUrl, 'anthropic');
     console.log(
       `[proxy:anthropic] ${req.method} ${validated.parsed.hostname} model=${model}`,
     );
@@ -3639,7 +3745,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     }
   });
 
-  app.post('/api/proxy/openai/stream', async (req, res) => {
+  async function handleOpenAiProxyStream(req, res) {
     /** @type {Partial<ProxyStreamRequest>} */
     const proxyBody = req.body || {};
     const { baseUrl, apiKey, model, systemPrompt, messages, maxTokens } =
@@ -3663,10 +3769,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       );
     }
 
-    const clean = baseUrl.replace(/\/+$/, '');
-    const url = /\/v\d+$/.test(clean)
-      ? `${clean}/chat/completions`
-      : `${clean}/v1/chat/completions`;
+    const url = apiEndpointForProtocol(baseUrl, 'openai');
     console.log(
       `[proxy:openai] ${req.method} ${validated.parsed.hostname} model=${model}`,
     );
@@ -3737,7 +3840,10 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       sse.send('error', { message: err.message });
       sse.end();
     }
-  });
+  }
+
+  app.post('/api/proxy/openai/stream', handleOpenAiProxyStream);
+  app.post('/api/proxy/stream', handleOpenAiProxyStream);
 
   // Wait for `listen` to bind so callers always see the resolved URL —
   // critical when port=0 (ephemeral port) and when the embedding sidecar
@@ -3823,5 +3929,20 @@ export function isLocalSameOrigin(req, port) {
   if (!allowedHosts.has(host)) return false;
   const origin = req.headers.origin;
   if (origin == null || origin === '') return true;
+  if (req.method === 'GET' && isPortlessLoopbackOrigin(String(origin))) {
+    return true;
+  }
   return allowedOrigins.has(String(origin));
+}
+
+export function isPortlessLoopbackOrigin(origin) {
+  try {
+    const parsed = new URL(String(origin));
+    if (parsed.port) return false;
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return false;
+    const hostname = parsed.hostname.toLowerCase();
+    return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1' || hostname === '[::1]';
+  } catch {
+    return false;
+  }
 }

@@ -37,6 +37,13 @@ const ENV_KEYS = {
   // upstream env per docs.x.ai quickstart — so users who already export
   // it for the official SDK don't have to re-paste into Settings.
   grok: ['PIXELPITCH_GROK_API_KEY', 'XAI_API_KEY'],
+  nanobanana: [
+    'PIXELPITCH_NANOBANANA_API_KEY',
+    'PIXELPITCH_NANOBANANA_VERTEX_ACCESS_TOKEN',
+    'GOOGLE_VERTEX_ACCESS_TOKEN',
+    'GOOGLE_API_KEY',
+    'GEMINI_API_KEY',
+  ],
   bfl: ['PIXELPITCH_BFL_API_KEY', 'BFL_API_KEY'],
   fal: ['PIXELPITCH_FAL_KEY', 'FAL_KEY'],
   replicate: ['PIXELPITCH_REPLICATE_API_TOKEN', 'REPLICATE_API_TOKEN'],
@@ -86,7 +93,7 @@ function readEnvKey(providerId) {
 
 /**
  * Resolve credentials for a provider. Env vars win, then stored config.
- * Returns { apiKey, baseUrl } where either may be empty string.
+ * Returns { apiKey, baseUrl, model } where any value may be empty string.
  */
 export async function resolveProviderConfig(dataDir, providerId) {
   const stored = await readStored(dataDir);
@@ -95,6 +102,7 @@ export async function resolveProviderConfig(dataDir, providerId) {
   return {
     apiKey: envKey || entry.apiKey || '',
     baseUrl: entry.baseUrl || '',
+    model: entry.model || '',
   };
 }
 
@@ -118,6 +126,7 @@ export async function readMaskedConfig(dataDir) {
       // see them in the DOM.
       apiKeyTail: hasStoredKey ? entry.apiKey.slice(-4) : '',
       baseUrl: entry.baseUrl || '',
+      model: entry.model || '',
     };
   }
   return { providers };
@@ -150,8 +159,12 @@ export async function writeConfig(dataDir, body) {
       typeof entry.baseUrl === 'string' && entry.baseUrl.trim()
         ? entry.baseUrl.trim()
         : '';
-    if (!apiKey && !baseUrl) continue;
-    next[id] = { apiKey, baseUrl };
+    const model =
+      typeof entry.model === 'string' && entry.model.trim()
+        ? entry.model.trim()
+        : '';
+    if (!apiKey && !baseUrl && !model) continue;
+    next[id] = { apiKey, baseUrl, model };
   }
   if (Object.keys(next).length === 0) {
     const prior = await readStored(dataDir);

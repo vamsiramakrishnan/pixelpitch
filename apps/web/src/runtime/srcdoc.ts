@@ -16,7 +16,7 @@
  */
 export function buildSrcdoc(
   html: string,
-  options: { deck?: boolean; baseHref?: string; initialSlideIndex?: number; commentBridge?: boolean } = {}
+  options: { deck?: boolean; baseHref?: string; initialSlideIndex?: number; commentBridge?: boolean; inspectBridge?: boolean } = {}
 ): string {
   const head = html.trimStart().slice(0, 64).toLowerCase();
   const isFullDoc = head.startsWith("<!doctype") || head.startsWith("<html");
@@ -33,7 +33,7 @@ export function buildSrcdoc(
   const withBase = options.baseHref ? injectBaseHref(wrapped, options.baseHref) : wrapped;
   const withShim = injectSandboxShim(withBase);
   const withDeck = options.deck ? injectDeckBridge(withShim, options.initialSlideIndex) : withShim;
-  return options.commentBridge ? injectCommentBridge(withDeck) : withDeck;
+  return options.commentBridge || options.inspectBridge ? injectCommentBridge(withDeck) : withDeck;
 }
 
 function injectBaseHref(doc: string, baseHref: string): string {
@@ -99,32 +99,89 @@ function injectSandboxShim(doc: string): string {
 function injectCommentBridge(doc: string): string {
   const script = `<script data-od-comment-bridge>(function(){
   var enabled = true;
+  var targetMode = 'comment';
   var hoveredId = null;
   function esc(value){ try { return window.CSS && CSS.escape ? CSS.escape(value) : String(value).replace(/"/g, '\\\\"'); } catch (_) { return String(value); } }
+  function textSlug(value){
+    return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 42);
+  }
+  function indexOfElement(el, list){
+    for (var i = 0; i < list.length; i++) if (list[i] === el) return i;
+    return -1;
+  }
+  function generatedId(el){
+    var explicit = el.getAttribute('data-od-id') || el.getAttribute('data-screen-label') || el.getAttribute('aria-label') || el.id;
+    if (explicit) return String(explicit);
+    var tag = el.tagName ? el.tagName.toLowerCase() : 'element';
+    var scope = tag;
+    if (el.classList && el.classList.length) scope += '-' + Array.prototype.slice.call(el.classList, 0, 2).join('-');
+    var text = textSlug(el.textContent || el.getAttribute('title') || '');
+    var peers = document.querySelectorAll(tag);
+    var index = Math.max(0, indexOfElement(el, peers));
+    return textSlug(scope + '-' + (text || 'target') + '-' + (index + 1));
+  }
+  function selectorFor(el, id){
+    if (el.hasAttribute('data-od-id')) return '[data-od-id="' + esc(el.getAttribute('data-od-id')) + '"]';
+    if (el.hasAttribute('data-screen-label')) return '[data-screen-label="' + esc(el.getAttribute('data-screen-label')) + '"]';
+    if (el.id) return '#' + esc(el.id);
+    var tag = el.tagName ? el.tagName.toLowerCase() : 'element';
+    var cls = el.classList && el.classList.length ? '.' + Array.prototype.slice.call(el.classList, 0, 3).map(esc).join('.') : '';
+    var parent = el.parentElement;
+    if (!parent) return tag + cls;
+    var siblings = Array.prototype.filter.call(parent.children || [], function(child){ return child.tagName === el.tagName; });
+    var index = Math.max(0, indexOfElement(el, siblings)) + 1;
+    return tag + cls + ':nth-of-type(' + index + ')';
+  }
   function targetFrom(el){
-    var id = el.getAttribute('data-od-id') || el.getAttribute('data-screen-label');
+    var id = generatedId(el);
     if (!id) return null;
     var rect = el.getBoundingClientRect();
+    if (!rect || rect.width < 2 || rect.height < 2) return null;
     var tag = el.tagName ? el.tagName.toLowerCase() : 'element';
     var cls = typeof el.className === 'string' && el.className.trim() ? '.' + el.className.trim().split(/\\s+/).slice(0,2).join('.') : '';
     var html = '';
     try { html = (el.outerHTML || '').replace(/\\s+/g, ' ').match(/^<[^>]+>/)?.[0] || ''; } catch (_) {}
+    var style = '';
+    var styles = {};
+    try {
+      var cs = window.getComputedStyle(el);
+      style = ' display=' + cs.display + ' font=' + cs.fontFamily.split(',')[0] + ' size=' + cs.fontSize + ' color=' + cs.color + ' bg=' + cs.backgroundColor;
+      styles = {
+        color: cs.color,
+        backgroundColor: cs.backgroundColor,
+        fontSize: cs.fontSize,
+        fontWeight: cs.fontWeight,
+        lineHeight: cs.lineHeight,
+        letterSpacing: cs.letterSpacing,
+        padding: cs.padding,
+        borderRadius: cs.borderRadius,
+        opacity: cs.opacity,
+        width: Math.round(rect.width) + 'px',
+        height: Math.round(rect.height) + 'px'
+      };
+    } catch (_) {}
+    var slide = el.closest ? el.closest('.slide, [data-screen-label]') : null;
+    var slideInfo = slide && slide !== el ? ' within ' + generatedId(slide) : '';
     return {
       type: 'od:comment-target',
       elementId: id,
-      selector: el.hasAttribute('data-od-id') ? '[data-od-id="' + esc(id) + '"]' : '[data-screen-label="' + esc(id) + '"]',
-      label: tag + cls,
+      selector: selectorFor(el, id),
+      label: tag + cls + slideInfo,
       text: (el.textContent || '').replace(/\\s+/g, ' ').trim().slice(0, 160),
       position: { x: Math.round(rect.x), y: Math.round(rect.y), width: Math.round(rect.width), height: Math.round(rect.height) },
-      htmlHint: html.slice(0, 180)
+      htmlHint: (html + style).slice(0, 260),
+      tagName: tag,
+      className: typeof el.className === 'string' ? el.className : '',
+      styles: styles
     };
   }
   function allTargets(){
-    var nodes = document.querySelectorAll('[data-od-id], [data-screen-label]');
+    var nodes = document.querySelectorAll('[data-od-id], [data-screen-label], .slide, section, article, main, header, footer, nav, aside, button, a[href], h1, h2, h3, h4, p, li, figure, figcaption, img, video, canvas, svg, table, [role="button"], [role="region"], [aria-label]');
     var items = [];
     for (var i = 0; i < nodes.length; i++) {
       var item = targetFrom(nodes[i]);
       if (item) items.push(item);
+      if (items.length >= 180) break;
     }
     return items;
   }
@@ -142,17 +199,81 @@ function injectCommentBridge(doc: string): string {
     });
   }
   function closestTarget(event){
+    var path = typeof event.composedPath === 'function' ? event.composedPath() : null;
+    if (path && path.length) {
+      for (var i = 0; i < path.length; i++) {
+        var node = path[i];
+        if (!node || !node.matches || node === document.body || node === document.documentElement) continue;
+        if (node.matches('script, style, link, meta, head')) continue;
+        var candidate = targetFrom(node);
+        if (candidate) return node;
+      }
+    }
     var el = event.target;
     while (el && el !== document.documentElement) {
       if (el.getAttribute && (el.hasAttribute('data-od-id') || el.hasAttribute('data-screen-label'))) return el;
+      if (el.matches && el.matches('section, article, main, header, footer, nav, aside, button, a[href], h1, h2, h3, h4, p, li, figure, figcaption, img, video, canvas, svg, table, [role="button"], [role="region"], [aria-label]')) return el;
       el = el.parentElement;
     }
     return null;
   }
+  function findTarget(selector, elementId){
+    try {
+      if (selector) {
+        var selected = document.querySelector(selector);
+        if (selected) return selected;
+      }
+    } catch (_) {}
+    var targets = allTargets();
+    for (var i = 0; i < targets.length; i++) {
+      if (targets[i].elementId === elementId) {
+        try { return document.querySelector(targets[i].selector); } catch (_) { return null; }
+      }
+    }
+    return null;
+  }
+  function applyStyles(el, styles){
+    if (!el || !styles || typeof styles !== 'object') return;
+    var allowed = {
+      color: true,
+      backgroundColor: true,
+      fontSize: true,
+      fontWeight: true,
+      lineHeight: true,
+      letterSpacing: true,
+      padding: true,
+      borderRadius: true,
+      opacity: true,
+      width: true,
+      height: true
+    };
+    Object.keys(styles).forEach(function(key){
+      if (!allowed[key]) return;
+      var value = styles[key];
+      if (value == null) el.style[key] = '';
+      else el.style[key] = String(value);
+    });
+    schedulePostTargets();
+  }
   window.addEventListener('message', function(ev){
-    if (!ev.data || ev.data.type !== 'od:comment-mode') return;
+    if (!ev.data) return;
+    if (ev.data.type === 'od:inspect-apply') {
+      applyStyles(findTarget(ev.data.selector, ev.data.elementId), ev.data.styles);
+      return;
+    }
+    if (ev.data.type === 'od:preview-target-mode') {
+      targetMode = ev.data.mode || 'comment';
+      enabled = !!ev.data.enabled;
+      document.documentElement.toggleAttribute('data-od-comment-mode', enabled);
+      document.documentElement.setAttribute('data-od-target-mode', targetMode);
+      if (enabled) setTimeout(postTargets, 0);
+      else hoveredId = null;
+      return;
+    }
+    if (ev.data.type !== 'od:comment-mode') return;
     enabled = !!ev.data.enabled;
     document.documentElement.toggleAttribute('data-od-comment-mode', enabled);
+    document.documentElement.setAttribute('data-od-target-mode', enabled ? targetMode : 'off');
     if (enabled) setTimeout(postTargets, 0);
     else hoveredId = null;
   });
@@ -188,12 +309,41 @@ function injectCommentBridge(doc: string): string {
   }, true);
   window.addEventListener('resize', schedulePostTargets);
   document.addEventListener('scroll', schedulePostTargets, true);
+  try {
+    var mo = new MutationObserver(schedulePostTargets);
+    mo.observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'style', 'hidden', 'aria-hidden', 'data-od-id', 'data-screen-label'] });
+  } catch (_) {}
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', postTargets);
   else setTimeout(postTargets, 0);
 })();</script>`;
   const style = `<style data-od-comment-bridge-style>
 html[data-od-comment-mode] [data-od-id],
-html[data-od-comment-mode] [data-screen-label] { cursor: crosshair !important; }
+html[data-od-comment-mode] [data-screen-label],
+html[data-od-comment-mode] section,
+html[data-od-comment-mode] article,
+html[data-od-comment-mode] main,
+html[data-od-comment-mode] header,
+html[data-od-comment-mode] footer,
+html[data-od-comment-mode] nav,
+html[data-od-comment-mode] aside,
+html[data-od-comment-mode] button,
+html[data-od-comment-mode] a[href],
+html[data-od-comment-mode] h1,
+html[data-od-comment-mode] h2,
+html[data-od-comment-mode] h3,
+html[data-od-comment-mode] h4,
+html[data-od-comment-mode] p,
+html[data-od-comment-mode] li,
+html[data-od-comment-mode] figure,
+html[data-od-comment-mode] figcaption,
+html[data-od-comment-mode] img,
+html[data-od-comment-mode] video,
+html[data-od-comment-mode] canvas,
+html[data-od-comment-mode] svg,
+html[data-od-comment-mode] table,
+html[data-od-comment-mode] [role="button"],
+html[data-od-comment-mode] [role="region"],
+html[data-od-comment-mode] [aria-label] { cursor: crosshair !important; }
 </style>`;
   const withStyle = /<\/head>/i.test(doc)
     ? doc.replace(/<\/head>/i, style + '</head>')

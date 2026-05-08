@@ -45,6 +45,30 @@ import type {
   SkillSummary,
 } from './types';
 
+function normalizeAccentColor(value: string | undefined): string | null {
+  if (!value) return null;
+  const trimmed = value.trim();
+  return /^#[0-9a-f]{6}$/i.test(trimmed) ? trimmed : null;
+}
+
+function applyAccentColor(value: string | undefined): void {
+  const accent = normalizeAccentColor(value);
+  const root = document.documentElement;
+  if (!accent) {
+    root.style.removeProperty('--accent');
+    root.style.removeProperty('--accent-strong');
+    root.style.removeProperty('--accent-hover');
+    root.style.removeProperty('--accent-soft');
+    root.style.removeProperty('--accent-tint');
+    return;
+  }
+  root.style.setProperty('--accent', accent);
+  root.style.setProperty('--accent-strong', `color-mix(in srgb, ${accent} 88%, #000)`);
+  root.style.setProperty('--accent-hover', `color-mix(in srgb, ${accent} 86%, #000)`);
+  root.style.setProperty('--accent-soft', `color-mix(in srgb, ${accent} 18%, transparent)`);
+  root.style.setProperty('--accent-tint', `color-mix(in srgb, ${accent} 8%, transparent)`);
+}
+
 export function App() {
   const [config, setConfig] = useState<AppConfig>(() => loadConfig());
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -81,7 +105,8 @@ export function App() {
     } else {
       document.documentElement.setAttribute('data-theme', theme);
     }
-  }, [config.theme]);
+    applyAccentColor(config.accentColor);
+  }, [config.theme, config.accentColor]);
 
   // Bootstrap — detect daemon, load pickers, seed sensible defaults.
   useEffect(() => {

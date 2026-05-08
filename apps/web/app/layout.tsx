@@ -10,14 +10,14 @@ export const metadata: Metadata = {
     // Safari pinned-tab mask icon — Next.js's Metadata API doesn't have a
     // dedicated `mask` field, so we surface it via the generic `other`
     // bucket which renders as a raw <link rel="mask-icon" ...>.
-    other: [{ rel: 'mask-icon', url: '/logo.svg', color: '#1a73e8' }],
+    other: [{ rel: 'mask-icon', url: '/logo.svg', color: '#ed6f5c' }],
   },
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#F8FAFC' },
-    { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
+    { media: '(prefers-color-scheme: light)', color: '#efe7d2' },
+    { media: '(prefers-color-scheme: dark)', color: '#15140f' },
   ],
 };
 

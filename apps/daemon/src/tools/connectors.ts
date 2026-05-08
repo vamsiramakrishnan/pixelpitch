@@ -1,12 +1,17 @@
 import type { ToolTokenGrant } from '../tool-tokens.js';
 
 import { classifyConnectorToolSafety, type ConnectorCatalogDefinition, type ConnectorToolDetail, type ConnectorToolSafety } from '../connectors/catalog.js';
-import { connectorService, ConnectorService, type ConnectorExecuteRequest } from '../connectors/service.js';
+import { connectorService, ConnectorService, ConnectorServiceError, type ConnectorExecuteRequest } from '../connectors/service.js';
 
 export interface ConnectorToolContext {
   grant: ToolTokenGrant;
   projectsRoot: string;
   service?: ConnectorService;
+}
+
+export interface ConnectorInspectRequest {
+  connectorId: string;
+  toolName: string;
 }
 
 function approvalRank(approval: ConnectorCatalogDefinition['minimumApproval']): number {
@@ -48,7 +53,17 @@ function isAgentPreviewListableTool(definition: ConnectorCatalogDefinition, tool
   return runtimeSafety.sideEffect === 'read' && effectiveApproval === 'auto';
 }
 
-export async function listConnectorTools(context: ConnectorToolContext): Promise<Awaited<ReturnType<ConnectorService['listConnectors']>>> {
+function compactListableTool(tool: ConnectorToolDetail): Omit<ConnectorToolDetail, 'inputSchemaJson' | 'outputSchemaJson'> {
+  return {
+    name: tool.name,
+    title: tool.title,
+    ...(tool.description === undefined ? {} : { description: tool.description }),
+    safety: { ...tool.safety },
+    refreshEligible: tool.refreshEligible,
+  };
+}
+
+export async function listConnectorTools(context: ConnectorToolContext) {
   const service = context.service ?? connectorService;
   const definitions = await service.listDefinitions();
   const entries = await Promise.all(definitions.map(async (definition) => ({ definition, connector: await service.getConnector(definition.id) })));
@@ -63,9 +78,43 @@ export async function listConnectorTools(context: ConnectorToolContext): Promise
           const rightReadOnly = right.safety.sideEffect === 'read' && right.safety.approval === 'auto';
           if (leftReadOnly === rightReadOnly) return 0;
           return leftReadOnly ? -1 : 1;
-        }),
+        })
+        .map(compactListableTool),
     }))
     .filter((connector) => connector.tools.length > 0);
+}
+
+export async function inspectConnectorTool(request: ConnectorInspectRequest, context: ConnectorToolContext) {
+  const service = context.service ?? connectorService;
+  const definition = await service.getDefinition(request.connectorId);
+  if (!definition) {
+    throw new ConnectorServiceError('CONNECTOR_NOT_FOUND', 'connector not found', 404);
+  }
+  const connector = await service.getConnector(request.connectorId);
+  if (connector.status !== 'connected') {
+    throw new ConnectorServiceError('CONNECTOR_NOT_CONNECTED', 'connector is not connected', 403, {
+      connectorId: request.connectorId,
+      status: connector.status,
+    });
+  }
+  const tool = connector.tools.find((candidate) => candidate.name === request.toolName);
+  if (!tool || !isAgentPreviewListableTool(definition, tool)) {
+    throw new ConnectorServiceError('CONNECTOR_TOOL_NOT_FOUND', 'connector tool not found', 404, {
+      connectorId: request.connectorId,
+      toolName: request.toolName,
+    });
+  }
+  return {
+    connector: {
+      id: connector.id,
+      name: connector.name,
+      provider: connector.provider,
+      category: connector.category,
+      status: connector.status,
+      ...(connector.accountLabel === undefined ? {} : { accountLabel: connector.accountLabel }),
+    },
+    tool,
+  };
 }
 
 export async function executeConnectorTool(request: ConnectorExecuteRequest, context: ConnectorToolContext) {

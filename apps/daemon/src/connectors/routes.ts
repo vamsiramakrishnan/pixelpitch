@@ -4,7 +4,7 @@ import type { Express, Request, RequestHandler, Response } from 'express';
 
 import type { ToolTokenGrant } from '../tool-tokens.js';
 import { validateBoundedJsonObject } from '../live-artifacts/schema.js';
-import { executeConnectorTool, listConnectorTools } from '../tools/connectors.js';
+import { executeConnectorTool, inspectConnectorTool, listConnectorTools } from '../tools/connectors.js';
 import { connectorService, ConnectorService, ConnectorServiceError } from './service.js';
 
 type ConnectorApiErrorCode =
@@ -431,6 +431,41 @@ export function registerConnectorRoutes(app: Express, options: RegisterConnector
         return;
       }
       res.json({ connectors: await listConnectorTools({ grant, projectsRoot: options.projectsRoot, service }) });
+    } catch (err) {
+      sendConnectorRouteError(res, err, options.sendApiError);
+    }
+  });
+
+  app.post('/api/tools/connectors/inspect', async (req: Request, res: Response) => {
+    try {
+      if (!options.authorizeToolRequest) {
+        options.sendApiError(res, 500, 'CONNECTOR_EXECUTION_FAILED', 'connector tool routes are not configured');
+        return;
+      }
+      const grant = options.authorizeToolRequest?.(req, res, 'connectors:inspect');
+      if (!grant) return;
+      if (!options.projectsRoot) {
+        options.sendApiError(res, 500, 'CONNECTOR_EXECUTION_FAILED', 'connector tool routes are not configured');
+        return;
+      }
+
+      const { projectId, connectorId, toolName } = req.body || {};
+      if (projectId && projectId !== grant.projectId) {
+        options.sendApiError(res, 403, 'FORBIDDEN', 'projectId is derived from the tool token', {
+          details: { suppliedProjectId: projectId },
+        });
+        return;
+      }
+      if (typeof connectorId !== 'string' || connectorId.length === 0) {
+        options.sendApiError(res, 400, 'BAD_REQUEST', 'connectorId is required');
+        return;
+      }
+      if (typeof toolName !== 'string' || toolName.length === 0) {
+        options.sendApiError(res, 400, 'BAD_REQUEST', 'toolName is required');
+        return;
+      }
+
+      res.json(await inspectConnectorTool({ connectorId, toolName }, { grant, projectsRoot: options.projectsRoot, service }));
     } catch (err) {
       sendConnectorRouteError(res, err, options.sendApiError);
     }

@@ -39,6 +39,25 @@ import type { PreviewComment, PreviewCommentTarget } from '../types';
 
 type TranslateFn = (key: keyof Dict, vars?: Record<string, string | number>) => string;
 type SlideState = { active: number; count: number };
+type InspectStyleKey =
+  | 'color'
+  | 'backgroundColor'
+  | 'fontSize'
+  | 'fontWeight'
+  | 'lineHeight'
+  | 'letterSpacing'
+  | 'padding'
+  | 'borderRadius'
+  | 'opacity'
+  | 'width'
+  | 'height';
+type InspectStyleDraft = Record<InspectStyleKey, string>;
+type InspectSnapshot = PreviewCommentSnapshot & {
+  tagName?: string;
+  className?: string;
+  styles?: Partial<InspectStyleDraft>;
+};
+type TargetMode = 'comment' | 'inspect' | 'edit' | 'draw';
 
 const htmlPreviewSlideState = new Map<string, SlideState>();
 
@@ -52,6 +71,7 @@ interface Props {
   previewComments?: PreviewComment[];
   onSavePreviewComment?: (target: PreviewCommentTarget, note: string, attachAfterSave: boolean) => Promise<PreviewComment | null>;
   onRemovePreviewComment?: (commentId: string) => Promise<void>;
+  onStageComposerToken?: (token: string) => void;
 }
 
 export function FileViewer({
@@ -64,6 +84,7 @@ export function FileViewer({
   previewComments = [],
   onSavePreviewComment,
   onRemovePreviewComment,
+  onStageComposerToken,
 }: Props) {
   const rendererMatch = artifactRendererRegistry.resolve({
     file,
@@ -82,6 +103,7 @@ export function FileViewer({
         previewComments={previewComments}
         onSavePreviewComment={onSavePreviewComment}
         onRemovePreviewComment={onRemovePreviewComment}
+        onStageComposerToken={onStageComposerToken}
       />
     );
   }
@@ -297,6 +319,203 @@ function CommentTargetOverlay({
         <strong>{snapshot.elementId}</strong>
         <span>{snapshot.label}</span>
         <span>{width} × {height}</span>
+      </div>
+    </div>
+  );
+}
+
+const EMPTY_INSPECT_STYLE: InspectStyleDraft = {
+  color: '',
+  backgroundColor: '',
+  fontSize: '',
+  fontWeight: '',
+  lineHeight: '',
+  letterSpacing: '',
+  padding: '',
+  borderRadius: '',
+  opacity: '',
+  width: '',
+  height: '',
+};
+
+const INSPECT_FIELDS: Array<{ key: InspectStyleKey; label: string; type?: 'color' }> = [
+  { key: 'color', label: 'Text', type: 'color' },
+  { key: 'backgroundColor', label: 'Fill', type: 'color' },
+  { key: 'fontSize', label: 'Size' },
+  { key: 'fontWeight', label: 'Weight' },
+  { key: 'lineHeight', label: 'Line' },
+  { key: 'letterSpacing', label: 'Track' },
+  { key: 'padding', label: 'Padding' },
+  { key: 'borderRadius', label: 'Radius' },
+  { key: 'opacity', label: 'Opacity' },
+  { key: 'width', label: 'Width' },
+  { key: 'height', label: 'Height' },
+];
+
+function inspectStyleFromSnapshot(snapshot: InspectSnapshot | null): InspectStyleDraft {
+  return { ...EMPTY_INSPECT_STYLE, ...(snapshot?.styles ?? {}) };
+}
+
+function cssColorToInput(value: string): string {
+  const raw = value.trim();
+  const hex = /^#([0-9a-f]{6})$/i.exec(raw);
+  if (hex) return raw;
+  const rgb = /^rgba?\((\d+),\s*(\d+),\s*(\d+)/i.exec(raw);
+  if (!rgb) return '#000000';
+  return `#${[rgb[1], rgb[2], rgb[3]]
+    .map((part) => Math.max(0, Math.min(255, Number(part))).toString(16).padStart(2, '0'))
+    .join('')}`;
+}
+
+function changedInspectStyles(draft: InspectStyleDraft, baseline: InspectStyleDraft): Partial<InspectStyleDraft> {
+  const out: Partial<InspectStyleDraft> = {};
+  for (const field of INSPECT_FIELDS) {
+    const next = draft[field.key].trim();
+    if (next && next !== baseline[field.key].trim()) out[field.key] = next;
+  }
+  return out;
+}
+
+function renderInspectToken(snapshot: InspectSnapshot, styles: Partial<InspectStyleDraft>): string {
+  const declarations = Object.entries(styles)
+    .map(([key, value]) => `${key}: ${value}`)
+    .join('; ');
+  return [
+    'inspect:style',
+    `file=${snapshot.filePath}`,
+    `element=${snapshot.elementId}`,
+    `selector=${snapshot.selector}`,
+    `label=${snapshot.label}`,
+    `styles=${declarations}`,
+  ].join(' | ');
+}
+
+function renderEditToken(snapshot: InspectSnapshot, instruction: string): string {
+  return [
+    'edit:element',
+    `file=${snapshot.filePath}`,
+    `element=${snapshot.elementId}`,
+    `selector=${snapshot.selector}`,
+    `label=${snapshot.label}`,
+    `text=${snapshot.text || '(empty)'}`,
+    `instruction=${instruction.trim() || 'Edit this rendered element as requested.'}`,
+  ].join(' | ');
+}
+
+function renderDrawToken(snapshot: InspectSnapshot): string {
+  return [
+    'draw:element',
+    `file=${snapshot.filePath}`,
+    `element=${snapshot.elementId}`,
+    `selector=${snapshot.selector}`,
+    `label=${snapshot.label}`,
+    'instruction=Use this rendered element as the visual target for annotation or redraw.',
+  ].join(' | ');
+}
+
+function InspectStylePanel({
+  target,
+  draft,
+  baseline,
+  onChange,
+  onClose,
+  onReset,
+  onStage,
+}: {
+  target: InspectSnapshot;
+  draft: InspectStyleDraft;
+  baseline: InspectStyleDraft;
+  onChange: (key: InspectStyleKey, value: string) => void;
+  onClose: () => void;
+  onReset: () => void;
+  onStage: () => void;
+}) {
+  const changed = Object.keys(changedInspectStyles(draft, baseline)).length > 0;
+  return (
+    <div className="inspect-panel" data-testid="inspect-style-panel">
+      <div className="inspect-panel-head">
+        <div>
+          <strong>{target.elementId}</strong>
+          <span>{target.tagName || target.label}</span>
+        </div>
+        <button type="button" className="ghost" onClick={onClose}>
+          Close
+        </button>
+      </div>
+      <div className="inspect-panel-grid">
+        {INSPECT_FIELDS.map((field) => (
+          <label key={field.key} className={field.type === 'color' ? 'inspect-color-field' : undefined}>
+            <span>{field.label}</span>
+            {field.type === 'color' ? (
+              <>
+                <input
+                  type="color"
+                  value={cssColorToInput(draft[field.key])}
+                  onChange={(event) => onChange(field.key, event.target.value)}
+                  aria-label={field.label}
+                />
+                <input
+                  value={draft[field.key]}
+                  onChange={(event) => onChange(field.key, event.target.value)}
+                />
+              </>
+            ) : (
+              <input
+                value={draft[field.key]}
+                onChange={(event) => onChange(field.key, event.target.value)}
+              />
+            )}
+          </label>
+        ))}
+      </div>
+      <div className="inspect-panel-actions">
+        <button type="button" className="ghost-link button-like" onClick={onReset}>
+          Reset
+        </button>
+        <button type="button" className="primary" disabled={!changed} onClick={onStage}>
+          Stage in chat
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function EditTargetPanel({
+  target,
+  draft,
+  onDraft,
+  onClose,
+  onStage,
+}: {
+  target: InspectSnapshot;
+  draft: string;
+  onDraft: (value: string) => void;
+  onClose: () => void;
+  onStage: () => void;
+}) {
+  return (
+    <div className="inspect-panel edit-target-panel" data-testid="edit-target-panel">
+      <div className="inspect-panel-head">
+        <div>
+          <strong>{target.elementId}</strong>
+          <span>{target.tagName || target.label}</span>
+        </div>
+        <button type="button" className="ghost" onClick={onClose}>
+          Close
+        </button>
+      </div>
+      <textarea
+        value={draft}
+        placeholder="Describe the edit for this rendered element"
+        onChange={(event) => onDraft(event.target.value)}
+      />
+      <div className="inspect-panel-actions">
+        <button type="button" className="ghost-link button-like" onClick={onClose}>
+          Cancel
+        </button>
+        <button type="button" className="primary" onClick={onStage}>
+          Stage edit
+        </button>
       </div>
     </div>
   );
@@ -583,6 +802,7 @@ function HtmlViewer({
   previewComments = [],
   onSavePreviewComment,
   onRemovePreviewComment,
+  onStageComposerToken,
 }: {
   projectId: string;
   file: ProjectFile;
@@ -593,6 +813,7 @@ function HtmlViewer({
   previewComments?: PreviewComment[];
   onSavePreviewComment?: (target: PreviewCommentTarget, note: string, attachAfterSave: boolean) => Promise<PreviewComment | null>;
   onRemovePreviewComment?: (commentId: string) => Promise<void>;
+  onStageComposerToken?: (token: string) => void;
 }) {
   const t = useT();
   const [mode, setMode] = useState<'preview' | 'source'>('preview');
@@ -619,6 +840,13 @@ function HtmlViewer({
   const [teamSlug, setTeamSlug] = useState('');
   const [inTabPresent, setInTabPresent] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
+  const [inspectMode, setInspectMode] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [drawMode, setDrawMode] = useState(false);
+  const [activeInspectTarget, setActiveInspectTarget] = useState<InspectSnapshot | null>(null);
+  const [inspectBaseline, setInspectBaseline] = useState<InspectStyleDraft>(EMPTY_INSPECT_STYLE);
+  const [inspectDraft, setInspectDraft] = useState<InspectStyleDraft>(EMPTY_INSPECT_STYLE);
+  const [editInstruction, setEditInstruction] = useState('');
   const [commentMode, setCommentMode] = useState(false);
   const [activeCommentTarget, setActiveCommentTarget] = useState<PreviewCommentSnapshot | null>(null);
   const [hoveredCommentTarget, setHoveredCommentTarget] = useState<PreviewCommentSnapshot | null>(null);
@@ -698,8 +926,9 @@ function HtmlViewer({
       baseHref: projectRawUrl(projectId, baseDirFor(file.name)),
       initialSlideIndex: htmlPreviewSlideState.get(previewStateKey)?.active ?? 0,
       commentBridge: commentMode,
+      inspectBridge: inspectMode || editMode || drawMode,
     }) : ''),
-    [previewSource, effectiveDeck, projectId, file.name, previewStateKey, commentMode],
+    [previewSource, effectiveDeck, projectId, file.name, previewStateKey, commentMode, inspectMode, editMode, drawMode],
   );
 
   useEffect(() => {
@@ -726,24 +955,38 @@ function HtmlViewer({
   useEffect(() => {
     const win = iframeRef.current?.contentWindow;
     if (!win) return;
-    win.postMessage({ type: 'od:comment-mode', enabled: commentMode }, '*');
-  }, [commentMode, srcDoc]);
+    const mode: TargetMode | 'off' = commentMode
+      ? 'comment'
+      : inspectMode
+        ? 'inspect'
+        : editMode
+          ? 'edit'
+          : drawMode
+            ? 'draw'
+            : 'off';
+    win.postMessage({ type: 'od:preview-target-mode', mode, enabled: mode !== 'off' }, '*');
+  }, [commentMode, inspectMode, editMode, drawMode, srcDoc]);
 
   useEffect(() => {
     setActiveCommentTarget(null);
     setHoveredCommentTarget(null);
+    setActiveInspectTarget(null);
+    setInspectBaseline(EMPTY_INSPECT_STYLE);
+    setInspectDraft(EMPTY_INSPECT_STYLE);
+    setEditInstruction('');
     setLiveCommentTargets(new Map());
     setCommentDraft('');
   }, [file.name]);
 
   useEffect(() => {
-    if (!commentMode) {
+    if (!commentMode && !inspectMode && !editMode && !drawMode) {
       setActiveCommentTarget(null);
       setHoveredCommentTarget(null);
+      setActiveInspectTarget(null);
       setLiveCommentTargets(new Map());
       return;
     }
-    const snapshotFromData = (data: Partial<PreviewCommentSnapshot>): PreviewCommentSnapshot => ({
+    const snapshotFromData = (data: Partial<InspectSnapshot>): InspectSnapshot => ({
       filePath: file.name,
       elementId: String(data.elementId || ''),
       selector: String(data.selector || ''),
@@ -756,6 +999,9 @@ function HtmlViewer({
         height: Number(data.position?.height) || 0,
       },
       htmlHint: String(data.htmlHint || ''),
+      tagName: typeof data.tagName === 'string' ? data.tagName : undefined,
+      className: typeof data.className === 'string' ? data.className : undefined,
+      styles: data.styles && typeof data.styles === 'object' ? data.styles : undefined,
     });
     function onMessage(ev: MessageEvent) {
       if (ev.source !== iframeRef.current?.contentWindow) return;
@@ -777,6 +1023,9 @@ function HtmlViewer({
         setHoveredCommentTarget((current) => (
           current ? next.get(current.elementId) ?? null : null
         ));
+        setActiveInspectTarget((current) => (
+          current ? (next.get(current.elementId) as InspectSnapshot | undefined) ?? current : null
+        ));
         return;
       }
       if (data.type === 'od:comment-leave') {
@@ -786,6 +1035,11 @@ function HtmlViewer({
       if (data.type === 'od:comment-hover') {
         const snapshot = snapshotFromData(data);
         if (!snapshot.elementId) return;
+        if (inspectMode || editMode || drawMode) {
+          setHoveredCommentTarget(snapshot);
+          setLiveCommentTargets((current) => new Map(current).set(snapshot.elementId, snapshot));
+          return;
+        }
         setHoveredCommentTarget(snapshot);
         setLiveCommentTargets((current) => new Map(current).set(snapshot.elementId, snapshot));
         return;
@@ -793,6 +1047,19 @@ function HtmlViewer({
       if (data.type === 'od:comment-target') {
         const snapshot = snapshotFromData(data);
         if (!snapshot.elementId) return;
+        if (inspectMode || editMode || drawMode) {
+          const nextStyle = inspectStyleFromSnapshot(snapshot);
+          setActiveInspectTarget(snapshot);
+          setInspectBaseline(nextStyle);
+          setInspectDraft(nextStyle);
+          setEditInstruction('');
+          setHoveredCommentTarget(snapshot);
+          setLiveCommentTargets((current) => new Map(current).set(snapshot.elementId, snapshot));
+          if (drawMode && onStageComposerToken) {
+            onStageComposerToken(renderDrawToken(snapshot));
+          }
+          return;
+        }
         const existing = previewComments.find((comment) => comment.elementId === snapshot.elementId);
         setActiveCommentTarget(snapshot);
         setHoveredCommentTarget(snapshot);
@@ -802,7 +1069,7 @@ function HtmlViewer({
     }
     window.addEventListener('message', onMessage);
     return () => window.removeEventListener('message', onMessage);
-  }, [commentMode, file.name, previewComments]);
+  }, [commentMode, inspectMode, editMode, drawMode, file.name, previewComments, onStageComposerToken]);
 
   function postSlide(action: 'next' | 'prev' | 'first' | 'last') {
     const win = iframeRef.current?.contentWindow;
@@ -1063,6 +1330,40 @@ function HtmlViewer({
     setZoom((z) => Math.max(25, Math.min(200, z + delta)));
   }
 
+  function postInspectStyles(target: InspectSnapshot, styles: Partial<InspectStyleDraft>) {
+    iframeRef.current?.contentWindow?.postMessage({
+      type: 'od:inspect-apply',
+      elementId: target.elementId,
+      selector: target.selector,
+      styles,
+    }, '*');
+  }
+
+  function updateInspectStyle(key: InspectStyleKey, value: string) {
+    if (!activeInspectTarget) return;
+    const next = { ...inspectDraft, [key]: value };
+    setInspectDraft(next);
+    postInspectStyles(activeInspectTarget, { [key]: value });
+  }
+
+  function resetInspectStyles() {
+    if (!activeInspectTarget) return;
+    setInspectDraft(inspectBaseline);
+    postInspectStyles(activeInspectTarget, inspectBaseline);
+  }
+
+  function stageInspectStyles() {
+    if (!activeInspectTarget || !onStageComposerToken) return;
+    const changed = changedInspectStyles(inspectDraft, inspectBaseline);
+    if (Object.keys(changed).length === 0) return;
+    onStageComposerToken(renderInspectToken(activeInspectTarget, changed));
+  }
+
+  function stageEditTarget() {
+    if (!activeInspectTarget || !onStageComposerToken) return;
+    onStageComposerToken(renderEditToken(activeInspectTarget, editInstruction));
+  }
+
   const showPresent = effectiveDeck && source !== null;
   const canShare = source !== null;
   const exportTitle = file.name.replace(/\.html?$/i, '') || file.name;
@@ -1125,16 +1426,40 @@ function HtmlViewer({
               >
                 <Icon name="chevron-right" size={14} />
               </button>
+              {onStageComposerToken ? (
+                <button
+                  type="button"
+                  className="deck-target-btn"
+                  onClick={() => onStageComposerToken('slide:current')}
+                  title="Target current slide in chat"
+                  aria-label="Target current slide in chat"
+                >
+                  <Icon name="comment" size={12} />
+                  <span>Target</span>
+                </button>
+              ) : null}
             </span>
           ) : null}
           <button
             type="button"
-            className="viewer-toggle"
-            disabled
-            data-coming-soon="true"
+            className={`viewer-toggle${inspectMode ? ' on' : ''}`}
             title={t('fileViewer.tweaks')}
-            aria-pressed={false}
-            onClick={(e) => e.preventDefault()}
+            aria-pressed={inspectMode}
+            data-testid="inspect-mode-toggle"
+            onClick={() => {
+              setInspectMode((value) => {
+                const next = !value;
+                if (next) {
+                  setCommentMode(false);
+                  setEditMode(false);
+                  setDrawMode(false);
+                  setActiveCommentTarget(null);
+                } else {
+                  setActiveInspectTarget(null);
+                }
+                return next;
+              });
+            }}
           >
             <Icon name="tweaks" size={13} />
             <span>{t('fileViewer.tweaks')}</span>
@@ -1162,27 +1487,64 @@ function HtmlViewer({
             type="button"
             data-testid="comment-mode-toggle"
             title={t('fileViewer.comment')}
-            onClick={() => setCommentMode((v) => !v)}
+            onClick={() => {
+              setCommentMode((value) => {
+                const next = !value;
+                if (next) {
+                  setInspectMode(false);
+                  setEditMode(false);
+                  setDrawMode(false);
+                  setActiveInspectTarget(null);
+                }
+                return next;
+              });
+            }}
           >
             <Icon name="comment" size={13} />
             <span>{t('fileViewer.comment')}</span>
           </button>
           <button
-            className="viewer-action"
+            className={`viewer-action${editMode ? ' active' : ''}`}
             type="button"
-            disabled
-            data-coming-soon="true"
             title={t('fileViewer.edit')}
+            aria-pressed={editMode}
+            data-testid="edit-mode-toggle"
+            onClick={() => {
+              setEditMode((value) => {
+                const next = !value;
+                if (next) {
+                  setCommentMode(false);
+                  setInspectMode(false);
+                  setDrawMode(false);
+                } else {
+                  setActiveInspectTarget(null);
+                }
+                return next;
+              });
+            }}
           >
             <Icon name="edit" size={13} />
             <span>{t('fileViewer.edit')}</span>
           </button>
           <button
-            className="viewer-action"
+            className={`viewer-action${drawMode ? ' active' : ''}`}
             type="button"
-            disabled
-            data-coming-soon="true"
             title={t('fileViewer.draw')}
+            aria-pressed={drawMode}
+            data-testid="draw-mode-toggle"
+            onClick={() => {
+              setDrawMode((value) => {
+                const next = !value;
+                if (next) {
+                  setCommentMode(false);
+                  setInspectMode(false);
+                  setEditMode(false);
+                } else {
+                  setActiveInspectTarget(null);
+                }
+                return next;
+              });
+            }}
           >
             <Icon name="draw" size={13} />
             <span>{t('fileViewer.draw')}</span>
@@ -1420,12 +1782,12 @@ function HtmlViewer({
                 srcDoc={srcDoc}
               />
             </div>
-            {commentMode ? (
+            {commentMode || inspectMode || editMode || drawMode ? (
               <CommentPreviewOverlays
-                comments={previewComments}
+                comments={commentMode ? previewComments : []}
                 liveTargets={liveCommentTargets}
                 hoveredTarget={hoveredCommentTarget}
-                activeTarget={activeCommentTarget}
+                activeTarget={commentMode ? activeCommentTarget : activeInspectTarget}
                 scale={previewScale}
                 onOpenComment={(comment, snapshot) => {
                   setActiveCommentTarget(snapshot);
@@ -1452,6 +1814,26 @@ function HtmlViewer({
                   setActiveCommentTarget(null);
                 }}
                 t={t}
+              />
+            ) : null}
+            {inspectMode && activeInspectTarget ? (
+              <InspectStylePanel
+                target={activeInspectTarget}
+                draft={inspectDraft}
+                baseline={inspectBaseline}
+                onChange={updateInspectStyle}
+                onClose={() => setActiveInspectTarget(null)}
+                onReset={resetInspectStyles}
+                onStage={stageInspectStyles}
+              />
+            ) : null}
+            {editMode && activeInspectTarget ? (
+              <EditTargetPanel
+                target={activeInspectTarget}
+                draft={editInstruction}
+                onDraft={setEditInstruction}
+                onClose={() => setActiveInspectTarget(null)}
+                onStage={stageEditTarget}
               />
             ) : null}
           </div>

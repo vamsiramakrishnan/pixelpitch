@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { createHtmlArtifactManifest, inferLegacyManifest } from '../artifacts/manifest';
 import { createArtifactParser } from '../artifacts/parser';
 import { useT } from '../i18n';
@@ -16,6 +16,7 @@ import {
   fetchLiveArtifacts,
   fetchProjectFiles,
   fetchSkill,
+  exportConversationTranscript,
   exportProjectFileAsPptx,
   patchPreviewCommentStatus,
   projectFileUrl,
@@ -135,6 +136,7 @@ export function ProjectView({
   const [filesRefresh, setFilesRefresh] = useState(0);
   const [projectFiles, setProjectFiles] = useState<ProjectFile[]>([]);
   const [liveArtifacts, setLiveArtifacts] = useState<LiveArtifactSummary[]>([]);
+  const [chatWidth, setChatWidth] = useState(460);
   // The persisted set of open tabs + active tab. Persisted via PUT on every
   // change; loaded once when the project mounts.
   const [openTabsState, setOpenTabsState] = useState<OpenTabsState>({
@@ -147,6 +149,7 @@ export function ProjectView({
   // include a nonce so re-clicking the same name after the user closed the
   // tab still focuses it.
   const [openRequest, setOpenRequest] = useState<{ name: string; nonce: number } | null>(null);
+  const [stageTokenRequest, setStageTokenRequest] = useState<{ token: string; nonce: number } | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const cancelRef = useRef<AbortController | null>(null);
   const sendTextBufferRef = useRef<BufferedTextUpdates | null>(null);
@@ -170,6 +173,35 @@ export function ProjectView({
   // the agent's Write actually completes, without the previous synthetic
   // "live" tab that was causing flicker against manual opens.
   const pendingWritesRef = useRef<Map<string, string>>(new Map());
+
+  const stageComposerToken = useCallback((token: string) => {
+    setStageTokenRequest({ token, nonce: Date.now() });
+  }, []);
+
+  const handleExportConversationTranscript = useCallback(() => {
+    if (!activeConversationId) return;
+    void exportConversationTranscript(project.id, activeConversationId).catch((err) => {
+      setError(err instanceof Error ? err.message : 'Could not export transcript.');
+    });
+  }, [activeConversationId, project.id]);
+
+  const startChatResize = useCallback((event: ReactPointerEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    const startX = event.clientX;
+    const startWidth = chatWidth;
+    document.body.classList.add('chat-resizing');
+    const onMove = (moveEvent: PointerEvent) => {
+      const next = Math.max(340, Math.min(720, startWidth + moveEvent.clientX - startX));
+      setChatWidth(next);
+    };
+    const onUp = () => {
+      document.body.classList.remove('chat-resizing');
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+  }, [chatWidth]);
 
   // Load conversations on project switch. If none exist (older projects
   // pre-conversations, or a freshly created one whose default seed got
@@ -401,25 +433,26 @@ export function ProjectView({
     return project.id;
   }, [project.id]);
 
-  const composedSystemPrompt = useCallback(async (): Promise<string> => {
+  const composedSystemPrompt = useCallback(async (skillOverrideId?: string | null): Promise<string> => {
     let skillBody: string | undefined;
     let skillName: string | undefined;
     let skillMode: SkillSummary['mode'] | undefined;
     let designSystemBody: string | undefined;
     let designSystemTitle: string | undefined;
 
-    if (project.skillId) {
-      const summary = skills.find((s) => s.id === project.skillId);
+    const effectiveSkillId = skillOverrideId || project.skillId;
+    if (effectiveSkillId) {
+      const summary = skills.find((s) => s.id === effectiveSkillId);
       skillName = summary?.name;
       skillMode = summary?.mode;
-      const cached = skillCache.current.get(project.skillId);
+      const cached = skillCache.current.get(effectiveSkillId);
       if (cached !== undefined) {
         skillBody = cached;
       } else {
-        const detail = await fetchSkill(project.skillId);
+        const detail = await fetchSkill(effectiveSkillId);
         if (detail) {
           skillBody = detail.body;
-          skillCache.current.set(project.skillId, detail.body);
+          skillCache.current.set(effectiveSkillId, detail.body);
         }
       }
     }
@@ -788,6 +821,9 @@ export function ProjectView({
       if (!prompt.trim() && attachments.length === 0 && commentAttachments.length === 0) return;
       setError(null);
       const startedAt = Date.now();
+      const mentionRouting = resolveMentionRouting(prompt, skills, designSystems, attachedComments);
+      const mentionedSkillId = mentionRouting.skillIds[0] ?? null;
+      const agentPrompt = appendMentionRoutingBlock(prompt, mentionRouting);
       const userMsg: ChatMessage = {
         id: crypto.randomUUID(),
         role: 'user',
@@ -819,6 +855,9 @@ export function ProjectView({
         startedAt,
       };
       const nextHistory = [...messages, userMsg];
+      const agentHistory = mentionRouting.hasMentions
+        ? [...messages, { ...userMsg, content: agentPrompt }]
+        : nextHistory;
       setMessages([...nextHistory, assistantMsg]);
       setStreaming(true);
       setArtifact(null);
@@ -1027,7 +1066,7 @@ export function ProjectView({
         const choice = config.agentModels?.[config.agentId];
         void streamViaDaemon({
           agentId: config.agentId,
-          history: nextHistory,
+          history: agentHistory,
           signal: controller.signal,
           cancelSignal: cancelController.signal,
           handlers,
@@ -1035,8 +1074,11 @@ export function ProjectView({
           conversationId: activeConversationId,
           assistantMessageId: assistantId,
           clientRequestId: crypto.randomUUID(),
-          skillId: project.skillId ?? null,
+          skillId: mentionedSkillId ?? project.skillId ?? null,
+          skillIds: mentionRouting.skillIds,
           designSystemId: project.designSystemId ?? null,
+          designSystemIds: mentionRouting.designSystemIds,
+          craftIds: mentionRouting.craftIds,
           attachments: attachments.map((a) => a.path),
           commentAttachments,
           model: choice?.model ?? null,
@@ -1061,8 +1103,8 @@ export function ProjectView({
           },
         });
       } else {
-        const systemPrompt = await composedSystemPrompt();
-        const apiHistory = historyWithCommentAttachmentContext(nextHistory, userMsg.id);
+        const systemPrompt = await composedSystemPrompt(mentionedSkillId);
+        const apiHistory = historyWithCommentAttachmentContext(agentHistory, userMsg.id);
         pushEvent({ kind: 'status', label: 'requesting', detail: config.model });
         void streamMessage(config, systemPrompt, apiHistory, controller.signal, {
           onDelta: (delta) => {
@@ -1079,6 +1121,9 @@ export function ProjectView({
       activeConversationId,
       messages,
       config,
+      skills,
+      designSystems,
+      attachedComments,
       agentsById,
       composedSystemPrompt,
       onTouchProject,
@@ -1394,7 +1439,10 @@ export function ProjectView({
             <span className="meta" data-testid="project-meta">{projectMeta}</span>
         </div>
       </AppChromeHeader>
-      <div className="split">
+      <div
+        className="split"
+        style={{ ['--chat-pane-width' as string]: `${chatWidth}px` }}
+      >
         <ChatPane
           // The conversation id is part of the key so switching conversations
           // resets internal scroll/draft state inside ChatPane and ChatComposer.
@@ -1404,6 +1452,8 @@ export function ProjectView({
           error={error}
           projectId={project.id}
           projectFiles={projectFiles}
+          skills={skills}
+          designSystems={designSystems}
           projectFileNames={projectFileNames}
           onEnsureProject={handleEnsureProject}
           previewComments={previewComments}
@@ -1426,11 +1476,30 @@ export function ProjectView({
           onSelectConversation={handleSelectConversation}
           onDeleteConversation={handleDeleteConversation}
           onRenameConversation={handleRenameConversation}
+          onExportConversationTranscript={handleExportConversationTranscript}
           onOpenSettings={onOpenSettings}
           petConfig={config.pet}
           onAdoptPet={onAdoptPetInline}
           onTogglePet={onTogglePet}
           onOpenPetSettings={onOpenPetSettings}
+          stageTokenRequest={stageTokenRequest}
+        />
+        <div
+          className="chat-pane-resizer"
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize chat"
+          tabIndex={0}
+          onPointerDown={startChatResize}
+          onKeyDown={(event) => {
+            if (event.key === 'ArrowLeft') {
+              event.preventDefault();
+              setChatWidth((width) => Math.max(340, width - 24));
+            } else if (event.key === 'ArrowRight') {
+              event.preventDefault();
+              setChatWidth((width) => Math.min(720, width + 24));
+            }
+          }}
         />
         <FileWorkspace
           projectId={project.id}
@@ -1451,6 +1520,7 @@ export function ProjectView({
           previewComments={previewComments}
           onSavePreviewComment={savePreviewComment}
           onRemovePreviewComment={removePreviewComment}
+          onStageComposerToken={stageComposerToken}
         />
       </div>
     </div>
@@ -1614,4 +1684,97 @@ function triggerProjectFileDownload(projectId: string, fileName: string): void {
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
+}
+
+interface MentionRouting {
+  hasMentions: boolean;
+  skillIds: string[];
+  designSystemIds: string[];
+  craftIds: string[];
+  actionIds: string[];
+  fileRefs: string[];
+  selectionRefs: string[];
+  lines: string[];
+}
+
+function resolveMentionRouting(
+  prompt: string,
+  skills: SkillSummary[],
+  designSystems: DesignSystemSummary[],
+  attachedComments: PreviewComment[],
+): MentionRouting {
+  const tokens = Array.from(prompt.matchAll(/@([^\s]+)/g)).map((match) =>
+    match[1]!.replace(/[),.;:!?]+$/g, ''),
+  );
+  const routing: MentionRouting = {
+    hasMentions: tokens.length > 0,
+    skillIds: [],
+    designSystemIds: [],
+    craftIds: [],
+    actionIds: [],
+    fileRefs: [],
+    selectionRefs: [],
+    lines: [],
+  };
+  const pushUnique = (list: string[], value: string) => {
+    if (value && !list.includes(value)) list.push(value);
+  };
+  const skillById = new Map(skills.map((skill) => [skill.id, skill]));
+  const designById = new Map(designSystems.map((system) => [system.id, system]));
+  for (const token of tokens) {
+    if (token.startsWith('skill:')) {
+      const id = token.slice('skill:'.length);
+      pushUnique(routing.skillIds, id);
+      const skill = skillById.get(id);
+      routing.lines.push(
+        skill
+          ? `- @skill:${id}: use "${skill.name}" (${skill.mode}) as an explicit capability/workflow reference.`
+          : `- @skill:${id}: use this named skill if available.`,
+      );
+    } else if (token.startsWith('design:')) {
+      const id = token.slice('design:'.length);
+      pushUnique(routing.designSystemIds, id);
+      const system = designById.get(id);
+      routing.lines.push(
+        system
+          ? `- @design:${id}: compose with "${system.title}" design-system direction (${system.category}).`
+          : `- @design:${id}: compose with this design-system direction if available.`,
+      );
+    } else if (token.startsWith('craft:')) {
+      const id = token.slice('craft:'.length);
+      pushUnique(routing.craftIds, id);
+      routing.lines.push(`- @craft:${id}: apply this craft rule-set as a quality bar, not a visual theme.`);
+    } else if (token === 'selection' || token === 'current' || token.startsWith('slide:')) {
+      pushUnique(routing.selectionRefs, token);
+      routing.lines.push(`- @${token}: target the currently selected rendered element/slide or matching saved comment context.`);
+    } else if (token === 'rewrite-prompt') {
+      pushUnique(routing.actionIds, token);
+      routing.lines.push('- @rewrite-prompt: rewrite the user brief into a precise execution prompt before implementing.');
+    } else {
+      pushUnique(routing.fileRefs, token);
+      routing.lines.push(`- @${token}: include this project file/reference as concrete context.`);
+    }
+  }
+  if (routing.selectionRefs.length > 0 && attachedComments.length > 0) {
+    for (const comment of attachedComments) {
+      routing.lines.push(
+        `- selected rendered target ${comment.elementId}: ${comment.note} (${comment.filePath}, selector ${comment.selector}).`,
+      );
+    }
+  }
+  routing.hasMentions = routing.lines.length > 0;
+  return routing;
+}
+
+function appendMentionRoutingBlock(prompt: string, routing: MentionRouting): string {
+  if (!routing.hasMentions) return prompt;
+  return [
+    prompt,
+    '',
+    '<pixelpitch_mention_routing>',
+    'Resolve every @ mention compositionally. Multiple skills, design systems, craft rules, files, slides, and selections are additive unless they conflict; if they conflict, prefer the user typed instruction and explain the tradeoff briefly.',
+    'For rendered assets, produce next-level detail: stable data-od-id anchors, meaningful slide/section labels, accessible controls, responsive states, polished empty/loading/error states, and enough structural hooks for future surgical edits.',
+    ...routing.lines,
+    '</pixelpitch_mention_routing>',
+  ].join('\n');
 }

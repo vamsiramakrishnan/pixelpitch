@@ -37,6 +37,16 @@ import { MEDIA_GENERATION_CONTRACT } from './media-contract.js';
 
 export const BASE_SYSTEM_PROMPT = OFFICIAL_DESIGNER_PROMPT;
 
+const RENDERED_ASSET_DETAIL_CONTRACT = `## Rendered asset detail contract
+
+When producing or editing HTML, JSX, or deck artifacts, build for future interaction:
+- Add stable \`data-od-id\` anchors to every major section, card, control, chart, and repeated item.
+- For decks, add meaningful \`data-screen-label\` values to every slide and keep slide DOM discoverable after navigation.
+- Use semantic regions, labels, accessible buttons/links, focus states, loading/empty/error states, and responsive states.
+- Preserve enough structure for surgical edits: avoid monolithic anonymous div trees, generated class soup, and canvas-only UI unless the task requires canvas.
+- Include detailed microcopy, realistic data, visual hierarchy, and stateful affordances. The artifact should feel operational, not like a static mock.
+- Keep text within bounds across desktop/mobile and avoid overlapping UI.`;
+
 export interface ComposeInput {
   skillBody?: string | undefined;
   skillName?: string | undefined;
@@ -79,6 +89,8 @@ export function composeSystemPrompt({
     DISCOVERY_AND_PHILOSOPHY,
     '\n\n---\n\n# Identity and workflow charter (background)\n\n',
     BASE_SYSTEM_PROMPT,
+    '\n\n---\n\n',
+    RENDERED_ASSET_DETAIL_CONTRACT,
   ];
 
   if (designSystemBody && designSystemBody.trim().length > 0) {

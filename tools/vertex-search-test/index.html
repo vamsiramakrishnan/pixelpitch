@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vertex AI Search Grounding Test</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Google Sans", "Inter", system-ui, sans-serif;
+    background: #0f0f11;
+    color: #e4e4e7;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    color: #fff;
+  }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .controls select, .controls input[type="text"] {
+    background: #1a1a1f;
+    border: 1px solid #2a2a30;
+    border-radius: 8px;
+    color: #e4e4e7;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.875rem;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .controls select:focus, .controls input[type="text"]:focus {
+    border-color: #4285f4;
+  }
+  .controls input[type="text"] { flex: 1; min-width: 300px; }
+  .controls select { min-width: 160px; }
+  .toggle-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 0.5rem;
+  }
+  .toggle-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: #a1a1aa;
+    cursor: pointer;
+    user-select: none;
+  }
+  .toggle-group input[type="checkbox"] {
+    accent-color: #4285f4;
+    width: 16px;
+    height: 16px;
+  }
+  button.send {
+    background: #4285f4;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  button.send:hover { background: #3b78e7; }
+  button.send:disabled { opacity: 0.5; cursor: not-allowed; }
+  .panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  @media (max-width: 900px) { .panels { grid-template-columns: 1fr; } }
+  .panel {
+    background: #1a1a1f;
+    border: 1px solid #2a2a30;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .panel-header {
+    padding: 0.75rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #71717a;
+    border-bottom: 1px solid #2a2a30;
+    background: #16161a;
+  }
+  .panel-body {
+    padding: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    max-height: 600px;
+    overflow-y: auto;
+  }
+  .panel-body pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+    font-size: 0.8rem;
+    color: #a1a1aa;
+  }
+  .response-text { color: #e4e4e7; }
+  .response-text p { margin-bottom: 0.75rem; }
+  .source-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: #27272a;
+    border: 1px solid #3f3f46;
+    border-radius: 6px;
+    padding: 0.3rem 0.6rem;
+    margin: 0.25rem 0.15rem;
+    font-size: 0.75rem;
+    color: #a1a1aa;
+    text-decoration: none;
+    transition: background 0.1s;
+  }
+  .source-chip:hover { background: #3f3f46; color: #fff; }
+  .source-chip .domain { color: #4285f4; }
+  .search-queries {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+  }
+  .search-query-tag {
+    background: #1e3a5f;
+    color: #93c5fd;
+    border-radius: 4px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.75rem;
+  }
+  .status-bar {
+    font-size: 0.75rem;
+    color: #71717a;
+    margin-top: 0.5rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .status-bar .ok { color: #4ade80; }
+  .status-bar .err { color: #f87171; }
+  .spinner {
+    display: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #4285f4;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    margin-left: 0.5rem;
+  }
+  .spinner.active { display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .endpoint-label {
+    font-family: monospace;
+    font-size: 0.7rem;
+    color: #52525b;
+    margin-top: 0.5rem;
+    word-break: break-all;
+  }
+  .grounding-support {
+    border-left: 2px solid #4285f4;
+    padding-left: 0.75rem;
+    margin: 0.5rem 0;
+    font-size: 0.8rem;
+    color: #a1a1aa;
+  }
+  .grounding-support .text { color: #d4d4d8; font-style: italic; }
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0.75rem;
+    margin: 1rem 0;
+  }
+  .image-card {
+    background: #111114;
+    border: 1px solid #2a2a30;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .image-card img {
+    width: 100%;
+    display: block;
+  }
+  .image-meta {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.7rem;
+    color: #71717a;
+  }
+  .error-box {
+    background: #2d1215;
+    border: 1px solid #7f1d1d;
+    border-radius: 8px;
+    padding: 1rem;
+    color: #fca5a5;
+    font-size: 0.85rem;
+  }
+</style>
+</head>
+<body>
+
+<h1>Vertex AI — Google Search Grounding</h1>
+
+<div class="controls">
+  <input type="text" id="query" placeholder="Search query…" value="Find images of the northern lights aurora borealis">
+  <select id="model">
+    <option value="gemini-3.1-flash-image-preview">gemini-3.1-flash-image-preview</option>
+    <option value="gemini-3.1-pro-preview">gemini-3.1-pro-preview</option>
+    <option value="gemini-3-flash-preview">gemini-3-flash-preview</option>
+    <option value="gemini-3.1-flash-lite-preview">gemini-3.1-flash-lite-preview</option>
+    <option value="gemini-2.5-flash">gemini-2.5-flash</option>
+    <option value="gemini-2.5-pro">gemini-2.5-pro</option>
+    <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+  </select>
+  <select id="location">
+    <option value="global">global</option>
+    <option value="us-central1">us-central1</option>
+    <option value="europe-west4">europe-west4</option>
+    <option value="asia-northeast1">asia-northeast1</option>
+  </select>
+  <div class="toggle-group">
+    <label><input type="checkbox" id="webSearch" checked> Web Search</label>
+    <label><input type="checkbox" id="imageSearch"> Image Search</label>
+  </div>
+  <button class="send" id="sendBtn" onclick="doSearch()">Search</button>
+  <div class="spinner" id="spinner"></div>
+</div>
+
+<div class="status-bar" id="statusBar"></div>
+<div class="endpoint-label" id="endpointLabel"></div>
+
+<div class="panels">
+  <div class="panel">
+    <div class="panel-header">Response</div>
+    <div class="panel-body" id="responsePanel">
+      <span style="color:#52525b">Results will appear here</span>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-header">Raw JSON</div>
+    <div class="panel-body" id="jsonPanel">
+      <pre id="jsonPre" style="color:#52525b">—</pre>
+    </div>
+  </div>
+</div>
+
+<script>
+async function doSearch() {
+  const btn = document.getElementById("sendBtn");
+  const spinner = document.getElementById("spinner");
+  const statusBar = document.getElementById("statusBar");
+  const endpointLabel = document.getElementById("endpointLabel");
+  const responsePanel = document.getElementById("responsePanel");
+  const jsonPre = document.getElementById("jsonPre");
+
+  const query = document.getElementById("query").value.trim();
+  if (!query) return;
+
+  btn.disabled = true;
+  spinner.classList.add("active");
+  statusBar.innerHTML = "";
+  endpointLabel.textContent = "";
+  responsePanel.innerHTML = '<span style="color:#52525b">Loading…</span>';
+  jsonPre.textContent = "…";
+
+  const t0 = performance.now();
+
+  try {
+    const resp = await fetch("/api/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query,
+        model: document.getElementById("model").value,
+        location: document.getElementById("location").value,
+        enableWebSearch: document.getElementById("webSearch").checked,
+        enableImageSearch: document.getElementById("imageSearch").checked,
+      }),
+    });
+
+    const data = await resp.json();
+    const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
+
+    jsonPre.textContent = JSON.stringify(data, (key, val) => {
+      if (key === "data" && typeof val === "string" && val.length > 200) {
+        return val.slice(0, 80) + `… [${val.length} chars base64]`;
+      }
+      return val;
+    }, 2);
+    endpointLabel.textContent = data.endpoint || "";
+
+    const apiResp = data.response;
+
+    if (apiResp?.error) {
+      responsePanel.innerHTML = `<div class="error-box"><strong>${apiResp.error.code} ${apiResp.error.status}</strong><br>${apiResp.error.message}</div>`;
+      statusBar.innerHTML = `<span class="err">Error ${apiResp.error.code}</span> <span>${elapsed}s</span>`;
+      return;
+    }
+
+    const candidate = apiResp?.candidates?.[0];
+    if (!candidate) {
+      responsePanel.innerHTML = '<span style="color:#f87171">No candidates returned</span>';
+      statusBar.innerHTML = `<span class="err">No candidates</span> <span>${elapsed}s</span>`;
+      return;
+    }
+
+    let html = "";
+
+    // Search queries
+    const gm = candidate.groundingMetadata;
+    if (gm?.webSearchQueries?.length) {
+      html += '<div class="search-queries">';
+      for (const q of gm.webSearchQueries) {
+        html += `<span class="search-query-tag">${esc(q)}</span>`;
+      }
+      html += "</div>";
+    }
+
+    // Parts: text + inline images
+    const parts = candidate.content?.parts || [];
+    let textParts = [];
+    let imageParts = [];
+    for (const p of parts) {
+      if (p.text) {
+        textParts.push(p.text);
+      }
+      if (p.inlineData) {
+        imageParts.push(p.inlineData);
+      }
+    }
+
+    if (textParts.length) {
+      html += `<div class="response-text">${markdownBasic(textParts.join("\n"))}</div>`;
+    }
+
+    if (imageParts.length) {
+      html += '<div class="image-grid">';
+      for (const img of imageParts) {
+        const src = `data:${img.mimeType};base64,${img.data}`;
+        html += `<div class="image-card">
+          <img src="${src}" alt="Generated image" loading="lazy">
+          <div class="image-meta">${esc(img.mimeType)}</div>
+        </div>`;
+      }
+      html += "</div>";
+    }
+
+    // Grounding chunks / sources
+    if (gm?.groundingChunks?.length) {
+      html += '<div style="margin-top:1rem"><strong style="font-size:0.75rem;color:#71717a">SOURCES</strong></div>';
+      for (const chunk of gm.groundingChunks) {
+        const w = chunk.web;
+        if (w) {
+          html += `<a class="source-chip" href="${esc(w.uri)}" target="_blank" rel="noopener">
+            <span class="domain">${esc(w.domain || w.title)}</span>
+            <span>${esc(w.title)}</span>
+          </a>`;
+        }
+      }
+    }
+
+    // Grounding supports
+    if (gm?.groundingSupports?.length) {
+      html += '<div style="margin-top:1rem"><strong style="font-size:0.75rem;color:#71717a">GROUNDING EVIDENCE</strong></div>';
+      for (const s of gm.groundingSupports) {
+        const indices = s.groundingChunkIndices || [];
+        const sources = indices.map(i => {
+          const c = gm.groundingChunks?.[i]?.web;
+          return c ? c.domain || c.title : `[${i}]`;
+        }).join(", ");
+        html += `<div class="grounding-support">
+          <div class="text">"${esc(s.segment?.text || "")}"</div>
+          <div style="font-size:0.7rem;margin-top:0.25rem">→ ${esc(sources)}</div>
+        </div>`;
+      }
+    }
+
+    // Usage
+    const usage = apiResp.usageMetadata;
+    const tokens = usage ? `${usage.totalTokenCount} tokens (${usage.promptTokenCount} in / ${usage.candidatesTokenCount} out)` : "";
+
+    responsePanel.innerHTML = html;
+    statusBar.innerHTML = `<span class="ok">OK ${data.status}</span> <span>${elapsed}s</span> <span>${tokens}</span> <span>${apiResp.modelVersion || ""}</span>`;
+
+  } catch (err) {
+    responsePanel.innerHTML = `<div class="error-box">${esc(String(err))}</div>`;
+    statusBar.innerHTML = '<span class="err">Request failed</span>';
+  } finally {
+    btn.disabled = false;
+    spinner.classList.remove("active");
+  }
+}
+
+function esc(s) {
+  const d = document.createElement("div");
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function markdownBasic(text) {
+  return text
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*(.+?)\*/g, "<em>$1</em>")
+    .replace(/^\*\s+/gm, "• ")
+    .replace(/\n{2,}/g, "</p><p>")
+    .replace(/\n/g, "<br>")
+    .replace(/^/, "<p>").replace(/$/, "</p>");
+}
+
+document.getElementById("query").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") doSearch();
+});
+</script>
+</body>
+</html>

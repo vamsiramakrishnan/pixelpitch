@@ -17,7 +17,9 @@ import {
   upsertPreviewComment,
 } from '../src/db.js';
 import {
+  buildConversationTranscriptPayload,
   normalizeCommentAttachments,
+  renderConversationTranscriptMarkdown,
   renderCommentAttachmentHint,
 } from '../src/server.js';
 
@@ -124,6 +126,46 @@ describe('preview comment agent payload', () => {
     expect(hint).toContain('file: index.html');
     expect(hint).toContain('selector: [data-od-id="hero-title"]');
     expect(hint).toContain('comment: Make the headline shorter');
+  });
+});
+
+describe('conversation transcript export', () => {
+  it('renders chat messages, preview comments, and produced files as markdown', () => {
+    const db = seededDb();
+    const attachment = commentAttachment({
+      id: 'c1',
+      elementId: 'hero-title',
+      comment: 'Make the headline shorter',
+    });
+    upsertMessage(db, 'conversation-1', {
+      id: 'message-1',
+      role: 'user',
+      content: 'Please revise the hero.',
+      commentAttachments: [attachment],
+      createdAt: 1,
+    });
+    upsertMessage(db, 'conversation-1', {
+      id: 'message-2',
+      role: 'assistant',
+      content: 'Updated the file.',
+      producedFiles: [{ name: 'index.html' }],
+      createdAt: 2,
+    });
+
+    const payload = buildConversationTranscriptPayload(
+      { id: 'project-1', name: 'Project' },
+      { id: 'conversation-1', title: 'Chat', createdAt: 1, updatedAt: 2 },
+      listMessages(db, 'conversation-1'),
+    );
+    const markdown = renderConversationTranscriptMarkdown(payload);
+
+    expect(markdown).toContain('# Chat');
+    expect(markdown).toContain('## User');
+    expect(markdown).toContain('Please revise the hero.');
+    expect(markdown).toContain('Preview comments:');
+    expect(markdown).toContain('hero-title: Make the headline shorter');
+    expect(markdown).toContain('Produced files:');
+    expect(markdown).toContain('index.html');
   });
 });
 

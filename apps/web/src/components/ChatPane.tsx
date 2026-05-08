@@ -93,6 +93,7 @@ interface Props {
   onSelectConversation: (id: string) => void;
   onDeleteConversation: (id: string) => void;
   onRenameConversation?: (id: string, title: string) => void;
+  onExportConversationTranscript?: () => void;
   // Composer settings/CLI button forwards to here. The dialog lives in App
   // (it owns the AppConfig lifecycle) so we just pass the open trigger.
   onOpenSettings?: () => void;
@@ -134,6 +135,7 @@ export function ChatPane({
   onSelectConversation,
   onDeleteConversation,
   onRenameConversation,
+  onExportConversationTranscript,
   onOpenSettings,
   petConfig,
   onAdoptPet,
@@ -363,6 +365,17 @@ export function ChatPane({
               ) : null}
             </AnimatePresence>
           </div>
+          <button
+            type="button"
+            className="icon-only"
+            data-testid="export-conversation-transcript"
+            title="Export transcript"
+            aria-label="Export transcript"
+            onClick={onExportConversationTranscript}
+            disabled={!activeConversationId || !onExportConversationTranscript}
+          >
+            <Icon name="download" size={15} />
+          </button>
           <button
             type="button"
             className="icon-only"

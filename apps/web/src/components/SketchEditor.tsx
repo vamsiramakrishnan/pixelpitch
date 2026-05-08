@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useT } from '../i18n';
+import { MotionModal } from './MotionModal';
 
 export type Tool = 'select' | 'pen' | 'text' | 'rect' | 'arrow' | 'eraser';
 
@@ -73,6 +74,7 @@ export function SketchEditor({
   // chrome but the drawing surface stays warm-white for ink contrast.
   const [color, setColor] = useState('#1c1b1a');
   const [size, setSize] = useState(2);
+  const [pendingText, setPendingText] = useState<{ x: number; y: number; value: string } | null>(null);
   const drawingRef = useRef<SketchItem | null>(null);
   const [, force] = useState(0);
 
@@ -124,19 +126,14 @@ export function SketchEditor({
     if (tool === 'select') return;
     const cvs = canvasRef.current;
     if (!cvs) return;
-    cvs.setPointerCapture(e.pointerId);
     const pos = pointerPos(e);
 
     if (tool === 'text') {
-      const text = window.prompt(t('sketch.textPrompt'));
-      if (text) {
-        onItemsChange([
-          ...items,
-          { kind: 'text', x: pos.x, y: pos.y, text, color, size: 16 + size * 4 },
-        ]);
-      }
+      setPendingText({ x: pos.x, y: pos.y, value: '' });
       return;
     }
+
+    cvs.setPointerCapture(e.pointerId);
 
     if (tool === 'pen' || tool === 'eraser') {
       drawingRef.current = {
@@ -189,6 +186,19 @@ export function SketchEditor({
   }
   function handleClear() {
     onItemsChange([]);
+  }
+
+  function commitPendingText() {
+    const text = pendingText?.value.trim();
+    if (!pendingText || !text) {
+      setPendingText(null);
+      return;
+    }
+    onItemsChange([
+      ...items,
+      { kind: 'text', x: pendingText.x, y: pendingText.y, text, color, size: 16 + size * 4 },
+    ]);
+    setPendingText(null);
   }
 
   return (
@@ -252,6 +262,49 @@ export function SketchEditor({
           style={{ touchAction: 'none' }}
         />
       </div>
+      <MotionModal
+        open={Boolean(pendingText)}
+        onClose={() => setPendingText(null)}
+        className="sketch-text-modal"
+      >
+        <form
+          className="sketch-text-form"
+          onSubmit={(event) => {
+            event.preventDefault();
+            commitPendingText();
+          }}
+        >
+          <header>
+            <span>{t('sketch.toolText')}</span>
+            <button type="button" className="ghost" onClick={() => setPendingText(null)}>
+              {t('sketch.close')}
+            </button>
+          </header>
+          <textarea
+            autoFocus
+            value={pendingText?.value ?? ''}
+            placeholder={t('sketch.textPrompt')}
+            onChange={(event) => {
+              const value = event.target.value;
+              setPendingText((current) => current ? { ...current, value } : current);
+            }}
+            onKeyDown={(event) => {
+              if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+                event.preventDefault();
+                commitPendingText();
+              }
+            }}
+          />
+          <div className="sketch-text-actions">
+            <button type="button" className="ghost" onClick={() => setPendingText(null)}>
+              {t('common.cancel')}
+            </button>
+            <button type="submit" className="primary" disabled={!pendingText?.value.trim()}>
+              {t('common.save')}
+            </button>
+          </div>
+        </form>
+      </MotionModal>
     </div>
   );
 }

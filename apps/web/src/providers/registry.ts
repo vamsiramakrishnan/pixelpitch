@@ -2,6 +2,7 @@ import type {
   AgentInfo,
   AppVersionInfo,
   AppVersionResponse,
+  AppConfig,
   ChatAttachment,
   CodexPetSummary,
   CodexPetsResponse,
@@ -36,6 +37,35 @@ export async function fetchAgents(): Promise<AgentInfo[]> {
   } catch {
     return [];
   }
+}
+
+export interface ExecutionTestResult {
+  ok: boolean;
+  mode: 'daemon' | 'api';
+  message: string;
+  status?: number;
+  details?: string;
+}
+
+export async function testExecutionConfig(
+  config: Pick<AppConfig, 'mode' | 'agentId' | 'apiProtocol' | 'apiKey' | 'baseUrl' | 'model'>,
+): Promise<ExecutionTestResult> {
+  const resp = await fetch('/api/execution/test', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(config),
+  });
+  if (!resp.ok) {
+    const payload = (await resp.json().catch(() => null)) as
+      | { error?: { message?: string } | string; message?: string }
+      | null;
+    const message =
+      typeof payload?.error === 'string'
+        ? payload.error
+        : payload?.error?.message || payload?.message || `Connection test failed (${resp.status})`;
+    throw new Error(message);
+  }
+  return (await resp.json()) as ExecutionTestResult;
 }
 
 export async function fetchSkills(): Promise<SkillSummary[]> {
@@ -296,6 +326,57 @@ export async function exportProjectFileAsPptx(
     throw new Error(stderr ? `${message}\n${stderr}` : message);
   }
   return (await resp.json()) as ExportProjectPptxResponse;
+}
+
+function filenameFromDisposition(value: string | null, fallback: string): string {
+  if (!value) return fallback;
+  const encoded = /filename\*=UTF-8''([^;]+)/i.exec(value);
+  if (encoded) {
+    try {
+      return decodeURIComponent(encoded[1] || '') || fallback;
+    } catch {
+      return fallback;
+    }
+  }
+  const quoted = /filename="([^"]+)"/i.exec(value);
+  return quoted?.[1] || fallback;
+}
+
+function triggerBlobDownload(blob: Blob, filename: string): void {
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+export async function exportConversationTranscript(
+  projectId: string,
+  conversationId: string,
+  format: 'markdown' | 'json' = 'markdown',
+): Promise<void> {
+  const resp = await fetch(
+    `/api/projects/${encodeURIComponent(projectId)}/conversations/${encodeURIComponent(conversationId)}/transcript?format=${encodeURIComponent(format)}`,
+  );
+  if (!resp.ok) {
+    const payload = (await resp.json().catch(() => null)) as
+      | { error?: { message?: string } | string; message?: string }
+      | null;
+    const message =
+      typeof payload?.error === 'string'
+        ? payload.error
+        : payload?.error?.message || payload?.message || `Transcript export failed (${resp.status})`;
+    throw new Error(message);
+  }
+  const blob = await resp.blob();
+  const filename = filenameFromDisposition(
+    resp.headers.get('Content-Disposition'),
+    format === 'json' ? 'conversation-transcript.json' : 'conversation-transcript.md',
+  );
+  triggerBlobDownload(blob, filename);
 }
 
 export async function checkDeploymentLink(

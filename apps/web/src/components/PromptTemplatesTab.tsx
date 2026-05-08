@@ -22,6 +22,7 @@ export function PromptTemplatesTab({ surface, templates, onPreview }: Props) {
   const { locale, t } = useI18n();
   const [filter, setFilter] = useState('');
   const [category, setCategory] = useState<string>('All');
+  const [source, setSource] = useState<string>('All');
 
   const surfaceScoped = useMemo(
     () => templates.filter((tpl) => tpl.surface === surface),
@@ -34,17 +35,30 @@ export function PromptTemplatesTab({ surface, templates, onPreview }: Props) {
     return ['All', ...Array.from(set).sort()];
   }, [surfaceScoped]);
 
+  const sources = useMemo(() => {
+    const set = new Set<string>();
+    for (const tpl of surfaceScoped) set.add(templateSourceName(tpl));
+    return ['All', ...Array.from(set).sort()];
+  }, [surfaceScoped]);
+
   const filtered = useMemo(() => {
     const q = filter.trim().toLowerCase();
     return surfaceScoped.filter((tpl) => {
       if (category !== 'All' && (tpl.category || 'General') !== category) {
         return false;
       }
+      if (source !== 'All' && templateSourceName(tpl) !== source) {
+        return false;
+      }
       if (!q) return true;
       const localized = localizePromptTemplateSummary(locale, tpl);
+      const provider = templateProviderLabel(tpl).toLowerCase();
+      const sourceName = templateSourceName(tpl).toLowerCase();
       return (
         tpl.title.toLowerCase().includes(q)
         || tpl.summary.toLowerCase().includes(q)
+        || provider.includes(q)
+        || sourceName.includes(q)
         || (tpl.tags ?? []).some((tag) => tag.toLowerCase().includes(q))
         || localized.title.toLowerCase().includes(q)
         || localized.summary.toLowerCase().includes(q)
@@ -52,7 +66,7 @@ export function PromptTemplatesTab({ surface, templates, onPreview }: Props) {
         || (localized.tags ?? []).some((tag) => tag.toLowerCase().includes(q))
       );
     });
-  }, [surfaceScoped, filter, category, locale]);
+  }, [surfaceScoped, filter, category, source, locale]);
 
   if (surfaceScoped.length === 0) {
     return (
@@ -79,6 +93,15 @@ export function PromptTemplatesTab({ surface, templates, onPreview }: Props) {
             </option>
           ))}
         </select>
+        {sources.length > 2 ? (
+          <select value={source} onChange={(e) => setSource(e.target.value)}>
+            {sources.map((name) => (
+              <option key={name} value={name}>
+                {name === 'All' ? t('common.all') : name}
+              </option>
+            ))}
+          </select>
+        ) : null}
         <span className="prompt-templates-count">
           {t('promptTemplates.countLabel', { n: filtered.length })}
         </span>
@@ -106,6 +129,18 @@ export function PromptTemplatesTab({ surface, templates, onPreview }: Props) {
   );
 }
 
+function templateSourceName(tpl: PromptTemplateSummary): string {
+  return tpl.source.repo.split('/').filter(Boolean).pop() || tpl.source.repo || 'Source';
+}
+
+function templateProviderLabel(tpl: PromptTemplateSummary): string {
+  if (tpl.model === 'hyperframes-html') return 'HyperFrames';
+  if (!tpl.model) return tpl.surface === 'video' ? 'Video' : 'Image';
+  const prefix = tpl.model.split(/[-/:]/)[0] || tpl.model;
+  if (/^gpt/i.test(prefix)) return 'OpenAI';
+  return prefix.charAt(0).toUpperCase() + prefix.slice(1);
+}
+
 function PromptTemplateCard({
   tpl,
   onPreview,
@@ -117,6 +152,7 @@ function PromptTemplateCard({
   const sourceLabel = tpl.source.author
     ? `${tpl.source.author} · ${tpl.source.repo.split('/').pop()}`
     : tpl.source.repo.split('/').pop();
+  const providerLabel = templateProviderLabel(tpl);
   return (
     <button
       type="button"
@@ -141,6 +177,9 @@ function PromptTemplateCard({
             ▶
           </span>
         ) : null}
+        <span className="prompt-template-provider-badge">
+          {providerLabel}
+        </span>
       </span>
       <span className="prompt-template-meta">
         <span className="prompt-template-title">{tpl.title}</span>
