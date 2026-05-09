@@ -2,6 +2,7 @@ import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { variants } from '../motion';
 import { useT } from '../i18n';
+import { usePopoverLayer } from '../layers';
 import type { DesignSystemSummary } from '../types';
 import { Icon } from './Icon';
 import { Skeleton } from './Loading';
@@ -28,6 +29,12 @@ export function DesignSystemPicker({
   const [query, setQuery] = useState('');
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const searchRef = useRef<HTMLInputElement | null>(null);
+
+  const layer = usePopoverLayer({
+    open,
+    onDismiss: () => setOpen(false),
+    triggerRef: wrapRef as React.RefObject<HTMLElement | null>,
+  });
 
   const byId = useMemo(() => {
     const map = new Map<string, DesignSystemSummary>();
@@ -71,25 +78,6 @@ export function DesignSystemPicker({
     return () => window.clearTimeout(t);
   }, [open]);
 
-  useEffect(() => {
-    if (!open) return;
-    function onPointer(e: MouseEvent) {
-      if (wrapRef.current?.contains(e.target as Node)) return;
-      setOpen(false);
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setOpen(false);
-    }
-    const t = window.setTimeout(() => {
-      document.addEventListener('mousedown', onPointer);
-      document.addEventListener('keydown', onKey);
-    }, 0);
-    return () => {
-      window.clearTimeout(t);
-      document.removeEventListener('mousedown', onPointer);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [open]);
 
   function toggle(id: string) {
     if (multi) {
@@ -161,13 +149,14 @@ export function DesignSystemPicker({
       <AnimatePresence>
         {open ? (
           <motion.div
+            ref={layer.contentRef}
             className="ds-picker-popover"
             role="listbox"
             variants={variants.popoverIn}
             initial="initial"
             animate="animate"
             exit="exit"
-            style={{ animation: 'none' }}
+            style={{ animation: 'none', zIndex: layer.zIndex }}
           >
             <div className="ds-picker-head">
               <input

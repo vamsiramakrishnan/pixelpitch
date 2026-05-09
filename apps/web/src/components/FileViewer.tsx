@@ -2,8 +2,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { MarkdownRenderer, artifactRendererRegistry } from '../artifacts/renderer-registry';
 import { renderMarkdownToSafeHtml } from '../artifacts/markdown';
 import { useT } from '../i18n';
+import { usePopoverLayer } from '../layers';
 import type { Dict } from '../i18n/types';
 import {
+  applyElementEdits,
   checkDeploymentLink,
   deployProjectFile,
   fetchDeployConfig,
@@ -27,7 +29,7 @@ import {
 import { buildReactComponentSrcdoc } from '../runtime/react-component';
 import { buildSrcdoc } from '../runtime/srcdoc';
 import { saveTemplate } from '../state/projects';
-import type { DeployConfigResponse, DeployProjectFileResponse, ProjectFile } from '../types';
+import type { DeployConfigResponse, DeployProjectFileResponse, ElementEditOperation, ProjectFile } from '../types';
 import { Icon } from './Icon';
 import {
   liveSnapshotForComment,
@@ -42,6 +44,7 @@ type SlideState = { active: number; count: number };
 type InspectStyleKey =
   | 'color'
   | 'backgroundColor'
+  | 'borderColor'
   | 'fontSize'
   | 'fontWeight'
   | 'lineHeight'
@@ -58,6 +61,9 @@ type InspectSnapshot = PreviewCommentSnapshot & {
   styles?: Partial<InspectStyleDraft>;
 };
 type TargetMode = 'comment' | 'inspect' | 'edit' | 'draw';
+type InspectApplyScope = 'element' | 'section' | 'similar';
+type ColorToken = { label: string; value: string; source: 'token' | 'custom' };
+type ContrastSummary = { ratio: number | null; label: string; pass: boolean };
 
 const htmlPreviewSlideState = new Map<string, SlideState>();
 
@@ -72,6 +78,7 @@ interface Props {
   onSavePreviewComment?: (target: PreviewCommentTarget, note: string, attachAfterSave: boolean) => Promise<PreviewComment | null>;
   onRemovePreviewComment?: (commentId: string) => Promise<void>;
   onStageComposerToken?: (token: string) => void;
+  onFileEdited?: () => Promise<void> | void;
 }
 
 export function FileViewer({
@@ -85,6 +92,7 @@ export function FileViewer({
   onSavePreviewComment,
   onRemovePreviewComment,
   onStageComposerToken,
+  onFileEdited,
 }: Props) {
   const rendererMatch = artifactRendererRegistry.resolve({
     file,
@@ -104,6 +112,7 @@ export function FileViewer({
         onSavePreviewComment={onSavePreviewComment}
         onRemovePreviewComment={onRemovePreviewComment}
         onStageComposerToken={onStageComposerToken}
+        onFileEdited={onFileEdited}
       />
     );
   }
@@ -327,6 +336,7 @@ function CommentTargetOverlay({
 const EMPTY_INSPECT_STYLE: InspectStyleDraft = {
   color: '',
   backgroundColor: '',
+  borderColor: '',
   fontSize: '',
   fontWeight: '',
   lineHeight: '',
@@ -341,6 +351,7 @@ const EMPTY_INSPECT_STYLE: InspectStyleDraft = {
 const INSPECT_FIELDS: Array<{ key: InspectStyleKey; label: string; type?: 'color' }> = [
   { key: 'color', label: 'Text', type: 'color' },
   { key: 'backgroundColor', label: 'Fill', type: 'color' },
+  { key: 'borderColor', label: 'Border', type: 'color' },
   { key: 'fontSize', label: 'Size' },
   { key: 'fontWeight', label: 'Weight' },
   { key: 'lineHeight', label: 'Line' },
@@ -365,6 +376,100 @@ function cssColorToInput(value: string): string {
   return `#${[rgb[1], rgb[2], rgb[3]]
     .map((part) => Math.max(0, Math.min(255, Number(part))).toString(16).padStart(2, '0'))
     .join('')}`;
+}
+
+function colorTokenToInput(value: string): string | null {
+  const raw = value.trim();
+  if (/^var\(/i.test(raw)) return null;
+  const hex = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(raw);
+  if (hex) {
+    if (raw.length === 4) {
+      return `#${raw[1]}${raw[1]}${raw[2]}${raw[2]}${raw[3]}${raw[3]}`.toLowerCase();
+    }
+    return raw.toLowerCase();
+  }
+  return /^rgba?\(/i.test(raw) ? cssColorToInput(raw) : null;
+}
+
+function extractColorTokens(source: string | null): ColorToken[] {
+  if (!source) return [];
+  const seen = new Set<string>();
+  const tokens: ColorToken[] = [];
+  const push = (label: string, value: string, tokenSource: ColorToken['source']) => {
+    const cleanValue = value.trim();
+    if (!cleanValue || seen.has(`${label}:${cleanValue}`)) return;
+    seen.add(`${label}:${cleanValue}`);
+    tokens.push({ label, value: cleanValue, source: tokenSource });
+  };
+  const colorValue = '(#[0-9a-fA-F]{3,8}|rgba?\\([^)]*\\)|hsla?\\([^)]*\\))';
+  const varRe = new RegExp(`(--[\\w-]+)\\s*:\\s*${colorValue}`, 'g');
+  let match: RegExpExecArray | null;
+  while ((match = varRe.exec(source)) && tokens.length < 24) {
+    push(match[1] ?? 'token', `var(${match[1]})`, 'token');
+    if (match[2]) push(`${match[1]} value`, match[2], 'custom');
+  }
+  const colorRe = new RegExp(colorValue, 'g');
+  while ((match = colorRe.exec(source)) && tokens.length < 36) {
+    push(match[1] ?? 'color', match[1] ?? '', 'custom');
+  }
+  return tokens.slice(0, 24);
+}
+
+function parseCssColor(value: string): [number, number, number] | null {
+  const raw = value.trim();
+  const hex = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(raw);
+  if (hex) {
+    const body = hex[1]!;
+    const full = body.length === 3
+      ? body.split('').map((char) => char + char).join('')
+      : body;
+    return [
+      Number.parseInt(full.slice(0, 2), 16),
+      Number.parseInt(full.slice(2, 4), 16),
+      Number.parseInt(full.slice(4, 6), 16),
+    ];
+  }
+  const rgb = /^rgba?\((\d+),\s*(\d+),\s*(\d+)/i.exec(raw);
+  if (!rgb) return null;
+  return [Number(rgb[1]), Number(rgb[2]), Number(rgb[3])].map((n) => Math.max(0, Math.min(255, n))) as [number, number, number];
+}
+
+function relativeLuminance([r, g, b]: [number, number, number]): number {
+  return [r, g, b]
+    .map((channel) => {
+      const c = channel / 255;
+      return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    })
+    .reduce((sum, value, index) => sum + value * [0.2126, 0.7152, 0.0722][index]!, 0);
+}
+
+function contrastRatio(foreground: string, background: string): number | null {
+  const fg = parseCssColor(foreground);
+  const bg = parseCssColor(background);
+  if (!fg || !bg) return null;
+  const light = Math.max(relativeLuminance(fg), relativeLuminance(bg));
+  const dark = Math.min(relativeLuminance(fg), relativeLuminance(bg));
+  return (light + 0.05) / (dark + 0.05);
+}
+
+function contrastSummary(draft: InspectStyleDraft): ContrastSummary {
+  const ratio = contrastRatio(draft.color, draft.backgroundColor);
+  if (ratio === null) return { ratio: null, label: 'Contrast unavailable for token/current color', pass: false };
+  const pass = ratio >= 4.5;
+  return { ratio, label: `${ratio.toFixed(1)}:1 ${pass ? 'AA pass' : 'Low contrast'}`, pass };
+}
+
+function inspectVariantStyles(kind: string, draft: InspectStyleDraft): Partial<InspectStyleDraft> {
+  if (kind === 'light') return { color: '#111827', backgroundColor: '#ffffff', borderColor: '#e5e7eb' };
+  if (kind === 'dark') return { color: '#f9fafb', backgroundColor: '#111827', borderColor: '#374151' };
+  if (kind === 'warmer') return { color: '#431407', backgroundColor: '#fff7ed', borderColor: '#fed7aa' };
+  if (kind === 'premium') return { color: '#f8fafc', backgroundColor: '#0f172a', borderColor: '#d4af37' };
+  if (kind === 'contrast') {
+    const bg = parseCssColor(draft.backgroundColor);
+    if (!bg) return { color: '#000000', backgroundColor: '#ffffff', borderColor: '#111827' };
+    return { color: relativeLuminance(bg) >= 0.45 ? '#000000' : '#ffffff' };
+  }
+  return {};
 }
 
 function changedInspectStyles(draft: InspectStyleDraft, baseline: InspectStyleDraft): Partial<InspectStyleDraft> {
@@ -421,6 +526,14 @@ function InspectStylePanel({
   onClose,
   onReset,
   onStage,
+  onApply,
+  applyScope,
+  onApplyScope,
+  applyCount,
+  palette,
+  onVariant,
+  applying,
+  error,
 }: {
   target: InspectSnapshot;
   draft: InspectStyleDraft;
@@ -429,8 +542,19 @@ function InspectStylePanel({
   onClose: () => void;
   onReset: () => void;
   onStage: () => void;
+  onApply: () => void;
+  applyScope: InspectApplyScope;
+  onApplyScope: (scope: InspectApplyScope) => void;
+  applyCount: number;
+  palette: ColorToken[];
+  onVariant: (kind: string) => void;
+  applying: boolean;
+  error: string | null;
 }) {
+  const [colorTarget, setColorTarget] = useState<Extract<InspectStyleKey, 'color' | 'backgroundColor' | 'borderColor'>>('backgroundColor');
   const changed = Object.keys(changedInspectStyles(draft, baseline)).length > 0;
+  const contrast = contrastSummary(draft);
+  const colorFields = INSPECT_FIELDS.filter((field) => field.type === 'color');
   return (
     <div className="inspect-panel" data-testid="inspect-style-panel">
       <div className="inspect-panel-head">
@@ -441,6 +565,56 @@ function InspectStylePanel({
         <button type="button" className="ghost" onClick={onClose}>
           Close
         </button>
+      </div>
+      {palette.length > 0 ? (
+        <div className="inspect-palette" aria-label="Color palette">
+          <div className="inspect-panel-section-title">Palette</div>
+          <div className="inspect-swatch-grid">
+            {palette.slice(0, 18).map((token) => {
+              const color = colorTokenToInput(token.value);
+              return (
+                <button
+                  key={`${token.label}-${token.value}`}
+                  type="button"
+                  className={`inspect-swatch ${token.source}`}
+                  title={`${token.label}: ${token.value}`}
+                  onClick={() => onChange(colorTarget, token.value)}
+                >
+                  <span style={{ background: color ?? token.value }} />
+                  <em>{token.source === 'token' ? token.label.replace(/^--/, '') : token.value}</em>
+                </button>
+              );
+            })}
+          </div>
+          <div className="inspect-color-targets">
+            {colorFields.map((field) => (
+              <button
+                key={field.key}
+                type="button"
+                className={`ghost-link button-like ${colorTarget === field.key ? 'active' : ''}`}
+                onClick={() => setColorTarget(field.key as typeof colorTarget)}
+              >
+                {field.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : null}
+      <div className="inspect-variant-row">
+        {([
+          ['light', 'Light'],
+          ['dark', 'Dark'],
+          ['warmer', 'Warmer'],
+          ['premium', 'Premium'],
+          ['contrast', 'Higher contrast'],
+        ] as Array<[string, string]>).map(([kind, label]) => (
+          <button key={kind} type="button" className="ghost-link button-like" onClick={() => onVariant(kind)}>
+            {label}
+          </button>
+        ))}
+      </div>
+      <div className={`inspect-contrast ${contrast.pass ? 'pass' : 'warn'}`}>
+        {contrast.label}
       </div>
       <div className="inspect-panel-grid">
         {INSPECT_FIELDS.map((field) => (
@@ -472,10 +646,25 @@ function InspectStylePanel({
         <button type="button" className="ghost-link button-like" onClick={onReset}>
           Reset
         </button>
-        <button type="button" className="primary" disabled={!changed} onClick={onStage}>
-          Stage in chat
-        </button>
+        <div className="inspect-panel-action-group">
+          <select
+            value={applyScope}
+            onChange={(event) => onApplyScope(event.target.value as InspectApplyScope)}
+            aria-label="Apply scope"
+          >
+            <option value="element">This element</option>
+            <option value="section">This slide/section</option>
+            <option value="similar">Similar elements</option>
+          </select>
+          <button type="button" className="ghost-link button-like" disabled={!changed || applying} onClick={onStage}>
+            Stage in chat
+          </button>
+          <button type="button" className="primary" disabled={!changed || applying} onClick={onApply}>
+            {applying ? 'Applying...' : `Apply ${applyCount}`}
+          </button>
+        </div>
       </div>
+      {error ? <div className="inspect-panel-error">{error}</div> : null}
     </div>
   );
 }
@@ -486,12 +675,20 @@ function EditTargetPanel({
   onDraft,
   onClose,
   onStage,
+  onApplyText,
+  onRemove,
+  applying,
+  error,
 }: {
   target: InspectSnapshot;
   draft: string;
   onDraft: (value: string) => void;
   onClose: () => void;
   onStage: () => void;
+  onApplyText: () => void;
+  onRemove: () => void;
+  applying: boolean;
+  error: string | null;
 }) {
   return (
     <div className="inspect-panel edit-target-panel" data-testid="edit-target-panel">
@@ -506,17 +703,23 @@ function EditTargetPanel({
       </div>
       <textarea
         value={draft}
-        placeholder="Describe the edit for this rendered element"
+        placeholder="Edit the text content for this element"
         onChange={(event) => onDraft(event.target.value)}
       />
       <div className="inspect-panel-actions">
-        <button type="button" className="ghost-link button-like" onClick={onClose}>
-          Cancel
+        <button type="button" className="comment-popover-remove" disabled={applying} onClick={onRemove}>
+          Remove
         </button>
-        <button type="button" className="primary" onClick={onStage}>
-          Stage edit
-        </button>
+        <div className="inspect-panel-action-group">
+          <button type="button" className="ghost-link button-like" disabled={applying} onClick={onStage}>
+            Stage for agent
+          </button>
+          <button type="button" className="primary" disabled={applying} onClick={onApplyText}>
+            {applying ? 'Applying...' : 'Apply text'}
+          </button>
+        </div>
       </div>
+      {error ? <div className="inspect-panel-error">{error}</div> : null}
     </div>
   );
 }
@@ -536,6 +739,12 @@ function ReactComponentViewer({
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
   const shareRef = useRef<HTMLDivElement | null>(null);
 
+  const shareLayer = usePopoverLayer({
+    open: shareMenuOpen,
+    onDismiss: () => setShareMenuOpen(false),
+    triggerRef: shareRef as React.RefObject<HTMLElement | null>,
+  });
+
   useEffect(() => {
     setSource(null);
     let cancelled = false;
@@ -546,23 +755,6 @@ function ReactComponentViewer({
       cancelled = true;
     };
   }, [projectId, file.name, file.mtime, reloadKey]);
-
-  useEffect(() => {
-    if (!shareMenuOpen) return;
-    const onDocClick = (e: MouseEvent) => {
-      if (!shareRef.current) return;
-      if (!shareRef.current.contains(e.target as Node)) setShareMenuOpen(false);
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setShareMenuOpen(false);
-    };
-    document.addEventListener('mousedown', onDocClick);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onDocClick);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [shareMenuOpen]);
 
   const exportTitle = file.name.replace(/\.(jsx|tsx)$/i, '') || file.name;
   const sourceExtension = file.name.toLowerCase().endsWith('.tsx') ? '.tsx' : '.jsx';
@@ -643,7 +835,7 @@ function ReactComponentViewer({
                   <Icon name="chevron-down" size={11} />
                 </button>
                 {shareMenuOpen ? (
-                  <div className="share-menu-popover" role="menu">
+                  <div ref={shareLayer.contentRef} className="share-menu-popover" role="menu" style={{ zIndex: shareLayer.zIndex }}>
                     <button
                       type="button"
                       className="share-menu-item"
@@ -803,6 +995,7 @@ function HtmlViewer({
   onSavePreviewComment,
   onRemovePreviewComment,
   onStageComposerToken,
+  onFileEdited,
 }: {
   projectId: string;
   file: ProjectFile;
@@ -814,6 +1007,7 @@ function HtmlViewer({
   onSavePreviewComment?: (target: PreviewCommentTarget, note: string, attachAfterSave: boolean) => Promise<PreviewComment | null>;
   onRemovePreviewComment?: (commentId: string) => Promise<void>;
   onStageComposerToken?: (token: string) => void;
+  onFileEdited?: () => Promise<void> | void;
 }) {
   const t = useT();
   const [mode, setMode] = useState<'preview' | 'source'>('preview');
@@ -835,9 +1029,10 @@ function HtmlViewer({
   const [deployError, setDeployError] = useState<string | null>(null);
   const [deployResult, setDeployResult] = useState<DeployProjectFileResponse | null>(null);
   const [copiedDeployLink, setCopiedDeployLink] = useState(false);
-  const [vercelToken, setVercelToken] = useState('');
-  const [teamId, setTeamId] = useState('');
-  const [teamSlug, setTeamSlug] = useState('');
+  const [cloudRunProjectId, setCloudRunProjectId] = useState('');
+  const [cloudRunRegion, setCloudRunRegion] = useState('us-central1');
+  const [cloudRunServiceName, setCloudRunServiceName] = useState('');
+  const [cloudRunPublic, setCloudRunPublic] = useState(true);
   const [inTabPresent, setInTabPresent] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
   const [inspectMode, setInspectMode] = useState(false);
@@ -846,22 +1041,39 @@ function HtmlViewer({
   const [activeInspectTarget, setActiveInspectTarget] = useState<InspectSnapshot | null>(null);
   const [inspectBaseline, setInspectBaseline] = useState<InspectStyleDraft>(EMPTY_INSPECT_STYLE);
   const [inspectDraft, setInspectDraft] = useState<InspectStyleDraft>(EMPTY_INSPECT_STYLE);
+  const [inspectApplyScope, setInspectApplyScope] = useState<InspectApplyScope>('element');
   const [editInstruction, setEditInstruction] = useState('');
+  const [applyingEdit, setApplyingEdit] = useState(false);
+  const [editApplyError, setEditApplyError] = useState<string | null>(null);
   const [commentMode, setCommentMode] = useState(false);
   const [activeCommentTarget, setActiveCommentTarget] = useState<PreviewCommentSnapshot | null>(null);
   const [hoveredCommentTarget, setHoveredCommentTarget] = useState<PreviewCommentSnapshot | null>(null);
   const [liveCommentTargets, setLiveCommentTargets] = useState<Map<string, PreviewCommentSnapshot>>(() => new Map());
   const [commentDraft, setCommentDraft] = useState('');
   const previewStateKey = `${projectId}:${file.name}`;
-  // Slide deck nav state: the iframe posts the active index + total count
-  // back to the host every time a slide settles. Host renders prev/next
-  // controls in the toolbar and reflects the count beside them.
+  // Slide deck state: the iframe posts the active index + total count back
+  // every time a slide settles. The editor surfaces this as context only;
+  // slide transitions belong to the deck preview, not the editing controls.
   const [slideState, setSlideState] = useState<SlideState | null>(
     () => htmlPreviewSlideState.get(previewStateKey) ?? null,
   );
   const previewBodyRef = useRef<HTMLDivElement | null>(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const shareRef = useRef<HTMLDivElement | null>(null);
+  const presentWrapRef = useRef<HTMLDivElement | null>(null);
+  const foregroundSlideLockRef = useRef<number | null>(null);
+
+  const presentLayer = usePopoverLayer({
+    open: presentMenuOpen,
+    onDismiss: () => setPresentMenuOpen(false),
+    triggerRef: presentWrapRef as React.RefObject<HTMLElement | null>,
+  });
+
+  const htmlShareLayer = usePopoverLayer({
+    open: shareMenuOpen,
+    onDismiss: () => setShareMenuOpen(false),
+    triggerRef: shareRef as React.RefObject<HTMLElement | null>,
+  });
 
   useEffect(() => {
     if (liveHtml !== undefined) {
@@ -887,7 +1099,7 @@ function HtmlViewer({
     void fetchProjectDeployments(projectId).then((items) => {
       if (cancelled) return;
       const current = items.find(
-        (item) => item.fileName === file.name && item.providerId === 'vercel-self',
+        (item) => item.fileName === file.name && item.providerId === 'cloud-run',
       );
       setDeployment(current ?? null);
       setDeployResult(current ?? null);
@@ -906,7 +1118,9 @@ function HtmlViewer({
     return /class\s*=\s*['"][^'"]*\bslide\b/i.test(source);
   }, [source]);
   const effectiveDeck = isDeck || looksLikeDeck;
+  const targetingModeActive = commentMode || inspectMode || editMode || drawMode;
   const previewSource = inlinedSource ?? source;
+  const inspectPalette = useMemo(() => extractColorTokens(previewSource), [previewSource]);
 
   useEffect(() => {
     setInlinedSource(null);
@@ -968,11 +1182,28 @@ function HtmlViewer({
   }, [commentMode, inspectMode, editMode, drawMode, srcDoc]);
 
   useEffect(() => {
+    if (!effectiveDeck || mode !== 'preview' || !targetingModeActive) {
+      foregroundSlideLockRef.current = null;
+      return;
+    }
+    if (foregroundSlideLockRef.current === null) {
+      foregroundSlideLockRef.current =
+        slideState?.active ?? htmlPreviewSlideState.get(previewStateKey)?.active ?? 0;
+    }
+    const lockedIndex = foregroundSlideLockRef.current;
+    const frame = window.requestAnimationFrame(() => {
+      postSlide('go', lockedIndex);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [effectiveDeck, mode, targetingModeActive, slideState?.active, previewStateKey]);
+
+  useEffect(() => {
     setActiveCommentTarget(null);
     setHoveredCommentTarget(null);
     setActiveInspectTarget(null);
     setInspectBaseline(EMPTY_INSPECT_STYLE);
     setInspectDraft(EMPTY_INSPECT_STYLE);
+    setInspectApplyScope('element');
     setEditInstruction('');
     setLiveCommentTargets(new Map());
     setCommentDraft('');
@@ -1052,7 +1283,8 @@ function HtmlViewer({
           setActiveInspectTarget(snapshot);
           setInspectBaseline(nextStyle);
           setInspectDraft(nextStyle);
-          setEditInstruction('');
+          setEditInstruction(editMode ? snapshot.text : '');
+          setEditApplyError(null);
           setHoveredCommentTarget(snapshot);
           setLiveCommentTargets((current) => new Map(current).set(snapshot.elementId, snapshot));
           if (drawMode && onStageComposerToken) {
@@ -1071,16 +1303,17 @@ function HtmlViewer({
     return () => window.removeEventListener('message', onMessage);
   }, [commentMode, inspectMode, editMode, drawMode, file.name, previewComments, onStageComposerToken]);
 
-  function postSlide(action: 'next' | 'prev' | 'first' | 'last') {
+  function postSlide(action: 'next' | 'prev' | 'first' | 'last' | 'go', index?: number) {
     const win = iframeRef.current?.contentWindow;
     if (!win) return;
-    win.postMessage({ type: 'od:slide', action }, '*');
+    win.postMessage({ type: 'od:slide', action, index }, '*');
   }
 
-  // Keyboard nav on the host, so the user can press ←/→ even when focus
-  // is on the chat composer or any other host control.
+  // Keyboard nav on the host stays available for passive previewing. During
+  // targeting/editing modes we freeze host-level slide changes so the chosen
+  // foreground slide remains the one being inspected or edited.
   useEffect(() => {
-    if (!effectiveDeck || mode !== 'preview') return;
+    if (!effectiveDeck || mode !== 'preview' || targetingModeActive) return;
     function onKey(e: KeyboardEvent) {
       const target = e.target as HTMLElement | null;
       if (target) {
@@ -1103,52 +1336,12 @@ function HtmlViewer({
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [effectiveDeck, mode]);
+  }, [effectiveDeck, mode, targetingModeActive]);
 
-  useEffect(() => {
-    if (!presentMenuOpen) return;
-    const onPointer = (e: MouseEvent) => {
-      const target = e.target as HTMLElement | null;
-      if (!target) return;
-      if (target.closest('.present-wrap')) return;
-      setPresentMenuOpen(false);
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setPresentMenuOpen(false);
-    };
-    document.addEventListener('mousedown', onPointer);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onPointer);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [presentMenuOpen]);
-
-  useEffect(() => {
-    if (!shareMenuOpen) return;
-    const onDocClick = (e: MouseEvent) => {
-      if (!shareRef.current) return;
-      if (!shareRef.current.contains(e.target as Node)) setShareMenuOpen(false);
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setShareMenuOpen(false);
-    };
-    document.addEventListener('mousedown', onDocClick);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onDocClick);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [shareMenuOpen]);
-
-  useEffect(() => {
-    if (!inTabPresent) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setInTabPresent(false);
-    };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [inTabPresent]);
+  usePopoverLayer({
+    open: inTabPresent,
+    onDismiss: () => setInTabPresent(false),
+  });
 
   function openInNewTab() {
     if (!source) return;
@@ -1205,12 +1398,13 @@ function HtmlViewer({
     ]);
     if (config) {
       setDeployConfig(config);
-      setVercelToken(config.tokenMask || '');
-      setTeamId(config.teamId || '');
-      setTeamSlug(config.teamSlug || '');
+      setCloudRunProjectId(config.projectId || '');
+      setCloudRunRegion(config.region || 'us-central1');
+      setCloudRunServiceName(config.serviceName || '');
+      setCloudRunPublic(config.allowUnauthenticated !== false);
     }
     const current = deployments.find(
-      (item) => item.fileName === file.name && item.providerId === 'vercel-self',
+      (item) => item.fileName === file.name && item.providerId === 'cloud-run',
     );
     setDeployment(current ?? null);
     setDeployResult(current ?? null);
@@ -1221,15 +1415,17 @@ function HtmlViewer({
     setDeployError(null);
     try {
       const config = await updateDeployConfig({
-        token: vercelToken,
-        teamId,
-        teamSlug,
+        projectId: cloudRunProjectId,
+        region: cloudRunRegion,
+        serviceName: cloudRunServiceName,
+        allowUnauthenticated: cloudRunPublic,
       });
       if (!config) throw new Error(t('fileViewer.deployConfigSaveFailed'));
       setDeployConfig(config);
-      setVercelToken(config.tokenMask || '');
-      setTeamId(config.teamId || '');
-      setTeamSlug(config.teamSlug || '');
+      setCloudRunProjectId(config.projectId || '');
+      setCloudRunRegion(config.region || 'us-central1');
+      setCloudRunServiceName(config.serviceName || '');
+      setCloudRunPublic(config.allowUnauthenticated !== false);
       return config;
     } catch (err) {
       setDeployError(err instanceof Error ? err.message : t('fileViewer.deployConfigSaveFailed'));
@@ -1239,18 +1435,17 @@ function HtmlViewer({
     }
   }
 
-  async function deployToVercel() {
+  async function deployToCloudRun() {
     setDeploying(true);
     setDeployPhase('deploying');
     setDeployError(null);
     setCopiedDeployLink(false);
     try {
-      const typedToken = vercelToken.trim();
-      const hasNewToken = typedToken && typedToken !== deployConfig?.tokenMask;
       const needsConfigSave =
-        hasNewToken ||
-        teamId.trim() !== (deployConfig?.teamId || '') ||
-        teamSlug.trim() !== (deployConfig?.teamSlug || '') ||
+        cloudRunProjectId.trim() !== (deployConfig?.projectId || '') ||
+        cloudRunRegion.trim() !== (deployConfig?.region || '') ||
+        cloudRunServiceName.trim() !== (deployConfig?.serviceName || '') ||
+        cloudRunPublic !== (deployConfig?.allowUnauthenticated !== false) ||
         !deployConfig?.configured;
       if (needsConfigSave) {
         const nextConfig = await saveDeployConfig();
@@ -1346,10 +1541,19 @@ function HtmlViewer({
     postInspectStyles(activeInspectTarget, { [key]: value });
   }
 
+  function applyInspectVariant(kind: string) {
+    if (!activeInspectTarget) return;
+    const styles = inspectVariantStyles(kind, inspectDraft);
+    const next = { ...inspectDraft, ...styles };
+    setInspectDraft(next);
+    postInspectStyles(activeInspectTarget, styles);
+  }
+
   function resetInspectStyles() {
     if (!activeInspectTarget) return;
     setInspectDraft(inspectBaseline);
     postInspectStyles(activeInspectTarget, inspectBaseline);
+    setEditApplyError(null);
   }
 
   function stageInspectStyles() {
@@ -1362,6 +1566,103 @@ function HtmlViewer({
   function stageEditTarget() {
     if (!activeInspectTarget || !onStageComposerToken) return;
     onStageComposerToken(renderEditToken(activeInspectTarget, editInstruction));
+  }
+
+  function targetForOperation(target: InspectSnapshot): ElementEditOperation['target'] {
+    const editTarget: ElementEditOperation['target'] & {
+      currentText?: string;
+      tagName?: string;
+      htmlHint?: string;
+    } = { fileName: file.name };
+    if (target.selector) editTarget.selector = target.selector;
+    if (target.elementId) editTarget.elementId = target.elementId;
+    if (target.label) editTarget.label = target.label;
+    if (target.text) editTarget.currentText = target.text;
+    if (target.tagName) editTarget.tagName = target.tagName;
+    if (target.htmlHint) editTarget.htmlHint = target.htmlHint;
+    return editTarget;
+  }
+
+  async function applyEditOperations(operations: ElementEditOperation[]): Promise<boolean> {
+    if (operations.length === 0) return false;
+    setApplyingEdit(true);
+    setEditApplyError(null);
+    try {
+      await applyElementEdits(projectId, { operations });
+      await onFileEdited?.();
+      setReloadKey((n) => n + 1);
+      setActiveInspectTarget(null);
+      return true;
+    } catch (err) {
+      setEditApplyError(err instanceof Error ? err.message : 'Edit operation failed');
+      return false;
+    } finally {
+      setApplyingEdit(false);
+    }
+  }
+
+  async function applyEditOperation(operation: ElementEditOperation): Promise<boolean> {
+    return applyEditOperations([operation]);
+  }
+
+  function sectionKeyForTarget(target: InspectSnapshot): string {
+    const within = /\bwithin\s+(.+)$/.exec(target.label || '');
+    return within?.[1]?.trim() || target.elementId;
+  }
+
+  function similarKeyForTarget(target: InspectSnapshot): string {
+    const tag = (target.tagName || '').toLowerCase();
+    const classes = (target.className || '').trim().split(/\s+/).filter(Boolean).slice(0, 2).join('.');
+    if (classes) return `${tag}.${classes}`;
+    if (/^h[1-6]$/.test(tag)) return 'heading';
+    if (tag === 'button' || tag === 'a') return 'action';
+    return tag || target.elementId;
+  }
+
+  function inspectTargetsForScope(scope: InspectApplyScope): InspectSnapshot[] {
+    if (!activeInspectTarget) return [];
+    if (scope === 'element') return [activeInspectTarget];
+    const targets = Array.from(liveCommentTargets.values()) as InspectSnapshot[];
+    if (scope === 'section') {
+      const sectionKey = sectionKeyForTarget(activeInspectTarget);
+      return targets
+        .filter((target) => target.elementId === sectionKey || sectionKeyForTarget(target) === sectionKey)
+        .slice(0, 80);
+    }
+    const similarKey = similarKeyForTarget(activeInspectTarget);
+    return targets
+      .filter((target) => similarKeyForTarget(target) === similarKey)
+      .slice(0, 80);
+  }
+
+  async function applyInspectStylesToSource() {
+    if (!activeInspectTarget) return;
+    const styles = changedInspectStyles(inspectDraft, inspectBaseline);
+    if (Object.keys(styles).length === 0) return;
+    const operations = inspectTargetsForScope(inspectApplyScope).map((target) => ({
+      type: 'setStyle' as const,
+      target: targetForOperation(target),
+      styles,
+    }));
+    const applied = await applyEditOperations(operations);
+    if (applied) setInspectBaseline(inspectDraft);
+  }
+
+  async function applyEditTextToSource() {
+    if (!activeInspectTarget) return;
+    await applyEditOperation({
+      type: 'setText',
+      target: targetForOperation(activeInspectTarget),
+      text: editInstruction,
+    });
+  }
+
+  async function removeEditTargetFromSource() {
+    if (!activeInspectTarget) return;
+    await applyEditOperation({
+      type: 'removeElement',
+      target: targetForOperation(activeInspectTarget),
+    });
   }
 
   const showPresent = effectiveDeck && source !== null;
@@ -1378,6 +1679,10 @@ function HtmlViewer({
   const copyDeployLabel = copiedDeployLink
     ? t('fileViewer.copied')
     : t('fileViewer.copyDeployLink');
+  const deployActionLabel = activeDeployedUrl
+    ? t('fileViewer.redeployToVercel')
+    : t('fileViewer.deployToVercel');
+  const inspectApplyCount = inspectTargetsForScope(inspectApplyScope).length || 1;
 
   return (
     <div className="viewer html-viewer">
@@ -1398,34 +1703,11 @@ function HtmlViewer({
               role="group"
               aria-label={t('fileViewer.slideNavAria')}
             >
-              <button
-                type="button"
-                className="icon-only"
-                onClick={() => postSlide('prev')}
-                title={t('fileViewer.previousSlide')}
-                aria-label={t('fileViewer.previousSlide')}
-                disabled={slideState !== null && slideState.active <= 0}
-              >
-                <Icon name="chevron-right" size={14} style={{ transform: 'rotate(180deg)' }} />
-              </button>
               <span className="deck-nav-counter">
                 {slideState
                   ? `${slideState.active + 1} / ${slideState.count}`
                   : '— / —'}
               </span>
-              <button
-                type="button"
-                className="icon-only"
-                onClick={() => postSlide('next')}
-                title={t('fileViewer.nextSlide')}
-                aria-label={t('fileViewer.nextSlide')}
-                disabled={
-                  slideState !== null &&
-                  slideState.active >= slideState.count - 1
-                }
-              >
-                <Icon name="chevron-right" size={14} />
-              </button>
               {onStageComposerToken ? (
                 <button
                   type="button"
@@ -1579,7 +1861,7 @@ function HtmlViewer({
           </button>
           <span className="viewer-divider" aria-hidden />
           {showPresent ? (
-            <div className="present-wrap">
+            <div className="present-wrap" ref={presentWrapRef}>
               <button
                 className="viewer-action present-trigger"
                 aria-haspopup="menu"
@@ -1591,7 +1873,7 @@ function HtmlViewer({
                 <Icon name="chevron-down" size={11} />
               </button>
               {presentMenuOpen ? (
-                <div className="present-menu" role="menu">
+                <div ref={presentLayer.contentRef} className="present-menu" role="menu" style={{ zIndex: presentLayer.zIndex }}>
                   <button role="menuitem" onClick={presentInThisTab}>
                     <span className="present-icon"><Icon name="eye" size={13} /></span>{' '}
                     {t('fileViewer.presentInTab')}
@@ -1620,7 +1902,7 @@ function HtmlViewer({
                 <Icon name="chevron-down" size={11} />
               </button>
               {shareMenuOpen ? (
-                <div className="share-menu-popover" role="menu">
+                <div ref={htmlShareLayer.contentRef} className="share-menu-popover" role="menu" style={{ zIndex: htmlShareLayer.zIndex }}>
                   <button
                     type="button"
                     className="share-menu-item"
@@ -1735,9 +2017,7 @@ function HtmlViewer({
                   >
                     <span className="share-menu-icon"><Icon name="upload" size={14} /></span>
                     <span>
-                      {activeDeployedUrl
-                        ? t('fileViewer.redeployToVercel')
-                        : t('fileViewer.deployToVercel')}
+                      {deployActionLabel}
                     </span>
                   </button>
                   <button
@@ -1825,6 +2105,14 @@ function HtmlViewer({
                 onClose={() => setActiveInspectTarget(null)}
                 onReset={resetInspectStyles}
                 onStage={stageInspectStyles}
+                onApply={() => void applyInspectStylesToSource()}
+                applyScope={inspectApplyScope}
+                onApplyScope={setInspectApplyScope}
+                applyCount={inspectApplyCount}
+                palette={inspectPalette}
+                onVariant={applyInspectVariant}
+                applying={applyingEdit}
+                error={editApplyError}
               />
             ) : null}
             {editMode && activeInspectTarget ? (
@@ -1834,6 +2122,10 @@ function HtmlViewer({
                 onDraft={setEditInstruction}
                 onClose={() => setActiveInspectTarget(null)}
                 onStage={stageEditTarget}
+                onApplyText={() => void applyEditTextToSource()}
+                onRemove={() => void removeEditTargetFromSource()}
+                applying={applyingEdit}
+                error={editApplyError}
               />
             ) : null}
           </div>
@@ -1861,28 +2153,46 @@ function HtmlViewer({
         <div className="modal-backdrop" role="presentation">
           <div className="modal deploy-modal" role="dialog" aria-modal="true">
             <div className="modal-head">
-              <div className="kicker">VERCEL</div>
+              <div className="kicker">CLOUD RUN</div>
               <h2>{t('fileViewer.deployModalTitle')}</h2>
               <p className="subtitle">{t('fileViewer.deployModalSubtitle')}</p>
             </div>
             <div className="deploy-form">
-              <div className="field-label-row">
-                <label htmlFor="vercel-token">{t('fileViewer.vercelToken')}</label>
-                <a
-                  href="https://vercel.com/account/settings/tokens"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  {t('fileViewer.vercelTokenGetLink')}
-                </a>
-              </div>
+              <label htmlFor="cloud-run-project">{t('fileViewer.vercelToken')}</label>
               <input
-                id="vercel-token"
-                type="password"
-                value={vercelToken}
+                id="cloud-run-project"
+                value={cloudRunProjectId}
                 placeholder={t('fileViewer.vercelTokenPlaceholder')}
-                onChange={(e) => setVercelToken(e.target.value)}
+                onChange={(e) => setCloudRunProjectId(e.target.value)}
               />
+              <div className="deploy-field-grid">
+                <label htmlFor="cloud-run-region">
+                  <span>{t('fileViewer.vercelTeamId')}</span>
+                  <input
+                    id="cloud-run-region"
+                    value={cloudRunRegion}
+                    placeholder="us-central1"
+                    onChange={(e) => setCloudRunRegion(e.target.value)}
+                  />
+                </label>
+                <label htmlFor="cloud-run-service">
+                  <span>{t('fileViewer.vercelTeamSlug')}</span>
+                  <input
+                    id="cloud-run-service"
+                    value={cloudRunServiceName}
+                    placeholder="pixelpitch-preview"
+                    onChange={(e) => setCloudRunServiceName(e.target.value)}
+                  />
+                </label>
+              </div>
+              <label className="deploy-public-toggle">
+                <input
+                  type="checkbox"
+                  checked={cloudRunPublic}
+                  onChange={(e) => setCloudRunPublic(e.target.checked)}
+                />
+                <span>{t('fileViewer.vercelTokenGetLink')}</span>
+              </label>
               <div className="deploy-config-actions">
                 <button
                   type="button"
@@ -1898,24 +2208,6 @@ function HtmlViewer({
               {deployConfig?.configured ? (
                 <p className="hint">{t('fileViewer.vercelTokenReuseHint')}</p>
               ) : null}
-              <div className="deploy-field-grid">
-                <label>
-                  <span>{t('fileViewer.vercelTeamId')}</span>
-                  <input
-                    value={teamId}
-                    placeholder={t('fileViewer.optional')}
-                    onChange={(e) => setTeamId(e.target.value)}
-                  />
-                </label>
-                <label>
-                  <span>{t('fileViewer.vercelTeamSlug')}</span>
-                  <input
-                    value={teamSlug}
-                    placeholder={t('fileViewer.optional')}
-                    onChange={(e) => setTeamSlug(e.target.value)}
-                  />
-                </label>
-              </div>
               <p className="hint">{t('fileViewer.vercelPreviewOnly')}</p>
               {deployError ? <p className="deploy-error">{deployError}</p> : null}
               {activeDeployedUrl ? (
@@ -1993,14 +2285,14 @@ function HtmlViewer({
                 className="viewer-action primary"
                 disabled={deploying || savingDeployConfig || deployPhase !== 'idle'}
                 onClick={() => {
-                  void deployToVercel();
+                  void deployToCloudRun();
                 }}
               >
                 {deployPhase === 'deploying'
                   ? t('fileViewer.deployingToVercel')
                   : deployPhase === 'preparing-link'
                     ? t('fileViewer.preparingPublicLink')
-                    : t('fileViewer.deployToVercel')}
+                    : deployActionLabel}
               </button>
             </div>
           </div>

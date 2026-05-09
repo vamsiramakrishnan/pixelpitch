@@ -1,9 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useT } from '../i18n';
+import { usePopoverLayer } from '../layers';
 import { AgentIcon } from './AgentIcon';
 import { Icon } from './Icon';
 import { renderModelOptions } from './modelOptions';
 import type { AgentInfo, AppConfig, ExecMode } from '../types';
+import { apiRuntimeDetail, apiRuntimeLabel } from '../utils/runtimeLabels';
 
 interface Props {
   config: AppConfig;
@@ -20,11 +22,6 @@ interface Props {
   onBack?: () => void;
 }
 
-/**
- * Compact settings control at the right of the project header. Click opens a dropdown
- * with current execution mode, the agent picker (when in daemon mode), and
- * a Settings entry — replaces the wide AgentPicker + env-pill row.
- */
 export function AvatarMenu({
   config,
   agents,
@@ -38,24 +35,13 @@ export function AvatarMenu({
 }: Props) {
   const t = useT();
   const [open, setOpen] = useState(false);
-  const wrapRef = useRef<HTMLDivElement | null>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
 
-  useEffect(() => {
-    if (!open) return;
-    const onClick = (e: MouseEvent) => {
-      if (!wrapRef.current) return;
-      if (!wrapRef.current.contains(e.target as Node)) setOpen(false);
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
-    };
-    document.addEventListener('mousedown', onClick);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onClick);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [open]);
+  const layer = usePopoverLayer({
+    open,
+    onDismiss: () => setOpen(false),
+    triggerRef: triggerRef as React.RefObject<HTMLElement | null>,
+  });
 
   const currentAgent = useMemo(
     () => agents.find((a) => a.id === config.agentId) ?? null,
@@ -64,9 +50,6 @@ export function AvatarMenu({
 
   const installedAgents = agents.filter((a) => a.available);
 
-  // Resolve the user's model + reasoning pick for the active agent. Falls
-  // back to the agent's first declared option (`'default'`) when the user
-  // hasn't touched the picker yet so the labels don't read as empty.
   const currentChoice =
     (config.agentId && config.agentModels?.[config.agentId]) || {};
   const currentModelId =
@@ -78,8 +61,9 @@ export function AvatarMenu({
   )?.label;
 
   return (
-    <div className="avatar-menu" ref={wrapRef}>
+    <div className="avatar-menu">
       <button
+        ref={triggerRef}
         type="button"
         className="settings-icon-btn"
         onClick={() => setOpen((v) => !v)}
@@ -91,16 +75,16 @@ export function AvatarMenu({
         <Icon name="settings" size={17} />
       </button>
       {open ? (
-        <div className="avatar-popover" role="menu">
+        <div ref={layer.contentRef} className="avatar-popover" role="menu" style={{ zIndex: layer.zIndex }}>
           <div className="avatar-popover-head">
             <span className="who">
               {config.mode === 'daemon'
                 ? t('avatar.localCli')
-                : t('avatar.anthropicApi')}
+                : apiRuntimeLabel(config)}
             </span>
             <span className="where">
               {config.mode === 'api'
-                ? safeHost(config.baseUrl)
+                ? apiRuntimeDetail(config)
                 : currentAgent
                   ? `${currentAgent.name}${currentAgent.version ? ` · ${currentAgent.version}` : ''}${currentModelLabel && currentModelId !== 'default' ? ` · ${currentModelLabel}` : ''}`
                   : t('avatar.noAgentSelected')}
@@ -113,8 +97,6 @@ export function AvatarMenu({
             onClick={() => {
               onModeChange('daemon');
               if (!daemonLive) {
-                // No daemon — let user know via settings page rather than
-                // silently failing.
                 setOpen(false);
                 onOpenSettings();
               }
@@ -155,8 +137,6 @@ export function AvatarMenu({
                   className="avatar-item"
                   onClick={() => {
                     onAgentChange(a.id);
-                    // Keep the popover open so the user can immediately
-                    // pick a model for the agent they just chose.
                   }}
                 >
                   <AgentIcon id={a.id} size={18} />
@@ -194,10 +174,6 @@ export function AvatarMenu({
                         }
                       >
                         {renderModelOptions(currentAgent.models)}
-                        {/* When the user has typed a custom id in
-                            Settings, surface it here too so the dropdown
-                            actually shows the active selection rather
-                            than collapsing to "Default". */}
                         {currentModelId &&
                         !currentAgent.models.some(
                           (m) => m.id === currentModelId,
@@ -284,12 +260,4 @@ export function AvatarMenu({
       ) : null}
     </div>
   );
-}
-
-function safeHost(url: string): string {
-  try {
-    return new URL(url).host;
-  } catch {
-    return url;
-  }
 }

@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useT } from '../i18n';
+import { MotionModal } from './MotionModal';
 
 interface Props {
+  open: boolean;
   onSave: (name: string, content: string) => void;
   onClose: () => void;
 }
 
-export function PasteTextDialog({ onSave, onClose }: Props) {
+export function PasteTextDialog({ open, onSave, onClose }: Props) {
   const t = useT();
   const [name, setName] = useState('');
   const [content, setContent] = useState('');
@@ -19,37 +21,35 @@ export function PasteTextDialog({ onSave, onClose }: Props) {
   }
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <h2>{t('pasteDialog.title')}</h2>
-        <p className="hint">{t('pasteDialog.hint')}</p>
-        <label>
-          {t('pasteDialog.fileNameLabel')}
-          <input
-            type="text"
-            value={name}
-            placeholder={t('pasteDialog.namePlaceholder')}
-            onChange={(e) => setName(e.target.value)}
-            autoFocus
-          />
-        </label>
-        <label>
-          {t('pasteDialog.contentLabel')}
-          <textarea
-            rows={10}
-            value={content}
-            placeholder={t('pasteDialog.contentPlaceholder')}
-            onChange={(e) => setContent(e.target.value)}
-          />
-        </label>
-        <div className="row">
-          <button onClick={onClose}>{t('pasteDialog.cancel')}</button>
-          <button className="primary" onClick={commit} disabled={!content.trim()}>
-            {t('pasteDialog.save')}
-          </button>
-        </div>
+    <MotionModal open={open} onClose={onClose}>
+      <h2>{t('pasteDialog.title')}</h2>
+      <p className="hint">{t('pasteDialog.hint')}</p>
+      <label>
+        {t('pasteDialog.fileNameLabel')}
+        <input
+          type="text"
+          value={name}
+          placeholder={t('pasteDialog.namePlaceholder')}
+          onChange={(e) => setName(e.target.value)}
+          autoFocus
+        />
+      </label>
+      <label>
+        {t('pasteDialog.contentLabel')}
+        <textarea
+          rows={10}
+          value={content}
+          placeholder={t('pasteDialog.contentPlaceholder')}
+          onChange={(e) => setContent(e.target.value)}
+        />
+      </label>
+      <div className="row">
+        <button onClick={onClose}>{t('pasteDialog.cancel')}</button>
+        <button className="primary" onClick={commit} disabled={!content.trim()}>
+          {t('pasteDialog.save')}
+        </button>
       </div>
-    </div>
+    </MotionModal>
   );
 }
 

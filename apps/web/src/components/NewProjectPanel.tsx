@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useT } from '../i18n';
+import { usePopoverLayer } from '../layers';
 import type { Dict } from '../i18n/types';
 import { fetchPromptTemplate } from '../providers/registry';
 import type {
@@ -60,6 +61,7 @@ interface Props {
   onImportClaudeDesign?: (file: File) => Promise<void> | void;
   mediaProviders?: Record<string, MediaProviderCredentials>;
   loading?: boolean;
+  initialTab?: CreateTab | null;
 }
 
 const TAB_LABEL_KEYS: Record<CreateTab, keyof Dict> = {
@@ -116,9 +118,11 @@ export function NewProjectPanel({
   onImportClaudeDesign,
   mediaProviders,
   loading = false,
+  initialTab = null,
 }: Props) {
   const t = useT();
   const importInputRef = useRef<HTMLInputElement | null>(null);
+  const lastInitialTabRef = useRef<CreateTab | null>(null);
   const [importing, setImporting] = useState(false);
   const [tab, setTab] = useState<CreateTab>('prototype');
   const [showAdvanced, setShowAdvanced] = useState(false);
@@ -158,6 +162,12 @@ export function NewProjectPanel({
     useState<PromptTemplatePick | null>(null);
   const [videoPromptTemplate, setVideoPromptTemplate] =
     useState<PromptTemplatePick | null>(null);
+
+  useEffect(() => {
+    if (!initialTab || lastInitialTabRef.current === initialTab) return;
+    lastInitialTabRef.current = initialTab;
+    setTab(initialTab);
+  }, [initialTab]);
 
   // Design system is meaningful only for the structured/visual surfaces
   // (prototype, deck, template, and the freeform "other" canvas). The
@@ -774,6 +784,12 @@ function PromptTemplatePicker({
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const searchRef = useRef<HTMLInputElement | null>(null);
 
+  const layer = usePopoverLayer({
+    open,
+    onDismiss: () => setOpen(false),
+    triggerRef: wrapRef as React.RefObject<HTMLElement | null>,
+  });
+
   const surfaceScoped = useMemo(
     () => templates.filter((tpl) => tpl.surface === surface),
     [templates, surface],
@@ -798,25 +814,6 @@ function PromptTemplatePicker({
     return () => window.clearTimeout(id);
   }, [open]);
 
-  useEffect(() => {
-    if (!open) return;
-    function onPointer(e: MouseEvent) {
-      if (wrapRef.current?.contains(e.target as Node)) return;
-      setOpen(false);
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setOpen(false);
-    }
-    const id = window.setTimeout(() => {
-      document.addEventListener('mousedown', onPointer);
-      document.addEventListener('keydown', onKey);
-    }, 0);
-    return () => {
-      window.clearTimeout(id);
-      document.removeEventListener('mousedown', onPointer);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [open]);
 
   async function pickTemplate(summary: PromptTemplateSummary) {
     setLoadingId(summary.id);
@@ -881,7 +878,7 @@ function PromptTemplatePicker({
         />
       </button>
       {open ? (
-        <div className="ds-picker-popover" role="listbox">
+        <div ref={layer.contentRef} className="ds-picker-popover" role="listbox" style={{ zIndex: layer.zIndex }}>
           <div className="ds-picker-head">
             <input
               ref={searchRef}

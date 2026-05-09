@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import { LOCALE_LABEL, LOCALES, useI18n } from '../i18n';
 import type { Locale } from '../i18n';
+import { usePopoverLayer } from '../layers';
 import { AgentIcon } from './AgentIcon';
 import { Icon } from './Icon';
 import { MotionModal } from './MotionModal';
@@ -165,6 +166,12 @@ export function SettingsDialog({
     }
   }, [daemonLive, cfg.mode]);
 
+  const langLayer = usePopoverLayer({
+    open: languageOpen,
+    onDismiss: () => setLanguageOpen(false),
+    triggerRef: languageRef as React.RefObject<HTMLElement | null>,
+  });
+
   useEffect(() => {
     if (!languageOpen) return;
     const updateRect = () => {
@@ -172,32 +179,12 @@ export function SettingsDialog({
       setLanguageMenuRect(button?.getBoundingClientRect() ?? null);
     };
     updateRect();
-    function onDown(e: MouseEvent) {
-      if (languageRef.current?.contains(e.target as Node)) return;
-      setLanguageOpen(false);
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setLanguageOpen(false);
-    }
-    document.addEventListener('mousedown', onDown);
-    document.addEventListener('keydown', onKey);
     window.addEventListener('resize', updateRect);
     window.addEventListener('scroll', updateRect, true);
     return () => {
-      document.removeEventListener('mousedown', onDown);
-      document.removeEventListener('keydown', onKey);
       window.removeEventListener('resize', updateRect);
       window.removeEventListener('scroll', updateRect, true);
     };
-  }, [languageOpen]);
-
-  // Close the language menu on window resize so its placement (computed on
-  // open) cannot end up stale relative to the new viewport dimensions.
-  useEffect(() => {
-    if (!languageOpen) return;
-    const handleResize = () => setLanguageOpen(false);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
   }, [languageOpen]);
 
   const installedCount = useMemo(
@@ -767,9 +754,11 @@ export function SettingsDialog({
                 const openDownward = spaceBelow >= spaceAbove || spaceBelow >= 200;
                 return (
                 <div
+                  ref={langLayer.contentRef}
                   className="settings-language-menu"
                   role="menu"
                   style={{
+                    zIndex: langLayer.zIndex,
                     top: openDownward ? languageMenuRect.bottom + 6 : undefined,
                     bottom: openDownward
                       ? undefined
@@ -944,7 +933,7 @@ function MediaProvidersSection({
                 </div>
                 <div className="media-provider-badges">
                   <span className={`media-provider-badge ${provider.integrated ? 'integrated' : 'unsupported'}`}>
-                    {provider.integrated ? 'Integrated' : 'Unsupported'}
+                    {provider.integrated ? 'Ready' : 'Not available'}
                   </span>
                   {configured ? (
                     <span className="media-provider-badge on">
@@ -972,8 +961,8 @@ function MediaProvidersSection({
                 {provider.supportsCustomModel ? (
                   <input
                     value={entry.model ?? ''}
-                    placeholder="Model override"
-                    aria-label={`${provider.label} model override`}
+                    placeholder="Model ID (optional)"
+                    aria-label={`${provider.label} model ID`}
                     disabled={disabled}
                     onChange={(e) => updateProvider(provider, { model: e.target.value })}
                   />

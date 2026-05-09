@@ -450,6 +450,7 @@ export function FileWorkspace({
             onSavePreviewComment={onSavePreviewComment}
             onRemovePreviewComment={onRemovePreviewComment}
             onStageComposerToken={onStageComposerToken}
+            onFileEdited={onRefreshFiles}
           />
         ) : (
           <div className="viewer-empty">
@@ -476,19 +477,18 @@ export function FileWorkspace({
         style={{ display: 'none' }}
         onChange={handleFilePicked}
       />
-      {showPasteDialog ? (
-        <PasteTextDialog
-          onClose={() => setShowPasteDialog(false)}
-          onSave={async (name, content) => {
-            setShowPasteDialog(false);
-            const file = await writeProjectTextFile(projectId, name, content);
-            if (file) {
-              await onRefreshFiles();
-              openFile(file.name);
-            }
-          }}
-        />
-      ) : null}
+      <PasteTextDialog
+        open={showPasteDialog}
+        onClose={() => setShowPasteDialog(false)}
+        onSave={async (name, content) => {
+          setShowPasteDialog(false);
+          const file = await writeProjectTextFile(projectId, name, content);
+          if (file) {
+            await onRefreshFiles();
+            openFile(file.name);
+          }
+        }}
+      />
     </div>
   );
 }

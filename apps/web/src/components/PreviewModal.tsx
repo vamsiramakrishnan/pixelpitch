@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useT } from '../i18n';
+import { useLayer, usePopoverLayer } from '../layers';
 import { exportAsHtml, exportAsPdf, exportAsZip } from '../runtime/exports';
 import { buildSrcdoc } from '../runtime/srcdoc';
 import { MotionModal } from './MotionModal';
@@ -115,27 +116,23 @@ export function PreviewModal({
     onView?.(activeId);
   }, [activeId, onView]);
 
-  // Close on Escape. If we're in fullscreen, exit fullscreen first instead
-  // of dismissing the whole modal in one keystroke.
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key !== 'Escape') return;
-      if (fullscreen) {
-        setFullscreen(false);
-        return;
+  // Fullscreen registers as a separate layer so Escape exits fullscreen
+  // before closing the modal. MotionModal handles modal-level escape and
+  // scroll lock.
+  useLayer({
+    open: fullscreen,
+    onDismiss: () => {
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
       }
-      onClose();
-    };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [onClose, fullscreen]);
+      setFullscreen(false);
+    },
+    kind: 'lightbox',
+    escapeClose: true,
+    clickOutsideClose: false,
+  });
 
-  // Mirror native fullscreen state into React. Without this, a user in
-  // browser fullscreen has to press Esc twice: the first Esc exits the
-  // native fullscreen element (consumed by the browser; in some browsers no
-  // keydown is delivered) while our `fullscreen` state stays true and the
-  // overlay keeps its `ds-modal-fullscreen` class. Listening to
-  // fullscreenchange lets one Esc dismiss both layers in lock-step.
+  // Mirror native fullscreen state into React.
   useEffect(() => {
     const onFsChange = () => {
       if (!document.fullscreenElement) {
@@ -146,32 +143,12 @@ export function PreviewModal({
     return () => document.removeEventListener('fullscreenchange', onFsChange);
   }, []);
 
-  // Close share popover on outside click / Escape.
-  useEffect(() => {
-    if (!shareOpen) return;
-    const onDoc = (e: MouseEvent) => {
-      if (!shareRef.current) return;
-      if (!shareRef.current.contains(e.target as Node)) setShareOpen(false);
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setShareOpen(false);
-    };
-    document.addEventListener('mousedown', onDoc);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onDoc);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [shareOpen]);
-
-  // Lock body scroll while open.
-  useEffect(() => {
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = prev;
-    };
-  }, []);
+  // Share popover — layer stack handles escape and click-outside.
+  const shareLayer = usePopoverLayer({
+    open: shareOpen,
+    onDismiss: () => setShareOpen(false),
+    triggerRef: shareRef,
+  });
 
   // Track the iframe stage size so we can render the document at a fixed
   // logical width and visually scale it down to fit. Without this, opening
@@ -209,6 +186,7 @@ export function PreviewModal({
   // Only down-scale: when the stage is wider than the design viewport we
   // render the iframe at native size instead of upscaling pixels.
   const scale = stageSize.w > 0 ? Math.min(1, stageSize.w / designWidth) : 1;
+  const stageHeight = stageSize.h > 80 ? stageSize.h : 720;
   const scalerStyle = useMemo(() => {
     if (scale >= 1 || stageSize.w === 0) {
       return {
@@ -219,10 +197,10 @@ export function PreviewModal({
     }
     return {
       width: designWidth,
-      height: stageSize.h / scale,
+      height: stageHeight / scale,
       transform: `scale(${scale})`,
     } as const;
-  }, [scale, stageSize.w, stageSize.h, designWidth]);
+  }, [scale, stageSize.w, stageHeight, designWidth]);
 
   function openInNewTab() {
     if (!activeHtml) return;
@@ -258,7 +236,6 @@ export function PreviewModal({
       onClose={onClose}
       backdropClassName="ds-modal-backdrop"
       modalClassName={`ds-modal${fullscreen ? ' ds-modal-fullscreen' : ''}`}
-      disableEscapeKey
       disableBackdropClick
     >
       <div role="dialog" aria-modal="true" aria-label={`${title} preview`}>
@@ -317,7 +294,7 @@ export function PreviewModal({
                 {t('preview.shareMenu')}
               </button>
               {shareOpen ? (
-                <div className="share-menu-popover" role="menu">
+                <div ref={shareLayer.contentRef} className="share-menu-popover" role="menu" style={{ zIndex: shareLayer.zIndex }}>
                   <button
                     type="button"
                     className="share-menu-item"
@@ -388,10 +365,15 @@ export function PreviewModal({
           <div className="ds-modal-stage-iframe" ref={stageFrameRef}>
             {activeHtml === null || activeHtml === undefined ? (
               <div className="ds-modal-empty">
-                {t('preview.loading', {
-                  label:
-                    activeView?.label.toLowerCase() ?? t('common.preview').toLowerCase(),
-                })}
+                <div className="preview-state-card loading">
+                  <span className="preview-state-mark" aria-hidden />
+                  <span>
+                    {t('preview.loading', {
+                      label:
+                        activeView?.label.toLowerCase() ?? t('common.preview').toLowerCase(),
+                    })}
+                  </span>
+                </div>
               </div>
             ) : (
               <div className="ds-modal-stage-iframe-scaler" style={scalerStyle}>

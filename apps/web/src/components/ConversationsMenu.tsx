@@ -1,6 +1,7 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useT } from '../i18n';
+import { usePopoverLayer } from '../layers';
 import type { Conversation } from '../types';
 
 interface Props {
@@ -12,9 +13,6 @@ interface Props {
   onRename: (id: string, title: string) => void;
 }
 
-// Pill + dropdown that lives in the project topbar. Click the pill to
-// reveal the list of conversations for this project, with a "New" action
-// at the top. Recency-ordered (server-side).
 export function ConversationsMenu({
   conversations,
   activeId,
@@ -26,26 +24,12 @@ export function ConversationsMenu({
   const t = useT();
   const [open, setOpen] = useState(false);
   const pillRef = useRef<HTMLButtonElement | null>(null);
-  const menuRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    if (!open) return;
-    function onDown(e: MouseEvent) {
-      const target = e.target as Node;
-      if (pillRef.current?.contains(target)) return;
-      if (menuRef.current?.contains(target)) return;
-      setOpen(false);
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setOpen(false);
-    }
-    document.addEventListener('mousedown', onDown);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onDown);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [open]);
+  const layer = usePopoverLayer({
+    open,
+    onDismiss: () => setOpen(false),
+    triggerRef: pillRef as React.RefObject<HTMLElement | null>,
+  });
 
   const active = conversations.find((c) => c.id === activeId) ?? null;
 
@@ -69,7 +53,8 @@ export function ConversationsMenu({
       {open
         ? createPortal(
             <ConversationsDropdown
-              menuRef={menuRef}
+              contentRef={layer.contentRef}
+              zIndex={layer.zIndex}
               anchor={pillRef.current}
               conversations={conversations}
               activeId={activeId}
@@ -93,7 +78,8 @@ export function ConversationsMenu({
 }
 
 function ConversationsDropdown({
-  menuRef,
+  contentRef,
+  zIndex,
   anchor,
   conversations,
   activeId,
@@ -103,7 +89,8 @@ function ConversationsDropdown({
   onDelete,
   onRename,
 }: {
-  menuRef: React.MutableRefObject<HTMLDivElement | null>;
+  contentRef: React.MutableRefObject<HTMLDivElement | null>;
+  zIndex: number;
   anchor: HTMLElement | null;
   conversations: Conversation[];
   activeId: string | null;
@@ -138,9 +125,9 @@ function ConversationsDropdown({
 
   return (
     <div
-      ref={menuRef}
+      ref={contentRef}
       className="conv-menu"
-      style={{ top: pos.top, left: pos.left }}
+      style={{ top: pos.top, left: pos.left, zIndex }}
     >
       <div className="conv-menu-header">
         <span>{t('conv.heading')}</span>

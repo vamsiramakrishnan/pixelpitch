@@ -1,39 +1,23 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { LOCALE_LABEL, LOCALES, useI18n, type Locale } from '../i18n';
+import { usePopoverLayer } from '../layers';
 import { Icon } from './Icon';
 
-/**
- * Compact language switcher rendered as a foot-pill in the entry view's
- * lower-left corner. Mirrors the "Local CLI · agent" pill so it doesn't
- * fight for visual weight, but remains discoverable for first-time users
- * who'd rather not dig into the settings dialog just to swap languages.
- */
 export function LanguageMenu() {
   const { locale, setLocale } = useI18n();
   const [open, setOpen] = useState(false);
-  const wrapRef = useRef<HTMLDivElement | null>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
 
-  useEffect(() => {
-    if (!open) return;
-    function onDown(e: MouseEvent) {
-      if (!wrapRef.current) return;
-      if (wrapRef.current.contains(e.target as Node)) return;
-      setOpen(false);
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setOpen(false);
-    }
-    document.addEventListener('mousedown', onDown);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onDown);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [open]);
+  const layer = usePopoverLayer({
+    open,
+    onDismiss: () => setOpen(false),
+    triggerRef: triggerRef as React.RefObject<HTMLElement | null>,
+  });
 
   return (
-    <div className="lang-menu-wrap" ref={wrapRef}>
+    <div className="lang-menu-wrap">
       <button
+        ref={triggerRef}
         type="button"
         className="foot-pill lang-pill"
         aria-haspopup="menu"
@@ -46,7 +30,7 @@ export function LanguageMenu() {
         <Icon name="chevron-down" size={11} />
       </button>
       {open ? (
-        <div className="lang-menu-popover" role="menu">
+        <div ref={layer.contentRef} className="lang-menu-popover" role="menu" style={{ zIndex: layer.zIndex }}>
           {LOCALES.map((code) => {
             const active = locale === code;
             return (

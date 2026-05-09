@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import { I18nProvider } from '../src/i18n';
+import { LayerProvider } from '../src/layers';
 import '../src/index.css';
 
 export const metadata: Metadata = {
@@ -38,7 +39,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body suppressHydrationWarning>
-        <I18nProvider>{children}</I18nProvider>
+        <I18nProvider>
+          <LayerProvider>{children}</LayerProvider>
+        </I18nProvider>
       </body>
     </html>
   );
