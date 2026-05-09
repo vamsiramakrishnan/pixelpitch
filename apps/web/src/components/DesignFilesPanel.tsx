@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { useT } from '../i18n';
 import type { Dict } from '../i18n/types';
-import { projectFileUrl } from '../providers/registry';
+import { liveArtifactPreviewUrl, projectFileUrl } from '../providers/registry';
 import type { LiveArtifactWorkspaceEntry, ProjectFile, ProjectFileKind } from '../types';
 import { Icon } from './Icon';
 import { LiveArtifactBadges } from './LiveArtifactBadges';
@@ -23,6 +23,7 @@ interface Props {
 }
 
 type Section = 'pages' | 'scripts' | 'images' | 'sketches' | 'other';
+type FileViewMode = 'list' | 'thumbs';
 
 const SECTION_LABEL_KEY: Record<Section, keyof Dict> = {
   pages: 'designFiles.sectionPages',
@@ -35,6 +36,17 @@ const SECTION_LABEL_KEY: Record<Section, keyof Dict> = {
 const SECTION_ORDER: Section[] = ['pages', 'sketches', 'scripts', 'images', 'other'];
 const INITIAL_SECTION_FILE_LIMIT = 30;
 const SECTION_FILE_LIMIT_INCREMENT = 200;
+const FILE_VIEW_MODE_KEY = 'pixelpitch:design-files-view-mode';
+
+function loadFileViewMode(): FileViewMode {
+  if (typeof window === 'undefined') return 'list';
+  try {
+    const stored = window.localStorage.getItem(FILE_VIEW_MODE_KEY);
+    return stored === 'thumbs' || stored === 'list' ? stored : 'list';
+  } catch {
+    return 'list';
+  }
+}
 
 /**
  * Full-panel browser for a project's `.pixelpitch/projects/<id>/` folder. Mirrors
@@ -62,6 +74,7 @@ export function DesignFilesPanel({
   const [hover, setHover] = useState<string | null>(null);
   const [menuPos, setMenuPos] = useState<{ name: string; top: number; left: number } | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<FileViewMode>(() => loadFileViewMode());
   const [sectionLimits, setSectionLimits] = useState<Partial<Record<Section, number>>>({});
   const [isSectionExpansionPending, startSectionExpansion] = useTransition();
 
@@ -100,6 +113,14 @@ export function DesignFilesPanel({
     };
   }, [menuPos]);
 
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(FILE_VIEW_MODE_KEY, viewMode);
+    } catch {
+      /* ignore */
+    }
+  }, [viewMode]);
+
   async function handleRefresh() {
     setRefreshing(true);
     try {
@@ -115,6 +136,33 @@ export function DesignFilesPanel({
     setDraggingFiles(false);
     const dropped = Array.from(ev.dataTransfer.files ?? []);
     if (dropped.length > 0) onUploadFiles(dropped);
+  }
+
+  function openFileMenu(name: string, target: HTMLElement) {
+    const rect = target.getBoundingClientRect();
+    setMenuPos({
+      name,
+      top: rect.bottom + 4,
+      left: rect.right - 160,
+    });
+  }
+
+  function selectPreview(name: string) {
+    setPreview(name);
+  }
+
+  function handleCardKey(
+    ev: React.KeyboardEvent<HTMLDivElement>,
+    name: string,
+    open: () => void,
+  ) {
+    if (ev.key === 'Enter') {
+      ev.preventDefault();
+      open();
+    } else if (ev.key === ' ') {
+      ev.preventDefault();
+      selectPreview(name);
+    }
   }
 
   return (
@@ -142,6 +190,26 @@ export function DesignFilesPanel({
           </button>
           <span className="crumbs">{t('designFiles.crumbs')}</span>
           <div className="df-actions">
+            <div className="df-view-toggle" role="group" aria-label="File view">
+              <button
+                type="button"
+                className={viewMode === 'list' ? 'active' : ''}
+                onClick={() => setViewMode('list')}
+                aria-pressed={viewMode === 'list'}
+                title="List view"
+              >
+                <Icon name="file" size={13} />
+              </button>
+              <button
+                type="button"
+                className={viewMode === 'thumbs' ? 'active' : ''}
+                onClick={() => setViewMode('thumbs')}
+                aria-pressed={viewMode === 'thumbs'}
+                title="Thumbnail view"
+              >
+                <Icon name="grid" size={13} />
+              </button>
+            </div>
             <button type="button" onClick={onNewSketch} title={t('designFiles.newSketch')}>
               <Icon name="pencil" size={13} />
               <span>{t('designFiles.newSketch')}</span>
@@ -172,22 +240,57 @@ export function DesignFilesPanel({
                   Live Artifacts
                   <span className="df-section-count">{liveArtifacts.length}</span>
                 </div>
-                {liveArtifacts.map((artifact) => (
-                  <button
-                    key={artifact.id}
-                    type="button"
-                    className="df-row live-artifact-row"
-                    onClick={() => onOpenLiveArtifact?.(artifact.tabId)}
-                    onDoubleClick={() => onOpenLiveArtifact?.(artifact.tabId)}
-                  >
-                    <span className="df-row-icon" data-kind="html" aria-hidden>◈</span>
-                    <span className="df-row-name-wrap">
-                      <span className="df-row-name">{artifact.title}</span>
-                      <LiveArtifactBadges status={artifact.status} refreshStatus={artifact.refreshStatus} />
-                    </span>
-                    <span className="df-row-time">{relativeTime(Date.parse(artifact.updatedAt), t)}</span>
-                  </button>
-                ))}
+                {viewMode === 'thumbs' ? (
+                  <div className="df-card-grid live-artifact-grid">
+                    {liveArtifacts.map((artifact) => (
+                      <div
+                        key={artifact.id}
+                        className="df-card live-artifact-card"
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => onOpenLiveArtifact?.(artifact.tabId)}
+                        onDoubleClick={() => onOpenLiveArtifact?.(artifact.tabId)}
+                        onKeyDown={(ev) => {
+                          if (ev.key === 'Enter' || ev.key === ' ') {
+                            ev.preventDefault();
+                            onOpenLiveArtifact?.(artifact.tabId);
+                          }
+                        }}
+                      >
+                        <div className="df-card-thumb html">
+                          <iframe
+                            title={artifact.title}
+                            src={liveArtifactPreviewUrl(projectId, artifact.id)}
+                            sandbox="allow-same-origin"
+                          />
+                          <span className="df-card-open">Open</span>
+                        </div>
+                        <div className="df-card-meta">
+                          <span className="df-card-kind">Live Artifact</span>
+                          <strong>{artifact.title}</strong>
+                          <LiveArtifactBadges status={artifact.status} refreshStatus={artifact.refreshStatus} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  liveArtifacts.map((artifact) => (
+                    <button
+                      key={artifact.id}
+                      type="button"
+                      className="df-row live-artifact-row"
+                      onClick={() => onOpenLiveArtifact?.(artifact.tabId)}
+                      onDoubleClick={() => onOpenLiveArtifact?.(artifact.tabId)}
+                    >
+                      <span className="df-row-icon" data-kind="html" aria-hidden>◈</span>
+                      <span className="df-row-name-wrap">
+                        <span className="df-row-name">{artifact.title}</span>
+                        <LiveArtifactBadges status={artifact.status} refreshStatus={artifact.refreshStatus} />
+                      </span>
+                      <span className="df-row-time">{relativeTime(Date.parse(artifact.updatedAt), t)}</span>
+                    </button>
+                  ))
+                )}
               </div>
             ) : null}
             {SECTION_ORDER.filter((s) => grouped[s].length > 0).map((section) => {
@@ -201,51 +304,87 @@ export function DesignFilesPanel({
                   {t(SECTION_LABEL_KEY[section])}
                   <span className="df-section-count">{sectionFiles.length}</span>
                 </div>
-                {visibleFiles.map((f) => {
-                  const active = preview === f.name;
-                  const isHovered = hover === f.name;
-                  return (
-                    <button
-                      key={f.name}
-                      type="button"
-                      data-testid={`design-file-row-${f.name}`}
-                      className={`df-row ${active ? 'active' : ''}`}
-                      onMouseEnter={() => setHover(f.name)}
-                      onMouseLeave={() => setHover((c) => (c === f.name ? null : c))}
-                      onClick={() => setPreview(f.name)}
-                      onDoubleClick={() => onOpenFile(f.name)}
-                    >
-                      <span className="df-row-icon" data-kind={f.kind} aria-hidden>
-                        {kindGlyph(f.kind)}
-                      </span>
-                      <span className="df-row-name-wrap">
-                        <span className="df-row-name">{f.name}</span>
-                        <span className="df-row-sub">{kindLabel(f.kind, t)}</span>
-                      </span>
-                      <span className="df-row-time">{relativeTime(f.mtime, t)}</span>
-                      <span
-                        data-testid={`design-file-menu-${f.name}`}
-                        className="df-row-menu"
-                        style={isHovered || active ? { opacity: 1 } : undefined}
-                        role="button"
-                        aria-label={t('designFiles.rowMenu')}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const rect = (e.target as HTMLElement)
-                            .closest('.df-row-menu')
-                            ?.getBoundingClientRect();
-                          setMenuPos({
-                            name: f.name,
-                            top: (rect?.bottom ?? 0) + 4,
-                            left: (rect?.right ?? 0) - 160,
-                          });
-                        }}
+                {viewMode === 'thumbs' ? (
+                  <div className="df-card-grid">
+                    {visibleFiles.map((f) => {
+                      const active = preview === f.name;
+                      const isHovered = hover === f.name;
+                      return (
+                        <div
+                          key={f.name}
+                          data-testid={`design-file-card-${f.name}`}
+                          className={`df-card ${active ? 'active' : ''}`}
+                          role="button"
+                          tabIndex={0}
+                          onMouseEnter={() => setHover(f.name)}
+                          onMouseLeave={() => setHover((c) => (c === f.name ? null : c))}
+                          onClick={() => selectPreview(f.name)}
+                          onDoubleClick={() => onOpenFile(f.name)}
+                          onKeyDown={(ev) => handleCardKey(ev, f.name, () => onOpenFile(f.name))}
+                        >
+                          <DfThumb projectId={projectId} file={f} />
+                          <div className="df-card-meta">
+                            <span className="df-card-kind">{kindLabel(f.kind, t)}</span>
+                            <strong title={f.name}>{f.name}</strong>
+                            <span>{relativeTime(f.mtime, t)} · {humanBytes(f.size)}</span>
+                          </div>
+                          <button
+                            type="button"
+                            data-testid={`design-file-menu-${f.name}`}
+                            className="df-card-menu"
+                            style={isHovered || active ? { opacity: 1 } : undefined}
+                            aria-label={t('designFiles.rowMenu')}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openFileMenu(f.name, e.currentTarget);
+                            }}
+                          >
+                            ⋯
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  visibleFiles.map((f) => {
+                    const active = preview === f.name;
+                    const isHovered = hover === f.name;
+                    return (
+                      <button
+                        key={f.name}
+                        type="button"
+                        data-testid={`design-file-row-${f.name}`}
+                        className={`df-row ${active ? 'active' : ''}`}
+                        onMouseEnter={() => setHover(f.name)}
+                        onMouseLeave={() => setHover((c) => (c === f.name ? null : c))}
+                        onClick={() => setPreview(f.name)}
+                        onDoubleClick={() => onOpenFile(f.name)}
                       >
-                        ⋯
-                      </span>
-                    </button>
-                  );
-                })}
+                        <span className="df-row-icon" data-kind={f.kind} aria-hidden>
+                          {kindGlyph(f.kind)}
+                        </span>
+                        <span className="df-row-name-wrap">
+                          <span className="df-row-name">{f.name}</span>
+                          <span className="df-row-sub">{kindLabel(f.kind, t)}</span>
+                        </span>
+                        <span className="df-row-time">{relativeTime(f.mtime, t)}</span>
+                        <span
+                          data-testid={`design-file-menu-${f.name}`}
+                          className="df-row-menu"
+                          style={isHovered || active ? { opacity: 1 } : undefined}
+                          role="button"
+                          aria-label={t('designFiles.rowMenu')}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openFileMenu(f.name, e.currentTarget);
+                          }}
+                        >
+                          ⋯
+                        </span>
+                      </button>
+                    );
+                  })
+                )}
                 {hiddenCount > 0 ? (
                   <button
                     type="button"
@@ -381,6 +520,12 @@ function DfPreview({
   const url = projectFileUrl(projectId, file.name);
   return (
     <aside className="df-preview">
+      <div className="df-preview-head">
+        <span>Selected file</span>
+        <button type="button" onClick={onClose} aria-label={t('designFiles.previewClose')}>
+          <Icon name="close" size={13} />
+        </button>
+      </div>
       <div className="df-preview-thumb">
         {file.kind === 'image' || file.kind === 'sketch' ? (
           <img src={`${url}?v=${Math.round(file.mtime)}`} alt={file.name} />
@@ -410,26 +555,52 @@ function DfPreview({
             {kindGlyph(file.kind)}
           </div>
         )}
+        <span className="df-preview-kind-pill">{kindLabel(file.kind, t)}</span>
       </div>
       <div className="df-preview-meta" data-testid="design-file-preview">
-        <button
-          type="button"
-          className="ghost"
-          onClick={onOpen}
-          style={{ alignSelf: 'flex-start' }}
-        >
-          <Icon name="eye" size={13} />
-          <span>{t('designFiles.previewOpen')}</span>
-        </button>
         <div className="df-preview-name">{file.name}</div>
-        <div className="df-preview-kind">{kindLabel(file.kind, t)}</div>
         <div className="df-preview-stats">
           {t('designFiles.modified', {
             time: relativeTime(file.mtime, t),
             size: humanBytes(file.size),
           })}
         </div>
+        <div className="df-preview-facts" aria-label="File details">
+          <span>
+            <strong>{kindLabel(file.kind, t)}</strong>
+            Type
+          </span>
+          <span>
+            <strong>{humanBytes(file.size)}</strong>
+            Size
+          </span>
+          <span>
+            <strong>{relativeTime(file.mtime, t)}</strong>
+            Updated
+          </span>
+        </div>
+        <div className={`df-preview-wire ${file.kind}`} aria-hidden>
+          <div className="df-wire-head">
+            <i />
+            <i />
+            <i />
+          </div>
+          <div className="df-wire-stage">
+            <span />
+            <span />
+            <span />
+          </div>
+          <div className="df-wire-lines">
+            <i />
+            <i />
+            <i />
+          </div>
+        </div>
         <div className="df-preview-actions">
+          <button type="button" className="primary" onClick={onOpen}>
+            <Icon name="eye" size={13} />
+            <span>{t('designFiles.previewOpen')}</span>
+          </button>
           <a
             className="ghost-link"
             href={url}
@@ -438,12 +609,47 @@ function DfPreview({
           >
             {t('designFiles.download')}
           </a>
-          <button type="button" onClick={onClose}>
+          <button type="button" className="ghost" onClick={onClose}>
             {t('designFiles.previewClose')}
           </button>
         </div>
       </div>
     </aside>
+  );
+}
+
+function DfThumb({
+  projectId,
+  file,
+}: {
+  projectId: string;
+  file: ProjectFile;
+}) {
+  const url = projectFileUrl(projectId, file.name);
+  const versionedUrl = `${url}?v=${Math.round(file.mtime)}`;
+  return (
+    <div className={`df-card-thumb ${file.kind}`}>
+      {file.kind === 'image' || file.kind === 'sketch' ? (
+        <img src={versionedUrl} alt="" loading="lazy" draggable={false} />
+      ) : file.kind === 'html' ? (
+        <iframe title={`${file.name} thumbnail`} src={url} sandbox="allow-scripts" />
+      ) : file.kind === 'video' ? (
+        <video src={versionedUrl} muted playsInline preload="metadata" />
+      ) : file.kind === 'audio' ? (
+        <span className="df-card-wave" aria-hidden>
+          <i />
+          <i />
+          <i />
+          <i />
+          <i />
+        </span>
+      ) : (
+        <span className="df-card-fallback" aria-hidden>
+          {kindGlyph(file.kind)}
+        </span>
+      )}
+      <span className="df-card-open">Preview</span>
+    </div>
   );
 }
 

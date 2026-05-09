@@ -92,3 +92,96 @@ exports[`frameSectionToIR > emits a snapshot-stable section frame 1`] = `
   "zOrder": 0,
 }
 `;
+
+exports[`frameSectionToIR emits a snapshot-stable section frame 1`] = `
+{
+  "bbox": {
+    "h": 720,
+    "w": 1280,
+    "x": 0,
+    "y": 0,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 720,
+        "w": 1280,
+        "x": 0,
+        "y": 0,
+      },
+      "borderRadiusPx": 0,
+      "fill": {
+        "color": "#0e0e1a",
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "role": "section-scrim",
+      },
+      "recipeId": "frame.section.scrim",
+      "shape": "rect",
+      "zOrder": 0,
+    },
+    {
+      "bbox": {
+        "h": 720,
+        "w": 24,
+        "x": 0,
+        "y": 0,
+      },
+      "borderRadiusPx": 0,
+      "fill": {
+        "angleDeg": 135,
+        "kind": "linear-gradient",
+        "stops": [
+          {
+            "color": "#818cf8",
+            "position": 0,
+          },
+          {
+            "color": "#c084fc",
+            "position": 0.5,
+          },
+          {
+            "color": "#f472b6",
+            "position": 1,
+          },
+        ],
+      },
+      "kind": "shape",
+      "metadata": {
+        "role": "section-accent-strip",
+        "side": "left",
+        "thickness": 24,
+      },
+      "recipeId": "frame.section.accent-strip",
+      "shape": "rect",
+      "zOrder": 10,
+    },
+    {
+      "bbox": {
+        "h": 528,
+        "w": 1064,
+        "x": 120,
+        "y": 96,
+      },
+      "children": [],
+      "kind": "group",
+      "metadata": {
+        "role": "section-content",
+      },
+      "recipeId": "frame.section.content",
+      "zOrder": 20,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "frame",
+    "role": "frame.section",
+    "side": "left",
+    "stripPx": 24,
+  },
+  "recipeId": "frame.section",
+  "zOrder": 0,
+}
+`;

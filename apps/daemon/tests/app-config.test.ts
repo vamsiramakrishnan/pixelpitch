@@ -337,6 +337,16 @@ describe('app-config origin guard', () => {
     }
   });
 
+  it('allows GET from a Cloud Workstations browser origin through the local dev proxy', async () => {
+    const res = await httpRequest(`${baseUrl}/api/app-config`, {
+      headers: {
+        Host: `127.0.0.1:${port}`,
+        Origin: 'https://15656-workstation-test.cluster-test.cloudworkstations.dev',
+      },
+    });
+    expect(res.status).toBe(200);
+  });
+
   it('allows GET with a portless loopback Origin header', async () => {
     const res = await httpRequest(`${baseUrl}/api/app-config`, {
       headers: {

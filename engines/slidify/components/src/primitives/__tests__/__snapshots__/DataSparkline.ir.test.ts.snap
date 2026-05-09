@@ -193,3 +193,197 @@ exports[`dataSparklineToIR > emits a snapshot-stable trend line 1`] = `
   "zOrder": 0,
 }
 `;
+
+exports[`dataSparklineToIR emits a snapshot-stable trend line 1`] = `
+{
+  "bbox": {
+    "h": 80,
+    "w": 320,
+    "x": 0,
+    "y": 0,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 80,
+        "w": 320,
+        "x": 0,
+        "y": 0,
+      },
+      "commands": [
+        {
+          "op": "M",
+          "x": 0,
+          "y": 80,
+        },
+        {
+          "op": "L",
+          "x": 45.714285714285715,
+          "y": 50,
+        },
+        {
+          "op": "L",
+          "x": 91.42857142857143,
+          "y": 70,
+        },
+        {
+          "op": "L",
+          "x": 137.14285714285714,
+          "y": 30,
+        },
+        {
+          "op": "L",
+          "x": 182.85714285714286,
+          "y": 40,
+        },
+        {
+          "op": "L",
+          "x": 228.57142857142858,
+          "y": 10,
+        },
+        {
+          "op": "L",
+          "x": 274.2857142857143,
+          "y": 20,
+        },
+        {
+          "op": "L",
+          "x": 320,
+          "y": 0,
+        },
+        {
+          "op": "L",
+          "x": 320,
+          "y": 80,
+        },
+        {
+          "op": "L",
+          "x": 0,
+          "y": 80,
+        },
+        {
+          "op": "Z",
+        },
+      ],
+      "fill": {
+        "angleDeg": 180,
+        "kind": "linear-gradient",
+        "stops": [
+          {
+            "color": "#a78bfa",
+            "position": 0,
+          },
+          {
+            "color": {
+              "alpha": 0,
+              "hex": "#a78bfa",
+            },
+            "position": 1,
+          },
+        ],
+      },
+      "fillRule": "nonzero",
+      "kind": "path",
+      "metadata": {
+        "role": "sparkline-area",
+      },
+      "recipeId": "data.sparkline.area",
+      "strokeLinecap": "butt",
+      "strokeLinejoin": "miter",
+      "strokeWidthPx": 0,
+      "zOrder": 0,
+    },
+    {
+      "bbox": {
+        "h": 80,
+        "w": 320,
+        "x": 0,
+        "y": 0,
+      },
+      "commands": [
+        {
+          "op": "M",
+          "x": 0,
+          "y": 80,
+        },
+        {
+          "op": "L",
+          "x": 45.714285714285715,
+          "y": 50,
+        },
+        {
+          "op": "L",
+          "x": 91.42857142857143,
+          "y": 70,
+        },
+        {
+          "op": "L",
+          "x": 137.14285714285714,
+          "y": 30,
+        },
+        {
+          "op": "L",
+          "x": 182.85714285714286,
+          "y": 40,
+        },
+        {
+          "op": "L",
+          "x": 228.57142857142858,
+          "y": 10,
+        },
+        {
+          "op": "L",
+          "x": 274.2857142857143,
+          "y": 20,
+        },
+        {
+          "op": "L",
+          "x": 320,
+          "y": 0,
+        },
+      ],
+      "fillRule": "nonzero",
+      "kind": "path",
+      "metadata": {
+        "role": "sparkline-line",
+        "samples": 8,
+      },
+      "recipeId": "data.sparkline.line",
+      "strokeColor": "#a78bfa",
+      "strokeLinecap": "round",
+      "strokeLinejoin": "round",
+      "strokeWidthPx": 2,
+      "zOrder": 10,
+    },
+    {
+      "bbox": {
+        "h": 8,
+        "w": 8,
+        "x": 316,
+        "y": -4,
+      },
+      "borderRadiusPx": 0,
+      "fill": {
+        "color": "#a78bfa",
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "role": "sparkline-last-marker",
+      },
+      "recipeId": "data.sparkline.last-marker",
+      "shape": "oval",
+      "zOrder": 20,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "data",
+    "fillUnder": true,
+    "role": "data.sparkline",
+    "sampleCount": 8,
+  },
+  "recipeId": "data.sparkline",
+  "zOrder": 0,
+}
+`;

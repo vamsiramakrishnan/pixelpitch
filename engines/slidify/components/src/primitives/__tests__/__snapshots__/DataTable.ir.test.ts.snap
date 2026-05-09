@@ -493,3 +493,497 @@ exports[`dataTableToIR > emits a snapshot-stable 3x2 table with zebra + dividers
   "zOrder": 0,
 }
 `;
+
+exports[`dataTableToIR emits a snapshot-stable 3x2 table with zebra + dividers 1`] = `
+{
+  "bbox": {
+    "h": 240,
+    "w": 800,
+    "x": 0,
+    "y": 0,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 37,
+        "w": 800,
+        "x": 0,
+        "y": 0,
+      },
+      "borderRadiusPx": 0,
+      "fill": {
+        "color": "#0e0e1a",
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "role": "table-header-bg",
+      },
+      "recipeId": "data.table.header-bg",
+      "shape": "rect",
+      "zOrder": 0,
+    },
+    {
+      "bbox": {
+        "h": 101.5,
+        "w": 800,
+        "x": 0,
+        "y": 138.5,
+      },
+      "borderRadiusPx": 0,
+      "fill": {
+        "color": {
+          "alpha": 0.4,
+          "hex": "#0e0e1a",
+        },
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "role": "table-zebra",
+        "row": 2,
+      },
+      "recipeId": "data.table.zebra-2",
+      "shape": "rect",
+      "zOrder": 5,
+    },
+    {
+      "bbox": {
+        "h": 1,
+        "w": 800,
+        "x": 0,
+        "y": 36.5,
+      },
+      "commands": [
+        {
+          "op": "M",
+          "x": 0,
+          "y": 37,
+        },
+        {
+          "op": "L",
+          "x": 800,
+          "y": 37,
+        },
+      ],
+      "fillRule": "nonzero",
+      "kind": "path",
+      "metadata": {
+        "kind": "header",
+        "role": "table-h-divider",
+      },
+      "recipeId": "data.table.h-divider-0",
+      "strokeColor": {
+        "alpha": 0.4,
+        "hex": "#ffffff",
+      },
+      "strokeLinecap": "butt",
+      "strokeLinejoin": "miter",
+      "strokeWidthPx": 1,
+      "zOrder": 10,
+    },
+    {
+      "bbox": {
+        "h": 1,
+        "w": 800,
+        "x": 0,
+        "y": 138,
+      },
+      "commands": [
+        {
+          "op": "M",
+          "x": 0,
+          "y": 138.5,
+        },
+        {
+          "op": "L",
+          "x": 800,
+          "y": 138.5,
+        },
+      ],
+      "fillRule": "nonzero",
+      "kind": "path",
+      "metadata": {
+        "role": "table-h-divider",
+        "row": 1,
+      },
+      "recipeId": "data.table.h-divider-1",
+      "strokeColor": {
+        "alpha": 0.4,
+        "hex": "#ffffff",
+      },
+      "strokeLinecap": "butt",
+      "strokeLinejoin": "miter",
+      "strokeWidthPx": 1,
+      "zOrder": 11,
+    },
+    {
+      "bbox": {
+        "h": 240,
+        "w": 1,
+        "x": 266.1666666666667,
+        "y": 0,
+      },
+      "commands": [
+        {
+          "op": "M",
+          "x": 266.6666666666667,
+          "y": 0,
+        },
+        {
+          "op": "L",
+          "x": 266.6666666666667,
+          "y": 240,
+        },
+      ],
+      "fillRule": "nonzero",
+      "kind": "path",
+      "metadata": {
+        "col": 1,
+        "role": "table-v-divider",
+      },
+      "recipeId": "data.table.v-divider-1",
+      "strokeColor": {
+        "alpha": 0.4,
+        "hex": "#ffffff",
+      },
+      "strokeLinecap": "butt",
+      "strokeLinejoin": "miter",
+      "strokeWidthPx": 1,
+      "zOrder": 21,
+    },
+    {
+      "bbox": {
+        "h": 240,
+        "w": 1,
+        "x": 532.8333333333334,
+        "y": 0,
+      },
+      "commands": [
+        {
+          "op": "M",
+          "x": 533.3333333333334,
+          "y": 0,
+        },
+        {
+          "op": "L",
+          "x": 533.3333333333334,
+          "y": 240,
+        },
+      ],
+      "fillRule": "nonzero",
+      "kind": "path",
+      "metadata": {
+        "col": 2,
+        "role": "table-v-divider",
+      },
+      "recipeId": "data.table.v-divider-2",
+      "strokeColor": {
+        "alpha": 0.4,
+        "hex": "#ffffff",
+      },
+      "strokeLinecap": "butt",
+      "strokeLinejoin": "miter",
+      "strokeWidthPx": 1,
+      "zOrder": 22,
+    },
+    {
+      "bbox": {
+        "h": 13,
+        "w": 242.66666666666669,
+        "x": 12,
+        "y": 12,
+      },
+      "kind": "text",
+      "metadata": {
+        "col": 1,
+        "role": "table-header",
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#d4d4d8",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 13,
+              "fontWeight": 600,
+              "italic": false,
+              "text": "NAME",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "data.table.header-1",
+      "zOrder": 30,
+    },
+    {
+      "bbox": {
+        "h": 13,
+        "w": 242.66666666666669,
+        "x": 278.6666666666667,
+        "y": 12,
+      },
+      "kind": "text",
+      "metadata": {
+        "col": 2,
+        "role": "table-header",
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#d4d4d8",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 13,
+              "fontWeight": 600,
+              "italic": false,
+              "text": "VALUE",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "data.table.header-2",
+      "zOrder": 31,
+    },
+    {
+      "bbox": {
+        "h": 13,
+        "w": 242.66666666666669,
+        "x": 545.3333333333334,
+        "y": 12,
+      },
+      "kind": "text",
+      "metadata": {
+        "col": 3,
+        "role": "table-header",
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#d4d4d8",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 13,
+              "fontWeight": 600,
+              "italic": false,
+              "text": "DELTA",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "data.table.header-3",
+      "zOrder": 32,
+    },
+    {
+      "bbox": {
+        "h": 77.5,
+        "w": 242.66666666666669,
+        "x": 12,
+        "y": 49,
+      },
+      "kind": "text",
+      "metadata": {
+        "col": 1,
+        "role": "table-cell",
+        "row": 1,
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#f5f5f7",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 16,
+              "fontWeight": 400,
+              "italic": false,
+              "text": "Alpha",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "data.table.cell-1-1",
+      "zOrder": 100,
+    },
+    {
+      "bbox": {
+        "h": 77.5,
+        "w": 242.66666666666669,
+        "x": 278.6666666666667,
+        "y": 49,
+      },
+      "kind": "text",
+      "metadata": {
+        "col": 2,
+        "role": "table-cell",
+        "row": 1,
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#f5f5f7",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 16,
+              "fontWeight": 400,
+              "italic": false,
+              "text": "12",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "data.table.cell-1-2",
+      "zOrder": 101,
+    },
+    {
+      "bbox": {
+        "h": 77.5,
+        "w": 242.66666666666669,
+        "x": 545.3333333333334,
+        "y": 49,
+      },
+      "kind": "text",
+      "metadata": {
+        "col": 3,
+        "role": "table-cell",
+        "row": 1,
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#f5f5f7",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 16,
+              "fontWeight": 400,
+              "italic": false,
+              "text": "+1",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "data.table.cell-1-3",
+      "zOrder": 102,
+    },
+    {
+      "bbox": {
+        "h": 77.5,
+        "w": 242.66666666666669,
+        "x": 12,
+        "y": 150.5,
+      },
+      "kind": "text",
+      "metadata": {
+        "col": 1,
+        "role": "table-cell",
+        "row": 2,
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#f5f5f7",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 16,
+              "fontWeight": 400,
+              "italic": false,
+              "text": "Beta",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "data.table.cell-2-1",
+      "zOrder": 110,
+    },
+    {
+      "bbox": {
+        "h": 77.5,
+        "w": 242.66666666666669,
+        "x": 278.6666666666667,
+        "y": 150.5,
+      },
+      "kind": "text",
+      "metadata": {
+        "col": 2,
+        "role": "table-cell",
+        "row": 2,
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#f5f5f7",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 16,
+              "fontWeight": 400,
+              "italic": false,
+              "text": "34",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "data.table.cell-2-2",
+      "zOrder": 111,
+    },
+    {
+      "bbox": {
+        "h": 77.5,
+        "w": 242.66666666666669,
+        "x": 545.3333333333334,
+        "y": 150.5,
+      },
+      "kind": "text",
+      "metadata": {
+        "col": 3,
+        "role": "table-cell",
+        "row": 2,
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#f5f5f7",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 16,
+              "fontWeight": 400,
+              "italic": false,
+              "text": "-2",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "data.table.cell-2-3",
+      "zOrder": 112,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "data",
+    "columns": 3,
+    "role": "data.table",
+    "rows": 2,
+    "withRowDividers": true,
+    "withVerticalDividers": true,
+    "zebra": true,
+  },
+  "recipeId": "data.table",
+  "zOrder": 0,
+}
+`;

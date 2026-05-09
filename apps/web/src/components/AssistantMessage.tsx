@@ -118,6 +118,8 @@ export function AssistantMessage({
               />
             );
           }
+          if (b.kind === 'delegation') return <DelegationCard key={i} events={b.events} />;
+          if (b.kind === 'delegation-workflow') return <DelegationWorkflowCard key={i} events={b.events} />;
           if (b.kind === 'status') return <StatusPill key={i} label={b.label} detail={b.detail} />;
           return null;
         })}
@@ -519,6 +521,290 @@ function StatusPill({ label, detail }: { label: string; detail?: string | undefi
   );
 }
 
+function DelegationCard({ events }: { events: Extract<AgentEvent, { kind: 'delegation' }>[] }) {
+  const first = events[0];
+  if (!first) return null;
+  const latest = events[events.length - 1] ?? first;
+  const started = events.some((event) => event.event === 'start');
+  const errored = events.some((event) => event.event === 'error');
+  const ended = events.some((event) => event.event === 'end');
+  const status = latest.status ?? (errored ? 'failed' : ended ? 'complete' : started ? 'running' : latest.event);
+  const childId = first.childRunId.slice(0, 8);
+  return (
+    <div className={`op-card op-delegation ${errored ? 'errored' : ended ? 'done' : 'running'}`}>
+      <div className="op-card-head">
+        <span className="op-icon" aria-hidden>↪</span>
+        <span className="op-title">Delegation</span>
+        <code className="op-path">{childId}</code>
+        <span className="op-meta">{status}</span>
+      </div>
+      <div className="op-output">
+        {latest.agentId ? <span>agent: {latest.agentId}</span> : null}
+        {latest.detail ? <span>{latest.detail}</span> : null}
+      </div>
+    </div>
+  );
+}
+
+type WorkflowEvent = Extract<AgentEvent, { kind: 'delegation_workflow' }>;
+type WorkflowTask = {
+  id: string;
+  title?: string;
+  specialist?: string;
+  dependsOn: string[];
+};
+type WorkflowResult = {
+  taskId?: string;
+  status?: string;
+  specialist?: string;
+  childRunId?: string;
+  runId?: string;
+};
+type WorkflowLevel = {
+  level: number;
+  taskIds: string[];
+};
+
+function DelegationWorkflowCard({ events }: { events: WorkflowEvent[] }) {
+  const [open, setOpen] = useState(true);
+  const first = events[0];
+  if (!first) return null;
+  const latest = events[events.length - 1] ?? first;
+  const executionStart = events.find((event) => event.event === 'started' && !event.workflowId.startsWith('planner-'));
+  const taskSource = [...events].reverse().find((event) => event.tasks)?.tasks ?? first.tasks ?? [];
+  const tasks = normalizeWorkflowTasks(taskSource);
+  const results = normalizeWorkflowResults(latest.results ?? [...events].reverse().find((event) => event.results)?.results);
+  const resultByTaskId = new Map(results.map((result) => [result.taskId, result]));
+  const taskEventById = new Map<string, WorkflowEvent>();
+  for (const event of events) {
+    if (event.taskId) taskEventById.set(event.taskId, event);
+  }
+  const failed = latest.event === 'failed' || latest.status === 'failed';
+  const succeeded = latest.event === 'succeeded' || latest.status === 'succeeded';
+  const status = failed ? 'failed' : succeeded ? 'succeeded' : 'running';
+  const plannerEvent = [...events].reverse().find((event) => event.event.startsWith('planner_'));
+  const levels = deriveWorkflowLevels(tasks, events);
+  const taskCount = executionStart?.taskCount ?? first.taskCount ?? tasks.length;
+  const levelCount = levels.length || (taskCount > 0 ? 1 : 0);
+  const parallelLevels = levels.filter((level) => level.taskIds.length > 1).length;
+  const mode = executionStart?.mode ?? first.mode ?? deriveWorkflowMode(levels, taskCount);
+  const completedCount = tasks.filter((task) => taskStatus(task.id, resultByTaskId, taskEventById) === 'succeeded').length;
+  return (
+    <div className={`action-card delegation-workflow ${failed ? 'errored' : succeeded ? 'done' : 'running'}`}>
+      <button
+        type="button"
+        className={`action-card-toggle workflow-toggle ${status === 'running' ? 'running' : ''}`}
+        onClick={() => setOpen((value) => !value)}
+        aria-expanded={open}
+      >
+        <span className="ico workflow-ico" aria-hidden>⇄</span>
+        <span className="summary workflow-summary">
+          <strong>Specialist workflow</strong>
+          <span className="workflow-summary-line">
+            <span>{modeLabel(mode)}</span>
+            <span>{taskCount} tasks</span>
+            <span>{levelCount} levels</span>
+            <span>{parallelLevels} parallel</span>
+            <span>{status}</span>
+          </span>
+        </span>
+        <span className="chev" aria-hidden>
+          <Icon name={open ? 'chevron-down' : 'chevron-right'} size={11} />
+        </span>
+      </button>
+      {open ? (
+        <div className="action-card-body workflow-body">
+          <div className="workflow-overview" aria-label="Specialist workflow status">
+            <div>
+              <span className="workflow-overview-label">Planner</span>
+              <strong>{plannerStatusLabel(plannerEvent)}</strong>
+            </div>
+            <div>
+              <span className="workflow-overview-label">Mode</span>
+              <strong>{modeLabel(mode)}</strong>
+            </div>
+            <div>
+              <span className="workflow-overview-label">Progress</span>
+              <strong>{completedCount}/{taskCount || tasks.length}</strong>
+            </div>
+            <div>
+              <span className="workflow-overview-label">Final</span>
+              <strong>{status}</strong>
+            </div>
+          </div>
+          {plannerEvent?.detail ? (
+            <div className={`workflow-planner-note ${plannerEvent.status === 'fallback' ? 'errored' : ''}`}>
+              {plannerEvent.detail}
+            </div>
+          ) : null}
+          <div className="workflow-levels" aria-label="Specialist workflow DAG levels">
+            {levels.map((level) => (
+              <section className="workflow-level" key={level.level}>
+                <div className="workflow-level-head">
+                  <span>Level {level.level + 1}</span>
+                  <span>{level.taskIds.length > 1 ? `${level.taskIds.length} parallel tasks` : '1 task'}</span>
+                </div>
+                <div className="workflow-task-grid" data-parallel={level.taskIds.length > 1 ? 'true' : 'false'}>
+                  {level.taskIds.map((taskId) => {
+                    const task = tasks.find((item) => item.id === taskId) ?? {
+                      id: taskId,
+                      dependsOn: [],
+                    };
+                    const result = resultByTaskId.get(task.id);
+                    const event = taskEventById.get(task.id);
+                    const currentStatus = taskStatus(task.id, resultByTaskId, taskEventById);
+                    const childRunId = result?.childRunId ?? result?.runId ?? stringProp(event, 'childRunId');
+                    return (
+                      <div
+                        key={task.id}
+                        className={`workflow-task ${workflowStatusClass(currentStatus)}`}
+                      >
+                        <div className="workflow-task-head">
+                          <span className="workflow-task-index">{task.id}</span>
+                          <span className="workflow-task-status">{currentStatus}</span>
+                        </div>
+                        <div className="workflow-task-title">{task.title ?? task.id}</div>
+                        <div className="workflow-task-meta">
+                          <span>{task.specialist ?? result?.specialist ?? stringProp(event, 'specialist') ?? 'specialist'}</span>
+                          {childRunId ? <code>{shortId(childRunId)}</code> : null}
+                        </div>
+                        {task.dependsOn.length > 0 ? (
+                          <div className="workflow-dependencies" aria-label="Dependencies">
+                            {task.dependsOn.map((dep) => (
+                              <span key={dep}>{dep}</span>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            ))}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function normalizeWorkflowTasks(raw: unknown): WorkflowTask[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.flatMap((item): WorkflowTask[] => {
+    if (!item || typeof item !== 'object') return [];
+    const record = item as Record<string, unknown>;
+    const id = typeof record.id === 'string' ? record.id : undefined;
+    if (!id) return [];
+    const dependsOn = Array.isArray(record.dependsOn)
+      ? record.dependsOn.filter((dep): dep is string => typeof dep === 'string')
+      : [];
+    return [{
+      id,
+      title: typeof record.title === 'string' ? record.title : undefined,
+      specialist: typeof record.specialist === 'string' ? record.specialist : undefined,
+      dependsOn,
+    }];
+  });
+}
+
+function normalizeWorkflowResults(raw: unknown): WorkflowResult[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.flatMap((item): WorkflowResult[] => {
+    if (!item || typeof item !== 'object') return [];
+    const record = item as Record<string, unknown>;
+    return [{
+      taskId: typeof record.taskId === 'string' ? record.taskId : undefined,
+      status: typeof record.status === 'string' ? record.status : undefined,
+      specialist: typeof record.specialist === 'string' ? record.specialist : undefined,
+      childRunId: typeof record.childRunId === 'string' ? record.childRunId : undefined,
+      runId: typeof record.runId === 'string' ? record.runId : undefined,
+    }];
+  });
+}
+
+function deriveWorkflowLevels(tasks: WorkflowTask[], events: WorkflowEvent[]): WorkflowLevel[] {
+  const fromEvents = events
+    .filter((event) => typeof event.level === 'number' && event.taskId)
+    .reduce<Map<number, string[]>>((acc, event) => {
+      const taskIds = acc.get(event.level!) ?? [];
+      if (event.taskId && !taskIds.includes(event.taskId)) taskIds.push(event.taskId);
+      acc.set(event.level!, taskIds);
+      return acc;
+    }, new Map());
+  if (fromEvents.size > 0) {
+    return [...fromEvents.entries()]
+      .sort(([a], [b]) => a - b)
+      .map(([level, taskIds]) => ({ level, taskIds }));
+  }
+  if (tasks.length === 0) return [];
+  const remaining = new Map(tasks.map((task) => [task.id, task]));
+  const completed = new Set<string>();
+  const levels: WorkflowLevel[] = [];
+  while (remaining.size > 0) {
+    const ready = [...remaining.values()]
+      .filter((task) => task.dependsOn.every((dep) => completed.has(dep) || !remaining.has(dep)))
+      .map((task) => task.id);
+    const taskIds = ready.length > 0 ? ready : [...remaining.keys()];
+    levels.push({ level: levels.length, taskIds });
+    for (const taskId of taskIds) {
+      remaining.delete(taskId);
+      completed.add(taskId);
+    }
+  }
+  return levels;
+}
+
+function taskStatus(
+  taskId: string,
+  results: Map<string | undefined, WorkflowResult>,
+  events: Map<string, WorkflowEvent>,
+): string {
+  const resultStatus = results.get(taskId)?.status;
+  if (resultStatus) return resultStatus;
+  const event = events.get(taskId);
+  if (event?.event === 'task_succeeded') return 'succeeded';
+  if (event?.event === 'task_failed') return 'failed';
+  if (event?.event === 'task_started') return 'running';
+  return 'pending';
+}
+
+function deriveWorkflowMode(levels: WorkflowLevel[], taskCount: number): string {
+  if (taskCount <= 1) return 'single';
+  if (levels.some((level) => level.taskIds.length > 1)) return 'dag';
+  return 'sequential';
+}
+
+function modeLabel(mode: string | undefined): string {
+  if (mode === 'dag') return 'DAG';
+  if (mode === 'parallel') return 'Parallel';
+  if (mode === 'single') return 'Single';
+  if (mode === 'sequential') return 'Sequential';
+  return 'Workflow';
+}
+
+function plannerStatusLabel(event: WorkflowEvent | undefined): string {
+  if (!event) return 'skipped';
+  if (event.status) return event.status;
+  return event.event.replace('planner_', '');
+}
+
+function workflowStatusClass(status: string): string {
+  if (status === 'succeeded') return 'done';
+  if (status === 'failed') return 'errored';
+  if (status === 'running') return 'running';
+  return 'pending';
+}
+
+function stringProp(source: unknown, key: string): string | undefined {
+  if (!source || typeof source !== 'object') return undefined;
+  const value = (source as Record<string, unknown>)[key];
+  return typeof value === 'string' ? value : undefined;
+}
+
+function shortId(value: string): string {
+  return value.length > 12 ? value.slice(0, 12) : value;
+}
+
 interface ToolItem {
   use: Extract<AgentEvent, { kind: 'tool_use' }>;
   result?: Extract<AgentEvent, { kind: 'tool_result' }>;
@@ -554,6 +840,8 @@ function ToolGroupCard({
 
   const summary = summarizeGroup(items, t);
   const running = items.some((it) => !it.result);
+  const counts = toolGroupCounts(items);
+  const targets = summarizeToolTargets(items);
   return (
     <div className="action-card">
       <button
@@ -568,6 +856,18 @@ function ToolGroupCard({
           <Icon name={open ? 'chevron-down' : 'chevron-right'} size={11} />
         </span>
       </button>
+      <div className="action-card-summary" aria-label="Tool execution summary">
+        <span className="action-card-status-count ok">{counts.done}</span>
+        {counts.running > 0 ? <span className="action-card-status-count running">{counts.running}</span> : null}
+        {counts.error > 0 ? <span className="action-card-status-count error">{counts.error}</span> : null}
+        {targets.length > 0 ? (
+          <span className="action-card-targets">
+            {targets.map((target, i) => (
+              <code key={`${target}-${i}`}>{target}</code>
+            ))}
+          </span>
+        ) : null}
+      </div>
       {open ? (
         <div className="action-card-body">
           {items.map((it, i) => (
@@ -601,6 +901,56 @@ function summarizeGroup(
   const head = countLabel(family, items.length, t);
   const tail = lastStateLabel(verbs, t);
   return { label: tail ? `${head}, ${tail}` : head, icon };
+}
+
+function toolGroupCounts(items: ToolItem[]): { done: number; running: number; error: number } {
+  let done = 0;
+  let running = 0;
+  let error = 0;
+  for (const item of items) {
+    if (!item.result) running += 1;
+    else if (item.result.isError) error += 1;
+    else done += 1;
+  }
+  return { done, running, error };
+}
+
+function summarizeToolTargets(items: ToolItem[]): string[] {
+  const targets: string[] = [];
+  for (const item of items) {
+    const target = toolTargetLabel(item.use);
+    if (!target || targets.includes(target)) continue;
+    targets.push(target);
+    if (targets.length === 3) break;
+  }
+  const remaining = new Set(
+    items
+      .map((item) => toolTargetLabel(item.use))
+      .filter((target): target is string => !!target && !targets.includes(target)),
+  ).size;
+  return remaining > 0 ? [...targets, `+${remaining}`] : targets;
+}
+
+function toolTargetLabel(use: Extract<AgentEvent, { kind: 'tool_use' }>): string | null {
+  const input = use.input;
+  if (!input || typeof input !== 'object') return null;
+  const obj = input as Record<string, unknown>;
+  for (const key of ['file_path', 'path', 'pattern', 'query', 'url', 'command', 'name']) {
+    const value = obj[key];
+    if (typeof value === 'string' && value.trim()) return compactTarget(value.trim());
+  }
+  return null;
+}
+
+function compactTarget(value: string): string {
+  const normalized = value.replace(/^\/home\/user\/pixelpitch\//, '');
+  if (normalized.length <= 42) return normalized;
+  const parts = normalized.split('/');
+  if (parts.length > 1) {
+    const tail = parts.slice(-2).join('/');
+    if (tail.length <= 42) return `.../${tail}`;
+  }
+  return `${normalized.slice(0, 39)}...`;
 }
 
 function toolFamily(name: string): string {
@@ -676,6 +1026,8 @@ type Block =
   | { kind: 'text'; text: string }
   | { kind: 'thinking'; text: string }
   | { kind: 'tool-group'; items: ToolItem[] }
+  | { kind: 'delegation'; events: Extract<AgentEvent, { kind: 'delegation' }>[] }
+  | { kind: 'delegation-workflow'; events: Extract<AgentEvent, { kind: 'delegation_workflow' }>[] }
   | { kind: 'status'; label: string; detail?: string | undefined };
 
 /**
@@ -720,6 +1072,32 @@ function buildBlocks(events: AgentEvent[]): Block[] {
       continue;
     }
     if (ev.kind === 'tool_result') continue;
+    if (ev.kind === 'delegation') {
+      const last = out[out.length - 1];
+      if (
+        last &&
+        last.kind === 'delegation' &&
+        last.events[last.events.length - 1]?.childRunId === ev.childRunId
+      ) {
+        last.events.push(ev);
+      } else {
+        out.push({ kind: 'delegation', events: [ev] });
+      }
+      continue;
+    }
+    if (ev.kind === 'delegation_workflow') {
+      const last = out[out.length - 1];
+      if (
+        last &&
+        last.kind === 'delegation-workflow' &&
+        shouldMergeWorkflowEvents(last.events, ev)
+      ) {
+        last.events.push(ev);
+      } else {
+        out.push({ kind: 'delegation-workflow', events: [ev] });
+      }
+      continue;
+    }
     if (ev.kind === 'status') {
       if (
         ev.label === 'streaming' ||
@@ -735,6 +1113,14 @@ function buildBlocks(events: AgentEvent[]): Block[] {
     }
   }
   return out;
+}
+
+function shouldMergeWorkflowEvents(events: WorkflowEvent[], next: WorkflowEvent): boolean {
+  const previous = events[events.length - 1];
+  if (!previous) return false;
+  if (previous.workflowId === next.workflowId) return true;
+  const currentIsPlanner = events.every((event) => event.event.startsWith('planner_'));
+  return currentIsPlanner && next.event === 'started';
 }
 
 function stripArtifact(content: string): string {

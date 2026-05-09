@@ -361,7 +361,7 @@ _bench/               corpus, decks, prompts, scripts, harvest reports.
 
 The 6-step pipeline:
 
-1. **Design language** — `apps/daemon/src/prompts/discovery.ts` runs the
+1. **Design language** — `packages/contracts/src/prompts/discovery.ts` runs the
    discovery form + 5-school direction picker.
 2. **Components** — `skills/` provides parameterized templates; the
    `tweaks` skill mutates tokens in-place.

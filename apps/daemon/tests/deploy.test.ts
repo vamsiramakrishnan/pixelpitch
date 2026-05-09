@@ -17,6 +17,7 @@ import {
   extractHtmlReferences,
   extractInlineCssReferences,
   injectDeployHookScript,
+  isProtectedDeploymentResponse,
   isVercelProtectedResponse,
   normalizeDeployHookScriptUrl,
   prepareDeployPreflight,
@@ -609,7 +610,7 @@ describe('deploy plan and analyzer', () => {
     await writeFile(path.join(dir, 'assets', 'logo.png'), 'logo');
 
     const result = await prepareDeployPreflight(projectsRoot, projectId, 'index.html');
-    expect(result.providerId).toBe('vercel-self');
+    expect(result.providerId).toBe('cloud-run');
     expect(result.entry).toBe('index.html');
     expect(result.totalFiles).toBe(2);
     expect(result.totalBytes).toBeGreaterThan(0);
@@ -757,5 +758,16 @@ describe('deployment link readiness', () => {
       'set-cookie': '_vercel_sso_nonce=test',
     });
     expect(isVercelProtectedResponse({ headers }, 'Authentication Required')).toBe(true);
+  });
+
+  it('recognizes Cloud Run authentication failures as protected links', () => {
+    const headers = new Headers();
+    expect(
+      isProtectedDeploymentResponse(
+        { status: 403, headers },
+        'Your client does not have permission to get URL / from this server.',
+        'https://preview-project.us-central1.run.app',
+      ),
+    ).toBe(true);
   });
 });

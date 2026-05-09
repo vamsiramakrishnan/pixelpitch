@@ -157,7 +157,7 @@ export interface MessagesResponse {
   messages: ChatMessage[];
 }
 
-export type DeployProviderId = 'vercel-self';
+export type DeployProviderId = 'cloud-run';
 export type DeploymentStatus =
   | 'deploying'
   | 'preparing-link'
@@ -169,16 +169,18 @@ export type DeploymentStatus =
 export interface DeployConfigResponse {
   providerId: DeployProviderId;
   configured: boolean;
-  tokenMask: string;
-  teamId: string;
-  teamSlug: string;
+  projectId: string;
+  region: string;
+  serviceName: string;
+  allowUnauthenticated: boolean;
   target: 'preview';
 }
 
 export interface UpdateDeployConfigRequest {
-  token?: string;
-  teamId?: string;
-  teamSlug?: string;
+  projectId?: string;
+  region?: string;
+  serviceName?: string;
+  allowUnauthenticated?: boolean;
 }
 
 export interface DeploymentInfo {
@@ -209,6 +211,48 @@ export interface DeployProjectFileRequest {
 export interface DeployProjectFileResponse extends DeploymentInfo {}
 
 export interface CheckDeploymentLinkResponse extends DeploymentInfo {}
+
+export interface ElementEditTarget {
+  fileName: string;
+  selector?: string;
+  elementId?: string;
+  label?: string;
+  currentText?: string;
+  tagName?: string;
+  htmlHint?: string;
+}
+
+export type ElementEditOperation =
+  | {
+      type: 'setText';
+      target: ElementEditTarget;
+      text: string;
+    }
+  | {
+      type: 'setStyle';
+      target: ElementEditTarget;
+      styles: Record<string, string | null>;
+    }
+  | {
+      type: 'removeElement';
+      target: ElementEditTarget;
+    };
+
+export interface ApplyElementEditsRequest {
+  operations: ElementEditOperation[];
+}
+
+export interface AppliedElementEdit {
+  type: ElementEditOperation['type'];
+  fileName: string;
+  selector?: string;
+  elementId?: string;
+}
+
+export interface ApplyElementEditsResponse {
+  ok: true;
+  applied: AppliedElementEdit[];
+}
 
 // Preflight inspects the file set that would be uploaded for a deploy
 // without sending anything to the provider. Lets the UI show file count,

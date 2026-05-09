@@ -43,3 +43,47 @@ exports[`surfaceShapeFillToIR > emits a snapshot-stable rounded-rect with solid 
   "zOrder": 0,
 }
 `;
+
+exports[`surfaceShapeFillToIR emits a snapshot-stable rounded-rect with solid fill 1`] = `
+{
+  "bbox": {
+    "h": 200,
+    "w": 320,
+    "x": 0,
+    "y": 0,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 320,
+        "x": 0,
+        "y": 0,
+      },
+      "borderRadiusPx": 16,
+      "fill": {
+        "color": "#a78bfa",
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "axis": "surface",
+        "role": "surface.shape-fill",
+        "shape": "rounded-rect",
+      },
+      "recipeId": "surface.shape-fill",
+      "shape": "rounded-rect",
+      "zOrder": 0,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "surface",
+    "radiusPx": 16,
+    "role": "surface.shape-fill",
+    "shape": "rounded-rect",
+  },
+  "recipeId": "surface.shape-fill",
+  "zOrder": 0,
+}
+`;

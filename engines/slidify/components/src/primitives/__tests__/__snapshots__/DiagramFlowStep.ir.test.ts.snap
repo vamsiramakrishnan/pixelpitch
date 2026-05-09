@@ -103,3 +103,107 @@ exports[`diagramFlowStepToIR > emits a snapshot-stable step with circular dot 1`
   "zOrder": 0,
 }
 `;
+
+exports[`diagramFlowStepToIR emits a snapshot-stable step with circular dot 1`] = `
+{
+  "bbox": {
+    "h": 36,
+    "w": 280,
+    "x": 0,
+    "y": 0,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 36,
+        "w": 36,
+        "x": 0,
+        "y": 0,
+      },
+      "borderRadiusPx": 9999,
+      "fill": {
+        "color": "#a78bfa",
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "n": 1,
+        "role": "flow-step-dot",
+        "shape": "circle",
+      },
+      "recipeId": "diagram.flow-step.dot",
+      "shape": "oval",
+      "zOrder": 0,
+    },
+    {
+      "bbox": {
+        "h": 36,
+        "w": 36,
+        "x": 0,
+        "y": 0,
+      },
+      "kind": "text",
+      "metadata": {
+        "role": "flow-step-numeral",
+      },
+      "paragraphs": [
+        {
+          "align": "center",
+          "runs": [
+            {
+              "color": "#0a0a0f",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 14,
+              "fontWeight": 700,
+              "italic": false,
+              "text": "1",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "diagram.flow-step.numeral",
+      "zOrder": 10,
+    },
+    {
+      "bbox": {
+        "h": 36,
+        "w": 232,
+        "x": 48,
+        "y": 0,
+      },
+      "kind": "text",
+      "metadata": {
+        "role": "flow-step-label",
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#f5f5f7",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 14,
+              "fontWeight": 500,
+              "italic": false,
+              "text": "Discover",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "diagram.flow-step.label",
+      "zOrder": 10,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "diagram",
+    "n": 1,
+    "role": "diagram.flow-step",
+    "shape": "circle",
+  },
+  "recipeId": "diagram.flow-step",
+  "zOrder": 0,
+}
+`;

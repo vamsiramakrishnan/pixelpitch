@@ -554,12 +554,12 @@ export const hu: Dict = {
   'fileViewer.deployModalTitle': 'Telepítés Vercelre',
   'fileViewer.deployModalSubtitle':
     'Telepítsd ezt a HTML-artefaktumot Vercel Preview-ként a saját fiókodból.',
-  'fileViewer.vercelToken': 'Vercel token',
-  'fileViewer.vercelTokenGetLink': 'Vercel token kérése',
-  'fileViewer.vercelTokenPlaceholder': 'Illeszd be a Vercel tokenedet',
+  'fileViewer.vercelToken': 'Google Cloud project ID',
+  'fileViewer.vercelTokenGetLink': 'Google Cloud project ID kérése',
+  'fileViewer.vercelTokenPlaceholder': 'Illeszd be a Google Cloud project IDedet',
   'fileViewer.vercelTokenReuseHint':
     'A mentett tokent használjuk. Adj meg újat a cseréhez.',
-  'fileViewer.vercelTokenRequired': 'Előbb adj meg és ments el egy Vercel tokent.',
+  'fileViewer.vercelTokenRequired': 'Előbb adj meg és ments el egy Google Cloud project IDt.',
   'fileViewer.vercelTeamId': 'Team ID',
   'fileViewer.vercelTeamSlug': 'Team slug',
   'fileViewer.optional': 'Opcionális',

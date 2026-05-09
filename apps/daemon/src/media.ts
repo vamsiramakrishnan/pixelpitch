@@ -1383,7 +1383,7 @@ function grokAspectFor(aspect) {
 const MINIMAX_DEFAULT_BASE_URL = 'https://api.minimaxi.chat/v1';
 
 // Map our generic catalogue ids onto MiniMax's actual model ids. The
-// `minimax-tts` slot in src/media/models.ts is shorthand for "their
+// `minimax-tts` slot in packages/contracts/src/media-models.ts is shorthand for "their
 // fast TTS tier"; we substitute the real model name on the wire so
 // MiniMax accepts the request without exposing the user to their
 // internal naming.

@@ -91,5 +91,5 @@ synthesis. No source text was vendored from them into pixelpitch.
 - `alchaincyf/huashu-design` (personal-use license) — design-philosophy
   prompts, brand-spec template, anti-AI-slop checklist, 5-dim self-
   critique, "5 schools × 20 designers" direction picker. Patterns
-  paraphrased into Open Design's `apps/daemon/src/prompts/discovery.ts`
+  paraphrased into Open Design's shared `packages/contracts/src/prompts/discovery.ts`
   and `directions.ts`. No source text vendored here.

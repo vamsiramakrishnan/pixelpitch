@@ -50,3 +50,54 @@ exports[`slotEyebrowToIR > emits a snapshot-stable plain eyebrow 1`] = `
   "zOrder": 0,
 }
 `;
+
+exports[`slotEyebrowToIR emits a snapshot-stable plain eyebrow 1`] = `
+{
+  "bbox": {
+    "h": 24,
+    "w": 200,
+    "x": 0,
+    "y": 0,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 24,
+        "w": 200,
+        "x": 0,
+        "y": 0,
+      },
+      "kind": "text",
+      "metadata": {
+        "role": "eyebrow-text",
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#a1a1aa",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 13,
+              "fontWeight": 600,
+              "italic": false,
+              "text": "KICKER",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "slot.eyebrow.text",
+      "zOrder": 10,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "slot",
+    "role": "slot.eyebrow",
+    "withRule": "none",
+  },
+  "recipeId": "slot.eyebrow",
+  "zOrder": 0,
+}
+`;

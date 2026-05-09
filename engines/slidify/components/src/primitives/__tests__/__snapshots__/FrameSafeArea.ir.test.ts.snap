@@ -26,3 +26,30 @@ exports[`frameSafeAreaToIR > emits a snapshot-stable group with the inner bbox 1
   "zOrder": 0,
 }
 `;
+
+exports[`frameSafeAreaToIR emits a snapshot-stable group with the inner bbox 1`] = `
+{
+  "bbox": {
+    "h": 720,
+    "w": 1280,
+    "x": 0,
+    "y": 0,
+  },
+  "children": [],
+  "kind": "group",
+  "metadata": {
+    "axis": "frame",
+    "innerBbox": {
+      "h": 528,
+      "w": 1088,
+      "x": 96,
+      "y": 96,
+    },
+    "insetPx": 96,
+    "padding": "cozy",
+    "role": "frame.safe-area",
+  },
+  "recipeId": "frame.safe-area",
+  "zOrder": 0,
+}
+`;

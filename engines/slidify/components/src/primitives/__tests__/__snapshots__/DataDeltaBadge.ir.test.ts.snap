@@ -79,3 +79,83 @@ exports[`dataDeltaBadgeToIR > emits a snapshot-stable up-success delta 1`] = `
   "zOrder": 0,
 }
 `;
+
+exports[`dataDeltaBadgeToIR emits a snapshot-stable up-success delta 1`] = `
+{
+  "bbox": {
+    "h": 28,
+    "w": 96,
+    "x": 0,
+    "y": 0,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 28,
+        "w": 96,
+        "x": 0,
+        "y": 0,
+      },
+      "borderRadiusPx": 9999,
+      "fill": {
+        "color": {
+          "alpha": 0.18,
+          "hex": "#10b981",
+        },
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "role": "delta-badge-bg",
+        "tone": "success",
+      },
+      "recipeId": "data.delta-badge.bg",
+      "shape": "rounded-rect",
+      "zOrder": 0,
+    },
+    {
+      "bbox": {
+        "h": 28,
+        "w": 96,
+        "x": 0,
+        "y": 0,
+      },
+      "kind": "text",
+      "metadata": {
+        "direction": "up",
+        "role": "delta-badge-label",
+        "value": "+29.4%",
+      },
+      "paragraphs": [
+        {
+          "align": "center",
+          "runs": [
+            {
+              "color": "#10b981",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 13,
+              "fontWeight": 600,
+              "italic": false,
+              "text": "▲ +29.4%",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "data.delta-badge.label",
+      "zOrder": 10,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "data",
+    "direction": "up",
+    "role": "data.delta-badge",
+    "size": "md",
+    "tone": "success",
+    "value": "+29.4%",
+  },
+  "recipeId": "data.delta-badge",
+  "zOrder": 0,
+}
+`;

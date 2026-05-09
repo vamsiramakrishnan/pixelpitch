@@ -31,6 +31,8 @@ interface Props {
   previewComments?: PreviewComment[];
   onSavePreviewComment?: (target: PreviewCommentTarget, note: string, attachAfterSave: boolean) => Promise<PreviewComment | null>;
   onRemovePreviewComment?: (commentId: string) => Promise<void>;
+  onAttachPreviewComments?: (comments: PreviewComment[]) => void;
+  onSendPreviewComments?: (comments: PreviewComment[]) => void;
   onStageComposerToken?: (token: string) => void;
 }
 
@@ -59,6 +61,8 @@ export function FileWorkspace({
   previewComments = [],
   onSavePreviewComment,
   onRemovePreviewComment,
+  onAttachPreviewComments,
+  onSendPreviewComments,
   onStageComposerToken,
 }: Props) {
   const t = useT();
@@ -449,6 +453,8 @@ export function FileWorkspace({
             previewComments={previewComments.filter((comment) => comment.filePath === activeFile.name)}
             onSavePreviewComment={onSavePreviewComment}
             onRemovePreviewComment={onRemovePreviewComment}
+            onAttachPreviewComments={onAttachPreviewComments}
+            onSendPreviewComments={onSendPreviewComments}
             onStageComposerToken={onStageComposerToken}
             onFileEdited={onRefreshFiles}
           />

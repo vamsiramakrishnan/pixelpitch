@@ -10,6 +10,8 @@ export const CHAT_TOOL_ENDPOINTS = [
   '/api/tools/connectors/list',
   '/api/tools/connectors/inspect',
   '/api/tools/connectors/execute',
+  '/api/tools/delegation/send',
+  '/api/tools/delegation/workflow',
 ] as const;
 
 export const CHAT_TOOL_OPERATIONS = [
@@ -20,6 +22,8 @@ export const CHAT_TOOL_OPERATIONS = [
   'connectors:list',
   'connectors:inspect',
   'connectors:execute',
+  'delegation:send',
+  'delegation:workflow',
 ] as const;
 
 export type ToolEndpoint = (typeof CHAT_TOOL_ENDPOINTS)[number] | (string & {});

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { composeSystemPrompt } from '../src/prompts/system.js';
+import { composeSystemPrompt } from '@pixelpitch/contracts';
 
 // These tests pin the rendering of metadata.promptTemplate inside the
 // composed system prompt. The composer is the trust boundary between the

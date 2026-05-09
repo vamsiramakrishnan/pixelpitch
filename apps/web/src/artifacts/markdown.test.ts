@@ -62,6 +62,21 @@ describe('renderMarkdownToSafeHtml', () => {
     expect(out).not.toContain('<code><em>literal</em></code>');
   });
 
+  it('renders pipe tables with alignment', () => {
+    const out = renderMarkdownToSafeHtml([
+      '| Name | Score | Notes |',
+      '| :--- | ---: | :---: |',
+      '| Pikachu | 98 | **fast** |',
+      '| Bulbasaur | 91 | `steady` |',
+    ].join('\n'));
+    expect(out).toContain('<table>');
+    expect(out).toContain('<th style="text-align: left">Name</th>');
+    expect(out).toContain('<th style="text-align: right">Score</th>');
+    expect(out).toContain('<th style="text-align: center">Notes</th>');
+    expect(out).toContain('<td style="text-align: center"><strong>fast</strong></td>');
+    expect(out).toContain('<td style="text-align: center"><code>steady</code></td>');
+  });
+
   it('does not render unsafe link protocols', () => {
     const out = renderMarkdownToSafeHtml('[Bad](javascript:alert(1))');
     expect(out).toContain('<p>Bad)</p>');

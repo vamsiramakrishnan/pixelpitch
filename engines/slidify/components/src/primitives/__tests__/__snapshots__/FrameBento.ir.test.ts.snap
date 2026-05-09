@@ -86,3 +86,90 @@ exports[`frameBentoToIR > emits a snapshot-stable 2x2 grid 1`] = `
   "zOrder": 0,
 }
 `;
+
+exports[`frameBentoToIR emits a snapshot-stable 2x2 grid 1`] = `
+{
+  "bbox": {
+    "h": 600,
+    "w": 1200,
+    "x": 0,
+    "y": 0,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 288,
+        "w": 588,
+        "x": 0,
+        "y": 0,
+      },
+      "children": [],
+      "kind": "group",
+      "metadata": {
+        "axis": "frame",
+        "col": 0,
+        "colSpan": 1,
+        "index": 0,
+        "role": "bento-cell",
+        "row": 0,
+        "rowSpan": 1,
+      },
+      "recipeId": "frame.bento.cell-1",
+      "zOrder": 0,
+    },
+    {
+      "bbox": {
+        "h": 288,
+        "w": 588,
+        "x": 612,
+        "y": 0,
+      },
+      "children": [],
+      "kind": "group",
+      "metadata": {
+        "axis": "frame",
+        "col": 1,
+        "colSpan": 1,
+        "index": 1,
+        "role": "bento-cell",
+        "row": 0,
+        "rowSpan": 1,
+      },
+      "recipeId": "frame.bento.cell-2",
+      "zOrder": 10,
+    },
+    {
+      "bbox": {
+        "h": 288,
+        "w": 1200,
+        "x": 0,
+        "y": 312,
+      },
+      "children": [],
+      "kind": "group",
+      "metadata": {
+        "axis": "frame",
+        "col": 0,
+        "colSpan": 2,
+        "index": 2,
+        "role": "bento-cell",
+        "row": 1,
+        "rowSpan": 1,
+      },
+      "recipeId": "frame.bento.cell-3",
+      "zOrder": 20,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "frame",
+    "cellCount": 3,
+    "columns": 2,
+    "gap": 24,
+    "role": "frame.bento",
+    "rows": 2,
+  },
+  "recipeId": "frame.bento",
+  "zOrder": 0,
+}
+`;

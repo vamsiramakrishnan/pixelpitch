@@ -146,6 +146,191 @@ describe('createAgentRunService child cancellation', () => {
   });
 });
 
+describe('createAgentRunService delegation', () => {
+  it('spawns a bounded child run and returns stdout to the parent', async () => {
+    const runMap = new Map<string, any>();
+    let nextRun = 0;
+    const events: Array<{ runId: string; event: string; payload: any }> = [];
+    const finishes: Array<{ runId: string; status: string }> = [];
+    const runs = {
+      create: vi.fn((meta: any = {}) => {
+        nextRun += 1;
+        const run = {
+          id: `delegate-${nextRun}`,
+          projectId: meta.projectId ?? null,
+          conversationId: meta.conversationId ?? null,
+          agentId: meta.agentId ?? null,
+          status: 'queued',
+          updatedAt: Date.now(),
+          child: null,
+          cancelRequested: false,
+        };
+        runMap.set(run.id, run);
+        return run;
+      }),
+      get: vi.fn((id: string) => runMap.get(id) ?? null),
+      cancel: vi.fn((run: any) => {
+        run.cancelRequested = true;
+        run.child?.kill?.('SIGTERM');
+      }),
+      isTerminal: vi.fn((status: string) => ['succeeded', 'failed', 'canceled'].includes(status)),
+      emit: vi.fn((run: any, event: string, payload: any) => {
+        events.push({ runId: run.id, event, payload });
+      }),
+      finish: vi.fn((run: any, status: string) => {
+        run.status = status;
+        finishes.push({ runId: run.id, status });
+      }),
+    };
+    const service = createAgentRunService({
+      runs,
+      toolTokenRegistry: new ToolTokenRegistry(),
+      daemonUrl: 'http://127.0.0.1:17456',
+      pixelpitchBin: '/repo/apps/daemon/dist/cli.js',
+      projectRoot: '/repo',
+      artifactsDir: '/tmp/pixelpitch-agent-run-service-delegate',
+      db: null,
+      critiqueCfg: { enabled: false },
+      critiqueWarnedAdapters: new Set(),
+      createSseErrorPayload: (code: string, message: string) => ({ code, message }),
+      registerChatAgentEventSink() {},
+      unregisterChatAgentEventSink() {},
+    });
+    const parentRun = {
+      id: 'parent-run',
+      status: 'running',
+      updatedAt: Date.now(),
+      child: null,
+      cancelRequested: false,
+    };
+    runMap.set(parentRun.id, parentRun);
+
+    const result = await service.sendDelegatedTask({
+      parentRun,
+      parentSend: (event: string, payload: unknown) => runs.emit(parentRun, event, payload),
+      agentId: 'shell-delegate',
+      def: {
+        id: 'shell-delegate',
+        streamFormat: 'plain',
+        buildArgs(prompt: string) {
+          expect(prompt).toContain('Pixelpitch delegated sub-run');
+          expect(prompt).toContain('Summarize the project');
+          return ['-c', 'printf delegated-result'];
+        },
+      },
+      resolvedBin: '/bin/sh',
+      cwd: '/tmp',
+      projectId: 'project-1',
+      conversationId: null,
+      safeModel: null,
+      safeReasoning: null,
+      task: 'Summarize the project',
+      timeoutMs: 5000,
+    } as any);
+
+    expect(result).toMatchObject({
+      runId: 'delegate-1',
+      status: 'succeeded',
+      stdout: 'delegated-result',
+    });
+    expect(events.some((event) => event.payload?.type === 'delegation_subrun')).toBe(true);
+    expect(finishes).toContainEqual({ runId: 'delegate-1', status: 'succeeded' });
+  });
+
+  it('runs specialist workflow levels and emits workflow events', async () => {
+    const runMap = new Map<string, any>();
+    let nextRun = 0;
+    const events: Array<{ runId: string; event: string; payload: any }> = [];
+    const runs = {
+      create: vi.fn((meta: any = {}) => {
+        nextRun += 1;
+        const run = {
+          id: `workflow-child-${nextRun}`,
+          projectId: meta.projectId ?? null,
+          conversationId: meta.conversationId ?? null,
+          agentId: meta.agentId ?? null,
+          status: 'queued',
+          updatedAt: Date.now(),
+          child: null,
+          cancelRequested: false,
+        };
+        runMap.set(run.id, run);
+        return run;
+      }),
+      get: vi.fn((id: string) => runMap.get(id) ?? null),
+      cancel: vi.fn(),
+      isTerminal: vi.fn((status: string) => ['succeeded', 'failed', 'canceled'].includes(status)),
+      emit: vi.fn((run: any, event: string, payload: any) => {
+        events.push({ runId: run.id, event, payload });
+      }),
+      finish: vi.fn((run: any, status: string) => {
+        run.status = status;
+      }),
+    };
+    const service = createAgentRunService({
+      runs,
+      toolTokenRegistry: new ToolTokenRegistry(),
+      daemonUrl: 'http://127.0.0.1:17456',
+      pixelpitchBin: '/repo/apps/daemon/dist/cli.js',
+      projectRoot: '/repo',
+      artifactsDir: '/tmp/pixelpitch-agent-run-service-workflow',
+      db: null,
+      critiqueCfg: { enabled: false },
+      critiqueWarnedAdapters: new Set(),
+      createSseErrorPayload: (code: string, message: string) => ({ code, message }),
+      registerChatAgentEventSink() {},
+      unregisterChatAgentEventSink() {},
+    });
+    const parentRun = {
+      id: 'parent-run',
+      status: 'running',
+      updatedAt: Date.now(),
+      child: null,
+      cancelRequested: false,
+    };
+    runMap.set(parentRun.id, parentRun);
+
+    const result = await service.runSpecialistWorkflow({
+      parentRun,
+      parentSend: (event: string, payload: unknown) => runs.emit(parentRun, event, payload),
+      agentId: 'shell-workflow',
+      def: {
+        id: 'shell-workflow',
+        streamFormat: 'plain',
+        buildArgs() {
+          return ['-c', 'printf ok'];
+        },
+      },
+      resolvedBin: '/bin/sh',
+      cwd: '/tmp',
+      projectId: 'project-1',
+      conversationId: null,
+      safeModel: null,
+      safeReasoning: null,
+      plan: {
+        mode: 'dag',
+        tasks: [
+          { id: 'researcher', specialist: 'researcher', title: 'Researcher', task: 'research' },
+          { id: 'artifact-builder', specialist: 'artifact-builder', title: 'Builder', task: 'build', dependsOn: ['researcher'] },
+        ],
+        levels: [
+          { level: 0, taskIds: ['researcher'] },
+          { level: 1, taskIds: ['artifact-builder'] },
+        ],
+      },
+      timeoutMs: 5000,
+    } as any);
+
+    expect(result.status).toBe('succeeded');
+    expect(result.results).toHaveLength(2);
+    const workflowEvents = events
+      .map((event) => event.payload)
+      .filter((payload) => payload?.type === 'delegation_workflow');
+    expect(workflowEvents.map((event) => event.event)).toContain('started');
+    expect(workflowEvents.map((event) => event.event)).toContain('succeeded');
+  });
+});
+
 describe('createAgentRunService parallel critique', () => {
   it('spawns real reviewer child runs and fans results into critique events', async () => {
     const db = new Database(':memory:');

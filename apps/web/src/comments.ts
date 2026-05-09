@@ -37,15 +37,29 @@ export function targetFromSnapshot(snapshot: PreviewCommentSnapshot): PreviewCom
 export function overlayBoundsFromSnapshot(
   snapshot: PreviewCommentSnapshot,
   scale: number,
+  offset: { x: number; y: number } = { x: 0, y: 0 },
 ): CommentOverlayBounds {
   const safeScale = Number.isFinite(scale) && scale > 0 ? scale : 1;
   const position = normalizePosition(snapshot.position);
   return {
-    left: position.x * safeScale,
-    top: position.y * safeScale,
+    left: offset.x + position.x * safeScale,
+    top: offset.y + position.y * safeScale,
     width: Math.max(1, position.width * safeScale),
     height: Math.max(1, position.height * safeScale),
   };
+}
+
+export function materiallySameSnapshot(
+  a: PreviewCommentSnapshot | null,
+  b: PreviewCommentSnapshot,
+): boolean {
+  if (!a || a.elementId !== b.elementId || a.filePath !== b.filePath) return false;
+  return (
+    Math.abs(a.position.x - b.position.x) <= 1 &&
+    Math.abs(a.position.y - b.position.y) <= 1 &&
+    Math.abs(a.position.width - b.position.width) <= 1 &&
+    Math.abs(a.position.height - b.position.height) <= 1
+  );
 }
 
 export function liveSnapshotForComment(

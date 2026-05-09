@@ -30,8 +30,10 @@ export function LiveArtifactViewer({
   const [artifact, setArtifact] = useState<LiveArtifact | null>(null);
   const [history, setHistory] = useState<LiveArtifactRefreshLogEntry[]>([]);
   const [reloadKey, setReloadKey] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const previewUrl = useMemo(
     () => `${liveArtifactPreviewUrl(projectId, summary.id)}&v=${reloadKey}`,
     [projectId, summary.id, reloadKey],
@@ -39,6 +41,8 @@ export function LiveArtifactViewer({
 
   useEffect(() => {
     let cancelled = false;
+    setLoading(true);
+    setLoadError(null);
     void Promise.all([
       fetchLiveArtifact(projectId, summary.id),
       fetchLiveArtifactRefreshes(projectId, summary.id),
@@ -46,6 +50,11 @@ export function LiveArtifactViewer({
       if (cancelled) return;
       setArtifact(nextArtifact);
       setHistory(nextHistory);
+    }).catch((err: unknown) => {
+      if (cancelled) return;
+      setLoadError(err instanceof Error ? err.message : 'Unable to load artifact preview.');
+    }).finally(() => {
+      if (!cancelled) setLoading(false);
     });
     return () => {
       cancelled = true;
@@ -55,16 +64,21 @@ export function LiveArtifactViewer({
   async function handleRefresh() {
     setRefreshing(true);
     setError(null);
-    const next = await refreshLiveArtifact(projectId, summary.id);
-    if (!next) {
-      setError('Refresh failed or no refresh source is available.');
-    } else {
-      setArtifact(next);
-      setReloadKey((value) => value + 1);
-      await onUpdated?.();
+    try {
+      const next = await refreshLiveArtifact(projectId, summary.id);
+      if (!next) {
+        setError('Refresh failed or no refresh source is available.');
+      } else {
+        setArtifact(next);
+        setReloadKey((value) => value + 1);
+        await onUpdated?.();
+      }
+      setHistory(await fetchLiveArtifactRefreshes(projectId, summary.id));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Refresh failed.');
+    } finally {
+      setRefreshing(false);
     }
-    setHistory(await fetchLiveArtifactRefreshes(projectId, summary.id));
-    setRefreshing(false);
   }
 
   const current = artifact ?? summary;
@@ -98,7 +112,19 @@ export function LiveArtifactViewer({
         <div className="live-artifact-notice">This artifact is viewable now; add a refresh source to enable manual refresh.</div>
       ) : null}
       <div className="live-artifact-stage">
-        <iframe title={current.title} src={previewUrl} sandbox="allow-same-origin" />
+        {loading ? (
+          <div className="live-artifact-state loading">
+            <span className="preview-state-mark" aria-hidden />
+            <span>Loading preview</span>
+          </div>
+        ) : loadError ? (
+          <div className="live-artifact-state error">
+            <span className="preview-state-mark" aria-hidden />
+            <span>{loadError}</span>
+          </div>
+        ) : (
+          <iframe title={current.title} src={previewUrl} sandbox="allow-same-origin" />
+        )}
       </div>
       <div className="live-artifact-history">
         <span>Refresh history</span>
@@ -106,7 +132,7 @@ export function LiveArtifactViewer({
           <em>No refreshes yet</em>
         ) : (
           history.slice(0, 8).map((entry) => (
-            <div key={entry.id} className={`live-artifact-history-row ${entry.status}`}>
+            <div key={`${entry.refreshId}:${entry.sequence}`} className={`live-artifact-history-row ${entry.status}`}>
               <strong>{entry.step}</strong>
               <span>{entry.status}</span>
               <time>{new Date(entry.finishedAt ?? entry.startedAt).toLocaleString()}</time>

@@ -68,6 +68,8 @@ export function PromptTemplatesTab({ surface, templates, onPreview }: Props) {
     });
   }, [surfaceScoped, filter, category, source, locale]);
 
+  const featured = filtered[0] ?? surfaceScoped[0] ?? null;
+
   if (surfaceScoped.length === 0) {
     return (
       <div className="tab-empty">
@@ -80,7 +82,27 @@ export function PromptTemplatesTab({ surface, templates, onPreview }: Props) {
 
   return (
     <div className="tab-panel prompt-templates-panel">
-      <div className="tab-panel-toolbar">
+      <div className="prompt-templates-hero">
+        <div>
+          <span className="prompt-templates-kicker">
+            {surface === 'image' ? 'Image Playbooks' : 'Video Playbooks'}
+          </span>
+          <h2>
+            {surface === 'image'
+              ? 'Prompt systems for visual direction, not loose one-liners.'
+              : 'Motion briefs with mood, camera, rhythm, and render intent.'}
+          </h2>
+          <p>
+            Browse curated playbooks, preview the source media, then carry the prompt into the creation flow.
+          </p>
+        </div>
+        <div className="prompt-templates-hero-card" aria-hidden>
+          <span>{filtered.length} visible</span>
+          <strong>{featured?.category ?? 'Curated'}</strong>
+          <em>{sources.length - 1} sources · {surfaceScoped.length} templates</em>
+        </div>
+      </div>
+      <div className="tab-panel-toolbar prompt-templates-toolbar">
         <input
           placeholder={t('promptTemplates.searchPlaceholder')}
           value={filter}
@@ -177,6 +199,7 @@ function PromptTemplateCard({
             ▶
           </span>
         ) : null}
+        <span className="prompt-template-thumb-sheen" aria-hidden />
         <span className="prompt-template-provider-badge">
           {providerLabel}
         </span>

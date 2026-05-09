@@ -7,7 +7,7 @@ import path from 'node:path';
 import fs from 'node:fs';
 import os from 'node:os';
 import net from 'node:net';
-import { composeSystemPrompt } from './prompts/system.js';
+import { composeSystemPrompt } from '@pixelpitch/contracts';
 import {
   detectAgents,
   getAgentDef,
@@ -30,6 +30,11 @@ import { listPromptTemplates, readPromptTemplate } from './prompt-templates.js';
 import { buildDocumentPreview } from './document-preview.js';
 import { lintArtifact, renderFindingsForAgent } from './lint-artifact.js';
 import { loadCraftSections } from './craft.js';
+import {
+  buildSpecialistPlannerPrompt,
+  parseSpecialistPlannerOutput,
+  planSpecialistWorkflow,
+} from './specialist-router.js';
 import { generateMedia } from './media.js';
 import { PptxExportError, runPptxExport } from './pptx-export.js';
 import {
@@ -43,6 +48,10 @@ import {
 } from './media-models.js';
 import { readMaskedConfig, writeConfig } from './media-config.js';
 import { readAppConfig, writeAppConfig } from './app-config.js';
+import {
+  applyHtmlEditOperations,
+  HtmlEditOperationError,
+} from './html-edit-ops.js';
 import {
   buildProjectArchive,
   decodeMultipartFilename,
@@ -131,13 +140,13 @@ import {
 import {
   buildDeployFileSet,
   checkDeploymentUrl,
+  CLOUD_RUN_PROVIDER_ID,
   DeployError,
-  deployToVercel,
+  deployToCloudRun,
   prepareDeployPreflight,
   publicDeployConfig,
-  readVercelConfig,
-  VERCEL_PROVIDER_ID,
-  writeVercelConfig,
+  readCloudRunConfig,
+  writeCloudRunConfig,
 } from './deploy.js';
 
 /** @typedef {import('@pixelpitch/contracts').ApiErrorCode} ApiErrorCode */
@@ -544,6 +553,111 @@ export function renderConversationTranscriptMarkdown(payload) {
  */
 function createSseErrorPayload(code, message, init = {}) {
   return { message, error: createCompatApiError(code, message, init) };
+}
+
+async function applyProjectEditOperations(projectId, ownerFileName, operations) {
+  const owner = await readProjectFile(PROJECTS_DIR, projectId, ownerFileName);
+  const ownerSource = owner.buffer.toString('utf8');
+  const sourceCache = new Map([[owner.name, ownerSource]]);
+  const changed = new Map();
+  const applied = [];
+
+  for (const operation of operations) {
+    const candidates = await projectEditCandidateNames(projectId, owner.name, ownerSource, operation);
+    let match = null;
+    let lastTargetError = null;
+
+    for (const candidateName of candidates) {
+      let source = sourceCache.get(candidateName);
+      if (source == null) {
+        try {
+          const file = await readProjectFile(PROJECTS_DIR, projectId, candidateName);
+          source = file.buffer.toString('utf8');
+          sourceCache.set(file.name, source);
+        } catch {
+          continue;
+        }
+      }
+
+      try {
+        const result = applyHtmlEditOperations(source, [operation]);
+        sourceCache.set(candidateName, result.source);
+        changed.set(candidateName, result.source);
+        applied.push(...result.applied.map((item) => ({ ...item, fileName: candidateName })));
+        match = candidateName;
+        break;
+      } catch (err) {
+        if (err instanceof HtmlEditOperationError && err.message === 'target element not found') {
+          lastTargetError = err;
+          continue;
+        }
+        throw err;
+      }
+    }
+
+    if (!match) {
+      if (lastTargetError) throw lastTargetError;
+      throw new HtmlEditOperationError('target element not found', {
+        selector: operation?.target?.selector,
+        elementId: operation?.target?.elementId,
+      });
+    }
+  }
+
+  for (const [fileName, source] of changed.entries()) {
+    await writeProjectFile(
+      PROJECTS_DIR,
+      projectId,
+      fileName,
+      Buffer.from(source, 'utf8'),
+    );
+  }
+
+  return applied;
+}
+
+async function projectEditCandidateNames(projectId, ownerName, ownerSource, operation) {
+  const names = uniqueStrings([
+    ownerName,
+    ...relativeHtmlAssetRefs(ownerName, ownerSource),
+  ]);
+
+  const target = operation?.target ?? {};
+  const needle = compactString(target.currentText || target.elementId || target.label || '', 80);
+  if (!needle) return names;
+  const files = await listFiles(PROJECTS_DIR, projectId);
+  const searchable = files
+    .filter((file) => /\.(?:html?|jsx?|tsx?)$/i.test(file.name))
+    .filter((file) => file.size <= 500_000)
+    .map((file) => file.name);
+  return uniqueStrings([...names, ...searchable]);
+}
+
+function relativeHtmlAssetRefs(ownerName, source) {
+  const out = [];
+  const tagRe = /<(?:script|link)\b[^>]*(?:src|href)\s*=\s*(['"])([\s\S]*?)\1[^>]*>/gi;
+  let match;
+  while ((match = tagRe.exec(String(source || '')))) {
+    const resolved = resolveProjectRelativePath(ownerName, match[2]);
+    if (resolved) out.push(resolved);
+  }
+  return out;
+}
+
+function resolveProjectRelativePath(ownerName, assetRef) {
+  if (/^(?:https?:|data:|blob:|mailto:|tel:|#|\/)/i.test(String(assetRef || ''))) return null;
+  try {
+    const url = new URL(String(assetRef || ''), `https://pixelpitch.local/${baseDirForProjectPath(ownerName)}`);
+    if (url.origin !== 'https://pixelpitch.local') return null;
+    return decodeURIComponent(url.pathname.replace(/^\/+/, ''));
+  } catch {
+    return null;
+  }
+}
+
+function baseDirForProjectPath(fileName) {
+  const idx = String(fileName || '').lastIndexOf('/');
+  return idx >= 0 ? String(fileName).slice(0, idx + 1) : '';
 }
 
 const UPLOAD_DIR = path.join(os.tmpdir(), 'od-uploads');
@@ -2284,7 +2398,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
   app.get('/api/deploy/config', async (_req, res) => {
     try {
       /** @type {import('@pixelpitch/contracts').DeployConfigResponse} */
-      const body = publicDeployConfig(await readVercelConfig());
+      const body = publicDeployConfig(await readCloudRunConfig());
       res.json(body);
     } catch (err) {
       sendApiError(res, 500, 'INTERNAL_ERROR', String(err?.message || err));
@@ -2294,7 +2408,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
   app.put('/api/deploy/config', async (req, res) => {
     try {
       /** @type {import('@pixelpitch/contracts').DeployConfigResponse} */
-      const body = await writeVercelConfig(req.body || {});
+      const body = await writeCloudRunConfig(req.body || {});
       res.json(body);
     } catch (err) {
       sendApiError(res, 400, 'BAD_REQUEST', String(err?.message || err));
@@ -2313,8 +2427,8 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
 
   app.post('/api/projects/:id/deploy', async (req, res) => {
     try {
-      const { fileName, providerId = VERCEL_PROVIDER_ID } = req.body || {};
-      if (providerId !== VERCEL_PROVIDER_ID) {
+      const { fileName, providerId = CLOUD_RUN_PROVIDER_ID } = req.body || {};
+      if (providerId !== CLOUD_RUN_PROVIDER_ID) {
         return sendApiError(
           res,
           400,
@@ -2332,8 +2446,8 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
         req.params.id,
         fileName,
       );
-      const result = await deployToVercel({
-        config: await readVercelConfig(),
+      const result = await deployToCloudRun({
+        config: await readCloudRunConfig(),
         files,
         projectId: req.params.id,
       });
@@ -2373,8 +2487,8 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
 
   app.post('/api/projects/:id/deploy/preflight', async (req, res) => {
     try {
-      const { fileName, providerId = VERCEL_PROVIDER_ID } = req.body || {};
-      if (providerId !== VERCEL_PROVIDER_ID) {
+      const { fileName, providerId = CLOUD_RUN_PROVIDER_ID } = req.body || {};
+      if (providerId !== CLOUD_RUN_PROVIDER_ID) {
         return sendApiError(
           res,
           400,
@@ -2436,7 +2550,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
           statusMessage: result.reachable
             ? 'Public link is ready.'
             : result.statusMessage ||
-              'Vercel is still preparing the public link.',
+              'Cloud Run is still preparing the public link.',
           reachableAt: result.reachable ? now : existing.reachableAt,
           updatedAt: now,
         });
@@ -2487,6 +2601,59 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       res.json({ query, matches });
     } catch (err) {
       sendApiError(res, 400, 'BAD_REQUEST', String(err));
+    }
+  });
+
+  app.post('/api/projects/:id/edit-ops/apply', async (req, res) => {
+    try {
+      if (!getProject(db, req.params.id)) {
+        return sendApiError(res, 404, 'FILE_NOT_FOUND', 'project not found');
+      }
+      const operations = Array.isArray(req.body?.operations)
+        ? req.body.operations
+        : [];
+      if (operations.length === 0) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'operations required');
+      }
+      if (operations.length > 100) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'too many edit operations');
+      }
+
+      const byFile = new Map();
+      for (const operation of operations) {
+        const fileName = operation?.target?.fileName;
+        if (typeof fileName !== 'string' || !fileName.trim()) {
+          return sendApiError(res, 400, 'BAD_REQUEST', 'operation target.fileName required');
+        }
+        const list = byFile.get(fileName) ?? [];
+        list.push(operation);
+        byFile.set(fileName, list);
+      }
+
+      const applied = [];
+      for (const [fileName, fileOperations] of byFile.entries()) {
+        if (!/\.html?$/i.test(fileName)) {
+          return sendApiError(res, 400, 'BAD_REQUEST', 'deterministic edit ops currently support HTML files only');
+        }
+        const edited = await applyProjectEditOperations(req.params.id, fileName, fileOperations);
+        applied.push(...edited);
+      }
+
+      updateProject(db, req.params.id, {});
+      /** @type {import('@pixelpitch/contracts').ApplyElementEditsResponse} */
+      const body = { ok: true, applied };
+      res.json(body);
+    } catch (err) {
+      if (err instanceof HtmlEditOperationError) {
+        return sendApiError(res, 400, 'BAD_REQUEST', err.message, err.details ? { details: err.details } : undefined);
+      }
+      const status = err && err.code === 'ENOENT' ? 404 : 400;
+      sendApiError(
+        res,
+        status,
+        status === 404 ? 'FILE_NOT_FOUND' : 'BAD_REQUEST',
+        String(err?.message || err),
+      );
     }
   });
 
@@ -3459,6 +3626,231 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     });
   };
 
+  app.post('/api/tools/delegation/send', async (req, res) => {
+    try {
+      const toolGrant = authorizeToolRequest(req, res, 'delegation:send');
+      if (!toolGrant) return;
+      const task = typeof req.body?.task === 'string' ? req.body.task.trim() : '';
+      if (!task) return sendApiError(res, 400, 'BAD_REQUEST', 'task required');
+      if (task.length > 12000) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'task is too long');
+      }
+
+      const parentRun = design.runs.get(toolGrant.runId);
+      if (!parentRun) return sendApiError(res, 404, 'NOT_FOUND', 'parent run not found');
+      if (design.runs.isTerminal(parentRun.status)) {
+        return sendApiError(res, 409, 'BAD_REQUEST', 'parent run is already complete');
+      }
+
+      const requestedAgentId =
+        typeof req.body?.agentId === 'string' && req.body.agentId.trim()
+          ? req.body.agentId.trim()
+          : parentRun.agentId;
+      const def = getAgentDef(requestedAgentId);
+      if (!def) return sendApiError(res, 400, 'AGENT_UNAVAILABLE', `unknown agent: ${requestedAgentId}`);
+      if (!def.bin) return sendApiError(res, 400, 'AGENT_UNAVAILABLE', 'agent has no binary');
+      if ((def.streamFormat ?? 'plain') !== 'plain') {
+        return sendApiError(
+          res,
+          400,
+          'BAD_REQUEST',
+          `delegation currently requires a plain-stream adapter, got ${def.streamFormat}`,
+        );
+      }
+      const resolvedBin = resolveAgentBin(requestedAgentId);
+      if (!resolvedBin) {
+        return sendApiError(
+          res,
+          400,
+          'AGENT_UNAVAILABLE',
+          `Agent "${def.name}" (\`${def.bin}\`) is not installed or not on PATH.`,
+          { retryable: true },
+        );
+      }
+
+      const cwd = await ensureProject(PROJECTS_DIR, toolGrant.projectId);
+      const safeModel =
+        typeof req.body?.model === 'string'
+          ? isKnownModel(def, req.body.model)
+            ? req.body.model
+            : sanitizeCustomModel(req.body.model)
+          : null;
+      const safeReasoning =
+        typeof req.body?.reasoning === 'string' && Array.isArray(def.reasoningOptions)
+          ? (def.reasoningOptions.find((r) => r.id === req.body.reasoning)?.id ?? null)
+          : null;
+      const timeoutMs = Math.max(
+        1000,
+        Math.min(Number(req.body?.timeoutMs) || 10 * 60 * 1000, 30 * 60 * 1000),
+      );
+      const parentSend = (event, data) => design.runs.emit(parentRun, event, data);
+      const result = await agentRunService.sendDelegatedTask({
+        parentRun,
+        parentSend,
+        agentId: requestedAgentId,
+        def,
+        resolvedBin,
+        cwd,
+        projectId: toolGrant.projectId,
+        conversationId: parentRun.conversationId,
+        safeModel,
+        safeReasoning,
+        task,
+        timeoutMs,
+      });
+      res.json({ ok: result.status === 'succeeded', ...result });
+    } catch (err) {
+      sendApiError(
+        res,
+        400,
+        'BAD_REQUEST',
+        err instanceof Error ? err.message : String(err),
+      );
+    }
+  });
+
+  app.post('/api/tools/delegation/workflow', async (req, res) => {
+    try {
+      const toolGrant = authorizeToolRequest(req, res, 'delegation:workflow');
+      if (!toolGrant) return;
+      const request = typeof req.body?.request === 'string' ? req.body.request.trim() : '';
+      if (!request) return sendApiError(res, 400, 'BAD_REQUEST', 'request required');
+      if (request.length > 16000) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'request is too long');
+      }
+
+      const parentRun = design.runs.get(toolGrant.runId);
+      if (!parentRun) return sendApiError(res, 404, 'NOT_FOUND', 'parent run not found');
+      if (design.runs.isTerminal(parentRun.status)) {
+        return sendApiError(res, 409, 'BAD_REQUEST', 'parent run is already complete');
+      }
+
+      const requestedAgentId =
+        typeof req.body?.agentId === 'string' && req.body.agentId.trim()
+          ? req.body.agentId.trim()
+          : parentRun.agentId;
+      const def = getAgentDef(requestedAgentId);
+      if (!def) return sendApiError(res, 400, 'AGENT_UNAVAILABLE', `unknown agent: ${requestedAgentId}`);
+      if (!def.bin) return sendApiError(res, 400, 'AGENT_UNAVAILABLE', 'agent has no binary');
+      if ((def.streamFormat ?? 'plain') !== 'plain') {
+        return sendApiError(
+          res,
+          400,
+          'BAD_REQUEST',
+          `delegation workflow currently requires a plain-stream adapter, got ${def.streamFormat}`,
+        );
+      }
+      const resolvedBin = resolveAgentBin(requestedAgentId);
+      if (!resolvedBin) {
+        return sendApiError(
+          res,
+          400,
+          'AGENT_UNAVAILABLE',
+          `Agent "${def.name}" (\`${def.bin}\`) is not installed or not on PATH.`,
+          { retryable: true },
+        );
+      }
+
+      const cwd = await ensureProject(PROJECTS_DIR, toolGrant.projectId);
+      const safeModel =
+        typeof req.body?.model === 'string'
+          ? isKnownModel(def, req.body.model)
+            ? req.body.model
+            : sanitizeCustomModel(req.body.model)
+          : null;
+      const safeReasoning =
+        typeof req.body?.reasoning === 'string' && Array.isArray(def.reasoningOptions)
+          ? (def.reasoningOptions.find((r) => r.id === req.body.reasoning)?.id ?? null)
+          : null;
+      const timeoutMs = Math.max(
+        1000,
+        Math.min(Number(req.body?.timeoutMs) || 10 * 60 * 1000, 30 * 60 * 1000),
+      );
+      const parentSend = (event, data) => design.runs.emit(parentRun, event, data);
+      const usePlanner = req.body?.planner !== false;
+      let plan = planSpecialistWorkflow(request);
+      let planner = { used: false, status: 'skipped', error: null };
+      if (usePlanner) {
+        const workflowId = `planner-${Date.now().toString(36)}`;
+        parentSend('agent', {
+          type: 'delegation_workflow',
+          workflowId,
+          event: 'planner_started',
+          status: 'running',
+        });
+        const plannerResult = await agentRunService.sendDelegatedTask({
+          parentRun,
+          parentSend,
+          agentId: requestedAgentId,
+          def,
+          resolvedBin,
+          cwd,
+          projectId: toolGrant.projectId,
+          conversationId: parentRun.conversationId,
+          safeModel,
+          safeReasoning,
+          task: buildSpecialistPlannerPrompt(request),
+          timeoutMs: Math.min(timeoutMs, 5 * 60 * 1000),
+        });
+        try {
+          if (plannerResult.status !== 'succeeded') {
+            throw new Error(`planner exited with status ${plannerResult.status}`);
+          }
+          plan = parseSpecialistPlannerOutput(plannerResult.stdout, request);
+          planner = { used: true, status: 'succeeded', error: null };
+          parentSend('agent', {
+            type: 'delegation_workflow',
+            workflowId,
+            event: 'planner_succeeded',
+            status: 'succeeded',
+            taskCount: plan.tasks.length,
+            tasks: plan.tasks.map((task) => ({
+              id: task.id,
+              title: task.title,
+              specialist: task.specialist,
+              dependsOn: task.dependsOn ?? [],
+            })),
+          });
+        } catch (err) {
+          planner = {
+            used: true,
+            status: 'fallback',
+            error: err instanceof Error ? err.message : String(err),
+          };
+          parentSend('agent', {
+            type: 'delegation_workflow',
+            workflowId,
+            event: 'planner_fallback',
+            status: 'fallback',
+            detail: planner.error,
+          });
+        }
+      }
+      const result = await agentRunService.runSpecialistWorkflow({
+        parentRun,
+        parentSend,
+        agentId: requestedAgentId,
+        def,
+        resolvedBin,
+        cwd,
+        projectId: toolGrant.projectId,
+        conversationId: parentRun.conversationId,
+        safeModel,
+        safeReasoning,
+        plan,
+        timeoutMs,
+      });
+      res.json({ ok: result.status === 'succeeded', planner, ...result });
+    } catch (err) {
+      sendApiError(
+        res,
+        400,
+        'BAD_REQUEST',
+        err instanceof Error ? err.message : String(err),
+      );
+    }
+  });
+
   app.post('/api/runs', (req, res) => {
     const run = design.runs.create(req.body || {});
     /** @type {import('@pixelpitch/contracts').ChatRunCreateResponse} */
@@ -3932,6 +4324,7 @@ export function isLocalSameOrigin(req, port) {
   if (req.method === 'GET' && isPortlessLoopbackOrigin(String(origin))) {
     return true;
   }
+  if (isAllowedDevWebOrigin(String(origin))) return true;
   return allowedOrigins.has(String(origin));
 }
 
@@ -3942,6 +4335,25 @@ export function isPortlessLoopbackOrigin(origin) {
     if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return false;
     const hostname = parsed.hostname.toLowerCase();
     return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1' || hostname === '[::1]';
+  } catch {
+    return false;
+  }
+}
+
+function isAllowedDevWebOrigin(origin) {
+  try {
+    const parsed = new URL(String(origin));
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return false;
+    const hostname = parsed.hostname.toLowerCase();
+    const configured = String(process.env.PIXELPITCH_ALLOWED_DEV_ORIGINS || '')
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean);
+    if (configured.includes(parsed.origin)) return true;
+    if (hostname === 'cloudworkstations.dev' || hostname.endsWith('.cloudworkstations.dev')) {
+      return true;
+    }
+    return false;
   } catch {
     return false;
   }

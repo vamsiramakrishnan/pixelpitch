@@ -149,21 +149,25 @@ export interface LiveArtifactRefreshResponse {
 
 export type LiveArtifactRefreshStepStatus = 'running' | 'succeeded' | 'failed' | 'cancelled' | 'skipped';
 
+export type LiveArtifactRefreshSourceType = 'document' | 'artifact';
+
 export interface LiveArtifactRefreshErrorRecord {
   code?: string;
   message: string;
   path?: string;
 }
 
+export interface LiveArtifactRefreshConnectorMetadata {
+  connectorId: string;
+  accountLabel?: string;
+  toolName: string;
+  approvalPolicy?: LiveArtifactConnectorApprovalPolicy;
+}
+
 export interface LiveArtifactRefreshSourceMetadata {
-  sourceType: 'document';
+  sourceType: LiveArtifactRefreshSourceType;
   toolName?: string;
-  connector?: {
-    connectorId: string;
-    accountLabel?: string;
-    toolName: string;
-    approvalPolicy?: LiveArtifactConnectorApprovalPolicy;
-  };
+  connector?: LiveArtifactRefreshConnectorMetadata;
 }
 
 export interface LiveArtifactRefreshLogEntry {

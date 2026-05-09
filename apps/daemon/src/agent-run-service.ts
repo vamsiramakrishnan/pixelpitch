@@ -4,6 +4,7 @@ import path from 'node:path';
 import { spawnEnvForAgent } from './agents.js';
 import { runOrchestrator } from './critique/orchestrator.js';
 import { runParallelReviewRound } from './critique/parallel-orchestrator.js';
+import { planTaskDagLevels } from './task-dag.js';
 import {
   CHAT_TOOL_ENDPOINTS,
   CHAT_TOOL_OPERATIONS,
@@ -30,12 +31,18 @@ export function createAgentRuntimeToolPrompt(daemonUrl, grant) {
     '- GET /api/tools/connectors/list',
     '- POST /api/tools/connectors/inspect',
     '- POST /api/tools/connectors/execute',
+    '- POST /api/tools/delegation/send',
+    '- POST /api/tools/delegation/workflow',
     '',
     'Connector tools are limited to connected, auto-approved read-only tools. Use list for a compact index, inspect for the full schema of one tool, then execute with validated JSON input. Prefer the CLI wrapper when available:',
     '- `"$PIXELPITCH_NODE_BIN" "$PIXELPITCH_BIN" tools connectors list --format compact`',
     '- `"$PIXELPITCH_NODE_BIN" "$PIXELPITCH_BIN" tools connectors inspect --connector <id> --tool <name> --format compact`',
     '- `"$PIXELPITCH_NODE_BIN" "$PIXELPITCH_BIN" tools connectors execute --connector <id> --tool <name> --input input.json`',
+    '- `"$PIXELPITCH_NODE_BIN" "$PIXELPITCH_BIN" tools delegate send --task "Audit the CSS for contrast issues" --format compact`',
+    '- `"$PIXELPITCH_NODE_BIN" "$PIXELPITCH_BIN" tools delegate workflow --request "Research, build, and review a landing page refresh" --format compact`',
     '',
+    'Use delegation for bounded specialist side work. The delegate receives scoped project access, runs as a child of your current run, and returns its result here.',
+    'Use delegation workflow for multi-part requests; Pixelpitch first asks a planner child for a validated JSON DAG, falls back to deterministic routing if invalid, runs independent specialist tasks in parallel, and returns the merged child results.',
     'Prefer Live Artifacts for dashboards, reports, scorecards, and refreshable views where the data and preview should stay structured.',
   ].join('\n');
 }
@@ -220,6 +227,307 @@ export function createAgentRunService({
       '',
       prompt,
     ].filter(Boolean).join('\n');
+  }
+
+  function buildDelegatePrompt({
+    task,
+    parentRunId,
+    cwd,
+    runtimeToolPrompt = '',
+  }) {
+    return [
+      '# Pixelpitch delegated sub-run',
+      '',
+      `Parent run: ${parentRunId}`,
+      cwd ? `Project directory: ${cwd}` : '',
+      runtimeToolPrompt ? `\n${runtimeToolPrompt}` : '',
+      '',
+      'You are a bounded specialist child agent. Complete only the delegated task. Do not ask the user questions.',
+      'Return a concise result with: findings, changed files if any, validation performed, and remaining risks.',
+      '',
+      '# Delegated task',
+      '',
+      task,
+    ].filter(Boolean).join('\n');
+  }
+
+  async function sendDelegatedTask({
+    parentRun,
+    parentSend,
+    agentId,
+    def,
+    resolvedBin,
+    cwd,
+    projectId,
+    conversationId,
+    safeModel,
+    safeReasoning,
+    task,
+    timeoutMs = 10 * 60 * 1000,
+  }) {
+    const childRun = runs.create({ projectId, conversationId, agentId });
+    const childSend = (event, data) => {
+      runs.emit(childRun, event, data);
+      if (event === 'start' || event === 'end' || event === 'error') {
+        parentSend('agent', {
+          type: 'delegation_subrun',
+          runId: parentRun.id,
+          childRunId: childRun.id,
+          event,
+          data,
+        });
+      }
+    };
+    const toolContext = createToolContext({
+      runId: childRun.id,
+      projectId,
+      cwd,
+      send: childSend,
+      parentRunId: parentRun.id,
+      parentSend,
+    });
+    const prompt = buildDelegatePrompt({
+      task,
+      parentRunId: parentRun.id,
+      cwd,
+      runtimeToolPrompt: toolContext.runtimeToolPrompt,
+    });
+    const args = def.buildArgs(
+      prompt,
+      [],
+      [],
+      { model: safeModel, reasoning: safeReasoning },
+      { cwd },
+    );
+
+    rememberChild(parentRun.id, childRun.id);
+    childRun.status = 'running';
+    childRun.updatedAt = Date.now();
+    childSend('start', {
+      runId: childRun.id,
+      parentRunId: parentRun.id,
+      runKind: 'delegation',
+      agentId,
+      bin: resolvedBin,
+      streamFormat: def.streamFormat ?? 'plain',
+      projectId: typeof projectId === 'string' ? projectId : null,
+      cwd,
+      model: safeModel,
+      reasoning: safeReasoning,
+    });
+
+    const output = [];
+    const stderrOutput = [];
+    let child;
+    try {
+      const env = spawnEnvForAgent(agentId, {
+        ...process.env,
+        ...(toolContext?.env ?? {}),
+      });
+      child = spawnAgentProcess({
+        agentId,
+        def,
+        resolvedBin,
+        args,
+        env,
+        cwd,
+        prompt,
+        send: childSend,
+        createExecutionErrorPayload: (message) =>
+          createSseErrorPayload('AGENT_EXECUTION_FAILED', message),
+      }).child;
+      childRun.child = child;
+    } catch (err) {
+      toolContext.cleanup('child_exit');
+      forgetChild(parentRun.id, childRun.id);
+      childSend('error', createSseErrorPayload('AGENT_EXECUTION_FAILED', `spawn failed: ${err.message}`));
+      runs.finish(childRun, 'failed', 1, null);
+      throw err;
+    }
+
+    child.stdout?.setEncoding('utf8');
+    child.stderr?.setEncoding('utf8');
+    const stdoutDone = new Promise((resolve) => {
+      if (!child.stdout) return resolve(undefined);
+      child.stdout.on('data', (chunk) => {
+        const text = String(chunk);
+        output.push(text);
+        childSend('stdout', { chunk: text });
+      });
+      child.stdout.on('end', resolve);
+      child.stdout.resume();
+    });
+    const stderrDone = new Promise((resolve) => {
+      if (!child.stderr) return resolve(undefined);
+      child.stderr.on('data', (chunk) => {
+        const text = String(chunk);
+        stderrOutput.push(text);
+        childSend('stderr', { chunk: text });
+      });
+      child.stderr.on('end', resolve);
+      child.stderr.resume();
+    });
+
+    return await new Promise((resolve) => {
+      let timedOut = false;
+      const timer = setTimeout(() => {
+        timedOut = true;
+        childRun.cancelRequested = true;
+        child.kill?.('SIGTERM');
+      }, Math.max(1000, Math.min(Number(timeoutMs) || 600000, 30 * 60 * 1000)));
+      timer.unref?.();
+
+      child.on('error', (err) => {
+        clearTimeout(timer);
+        toolContext.cleanup('child_exit');
+        forgetChild(parentRun.id, childRun.id);
+        childSend('error', createSseErrorPayload('AGENT_EXECUTION_FAILED', err.message));
+        runs.finish(childRun, 'failed', 1, null);
+        resolve({
+          runId: childRun.id,
+          status: 'failed',
+          stdout: output.join('').slice(0, 200000),
+          stderr: String(err.message || '').slice(0, 200000),
+        });
+      });
+      child.on('close', async (code, signal) => {
+        clearTimeout(timer);
+        await Promise.allSettled([stdoutDone, stderrDone]);
+        toolContext.cleanup('child_exit');
+        forgetChild(parentRun.id, childRun.id);
+        const status = timedOut
+          ? 'timed_out'
+          : childRun.cancelRequested
+            ? 'canceled'
+            : code === 0
+              ? 'succeeded'
+              : 'failed';
+        runs.finish(childRun, status === 'succeeded' ? 'succeeded' : status === 'canceled' ? 'canceled' : 'failed', code, signal);
+        resolve({
+          runId: childRun.id,
+          status,
+          code,
+          signal,
+          stdout: output.join('').slice(0, 200000),
+          stderr: stderrOutput.join('').slice(0, 200000),
+        });
+      });
+    });
+  }
+
+  async function runSpecialistWorkflow({
+    parentRun,
+    parentSend,
+    agentId,
+    def,
+    resolvedBin,
+    cwd,
+    projectId,
+    conversationId,
+    safeModel,
+    safeReasoning,
+    plan,
+    timeoutMs = 10 * 60 * 1000,
+  }) {
+    const levels = planTaskDagLevels(plan.tasks);
+    const workflowId = `workflow-${Date.now().toString(36)}`;
+    const results = [];
+    parentSend('agent', {
+      type: 'delegation_workflow',
+      workflowId,
+      event: 'started',
+      mode: plan.mode,
+      taskCount: plan.tasks.length,
+      levels: plan.levels,
+      tasks: plan.tasks.map((task) => ({
+        id: task.id,
+        title: task.title,
+        specialist: task.specialist,
+        dependsOn: task.dependsOn ?? [],
+      })),
+    });
+
+    for (const level of levels) {
+      parentSend('agent', {
+        type: 'delegation_workflow',
+        workflowId,
+        event: 'level_started',
+        level: level.level,
+        taskIds: level.nodes.map((task) => task.id),
+      });
+      const settled = await Promise.all(level.nodes.map(async (task) => {
+        parentSend('agent', {
+          type: 'delegation_workflow',
+          workflowId,
+          event: 'task_started',
+          level: level.level,
+          taskId: task.id,
+          title: task.title,
+          specialist: task.specialist,
+        });
+        const result = await sendDelegatedTask({
+          parentRun,
+          parentSend,
+          agentId,
+          def,
+          resolvedBin,
+          cwd,
+          projectId,
+          conversationId,
+          safeModel,
+          safeReasoning,
+          task: task.task,
+          timeoutMs,
+        });
+        const taskResult = {
+          taskId: task.id,
+          title: task.title,
+          specialist: task.specialist,
+          ...result,
+        };
+        parentSend('agent', {
+          type: 'delegation_workflow',
+          workflowId,
+          event: result.status === 'succeeded' ? 'task_succeeded' : 'task_failed',
+          level: level.level,
+          taskId: task.id,
+          title: task.title,
+          specialist: task.specialist,
+          childRunId: result.runId,
+          status: result.status,
+        });
+        return taskResult;
+      }));
+      results.push(...settled);
+      const failed = settled.find((result) => result.status !== 'succeeded');
+      if (failed) {
+        parentSend('agent', {
+          type: 'delegation_workflow',
+          workflowId,
+          event: 'failed',
+          status: 'failed',
+          failedTaskId: failed.taskId,
+          results,
+        });
+        return { workflowId, status: 'failed', plan, results };
+      }
+      parentSend('agent', {
+        type: 'delegation_workflow',
+        workflowId,
+        event: 'level_finished',
+        level: level.level,
+        taskIds: level.nodes.map((task) => task.id),
+      });
+    }
+
+    parentSend('agent', {
+      type: 'delegation_workflow',
+      workflowId,
+      event: 'succeeded',
+      status: 'succeeded',
+      results,
+    });
+    return { workflowId, status: 'succeeded', plan, results };
   }
 
   async function spawnReviewerSubRun({
@@ -621,6 +929,8 @@ export function createAgentRunService({
   return {
     createToolContext,
     startPreparedAgentRun,
+    sendDelegatedTask,
+    runSpecialistWorkflow,
     cancelChildren,
   };
 }

@@ -27,6 +27,7 @@ import { composeSystemPrompt } from '@pixelpitch/contracts';
 import { navigate } from '../router';
 import { agentDisplayName } from '../utils/agentLabels';
 import { playSound, showCompletionNotification } from '../utils/notifications';
+import { apiRuntimeAgentId, apiRuntimeLabel } from '../utils/runtimeLabels';
 import { DEFAULT_NOTIFICATIONS } from '../state/config';
 import type { TodoItem } from '../runtime/todos';
 import {
@@ -260,18 +261,20 @@ export function ProjectView({
 
   useEffect(() => {
     return () => {
+      sendTextBufferRef.current?.flush();
       sendTextBufferRef.current?.cancel();
       sendTextBufferRef.current = null;
       for (const textBuffer of reattachTextBuffersRef.current) textBuffer.cancel();
       reattachTextBuffersRef.current.clear();
+      abortRef.current?.abort();
+      abortRef.current = null;
       for (const controller of reattachControllersRef.current.values()) {
         controller.abort();
       }
-      for (const controller of reattachCancelControllersRef.current.values()) {
-        controller.abort();
-      }
+      cancelRef.current = null;
       reattachControllersRef.current.clear();
       reattachCancelControllersRef.current.clear();
+      setStreaming(false);
     };
   }, [project.id, activeConversationId]);
 
@@ -583,6 +586,12 @@ export function ProjectView({
     setAttachedComments((current) => mergeAttachedComments(current, comment));
   }, []);
 
+  const attachPreviewComments = useCallback((comments: PreviewComment[]) => {
+    setAttachedComments((current) =>
+      comments.reduce((next, comment) => mergeAttachedComments(next, comment), current),
+    );
+  }, []);
+
   const detachPreviewComment = useCallback((commentId: string) => {
     setAttachedComments((current) => removeAttachedComment(current, commentId));
   }, []);
@@ -837,11 +846,11 @@ export function ProjectView({
           ? agentsById.get(config.agentId)
           : null;
       const assistantAgentId =
-        config.mode === 'daemon' ? config.agentId ?? undefined : 'anthropic-api';
+        config.mode === 'daemon' ? config.agentId ?? undefined : apiRuntimeAgentId(config);
       const assistantAgentName =
         config.mode === 'daemon'
           ? assistantAgentDisplayName(config.agentId, selectedAgent?.name)
-          : 'Anthropic API';
+          : apiRuntimeLabel(config);
       const assistantId = crypto.randomUUID();
       const assistantMsg: ChatMessage = {
         id: assistantId,
@@ -1138,6 +1147,11 @@ export function ProjectView({
     ],
   );
 
+  const sendPreviewComments = useCallback((comments: PreviewComment[]) => {
+    if (comments.length === 0 || streaming) return;
+    void handleSend('Apply the attached slide notes.', [], commentsToAttachments(comments));
+  }, [handleSend, streaming]);
+
   const persistArtifact = useCallback(
     async (art: Artifact) => {
       const baseName = (art.identifier || art.title || 'artifact')
@@ -1370,6 +1384,7 @@ export function ProjectView({
       <AppChromeHeader
         onBack={onBack}
         backLabel={t('project.backToProjects')}
+        plate
         actions={(
           <AvatarMenu
             config={config}
@@ -1384,6 +1399,10 @@ export function ProjectView({
           />
         )}
       >
+        <div className="app-project-plate" aria-hidden>
+          <img src="/landing/inspect-plate.png" alt="" draggable={false} />
+          <span>PP</span>
+        </div>
         <div className="app-project-title">
             {editingTitle ? (
               <input
@@ -1520,6 +1539,8 @@ export function ProjectView({
           previewComments={previewComments}
           onSavePreviewComment={savePreviewComment}
           onRemovePreviewComment={removePreviewComment}
+          onAttachPreviewComments={attachPreviewComments}
+          onSendPreviewComments={sendPreviewComments}
           onStageComposerToken={stageComposerToken}
         />
       </div>

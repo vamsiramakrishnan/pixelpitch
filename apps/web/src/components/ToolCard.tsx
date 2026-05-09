@@ -64,8 +64,8 @@ export function ToolCard({
   if (name === 'Bash') return <BashCard input={use.input} result={result} />;
   if (name === 'Glob' || name === 'list_files') return <GlobCard input={use.input} result={result} />;
   if (name === 'Grep') return <GrepCard input={use.input} result={result} />;
-  if (name === 'WebFetch' || name === 'web_fetch') return <WebFetchCard input={use.input} />;
-  if (name === 'WebSearch' || name === 'web_search') return <WebSearchCard input={use.input} />;
+  if (name === 'WebFetch' || name === 'web_fetch') return <WebFetchCard input={use.input} result={result} />;
+  if (name === 'WebSearch' || name === 'web_search') return <WebSearchCard input={use.input} result={result} />;
   return <GenericCard name={name} input={use.input} result={result} />;
 }
 
@@ -173,6 +173,7 @@ function FileEditCard({
   };
   const file = obj.file_path ?? obj.path ?? '(unnamed)';
   const editCount = Array.isArray(obj.edits) ? obj.edits.length : 1;
+  const preview = editPreview(obj);
   return (
     <div className="op-card op-file">
       <div className="op-card-head">
@@ -185,6 +186,18 @@ function FileEditCard({
         <ResultBadge result={result} />
         <OpenInTabButton filePath={file} ctx={ctx} />
       </div>
+      {preview ? (
+        <div className="op-diff-preview" aria-label="Edit preview">
+          <div className="op-diff-line removed">
+            <span aria-hidden>-</span>
+            <code>{preview.before}</code>
+          </div>
+          <div className="op-diff-line added">
+            <span aria-hidden>+</span>
+            <code>{preview.after}</code>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -199,14 +212,24 @@ function FileReadCard({
   ctx: FileToolCtx;
 }) {
   const t = useT();
-  const obj = (input ?? {}) as { file_path?: string; path?: string };
+  const obj = (input ?? {}) as { file_path?: string; path?: string; limit?: number; offset?: number };
   const file = obj.file_path ?? obj.path ?? '(unnamed)';
+  const lineCount = result?.content ? result.content.split('\n').filter(Boolean).length : null;
   return (
     <div className="op-card op-file">
       <div className="op-card-head">
         <span className="op-icon op-icon-read" aria-hidden>↗</span>
         <span className="op-title">{t('tool.read')}</span>
         <code className="op-path">{file}</code>
+        {typeof obj.offset === 'number' || typeof obj.limit === 'number' ? (
+          <span className="op-meta">
+            {typeof obj.offset === 'number' ? `from ${obj.offset}` : ''}
+            {typeof obj.offset === 'number' && typeof obj.limit === 'number' ? ' / ' : ''}
+            {typeof obj.limit === 'number' ? `${obj.limit} lines` : ''}
+          </span>
+        ) : lineCount !== null ? (
+          <span className="op-meta">{lineCount} lines</span>
+        ) : null}
         <ResultBadge result={result} />
         <OpenInTabButton filePath={file} ctx={ctx} />
       </div>
@@ -220,6 +243,8 @@ function BashCard({ input, result }: { input: unknown; result?: Props['result'] 
   const command = obj.command ?? '';
   const desc = obj.description;
   const [open, setOpen] = useState(false);
+  const output = result?.content ?? '';
+  const summary = summarizeOutput(output);
   return (
     <div className="op-card op-bash">
       <div className="op-card-head">
@@ -234,6 +259,14 @@ function BashCard({ input, result }: { input: unknown; result?: Props['result'] 
         ) : null}
       </div>
       <pre className="op-command">{truncate(command, 400)}</pre>
+      {summary && !open ? (
+        <div className="op-output-summary">
+          <span>{summary.lineCount} lines</span>
+          {summary.hasWarnings ? <span className="warn">warnings</span> : null}
+          {summary.hasErrors || result?.isError ? <span className="error">errors</span> : null}
+          <code>{summary.preview}</code>
+        </div>
+      ) : null}
       {open && result ? (
         <pre className="op-output">{truncate(result.content, 4000)}</pre>
       ) : null}
@@ -244,6 +277,7 @@ function BashCard({ input, result }: { input: unknown; result?: Props['result'] 
 function GlobCard({ input, result }: { input: unknown; result?: Props['result'] }) {
   const t = useT();
   const obj = (input ?? {}) as { pattern?: string; path?: string };
+  const matches = result?.content ? result.content.split('\n').filter(Boolean) : [];
   return (
     <div className="op-card op-search">
       <div className="op-card-head">
@@ -255,6 +289,7 @@ function GlobCard({ input, result }: { input: unknown; result?: Props['result'] 
         ) : null}
         <ResultBadge result={result} />
       </div>
+      {matches.length > 0 ? <ResultList lines={matches} /> : null}
     </div>
   );
 }
@@ -262,6 +297,7 @@ function GlobCard({ input, result }: { input: unknown; result?: Props['result'] 
 function GrepCard({ input, result }: { input: unknown; result?: Props['result'] }) {
   const t = useT();
   const obj = (input ?? {}) as { pattern?: string; path?: string; glob?: string };
+  const matches = result?.content ? result.content.split('\n').filter(Boolean) : [];
   return (
     <div className="op-card op-search">
       <div className="op-card-head">
@@ -273,34 +309,46 @@ function GrepCard({ input, result }: { input: unknown; result?: Props['result'] 
         ) : null}
         <ResultBadge result={result} />
       </div>
+      {matches.length > 0 ? <ResultList lines={matches} /> : null}
     </div>
   );
 }
 
-function WebFetchCard({ input }: { input: unknown }) {
+function WebFetchCard({ input, result }: { input: unknown; result?: Props['result'] }) {
   const t = useT();
   const obj = (input ?? {}) as { url?: string };
+  const summary = result?.content ? summarizeOutput(result.content) : null;
   return (
     <div className="op-card op-web">
       <div className="op-card-head">
         <span className="op-icon" aria-hidden>↬</span>
         <span className="op-title">{t('tool.fetch')}</span>
         <code className="op-path">{obj.url ?? ''}</code>
+        <ResultBadge result={result} />
       </div>
+      {summary ? (
+        <div className="op-output-summary">
+          <span>{summary.lineCount} lines</span>
+          <code>{summary.preview}</code>
+        </div>
+      ) : null}
     </div>
   );
 }
 
-function WebSearchCard({ input }: { input: unknown }) {
+function WebSearchCard({ input, result }: { input: unknown; result?: Props['result'] }) {
   const t = useT();
   const obj = (input ?? {}) as { query?: string };
+  const lines = result?.content ? result.content.split('\n').filter(Boolean) : [];
   return (
     <div className="op-card op-web">
       <div className="op-card-head">
         <span className="op-icon" aria-hidden>⌕</span>
         <span className="op-title">{t('tool.search')}</span>
         <code className="op-path">{obj.query ?? ''}</code>
+        <ResultBadge result={result} />
       </div>
+      {lines.length > 0 ? <ResultList lines={lines} /> : null}
     </div>
   );
 }
@@ -340,6 +388,8 @@ function GenericCard({
 }) {
   const summary = describeInput(input);
   const iconName = toolIcon(name);
+  const [open, setOpen] = useState(false);
+  const resultSummary = result?.content ? summarizeOutput(result.content) : null;
   return (
     <div className="op-card op-generic">
       <div className="op-card-head">
@@ -347,7 +397,23 @@ function GenericCard({
         <span className="op-title">{name}</span>
         {summary ? <span className="op-meta">{truncate(summary, 200)}</span> : null}
         <ResultBadge result={result} />
+        {result?.content ? (
+          <button className="op-toggle" onClick={() => setOpen((o) => !o)}>
+            {open ? 'Hide details' : 'Details'}
+          </button>
+        ) : null}
       </div>
+      {resultSummary && !open ? (
+        <div className="op-output-summary">
+          <span>{resultSummary.lineCount} lines</span>
+          {resultSummary.hasWarnings ? <span className="warn">warnings</span> : null}
+          {resultSummary.hasErrors || result?.isError ? <span className="error">errors</span> : null}
+          <code>{resultSummary.preview}</code>
+        </div>
+      ) : null}
+      {open && result?.content ? (
+        <pre className="op-output">{truncate(result.content, 4000)}</pre>
+      ) : null}
     </div>
   );
 }
@@ -378,4 +444,54 @@ function describeInput(input: unknown): string {
 function truncate(s: string, n: number): string {
   if (s.length <= n) return s;
   return s.slice(0, n - 1) + '…';
+}
+
+function editPreview(obj: {
+  old_string?: string;
+  new_string?: string;
+  edits?: { old_string?: string; new_string?: string }[];
+}): { before: string; after: string } | null {
+  const first = Array.isArray(obj.edits) ? obj.edits[0] : obj;
+  const before = first?.old_string;
+  const after = first?.new_string;
+  if (typeof before !== 'string' || typeof after !== 'string') return null;
+  if (!before && !after) return null;
+  return {
+    before: compactSnippet(before),
+    after: compactSnippet(after),
+  };
+}
+
+function compactSnippet(value: string): string {
+  return truncate(value.trim().replace(/\s+/g, ' '), 160);
+}
+
+function summarizeOutput(content: string): {
+  lineCount: number;
+  preview: string;
+  hasWarnings: boolean;
+  hasErrors: boolean;
+} | null {
+  const lines = content.split('\n').map((line) => line.trim()).filter(Boolean);
+  if (lines.length === 0) return null;
+  const previewLine = lines.find((line) => !/^(success|done|ok)$/i.test(line)) ?? lines[0] ?? '';
+  return {
+    lineCount: lines.length,
+    preview: truncate(previewLine, 180),
+    hasWarnings: lines.some((line) => /\bwarn(ing)?\b/i.test(line)),
+    hasErrors: lines.some((line) => /\b(error|failed|exception|traceback)\b/i.test(line)),
+  };
+}
+
+function ResultList({ lines }: { lines: string[] }) {
+  const visible = lines.slice(0, 4);
+  const hidden = lines.length - visible.length;
+  return (
+    <div className="op-result-list">
+      {visible.map((line, i) => (
+        <code key={`${line}-${i}`}>{truncate(line, 180)}</code>
+      ))}
+      {hidden > 0 ? <span>+{hidden} more</span> : null}
+    </div>
+  );
 }

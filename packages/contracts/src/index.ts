@@ -12,6 +12,7 @@ export * from './api/projects.js';
 export * from './api/proxy.js';
 export * from './api/registry.js';
 export * from './api/version.js';
+export * from './media-models.js';
 export * from './critique.js';
 export * from './sse/common.js';
 export * from './sse/chat.js';

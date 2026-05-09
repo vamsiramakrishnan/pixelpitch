@@ -101,6 +101,12 @@ function injectCommentBridge(doc: string): string {
   var enabled = true;
   var targetMode = 'comment';
   var hoveredId = null;
+  var stableHover = null;
+  var hoverFrame = 0;
+  var queuedHover = null;
+  var drawStart = null;
+  var drawBox = null;
+  var nativeRing = null;
   function esc(value){ try { return window.CSS && CSS.escape ? CSS.escape(value) : String(value).replace(/"/g, '\\\\"'); } catch (_) { return String(value); } }
   function textSlug(value){
     return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 42);
@@ -120,21 +126,78 @@ function injectCommentBridge(doc: string): string {
     var index = Math.max(0, indexOfElement(el, peers));
     return textSlug(scope + '-' + (text || 'target') + '-' + (index + 1));
   }
+  function isDeckChrome(el){
+    if (!el || !el.closest) return false;
+    try {
+      return !!el.closest([
+        '#deck-prev',
+        '#deck-next',
+        '#deck-cur',
+        '#deck-total',
+        '[data-od-deck-chrome]',
+        '[aria-label="Previous slide"]',
+        '[aria-label="Next slide"]',
+        '[aria-label="Previous"]',
+        '[aria-label="Next"]',
+        '.deck-nav',
+        '.deck-controls',
+        '.slide-nav',
+        '.slide-controls',
+        '.nav-controls',
+        '.carousel-controls',
+        '.pager',
+        '.pagination',
+        '.prev',
+        '.next',
+        '.arrow'
+      ].join(','));
+    } catch (_) {
+      return false;
+    }
+  }
   function selectorFor(el, id){
     if (el.hasAttribute('data-od-id')) return '[data-od-id="' + esc(el.getAttribute('data-od-id')) + '"]';
     if (el.hasAttribute('data-screen-label')) return '[data-screen-label="' + esc(el.getAttribute('data-screen-label')) + '"]';
     if (el.id) return '#' + esc(el.id);
+    function stableSelectorFor(node){
+      if (!node || !node.getAttribute) return '';
+      if (node.hasAttribute('data-od-id')) return '[data-od-id="' + esc(node.getAttribute('data-od-id')) + '"]';
+      if (node.hasAttribute('data-screen-label')) return '[data-screen-label="' + esc(node.getAttribute('data-screen-label')) + '"]';
+      if (node.id) return '#' + esc(node.id);
+      return '';
+    }
+    function segmentFor(node){
+      var nodeTag = node.tagName ? node.tagName.toLowerCase() : 'element';
+      var nodeCls = node.classList && node.classList.length ? '.' + Array.prototype.slice.call(node.classList, 0, 3).map(esc).join('.') : '';
+      var nodeParent = node.parentElement;
+      if (!nodeParent) return nodeTag + nodeCls;
+      var nodeSiblings = Array.prototype.filter.call(nodeParent.children || [], function(child){ return child.tagName === node.tagName; });
+      var nodeIndex = Math.max(0, indexOfElement(node, nodeSiblings)) + 1;
+      return nodeTag + nodeCls + ':nth-of-type(' + nodeIndex + ')';
+    }
     var tag = el.tagName ? el.tagName.toLowerCase() : 'element';
     var cls = el.classList && el.classList.length ? '.' + Array.prototype.slice.call(el.classList, 0, 3).map(esc).join('.') : '';
     var parent = el.parentElement;
     if (!parent) return tag + cls;
     var siblings = Array.prototype.filter.call(parent.children || [], function(child){ return child.tagName === el.tagName; });
     var index = Math.max(0, indexOfElement(el, siblings)) + 1;
-    return tag + cls + ':nth-of-type(' + index + ')';
+    var segment = tag + cls + ':nth-of-type(' + index + ')';
+    var anchor = parent;
+    var path = [segment];
+    while (anchor && anchor !== document.body && anchor !== document.documentElement) {
+      var stable = stableSelectorFor(anchor);
+      if (stable) return stable + ' ' + path.join(' > ');
+      path.unshift(segmentFor(anchor));
+      anchor = anchor.parentElement;
+    }
+    return path.join(' > ');
   }
   function targetFrom(el){
+    if (isDeckChrome(el)) return null;
     var id = generatedId(el);
     if (!id) return null;
+    var slide = el.closest ? el.closest('.slide, [data-screen-label]') : null;
+    if (slide && !isForegroundSlide(slide)) return null;
     var rect = el.getBoundingClientRect();
     if (!rect || rect.width < 2 || rect.height < 2) return null;
     var tag = el.tagName ? el.tagName.toLowerCase() : 'element';
@@ -149,6 +212,7 @@ function injectCommentBridge(doc: string): string {
       styles = {
         color: cs.color,
         backgroundColor: cs.backgroundColor,
+        borderColor: cs.borderColor,
         fontSize: cs.fontSize,
         fontWeight: cs.fontWeight,
         lineHeight: cs.lineHeight,
@@ -160,7 +224,6 @@ function injectCommentBridge(doc: string): string {
         height: Math.round(rect.height) + 'px'
       };
     } catch (_) {}
-    var slide = el.closest ? el.closest('.slide, [data-screen-label]') : null;
     var slideInfo = slide && slide !== el ? ' within ' + generatedId(slide) : '';
     return {
       type: 'od:comment-target',
@@ -175,8 +238,44 @@ function injectCommentBridge(doc: string): string {
       styles: styles
     };
   }
+  function slideNodes(){
+    return Array.prototype.slice.call(document.querySelectorAll('.slide, [data-screen-label]'));
+  }
+  function isForegroundSlide(slide){
+    var list = slideNodes();
+    if (!list || list.length <= 1) return true;
+    if (slide.classList && (slide.classList.contains('active') || slide.classList.contains('is-active') || slide.classList.contains('current'))) return true;
+    try {
+      var cs = window.getComputedStyle(slide);
+      if (cs.display === 'none' || cs.visibility === 'hidden' || cs.opacity === '0') return false;
+    } catch (_) {}
+    var activeByClass = list.some(function(item){
+      return item.classList && (item.classList.contains('active') || item.classList.contains('is-active') || item.classList.contains('current'));
+    });
+    if (activeByClass) return false;
+    var rect = slide.getBoundingClientRect();
+    if (!rect || rect.width < 2 || rect.height < 2) return false;
+    var viewportCenter = window.innerWidth / 2;
+    var slideCenter = rect.left + rect.width / 2;
+    var nearest = list[0];
+    var nearestDistance = Infinity;
+    for (var i = 0; i < list.length; i++) {
+      try {
+        var itemStyle = window.getComputedStyle(list[i]);
+        if (itemStyle.display === 'none' || itemStyle.visibility === 'hidden' || itemStyle.opacity === '0') continue;
+      } catch (_) {}
+      var itemRect = list[i].getBoundingClientRect();
+      if (!itemRect || itemRect.width < 2 || itemRect.height < 2) continue;
+      var distance = Math.abs((itemRect.left + itemRect.width / 2) - viewportCenter);
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearest = list[i];
+      }
+    }
+    return nearest === slide || Math.abs(slideCenter - viewportCenter) <= 2;
+  }
   function allTargets(){
-    var nodes = document.querySelectorAll('[data-od-id], [data-screen-label], .slide, section, article, main, header, footer, nav, aside, button, a[href], h1, h2, h3, h4, p, li, figure, figcaption, img, video, canvas, svg, table, [role="button"], [role="region"], [aria-label]');
+    var nodes = document.querySelectorAll('[data-od-id], [data-screen-label], .slide, section, article, main, header, footer, nav, aside, button, a[href], h1, h2, h3, h4, p, li, figure, figcaption, span, strong, em, small, b, i, label, img, video, canvas, svg, table, [role="button"], [role="region"], [aria-label]');
     var items = [];
     for (var i = 0; i < nodes.length; i++) {
       var item = targetFrom(nodes[i]);
@@ -184,6 +283,52 @@ function injectCommentBridge(doc: string): string {
       if (items.length >= 180) break;
     }
     return items;
+  }
+  function containsPoint(rect, x, y, pad){
+    return rect &&
+      x >= rect.left - pad &&
+      x <= rect.right + pad &&
+      y >= rect.top - pad &&
+      y <= rect.bottom + pad;
+  }
+  function targetScore(el, event){
+    if (!el || !el.matches) return -1;
+    if (el.matches('script, style, link, meta, head, html, body')) return -1;
+    if (isDeckChrome(el)) return -1;
+    var payload = targetFrom(el);
+    if (!payload) return -1;
+    var rect = el.getBoundingClientRect();
+    if (!rect || !containsPoint(rect, event.clientX, event.clientY, 0)) return -1;
+    var tag = el.tagName ? el.tagName.toLowerCase() : '';
+    var score = 0;
+    if (el.hasAttribute && el.hasAttribute('data-od-id')) score += 90;
+    if (el.hasAttribute && el.hasAttribute('data-screen-label')) score += 35;
+    if (el.id) score += 72;
+    if (el.hasAttribute && el.hasAttribute('aria-label')) score += 58;
+    if (/^(span|strong|em|small|b|i|label)$/.test(tag)) score += 72;
+    if (/^(button|a|input|select|textarea)$/.test(tag)) score += 60;
+    if (/^h[1-6]$/.test(tag)) score += 48;
+    if (/^(img|video|canvas|svg|table)$/.test(tag)) score += 44;
+    if (/^(div)$/.test(tag) && (el.textContent || '').trim().length > 0) score += 34;
+    if (/^(figure|li|p|figcaption)$/.test(tag)) score += 28;
+    if (/^(section|article|main|header|footer|nav|aside)$/.test(tag)) score += 8;
+    var area = Math.max(1, rect.width * rect.height);
+    var viewportArea = Math.max(1, window.innerWidth * window.innerHeight);
+    var isSlideShell = false;
+    try {
+      isSlideShell = !!(el.classList && (
+        el.classList.contains('slide') ||
+        el.classList.contains('slide-cover') ||
+        el.classList.contains('deck-slide')
+      ));
+      if (!isSlideShell && typeof el.className === 'string') isSlideShell = /(^|\\s)(slide|slide-[\\w-]+|deck-slide)(\\s|$)/i.test(el.className);
+    } catch (_) {}
+    if (isSlideShell) score -= 96;
+    if (area > viewportArea * 0.55) score -= 82;
+    else if (area > viewportArea * 0.28) score -= 44;
+    if (area < 18 * 10) score -= 10;
+    score -= Math.min(28, Math.log(area) / Math.log(10) * 2.2);
+    return score;
   }
   var postTargetsPending = false;
   function postTargets(){
@@ -200,22 +345,147 @@ function injectCommentBridge(doc: string): string {
   }
   function closestTarget(event){
     var path = typeof event.composedPath === 'function' ? event.composedPath() : null;
+    var best = null;
+    var bestScore = -1;
     if (path && path.length) {
       for (var i = 0; i < path.length; i++) {
         var node = path[i];
         if (!node || !node.matches || node === document.body || node === document.documentElement) continue;
         if (node.matches('script, style, link, meta, head')) continue;
-        var candidate = targetFrom(node);
-        if (candidate) return node;
+        var score = targetScore(node, event);
+        if (score > bestScore) {
+          best = node;
+          bestScore = score;
+        }
+      }
+      if (!best || bestScore < 20) {
+        try {
+          var pointNodes = document.elementsFromPoint(event.clientX, event.clientY);
+          for (var p = 0; p < pointNodes.length; p++) {
+            var pointNode = pointNodes[p];
+            var pointScore = targetScore(pointNode, event);
+            if (pointScore > bestScore) {
+              best = pointNode;
+              bestScore = pointScore;
+            }
+          }
+        } catch (_) {}
       }
     }
     var el = event.target;
     while (el && el !== document.documentElement) {
-      if (el.getAttribute && (el.hasAttribute('data-od-id') || el.hasAttribute('data-screen-label'))) return el;
-      if (el.matches && el.matches('section, article, main, header, footer, nav, aside, button, a[href], h1, h2, h3, h4, p, li, figure, figcaption, img, video, canvas, svg, table, [role="button"], [role="region"], [aria-label]')) return el;
+      if (el.matches && targetScore(el, event) > bestScore) {
+        best = el;
+        bestScore = targetScore(el, event);
+      }
       el = el.parentElement;
     }
+    if (stableHover && stableHover.el && stableHover.rect && containsPoint(stableHover.rect, event.clientX, event.clientY, 6)) {
+      var stableScore = targetScore(stableHover.el, event);
+      if (stableScore >= 6 && stableScore >= bestScore - 8) return stableHover.el;
+    }
+    if (best && bestScore >= 6) {
+      try { stableHover = { el: best, rect: best.getBoundingClientRect() }; } catch (_) {}
+      return best;
+    }
     return null;
+  }
+  function postHover(payload){
+    queuedHover = payload;
+    if (hoverFrame) return;
+    hoverFrame = window.requestAnimationFrame(function(){
+      hoverFrame = 0;
+      if (!queuedHover) return;
+      if (queuedHover.elementId === hoveredId) {
+        queuedHover = null;
+        return;
+      }
+      hoveredId = queuedHover.elementId;
+      window.parent.postMessage(Object.assign({}, queuedHover, { type: 'od:comment-hover' }), '*');
+      queuedHover = null;
+    });
+  }
+  function ensureNativeRing(){
+    if (nativeRing) return nativeRing;
+    nativeRing = document.createElement('div');
+    nativeRing.setAttribute('data-od-selection-ring', 'true');
+    nativeRing.innerHTML = '<span data-od-ring-label></span>';
+    document.documentElement.appendChild(nativeRing);
+    return nativeRing;
+  }
+  function hideNativeRing(){
+    if (!nativeRing) return;
+    nativeRing.style.opacity = '0';
+    nativeRing.removeAttribute('data-selected');
+  }
+  function updateNativeRing(el, payload, selected){
+    if (!el || !payload) {
+      hideNativeRing();
+      return;
+    }
+    var rect = el.getBoundingClientRect();
+    if (!rect || rect.width < 2 || rect.height < 2) {
+      hideNativeRing();
+      return;
+    }
+    var ring = ensureNativeRing();
+    ring.style.opacity = '1';
+    ring.style.left = Math.round(rect.left) + 'px';
+    ring.style.top = Math.round(rect.top) + 'px';
+    ring.style.width = Math.round(rect.width) + 'px';
+    ring.style.height = Math.round(rect.height) + 'px';
+    ring.toggleAttribute('data-selected', !!selected);
+    var label = ring.querySelector('[data-od-ring-label]');
+    if (label) {
+      label.textContent = (payload.text || payload.elementId || payload.label || 'Selected').slice(0, 56);
+    }
+  }
+  function removeDrawBox(){
+    if (drawBox && drawBox.parentNode) drawBox.parentNode.removeChild(drawBox);
+    drawBox = null;
+  }
+  function updateDrawBox(a, b){
+    if (!drawBox) {
+      drawBox = document.createElement('div');
+      drawBox.setAttribute('data-od-draw-box', 'true');
+      document.documentElement.appendChild(drawBox);
+    }
+    var left = Math.min(a.x, b.x);
+    var top = Math.min(a.y, b.y);
+    var width = Math.abs(a.x - b.x);
+    var height = Math.abs(a.y - b.y);
+    drawBox.style.left = left + 'px';
+    drawBox.style.top = top + 'px';
+    drawBox.style.width = width + 'px';
+    drawBox.style.height = height + 'px';
+  }
+  function drawRegionPayload(start, end){
+    var left = Math.min(start.x, end.x);
+    var top = Math.min(start.y, end.y);
+    var width = Math.abs(start.x - end.x);
+    var height = Math.abs(start.y - end.y);
+    if (width < 8 || height < 8) return null;
+    var centerX = left + width / 2;
+    var centerY = top + height / 2;
+    var under = null;
+    try {
+      if (drawBox) drawBox.style.pointerEvents = 'none';
+      under = document.elementFromPoint(centerX, centerY);
+    } catch (_) {}
+    var target = under ? targetFrom(under) : null;
+    var id = 'draw-region-' + Math.round(left) + '-' + Math.round(top) + '-' + Math.round(width) + 'x' + Math.round(height);
+    return Object.assign({}, target || {}, {
+      type: 'od:draw-region',
+      elementId: id,
+      selector: target && target.selector ? target.selector : 'body',
+      label: target && target.label ? 'Drawn region over ' + target.label : 'Drawn region',
+      text: target && target.text ? target.text : '',
+      position: { x: Math.round(left), y: Math.round(top), width: Math.round(width), height: Math.round(height) },
+      htmlHint: target && target.htmlHint ? target.htmlHint : 'drawn preview region',
+      tagName: target && target.tagName ? target.tagName : 'region',
+      className: target && target.className ? target.className : '',
+      drawRegion: true
+    });
   }
   function findTarget(selector, elementId){
     try {
@@ -237,6 +507,7 @@ function injectCommentBridge(doc: string): string {
     var allowed = {
       color: true,
       backgroundColor: true,
+      borderColor: true,
       fontSize: true,
       fontWeight: true,
       lineHeight: true,
@@ -267,7 +538,7 @@ function injectCommentBridge(doc: string): string {
       document.documentElement.toggleAttribute('data-od-comment-mode', enabled);
       document.documentElement.setAttribute('data-od-target-mode', targetMode);
       if (enabled) setTimeout(postTargets, 0);
-      else hoveredId = null;
+      else { hoveredId = null; stableHover = null; queuedHover = null; drawStart = null; removeDrawBox(); hideNativeRing(); }
       return;
     }
     if (ev.data.type !== 'od:comment-mode') return;
@@ -275,19 +546,76 @@ function injectCommentBridge(doc: string): string {
     document.documentElement.toggleAttribute('data-od-comment-mode', enabled);
     document.documentElement.setAttribute('data-od-target-mode', enabled ? targetMode : 'off');
     if (enabled) setTimeout(postTargets, 0);
-    else hoveredId = null;
+    else { hoveredId = null; stableHover = null; queuedHover = null; drawStart = null; removeDrawBox(); hideNativeRing(); }
   });
-  document.addEventListener('mouseover', function(ev){
+  function handleAnnotationSlideKey(ev){
     if (!enabled) return;
+    var isSlideKey = ev.key === 'ArrowRight' || ev.key === 'ArrowLeft' || ev.key === 'PageDown' || ev.key === 'PageUp' || ev.key === 'Home' || ev.key === 'End';
+    if (!isSlideKey) return;
+    if (ev.metaKey || ev.ctrlKey) {
+      var action = ev.key === 'ArrowRight' || ev.key === 'PageDown'
+        ? 'next'
+        : ev.key === 'ArrowLeft' || ev.key === 'PageUp'
+          ? 'prev'
+          : ev.key === 'Home'
+            ? 'first'
+            : 'last';
+      window.parent.postMessage({ type: 'od:annotation-slide-nav', action: action }, '*');
+    }
+    ev.preventDefault();
+    ev.stopPropagation();
+  }
+  document.addEventListener('keydown', handleAnnotationSlideKey, true);
+  document.addEventListener('keyup', handleAnnotationSlideKey, true);
+  document.addEventListener('pointerdown', function(ev){
+    if (!enabled || targetMode !== 'draw') return;
+    drawStart = { x: ev.clientX, y: ev.clientY };
+    updateDrawBox(drawStart, drawStart);
+    ev.preventDefault();
+    ev.stopPropagation();
+  }, true);
+  document.addEventListener('pointermove', function(ev){
+    if (!enabled) return;
+    if (targetMode !== 'draw') {
+      var hoverEl = closestTarget(ev);
+      if (!hoverEl) {
+        hideNativeRing();
+        return;
+      }
+      var hoverPayload = targetFrom(hoverEl);
+      if (!hoverPayload) {
+        hideNativeRing();
+        return;
+      }
+      updateNativeRing(hoverEl, hoverPayload, false);
+      postHover(hoverPayload);
+      return;
+    }
+    if (!drawStart) return;
+    updateDrawBox(drawStart, { x: ev.clientX, y: ev.clientY });
+    ev.preventDefault();
+    ev.stopPropagation();
+  }, true);
+  document.addEventListener('pointerup', function(ev){
+    if (!enabled || targetMode !== 'draw' || !drawStart) return;
+    var start = drawStart;
+    drawStart = null;
+    var payload = drawRegionPayload(start, { x: ev.clientX, y: ev.clientY });
+    removeDrawBox();
+    if (payload) window.parent.postMessage(payload, '*');
+    ev.preventDefault();
+    ev.stopPropagation();
+  }, true);
+  document.addEventListener('mouseover', function(ev){
+    if (!enabled || targetMode === 'draw') return;
     var el = closestTarget(ev);
     if (!el) return;
     var payload = targetFrom(el);
-    if (!payload || payload.elementId === hoveredId) return;
-    hoveredId = payload.elementId;
-    window.parent.postMessage(Object.assign({}, payload, { type: 'od:comment-hover' }), '*');
+    if (!payload) return;
+    postHover(payload);
   }, true);
   document.addEventListener('mouseout', function(ev){
-    if (!enabled) return;
+    if (!enabled || targetMode === 'draw') return;
     var el = closestTarget(ev);
     if (!el) return;
     var next = ev.relatedTarget;
@@ -296,16 +624,27 @@ function injectCommentBridge(doc: string): string {
       next = next.parentElement;
     }
     hoveredId = null;
+    stableHover = null;
+    queuedHover = null;
+    hideNativeRing();
     window.parent.postMessage({ type: 'od:comment-leave' }, '*');
   }, true);
   document.addEventListener('click', function(ev){
     if (!enabled) return;
+    if (targetMode === 'draw') {
+      ev.preventDefault();
+      ev.stopPropagation();
+      return;
+    }
     var el = closestTarget(ev);
     if (!el) return;
     ev.preventDefault();
     ev.stopPropagation();
     var payload = targetFrom(el);
-    if (payload) window.parent.postMessage(payload, '*');
+    if (payload) {
+      updateNativeRing(el, payload, true);
+      window.parent.postMessage(payload, '*');
+    }
   }, true);
   window.addEventListener('resize', schedulePostTargets);
   document.addEventListener('scroll', schedulePostTargets, true);
@@ -332,6 +671,13 @@ html[data-od-comment-mode] h1,
 html[data-od-comment-mode] h2,
 html[data-od-comment-mode] h3,
 html[data-od-comment-mode] h4,
+html[data-od-comment-mode] span,
+html[data-od-comment-mode] strong,
+html[data-od-comment-mode] em,
+html[data-od-comment-mode] small,
+html[data-od-comment-mode] b,
+html[data-od-comment-mode] i,
+html[data-od-comment-mode] label,
 html[data-od-comment-mode] p,
 html[data-od-comment-mode] li,
 html[data-od-comment-mode] figure,
@@ -344,6 +690,82 @@ html[data-od-comment-mode] table,
 html[data-od-comment-mode] [role="button"],
 html[data-od-comment-mode] [role="region"],
 html[data-od-comment-mode] [aria-label] { cursor: crosshair !important; }
+html[data-od-comment-mode][data-od-target-mode="draw"],
+html[data-od-comment-mode][data-od-target-mode="draw"] * { cursor: crosshair !important; user-select: none !important; }
+[data-od-draw-box] {
+  position: fixed;
+  z-index: 2147483647;
+  pointer-events: none;
+  border: 1.5px solid rgba(22, 119, 255, 0.95);
+  border-radius: 10px;
+  background:
+    linear-gradient(135deg, rgba(22, 119, 255, 0.2), rgba(91, 141, 255, 0.09));
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.55) inset,
+    0 18px 54px -28px rgba(22, 119, 255, 0.95);
+}
+[data-od-selection-ring] {
+  position: fixed;
+  z-index: 2147483646;
+  pointer-events: none;
+  opacity: 0;
+  border: 1.5px solid rgba(234, 88, 12, 0.98);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(234, 88, 12, 0.15), rgba(255, 247, 237, 0.04));
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.7) inset,
+    0 0 0 5px rgba(234, 88, 12, 0.13),
+    0 18px 54px -30px rgba(124, 45, 18, 0.8);
+  transition:
+    left 90ms ease,
+    top 90ms ease,
+    width 90ms ease,
+    height 90ms ease,
+    opacity 80ms ease;
+}
+[data-od-selection-ring]::before,
+[data-od-selection-ring]::after {
+  content: '';
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-color: rgba(234, 88, 12, 0.98);
+}
+[data-od-selection-ring]::before {
+  left: -4px;
+  top: -4px;
+  border-left: 2px solid;
+  border-top: 2px solid;
+}
+[data-od-selection-ring]::after {
+  right: -4px;
+  bottom: -4px;
+  border-right: 2px solid;
+  border-bottom: 2px solid;
+}
+[data-od-selection-ring][data-selected] {
+  border-color: rgba(22, 119, 255, 0.98);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.72) inset,
+    0 0 0 5px rgba(22, 119, 255, 0.14),
+    0 18px 54px -30px rgba(22, 119, 255, 0.9);
+}
+[data-od-selection-ring] [data-od-ring-label] {
+  position: absolute;
+  left: 0;
+  top: -24px;
+  max-width: min(260px, 80vw);
+  overflow: hidden;
+  border: 1px solid rgba(234, 88, 12, 0.42);
+  border-radius: 999px;
+  padding: 3px 8px;
+  background: rgba(17, 24, 39, 0.93);
+  color: white;
+  font: 600 11px/1.25 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 </style>`;
   const withStyle = /<\/head>/i.test(doc)
     ? doc.replace(/<\/head>/i, style + '</head>')
@@ -572,6 +994,7 @@ function injectDeckBridge(doc: string, initialSlideIndex = 0): string {
     var btn = document.getElementById(id);
     if (!btn || btn.__odDeckOwned) return;
     btn.__odDeckOwned = true;
+    btn.setAttribute('data-od-deck-chrome', 'true');
     btn.addEventListener('click', function(e){
       e.preventDefault();
       e.stopImmediatePropagation();

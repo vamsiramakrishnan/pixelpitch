@@ -7,14 +7,15 @@ interface Props {
   children?: ReactNode;
   onBack?: () => void;
   backLabel?: string;
+  plate?: boolean;
 }
 
-export function AppChromeHeader({ actions, children, onBack, backLabel }: Props) {
+export function AppChromeHeader({ actions, children, onBack, backLabel, plate = false }: Props) {
   const t = useT();
   const resolvedBackLabel = backLabel ?? t('project.backToProjects');
 
   return (
-    <header className="app-chrome-header">
+    <header className={`app-chrome-header${plate ? ' plate' : ''}`}>
       <div className="app-chrome-traffic-space" aria-hidden />
       <div className="app-chrome-brand" aria-label={t('app.brand')}>
         <span className="app-chrome-mark" aria-hidden>

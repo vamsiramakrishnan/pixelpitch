@@ -1,19 +1,21 @@
 import { ClientApp } from './client-app';
+import { LandingPage } from './landing';
 
-// The whole product is a client-driven SPA: project IDs and file paths are
-// unbounded user input, so we route every URL through this single optional
-// catch-all and let the existing client router (src/router.ts, which reads
-// window.location at runtime) decide what to render.
-//
-// For `output: 'export'` we return a single empty `slug` so Next.js emits
-// one shell HTML at out/index.html; the daemon's SPA fallback (see
-// apps/daemon/src/server.ts) serves it for any unknown non-API path so deep links
-// still hydrate to the right view. In dev we leave `dynamicParams` at its
-// default (true) so `next dev` happily renders /projects/<id> directly.
+// The catch-all renders either the landing page (at /) or the client SPA
+// (at any deeper path).  For `output: 'export'` we emit a single shell at
+// out/index.html; the daemon's SPA fallback serves it for deep links.
 export function generateStaticParams() {
   return [{ slug: [] as string[] }];
 }
 
-export default function Page() {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug?: string[] }>;
+}) {
+  const { slug } = await params;
+  if (!slug || slug.length === 0) {
+    return <LandingPage />;
+  }
   return <ClientApp />;
 }

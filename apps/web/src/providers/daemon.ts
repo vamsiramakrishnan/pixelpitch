@@ -389,6 +389,41 @@ function translateAgentEvent(data: DaemonAgentPayload): AgentEvent | null {
       isError: Boolean(data.isError),
     };
   }
+  if (t === 'delegation_subrun' && typeof data.childRunId === 'string' && typeof data.event === 'string') {
+    const eventData = data.data && typeof data.data === 'object' ? data.data as Record<string, unknown> : {};
+    return {
+      kind: 'delegation',
+      runId: typeof data.runId === 'string' ? data.runId : '',
+      childRunId: data.childRunId,
+      event: data.event,
+      status: typeof eventData.status === 'string' ? eventData.status : undefined,
+      agentId: typeof eventData.agentId === 'string' ? eventData.agentId : undefined,
+      detail: typeof eventData.runKind === 'string'
+        ? eventData.runKind
+        : typeof eventData.bin === 'string'
+          ? eventData.bin
+          : undefined,
+    };
+  }
+  if (t === 'delegation_workflow' && typeof data.workflowId === 'string' && typeof data.event === 'string') {
+    return {
+      kind: 'delegation_workflow',
+      workflowId: data.workflowId,
+      event: data.event,
+      status: typeof data.status === 'string' ? data.status : undefined,
+      mode: typeof data.mode === 'string' ? data.mode : undefined,
+      level: typeof data.level === 'number' ? data.level : undefined,
+      taskId: typeof data.taskId === 'string' ? data.taskId : undefined,
+      taskCount: typeof data.taskCount === 'number' ? data.taskCount : undefined,
+      tasks: Array.isArray(data.tasks) ? data.tasks : undefined,
+      results: Array.isArray(data.results) ? data.results : undefined,
+      detail: typeof data.detail === 'string'
+        ? data.detail
+        : typeof data.failedTaskId === 'string'
+          ? `failed: ${data.failedTaskId}`
+          : undefined,
+    };
+  }
   if (t === 'live_artifact') {
     return {
       kind: 'live_artifact',

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
-import { EntryView } from './components/EntryView';
-import type { CreateInput } from './components/NewProjectPanel';
+import { EntryView, type EntryTopTab } from './components/EntryView';
+import type { CreateInput, CreateTab } from './components/NewProjectPanel';
 import { PetOverlay } from './components/pet/PetOverlay';
 import { migrateCustomPetAtlas } from './components/pet/pets';
 import { ProjectView } from './components/ProjectView';
@@ -8,6 +8,7 @@ import {
   SettingsDialog,
   type SettingsSection,
 } from './components/SettingsDialog';
+import { StudioCommandPalette } from './components/StudioCommandPalette';
 import {
   daemonIsLive,
   fetchAppVersionInfo,
@@ -44,6 +45,45 @@ import type {
   PromptTemplateSummary,
   SkillSummary,
 } from './types';
+
+type StudioIntent = {
+  topTab: EntryTopTab | null;
+  createTab: CreateTab | null;
+};
+
+const ENTRY_TOP_TABS = new Set<EntryTopTab>([
+  'designs',
+  'examples',
+  'design-systems',
+  'image-templates',
+  'video-templates',
+]);
+
+const CREATE_TABS = new Set<CreateTab>([
+  'prototype',
+  'deck',
+  'template',
+  'image',
+  'video',
+  'audio',
+  'other',
+]);
+
+function studioIntentFromLocation(): StudioIntent {
+  if (typeof window === 'undefined') return { topTab: null, createTab: null };
+  const params = new URLSearchParams(window.location.search);
+  const rawTab = params.get('tab');
+  const rawCreate = params.get('create');
+  const createTab = rawCreate && CREATE_TABS.has(rawCreate as CreateTab)
+    ? (rawCreate as CreateTab)
+    : null;
+  let topTab = rawTab && ENTRY_TOP_TABS.has(rawTab as EntryTopTab)
+    ? (rawTab as EntryTopTab)
+    : null;
+  if (!topTab && createTab) topTab = 'designs';
+  if (!topTab && rawTab === 'templates') topTab = 'image-templates';
+  return { topTab, createTab };
+}
 
 function normalizeAccentColor(value: string | undefined): string | null {
   if (!value) return null;
@@ -92,7 +132,16 @@ export function App() {
   // fetches. The entry view uses this to show shimmer / skeleton states
   // instead of an "empty" page that flickers before data lands.
   const [bootstrapping, setBootstrapping] = useState(true);
+  const [studioIntent, setStudioIntent] = useState<StudioIntent>(() =>
+    studioIntentFromLocation(),
+  );
   const route = useRoute();
+
+  useEffect(() => {
+    const onPop = () => setStudioIntent(studioIntentFromLocation());
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
 
   // Sync theme preference to the <html> element so CSS variables pick it up.
   // useLayoutEffect (vs useEffect) fires before the browser paints, so a
@@ -531,6 +580,8 @@ export function App() {
           config={config}
           agents={agents}
           loading={bootstrapping}
+          initialTopTab={studioIntent.topTab}
+          initialCreateTab={studioIntent.createTab}
           onCreateProject={handleCreateProject}
           onImportClaudeDesign={handleImportClaudeDesign}
           onOpenProject={handleOpenProject}
@@ -570,6 +621,12 @@ export function App() {
           setSettingsOpen(false);
         }}
         onRefreshAgents={refreshAgents}
+      />
+      <div className="studio-arrival-glow" aria-hidden />
+      <StudioCommandPalette
+        route={route}
+        projects={projects}
+        onOpenSettings={openSettings}
       />
     </>
   );

@@ -3,6 +3,7 @@
 import { startServer } from './server.js';
 import { runMcpStdio } from './mcp.js';
 import { runConnectorsToolCli } from './tools-connectors-cli.js';
+import { runDelegateToolCli } from './tools-delegate-cli.js';
 import { runLiveArtifactsToolCli } from './tools-live-artifacts-cli.js';
 
 const argv = process.argv.slice(2);
@@ -114,6 +115,8 @@ function printRootHelp() {
   pixelpitch tools connectors list
   pixelpitch tools connectors inspect --connector <id> --tool <name>
   pixelpitch tools connectors execute --connector <id> --tool <name> --input input.json
+  pixelpitch tools delegate send --task <task>
+  pixelpitch tools delegate workflow --request <request>
       Invoke connected read-only connector tools from an agent run using
       PIXELPITCH_DAEMON_URL and PIXELPITCH_TOOL_TOKEN.
 
@@ -182,6 +185,11 @@ async function runTools(args) {
     if (result.exitCode) process.exit(result.exitCode);
     return;
   }
+  if (sub === 'delegate') {
+    const result = await runDelegateToolCli(subArgs);
+    if (result.exitCode) process.exit(result.exitCode);
+    return;
+  }
   console.error(`unknown subcommand: pixelpitch tools ${sub}`);
   printToolsHelp();
   process.exit(1);
@@ -192,6 +200,8 @@ function printToolsHelp() {
   pixelpitch tools connectors list [--format compact|json]
   pixelpitch tools connectors inspect --connector <id> --tool <name> [--format compact|json]
   pixelpitch tools connectors execute --connector <id> --tool <name> --input input.json [--format compact|json]
+  pixelpitch tools delegate send --task <task> [--agent <id>] [--format compact|json]
+  pixelpitch tools delegate workflow --request <request> [--agent <id>] [--no-planner] [--format compact|json]
   pixelpitch tools live-artifacts create --input artifact.json
   pixelpitch tools live-artifacts list [--format compact|json]
   pixelpitch tools live-artifacts refresh --artifact-id <id>

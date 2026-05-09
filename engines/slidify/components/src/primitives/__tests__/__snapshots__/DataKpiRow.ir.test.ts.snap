@@ -300,3 +300,304 @@ exports[`dataKpiRowToIR > emits a snapshot-stable KPI row 1`] = `
   "zOrder": 0,
 }
 `;
+
+exports[`dataKpiRowToIR emits a snapshot-stable KPI row 1`] = `
+{
+  "bbox": {
+    "h": 200,
+    "w": 1000,
+    "x": 0,
+    "y": 0,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 22,
+        "w": 317.3333333333333,
+        "x": 0,
+        "y": 52,
+      },
+      "kind": "text",
+      "metadata": {
+        "index": 1,
+        "role": "kpi-label",
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#a1a1aa",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 13,
+              "fontWeight": 600,
+              "italic": false,
+              "text": "ARR",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "data.kpi-row.cell-1.label",
+      "zOrder": 0,
+    },
+    {
+      "bbox": {
+        "h": 88,
+        "w": 317.3333333333333,
+        "x": 0,
+        "y": 82,
+      },
+      "kind": "text",
+      "metadata": {
+        "index": 1,
+        "role": "kpi-value",
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#f5f5f7",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 88,
+              "fontWeight": 800,
+              "italic": false,
+              "text": "$12.4M",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "data.kpi-row.cell-1.value",
+      "zOrder": 10,
+    },
+    {
+      "bbox": {
+        "h": 22,
+        "w": 317.3333333333333,
+        "x": 0,
+        "y": 178,
+      },
+      "kind": "text",
+      "metadata": {
+        "index": 1,
+        "role": "kpi-delta",
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#10b981",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 13,
+              "fontWeight": 500,
+              "italic": false,
+              "text": "+18%",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "data.kpi-row.cell-1.delta",
+      "zOrder": 20,
+    },
+    {
+      "bbox": {
+        "h": 22,
+        "w": 317.3333333333333,
+        "x": 341.3333333333333,
+        "y": 52,
+      },
+      "kind": "text",
+      "metadata": {
+        "index": 2,
+        "role": "kpi-label",
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#a1a1aa",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 13,
+              "fontWeight": 600,
+              "italic": false,
+              "text": "CHURN",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "data.kpi-row.cell-2.label",
+      "zOrder": 30,
+    },
+    {
+      "bbox": {
+        "h": 88,
+        "w": 317.3333333333333,
+        "x": 341.3333333333333,
+        "y": 82,
+      },
+      "kind": "text",
+      "metadata": {
+        "index": 2,
+        "role": "kpi-value",
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#f5f5f7",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 88,
+              "fontWeight": 800,
+              "italic": false,
+              "text": "2.1%",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "data.kpi-row.cell-2.value",
+      "zOrder": 40,
+    },
+    {
+      "bbox": {
+        "h": 22,
+        "w": 317.3333333333333,
+        "x": 341.3333333333333,
+        "y": 178,
+      },
+      "kind": "text",
+      "metadata": {
+        "index": 2,
+        "role": "kpi-delta",
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#10b981",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 13,
+              "fontWeight": 500,
+              "italic": false,
+              "text": "-0.3%",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "data.kpi-row.cell-2.delta",
+      "zOrder": 50,
+    },
+    {
+      "bbox": {
+        "h": 22,
+        "w": 317.3333333333333,
+        "x": 682.6666666666666,
+        "y": 52,
+      },
+      "kind": "text",
+      "metadata": {
+        "index": 3,
+        "role": "kpi-label",
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#a1a1aa",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 13,
+              "fontWeight": 600,
+              "italic": false,
+              "text": "NPS",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "data.kpi-row.cell-3.label",
+      "zOrder": 60,
+    },
+    {
+      "bbox": {
+        "h": 88,
+        "w": 317.3333333333333,
+        "x": 682.6666666666666,
+        "y": 82,
+      },
+      "kind": "text",
+      "metadata": {
+        "index": 3,
+        "role": "kpi-value",
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#f5f5f7",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 88,
+              "fontWeight": 800,
+              "italic": false,
+              "text": "67",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "data.kpi-row.cell-3.value",
+      "zOrder": 70,
+    },
+    {
+      "bbox": {
+        "h": 22,
+        "w": 317.3333333333333,
+        "x": 682.6666666666666,
+        "y": 178,
+      },
+      "kind": "text",
+      "metadata": {
+        "index": 3,
+        "role": "kpi-delta",
+      },
+      "paragraphs": [
+        {
+          "align": "left",
+          "runs": [
+            {
+              "color": "#10b981",
+              "fontFamily": "Inter, sans-serif",
+              "fontSizePx": 13,
+              "fontWeight": 500,
+              "italic": false,
+              "text": "+9",
+              "underline": false,
+            },
+          ],
+        },
+      ],
+      "recipeId": "data.kpi-row.cell-3.delta",
+      "zOrder": 80,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "data",
+    "cellCount": 3,
+    "role": "data.kpi-row",
+    "withDividers": false,
+  },
+  "recipeId": "data.kpi-row",
+  "zOrder": 0,
+}
+`;

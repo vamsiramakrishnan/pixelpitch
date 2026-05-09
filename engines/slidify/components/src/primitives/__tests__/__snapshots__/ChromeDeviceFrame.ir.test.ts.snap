@@ -84,3 +84,88 @@ exports[`chromeDeviceFrameToIR > emits a snapshot-stable phone frame with notch 
   "zOrder": 0,
 }
 `;
+
+exports[`chromeDeviceFrameToIR emits a snapshot-stable phone frame with notch 1`] = `
+{
+  "bbox": {
+    "h": 560,
+    "w": 280,
+    "x": 80,
+    "y": 80,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 560,
+        "w": 280,
+        "x": 80,
+        "y": 80,
+      },
+      "borderRadiusPx": 36,
+      "fill": {
+        "color": "#f5f5f7",
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "device": "phone",
+        "role": "device-bezel",
+      },
+      "recipeId": "chrome.device-frame.bezel",
+      "shape": "rounded-rect",
+      "zOrder": 0,
+    },
+    {
+      "alt": "",
+      "bbox": {
+        "h": 544,
+        "w": 264,
+        "x": 88,
+        "y": 88,
+      },
+      "clipPath": {
+        "insetPx": 0,
+        "kind": "rounded-rect",
+        "radiusPx": 28,
+      },
+      "kind": "picture",
+      "metadata": {
+        "role": "device-screen",
+      },
+      "recipeId": "chrome.device-frame.screen",
+      "src": "https://example.com/shot.png",
+      "zOrder": 10,
+    },
+    {
+      "bbox": {
+        "h": 18,
+        "w": 96,
+        "x": 172,
+        "y": 84,
+      },
+      "borderRadiusPx": 9999,
+      "fill": {
+        "color": "#f5f5f7",
+        "kind": "solid",
+      },
+      "kind": "shape",
+      "metadata": {
+        "role": "device-notch",
+      },
+      "recipeId": "chrome.device-frame.notch",
+      "shape": "rounded-rect",
+      "zOrder": 20,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "chrome",
+    "device": "phone",
+    "hasScreenshot": true,
+    "notch": true,
+    "role": "chrome.device-frame",
+  },
+  "recipeId": "chrome.device-frame",
+  "zOrder": 0,
+}
+`;

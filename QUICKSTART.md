@@ -51,8 +51,8 @@ This is what an agent does on your behalf when you send a brief in the UI:
 ### 1. Design language
 
 Discovery prompt + 5-school direction picker
-(`apps/daemon/src/prompts/discovery.ts`,
-`apps/daemon/src/prompts/directions.ts`). Five curated directions ship
+(`packages/contracts/src/prompts/discovery.ts`,
+`packages/contracts/src/prompts/directions.ts`). Five curated directions ship
 out-of-the-box: **Editorial Monocle**, **Modern Minimal**, **Warm Soft**,
 **Tech Utility**, **Brutalist Experimental** — each with a deterministic
 OKLch palette and font stack.

@@ -52,3 +52,56 @@ exports[`surfacePatternTileToIR > emits a snapshot-stable dot-lattice tile 1`] =
   "zOrder": 0,
 }
 `;
+
+exports[`surfacePatternTileToIR emits a snapshot-stable dot-lattice tile 1`] = `
+{
+  "bbox": {
+    "h": 200,
+    "w": 320,
+    "x": 0,
+    "y": 0,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 200,
+        "w": 320,
+        "x": 0,
+        "y": 0,
+      },
+      "borderRadiusPx": 0,
+      "fill": {
+        "angleDeg": 0,
+        "featureSizePx": 1.5,
+        "fgColor": "#a78bfa",
+        "kind": "pattern",
+        "pattern": "dots",
+        "tileHeightPx": 24,
+        "tileWidthPx": 24,
+      },
+      "kind": "shape",
+      "metadata": {
+        "axis": "surface",
+        "featurePx": 1.5,
+        "pattern": "dots",
+        "role": "surface.pattern-tile",
+        "tilePx": 24,
+      },
+      "recipeId": "surface.pattern-tile",
+      "shape": "rect",
+      "zOrder": 0,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "angleDeg": 0,
+    "axis": "surface",
+    "featurePx": 1.5,
+    "pattern": "dots",
+    "role": "surface.pattern-tile",
+    "tilePx": 24,
+  },
+  "recipeId": "surface.pattern-tile",
+  "zOrder": 0,
+}
+`;

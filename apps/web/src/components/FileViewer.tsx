@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { MarkdownRenderer, artifactRendererRegistry } from '../artifacts/renderer-registry';
 import { renderMarkdownToSafeHtml } from '../artifacts/markdown';
 import { useT } from '../i18n';
@@ -33,6 +33,7 @@ import type { DeployConfigResponse, DeployProjectFileResponse, ElementEditOperat
 import { Icon } from './Icon';
 import {
   liveSnapshotForComment,
+  materiallySameSnapshot,
   overlayBoundsFromSnapshot,
   targetFromSnapshot,
   type PreviewCommentSnapshot,
@@ -59,6 +60,7 @@ type InspectSnapshot = PreviewCommentSnapshot & {
   tagName?: string;
   className?: string;
   styles?: Partial<InspectStyleDraft>;
+  drawRegion?: boolean;
 };
 type TargetMode = 'comment' | 'inspect' | 'edit' | 'draw';
 type InspectApplyScope = 'element' | 'section' | 'similar';
@@ -77,6 +79,8 @@ interface Props {
   previewComments?: PreviewComment[];
   onSavePreviewComment?: (target: PreviewCommentTarget, note: string, attachAfterSave: boolean) => Promise<PreviewComment | null>;
   onRemovePreviewComment?: (commentId: string) => Promise<void>;
+  onAttachPreviewComments?: (comments: PreviewComment[]) => void;
+  onSendPreviewComments?: (comments: PreviewComment[]) => void;
   onStageComposerToken?: (token: string) => void;
   onFileEdited?: () => Promise<void> | void;
 }
@@ -91,6 +95,8 @@ export function FileViewer({
   previewComments = [],
   onSavePreviewComment,
   onRemovePreviewComment,
+  onAttachPreviewComments,
+  onSendPreviewComments,
   onStageComposerToken,
   onFileEdited,
 }: Props) {
@@ -111,6 +117,8 @@ export function FileViewer({
         previewComments={previewComments}
         onSavePreviewComment={onSavePreviewComment}
         onRemovePreviewComment={onRemovePreviewComment}
+        onAttachPreviewComments={onAttachPreviewComments}
+        onSendPreviewComments={onSendPreviewComments}
         onStageComposerToken={onStageComposerToken}
         onFileEdited={onFileEdited}
       />
@@ -242,6 +250,7 @@ function CommentPreviewOverlays({
   hoveredTarget,
   activeTarget,
   scale,
+  offset,
   onOpenComment,
 }: {
   comments: PreviewComment[];
@@ -249,6 +258,7 @@ function CommentPreviewOverlays({
   hoveredTarget: PreviewCommentSnapshot | null;
   activeTarget: PreviewCommentSnapshot | null;
   scale: number;
+  offset: { x: number; y: number };
   onOpenComment: (comment: PreviewComment, snapshot: PreviewCommentSnapshot) => void;
 }) {
   const visibleComments = comments
@@ -264,7 +274,7 @@ function CommentPreviewOverlays({
   return (
     <div className="comment-overlay-layer" aria-hidden={false}>
       {visibleComments.map(({ comment, index, snapshot }) => {
-        const bounds = overlayBoundsFromSnapshot(snapshot, scale);
+        const bounds = overlayBoundsFromSnapshot(snapshot, scale, offset);
         return (
           <div
             key={comment.id}
@@ -294,6 +304,7 @@ function CommentPreviewOverlays({
         <CommentTargetOverlay
           snapshot={targetOverlay}
           scale={scale}
+          offset={offset}
           selected={Boolean(activeTarget)}
         />
       ) : null}
@@ -304,13 +315,15 @@ function CommentPreviewOverlays({
 function CommentTargetOverlay({
   snapshot,
   scale,
+  offset,
   selected,
 }: {
   snapshot: PreviewCommentSnapshot;
   scale: number;
+  offset: { x: number; y: number };
   selected: boolean;
 }) {
-  const bounds = overlayBoundsFromSnapshot(snapshot, scale);
+  const bounds = overlayBoundsFromSnapshot(snapshot, scale, offset);
   const width = Math.round(snapshot.position.width);
   const height = Math.round(snapshot.position.height);
   return (
@@ -514,8 +527,94 @@ function renderDrawToken(snapshot: InspectSnapshot): string {
     `element=${snapshot.elementId}`,
     `selector=${snapshot.selector}`,
     `label=${snapshot.label}`,
+    `region=x${snapshot.position.x} y${snapshot.position.y} ${snapshot.position.width}x${snapshot.position.height}`,
     'instruction=Use this rendered element as the visual target for annotation or redraw.',
   ].join(' | ');
+}
+
+function TargetingDock({
+  mode,
+  target,
+  targetCount,
+  visibleCommentCount,
+  slideState,
+  onMode,
+  onCloseTarget,
+  onStageTarget,
+  onStageSlideComments,
+  onSendSlideComments,
+}: {
+  mode: TargetMode;
+  target: InspectSnapshot | PreviewCommentSnapshot | null;
+  targetCount: number;
+  visibleCommentCount: number;
+  slideState: SlideState | null;
+  onMode: (mode: TargetMode) => void;
+  onCloseTarget: () => void;
+  onStageTarget: () => void;
+  onStageSlideComments: () => void;
+  onSendSlideComments: () => void;
+}) {
+  const copy = mode === 'draw'
+    ? 'Drag a region. Pixelpitch will keep its bounds and nearby element context.'
+    : mode === 'comment'
+      ? 'Click any element to leave a durable comment, then attach it to chat.'
+      : mode === 'inspect'
+        ? 'Click an element to tune visual tokens, preview instantly, then apply or stage.'
+        : 'Click an element to edit text/remove it directly or stage exact context for the agent.';
+  return (
+    <div className="targeting-dock" data-mode={mode}>
+      <div className="targeting-dock-mode">
+        {(['comment', 'inspect', 'edit', 'draw'] as TargetMode[]).map((item) => (
+          <button
+            key={item}
+            type="button"
+            className={item === mode ? 'active' : ''}
+            onClick={() => onMode(item)}
+            aria-pressed={item === mode}
+          >
+            <Icon name={item === 'inspect' ? 'tweaks' : item === 'draw' ? 'draw' : item} size={13} />
+            <span>{item === 'inspect' ? 'Tweaks' : item[0]!.toUpperCase() + item.slice(1)}</span>
+          </button>
+        ))}
+      </div>
+      <div className="targeting-dock-body">
+        <span className="targeting-live-dot" aria-hidden />
+        <div>
+          <strong>{target ? target.elementId : 'Selection ready'}</strong>
+          <span>
+            {target
+              ? `${target.label} · ${Math.round(target.position.width)}x${Math.round(target.position.height)}`
+              : copy}
+          </span>
+        </div>
+      </div>
+      <div className="targeting-dock-meta">
+        {slideState ? <span>Slide {slideState.active + 1}/{slideState.count}</span> : null}
+        <span>{targetCount} targets</span>
+        {visibleCommentCount > 0 ? (
+          <button type="button" className="ghost-link button-like" onClick={onStageSlideComments}>
+            Stage {visibleCommentCount} notes
+          </button>
+        ) : null}
+        {visibleCommentCount > 0 ? (
+          <button type="button" className="primary compact" onClick={onSendSlideComments}>
+            Send notes
+          </button>
+        ) : null}
+        {target ? (
+          <button type="button" className="ghost-link button-like" onClick={onStageTarget}>
+            Stage
+          </button>
+        ) : null}
+        {target ? (
+          <button type="button" className="ghost" onClick={onCloseTarget} aria-label="Clear selection">
+            Clear
+          </button>
+        ) : null}
+      </div>
+    </div>
+  );
 }
 
 function InspectStylePanel({
@@ -524,7 +623,6 @@ function InspectStylePanel({
   baseline,
   onChange,
   onClose,
-  onReset,
   onStage,
   onApply,
   applyScope,
@@ -540,7 +638,6 @@ function InspectStylePanel({
   baseline: InspectStyleDraft;
   onChange: (key: InspectStyleKey, value: string) => void;
   onClose: () => void;
-  onReset: () => void;
   onStage: () => void;
   onApply: () => void;
   applyScope: InspectApplyScope;
@@ -643,9 +740,7 @@ function InspectStylePanel({
         ))}
       </div>
       <div className="inspect-panel-actions">
-        <button type="button" className="ghost-link button-like" onClick={onReset}>
-          Reset
-        </button>
+        <span className="inspect-panel-selection-note">Live previewing selected element</span>
         <div className="inspect-panel-action-group">
           <select
             value={applyScope}
@@ -718,6 +813,61 @@ function EditTargetPanel({
             {applying ? 'Applying...' : 'Apply text'}
           </button>
         </div>
+      </div>
+      {error ? <div className="inspect-panel-error">{error}</div> : null}
+    </div>
+  );
+}
+
+function DrawRegionPanel({
+  target,
+  draft,
+  onDraft,
+  onClose,
+  onStage,
+  onSaveComment,
+  saving,
+  error,
+}: {
+  target: InspectSnapshot;
+  draft: string;
+  onDraft: (value: string) => void;
+  onClose: () => void;
+  onStage: () => void;
+  onSaveComment: () => void | Promise<void>;
+  saving: boolean;
+  error: string | null;
+}) {
+  return (
+    <div className="inspect-panel draw-region-panel" data-testid="draw-region-panel">
+      <div className="inspect-panel-head">
+        <div>
+          <strong>Drawn region</strong>
+          <span>{target.position.width}x{target.position.height} over {target.label}</span>
+        </div>
+        <button type="button" className="ghost" onClick={onClose}>
+          Close
+        </button>
+      </div>
+      <div className="draw-region-preview">
+        <span aria-hidden />
+        <div>
+          <strong>{target.elementId}</strong>
+          <p>{target.text || 'No text inside this region. The bounds and nearby element context will still be sent.'}</p>
+        </div>
+      </div>
+      <textarea
+        value={draft}
+        placeholder="Describe what should change in this region"
+        onChange={(event) => onDraft(event.target.value)}
+      />
+      <div className="inspect-panel-actions">
+        <button type="button" className="ghost-link button-like" disabled={saving} onClick={onStage}>
+          Stage for agent
+        </button>
+        <button type="button" className="primary" disabled={saving || !draft.trim()} onClick={() => void onSaveComment()}>
+          {saving ? 'Saving...' : 'Save + attach'}
+        </button>
       </div>
       {error ? <div className="inspect-panel-error">{error}</div> : null}
     </div>
@@ -994,6 +1144,8 @@ function HtmlViewer({
   previewComments = [],
   onSavePreviewComment,
   onRemovePreviewComment,
+  onAttachPreviewComments,
+  onSendPreviewComments,
   onStageComposerToken,
   onFileEdited,
 }: {
@@ -1006,6 +1158,8 @@ function HtmlViewer({
   previewComments?: PreviewComment[];
   onSavePreviewComment?: (target: PreviewCommentTarget, note: string, attachAfterSave: boolean) => Promise<PreviewComment | null>;
   onRemovePreviewComment?: (commentId: string) => Promise<void>;
+  onAttachPreviewComments?: (comments: PreviewComment[]) => void;
+  onSendPreviewComments?: (comments: PreviewComment[]) => void;
   onStageComposerToken?: (token: string) => void;
   onFileEdited?: () => Promise<void> | void;
 }) {
@@ -1043,6 +1197,7 @@ function HtmlViewer({
   const [inspectDraft, setInspectDraft] = useState<InspectStyleDraft>(EMPTY_INSPECT_STYLE);
   const [inspectApplyScope, setInspectApplyScope] = useState<InspectApplyScope>('element');
   const [editInstruction, setEditInstruction] = useState('');
+  const [drawInstruction, setDrawInstruction] = useState('');
   const [applyingEdit, setApplyingEdit] = useState(false);
   const [editApplyError, setEditApplyError] = useState<string | null>(null);
   const [commentMode, setCommentMode] = useState(false);
@@ -1050,6 +1205,8 @@ function HtmlViewer({
   const [hoveredCommentTarget, setHoveredCommentTarget] = useState<PreviewCommentSnapshot | null>(null);
   const [liveCommentTargets, setLiveCommentTargets] = useState<Map<string, PreviewCommentSnapshot>>(() => new Map());
   const [commentDraft, setCommentDraft] = useState('');
+  const [iframeVisualOffset, setIframeVisualOffset] = useState({ x: 0, y: 0 });
+  const [previewViewportVars, setPreviewViewportVars] = useState<CSSProperties | undefined>();
   const previewStateKey = `${projectId}:${file.name}`;
   // Slide deck state: the iframe posts the active index + total count back
   // every time a slide settles. The editor surfaces this as context only;
@@ -1058,10 +1215,12 @@ function HtmlViewer({
     () => htmlPreviewSlideState.get(previewStateKey) ?? null,
   );
   const previewBodyRef = useRef<HTMLDivElement | null>(null);
+  const previewFrameWrapRef = useRef<HTMLDivElement | null>(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const shareRef = useRef<HTMLDivElement | null>(null);
   const presentWrapRef = useRef<HTMLDivElement | null>(null);
   const foregroundSlideLockRef = useRef<number | null>(null);
+  const lastAnnotationSlideNavRef = useRef<{ action: string; at: number } | null>(null);
 
   const presentLayer = usePopoverLayer({
     open: presentMenuOpen,
@@ -1146,6 +1305,75 @@ function HtmlViewer({
   );
 
   useEffect(() => {
+    if (mode !== 'preview' || !targetingModeActive) {
+      setPreviewViewportVars(undefined);
+      return;
+    }
+    const body = previewBodyRef.current;
+    if (!body) return;
+    const measure = () => {
+      const rect = body.getBoundingClientRect();
+      const next = {
+        '--preview-left': `${Math.round(rect.left)}px`,
+        '--preview-right': `${Math.round(rect.right)}px`,
+        '--preview-top': `${Math.round(rect.top)}px`,
+        '--preview-bottom': `${Math.round(rect.bottom)}px`,
+        '--preview-width': `${Math.round(rect.width)}px`,
+        '--preview-height': `${Math.round(rect.height)}px`,
+        '--preview-center-x': `${Math.round(rect.left + rect.width / 2)}px`,
+      } as CSSProperties;
+      setPreviewViewportVars(next);
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(measure);
+      ro.observe(body);
+    }
+    return () => {
+      window.removeEventListener('resize', measure);
+      ro?.disconnect();
+    };
+  }, [mode, targetingModeActive, zoom]);
+
+  useEffect(() => {
+    if (mode !== 'preview') {
+      setIframeVisualOffset({ x: 0, y: 0 });
+      return;
+    }
+    const layer = previewBodyRef.current?.querySelector('.comment-preview-layer') as HTMLElement | null;
+    const wrap = previewFrameWrapRef.current;
+    if (!layer || !wrap) return;
+    const measure = () => {
+      const layerRect = layer.getBoundingClientRect();
+      const wrapRect = wrap.getBoundingClientRect();
+      setIframeVisualOffset((current) => {
+        const next = {
+          x: Math.round(wrapRect.left - layerRect.left),
+          y: Math.round(wrapRect.top - layerRect.top),
+        };
+        return current.x === next.x && current.y === next.y ? current : next;
+      });
+    };
+    measure();
+    const scrollParent = previewBodyRef.current;
+    scrollParent?.addEventListener('scroll', measure, { passive: true });
+    window.addEventListener('resize', measure);
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(measure);
+      ro.observe(layer);
+      ro.observe(wrap);
+    }
+    return () => {
+      scrollParent?.removeEventListener('scroll', measure);
+      window.removeEventListener('resize', measure);
+      ro?.disconnect();
+    };
+  }, [mode, zoom, srcDoc]);
+
+  useEffect(() => {
     if (!effectiveDeck) {
       setSlideState(null);
       return;
@@ -1190,11 +1418,6 @@ function HtmlViewer({
       foregroundSlideLockRef.current =
         slideState?.active ?? htmlPreviewSlideState.get(previewStateKey)?.active ?? 0;
     }
-    const lockedIndex = foregroundSlideLockRef.current;
-    const frame = window.requestAnimationFrame(() => {
-      postSlide('go', lockedIndex);
-    });
-    return () => window.cancelAnimationFrame(frame);
   }, [effectiveDeck, mode, targetingModeActive, slideState?.active, previewStateKey]);
 
   useEffect(() => {
@@ -1205,6 +1428,7 @@ function HtmlViewer({
     setInspectDraft(EMPTY_INSPECT_STYLE);
     setInspectApplyScope('element');
     setEditInstruction('');
+    setDrawInstruction('');
     setLiveCommentTargets(new Map());
     setCommentDraft('');
   }, [file.name]);
@@ -1233,14 +1457,25 @@ function HtmlViewer({
       tagName: typeof data.tagName === 'string' ? data.tagName : undefined,
       className: typeof data.className === 'string' ? data.className : undefined,
       styles: data.styles && typeof data.styles === 'object' ? data.styles : undefined,
+      drawRegion: Boolean((data as InspectSnapshot).drawRegion),
     });
     function onMessage(ev: MessageEvent) {
       if (ev.source !== iframeRef.current?.contentWindow) return;
       const data = ev.data as (Partial<PreviewCommentSnapshot> & {
         type?: string;
         targets?: Array<Partial<PreviewCommentSnapshot>>;
+        action?: unknown;
       }) | null;
       if (!data?.type) return;
+      if (data.type === 'od:annotation-slide-nav') {
+        const action = data.action === 'next' || data.action === 'prev' || data.action === 'first' || data.action === 'last'
+          ? data.action
+          : null;
+        if (action) {
+          annotationSlideNav(action);
+        }
+        return;
+      }
       if (data.type === 'od:comment-targets' && Array.isArray(data.targets)) {
         const next = new Map<string, PreviewCommentSnapshot>();
         data.targets.forEach((item) => {
@@ -1267,11 +1502,11 @@ function HtmlViewer({
         const snapshot = snapshotFromData(data);
         if (!snapshot.elementId) return;
         if (inspectMode || editMode || drawMode) {
-          setHoveredCommentTarget(snapshot);
+          setHoveredCommentTarget((current) => materiallySameSnapshot(current, snapshot) ? current : snapshot);
           setLiveCommentTargets((current) => new Map(current).set(snapshot.elementId, snapshot));
           return;
         }
-        setHoveredCommentTarget(snapshot);
+        setHoveredCommentTarget((current) => materiallySameSnapshot(current, snapshot) ? current : snapshot);
         setLiveCommentTargets((current) => new Map(current).set(snapshot.elementId, snapshot));
         return;
       }
@@ -1284,12 +1519,10 @@ function HtmlViewer({
           setInspectBaseline(nextStyle);
           setInspectDraft(nextStyle);
           setEditInstruction(editMode ? snapshot.text : '');
+          setDrawInstruction('');
           setEditApplyError(null);
           setHoveredCommentTarget(snapshot);
           setLiveCommentTargets((current) => new Map(current).set(snapshot.elementId, snapshot));
-          if (drawMode && onStageComposerToken) {
-            onStageComposerToken(renderDrawToken(snapshot));
-          }
           return;
         }
         const existing = previewComments.find((comment) => comment.elementId === snapshot.elementId);
@@ -1297,6 +1530,16 @@ function HtmlViewer({
         setHoveredCommentTarget(snapshot);
         setLiveCommentTargets((current) => new Map(current).set(snapshot.elementId, snapshot));
         setCommentDraft(existing?.note ?? '');
+      }
+      if (data.type === 'od:draw-region') {
+        const snapshot = snapshotFromData(data);
+        if (!snapshot.elementId) return;
+        const drawSnapshot = { ...snapshot, drawRegion: true };
+        setActiveInspectTarget(drawSnapshot);
+        setHoveredCommentTarget(drawSnapshot);
+        setLiveCommentTargets((current) => new Map(current).set(drawSnapshot.elementId, drawSnapshot));
+        setDrawInstruction('');
+        setEditApplyError(null);
       }
     }
     window.addEventListener('message', onMessage);
@@ -1309,33 +1552,54 @@ function HtmlViewer({
     win.postMessage({ type: 'od:slide', action, index }, '*');
   }
 
-  // Keyboard nav on the host stays available for passive previewing. During
-  // targeting/editing modes we freeze host-level slide changes so the chosen
-  // foreground slide remains the one being inspected or edited.
+  function annotationSlideNav(action: 'next' | 'prev' | 'first' | 'last') {
+    const now = Date.now();
+    const last = lastAnnotationSlideNavRef.current;
+    if (last?.action === action && now - last.at < 220) return;
+    lastAnnotationSlideNavRef.current = { action, at: now };
+    foregroundSlideLockRef.current = null;
+    setActiveCommentTarget(null);
+    setHoveredCommentTarget(null);
+    setActiveInspectTarget(null);
+    setLiveCommentTargets(new Map());
+    postSlide(action);
+  }
+
+  // Plain arrows remain passive preview navigation only. In targeting modes,
+  // only Cmd/Ctrl + arrows are treated as deliberate slide annotation nav.
   useEffect(() => {
-    if (!effectiveDeck || mode !== 'preview' || targetingModeActive) return;
+    if (!effectiveDeck || mode !== 'preview') return;
     function onKey(e: KeyboardEvent) {
       const target = e.target as HTMLElement | null;
       if (target) {
         const tag = target.tagName;
         if (tag === 'INPUT' || tag === 'TEXTAREA' || target.isContentEditable) return;
       }
-      if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+      if (targetingModeActive && !(e.metaKey || e.ctrlKey)) return;
+      const navRight = e.key === 'ArrowRight' || e.key === 'PageDown';
+      const navLeft = e.key === 'ArrowLeft' || e.key === 'PageUp';
+      if (navRight) {
         e.preventDefault();
-        postSlide('next');
-      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        annotationSlideNav('next');
+      } else if (navLeft) {
         e.preventDefault();
-        postSlide('prev');
+        annotationSlideNav('prev');
       } else if (e.key === 'Home') {
+        if (targetingModeActive && !(e.metaKey || e.ctrlKey)) return;
         e.preventDefault();
-        postSlide('first');
+        annotationSlideNav('first');
       } else if (e.key === 'End') {
+        if (targetingModeActive && !(e.metaKey || e.ctrlKey)) return;
         e.preventDefault();
-        postSlide('last');
+        annotationSlideNav('last');
       }
     }
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener('keyup', onKey);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('keyup', onKey);
+    };
   }, [effectiveDeck, mode, targetingModeActive]);
 
   usePopoverLayer({
@@ -1549,13 +1813,6 @@ function HtmlViewer({
     postInspectStyles(activeInspectTarget, styles);
   }
 
-  function resetInspectStyles() {
-    if (!activeInspectTarget) return;
-    setInspectDraft(inspectBaseline);
-    postInspectStyles(activeInspectTarget, inspectBaseline);
-    setEditApplyError(null);
-  }
-
   function stageInspectStyles() {
     if (!activeInspectTarget || !onStageComposerToken) return;
     const changed = changedInspectStyles(inspectDraft, inspectBaseline);
@@ -1566,6 +1823,67 @@ function HtmlViewer({
   function stageEditTarget() {
     if (!activeInspectTarget || !onStageComposerToken) return;
     onStageComposerToken(renderEditToken(activeInspectTarget, editInstruction));
+  }
+
+  function stageActiveTarget() {
+    if (!activeInspectTarget || !onStageComposerToken) return;
+    if (inspectMode) {
+      stageInspectStyles();
+      return;
+    }
+    if (editMode) {
+      stageEditTarget();
+      return;
+    }
+    if (drawMode) {
+      onStageComposerToken(`${renderDrawToken(activeInspectTarget)} | note=${drawInstruction.trim() || 'Review this drawn region.'}`);
+    }
+  }
+
+  function visibleSlideComments(): PreviewComment[] {
+    return previewComments.filter((comment) => Boolean(liveSnapshotForComment(comment, liveCommentTargets)));
+  }
+
+  function stageVisibleSlideComments() {
+    const comments = visibleSlideComments();
+    if (comments.length === 0) return;
+    onAttachPreviewComments?.(comments);
+    onStageComposerToken?.('slide:current');
+  }
+
+  function sendVisibleSlideComments() {
+    const comments = visibleSlideComments();
+    if (comments.length === 0) return;
+    onSendPreviewComments?.(comments);
+  }
+
+  async function saveDrawRegionComment() {
+    if (!activeInspectTarget || !onSavePreviewComment || !drawInstruction.trim()) return;
+    setApplyingEdit(true);
+    setEditApplyError(null);
+    try {
+      const saved = await onSavePreviewComment(targetFromSnapshot(activeInspectTarget), drawInstruction.trim(), true);
+      if (saved) {
+        setActiveInspectTarget(null);
+        setDrawInstruction('');
+      }
+    } catch (err) {
+      setEditApplyError(err instanceof Error ? err.message : 'Unable to save drawn annotation');
+    } finally {
+      setApplyingEdit(false);
+    }
+  }
+
+  function activateTargetMode(nextMode: TargetMode) {
+    setCommentMode(nextMode === 'comment');
+    setInspectMode(nextMode === 'inspect');
+    setEditMode(nextMode === 'edit');
+    setDrawMode(nextMode === 'draw');
+    setActiveCommentTarget(null);
+    setHoveredCommentTarget(null);
+    setActiveInspectTarget(null);
+    setEditApplyError(null);
+    setDrawInstruction('');
   }
 
   function targetForOperation(target: InspectSnapshot): ElementEditOperation['target'] {
@@ -1683,21 +2001,33 @@ function HtmlViewer({
     ? t('fileViewer.redeployToVercel')
     : t('fileViewer.deployToVercel');
   const inspectApplyCount = inspectTargetsForScope(inspectApplyScope).length || 1;
+  const passivePreviewControlsVisible = !targetingModeActive;
+  const activeTargetMode: TargetMode = commentMode
+    ? 'comment'
+    : inspectMode
+      ? 'inspect'
+      : editMode
+        ? 'edit'
+        : 'draw';
+  const activeDockTarget = commentMode ? activeCommentTarget : activeInspectTarget;
+  const visibleCommentCount = visibleSlideComments().length;
 
   return (
     <div className="viewer html-viewer">
       <div className="viewer-toolbar">
         <div className="viewer-toolbar-left">
-          <button
-            type="button"
-            className="icon-only"
-            onClick={() => setReloadKey((n) => n + 1)}
-            title={t('fileViewer.reload')}
-            aria-label={t('fileViewer.reloadAria')}
-          >
-            <Icon name="reload" size={14} />
-          </button>
-          {effectiveDeck ? (
+          {passivePreviewControlsVisible ? (
+            <button
+              type="button"
+              className="icon-only"
+              onClick={() => setReloadKey((n) => n + 1)}
+              title={t('fileViewer.reload')}
+              aria-label={t('fileViewer.reloadAria')}
+            >
+              <Icon name="reload" size={14} />
+            </button>
+          ) : null}
+          {effectiveDeck && passivePreviewControlsVisible ? (
             <span
               className="deck-nav"
               role="group"
@@ -1729,18 +2059,8 @@ function HtmlViewer({
             aria-pressed={inspectMode}
             data-testid="inspect-mode-toggle"
             onClick={() => {
-              setInspectMode((value) => {
-                const next = !value;
-                if (next) {
-                  setCommentMode(false);
-                  setEditMode(false);
-                  setDrawMode(false);
-                  setActiveCommentTarget(null);
-                } else {
-                  setActiveInspectTarget(null);
-                }
-                return next;
-              });
+              if (inspectMode) setInspectMode(false);
+              else activateTargetMode('inspect');
             }}
           >
             <Icon name="tweaks" size={13} />
@@ -1770,16 +2090,8 @@ function HtmlViewer({
             data-testid="comment-mode-toggle"
             title={t('fileViewer.comment')}
             onClick={() => {
-              setCommentMode((value) => {
-                const next = !value;
-                if (next) {
-                  setInspectMode(false);
-                  setEditMode(false);
-                  setDrawMode(false);
-                  setActiveInspectTarget(null);
-                }
-                return next;
-              });
+              if (commentMode) setCommentMode(false);
+              else activateTargetMode('comment');
             }}
           >
             <Icon name="comment" size={13} />
@@ -1792,17 +2104,8 @@ function HtmlViewer({
             aria-pressed={editMode}
             data-testid="edit-mode-toggle"
             onClick={() => {
-              setEditMode((value) => {
-                const next = !value;
-                if (next) {
-                  setCommentMode(false);
-                  setInspectMode(false);
-                  setDrawMode(false);
-                } else {
-                  setActiveInspectTarget(null);
-                }
-                return next;
-              });
+              if (editMode) setEditMode(false);
+              else activateTargetMode('edit');
             }}
           >
             <Icon name="edit" size={13} />
@@ -1815,52 +2118,41 @@ function HtmlViewer({
             aria-pressed={drawMode}
             data-testid="draw-mode-toggle"
             onClick={() => {
-              setDrawMode((value) => {
-                const next = !value;
-                if (next) {
-                  setCommentMode(false);
-                  setInspectMode(false);
-                  setEditMode(false);
-                } else {
-                  setActiveInspectTarget(null);
-                }
-                return next;
-              });
+              if (drawMode) setDrawMode(false);
+              else activateTargetMode('draw');
             }}
           >
             <Icon name="draw" size={13} />
             <span>{t('fileViewer.draw')}</span>
           </button>
-          <span className="viewer-divider" aria-hidden />
-          <button
-            type="button"
-            className="icon-only"
-            onClick={() => bumpZoom(-25)}
-            title={t('fileViewer.zoomOut')}
-            aria-label={t('fileViewer.zoomOut')}
-          >
-            <Icon name="minus" size={14} />
-          </button>
-          <button
-            type="button"
-            className="viewer-action"
-            onClick={() => setZoom(100)}
-            title={t('fileViewer.resetZoom')}
-            style={{ minWidth: 60 }}
-          >
-            <span style={{ fontVariantNumeric: 'tabular-nums' }}>{zoom}%</span>
-          </button>
-          <button
-            type="button"
-            className="icon-only"
-            onClick={() => bumpZoom(25)}
-            title={t('fileViewer.zoomIn')}
-            aria-label={t('fileViewer.zoomIn')}
-          >
-            <Icon name="plus" size={14} />
-          </button>
-          <span className="viewer-divider" aria-hidden />
-          {showPresent ? (
+          {passivePreviewControlsVisible ? (
+            <>
+              <span className="viewer-divider" aria-hidden />
+              <button
+                type="button"
+                className="icon-only"
+                onClick={() => bumpZoom(-25)}
+                title={t('fileViewer.zoomOut')}
+                aria-label={t('fileViewer.zoomOut')}
+              >
+                <Icon name="minus" size={14} />
+              </button>
+              <span className="viewer-zoom-readout" aria-label={`Zoom ${zoom}%`}>
+                {zoom}%
+              </span>
+              <button
+                type="button"
+                className="icon-only"
+                onClick={() => bumpZoom(25)}
+                title={t('fileViewer.zoomIn')}
+                aria-label={t('fileViewer.zoomIn')}
+              >
+                <Icon name="plus" size={14} />
+              </button>
+              <span className="viewer-divider" aria-hidden />
+            </>
+          ) : null}
+          {showPresent && passivePreviewControlsVisible ? (
             <div className="present-wrap" ref={presentWrapRef}>
               <button
                 className="viewer-action present-trigger"
@@ -2041,12 +2333,17 @@ function HtmlViewer({
           ) : null}
         </div>
       </div>
-      <div className="viewer-body" ref={previewBodyRef}>
+      <div
+        className={`viewer-body${targetingModeActive ? ' targeting-active' : ''}`}
+        style={previewViewportVars}
+        ref={previewBodyRef}
+      >
         {source === null ? (
           <div className="viewer-empty">{t('fileViewer.loading')}</div>
         ) : mode === 'preview' ? (
           <div className="comment-preview-layer">
             <div
+              ref={previewFrameWrapRef}
               style={{
                 width: `${100 / previewScale}%`,
                 height: `${100 / previewScale}%`,
@@ -2069,11 +2366,30 @@ function HtmlViewer({
                 hoveredTarget={hoveredCommentTarget}
                 activeTarget={commentMode ? activeCommentTarget : activeInspectTarget}
                 scale={previewScale}
+                offset={iframeVisualOffset}
                 onOpenComment={(comment, snapshot) => {
                   setActiveCommentTarget(snapshot);
                   setHoveredCommentTarget(snapshot);
                   setCommentDraft(comment.note);
                 }}
+              />
+            ) : null}
+            {targetingModeActive ? (
+              <TargetingDock
+                mode={activeTargetMode}
+                target={activeDockTarget}
+                targetCount={liveCommentTargets.size}
+                visibleCommentCount={visibleCommentCount}
+                slideState={effectiveDeck ? slideState : null}
+                onMode={activateTargetMode}
+                onCloseTarget={() => {
+                  setActiveCommentTarget(null);
+                  setActiveInspectTarget(null);
+                  setHoveredCommentTarget(null);
+                }}
+                onStageTarget={stageActiveTarget}
+                onStageSlideComments={stageVisibleSlideComments}
+                onSendSlideComments={sendVisibleSlideComments}
               />
             ) : null}
             {commentMode && activeCommentTarget ? (
@@ -2103,7 +2419,6 @@ function HtmlViewer({
                 baseline={inspectBaseline}
                 onChange={updateInspectStyle}
                 onClose={() => setActiveInspectTarget(null)}
-                onReset={resetInspectStyles}
                 onStage={stageInspectStyles}
                 onApply={() => void applyInspectStylesToSource()}
                 applyScope={inspectApplyScope}
@@ -2125,6 +2440,18 @@ function HtmlViewer({
                 onApplyText={() => void applyEditTextToSource()}
                 onRemove={() => void removeEditTargetFromSource()}
                 applying={applyingEdit}
+                error={editApplyError}
+              />
+            ) : null}
+            {drawMode && activeInspectTarget ? (
+              <DrawRegionPanel
+                target={activeInspectTarget}
+                draft={drawInstruction}
+                onDraft={setDrawInstruction}
+                onClose={() => setActiveInspectTarget(null)}
+                onStage={stageActiveTarget}
+                onSaveComment={saveDrawRegionComment}
+                saving={applyingEdit}
                 error={editApplyError}
               />
             ) : null}

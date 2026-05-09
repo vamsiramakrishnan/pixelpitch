@@ -4,14 +4,14 @@
  * We deliberately avoid a full parser library — chat output rarely uses
  * the long tail of markdown features and a hand-rolled walker keeps the
  * bundle slim. Block-level: ATX headings (# … ###), fenced code (```),
- * ordered (1.) and unordered (- / *) lists, paragraphs, blank-line
- * separation. Inline: backtick code spans, **bold**, *italic* / _italic_,
- * and bare links (autolinked URLs).
+ * ordered (1.) and unordered (- / *) lists, pipe tables, blockquotes,
+ * paragraphs, blank-line separation. Inline: backtick code spans, **bold**,
+ * *italic* / _italic_, and bare links (autolinked URLs).
  *
  * Output is a React fragment of typed elements — no dangerouslySetInnerHTML,
  * so untrusted text can't smuggle markup through.
  */
-import { Fragment, type ReactNode } from 'react';
+import { Fragment, type CSSProperties, type ReactNode } from 'react';
 
 export function renderMarkdown(input: string): ReactNode {
   const blocks = parseBlocks(input);
@@ -27,8 +27,12 @@ type Block =
   | { kind: 'h'; level: 1 | 2 | 3 | 4; text: string }
   | { kind: 'ul'; items: string[] }
   | { kind: 'ol'; items: string[] }
+  | { kind: 'quote'; text: string }
+  | { kind: 'table'; headers: string[]; rows: string[][]; align: TableAlign[] }
   | { kind: 'code'; lang: string | null; body: string }
   | { kind: 'hr' };
+
+type TableAlign = 'left' | 'center' | 'right' | null;
 
 function parseBlocks(input: string): Block[] {
   const lines = input.replace(/\r\n/g, '\n').split('\n');
@@ -69,6 +73,31 @@ function parseBlocks(input: string): Block[] {
       i++;
       continue;
     }
+    // GitHub-style pipe table. Requires a header row followed by a
+    // separator row, so prose containing pipes still renders as prose.
+    if (isTableHeader(lines, i)) {
+      const headers = splitTableRow(lines[i] ?? '');
+      const align = parseTableAlign(lines[i + 1] ?? '', headers.length);
+      const rows: string[][] = [];
+      i += 2;
+      while (i < lines.length && isTableRow(lines[i] ?? '')) {
+        const row = splitTableRow(lines[i] ?? '');
+        rows.push(normalizeTableCells(row, headers.length));
+        i++;
+      }
+      out.push({ kind: 'table', headers, rows, align });
+      continue;
+    }
+    // Blockquote. Group consecutive quoted lines into one block.
+    if (/^>\s?/.test(line)) {
+      const buf: string[] = [];
+      while (i < lines.length && /^>\s?/.test(lines[i] ?? '')) {
+        buf.push((lines[i] ?? '').replace(/^>\s?/, ''));
+        i++;
+      }
+      out.push({ kind: 'quote', text: buf.join('\n') });
+      continue;
+    }
     // Unordered list. Group consecutive items.
     if (/^\s*[-*+]\s+/.test(line)) {
       const items: string[] = [];
@@ -97,6 +126,8 @@ function parseBlocks(input: string): Block[] {
       if (next.trim() === '') break;
       if (/^```/.test(next)) break;
       if (/^#{1,4}\s+/.test(next)) break;
+      if (isTableHeader(lines, i)) break;
+      if (/^>\s?/.test(next)) break;
       if (/^\s*[-*+]\s+/.test(next)) break;
       if (/^\s*\d+\.\s+/.test(next)) break;
       buf.push(next);
@@ -133,6 +164,37 @@ function renderBlock(block: Block, key: number): ReactNode {
       </ol>
     );
   }
+  if (block.kind === 'quote') {
+    return <blockquote key={key} className="md-quote">{renderInline(block.text)}</blockquote>;
+  }
+  if (block.kind === 'table') {
+    return (
+      <div key={key} className="md-table-wrap">
+        <table className="md-table">
+          <thead>
+            <tr>
+              {block.headers.map((header, i) => (
+                <th key={i} style={tableAlignStyle(block.align[i])}>
+                  {renderInline(header)}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {block.rows.map((row, r) => (
+              <tr key={r}>
+                {block.headers.map((_header, c) => (
+                  <td key={c} style={tableAlignStyle(block.align[c])}>
+                    {renderInline(row[c] ?? '')}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
   if (block.kind === 'code') {
     return (
       <pre key={key} className="md-code">
@@ -144,6 +206,53 @@ function renderBlock(block: Block, key: number): ReactNode {
     return <hr key={key} className="md-hr" />;
   }
   return null;
+}
+
+function isTableHeader(lines: string[], index: number): boolean {
+  const header = lines[index] ?? '';
+  const separator = lines[index + 1] ?? '';
+  if (!isTableRow(header)) return false;
+  const headers = splitTableRow(header);
+  if (headers.length < 2) return false;
+  const align = parseTableAlign(separator, headers.length);
+  return align.length === headers.length;
+}
+
+function isTableRow(line: string): boolean {
+  if (!line.includes('|')) return false;
+  const trimmed = line.trim();
+  if (!trimmed || trimmed === '|') return false;
+  return splitTableRow(line).length >= 2;
+}
+
+function splitTableRow(line: string): string[] {
+  let trimmed = line.trim();
+  if (trimmed.startsWith('|')) trimmed = trimmed.slice(1);
+  if (trimmed.endsWith('|')) trimmed = trimmed.slice(0, -1);
+  return trimmed.split('|').map((cell) => cell.trim());
+}
+
+function parseTableAlign(line: string, width: number): TableAlign[] {
+  if (!isTableRow(line)) return [];
+  const cells = splitTableRow(line);
+  if (cells.length !== width) return [];
+  const align: TableAlign[] = [];
+  for (const cell of cells) {
+    if (!/^:?-{3,}:?$/.test(cell)) return [];
+    align.push(cell.startsWith(':') && cell.endsWith(':') ? 'center' : cell.endsWith(':') ? 'right' : 'left');
+  }
+  return align;
+}
+
+function normalizeTableCells(cells: string[], width: number): string[] {
+  if (cells.length === width) return cells;
+  if (cells.length > width) return cells.slice(0, width);
+  return [...cells, ...Array.from({ length: width - cells.length }, () => '')];
+}
+
+function tableAlignStyle(align: TableAlign | undefined): CSSProperties | undefined {
+  if (!align) return undefined;
+  return { textAlign: align };
 }
 
 // Inline pass: tokenize into runs of `code`, **bold**, *italic*, links,

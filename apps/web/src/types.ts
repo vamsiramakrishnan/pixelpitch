@@ -1,6 +1,8 @@
 import type {
   AgentInfo,
   AgentModelPrefs,
+  ApplyElementEditsRequest,
+  ApplyElementEditsResponse,
   AppVersionInfo,
   AppVersionResponse,
   AudioKind,
@@ -12,6 +14,12 @@ import type {
   DeployProjectFileResponse,
   DesignSystemDetail,
   DesignSystemSummary,
+  ElementEditOperation,
+  LiveArtifact,
+  LiveArtifactRefreshLogEntry,
+  LiveArtifactRefreshStatus,
+  LiveArtifactStatus,
+  LiveArtifactSummary,
   MediaAspect,
   ProjectDeploymentsResponse,
   PersistedAgentEvent,
@@ -179,48 +187,16 @@ export interface AppConfig {
 
 export type AgentEvent = PersistedAgentEvent;
 
-export type { ChatAttachment, ChatCommentAttachment, ChatMessage };
-
-export type LiveArtifactStatus = 'active' | 'archived' | 'error';
-export type LiveArtifactRefreshStatus = 'never' | 'idle' | 'running' | 'succeeded' | 'failed';
-
-export interface LiveArtifactSummary {
-  id: string;
-  projectId: string;
-  title: string;
-  slug: string;
-  status: LiveArtifactStatus;
-  pinned: boolean;
-  preview: { type: 'html' | 'jsx' | 'markdown'; entry: string };
-  refreshStatus: LiveArtifactRefreshStatus;
-  createdAt: string;
-  updatedAt: string;
-  lastRefreshedAt?: string;
-  hasDocument: boolean;
-}
-
-export interface LiveArtifact extends LiveArtifactSummary {
-  document: {
-    format: string;
-    templatePath: string;
-    generatedPreviewPath: string;
-    dataPath: string;
-    dataJson?: Record<string, unknown>;
-    sourceJson?: Record<string, unknown>;
-  };
-}
-
-export interface LiveArtifactRefreshLogEntry {
-  id: string;
-  refreshId: string;
-  sequence: number;
-  step: string;
-  status: string;
-  startedAt: string;
-  finishedAt?: string;
-  durationMs?: number;
-  error?: { message: string; code?: string };
-}
+export type {
+  ChatAttachment,
+  ChatCommentAttachment,
+  ChatMessage,
+  LiveArtifact,
+  LiveArtifactRefreshLogEntry,
+  LiveArtifactRefreshStatus,
+  LiveArtifactStatus,
+  LiveArtifactSummary,
+};
 
 export interface LiveArtifactWorkspaceEntry extends LiveArtifactSummary {
   tabId: string;
@@ -275,6 +251,8 @@ export interface PromptTemplateDetail extends PromptTemplateSummary {
 
 export type {
   AgentInfo,
+  ApplyElementEditsRequest,
+  ApplyElementEditsResponse,
   AppVersionInfo,
   AppVersionResponse,
   AudioKind,
@@ -283,6 +261,7 @@ export type {
   DeployProjectFileResponse,
   DesignSystemDetail,
   DesignSystemSummary,
+  ElementEditOperation,
   MediaAspect,
   ProjectDeploymentsResponse,
   Project,

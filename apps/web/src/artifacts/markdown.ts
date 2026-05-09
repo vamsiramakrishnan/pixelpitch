@@ -66,7 +66,7 @@ function headingLevel(line: string): number {
 export function renderMarkdownToSafeHtml(markdown: string): string {
   // Intentionally small markdown subset for conservative preview rendering.
   // Supported: headings, paragraphs, blockquotes, ul/ol lists, fenced code,
-  // inline code, bold/italic, and links.
+  // pipe tables, inline code, bold/italic, and links.
   // Not supported on purpose: full CommonMark edge cases (nested lists,
   // escaped markdown syntax, raw HTML blocks, tables, etc.).
   const lines = markdown.replace(/\r\n/g, '\n').split('\n');
@@ -100,6 +100,21 @@ export function renderMarkdownToSafeHtml(markdown: string): string {
     if (h > 0) {
       out.push(`<h${h}>${formatInline(line.replace(/^#{1,6}\s+/, ''))}</h${h}>`);
       i += 1;
+      continue;
+    }
+
+    if (isTableHeader(lines, i)) {
+      const headers = splitTableRow(line);
+      const align = parseTableAlign(lines[i + 1] ?? '', headers.length);
+      const rows: string[][] = [];
+      i += 2;
+      while (i < lines.length) {
+        const rowLine = lines[i];
+        if (rowLine === undefined || !isTableRow(rowLine)) break;
+        rows.push(normalizeTableCells(splitTableRow(rowLine), headers.length));
+        i += 1;
+      }
+      out.push(renderTable(headers, rows, align));
       continue;
     }
 
@@ -146,6 +161,7 @@ export function renderMarkdownToSafeHtml(markdown: string): string {
       if (
         /^```/.test(paraLine) ||
         headingLevel(paraLine) > 0 ||
+        isTableHeader(lines, i) ||
         /^>\s?/.test(paraLine) ||
         /^\s*[-*]\s+/.test(paraLine) ||
         /^\s*\d+\.\s+/.test(paraLine)
@@ -159,4 +175,62 @@ export function renderMarkdownToSafeHtml(markdown: string): string {
   }
 
   return out.join('\n');
+}
+
+type TableAlign = 'left' | 'center' | 'right' | null;
+
+function isTableHeader(lines: string[], index: number): boolean {
+  const header = lines[index] ?? '';
+  const separator = lines[index + 1] ?? '';
+  if (!isTableRow(header)) return false;
+  const headers = splitTableRow(header);
+  if (headers.length < 2) return false;
+  const align = parseTableAlign(separator, headers.length);
+  return align.length === headers.length;
+}
+
+function isTableRow(line: string): boolean {
+  if (!line.includes('|')) return false;
+  const trimmed = line.trim();
+  if (!trimmed || trimmed === '|') return false;
+  return splitTableRow(line).length >= 2;
+}
+
+function splitTableRow(line: string): string[] {
+  let trimmed = line.trim();
+  if (trimmed.startsWith('|')) trimmed = trimmed.slice(1);
+  if (trimmed.endsWith('|')) trimmed = trimmed.slice(0, -1);
+  return trimmed.split('|').map((cell) => cell.trim());
+}
+
+function parseTableAlign(line: string, width: number): TableAlign[] {
+  if (!isTableRow(line)) return [];
+  const cells = splitTableRow(line);
+  if (cells.length !== width) return [];
+  const align: TableAlign[] = [];
+  for (const cell of cells) {
+    if (!/^:?-{3,}:?$/.test(cell)) return [];
+    align.push(cell.startsWith(':') && cell.endsWith(':') ? 'center' : cell.endsWith(':') ? 'right' : 'left');
+  }
+  return align;
+}
+
+function normalizeTableCells(cells: string[], width: number): string[] {
+  if (cells.length === width) return cells;
+  if (cells.length > width) return cells.slice(0, width);
+  return [...cells, ...Array.from({ length: width - cells.length }, () => '')];
+}
+
+function renderTable(headers: string[], rows: string[][], align: TableAlign[]): string {
+  const headerHtml = headers
+    .map((header, i) => `<th${alignAttr(align[i])}>${formatInline(header)}</th>`)
+    .join('');
+  const bodyHtml = rows
+    .map((row) => `<tr>${headers.map((_header, i) => `<td${alignAttr(align[i])}>${formatInline(row[i] ?? '')}</td>`).join('')}</tr>`)
+    .join('');
+  return `<table><thead><tr>${headerHtml}</tr></thead><tbody>${bodyHtml}</tbody></table>`;
+}
+
+function alignAttr(align: TableAlign | undefined): string {
+  return align ? ` style="text-align: ${align}"` : '';
 }

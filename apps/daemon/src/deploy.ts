@@ -1,17 +1,21 @@
 // @ts-nocheck
+import { execFile } from 'node:child_process';
 import fs from 'node:fs';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
+import { promisify } from 'node:util';
 import { readProjectFile, validateProjectPath } from './projects.js';
 
-export const VERCEL_PROVIDER_ID = 'vercel-self';
-export const SAVED_TOKEN_MASK = 'saved-vercel-token';
+export const CLOUD_RUN_PROVIDER_ID = 'cloud-run';
+export const VERCEL_PROVIDER_ID = CLOUD_RUN_PROVIDER_ID;
 
-const VERCEL_API = 'https://api.vercel.com';
-const VERCEL_PROTECTED_MESSAGE =
-  'Deployment is protected by Vercel. Disable Deployment Protection or use a custom domain to make this link public.';
+const execFileAsync = promisify(execFile);
+const DEFAULT_CLOUD_RUN_REGION = 'us-central1';
+const CLOUD_RUN_DEPLOY_TIMEOUT_MS = 15 * 60 * 1000;
+const CLOUD_RUN_AUTH_MESSAGE =
+  'Cloud Run service is not public. Enable unauthenticated access or configure IAM before sharing this link.';
 
 export class DeployError extends Error {
   constructor(message, status = 400, details = undefined) {
@@ -24,35 +28,46 @@ export class DeployError extends Error {
 
 export function deployConfigPath() {
   const base = process.env.PIXELPITCH_USER_STATE_DIR || path.join(os.homedir(), '.pixelpitch');
-  return path.join(base, 'vercel.json');
+  return path.join(base, 'cloud-run.json');
 }
 
-export async function readVercelConfig() {
+export async function readCloudRunConfig() {
   try {
     const raw = await readFile(deployConfigPath(), 'utf8');
     const parsed = JSON.parse(raw);
     return {
-      token: typeof parsed.token === 'string' ? parsed.token : '',
-      teamId: typeof parsed.teamId === 'string' ? parsed.teamId : '',
-      teamSlug: typeof parsed.teamSlug === 'string' ? parsed.teamSlug : '',
+      projectId: typeof parsed.projectId === 'string' ? parsed.projectId : '',
+      region: typeof parsed.region === 'string' ? parsed.region : DEFAULT_CLOUD_RUN_REGION,
+      serviceName: typeof parsed.serviceName === 'string' ? parsed.serviceName : '',
+      allowUnauthenticated: parsed.allowUnauthenticated !== false,
     };
   } catch (err) {
-    if (err && err.code === 'ENOENT') return { token: '', teamId: '', teamSlug: '' };
+    if (err && err.code === 'ENOENT') {
+      return {
+        projectId: '',
+        region: DEFAULT_CLOUD_RUN_REGION,
+        serviceName: '',
+        allowUnauthenticated: true,
+      };
+    }
     throw err;
   }
 }
 
-export async function writeVercelConfig(input) {
-  const current = await readVercelConfig();
-  const tokenInput = typeof input?.token === 'string' ? input.token.trim() : '';
+export async function writeCloudRunConfig(input) {
+  const current = await readCloudRunConfig();
   const next = {
-    token:
-      tokenInput && tokenInput !== SAVED_TOKEN_MASK
-        ? tokenInput
-        : current.token,
-    teamId: typeof input?.teamId === 'string' ? input.teamId.trim() : current.teamId,
-    teamSlug:
-      typeof input?.teamSlug === 'string' ? input.teamSlug.trim() : current.teamSlug,
+    projectId: typeof input?.projectId === 'string' ? input.projectId.trim() : current.projectId,
+    region: normalizeCloudRunRegion(
+      typeof input?.region === 'string' ? input.region : current.region,
+    ),
+    serviceName: normalizeCloudRunServiceName(
+      typeof input?.serviceName === 'string' ? input.serviceName : current.serviceName,
+    ),
+    allowUnauthenticated:
+      typeof input?.allowUnauthenticated === 'boolean'
+        ? input.allowUnauthenticated
+        : current.allowUnauthenticated !== false,
   };
   const file = deployConfigPath();
   await mkdir(path.dirname(file), { recursive: true });
@@ -67,14 +82,18 @@ export async function writeVercelConfig(input) {
 
 export function publicDeployConfig(config) {
   return {
-    providerId: VERCEL_PROVIDER_ID,
-    configured: Boolean(config?.token),
-    tokenMask: config?.token ? SAVED_TOKEN_MASK : '',
-    teamId: config?.teamId || '',
-    teamSlug: config?.teamSlug || '',
+    providerId: CLOUD_RUN_PROVIDER_ID,
+    configured: Boolean(config?.projectId && config?.region && config?.serviceName),
+    projectId: config?.projectId || '',
+    region: config?.region || DEFAULT_CLOUD_RUN_REGION,
+    serviceName: config?.serviceName || '',
+    allowUnauthenticated: config?.allowUnauthenticated !== false,
     target: 'preview',
   };
 }
+
+export const readVercelConfig = readCloudRunConfig;
+export const writeVercelConfig = writeCloudRunConfig;
 
 // Walk the entry HTML and any referenced CSS, producing the full set of
 // files that would be uploaded for a deploy along with the lists of
@@ -185,52 +204,154 @@ export async function buildDeployFileSet(projectsRoot, projectId, entryName, opt
   return plan.files;
 }
 
-export async function deployToVercel({ config, files, projectId }) {
-  if (!config?.token) {
-    throw new DeployError('Vercel token is required.', 400);
+export async function deployToCloudRun({ config, files, projectId }) {
+  const normalized = normalizeCloudRunConfig(config);
+  if (!normalized.projectId) {
+    throw new DeployError('Google Cloud project ID is required.', 400);
+  }
+  if (!normalized.region) {
+    throw new DeployError('Cloud Run region is required.', 400);
+  }
+  if (!normalized.serviceName) {
+    throw new DeployError('Cloud Run service name is required.', 400);
+  }
+  if (!Array.isArray(files) || files.length === 0) {
+    throw new DeployError('No deployable files were found.', 400);
   }
 
-  const createResp = await fetch(`${VERCEL_API}/v13/deployments${vercelTeamQuery(config)}`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${config.token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      name: safeVercelProjectName(`od-${projectId}`),
-      files: files.map((f) => ({
-        file: f.file,
-        data: Buffer.from(f.data).toString('base64'),
-        encoding: 'base64',
-      })),
-      projectSettings: { framework: null },
-    }),
-  });
-
-  const created = await readVercelJson(createResp);
-  if (!createResp.ok) throw vercelError(created, createResp.status);
-
-  const deploymentId = created.id || created.uid;
-  const initialUrl = deploymentUrl(created);
-  const ready = deploymentId
-    ? await pollVercelDeployment(config, deploymentId)
-    : created;
-  if (ready?.readyState === 'ERROR') {
-    throw new DeployError(ready?.error?.message || 'Vercel deployment failed.', 502, ready);
+  const workDir = await mkdtemp(path.join(os.tmpdir(), `pixelpitch-cloud-run-${projectId}-`));
+  try {
+    await writeCloudRunSourceBundle(workDir, files);
+    const args = [
+      'run',
+      'deploy',
+      normalized.serviceName,
+      '--source',
+      workDir,
+      '--project',
+      normalized.projectId,
+      '--region',
+      normalized.region,
+      normalized.allowUnauthenticated ? '--allow-unauthenticated' : '--no-allow-unauthenticated',
+      '--quiet',
+      '--format=json',
+    ];
+    const { stdout } = await execFileAsync('gcloud', args, {
+      timeout: CLOUD_RUN_DEPLOY_TIMEOUT_MS,
+      maxBuffer: 1024 * 1024 * 8,
+    });
+    const deployed = parseCloudRunDeployOutput(stdout);
+    const url = deployed.url || '';
+    const link = await waitForReachableDeploymentUrl([url]);
+    return {
+      providerId: CLOUD_RUN_PROVIDER_ID,
+      url: link.url || url,
+      deploymentId: deployed.deploymentId || deployed.serviceName || normalized.serviceName,
+      target: 'preview',
+      status: link.status,
+      statusMessage: link.statusMessage,
+      reachableAt: link.reachableAt,
+    };
+  } catch (err) {
+    throw cloudRunError(err);
+  } finally {
+    await rm(workDir, { recursive: true, force: true });
   }
+}
 
-  const candidates = deploymentUrlCandidates(ready, created);
-  const link = await waitForReachableDeploymentUrl(candidates.length ? candidates : [initialUrl]);
+export const deployToVercel = deployToCloudRun;
 
+function normalizeCloudRunConfig(config) {
   return {
-    providerId: VERCEL_PROVIDER_ID,
-    url: link.url || deploymentUrl(ready) || initialUrl,
-    deploymentId,
-    target: 'preview',
-    status: link.status,
-    statusMessage: link.statusMessage,
-    reachableAt: link.reachableAt,
+    projectId: typeof config?.projectId === 'string' ? config.projectId.trim() : '',
+    region: normalizeCloudRunRegion(config?.region),
+    serviceName: normalizeCloudRunServiceName(config?.serviceName),
+    allowUnauthenticated: config?.allowUnauthenticated !== false,
   };
+}
+
+function normalizeCloudRunRegion(raw) {
+  const value = typeof raw === 'string' ? raw.trim().toLowerCase() : '';
+  return value || DEFAULT_CLOUD_RUN_REGION;
+}
+
+function normalizeCloudRunServiceName(raw) {
+  const value = typeof raw === 'string' ? raw.trim().toLowerCase() : '';
+  if (!value) return '';
+  return value
+    .replace(/[^a-z0-9-]/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 63);
+}
+
+async function writeCloudRunSourceBundle(root, files) {
+  for (const item of files) {
+    const relative = validateCloudRunBundlePath(item.file);
+    const target = path.join(root, relative);
+    await mkdir(path.dirname(target), { recursive: true });
+    await writeFile(target, Buffer.from(item.data));
+  }
+  await writeFile(
+    path.join(root, 'Dockerfile'),
+    [
+      'FROM nginx:1.27-alpine',
+      'COPY . /usr/share/nginx/html',
+      '',
+    ].join('\n'),
+    'utf8',
+  );
+  await writeFile(
+    path.join(root, '.gcloudignore'),
+    [
+      '.git',
+      '.DS_Store',
+      '',
+    ].join('\n'),
+    'utf8',
+  );
+}
+
+function validateCloudRunBundlePath(raw) {
+  const relative = path.posix.normalize(String(raw || '').replace(/^\/+/, ''));
+  if (!relative || relative === '.' || relative.startsWith('../') || path.isAbsolute(relative)) {
+    throw new DeployError(`Invalid deploy file path: ${raw}`, 400);
+  }
+  return relative;
+}
+
+function parseCloudRunDeployOutput(stdout) {
+  const text = String(stdout || '').trim();
+  if (!text) return {};
+  try {
+    const json = JSON.parse(text);
+    return {
+      url: json?.status?.url || json?.status?.address?.url || json?.uri || '',
+      serviceName: json?.metadata?.name || '',
+      deploymentId: json?.metadata?.uid || json?.metadata?.name || '',
+    };
+  } catch {
+    const match = text.match(/https:\/\/[^\s]+/i);
+    return { url: match?.[0] || '' };
+  }
+}
+
+function cloudRunError(err) {
+  if (err instanceof DeployError) return err;
+  const code = err?.code;
+  if (code === 'ENOENT') {
+    return new DeployError(
+      'gcloud CLI is required to deploy to Cloud Run. Install Google Cloud CLI and run `gcloud auth login` plus `gcloud auth application-default login`.',
+      400,
+    );
+  }
+  const stderr = String(err?.stderr || '').trim();
+  const stdout = String(err?.stdout || '').trim();
+  const message = stderr || stdout || err?.message || String(err);
+  return new DeployError(`Cloud Run deploy failed: ${message}`, 502, {
+    code,
+    stderr,
+    stdout,
+  });
 }
 
 export function extractHtmlReferences(html) {
@@ -360,11 +481,10 @@ export function rewriteEntryHtmlReferences(html, baseDir) {
   });
 }
 
-// Soft thresholds chosen against Vercel's v13 deployment shape and
+// Soft thresholds chosen against static HTML deploy budgets and
 // typical first-paint budgets. Per-asset is a usability hint, not a
-// hard cap; bundle is a margin against Vercel's 100MB request body
-// (each file is base64-encoded which adds ~33%, so 75MiB pre-encoded
-// is the safer ceiling).
+// hard cap; bundle is a margin against pushing a large source bundle
+// through Cloud Build from the local machine.
 export const DEPLOY_PREFLIGHT_LARGE_ASSET_BYTES = 4 * 1024 * 1024;
 export const DEPLOY_PREFLIGHT_LARGE_BUNDLE_BYTES = 75 * 1024 * 1024;
 export const DEPLOY_PREFLIGHT_LARGE_HTML_BYTES = 1 * 1024 * 1024;
@@ -462,7 +582,7 @@ export function analyzeDeployPlan(input: {
     pushUnique(acc, {
       code: 'large-bundle',
       size: totalBytes,
-      message: `Bundle is ${formatMib(totalBytes)}; Vercel rejects deploy bodies above ~100MB after base64 encoding.`,
+      message: `Bundle is ${formatMib(totalBytes)}; large Cloud Run source deploys are slow and can fail in Cloud Build.`,
     });
   }
 
@@ -536,7 +656,7 @@ export async function prepareDeployPreflight(projectsRoot, projectId, entryName,
   const plan = await buildDeployFilePlan(projectsRoot, projectId, entryName, options);
   const { warnings, totalBytes, totalFiles } = analyzeDeployPlan(plan);
   return {
-    providerId: VERCEL_PROVIDER_ID,
+    providerId: CLOUD_RUN_PROVIDER_ID,
     entry: plan.entryPath,
     files: plan.files.map((f) => ({
       path: f.file,
@@ -739,7 +859,7 @@ export async function waitForReachableDeploymentUrl(
     return {
       status: 'link-delayed',
       url: '',
-      statusMessage: 'Vercel did not return a public deployment URL.',
+      statusMessage: 'Cloud Run did not return a public service URL.',
     };
   }
 
@@ -760,7 +880,7 @@ export async function waitForReachableDeploymentUrl(
         return {
           status: 'protected',
           url,
-          statusMessage: result.statusMessage || VERCEL_PROTECTED_MESSAGE,
+          statusMessage: result.statusMessage || CLOUD_RUN_AUTH_MESSAGE,
         };
       }
       lastMessage = result.statusMessage || lastMessage;
@@ -773,7 +893,7 @@ export async function waitForReachableDeploymentUrl(
     status: 'link-delayed',
     url: fallbackUrl,
     statusMessage:
-      lastMessage || 'Vercel returned a deployment URL, but it is not reachable yet.',
+      lastMessage || 'Cloud Run returned a service URL, but it is not reachable yet.',
   };
 }
 
@@ -807,15 +927,15 @@ async function requestDeploymentUrl(url, method, timeoutMs) {
     if (resp.status >= 200 && resp.status < 400) {
       return { reachable: true, statusCode: resp.status };
     }
-    const body = method === 'GET' || resp.status === 401
+    const body = method === 'GET' || resp.status === 401 || resp.status === 403
       ? await resp.text().catch(() => '')
       : '';
-    if (resp.status === 401 && isVercelProtectedResponse(resp, body)) {
+    if (isProtectedDeploymentResponse(resp, body, url)) {
       return {
         reachable: false,
         status: 'protected',
         statusCode: resp.status,
-        statusMessage: VERCEL_PROTECTED_MESSAGE,
+        statusMessage: CLOUD_RUN_AUTH_MESSAGE,
       };
     }
     return {
@@ -843,6 +963,18 @@ export function isVercelProtectedResponse(resp, body = '') {
     /Authentication Required/i.test(text) ||
     /Vercel Authentication/i.test(text) ||
     /vercel\.com\/sso-api/i.test(text)
+  );
+}
+
+export function isProtectedDeploymentResponse(resp, body = '', url = '') {
+  if (isVercelProtectedResponse(resp, body)) return true;
+  if (resp?.status !== 401 && resp?.status !== 403) return false;
+  const text = String(body || '');
+  return (
+    /\.run\.app(?:\/|$)/i.test(String(url || '')) ||
+    /Cloud Run/i.test(text) ||
+    /Your client does not have permission/i.test(text) ||
+    /request was not authenticated/i.test(text)
   );
 }
 

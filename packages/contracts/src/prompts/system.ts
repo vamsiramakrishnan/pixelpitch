@@ -61,6 +61,11 @@ export interface ComposeInput {
     | undefined;
   designSystemBody?: string | undefined;
   designSystemTitle?: string | undefined;
+  designSystemCss?: string | undefined;
+  // Craft references the active skill opted into via `od.craft.requires`.
+  // Daemon resolves slugs to file contents; web callers may leave these empty.
+  craftBody?: string | undefined;
+  craftSections?: string[] | undefined;
   // Project-level metadata captured by the new-project panel. Drives the
   // agent's understanding of artifact kind, fidelity, speaker-notes intent
   // and animation intent. Missing fields here are exactly what the
@@ -78,6 +83,9 @@ export function composeSystemPrompt({
   skillMode,
   designSystemBody,
   designSystemTitle,
+  designSystemCss,
+  craftBody,
+  craftSections,
   metadata,
   template,
 }: ComposeInput): string {
@@ -94,8 +102,22 @@ export function composeSystemPrompt({
   ];
 
   if (designSystemBody && designSystemBody.trim().length > 0) {
+    let cssBlock = '';
+    if (designSystemCss) {
+      cssBlock = `\n### CSS Custom Properties (authoritative token values)\n\n\`\`\`css\n${designSystemCss}\n\`\`\`\n\n`;
+    }
     parts.push(
-      `\n\n## Active design system${designSystemTitle ? ` — ${designSystemTitle}` : ''}\n\nTreat the following DESIGN.md as authoritative for color, typography, spacing, and component rules. Do not invent tokens outside this palette. When you copy the active skill's seed template, bind these tokens into its \`:root\` block before generating any layout.\n\n${designSystemBody.trim()}`,
+      `\n\n## Active design system${designSystemTitle ? ` — ${designSystemTitle}` : ''}${cssBlock}\n\nTreat the following DESIGN.md as authoritative for color, typography, spacing, and component rules. Do not invent tokens outside this palette. When you copy the active skill's seed template, bind these tokens into its \`:root\` block before generating any layout.\n\n${designSystemBody.trim()}`,
+    );
+  }
+
+  if (craftBody && craftBody.trim().length > 0) {
+    const sectionLabel =
+      Array.isArray(craftSections) && craftSections.length > 0
+        ? ` — ${craftSections.join(', ')}`
+        : '';
+    parts.push(
+      `\n\n## Active craft references${sectionLabel}\n\nThe following craft rules are universal — they apply on top of the active design system above, regardless of brand. The DESIGN.md decides *which* tokens to use; craft rules decide *how* to use them. On any conflict between a craft rule and a brand DESIGN.md, the brand wins for token values; craft rules still apply to anything the brand does not override (letter-spacing, accent caps, anti-slop patterns).\n\n${craftBody.trim()}`,
     );
   }
 
@@ -179,15 +201,19 @@ function renderMetadataBlock(
   }
   if (metadata.kind === 'image') {
     lines.push(
-      `- **imageModel**: ${metadata.imageModel ?? '(unknown - ask: which image model to use)'}`,
+      `- **imageModel**: ${metadata.imageModel ?? '(unknown — ask: which image model to use)'}`,
     );
     lines.push(
-      `- **aspectRatio**: ${metadata.imageAspect ?? '(unknown - ask: 1:1, 16:9, 9:16, 4:3, 3:4)'}`,
+      `- **aspectRatio**: ${metadata.imageAspect ?? '(unknown — ask: 1:1, 16:9, 9:16, 4:3, 3:4)'}`,
     );
     if (metadata.imageStyle) {
       lines.push(`- **styleNotes**: ${metadata.imageStyle}`);
     }
-    if (metadata.promptTemplate && metadata.promptTemplate.prompt.trim().length > 0) {
+    if (
+      metadata.promptTemplate?.title &&
+      typeof metadata.promptTemplate.prompt === 'string' &&
+      metadata.promptTemplate.prompt.trim().length > 0
+    ) {
       lines.push(`- **referenceTemplate**: ${metadata.promptTemplate.title}`);
     }
     lines.push('');
@@ -197,15 +223,19 @@ function renderMetadataBlock(
   }
   if (metadata.kind === 'video') {
     lines.push(
-      `- **videoModel**: ${metadata.videoModel ?? '(unknown - ask: which video model to use)'}`,
+      `- **videoModel**: ${metadata.videoModel ?? '(unknown — ask: which video model to use)'}`,
     );
     lines.push(
-      `- **lengthSeconds**: ${typeof metadata.videoLength === 'number' ? metadata.videoLength : '(unknown - ask: 3s / 5s / 10s)'}`,
+      `- **lengthSeconds**: ${typeof metadata.videoLength === 'number' ? metadata.videoLength : '(unknown — ask: 3s / 5s / 10s)'}`,
     );
     lines.push(
-      `- **aspectRatio**: ${metadata.videoAspect ?? '(unknown - ask: 16:9, 9:16, 1:1)'}`,
+      `- **aspectRatio**: ${metadata.videoAspect ?? '(unknown — ask: 16:9, 9:16, 1:1)'}`,
     );
-    if (metadata.promptTemplate && metadata.promptTemplate.prompt.trim().length > 0) {
+    if (
+      metadata.promptTemplate?.title &&
+      typeof metadata.promptTemplate.prompt === 'string' &&
+      metadata.promptTemplate.prompt.trim().length > 0
+    ) {
       lines.push(`- **referenceTemplate**: ${metadata.promptTemplate.title}`);
     }
     lines.push('');
@@ -220,18 +250,18 @@ function renderMetadataBlock(
   }
   if (metadata.kind === 'audio') {
     lines.push(
-      `- **audioKind**: ${metadata.audioKind ?? '(unknown - ask: music / speech / sfx)'}`,
+      `- **audioKind**: ${metadata.audioKind ?? '(unknown — ask: music / speech / sfx)'}`,
     );
     lines.push(
-      `- **audioModel**: ${metadata.audioModel ?? '(unknown - ask: which audio model to use)'}`,
+      `- **audioModel**: ${metadata.audioModel ?? '(unknown — ask: which audio model to use)'}`,
     );
     lines.push(
-      `- **durationSeconds**: ${typeof metadata.audioDuration === 'number' ? metadata.audioDuration : '(unknown - ask: target duration)'}`,
+      `- **durationSeconds**: ${typeof metadata.audioDuration === 'number' ? metadata.audioDuration : '(unknown — ask: target duration)'}`,
     );
     if (metadata.voice) {
       lines.push(`- **voice**: ${metadata.voice}`);
     } else if (metadata.audioKind === 'speech') {
-      lines.push('- **voice**: (unknown - ask: voice id / accent / pacing)');
+      lines.push('- **voice**: (unknown — ask: voice id / accent / pacing)');
     }
     lines.push('');
     lines.push(
@@ -253,16 +283,17 @@ function renderMetadataBlock(
   if (
     (metadata.kind === 'image' || metadata.kind === 'video') &&
     metadata.promptTemplate &&
+    typeof metadata.promptTemplate.prompt === 'string' &&
     metadata.promptTemplate.prompt.trim().length > 0
   ) {
     const tpl = metadata.promptTemplate;
     lines.push('');
-    lines.push(`### Reference prompt template — "${tpl.title}"`);
-    const meta: string[] = [];
+    lines.push(`### Reference prompt template — "${tpl.title ?? 'untitled'}"`);
+    const meta = [];
     if (tpl.category) meta.push(`category: ${tpl.category}`);
     if (tpl.model) meta.push(`suggested model: ${tpl.model}`);
     if (tpl.aspect) meta.push(`aspect: ${tpl.aspect}`);
-    if (tpl.tags && tpl.tags.length > 0) {
+    if (Array.isArray(tpl.tags) && tpl.tags.length > 0) {
       meta.push(`tags: ${tpl.tags.join(', ')}`);
     }
     if (meta.length > 0) lines.push(meta.join(' · '));
@@ -279,7 +310,7 @@ function renderMetadataBlock(
     // free-form instructions into the agent's system prompt. Zero-width
     // joiner between the backticks keeps the prompt human-readable while
     // preventing the closing fence from matching prematurely.
-    const safe = tpl.prompt.replace(/```/g, '`\u200b`\u200b`');
+    const safe = (tpl.prompt ?? '').replace(/```/g, '`\u200b`\u200b`');
     const truncated =
       safe.length > 4000
         ? `${safe.slice(0, 4000)}\n… (truncated ${safe.length - 4000} chars)`
@@ -292,7 +323,7 @@ function renderMetadataBlock(
       const author = tpl.source.author ? ` by ${tpl.source.author}` : '';
       lines.push('');
       lines.push(
-        `Source: ${tpl.source.repo}${author} — license ${tpl.source.license}. Preserve attribution if you echo the template language directly.`,
+        `Source: ${tpl.source.repo}${author} — license ${tpl.source.license ?? 'unspecified'}. Preserve attribution if you echo the template language directly.`,
       );
     }
   }

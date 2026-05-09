@@ -1,5 +1,7 @@
 import type {
   AgentInfo,
+  ApplyElementEditsRequest,
+  ApplyElementEditsResponse,
   AppVersionInfo,
   AppVersionResponse,
   AppConfig,
@@ -288,7 +290,7 @@ export async function deployProjectFile(
   const resp = await fetch(`/api/projects/${encodeURIComponent(projectId)}/deploy`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ fileName, providerId: 'vercel-self' }),
+    body: JSON.stringify({ fileName, providerId: 'cloud-run' }),
   });
   if (!resp.ok) {
     const payload = (await resp.json().catch(() => null)) as
@@ -377,6 +379,24 @@ export async function exportConversationTranscript(
     format === 'json' ? 'conversation-transcript.json' : 'conversation-transcript.md',
   );
   triggerBlobDownload(blob, filename);
+}
+
+export async function applyElementEdits(
+  projectId: string,
+  request: ApplyElementEditsRequest,
+): Promise<ApplyElementEditsResponse> {
+  const resp = await fetch(`/api/projects/${encodeURIComponent(projectId)}/edit-ops/apply`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(request),
+  });
+  if (!resp.ok) {
+    const payload = (await resp.json().catch(() => null)) as
+      | { error?: { message?: string }; message?: string }
+      | null;
+    throw new Error(payload?.error?.message || payload?.message || `Edit operation failed (${resp.status})`);
+  }
+  return (await resp.json()) as ApplyElementEditsResponse;
 }
 
 export async function checkDeploymentLink(

@@ -34,3 +34,38 @@ exports[`slotCaptionToIR > emits a snapshot-stable caption 1`] = `
   "zOrder": 0,
 }
 `;
+
+exports[`slotCaptionToIR emits a snapshot-stable caption 1`] = `
+{
+  "bbox": {
+    "h": 80,
+    "w": 600,
+    "x": 0,
+    "y": 0,
+  },
+  "kind": "text",
+  "metadata": {
+    "axis": "slot",
+    "register": "caption",
+    "role": "slot.caption",
+  },
+  "paragraphs": [
+    {
+      "align": "left",
+      "runs": [
+        {
+          "color": "#a1a1aa",
+          "fontFamily": "Inter, sans-serif",
+          "fontSizePx": 13,
+          "fontWeight": 500,
+          "italic": false,
+          "text": "A short caption.",
+          "underline": false,
+        },
+      ],
+    },
+  ],
+  "recipeId": "slot.caption",
+  "zOrder": 0,
+}
+`;

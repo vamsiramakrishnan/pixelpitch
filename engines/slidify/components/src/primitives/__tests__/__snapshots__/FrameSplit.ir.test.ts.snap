@@ -55,3 +55,59 @@ exports[`frameSplitToIR > emits a snapshot-stable 60/40 split 1`] = `
   "zOrder": 0,
 }
 `;
+
+exports[`frameSplitToIR emits a snapshot-stable 60/40 split 1`] = `
+{
+  "bbox": {
+    "h": 720,
+    "w": 1280,
+    "x": 0,
+    "y": 0,
+  },
+  "children": [
+    {
+      "bbox": {
+        "h": 720,
+        "w": 739.1999999999999,
+        "x": 0,
+        "y": 0,
+      },
+      "children": [],
+      "kind": "group",
+      "metadata": {
+        "ratio": 0.6,
+        "role": "split-column",
+        "side": "left",
+      },
+      "recipeId": "frame.split.left",
+      "zOrder": 0,
+    },
+    {
+      "bbox": {
+        "h": 720,
+        "w": 492.8,
+        "x": 787.1999999999999,
+        "y": 0,
+      },
+      "children": [],
+      "kind": "group",
+      "metadata": {
+        "ratio": 0.4,
+        "role": "split-column",
+        "side": "right",
+      },
+      "recipeId": "frame.split.right",
+      "zOrder": 10,
+    },
+  ],
+  "kind": "group",
+  "metadata": {
+    "axis": "frame",
+    "gap": 48,
+    "ratio": 0.6,
+    "role": "frame.split",
+  },
+  "recipeId": "frame.split",
+  "zOrder": 0,
+}
+`;

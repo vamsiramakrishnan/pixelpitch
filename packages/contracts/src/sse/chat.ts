@@ -55,6 +55,8 @@ export type DaemonAgentPayload =
   | { type: 'thinking_start' }
   | { type: 'tool_use'; id: string; name: string; input: unknown }
   | { type: 'tool_result'; toolUseId: string; content: string; isError?: boolean }
+  | { type: 'delegation_subrun'; runId: string; childRunId: string; event: string; data?: Record<string, unknown> }
+  | { type: 'delegation_workflow'; workflowId: string; event: string; status?: string; mode?: string; level?: number; taskId?: string; failedTaskId?: string; taskCount?: number; tasks?: unknown[]; results?: unknown[]; detail?: string }
   | { type: 'usage'; usage?: { input_tokens?: number; output_tokens?: number }; costUsd?: number; durationMs?: number }
   | LiveArtifactSsePayload
   | LiveArtifactRefreshSsePayload
