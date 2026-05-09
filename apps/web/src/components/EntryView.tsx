@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useT } from '../i18n';
+import { usePopoverLayer } from '../layers';
 import {
   DEFAULT_AUDIO_MODEL,
   DEFAULT_IMAGE_MODEL,
@@ -23,12 +24,13 @@ import { ExamplesTab } from './ExamplesTab';
 import { Icon } from './Icon';
 import { LanguageMenu } from './LanguageMenu';
 import { CenteredLoader } from './Loading';
-import { NewProjectPanel, type CreateInput } from './NewProjectPanel';
+import { NewProjectPanel, type CreateInput, type CreateTab } from './NewProjectPanel';
 import { PetRail } from './pet/PetRail';
 import { PromptTemplatePreviewModal } from './PromptTemplatePreviewModal';
 import { PromptTemplatesTab } from './PromptTemplatesTab';
+import { apiRuntimeLabel } from '../utils/runtimeLabels';
 
-type TopTab = 'designs' | 'examples' | 'design-systems' | 'image-templates' | 'video-templates';
+export type EntryTopTab = 'designs' | 'examples' | 'design-systems' | 'image-templates' | 'video-templates';
 
 interface Props {
   skills: SkillSummary[];
@@ -40,6 +42,8 @@ interface Props {
   config: AppConfig;
   agents: AgentInfo[];
   loading?: boolean;
+  initialTopTab?: EntryTopTab | null;
+  initialCreateTab?: CreateTab | null;
   onCreateProject: (input: CreateInput & { pendingPrompt?: string }) => void;
   onImportClaudeDesign: (file: File) => Promise<void> | void;
   onOpenProject: (id: string) => void;
@@ -99,6 +103,8 @@ export function EntryView({
   config,
   agents,
   loading = false,
+  initialTopTab = null,
+  initialCreateTab = null,
   onCreateProject,
   onImportClaudeDesign,
   onOpenProject,
@@ -110,7 +116,7 @@ export function EntryView({
   onTogglePet,
 }: Props) {
   const t = useT();
-  const [topTab, setTopTab] = useState<TopTab>('designs');
+  const [topTab, setTopTab] = useState<EntryTopTab>('designs');
   const [previewSystemId, setPreviewSystemId] = useState<string | null>(null);
   const [previewPromptTemplate, setPreviewPromptTemplate] =
     useState<PromptTemplateSummary | null>(null);
@@ -119,6 +125,13 @@ export function EntryView({
   const [petRailHidden, setPetRailHiddenState] = useState<boolean>(() => loadPetRailHidden());
   const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
   const avatarMenuRef = useRef<HTMLDivElement | null>(null);
+  const lastIntentRef = useRef('');
+
+  const entryAvatarLayer = usePopoverLayer({
+    open: avatarMenuOpen,
+    onDismiss: () => setAvatarMenuOpen(false),
+    triggerRef: avatarMenuRef as React.RefObject<HTMLElement | null>,
+  });
 
   function setPetRailHidden(next: boolean) {
     setPetRailHiddenState(next);
@@ -212,6 +225,18 @@ export function EntryView({
     input?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
+  useEffect(() => {
+    const intentKey = `${initialTopTab ?? ''}:${initialCreateTab ?? ''}`;
+    if (!intentKey || lastIntentRef.current === intentKey) return;
+    lastIntentRef.current = intentKey;
+    if (initialTopTab) {
+      setTopTab(initialTopTab);
+    }
+    if (initialCreateTab) {
+      window.requestAnimationFrame(() => focusCreatePanel());
+    }
+  }, [initialTopTab, initialCreateTab]);
+
   const startWidthRef = useRef(0);
   const startXRef = useRef(0);
 
@@ -246,26 +271,6 @@ export function EntryView({
     }
   }, [sidebarWidth]);
 
-  // Dismiss the avatar dropdown on outside-click / Escape so it behaves
-  // like the project-view AvatarMenu (which uses the same shell CSS).
-  useEffect(() => {
-    if (!avatarMenuOpen) return;
-    const onClick = (e: MouseEvent) => {
-      if (!avatarMenuRef.current) return;
-      if (!avatarMenuRef.current.contains(e.target as Node)) {
-        setAvatarMenuOpen(false);
-      }
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setAvatarMenuOpen(false);
-    };
-    document.addEventListener('mousedown', onClick);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onClick);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [avatarMenuOpen]);
 
   // The right rail tracks its own collapse state internally and tells
   // us its preferred column width via a CSS variable on the wrapper —
@@ -273,7 +278,7 @@ export function EntryView({
   // the grid stays in sync with whatever the rail decides to render.
   return (
     <div
-      className={`entry${petRailHidden ? '' : ' has-pet-rail'}`}
+      className={`entry${petRailHidden ? '' : ' has-pet-rail'}${initialTopTab || initialCreateTab ? ' entry-arrival' : ''}`}
       style={{
         gridTemplateColumns: petRailHidden
           ? `${sidebarWidth}px 1fr`
@@ -303,6 +308,7 @@ export function EntryView({
           onImportClaudeDesign={onImportClaudeDesign}
           mediaProviders={config.mediaProviders}
           loading={loading}
+          initialTab={initialCreateTab}
         />
         <div className="entry-side-foot">
           <button
@@ -339,7 +345,7 @@ export function EntryView({
             <span>
               {config.mode === 'daemon'
                 ? t('settings.localCli')
-                : t('settings.anthropicApi')}
+                : apiRuntimeLabel(config)}
             </span>
             <span style={{ color: 'var(--text-faint)' }}>·</span>
             <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 180 }}>
@@ -407,7 +413,7 @@ export function EntryView({
                 />
               </button>
               {avatarMenuOpen ? (
-                <div className="avatar-popover" role="menu">
+                <div ref={entryAvatarLayer.contentRef} className="avatar-popover" role="menu" style={{ zIndex: entryAvatarLayer.zIndex }}>
                   <button
                     type="button"
                     className="avatar-item"
@@ -451,9 +457,9 @@ export function EntryView({
             <>
               <section className="entry-dashboard" aria-label="Studio overview">
                 <div className="entry-dashboard-copy">
-                  <span className="entry-dashboard-kicker">Studio</span>
+                  <span className="entry-dashboard-kicker">PP / Studio Plate</span>
                   <h1>Make the next artifact</h1>
-                  <p>Start with a focused output, then iterate with chat, files, comments, and design-system context in one workspace.</p>
+                  <p>Start with a focused output, then iterate with chat, files, comments, inspect-mode edits, and design-system context in one workspace.</p>
                   <div className="entry-dashboard-flow" aria-label="Creation workflow">
                     <span><Icon name="send" size={13} /> Brief</span>
                     <span><Icon name="file" size={13} /> Files</span>
@@ -476,7 +482,12 @@ export function EntryView({
                     ) : null}
                   </div>
                 </div>
-                <div className="entry-dashboard-work" aria-label="Workspace summary">
+                <div className="entry-dashboard-plate" aria-label="Workspace summary">
+                  <img src="/landing/hero-plate.png" alt="" draggable={false} />
+                  <div className="entry-dashboard-plate-caption">
+                    <span>FIG. 01</span>
+                    <span>Local agent studio</span>
+                  </div>
                   {featuredProject ? (
                     <button
                       type="button"
@@ -613,10 +624,10 @@ function TopTabButton({
   label,
   onClick,
 }: {
-  current: TopTab;
-  value: TopTab;
+  current: EntryTopTab;
+  value: EntryTopTab;
   label: string;
-  onClick: (v: TopTab) => void;
+  onClick: (v: EntryTopTab) => void;
 }) {
   return (
     <button

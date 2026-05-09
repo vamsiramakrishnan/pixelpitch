@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useT } from '../i18n';
+import { useLayer } from '../layers';
 import { fetchPromptTemplate } from '../providers/registry';
 import type {
   PromptTemplateDetail,
@@ -47,22 +48,13 @@ export function PromptTemplatePreviewModal({ open = true, summary, onClose }: Pr
     };
   }, [summary.id, summary.surface, t]);
 
-  // Close on Escape — when the lightbox is open, ESC closes only the
-  // lightbox (preserving the modal beneath); otherwise it closes the
-  // modal itself. Mirrors the design-system preview modal's pattern so
-  // the two gallery views feel consistent.
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key !== 'Escape') return;
-      if (lightboxOpen) {
-        setLightboxOpen(false);
-        return;
-      }
-      onClose();
-    }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [onClose, lightboxOpen]);
+  useLayer({
+    open: lightboxOpen,
+    onDismiss: () => setLightboxOpen(false),
+    kind: 'lightbox',
+    escapeClose: true,
+    clickOutsideClose: false,
+  });
 
   function handleCopy() {
     if (!detail) return;

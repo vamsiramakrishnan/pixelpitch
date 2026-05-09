@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useI18n } from '../i18n';
+import { usePopoverLayer } from '../layers';
 import {
   localizeSkillDescription,
   localizeSkillPrompt,
@@ -336,22 +337,11 @@ function ExampleCard({
   const [shareOpen, setShareOpen] = useState(false);
   const shareRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    if (!shareOpen) return;
-    const onDoc = (e: MouseEvent) => {
-      if (!shareRef.current) return;
-      if (!shareRef.current.contains(e.target as Node)) setShareOpen(false);
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setShareOpen(false);
-    };
-    document.addEventListener('mousedown', onDoc);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onDoc);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [shareOpen]);
+  const shareLayer = usePopoverLayer({
+    open: shareOpen,
+    onDismiss: () => setShareOpen(false),
+    triggerRef: shareRef as React.RefObject<HTMLElement | null>,
+  });
 
   const exportTitle = skill.name;
   const isMobile = skill.platform === 'mobile';
@@ -448,7 +438,7 @@ function ExampleCard({
               {t('examples.shareMenu')}
             </button>
             {shareOpen && html ? (
-              <div className="share-menu-popover" role="menu">
+              <div ref={shareLayer.contentRef} className="share-menu-popover" role="menu" style={{ zIndex: shareLayer.zIndex }}>
                 <button
                   type="button"
                   className="share-menu-item"

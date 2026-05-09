@@ -2,6 +2,7 @@ import { Fragment, useEffect, useRef, useState, type CSSProperties } from 'react
 import { AnimatePresence, motion } from 'framer-motion';
 import { springs, variants } from '../motion';
 import { useT } from '../i18n';
+import { usePopoverLayer } from '../layers';
 import type { Dict } from '../i18n/types';
 import { projectRawUrl } from '../providers/registry';
 import type { TodoItem } from '../runtime/todos';
@@ -220,24 +221,11 @@ export function ChatPane({
     composerRef.current?.appendToken(stageTokenRequest.token);
   }, [stageTokenRequest]);
 
-  // Close the conversation history dropdown on outside click / Escape.
-  useEffect(() => {
-    if (!showConvList) return;
-    function onPointer(e: MouseEvent) {
-      const target = e.target as Node;
-      if (historyWrapRef.current?.contains(target)) return;
-      setShowConvList(false);
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setShowConvList(false);
-    }
-    document.addEventListener('mousedown', onPointer);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onPointer);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [showConvList]);
+  const convHistoryLayer = usePopoverLayer({
+    open: showConvList,
+    onDismiss: () => setShowConvList(false),
+    triggerRef: historyWrapRef as React.RefObject<HTMLElement | null>,
+  });
 
   const activeConversation =
     conversations.find((c) => c.id === activeConversationId) ?? null;
@@ -249,8 +237,12 @@ export function ChatPane({
   }
 
   return (
-    <div className="pane pane-recessed">
+    <div className="pane pane-recessed chat-pane-shell">
       <div className="chat-header">
+        <div className="chat-header-title">
+          <span>Studio Chat</span>
+          <strong>{streaming || hasActiveRunMessage ? 'Composing' : 'Ready'}</strong>
+        </div>
         <div className="chat-header-segment" role="tablist">
           <button
             type="button"
@@ -312,6 +304,7 @@ export function ChatPane({
             <AnimatePresence>
               {showConvList ? (
                 <motion.div
+                  ref={convHistoryLayer.contentRef}
                   className="chat-history-menu"
                   role="menu"
                   data-testid="conversation-history-menu"
@@ -319,6 +312,7 @@ export function ChatPane({
                   initial="initial"
                   animate="animate"
                   exit="exit"
+                  style={{ zIndex: convHistoryLayer.zIndex }}
                 >
                   <div className="chat-history-menu-head">
                     <span className="chat-history-menu-title">
@@ -395,6 +389,17 @@ export function ChatPane({
             <div className="chat-log" ref={logRef}>
               {messages.length === 0 ? (
                 <div className="chat-empty-wrap">
+                  <div className="chat-empty-plate" aria-hidden>
+                    <div className="chat-empty-orbit" />
+                    <div className="chat-empty-card one" />
+                    <div className="chat-empty-card two" />
+                    <div className="chat-empty-card three" />
+                    <div className="chat-empty-stream">
+                      <span />
+                      <span />
+                      <span />
+                    </div>
+                  </div>
                   <div className="chat-empty">
                     <span className="chat-empty-title">
                       {t('chat.startTitle')}
