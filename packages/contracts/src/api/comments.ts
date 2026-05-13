@@ -23,6 +23,11 @@ export interface PreviewCommentTarget {
   text: string;
   position: PreviewCommentPosition;
   htmlHint: string;
+  screenshotPath?: string;
+  sourcePath?: string;
+  sourceLine?: number;
+  sourceColumn?: number;
+  sourceSnippet?: string;
 }
 
 export interface PreviewComment {
@@ -36,6 +41,11 @@ export interface PreviewComment {
   text: string;
   position: PreviewCommentPosition;
   htmlHint: string;
+  screenshotPath?: string;
+  sourcePath?: string;
+  sourceLine?: number;
+  sourceColumn?: number;
+  sourceSnippet?: string;
   note: string;
   status: PreviewCommentStatus;
   createdAt: number;

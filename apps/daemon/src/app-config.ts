@@ -16,12 +16,19 @@ export interface AgentModelPrefs {
   reasoning?: string;
 }
 
+export interface OrbitConfigPrefs {
+  enabled?: boolean;
+  time?: string;
+  templateSkillId?: string | null;
+}
+
 export interface AppConfigPrefs {
   onboardingCompleted?: boolean;
   agentId?: string | null;
   agentModels?: Record<string, AgentModelPrefs>;
   skillId?: string | null;
   designSystemId?: string | null;
+  orbit?: OrbitConfigPrefs;
 }
 
 const ALLOWED_KEYS: ReadonlySet<keyof AppConfigPrefs> = new Set([
@@ -30,6 +37,7 @@ const ALLOWED_KEYS: ReadonlySet<keyof AppConfigPrefs> = new Set([
   'agentModels',
   'skillId',
   'designSystemId',
+  'orbit',
 ] as const);
 
 function configFile(dataDir: string): string {
@@ -37,6 +45,31 @@ function configFile(dataDir: string): string {
 }
 
 const AGENT_MODEL_KEYS: ReadonlySet<string> = new Set(['model', 'reasoning']);
+
+function isValidOrbitTime(time: string): boolean {
+  const match = /^(\d{2}):(\d{2})$/.exec(time);
+  if (!match) return false;
+  const hours = Number(match[1]);
+  const minutes = Number(match[2]);
+  return hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59;
+}
+
+function validateOrbit(raw: unknown): OrbitConfigPrefs | undefined {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return undefined;
+  const obj = raw as Record<string, unknown>;
+  const enabled = obj.enabled === true;
+  const time = typeof obj.time === 'string' && isValidOrbitTime(obj.time)
+    ? obj.time
+    : '08:00';
+  const orbit: OrbitConfigPrefs = { enabled, time };
+  if ('templateSkillId' in obj) {
+    orbit.templateSkillId =
+      typeof obj.templateSkillId === 'string' && obj.templateSkillId.trim()
+        ? obj.templateSkillId.trim()
+        : null;
+  }
+  return orbit;
+}
 
 function isValidAgentModelEntry(v: unknown): v is AgentModelPrefs {
   if (!v || typeof v !== 'object' || Array.isArray(v)) return false;
@@ -83,6 +116,11 @@ function applyConfigValue(
     } else {
       delete target[key];
     }
+  }
+  if (key === 'orbit') {
+    const validated = validateOrbit(value);
+    if (validated !== undefined) target[key] = validated;
+    return;
   }
 }
 

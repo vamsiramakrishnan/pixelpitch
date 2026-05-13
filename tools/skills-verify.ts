@@ -3,7 +3,7 @@
  * skills-verify.ts
  *
  * Hashes each skill under `content/skills/` and verifies the same content exists
- * under `.claude/skills/` and `.gemini/skills/`. Skills that only exist
+ * under `.claude/skills/`, `.gemini/skills/`, and `${CODEX_HOME:-~/.codex}/skills/`. Skills that only exist
  * in the mirror dirs (e.g. `slide-author`, `html-to-slides`) are noted
  * but not flagged as errors.
  *
@@ -14,10 +14,17 @@
 import { createHash } from "node:crypto";
 import { readdirSync, readFileSync, statSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
+import os from "node:os";
 
 const ROOT = process.cwd();
 const SOURCE = join(ROOT, "content", "skills");
-const TARGETS = [join(ROOT, ".claude", "skills"), join(ROOT, ".gemini", "skills")];
+const CODEX_SKILLS_DIR = process.env.CODEX_SKILLS_DIR?.trim()
+  || join(process.env.CODEX_HOME?.trim() || join(os.homedir(), ".codex"), "skills");
+const TARGETS = [
+  join(ROOT, ".claude", "skills"),
+  join(ROOT, ".gemini", "skills"),
+  CODEX_SKILLS_DIR,
+];
 
 function hashDir(dir: string): string {
   if (!existsSync(dir)) return "MISSING";

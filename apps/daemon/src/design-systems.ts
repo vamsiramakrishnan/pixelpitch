@@ -79,6 +79,56 @@ export async function listDesignSystems(root) {
   return out;
 }
 
+export async function searchDesignSystems(root, query, limit = 8) {
+  const systems = await listDesignSystems(root);
+  const terms = tokenizeSearch(query);
+  if (terms.length === 0) {
+    return systems.slice(0, limit).map((system) => ({
+      designSystem: stripDesignSystemBody(system),
+      score: 0,
+      matched: [],
+    }));
+  }
+  return systems
+    .map((system) => {
+      const fields = [
+        [system.id, 7],
+        [system.title, 7],
+        [system.category, 5],
+        [system.summary, 4],
+        [system.surface, 3],
+        [system.body, 1],
+      ];
+      let score = 0;
+      const matched = new Set();
+      for (const term of terms) {
+        for (const [value, weight] of fields) {
+          if (String(value ?? '').toLowerCase().includes(term)) {
+            score += weight;
+            matched.add(term);
+          }
+        }
+      }
+      return { designSystem: stripDesignSystemBody(system), score, matched: [...matched] };
+    })
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score || a.designSystem.title.localeCompare(b.designSystem.title))
+    .slice(0, limit);
+}
+
+function stripDesignSystemBody(system) {
+  const { body, ...rest } = system;
+  return rest;
+}
+
+function tokenizeSearch(value) {
+  return String(value ?? '')
+    .toLowerCase()
+    .split(/[^a-z0-9-]+/g)
+    .map((term) => term.trim())
+    .filter((term) => term.length >= 2);
+}
+
 export async function readDesignSystem(root, id) {
   const file = path.join(root, id, 'DESIGN.md');
   try {

@@ -3,8 +3,13 @@
 from __future__ import annotations
 
 import asyncio
+import mimetypes
+import socket
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from http.server import SimpleHTTPRequestHandler
+from pathlib import Path
+from threading import Thread
 from types import TracebackType
 
 import structlog
@@ -22,6 +27,47 @@ from slidify.geom import SLIDE_H_PX, SLIDE_W_PX
 from slidify.models import RenderedSlide
 
 log = structlog.get_logger(__name__)
+
+
+def _find_free_port() -> int:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(("127.0.0.1", 0))
+        return s.getsockname()[1]
+
+
+class _QuietHandler(SimpleHTTPRequestHandler):
+    """HTTP handler that serves from an arbitrary directory without logging."""
+
+    def log_message(self, format, *args):  # noqa: A002
+        pass
+
+    def guess_type(self, path):
+        mime, _ = mimetypes.guess_type(path)
+        if mime:
+            return mime
+        ext = Path(path).suffix.lower()
+        return {
+            ".jsx": "text/javascript",
+            ".tsx": "text/javascript",
+            ".mjs": "text/javascript",
+        }.get(ext, "application/octet-stream")
+
+
+@asynccontextmanager
+async def _local_server(directory: Path):
+    """Spin up a temporary HTTP server rooted at *directory*."""
+    import http.server
+
+    port = _find_free_port()
+    handler = lambda *a, **kw: _QuietHandler(*a, directory=str(directory), **kw)
+    server = http.server.HTTPServer(("127.0.0.1", port), handler)
+    thread = Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        yield f"http://127.0.0.1:{port}"
+    finally:
+        server.shutdown()
+        thread.join(timeout=2)
 
 
 # Injected before page load: kills animations and pauses video.
@@ -207,6 +253,188 @@ class Renderer:
                 reason=reason,
             )
 
+    async def render_file(self, path: Path) -> list[RenderedSlide]:
+        """Render an HTML file via a local HTTP server so relative paths resolve.
+
+        Returns a list — one ``RenderedSlide`` per slide ``<section>`` found in
+        the live DOM. If the page has no multi-slide structure, returns a single-
+        element list with the whole page rendered as one slide.
+        """
+        async with _local_server(path.parent) as base_url:
+            url = f"{base_url}/{path.name}"
+            async with self._page() as (_ctx, page):
+                try:
+                    await page.goto(url, wait_until="load", timeout=self.timeout_ms)
+                except Exception as e:
+                    log.warning("renderer.goto_failed", error=str(e))
+                    try:
+                        await page.goto(url, wait_until="domcontentloaded", timeout=self.timeout_ms)
+                    except Exception as e2:
+                        html = path.read_text(encoding="utf-8")
+                        return [RenderedSlide(
+                            html=html,
+                            elements=[],
+                            ground_truth_png=b"",
+                            viewport_w=self.viewport_w,
+                            viewport_h=self.viewport_h,
+                            degraded=True,
+                            reason=f"goto: {e2}",
+                        )]
+
+                degraded = False
+                reason = ""
+
+                try:
+                    await page.wait_for_load_state("networkidle", timeout=self.timeout_ms)
+                except Exception as e:
+                    degraded = True
+                    reason = f"networkidle: {e}"
+                    log.warning("renderer.networkidle_timeout", error=str(e))
+
+                try:
+                    await page.evaluate("document.fonts && document.fonts.ready")
+                except Exception as e:
+                    log.warning("renderer.fonts_ready_failed", error=str(e))
+
+                try:
+                    await page.evaluate(
+                        "new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))"
+                    )
+                except Exception as e:
+                    log.warning("renderer.raf_failed", error=str(e))
+
+                html = path.read_text(encoding="utf-8")
+                n_sections = await page.evaluate(
+                    "document.querySelectorAll('section').length"
+                )
+
+                if n_sections <= 1:
+                    return [await self._snapshot_current_page(
+                        page, html, degraded, reason, source_path=path,
+                    )]
+
+                # Inject transition-killer into the shadow DOM once so
+                # goTo() activations are instant (the light-DOM anim-freeze
+                # sheet can't reach ::slotted transitions).
+                await page.evaluate(
+                    """() => {
+                        const stage = document.querySelector('deck-stage');
+                        if (!stage || !stage.shadowRoot) return;
+                        const s = document.createElement('style');
+                        s.textContent = `
+                            ::slotted(*) {
+                                transition: none !important;
+                            }
+                        `;
+                        stage.shadowRoot.appendChild(s);
+                    }"""
+                )
+
+                results: list[RenderedSlide] = []
+                for i in range(n_sections):
+                    await page.evaluate(
+                        """(idx) => {
+                            const stage = document.querySelector('deck-stage');
+                            if (stage && typeof stage.goTo === 'function') {
+                                stage._index = -1;
+                                stage.goTo(idx);
+                            } else {
+                                // Fallback: toggle data-deck-active directly.
+                                const sections = document.querySelectorAll('section');
+                                sections.forEach((s, j) => {
+                                    if (j === idx) {
+                                        s.setAttribute('data-deck-active', '');
+                                    } else {
+                                        s.removeAttribute('data-deck-active');
+                                    }
+                                });
+                            }
+                        }""",
+                        i,
+                    )
+                    await page.evaluate(
+                        "new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))"
+                    )
+                    # Strip inherited presentation-level CSS (filter,
+                    # backdrop-filter, transform) from the active section so
+                    # the classifier doesn't raster the whole slide.
+                    await page.evaluate(
+                        """() => {
+                            const s = document.querySelector('[data-deck-active]');
+                            if (!s) return;
+                            s.style.setProperty('filter', 'none', 'important');
+                            s.style.setProperty('backdrop-filter', 'none', 'important');
+                        }"""
+                    )
+                    rendered = await self._snapshot_current_page(
+                        page, html, degraded, reason,
+                        source_path=path,
+                        root_selector="[data-deck-active]",
+                    )
+                    results.append(rendered)
+                    log.info(
+                        "renderer.render_file_slide",
+                        slide=i,
+                        element_count=len(rendered.elements),
+                    )
+
+                log.info(
+                    "renderer.render_file_ok",
+                    n_slides=len(results),
+                    total_elements=sum(len(r.elements) for r in results),
+                    degraded=degraded,
+                )
+                return results
+
+    async def _snapshot_current_page(
+        self,
+        page: Page,
+        html: str,
+        degraded: bool,
+        reason: str,
+        *,
+        source_path: Path | None = None,
+        root_selector: str | None = None,
+    ) -> RenderedSlide:
+        """Screenshot + DOM-walk the current page state."""
+        try:
+            png = await page.screenshot(
+                clip={
+                    "x": 0,
+                    "y": 0,
+                    "width": self.viewport_w,
+                    "height": self.viewport_h,
+                },
+                full_page=False,
+                type="png",
+            )
+        except Exception as e:
+            raise RenderError(f"screenshot failed: {e}") from e
+
+        no_text_png = b""
+        if self.differential:
+            try:
+                no_text_png = await self._capture_decoration_only(page)
+            except Exception as e:
+                log.warning("renderer.differential_failed", error=str(e))
+
+        try:
+            elements = await walk(page, root_selector=root_selector)
+        except Exception as e:
+            raise RenderError(f"dom walk failed: {e}") from e
+
+        return RenderedSlide(
+            html=html,
+            elements=elements,
+            ground_truth_png=png,
+            no_text_png=no_text_png,
+            viewport_w=self.viewport_w,
+            viewport_h=self.viewport_h,
+            degraded=degraded,
+            reason=reason,
+            source_path=source_path,
+        )
+
     async def _capture_decoration_only(self, page: Page) -> bytes:
         """Hide text paint, screenshot, restore.
 
@@ -312,3 +540,37 @@ class Renderer:
                 type="png",
             )
             return png
+
+    async def screenshot_region_file(
+        self, path: Path, selector: str, bbox: tuple[float, float, float, float]
+    ) -> bytes:
+        """Like screenshot_region but serves via a local HTTP server."""
+        async with _local_server(path.parent) as base_url:
+            url = f"{base_url}/{path.name}"
+            async with self._page() as (_ctx, page):
+                await page.goto(url, wait_until="load", timeout=self.timeout_ms)
+                try:
+                    await page.wait_for_load_state("networkidle", timeout=self.timeout_ms)
+                except Exception:
+                    pass
+                try:
+                    await page.evaluate("document.fonts && document.fonts.ready")
+                except Exception:
+                    pass
+                try:
+                    await page.evaluate(
+                        "new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))"
+                    )
+                except Exception:
+                    pass
+                x, y, w, h = bbox
+                x = max(0.0, x)
+                y = max(0.0, y)
+                w = max(1.0, min(w, self.viewport_w - x))
+                h = max(1.0, min(h, self.viewport_h - y))
+                png = await page.screenshot(
+                    clip={"x": x, "y": y, "width": w, "height": h},
+                    full_page=False,
+                    type="png",
+                )
+                return png

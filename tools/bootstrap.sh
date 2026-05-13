@@ -70,7 +70,7 @@ bun run --filter @pixelpitch/sidecar      build
 bun run --filter @pixelpitch/tools-dev    build
 bun run --filter @pixelpitch/daemon       build
 
-step "4/5  Mirroring skills into .claude/ and .gemini/"
+step "4/5  Mirroring skills into .claude/, .gemini/, and .codex/"
 bun tools/skills-sync.ts
 
 step "5/5  Optional: bootstrapping slidify (Python HTML→PPTX)"

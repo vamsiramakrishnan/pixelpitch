@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { chmodSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { AGENT_DEFS, resolveAgentExecutable, spawnEnvForAgent } from '../src/agents.js';
+import { AGENT_DEFS, resolveAgentBin, resolveAgentExecutable, spawnEnvForAgent } from '../src/agents.js';
 
 const codex = AGENT_DEFS.find((agent) => agent.id === 'codex');
 const copilot = AGENT_DEFS.find((agent) => agent.id === 'copilot');
@@ -13,6 +13,7 @@ const kiro = AGENT_DEFS.find((agent) => agent.id === 'kiro');
 const vibe = AGENT_DEFS.find((agent) => agent.id === 'vibe');
 const claude = AGENT_DEFS.find((agent) => agent.id === 'claude');
 const devin = AGENT_DEFS.find((agent) => agent.id === 'devin');
+const qoder = AGENT_DEFS.find((agent) => agent.id === 'qoder');
 const originalDisablePlugins = process.env.PIXELPITCH_CODEX_DISABLE_PLUGINS;
 const originalPath = process.env.PATH;
 const originalHome = process.env.HOME;
@@ -42,11 +43,13 @@ test('codex args disable plugins when PIXELPITCH_CODEX_DISABLE_PLUGINS is 1', ()
 
   const args = codex.buildArgs('', [], [], {}, { cwd: '/tmp/od-project' });
 
-  assert.deepEqual(args.slice(0, 8), [
+  assert.deepEqual(args.slice(0, 10), [
     'exec',
     '--json',
     '--skip-git-repo-check',
     '--full-auto',
+    '--sandbox',
+    'workspace-write',
     '-c',
     'sandbox_workspace_write.network_access=true',
     '--disable',
@@ -91,6 +94,21 @@ test('codex args do not include the literal `-` stdin sentinel (regression of #2
   process.env.PIXELPITCH_CODEX_DISABLE_PLUGINS = '1';
   const withDisablePlugins = codex.buildArgs('', [], [], {}, { cwd: '/tmp/od-project' });
   assert.equal(withDisablePlugins.includes('-'), false);
+});
+
+test('codex args pass extra allowed directories through --add-dir', () => {
+  const args = codex.buildArgs(
+    '',
+    [],
+    ['/tmp/od-skills', 'relative-dir', '/tmp/od-design-systems'],
+    {},
+    { cwd: '/tmp/od-project' },
+  );
+
+  assert.deepEqual(
+    args.filter((arg, index) => arg === '--add-dir' || args[index - 1] === '--add-dir'),
+    ['--add-dir', '/tmp/od-skills', '--add-dir', '/tmp/od-design-systems'],
+  );
 });
 
 test('cursor-agent args deliver prompts via stdin without passing a literal dash prompt', () => {
@@ -161,6 +179,33 @@ test('copilot drops empty / non-string entries from extraAllowedDirs without bre
   const addDirIndex = args.indexOf('--add-dir');
   assert.equal(args[addDirIndex + 1], '/tmp/od-skills');
   assert.equal(args.filter((a) => a === '--add-dir').length, 1);
+});
+
+test('qoder args use stream-json prompt mode with cwd, model, dirs, and attachments', () => {
+  const args = qoder.buildArgs(
+    '',
+    ['/tmp/input.png', 'relative.png'],
+    ['/tmp/od-skills', 'relative-dir'],
+    { model: 'performance' },
+    { cwd: '/tmp/od-project' },
+  );
+
+  assert.deepEqual(args, [
+    '-p',
+    '--output-format',
+    'stream-json',
+    '--yolo',
+    '-w',
+    '/tmp/od-project',
+    '--model',
+    'performance',
+    '--add-dir',
+    '/tmp/od-skills',
+    '--attachment',
+    '/tmp/input.png',
+  ]);
+  assert.equal(qoder.promptViaStdin, true);
+  assert.equal(qoder.streamFormat, 'qoder-stream-json');
 });
 
 test('kiro args use acp subcommand for json-rpc streaming', () => {
@@ -440,6 +485,33 @@ fsTest('resolveAgentExecutable still resolves agents without a fallbackBins fiel
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+fsTest('resolveAgentBin honors configured executable env override', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'od-agents-env-'));
+  try {
+    const configured = join(dir, 'custom-codex');
+    writeFileSync(configured, '');
+    chmodSync(configured, 0o755);
+    process.env.PATH = '';
+
+    assert.equal(resolveAgentBin('codex', { CODEX_BIN: configured }), configured);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('spawn env merges configured agent env without mutating the inputs', () => {
+  const baseEnv = { PATH: '/bin', BASE_ONLY: '1' };
+  const configuredEnv = { PATH: '/custom/bin', EXTRA: '2' };
+
+  const env = spawnEnvForAgent('codex', baseEnv, configuredEnv);
+
+  assert.equal(env.PATH, '/custom/bin');
+  assert.equal(env.BASE_ONLY, '1');
+  assert.equal(env.EXTRA, '2');
+  assert.equal(baseEnv.PATH, '/bin');
+  assert.equal(configuredEnv.PATH, '/custom/bin');
 });
 
 test('vibe args use empty array for acp-json-rpc streaming', () => {

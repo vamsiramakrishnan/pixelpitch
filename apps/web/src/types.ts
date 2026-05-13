@@ -5,11 +5,16 @@ import type {
   ApplyElementEditsResponse,
   AppVersionInfo,
   AppVersionResponse,
+  ConnectionTestRequest,
+  ConnectionTestResponse,
   AudioKind,
   ChatAttachment,
   ChatCommentAttachment,
   ChatMessage,
   Conversation,
+  ContextResolveRequest,
+  ContextResolveResponse,
+  ContextSearchResponse,
   DeployConfigResponse,
   DeployProjectFileResponse,
   DesignSystemDetail,
@@ -43,8 +48,11 @@ import type {
   UpdateDeployConfigRequest,
 } from '@pixelpitch/contracts';
 
+export type { ContextResolveRequest, ContextResolveResponse, ContextSearchResponse };
+export type { ConnectionTestRequest, ConnectionTestResponse };
+
 export type ExecMode = 'daemon' | 'api';
-export type ApiProtocol = 'anthropic' | 'openai';
+export type ApiProtocol = 'anthropic' | 'openai' | 'ollama';
 
 export interface MediaProviderCredentials {
   apiKey: string;
@@ -183,6 +191,11 @@ export interface AppConfig {
   // configs that pre-date the feature land at `undefined`, which the loader
   // normalizes to a safe default (everything off).
   notifications?: NotificationsConfig;
+  orbit?: {
+    enabled: boolean;
+    time: string;
+    templateSkillId?: string | null;
+  };
 }
 
 export type AgentEvent = PersistedAgentEvent;

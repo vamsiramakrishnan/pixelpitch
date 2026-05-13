@@ -70,9 +70,12 @@ section "Skills"
 n_canonical=$(find content/skills -mindepth 1 -maxdepth 1 -type d | wc -l)
 n_claude=$(find .claude/skills -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l)
 n_gemini=$(find .gemini/skills -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l)
+codex_skills_dir="${CODEX_SKILLS_DIR:-${CODEX_HOME:-$HOME/.codex}/skills}"
+n_codex=$(find "$codex_skills_dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l)
 printf "  %b content/skills/     %s skills\n" "$OK" "$n_canonical"
 printf "  %b .claude/skills/     %s skills\n" "$OK" "$n_claude"
 printf "  %b .gemini/skills/     %s skills\n" "$OK" "$n_gemini"
+printf "  %b %s  %s skills\n" "$OK" "$codex_skills_dir" "$n_codex"
 
 section "Ports"
 for p in 17456 17777 3000; do

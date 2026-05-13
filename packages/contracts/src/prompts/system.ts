@@ -34,6 +34,7 @@ import { OFFICIAL_DESIGNER_PROMPT } from './official-system.js';
 import { DISCOVERY_AND_PHILOSOPHY } from './discovery.js';
 import { DECK_FRAMEWORK_DIRECTIVE } from './deck-framework.js';
 import { MEDIA_GENERATION_CONTRACT } from './media-contract.js';
+import { renderPromptDirectiveBlock } from './directives.js';
 
 export const BASE_SYSTEM_PROMPT = OFFICIAL_DESIGNER_PROMPT;
 
@@ -66,6 +67,9 @@ export interface ComposeInput {
   // Daemon resolves slugs to file contents; web callers may leave these empty.
   craftBody?: string | undefined;
   craftSections?: string[] | undefined;
+  // Searchable built-in prompt directives. These are craft overlays, not
+  // brand systems; active DESIGN.md values remain authoritative.
+  directiveIds?: string[] | undefined;
   // Project-level metadata captured by the new-project panel. Drives the
   // agent's understanding of artifact kind, fidelity, speaker-notes intent
   // and animation intent. Missing fields here are exactly what the
@@ -86,6 +90,7 @@ export function composeSystemPrompt({
   designSystemCss,
   craftBody,
   craftSections,
+  directiveIds,
   metadata,
   template,
 }: ComposeInput): string {
@@ -109,6 +114,15 @@ export function composeSystemPrompt({
     parts.push(
       `\n\n## Active design system${designSystemTitle ? ` — ${designSystemTitle}` : ''}${cssBlock}\n\nTreat the following DESIGN.md as authoritative for color, typography, spacing, and component rules. Do not invent tokens outside this palette. When you copy the active skill's seed template, bind these tokens into its \`:root\` block before generating any layout.\n\n${designSystemBody.trim()}`,
     );
+  }
+
+  if (Array.isArray(directiveIds) && directiveIds.length > 0) {
+    const directiveBlock = renderPromptDirectiveBlock(directiveIds, {
+      hasDesignSystem: Boolean(designSystemBody && designSystemBody.trim().length > 0),
+    });
+    if (directiveBlock) {
+      parts.push(`\n\n${directiveBlock}`);
+    }
   }
 
   if (craftBody && craftBody.trim().length > 0) {

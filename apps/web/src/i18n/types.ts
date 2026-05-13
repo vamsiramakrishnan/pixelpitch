@@ -1,11 +1,12 @@
 // Supported UI locales. Adding a new locale requires creating a new
 // dictionary in `./locales/` and registering it in `./index.tsx`.
-export type Locale = 'en' | 'de' | 'zh-CN' | 'zh-TW' | 'pt-BR' | 'es-ES' | 'ru' | 'fa' | 'ar' | 'ja' | 'ko' | 'pl' | 'hu' | 'fr';
+export type Locale = 'en' | 'id' | 'de' | 'zh-CN' | 'zh-TW' | 'pt-BR' | 'es-ES' | 'ru' | 'fa' | 'ar' | 'ja' | 'ko' | 'pl' | 'hu' | 'fr' | 'th' | 'tr' | 'uk';
 
-export const LOCALES: Locale[] = ['en', 'de', 'zh-CN', 'zh-TW', 'pt-BR', 'es-ES', 'ru', 'fa', 'ar', 'ja', 'ko', 'pl', 'hu', 'fr'];
+export const LOCALES: Locale[] = ['en', 'id', 'de', 'zh-CN', 'zh-TW', 'pt-BR', 'es-ES', 'ru', 'fa', 'ar', 'ja', 'ko', 'pl', 'hu', 'fr', 'th', 'tr', 'uk'];
 
 export const LOCALE_LABEL: Record<Locale, string> = {
   'en': 'English',
+  'id': 'Bahasa Indonesia',
   'de': 'Deutsch',
   'zh-CN': '简体中文',
   'zh-TW': '繁體中文',
@@ -18,7 +19,10 @@ export const LOCALE_LABEL: Record<Locale, string> = {
   'ko': '한국어',
   'pl': 'Polski',
   'hu': 'Magyar',
-  'fr': 'Français'
+  'fr': 'Français',
+  'th': 'ไทย',
+  'tr': 'Türkçe',
+  'uk': 'Українська'
 };
 
 // Translation dictionary shape — flat keys, dot-namespaced. We keep it

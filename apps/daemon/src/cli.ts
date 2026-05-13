@@ -51,6 +51,10 @@ const MEDIA_GENERATE_BOOLEAN_FLAGS = new Set([
 ]);
 const MCP_STRING_FLAGS = new Set(['daemon-url']);
 const MCP_BOOLEAN_FLAGS = new Set(['help', 'h']);
+const DIRECTIVES_STRING_FLAGS = new Set(['query', 'limit', 'format', 'daemon-url']);
+const DIRECTIVES_BOOLEAN_FLAGS = new Set(['help', 'h']);
+const CATALOG_SEARCH_STRING_FLAGS = new Set(['query', 'limit', 'format', 'daemon-url']);
+const CATALOG_SEARCH_BOOLEAN_FLAGS = new Set(['help', 'h']);
 
 const SUBCOMMAND_MAP = {
   media: runMedia,
@@ -190,6 +194,22 @@ async function runTools(args) {
     if (result.exitCode) process.exit(result.exitCode);
     return;
   }
+  if (sub === 'directives') {
+    await runDirectivesToolCli(subArgs);
+    return;
+  }
+  if (sub === 'skills') {
+    await runCatalogSearchToolCli('skills', subArgs);
+    return;
+  }
+  if (sub === 'craft') {
+    await runCatalogSearchToolCli('craft', subArgs);
+    return;
+  }
+  if (sub === 'context') {
+    await runContextToolCli(subArgs);
+    return;
+  }
   console.error(`unknown subcommand: pixelpitch tools ${sub}`);
   printToolsHelp();
   process.exit(1);
@@ -202,6 +222,11 @@ function printToolsHelp() {
   pixelpitch tools connectors execute --connector <id> --tool <name> --input input.json [--format compact|json]
   pixelpitch tools delegate send --task <task> [--agent <id>] [--format compact|json]
   pixelpitch tools delegate workflow --request <request> [--agent <id>] [--no-planner] [--format compact|json]
+  pixelpitch tools skills search --query <text> [--limit <n>] [--format compact|json]
+  pixelpitch tools context search --query <text> [--limit <n>] [--format compact|json]
+  pixelpitch tools context resolve --message <text> [--project <id>] [--include-prompt] [--format compact|json]
+  pixelpitch tools directives search --query <text> [--limit <n>] [--format compact|json]
+  pixelpitch tools craft search --query <text> [--limit <n>] [--format compact|json]
   pixelpitch tools live-artifacts create --input artifact.json
   pixelpitch tools live-artifacts list [--format compact|json]
   pixelpitch tools live-artifacts refresh --artifact-id <id>
@@ -210,6 +235,248 @@ function printToolsHelp() {
 Environment:
   PIXELPITCH_DAEMON_URL  Daemon base URL injected into agent runs.
   PIXELPITCH_TOOL_TOKEN  Bearer token injected into agent runs.`);
+}
+
+async function runContextToolCli(args) {
+  const sub = args.find((a) => !a.startsWith('-')) || '';
+  if (sub === 'help' || sub === '-h' || sub === '--help' || sub === '') {
+    printContextHelp();
+    return;
+  }
+  if (sub !== 'search' && sub !== 'resolve') {
+    console.error(`unknown subcommand: pixelpitch tools context ${sub}`);
+    printContextHelp();
+    process.exit(1);
+  }
+  const idx = args.indexOf(sub);
+  const subArgs = [...args.slice(0, idx), ...args.slice(idx + 1)];
+  let flags;
+  try {
+    flags = parseFlags(subArgs, {
+      string: new Set(['query', 'limit', 'format', 'daemon-url', 'message', 'project']),
+      boolean: new Set(['help', 'h', 'include-prompt']),
+    });
+  } catch (err) {
+    console.error(err.message);
+    printContextHelp();
+    process.exit(2);
+  }
+  if (flags.help || flags.h) {
+    printContextHelp();
+    return;
+  }
+  const daemonUrl = flags['daemon-url'] || process.env.PIXELPITCH_DAEMON_URL || 'http://127.0.0.1:17456';
+  let resp;
+  try {
+    if (sub === 'search') {
+      if (!flags.query) {
+        console.error('--query required for context search');
+        process.exit(2);
+      }
+      const params = new URLSearchParams({ q: flags.query });
+      if (flags.limit) params.set('limit', flags.limit);
+      resp = await fetch(`${daemonUrl.replace(/\/$/, '')}/api/context/search?${params}`);
+    } else {
+      if (!flags.message) {
+        console.error('--message required for context resolve');
+        process.exit(2);
+      }
+      resp = await fetch(`${daemonUrl.replace(/\/$/, '')}/api/context/resolve`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          projectId: flags.project || process.env.PIXELPITCH_PROJECT_ID || null,
+          message: flags.message,
+          includePrompt: Boolean(flags['include-prompt']),
+        }),
+      });
+    }
+  } catch (err) {
+    surfaceFetchError(err, daemonUrl);
+    process.exit(3);
+  }
+  if (!resp.ok) {
+    console.error(`daemon ${resp.status}: ${await resp.text()}`);
+    process.exit(4);
+  }
+  const body = await resp.json();
+  if (flags.format === 'json') {
+    console.log(JSON.stringify(body, null, 2));
+    return;
+  }
+  const items = Array.isArray(body.results) ? body.results : Array.isArray(body.stack) ? body.stack : [];
+  for (const item of items) {
+    const status = item.loaded === false ? 'candidate' : item.loaded === true ? 'loaded' : item.kind;
+    const score = typeof item.score === 'number' ? ` score=${item.score}` : '';
+    console.log(`${item.kind} ${item.id} (${status})${score}`);
+    if (item.reason) console.log(`  ${item.reason}`);
+    if (item.summary) console.log(`  ${item.summary}`);
+    if (item.source) console.log(`  ${item.source}`);
+  }
+  if (Array.isArray(body.trace) && body.trace.length > 0) {
+    console.log('\nTrace:');
+    for (const line of body.trace) console.log(`  - ${line}`);
+  }
+}
+
+function printContextHelp() {
+  console.log(`Usage:
+  pixelpitch tools context search --query <text> [--limit <n>] [--format compact|json]
+  pixelpitch tools context resolve --message <text> [--project <id>] [--include-prompt] [--format compact|json]
+
+Context search returns mixed skills, design systems, directives, and craft rules. Context resolve shows the exact stack Pixelpitch would load for a chat turn.`);
+}
+
+async function runCatalogSearchToolCli(kind, args) {
+  const sub = args.find((a) => !a.startsWith('-')) || '';
+  if (sub === 'help' || sub === '-h' || sub === '--help' || sub === '') {
+    printCatalogSearchHelp(kind);
+    return;
+  }
+  if (sub !== 'search' && sub !== 'list') {
+    console.error(`unknown subcommand: pixelpitch tools ${kind} ${sub}`);
+    printCatalogSearchHelp(kind);
+    process.exit(1);
+  }
+  const idx = args.indexOf(sub);
+  const subArgs = [...args.slice(0, idx), ...args.slice(idx + 1)];
+  let flags;
+  try {
+    flags = parseFlags(subArgs, {
+      string: CATALOG_SEARCH_STRING_FLAGS,
+      boolean: CATALOG_SEARCH_BOOLEAN_FLAGS,
+    });
+  } catch (err) {
+    console.error(err.message);
+    printCatalogSearchHelp(kind);
+    process.exit(2);
+  }
+  if (flags.help || flags.h) {
+    printCatalogSearchHelp(kind);
+    return;
+  }
+  const daemonUrl = flags['daemon-url'] || process.env.PIXELPITCH_DAEMON_URL || 'http://127.0.0.1:17456';
+  const params = new URLSearchParams();
+  if (sub === 'search') {
+    if (!flags.query) {
+      console.error(`--query required for ${kind} search`);
+      process.exit(2);
+    }
+    params.set('q', flags.query);
+  }
+  if (flags.limit) params.set('limit', flags.limit);
+  const path = sub === 'search' ? `/api/${kind}/search` : `/api/${kind}`;
+  const url = `${daemonUrl.replace(/\/$/, '')}${path}${params.toString() ? `?${params}` : ''}`;
+  let resp;
+  try {
+    resp = await fetch(url);
+  } catch (err) {
+    surfaceFetchError(err, daemonUrl);
+    process.exit(3);
+  }
+  if (!resp.ok) {
+    console.error(`daemon ${resp.status}: ${await resp.text()}`);
+    process.exit(4);
+  }
+  const body = await resp.json();
+  if (flags.format === 'json') {
+    console.log(JSON.stringify(body, null, 2));
+    return;
+  }
+  const items = Array.isArray(body[kind]) ? body[kind] : [];
+  for (const item of items) {
+    const record = item.skill || item.section || item;
+    const score = typeof item.score === 'number' ? ` score=${item.score}` : '';
+    console.log(`${record.id}${score}`);
+    console.log(`  ${record.name || record.title || ''}`);
+    if (record.description || record.summary) console.log(`  ${record.description || record.summary}`);
+    if (Array.isArray(record.cliProcedures) && record.cliProcedures.length > 0) {
+      console.log(`  CLI procedures: ${record.cliProcedures.length}`);
+      for (const proc of record.cliProcedures.slice(0, 3)) console.log(`    ${proc.command}`);
+    }
+  }
+}
+
+function printCatalogSearchHelp(kind) {
+  console.log(`Usage:
+  pixelpitch tools ${kind} list [--limit <n>] [--format compact|json]
+  pixelpitch tools ${kind} search --query <text> [--limit <n>] [--format compact|json]
+
+Use this from an agent run to discover composable ${kind} context before deciding which capability, procedure, or quality rule to apply.`);
+}
+
+async function runDirectivesToolCli(args) {
+  const sub = args.find((a) => !a.startsWith('-')) || '';
+  if (sub === 'help' || sub === '-h' || sub === '--help' || sub === '') {
+    printDirectivesHelp();
+    return;
+  }
+  if (sub !== 'search' && sub !== 'list') {
+    console.error(`unknown subcommand: pixelpitch tools directives ${sub}`);
+    printDirectivesHelp();
+    process.exit(1);
+  }
+  const idx = args.indexOf(sub);
+  const subArgs = [...args.slice(0, idx), ...args.slice(idx + 1)];
+  let flags;
+  try {
+    flags = parseFlags(subArgs, {
+      string: DIRECTIVES_STRING_FLAGS,
+      boolean: DIRECTIVES_BOOLEAN_FLAGS,
+    });
+  } catch (err) {
+    console.error(err.message);
+    printDirectivesHelp();
+    process.exit(2);
+  }
+  if (flags.help || flags.h) {
+    printDirectivesHelp();
+    return;
+  }
+  const daemonUrl = flags['daemon-url'] || process.env.PIXELPITCH_DAEMON_URL || 'http://127.0.0.1:17456';
+  const params = new URLSearchParams();
+  if (sub === 'search') {
+    if (!flags.query) {
+      console.error('--query required for directives search');
+      process.exit(2);
+    }
+    params.set('q', flags.query);
+  }
+  if (flags.limit) params.set('limit', flags.limit);
+  const url = `${daemonUrl.replace(/\/$/, '')}/api/directives${params.toString() ? `?${params}` : ''}`;
+  let resp;
+  try {
+    resp = await fetch(url);
+  } catch (err) {
+    surfaceFetchError(err, daemonUrl);
+    process.exit(3);
+  }
+  if (!resp.ok) {
+    console.error(`daemon ${resp.status}: ${await resp.text()}`);
+    process.exit(4);
+  }
+  const body = await resp.json();
+  if (flags.format === 'json') {
+    console.log(JSON.stringify(body, null, 2));
+    return;
+  }
+  const items = Array.isArray(body.directives) ? body.directives : [];
+  for (const item of items) {
+    const directive = item.directive || item;
+    const score = typeof item.score === 'number' ? ` score=${item.score}` : '';
+    console.log(`${directive.id}${score}`);
+    console.log(`  ${directive.title}`);
+    console.log(`  ${directive.summary}`);
+    if (directive.composition?.precedence) console.log(`  ${directive.composition.precedence}`);
+  }
+}
+
+function printDirectivesHelp() {
+  console.log(`Usage:
+  pixelpitch tools directives list [--limit <n>] [--format compact|json]
+  pixelpitch tools directives search --query <text> [--limit <n>] [--format compact|json]
+
+Directives are searchable craft overlays. Active DESIGN.md systems remain authoritative for brand tokens and component rules.`);
 }
 
 // ---------------------------------------------------------------------------

@@ -13,6 +13,12 @@ export interface PreviewCommentSnapshot {
   text: string;
   position: { x: number; y: number; width: number; height: number };
   htmlHint: string;
+  screenshotDataUrl?: string;
+  screenshotPath?: string;
+  sourcePath?: string;
+  sourceLine?: number;
+  sourceColumn?: number;
+  sourceSnippet?: string;
 }
 
 export interface CommentOverlayBounds {
@@ -31,6 +37,11 @@ export function targetFromSnapshot(snapshot: PreviewCommentSnapshot): PreviewCom
     text: trimContextText(snapshot.text),
     position: normalizePosition(snapshot.position),
     htmlHint: trimHtmlHint(snapshot.htmlHint),
+    screenshotPath: trimOptional(snapshot.screenshotPath),
+    sourcePath: trimOptional(snapshot.sourcePath),
+    sourceLine: finitePositiveInt(snapshot.sourceLine),
+    sourceColumn: finitePositiveInt(snapshot.sourceColumn),
+    sourceSnippet: trimSourceSnippet(snapshot.sourceSnippet),
   };
 }
 
@@ -86,6 +97,11 @@ export function commentToAttachment(
     currentText: trimContextText(comment.text),
     pagePosition: normalizePosition(comment.position),
     htmlHint: trimHtmlHint(comment.htmlHint),
+    screenshotPath: trimOptional(comment.screenshotPath),
+    sourcePath: trimOptional(comment.sourcePath),
+    sourceLine: finitePositiveInt(comment.sourceLine),
+    sourceColumn: finitePositiveInt(comment.sourceColumn),
+    sourceSnippet: trimSourceSnippet(comment.sourceSnippet),
   };
 }
 
@@ -163,6 +179,11 @@ function renderCommentAttachmentContext(commentAttachments: ChatCommentAttachmen
       `selector: ${item.selector}`,
       `label: ${item.label || '(unlabeled)'}`,
       `position: x${position.x} y${position.y} ${position.width}x${position.height}`,
+      item.sourcePath && item.sourceLine
+        ? `source: ${item.sourcePath}:${item.sourceLine}${item.sourceColumn ? `:${item.sourceColumn}` : ''}`
+        : `source: ${item.filePath}`,
+      item.sourceSnippet ? `sourceSnippet:\n${item.sourceSnippet}` : 'sourceSnippet: (not located)',
+      item.screenshotPath ? `visual: ${item.screenshotPath}` : 'visual: (not captured)',
       `currentText: ${trimContextText(item.currentText || '') || '(empty)'}`,
       `htmlHint: ${trimHtmlHint(item.htmlHint || '') || '(none)'}`,
       `comment: ${item.comment}`,
@@ -183,4 +204,20 @@ function normalizePosition(input: PreviewComment['position']): PreviewComment['p
 
 function finite(value: number | undefined): number {
   return Number.isFinite(value) ? Math.round(value as number) : 0;
+}
+
+function trimOptional(value: unknown): string | undefined {
+  return typeof value === 'string' && value.trim() ? value.trim() : undefined;
+}
+
+function finitePositiveInt(value: unknown): number | undefined {
+  return typeof value === 'number' && Number.isFinite(value) && value > 0
+    ? Math.round(value)
+    : undefined;
+}
+
+function trimSourceSnippet(value: unknown): string | undefined {
+  return typeof value === 'string' && value.trim()
+    ? value.replace(/\n{4,}/g, '\n\n\n').trim().slice(0, 900)
+    : undefined;
 }

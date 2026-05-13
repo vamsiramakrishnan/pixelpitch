@@ -56,6 +56,7 @@ export function createAgentRunService({
   artifactsDir,
   db,
   critiqueCfg,
+  critiqueRunRegistry = null,
   critiqueWarnedAdapters,
   createSseErrorPayload,
   registerChatAgentEventSink,
@@ -757,6 +758,13 @@ export function createAgentRunService({
         const critiqueProjectKey =
           typeof projectId === 'string' && projectId ? projectId : runId;
         const critiqueArtifactDir = path.join(artifactsDir, critiqueProjectKey, runId);
+        const critiqueAbort = new AbortController();
+        critiqueRunRegistry?.register({
+          runId,
+          projectId: critiqueProjectKey,
+          abort: critiqueAbort,
+          startedAt: Date.now(),
+        });
         const orchestratorResult = await runParallelReviewRound({
           runId,
           projectId: typeof projectId === 'string' ? projectId : runId,
@@ -768,6 +776,7 @@ export function createAgentRunService({
           db,
           bus: { emit: (event) => send('agent', event) },
           prompt,
+          signal: critiqueAbort.signal,
           spawnReviewer: (ctx) => spawnReviewerSubRun({
             parentRun: run,
             parentSend: send,
@@ -784,6 +793,7 @@ export function createAgentRunService({
           }),
         });
         cleanup('child_exit');
+        critiqueRunRegistry?.unregister(critiqueProjectKey, runId);
         const succeeded =
           orchestratorResult.status === 'shipped' ||
           orchestratorResult.status === 'below_threshold';
@@ -796,6 +806,9 @@ export function createAgentRunService({
         }
       } catch (err) {
         cleanup('child_exit');
+        const critiqueProjectKey =
+          typeof projectId === 'string' && projectId ? projectId : runId;
+        critiqueRunRegistry?.unregister(critiqueProjectKey, runId);
         send('error', createSseErrorPayload('AGENT_EXECUTION_FAILED', err instanceof Error ? err.message : String(err)));
         runs.finish(run, 'failed', 1, null);
       }
@@ -851,6 +864,13 @@ export function createAgentRunService({
         const critiqueProjectKey =
           typeof projectId === 'string' && projectId ? projectId : critiqueRunId;
         const critiqueArtifactDir = path.join(artifactsDir, critiqueProjectKey, critiqueRunId);
+        const critiqueAbort = new AbortController();
+        critiqueRunRegistry?.register({
+          runId: critiqueRunId,
+          projectId: critiqueProjectKey,
+          abort: critiqueAbort,
+          startedAt: Date.now(),
+        });
         const stdoutIterable = (async function* () {
           for await (const chunk of child.stdout) yield String(chunk);
         })();
@@ -876,8 +896,10 @@ export function createAgentRunService({
             stdout: stdoutIterable,
             child,
             childExitPromise,
+            signal: critiqueAbort.signal,
           });
           cleanup('child_exit');
+          critiqueRunRegistry?.unregister(critiqueProjectKey, critiqueRunId);
           const succeeded =
             orchestratorResult.status === 'shipped' ||
             orchestratorResult.status === 'below_threshold';
@@ -890,6 +912,7 @@ export function createAgentRunService({
           }
         } catch (err) {
           cleanup('child_exit');
+          critiqueRunRegistry?.unregister(critiqueProjectKey, critiqueRunId);
           send('error', createSseErrorPayload('AGENT_EXECUTION_FAILED', err instanceof Error ? err.message : String(err)));
           runs.finish(run, 'failed', 1, null);
         }

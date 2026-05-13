@@ -61,6 +61,11 @@ export const DEFAULT_CONFIG: AppConfig = {
   agentModels: {},
   pet: DEFAULT_PET,
   notifications: DEFAULT_NOTIFICATIONS,
+  orbit: {
+    enabled: false,
+    time: '08:00',
+    templateSkillId: 'orbit-general',
+  },
 };
 
 /** Well-known providers with pre-filled base URLs. */
@@ -127,6 +132,18 @@ export const KNOWN_PROVIDERS: KnownProvider[] = [
     models: ['gpt-4o', 'gpt-4o-mini', 'o3', 'o4-mini'],
   },
   {
+    label: 'Ollama Cloud',
+    protocol: 'ollama',
+    baseUrl: 'https://ollama.com',
+    model: 'gpt-oss:120b-cloud',
+    models: [
+      'gpt-oss:120b-cloud',
+      'qwen3-coder:480b-cloud',
+      'deepseek-v3.1:671b-cloud',
+      'llama3.3:70b-cloud',
+    ],
+  },
+  {
     label: 'DeepSeek — OpenAI',
     protocol: 'openai',
     baseUrl: 'https://api.deepseek.com',
@@ -180,6 +197,22 @@ function normalizePet(input: Partial<PetConfig> | undefined): PetConfig {
   };
 }
 
+function normalizeOrbit(input: AppConfig['orbit'] | undefined): NonNullable<AppConfig['orbit']> {
+  const time =
+    typeof input?.time === 'string' && /^\d{2}:\d{2}$/.test(input.time)
+      ? input.time
+      : '08:00';
+  const templateSkillId =
+    typeof input?.templateSkillId === 'string' && input.templateSkillId.trim()
+      ? input.templateSkillId.trim()
+      : 'orbit-general';
+  return {
+    enabled: input?.enabled === true,
+    time,
+    templateSkillId,
+  };
+}
+
 function normalizeNotifications(
   input: Partial<NotificationsConfig> | undefined,
 ): NotificationsConfig {
@@ -205,6 +238,7 @@ export function loadConfig(): AppConfig {
         ...DEFAULT_CONFIG,
         pet: normalizePet(DEFAULT_PET),
         notifications: normalizeNotifications(DEFAULT_NOTIFICATIONS),
+        orbit: normalizeOrbit(DEFAULT_CONFIG.orbit),
       };
     }
     const parsed = JSON.parse(raw) as Partial<AppConfig>;
@@ -219,6 +253,7 @@ export function loadConfig(): AppConfig {
       agentModels: { ...(parsed.agentModels ?? {}) },
       pet: normalizePet(parsed.pet),
       notifications: normalizeNotifications(parsed.notifications),
+      orbit: normalizeOrbit(parsed.orbit),
     };
 
     if (parsed.configMigrationVersion !== CONFIG_MIGRATION_VERSION) {
@@ -246,6 +281,7 @@ export function loadConfig(): AppConfig {
       ...DEFAULT_CONFIG,
       pet: normalizePet(DEFAULT_PET),
       notifications: normalizeNotifications(DEFAULT_NOTIFICATIONS),
+      orbit: normalizeOrbit(DEFAULT_CONFIG.orbit),
     };
   }
 }

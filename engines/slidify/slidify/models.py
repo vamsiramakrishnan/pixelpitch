@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from enum import Enum
+from pathlib import Path
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -332,6 +333,7 @@ class RenderedSlide(BaseModel):
     notes: str = ""
     degraded: bool = False
     reason: str = ""
+    source_path: Path | None = None
 
 
 class UnmatchedSignature(BaseModel):

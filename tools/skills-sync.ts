@@ -2,14 +2,14 @@
 /**
  * skills-sync.ts
  *
- * Mirrors the canonical `content/skills/` directory into `.claude/skills/` and
- * `.gemini/skills/` so AI agents that look in those locations discover
+ * Mirrors the canonical `content/skills/` directory into `.claude/skills/`,
+ * `.gemini/skills/`, and `${CODEX_HOME:-~/.codex}/skills/` so AI agents that look in those locations discover
  * the bundled skill catalog.
  *
  * Behavior:
  *   - Files that originate from `content/skills/<skill>/` overwrite their copies
- *     in `.claude/skills/<skill>/` and `.gemini/skills/<skill>/`.
- *   - Skills that exist ONLY in `.claude/skills/` (e.g. pixelpitch's own
+ *     in `.claude/skills/<skill>/`, `.gemini/skills/<skill>/`, and the Codex skills dir.
+ *   - Skills that exist ONLY in a mirror dir (e.g. pixelpitch's own
  *     `slide-author` and `html-to-slides`) are left untouched.
  *   - Removed-from-source skills are NOT pruned from the mirrors —
  *     deletion is manual to avoid surprises.
@@ -18,10 +18,17 @@
  */
 import { mkdirSync, readdirSync, statSync, copyFileSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
+import os from "node:os";
 
 const ROOT = process.cwd();
 const SOURCE = join(ROOT, "content", "skills");
-const TARGETS = [join(ROOT, ".claude", "skills"), join(ROOT, ".gemini", "skills")];
+const CODEX_SKILLS_DIR = process.env.CODEX_SKILLS_DIR?.trim()
+  || join(process.env.CODEX_HOME?.trim() || join(os.homedir(), ".codex"), "skills");
+const TARGETS = [
+  join(ROOT, ".claude", "skills"),
+  join(ROOT, ".gemini", "skills"),
+  CODEX_SKILLS_DIR,
+];
 
 function copyDir(src: string, dst: string): number {
   let count = 0;

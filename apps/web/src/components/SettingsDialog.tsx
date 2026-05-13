@@ -21,6 +21,7 @@ import type { AgentInfo, AppConfig, AppTheme, AppVersionInfo, ExecMode } from '.
 import { MEDIA_PROVIDERS } from '../media/models';
 import type { MediaProvider } from '../media/models';
 import { PetSettings } from './pet/PetSettings';
+import { McpClientSection } from './McpClientSection';
 import { DEFAULT_NOTIFICATIONS } from '../state/config';
 import {
   FAILURE_SOUNDS,
@@ -35,6 +36,8 @@ import { testExecutionConfig, type ExecutionTestResult } from '../providers/regi
 export type SettingsSection =
   | 'execution'
   | 'media'
+  | 'orbit'
+  | 'mcpClient'
   | 'language'
   | 'appearance'
   | 'notifications'
@@ -91,6 +94,12 @@ const SUGGESTED_MODELS_BY_PROTOCOL = {
     'MiniMax-M2.1',
     'MiniMax-M2',
     'mimo-v2.5-pro',
+  ],
+  ollama: [
+    'gpt-oss:120b-cloud',
+    'qwen3-coder:480b-cloud',
+    'deepseek-v3.1:671b-cloud',
+    'llama3.3:70b-cloud',
   ],
 } as const;
 
@@ -193,7 +202,8 @@ export function SettingsDialog({
   );
 
   const setMode = (mode: ExecMode) => setCfg((c) => ({ ...c, mode }));
-  const setApiProtocol = (protocol: 'anthropic' | 'openai') => {
+  const setApiProtocol = (protocol: AppConfig['apiProtocol']) => {
+    if (!protocol) return;
     setCfg((c) => {
       const currentProvider = c.apiProviderBaseUrl
         ? KNOWN_PROVIDERS.find((p) => p.baseUrl === c.apiProviderBaseUrl)
@@ -322,6 +332,28 @@ export function SettingsDialog({
             </button>
             <button
               type="button"
+              className={`settings-nav-item${activeSection === 'orbit' ? ' active' : ''}`}
+              onClick={() => setActiveSection('orbit')}
+            >
+              <Icon name="refresh" size={18} />
+              <span>
+                <strong>Orbit</strong>
+                <small>Daily activity summaries</small>
+              </span>
+            </button>
+            <button
+              type="button"
+              className={`settings-nav-item${activeSection === 'mcpClient' ? ' active' : ''}`}
+              onClick={() => setActiveSection('mcpClient')}
+            >
+              <Icon name="link" size={18} />
+              <span>
+                <strong>MCP clients</strong>
+                <small>External tool servers</small>
+              </span>
+            </button>
+            <button
+              type="button"
               className={`settings-nav-item${activeSection === 'language' ? ' active' : ''}`}
               onClick={() => setActiveSection('language')}
             >
@@ -383,7 +415,7 @@ export function SettingsDialog({
                 className="seg-control"
                 role="tablist"
                 aria-label={t('settings.modeAria')}
-                style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}
+                style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}
               >
                 <button
                   type="button"
@@ -424,6 +456,16 @@ export function SettingsDialog({
                 >
                   <span className="seg-title">OpenAI API</span>
                   <span className="seg-meta">/v1/chat/completions</span>
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={cfg.mode === 'api' && apiProtocol === 'ollama'}
+                  className={'seg-btn' + (cfg.mode === 'api' && apiProtocol === 'ollama' ? ' active' : '')}
+                  onClick={() => setApiProtocol('ollama')}
+                >
+                  <span className="seg-title">Ollama Cloud</span>
+                  <span className="seg-meta">/api/chat</span>
                 </button>
               </div>
               <div className={`settings-test-card${executionTest ? (executionTest.ok ? ' ok' : ' fail') : ''}`}>
@@ -620,7 +662,7 @@ export function SettingsDialog({
           ) : (
             <section className="settings-section">
               <div className="section-head">
-                <h3>{apiProtocol === 'anthropic' ? 'Anthropic API' : 'OpenAI API'}</h3>
+                <h3>{apiProtocol === 'anthropic' ? 'Anthropic API' : apiProtocol === 'ollama' ? 'Ollama Cloud' : 'OpenAI API'}</h3>
               </div>
               <label className="field">
                 <span className="field-label">Quick fill provider</span>
@@ -719,6 +761,10 @@ export function SettingsDialog({
           ) : null}
 
           {activeSection === 'media' ? <MediaProvidersSection cfg={cfg} setCfg={setCfg} /> : null}
+
+          {activeSection === 'orbit' ? <OrbitSection cfg={cfg} setCfg={setCfg} /> : null}
+
+          {activeSection === 'mcpClient' ? <McpClientSection /> : null}
 
           {activeSection === 'language' ? (
           <section className="settings-section">
@@ -1049,6 +1095,115 @@ function AppearanceSection({
           />
         </div>
       </label>
+    </section>
+  );
+}
+
+function OrbitSection({
+  cfg,
+  setCfg,
+}: {
+  cfg: AppConfig;
+  setCfg: Dispatch<SetStateAction<AppConfig>>;
+}) {
+  const orbit = cfg.orbit ?? { enabled: false, time: '08:00', templateSkillId: 'orbit-general' };
+  const [status, setStatus] = useState<any | null>(null);
+  const [running, setRunning] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    void (async () => {
+      try {
+        const res = await fetch('/api/orbit/status');
+        if (!res.ok) return;
+        const data = await res.json();
+        if (alive) setStatus(data);
+      } catch {
+        // Daemon may be offline while editing settings.
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, [running]);
+
+  const updateOrbit = (patch: Partial<NonNullable<AppConfig['orbit']>>) => {
+    setCfg((current) => ({
+      ...current,
+      orbit: {
+        enabled: current.orbit?.enabled ?? false,
+        time: current.orbit?.time ?? '08:00',
+        templateSkillId: current.orbit?.templateSkillId ?? 'orbit-general',
+        ...patch,
+      },
+    }));
+  };
+
+  const runNow = async () => {
+    setRunning(true);
+    setMessage(null);
+    try {
+      const res = await fetch('/api/orbit/run', { method: 'POST' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      setMessage(data?.projectId ? `Started Orbit project ${data.projectId}.` : 'Orbit run started.');
+    } catch {
+      setMessage('Could not start Orbit from the local daemon.');
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  return (
+    <section className="settings-section orbit-section">
+      <div className="section-head">
+        <div>
+          <h3>Orbit</h3>
+          <p className="hint">Generate scheduled or manual activity summaries from connected sources.</p>
+        </div>
+        <button type="button" className="primary" disabled={running} onClick={() => void runNow()}>
+          {running ? 'Starting…' : 'Run now'}
+        </button>
+      </div>
+      {message ? <p className="hint">{message}</p> : null}
+      <label className="field checkbox-field">
+        <input
+          type="checkbox"
+          checked={orbit.enabled}
+          onChange={(e) => updateOrbit({ enabled: e.target.checked })}
+        />
+        <span>Run daily summary automatically</span>
+      </label>
+      <label className="field">
+        <span className="field-label">Run time</span>
+        <input
+          type="time"
+          value={orbit.time}
+          onChange={(e) => updateOrbit({ time: e.target.value || '08:00' })}
+        />
+      </label>
+      <label className="field">
+        <span className="field-label">Template skill</span>
+        <input
+          type="text"
+          value={orbit.templateSkillId ?? 'orbit-general'}
+          onChange={(e) => updateOrbit({ templateSkillId: e.target.value.trim() || 'orbit-general' })}
+        />
+      </label>
+      <div className="settings-card">
+        <strong>Status</strong>
+        <p className="hint">
+          {status?.running
+            ? 'Orbit is currently running.'
+            : status?.lastRun?.completedAt
+              ? `Last run completed at ${new Date(status.lastRun.completedAt).toLocaleString()}.`
+              : 'No completed Orbit run yet.'}
+        </p>
+        {status?.nextRunAt ? (
+          <p className="hint">Next scheduled run: {new Date(status.nextRunAt).toLocaleString()}</p>
+        ) : null}
+      </div>
     </section>
   );
 }

@@ -71,7 +71,29 @@ describe("pixelpitch sidecar contract", () => {
       input: { expression: "location.href" },
       type: "eval",
     });
+    expect(
+      normalizeDesktopSidecarMessage({
+        input: {
+          baseHref: "http://127.0.0.1:17456/api/projects/p/raw/deck/",
+          deck: true,
+          defaultFilename: "Deck.pdf",
+          html: "<!doctype html><section>Deck</section>",
+          title: "Deck",
+        },
+        type: SIDECAR_MESSAGES.EXPORT_PDF,
+      }),
+    ).toEqual({
+      input: {
+        baseHref: "http://127.0.0.1:17456/api/projects/p/raw/deck/",
+        deck: true,
+        defaultFilename: "Deck.pdf",
+        html: "<!doctype html><section>Deck</section>",
+        title: "Deck",
+      },
+      type: "export-pdf",
+    });
     expect(() => normalizeDesktopSidecarMessage({ input: { expression: 42 }, type: SIDECAR_MESSAGES.EVAL })).toThrow();
     expect(() => normalizeDesktopSidecarMessage({ input: { selector: "" }, type: SIDECAR_MESSAGES.CLICK })).toThrow();
+    expect(() => normalizeDesktopSidecarMessage({ input: { deck: "yes" }, type: SIDECAR_MESSAGES.EXPORT_PDF })).toThrow();
   });
 });

@@ -8,6 +8,9 @@ import type {
   ChatAttachment,
   CodexPetSummary,
   CodexPetsResponse,
+  ContextResolveRequest,
+  ContextResolveResponse,
+  ContextSearchResponse,
   SyncCommunityPetsRequest,
   SyncCommunityPetsResponse,
   PreviewComment,
@@ -149,6 +152,31 @@ export async function fetchSkill(id: string): Promise<SkillDetail | null> {
     const resp = await fetch(`/api/skills/${encodeURIComponent(id)}`);
     if (!resp.ok) return null;
     return (await resp.json()) as SkillDetail;
+  } catch {
+    return null;
+  }
+}
+
+export async function searchContext(query: string, limit = 12): Promise<ContextSearchResponse> {
+  try {
+    const params = new URLSearchParams({ q: query, limit: String(limit) });
+    const resp = await fetch(`/api/context/search?${params}`);
+    if (!resp.ok) return { results: [] };
+    return (await resp.json()) as ContextSearchResponse;
+  } catch {
+    return { results: [] };
+  }
+}
+
+export async function resolveContext(input: ContextResolveRequest & { includePrompt?: boolean }): Promise<ContextResolveResponse | null> {
+  try {
+    const resp = await fetch('/api/context/resolve', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(input),
+    });
+    if (!resp.ok) return null;
+    return (await resp.json()) as ContextResolveResponse;
   } catch {
     return null;
   }

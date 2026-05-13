@@ -57,6 +57,7 @@ export interface ParallelOrchestratorParams {
   bus: CritiqueSseBus;
   prompt: string;
   spawnReviewer: SpawnParallelReviewer;
+  signal?: AbortSignal;
 }
 
 interface RoleTask {
@@ -117,6 +118,7 @@ export async function runParallelReviewRound(
     bus,
     prompt,
     spawnReviewer,
+    signal,
   } = params;
 
   if (!Number.isFinite(cfg.maxConcurrentRuns) || cfg.maxConcurrentRuns < 1) {
@@ -152,6 +154,7 @@ export async function runParallelReviewRound(
   const tasks: RoleTask[] = cfg.cast.map((role) => ({
     role,
     run: async () => {
+      if (signal?.aborted) return;
       emitPanelEvent(bus, events, { type: 'panelist_open', runId, round, role });
       const result = await spawnReviewer({
         runId,
@@ -198,32 +201,45 @@ export async function runParallelReviewRound(
 
   try {
     await runWithConcurrency(tasks, cfg.maxConcurrentRuns);
-    const composite = computeComposite(scores, cfg.weights);
-    const decision = decideRound(composite, mustFix, cfg);
-    finalStatus = decision === 'ship' ? 'shipped' : 'below_threshold';
-    finalComposite = composite;
-    emitPanelEvent(bus, events, {
-      type: 'round_end',
-      runId,
-      round,
-      composite,
-      mustFix,
-      decision,
-      reason: decision === 'ship'
-        ? 'Parallel reviewers reached threshold with no must-fix items.'
-        : 'Parallel reviewers did not reach the ship threshold.',
-    });
-    emitPanelEvent(bus, events, {
-      type: 'ship',
-      runId,
-      round,
-      composite,
-      status: finalStatus,
-      artifactRef: { projectId, artifactId },
-      summary: finalStatus === 'shipped'
-        ? 'Parallel review shipped the artifact.'
-        : 'Parallel review completed below threshold.',
-    });
+    if (signal?.aborted) {
+      finalStatus = 'interrupted';
+      finalComposite = Object.keys(scores).length > 0
+        ? computeComposite(scores, cfg.weights)
+        : null;
+      emitPanelEvent(bus, events, {
+        type: 'interrupted',
+        runId,
+        bestRound: round,
+        composite: finalComposite ?? 0,
+      });
+    } else {
+      const composite = computeComposite(scores, cfg.weights);
+      const decision = decideRound(composite, mustFix, cfg);
+      finalStatus = decision === 'ship' ? 'shipped' : 'below_threshold';
+      finalComposite = composite;
+      emitPanelEvent(bus, events, {
+        type: 'round_end',
+        runId,
+        round,
+        composite,
+        mustFix,
+        decision,
+        reason: decision === 'ship'
+          ? 'Parallel reviewers reached threshold with no must-fix items.'
+          : 'Parallel reviewers did not reach the ship threshold.',
+      });
+      emitPanelEvent(bus, events, {
+        type: 'ship',
+        runId,
+        round,
+        composite,
+        status: finalStatus,
+        artifactRef: { projectId, artifactId },
+        summary: finalStatus === 'shipped'
+          ? 'Parallel review shipped the artifact.'
+          : 'Parallel review completed below threshold.',
+      });
+    }
   } catch {
     finalStatus = 'failed';
     finalComposite = null;

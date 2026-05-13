@@ -15,6 +15,7 @@ import {
   projectFileUrl,
   projectRawUrl,
   updateDeployConfig,
+  uploadProjectFiles,
 } from '../providers/registry';
 import type { ProjectFilePreview } from '../providers/registry';
 import {
@@ -22,6 +23,7 @@ import {
   exportAsJsx,
   exportAsMd,
   exportAsPdf,
+  exportProjectAsPdf,
   exportProjectAsZip,
   exportReactComponentAsHtml,
   exportReactComponentAsZip,
@@ -1274,7 +1276,12 @@ function HtmlViewer({
   // never surface and the deck becomes a static, unnavigable preview.
   const looksLikeDeck = useMemo(() => {
     if (!source) return false;
-    return /class\s*=\s*['"][^'"]*\bslide\b/i.test(source);
+    return (
+      /<deck-stage\b/i.test(source) ||
+      /\bdata-deck-slide\b/i.test(source) ||
+      /\bdata-deck-active\b/i.test(source) ||
+      /class\s*=\s*['"][^'"]*\bslide\b/i.test(source)
+    );
   }, [source]);
   const effectiveDeck = isDeck || looksLikeDeck;
   const targetingModeActive = commentMode || inspectMode || editMode || drawMode;
@@ -1283,7 +1290,7 @@ function HtmlViewer({
 
   useEffect(() => {
     setInlinedSource(null);
-    if (!source || effectiveDeck || !hasRelativeAssetRefs(source)) return;
+    if (!source || !hasRelativeAssetRefs(source)) return;
     let cancelled = false;
     void inlineRelativeAssets(source, projectId, file.name).then((next) => {
       if (!cancelled) setInlinedSource(next);
@@ -1407,6 +1414,9 @@ function HtmlViewer({
             ? 'draw'
             : 'off';
     win.postMessage({ type: 'od:preview-target-mode', mode, enabled: mode !== 'off' }, '*');
+    if (mode !== 'off') {
+      window.requestAnimationFrame(() => previewBodyRef.current?.focus({ preventScroll: true }));
+    }
   }, [commentMode, inspectMode, editMode, drawMode, srcDoc]);
 
   useEffect(() => {
@@ -1594,11 +1604,11 @@ function HtmlViewer({
         annotationSlideNav('last');
       }
     }
-    window.addEventListener('keydown', onKey);
-    window.addEventListener('keyup', onKey);
+    window.addEventListener('keydown', onKey, true);
+    window.addEventListener('keyup', onKey, true);
     return () => {
-      window.removeEventListener('keydown', onKey);
-      window.removeEventListener('keyup', onKey);
+      window.removeEventListener('keydown', onKey, true);
+      window.removeEventListener('keyup', onKey, true);
     };
   }, [effectiveDeck, mode, targetingModeActive]);
 
@@ -1814,15 +1824,27 @@ function HtmlViewer({
   }
 
   function stageInspectStyles() {
-    if (!activeInspectTarget || !onStageComposerToken) return;
+    if (!activeInspectTarget) return;
     const changed = changedInspectStyles(inspectDraft, inspectBaseline);
     if (Object.keys(changed).length === 0) return;
-    onStageComposerToken(renderInspectToken(activeInspectTarget, changed));
+    if (onSavePreviewComment) {
+      void targetFromSnapshotForAgent(activeInspectTarget).then((target) =>
+        onSavePreviewComment(target, `Apply these style changes: ${renderInspectToken(activeInspectTarget, changed)}`, true),
+      );
+      return;
+    }
+    onStageComposerToken?.(renderInspectToken(activeInspectTarget, changed));
   }
 
   function stageEditTarget() {
-    if (!activeInspectTarget || !onStageComposerToken) return;
-    onStageComposerToken(renderEditToken(activeInspectTarget, editInstruction));
+    if (!activeInspectTarget) return;
+    if (onSavePreviewComment) {
+      void targetFromSnapshotForAgent(activeInspectTarget).then((target) =>
+        onSavePreviewComment(target, editInstruction.trim() || 'Edit this rendered element as requested.', true),
+      );
+      return;
+    }
+    onStageComposerToken?.(renderEditToken(activeInspectTarget, editInstruction));
   }
 
   function stageActiveTarget() {
@@ -1836,7 +1858,13 @@ function HtmlViewer({
       return;
     }
     if (drawMode) {
-      onStageComposerToken(`${renderDrawToken(activeInspectTarget)} | note=${drawInstruction.trim() || 'Review this drawn region.'}`);
+      if (onSavePreviewComment) {
+        void targetFromSnapshotForAgent(activeInspectTarget).then((target) =>
+          onSavePreviewComment(target, drawInstruction.trim() || 'Review this drawn region.', true),
+        );
+        return;
+      }
+      onStageComposerToken?.(`${renderDrawToken(activeInspectTarget)} | note=${drawInstruction.trim() || 'Review this drawn region.'}`);
     }
   }
 
@@ -1862,7 +1890,7 @@ function HtmlViewer({
     setApplyingEdit(true);
     setEditApplyError(null);
     try {
-      const saved = await onSavePreviewComment(targetFromSnapshot(activeInspectTarget), drawInstruction.trim(), true);
+      const saved = await onSavePreviewComment(await targetFromSnapshotForAgent(activeInspectTarget), drawInstruction.trim(), true);
       if (saved) {
         setActiveInspectTarget(null);
         setDrawInstruction('');
@@ -1884,6 +1912,120 @@ function HtmlViewer({
     setActiveInspectTarget(null);
     setEditApplyError(null);
     setDrawInstruction('');
+  }
+
+  async function targetFromSnapshotForAgent(snapshot: InspectSnapshot | PreviewCommentSnapshot): Promise<PreviewCommentTarget> {
+    const enriched = { ...snapshot };
+    if (snapshot.screenshotDataUrl && !snapshot.screenshotPath) {
+      const file = dataUrlToFile(
+        snapshot.screenshotDataUrl,
+        `.preview-target-${Date.now()}-${safeArtifactSlug(snapshot.elementId)}.png`,
+      );
+      if (file) {
+        const uploaded = await uploadProjectFiles(projectId, [file]);
+        const first = uploaded.uploaded[0];
+        if (first?.path) enriched.screenshotPath = first.path;
+      }
+    }
+    const located = await locateSnapshotSource(enriched);
+    return targetFromSnapshot({ ...enriched, ...located });
+  }
+
+  async function locateSnapshotSource(snapshot: PreviewCommentSnapshot): Promise<Partial<PreviewCommentSnapshot>> {
+    const candidates = await sourceCandidatesForSnapshot(snapshot);
+    const needles = [
+      meaningfulNeedle(snapshot.text, 28),
+      idNeedle(snapshot.elementId),
+      classNeedle((snapshot as InspectSnapshot).className),
+      tagNeedle(snapshot.htmlHint),
+    ].filter((item): item is string => Boolean(item));
+    for (const candidate of candidates) {
+      for (const needle of needles) {
+        const index = candidate.text.indexOf(needle);
+        if (index >= 0) return sourceLocation(candidate.path, candidate.text, index);
+      }
+    }
+    return { sourcePath: snapshot.filePath };
+  }
+
+  async function sourceCandidatesForSnapshot(snapshot: PreviewCommentSnapshot): Promise<Array<{ path: string; text: string }>> {
+    const out: Array<{ path: string; text: string }> = [];
+    const add = async (path: string, text?: string | null) => {
+      if (!path || out.some((item) => item.path === path)) return;
+      const body = text ?? await fetchProjectFileText(projectId, path).catch(() => null);
+      if (body) out.push({ path, text: body });
+    };
+    await add(file.name, source);
+    if (source) {
+      const base = baseDirFor(file.name);
+      for (const ref of Array.from(source.matchAll(/<(?:script|link)\b[^>]+(?:src|href)=["']([^"']+\.(?:jsx?|tsx?|css|html?))["']/gi))) {
+        const path = resolveProjectRef(base, ref[1] ?? '');
+        if (path) await add(path);
+      }
+    }
+    if (snapshot.filePath !== file.name) await add(snapshot.filePath);
+    return out;
+  }
+
+  function sourceLocation(path: string, text: string, index: number): Partial<PreviewCommentSnapshot> {
+    const before = text.slice(0, index);
+    const line = before.split('\n').length;
+    const lineStart = before.lastIndexOf('\n') + 1;
+    const column = index - lineStart + 1;
+    const lines = text.split('\n');
+    const start = Math.max(0, line - 3);
+    const end = Math.min(lines.length, line + 2);
+    const sourceSnippet = lines
+      .slice(start, end)
+      .map((body, offset) => `${start + offset + 1}: ${body}`)
+      .join('\n')
+      .slice(0, 900);
+    return { sourcePath: path, sourceLine: line, sourceColumn: column, sourceSnippet };
+  }
+
+  function dataUrlToFile(dataUrl: string, name: string): File | null {
+    const match = /^data:([^;,]+);base64,(.+)$/i.exec(dataUrl);
+    if (!match) return null;
+    const binary = atob(match[2] ?? '');
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+    return new File([bytes], name, { type: match[1] || 'image/png' });
+  }
+
+  function meaningfulNeedle(value: string | undefined, min: number): string | null {
+    const text = String(value || '').replace(/\s+/g, ' ').trim();
+    return text.length >= min ? text.slice(0, 90) : null;
+  }
+
+  function idNeedle(value: string | undefined): string | null {
+    const id = String(value || '').trim();
+    return id && !id.startsWith('draw-region-') ? id : null;
+  }
+
+  function classNeedle(value: string | undefined): string | null {
+    const first = String(value || '').trim().split(/\s+/).find(Boolean);
+    return first ? `className="${first}` : null;
+  }
+
+  function tagNeedle(value: string | undefined): string | null {
+    const match = /^<([a-z0-9-]+)/i.exec(String(value || ''));
+    return match?.[1] ? `<${match[1]}` : null;
+  }
+
+  function safeArtifactSlug(value: string): string {
+    return value.toLowerCase().replace(/[^a-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 48) || 'target';
+  }
+
+  function resolveProjectRef(base: string, ref: string): string | null {
+    if (!ref || /^(?:https?:|data:|blob:|#)/i.test(ref)) return null;
+    const stack = `${base}${ref}`.split('/');
+    const out: string[] = [];
+    for (const part of stack) {
+      if (!part || part === '.') continue;
+      if (part === '..') out.pop();
+      else out.push(part);
+    }
+    return out.join('/');
   }
 
   function targetForOperation(target: InspectSnapshot): ElementEditOperation['target'] {
@@ -2201,7 +2343,13 @@ function HtmlViewer({
                     role="menuitem"
                     onClick={() => {
                       setShareMenuOpen(false);
-                      exportAsPdf(source ?? '', exportTitle, { deck: effectiveDeck });
+                      void exportProjectAsPdf({
+                        projectId,
+                        filePath: file.name,
+                        fallbackHtml: source ?? '',
+                        fallbackTitle: exportTitle,
+                        deck: effectiveDeck,
+                      });
                     }}
                   >
                     <span className="share-menu-icon"><Icon name="file" size={14} /></span>
@@ -2337,6 +2485,7 @@ function HtmlViewer({
         className={`viewer-body${targetingModeActive ? ' targeting-active' : ''}`}
         style={previewViewportVars}
         ref={previewBodyRef}
+        tabIndex={targetingModeActive ? 0 : undefined}
       >
         {source === null ? (
           <div className="viewer-empty">{t('fileViewer.loading')}</div>
@@ -2401,7 +2550,7 @@ function HtmlViewer({
                 onClose={() => setActiveCommentTarget(null)}
                 onSave={async (attach) => {
                   if (!commentDraft.trim() || !onSavePreviewComment) return;
-                  const saved = await onSavePreviewComment(targetFromSnapshot(activeCommentTarget), commentDraft.trim(), attach);
+                  const saved = await onSavePreviewComment(await targetFromSnapshotForAgent(activeCommentTarget), commentDraft.trim(), attach);
                   if (saved) setActiveCommentTarget(null);
                 }}
                 onRemove={async (commentId) => {

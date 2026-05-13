@@ -11,6 +11,7 @@ import {
 } from 'react';
 import { de } from './locales/de';
 import { en } from './locales/en';
+import { id } from './locales/id';
 import { esES } from './locales/es-ES';
 import { fa } from './locales/fa';
 import { ar } from './locales/ar';
@@ -23,6 +24,9 @@ import { zhTW } from './locales/zh-TW';
 import { pl } from './locales/pl';
 import { hu } from './locales/hu';
 import { fr } from './locales/fr';
+import { th } from './locales/th';
+import { tr } from './locales/tr';
+import { uk } from './locales/uk';
 import { LOCALES, type Dict, type Locale } from './types';
 
 export { LOCALES, LOCALE_LABEL } from './types';
@@ -32,6 +36,7 @@ type DictKey = keyof Dict;
 
 const DICTS: Record<Locale, Dict> = {
   'en': en,
+  'id': id,
   'de': de,
   'zh-CN': zhCN,
   'zh-TW': zhTW,
@@ -45,6 +50,9 @@ const DICTS: Record<Locale, Dict> = {
   'pl': pl,
   'hu': hu,
   'fr': fr,
+  'th': th,
+  'tr': tr,
+  'uk': uk,
 };
 
 const LS_KEY = 'pixelpitch:locale';

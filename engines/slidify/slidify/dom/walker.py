@@ -734,10 +734,25 @@ WALKER_JS = _WALKER_JS_TEMPLATE.replace(
     "__SVG_NATIVE_PATH_BUDGET__", str(SVG_NATIVE_PATH_BUDGET)
 )
 
+# Variant that accepts a CSS selector for the walk root via Playwright's
+# page.evaluate argument passing: `(selector) => { ... }`.
+_WALKER_SCOPED_JS = (
+    _WALKER_JS_TEMPLATE
+    .replace("() => {", "(selector) => {", 1)
+    .replace(
+        "snapshot(document.body, null, 0);",
+        "snapshot(selector ? (document.querySelector(selector) || document.body) : document.body, null, 0);",
+    )
+    .replace("__SVG_NATIVE_PATH_BUDGET__", str(SVG_NATIVE_PATH_BUDGET))
+)
 
-async def walk(page: Page) -> list[DomElement]:
+
+async def walk(page: Page, root_selector: str | None = None) -> list[DomElement]:
     """Run the in-page walker and parse results into DomElement models."""
-    raw: list[dict[str, Any]] = await page.evaluate(WALKER_JS)
+    if root_selector:
+        raw: list[dict[str, Any]] = await page.evaluate(_WALKER_SCOPED_JS, root_selector)
+    else:
+        raw = await page.evaluate(WALKER_JS)
     elements: list[DomElement] = []
     for entry in raw:
         bb = entry["bbox"]

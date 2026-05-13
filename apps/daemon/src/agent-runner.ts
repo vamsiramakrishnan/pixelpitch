@@ -7,6 +7,7 @@ import { attachPiRpcSession } from './pi-rpc.js';
 import { createClaudeStreamHandler } from './claude-stream.js';
 import { createCopilotStreamHandler } from './copilot-stream.js';
 import { createJsonEventStreamHandler } from './json-event-stream.js';
+import { createQoderStreamHandler } from './qoder-stream.js';
 
 export interface AgentDefinitionLike {
   id: string;
@@ -98,6 +99,10 @@ export function attachAgentOutputHandlers(
     const copilot = createCopilotStreamHandler((ev: unknown) => send('agent', ev));
     child.stdout?.on('data', (chunk: string) => copilot.feed(chunk));
     child.on('close', () => copilot.flush());
+  } else if (def.streamFormat === 'qoder-stream-json') {
+    const qoder = createQoderStreamHandler((ev: unknown) => send('agent', ev));
+    child.stdout?.on('data', (chunk: string) => qoder.feed(chunk));
+    child.on('close', () => qoder.flush());
   } else if (def.streamFormat === 'pi-rpc') {
     acpSession = attachPiRpcSession({
       child,

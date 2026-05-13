@@ -1697,16 +1697,18 @@ class Emitter:
             return
 
         # Try a region screenshot from the live page; fall back to ground-truth crop.
+        # For file-based multi-slide renders, re-rendering would show slide 0
+        # instead of the current slide, so skip straight to the ground-truth crop.
         png: bytes | None = None
-        try:
-            png = await renderer.screenshot_region(
-                rendered.html,
-                "",
-                (op.bbox.x, op.bbox.y, op.bbox.w, op.bbox.h),
-            )
-        except Exception as e:
-            log.warning("emitter.region_screenshot_failed", error=str(e))
-            png = None
+        if rendered.source_path is None:
+            try:
+                bbox_tuple = (op.bbox.x, op.bbox.y, op.bbox.w, op.bbox.h)
+                png = await renderer.screenshot_region(
+                    rendered.html, "", bbox_tuple,
+                )
+            except Exception as e:
+                log.warning("emitter.region_screenshot_failed", error=str(e))
+                png = None
         if not png:
             self._emit_region_raster(slide, rendered.ground_truth_png, op.bbox)
             return

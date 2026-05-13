@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PixelPitch Landing Page — Architecture</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#faf6ee; color:#15140f; font-family:'Inter','Helvetica Neue',system-ui,sans-serif; }
+
+  .container { max-width:900px; margin:0 auto; padding:48px 32px 80px; }
+
+  h1 { font-family:Georgia,'Times New Roman',serif; font-size:36px; line-height:1.15; margin-bottom:8px; letter-spacing:-0.02em; }
+  h1 em { color:#ed6f5c; font-style:italic; }
+  .lead { font-size:15px; color:#807868; margin-bottom:48px; line-height:1.6; }
+
+  .section-map { display:flex; flex-direction:column; gap:2px; }
+
+  .section-block {
+    background:white;
+    border:1px solid #e5ddd0;
+    padding:24px 28px;
+    display:grid;
+    grid-template-columns:48px 1fr 200px;
+    gap:20px;
+    align-items:start;
+    transition:transform 0.15s ease;
+  }
+  .section-block:first-child { border-radius:12px 12px 0 0; }
+  .section-block:last-child { border-radius:0 0 12px 12px; }
+  .section-block:hover { transform:translateX(4px); }
+
+  .section-num {
+    font-family:Georgia,serif;
+    font-size:28px;
+    color:#ed6f5c;
+    font-weight:400;
+    line-height:1;
+    padding-top:2px;
+  }
+
+  .section-info h3 {
+    font-size:16px;
+    font-weight:600;
+    margin-bottom:6px;
+    letter-spacing:-0.01em;
+  }
+  .section-info p {
+    font-size:13px;
+    color:#807868;
+    line-height:1.55;
+  }
+
+  .section-visual {
+    font-size:11px;
+    color:#a09888;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    text-align:right;
+    padding-top:4px;
+    line-height:1.7;
+  }
+
+  .divider {
+    height:1px;
+    background:#e5ddd0;
+    margin:40px 0;
+  }
+
+  .note {
+    background:#15140f;
+    color:#faf6ee;
+    border-radius:10px;
+    padding:24px 28px;
+    margin-top:32px;
+  }
+  .note h4 {
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:#ed6f5c;
+    margin-bottom:10px;
+  }
+  .note p {
+    font-size:14px;
+    line-height:1.6;
+    color:#c5bba8;
+  }
+  .note strong { color:#faf6ee; }
+
+  .tag {
+    display:inline-block;
+    background:#f5f0e6;
+    color:#807868;
+    padding:3px 10px;
+    border-radius:4px;
+    font-size:11px;
+    letter-spacing:0.04em;
+    margin-top:6px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Page Architecture: <em>The Warm Studio</em></h1>
+  <p class="lead">Seven sections, scrolling top-to-bottom. Parchment canvas, serif headings, coral accents. Each section maps to a numbered roman numeral — the page reads like a design journal.</p>
+
+  <div class="section-map">
+
+    <div class="section-block">
+      <div class="section-num">I.</div>
+      <div class="section-info">
+        <h3>Hero — "The studio that thinks"</h3>
+        <p>Serif headline with italic coral accent on "thinks." Subline: "59 skills. 138 design systems. Your brief becomes a masterpiece." Two CTAs: <strong>Open Studio</strong> (primary) + <strong>GitHub</strong> (secondary). Below: a miniature live preview showing an artifact streaming in — the product proving itself.</p>
+        <span class="tag">Full viewport</span>
+      </div>
+      <div class="section-visual">Parchment bg<br>Serif display<br>Live preview embed</div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-num">II.</div>
+      <div class="section-info">
+        <h3>The Method — Taste → Craft → Polish → Ship</h3>
+        <p>Four cards in a horizontal row, each with a roman numeral, a one-word stage name, and a 2-line description. Subtle connecting line between them. Each card can have a tiny illustration or icon.</p>
+        <span class="tag">4-column grid</span>
+      </div>
+      <div class="section-visual">Cards on white<br>Coral numerals<br>Connecting line</div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-num">III.</div>
+      <div class="section-info">
+        <h3>Gallery — "Made with PixelPitch"</h3>
+        <p>A masonry or bento grid of 8-12 artifacts: pitch decks, dashboards, mobile screens, editorial posters, social carousels. Each tile shows a screenshot with a label (skill name + design system). The output IS the proof.</p>
+        <span class="tag">Bento grid</span>
+      </div>
+      <div class="section-visual">Dark bg contrast<br>Rounded cards<br>Hover → zoom</div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-num">IV.</div>
+      <div class="section-info">
+        <h3>Skills Browser — "59 ways to create"</h3>
+        <p>Categorized pill tabs: Decks · Prototypes · Media · Utility. Below: a compact grid of skill cards showing name + one-line trigger description. Click reveals a preview. Shows the breadth without overwhelming.</p>
+        <span class="tag">Tabbed grid</span>
+      </div>
+      <div class="section-visual">Parchment bg<br>Category pills<br>Compact cards</div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-num">V.</div>
+      <div class="section-info">
+        <h3>The Craft — Design intelligence, not AI slop</h3>
+        <p>A short manifesto section. 3 principles in large serif type with supporting body text: <strong>Taste is opinionated</strong> (138 curated design systems, not random). <strong>Craft has rules</strong> (color governance, type scales, motion discipline). <strong>Output is editable</strong> (Slidify → native PPTX, not flattened images).</p>
+        <span class="tag">Editorial text</span>
+      </div>
+      <div class="section-visual">Large serif<br>3 principles<br>Accent borders</div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-num">VI.</div>
+      <div class="section-info">
+        <h3>Numbers — The system at a glance</h3>
+        <p>A single row of large-number stat blocks: <strong>59</strong> skills, <strong>138</strong> design systems, <strong>13</strong> agents, <strong>93</strong> prompt templates. Big serif numerals with small labels. The scale speaks.</p>
+        <span class="tag">Stat row</span>
+      </div>
+      <div class="section-visual">Ink-black bg<br>Oversized numerals<br>Coral labels</div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-num">VII.</div>
+      <div class="section-info">
+        <h3>Footer — Studio links + magazine colophon</h3>
+        <p>Four-column link grid (Studio, Library, Connect, Docs) with a colophon strip: "Vol. 01 · Designed with PixelPitch" and coordinates. GitHub star + download CTAs repeated.</p>
+        <span class="tag">4-col footer</span>
+      </div>
+      <div class="section-visual">Parchment bg<br>Small serif meta<br>Colophon strip</div>
+    </div>
+
+  </div>
+
+  <div class="note">
+    <h4>Design Philosophy</h4>
+    <p>The page alternates between <strong>warm parchment</strong> and <strong>ink-black contrast</strong> sections to create rhythm. Coral (#ed6f5c) is used sparingly — only on numerals, CTAs, and the hero accent word. <strong>No decorative blobs, gradients, or AI slop.</strong> Every element earns its pixel. Typography does the heavy lifting: Playfair Display for headlines, Inter Tight for UI, JetBrains Mono for code/metadata. Motion is Framer springs only — snappy entrances on scroll, no spectacle.</p>
+  </div>
+
+</div>
+</body>
+</html>

@@ -352,3 +352,25 @@ export function reconcileStaleRuns(
 
   return reconcile() as number;
 }
+
+export function markRunInterruptedRecovery(
+  db: Database.Database,
+  id: string,
+  recoveryReason: string,
+  now = Date.now(),
+): boolean {
+  const existing = getCritiqueRun(db, id);
+  if (existing === null || (existing.status as string) !== 'running') {
+    return false;
+  }
+
+  db.prepare(
+    `UPDATE critique_runs
+        SET status = 'interrupted',
+            rounds_json = ?,
+            updated_at = ?
+      WHERE id = ? AND status = 'running'`,
+  ).run(serializeRoundsPayload(existing.rounds, recoveryReason), now, id);
+
+  return true;
+}

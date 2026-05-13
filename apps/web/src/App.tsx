@@ -116,6 +116,11 @@ export function App() {
   const [settingsSection, setSettingsSection] = useState<
     SettingsSection | undefined
   >(undefined);
+  const [projectCommandRequest, setProjectCommandRequest] = useState<{
+    type: 'open-context' | 'stage-token';
+    token?: string;
+    nonce: number;
+  } | null>(null);
   const [daemonLive, setDaemonLive] = useState(false);
   const [agents, setAgents] = useState<AgentInfo[]>([]);
   const [skills, setSkills] = useState<SkillSummary[]>([]);
@@ -568,6 +573,7 @@ export function App() {
           onTouchProject={handleTouchProject}
           onProjectChange={handleProjectChange}
           onProjectsRefresh={refreshProjects}
+          commandRequest={projectCommandRequest}
         />
       ) : (
         <EntryView
@@ -627,6 +633,16 @@ export function App() {
         route={route}
         projects={projects}
         onOpenSettings={openSettings}
+        onOpenContextPanel={
+          route.kind === 'project'
+            ? () => setProjectCommandRequest({ type: 'open-context', nonce: Date.now() })
+            : undefined
+        }
+        onStageContextToken={
+          route.kind === 'project'
+            ? (token) => setProjectCommandRequest({ type: 'stage-token', token, nonce: Date.now() })
+            : undefined
+        }
       />
     </>
   );

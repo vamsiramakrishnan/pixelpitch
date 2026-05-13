@@ -11,6 +11,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { effectiveMaxTokens } from '../state/maxTokens';
 import type { AppConfig, ChatMessage } from '../types';
 import { streamMessageAnthropicProxy } from './anthropic-compatible';
+import { streamMessageOllama } from './ollama-compatible';
 import { isOpenAICompatible, streamMessageOpenAI } from './openai-compatible';
 
 // Re-export for convenience
@@ -41,6 +42,10 @@ export async function streamMessage(
   // fallback for configs saved before apiProtocol existed.
   if (cfg.apiProtocol === 'openai' || (!cfg.apiProtocol && isOpenAICompatible(cfg.model, cfg.baseUrl))) {
     return streamMessageOpenAI(cfg, system, history, signal, handlers);
+  }
+
+  if (cfg.apiProtocol === 'ollama') {
+    return streamMessageOllama(cfg, system, history, signal, handlers);
   }
 
   if (cfg.baseUrl && cfg.baseUrl !== 'https://api.anthropic.com') {

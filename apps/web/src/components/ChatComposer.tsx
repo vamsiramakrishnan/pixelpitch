@@ -84,7 +84,9 @@ interface Props {
 export interface ChatComposerHandle {
   setDraft: (text: string) => void;
   appendToken: (token: string) => void;
+  removeToken: (token: string) => void;
   focus: () => void;
+  getDraft: () => string;
 }
 
 /**
@@ -299,11 +301,23 @@ export const ChatComposer = forwardRef<ChatComposerHandle, Props>(
           seededRef.current = true;
           requestAnimationFrame(() => textareaRef.current?.focus());
         },
+        removeToken: (token: string) => {
+          const normalized = token.startsWith('@') ? token.slice(1) : token;
+          setDraft((current) =>
+            current
+              .replace(new RegExp(`(^|\\s)@${escapeRegExp(normalized)}(?=\\s|$)`, 'g'), ' ')
+              .replace(/[ \t]{2,}/g, ' ')
+              .trimStart(),
+          );
+          seededRef.current = true;
+          requestAnimationFrame(() => textareaRef.current?.focus());
+        },
         focus: () => {
           textareaRef.current?.focus();
         },
+        getDraft: () => draft,
       }),
-      []
+      [draft]
     );
 
     function reset() {

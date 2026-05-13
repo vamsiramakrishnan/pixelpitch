@@ -56,6 +56,16 @@ describe('SettingsDialog API protocol switching', () => {
     });
   });
 
+  it('auto-fills Ollama Cloud when switching from a selected known provider', () => {
+    expect(switchApiProtocol(baseConfig, 'ollama')).toMatchObject({
+      mode: 'api',
+      apiProtocol: 'ollama',
+      baseUrl: 'https://ollama.com',
+      model: 'gpt-oss:120b-cloud',
+      apiProviderBaseUrl: 'https://ollama.com',
+    });
+  });
+
   it('preserves user-customized known-looking baseUrl when provider tracking was cleared', () => {
     const config: AppConfig = {
       ...baseConfig,

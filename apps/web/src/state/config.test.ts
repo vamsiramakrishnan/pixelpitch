@@ -128,4 +128,15 @@ describe('loadConfig', () => {
     expect(DEFAULT_CONFIG.apiProtocol).toBe('anthropic');
     expect(DEFAULT_CONFIG.configMigrationVersion).toBe(1);
   });
+
+  it('includes Ollama Cloud as a known provider preset', async () => {
+    const { KNOWN_PROVIDERS } = await import('./config');
+
+    expect(KNOWN_PROVIDERS).toContainEqual(expect.objectContaining({
+      label: 'Ollama Cloud',
+      protocol: 'ollama',
+      baseUrl: 'https://ollama.com',
+      model: 'gpt-oss:120b-cloud',
+    }));
+  });
 });

@@ -4,9 +4,10 @@ import type { AppConfig } from '../types';
 export function apiRuntimeLabel(config: AppConfig): string {
   const provider = selectedKnownProvider(config);
   if (provider) return provider.label;
-  return (config.apiProtocol ?? 'anthropic') === 'openai'
-    ? 'OpenAI-compatible API'
-    : 'Anthropic-compatible API';
+  const protocol = config.apiProtocol ?? 'anthropic';
+  if (protocol === 'openai') return 'OpenAI-compatible API';
+  if (protocol === 'ollama') return 'Ollama-compatible API';
+  return 'Anthropic-compatible API';
 }
 
 export function apiRuntimeDetail(config: AppConfig): string {

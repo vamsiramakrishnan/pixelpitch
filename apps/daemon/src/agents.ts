@@ -5,6 +5,7 @@ import { existsSync, readdirSync } from 'node:fs';
 import { delimiter } from 'node:path';
 import path from 'node:path';
 import { homedir } from 'node:os';
+import { createCommandInvocation } from '@pixelpitch/platform';
 import { detectAcpModels } from './acp.js';
 import { parsePiModels } from './pi-rpc.js';
 
@@ -67,6 +68,59 @@ const agentCapabilities = new Map();
 
 const DEFAULT_MODEL_OPTION = { id: 'default', label: 'Default (CLI config)' };
 
+export const AGENT_BIN_ENV_KEYS = {
+  claude: 'CLAUDE_BIN',
+  codex: 'CODEX_BIN',
+  copilot: 'COPILOT_BIN',
+  'cursor-agent': 'CURSOR_AGENT_BIN',
+  deepseek: 'DEEPSEEK_BIN',
+  devin: 'DEVIN_BIN',
+  gemini: 'GEMINI_BIN',
+  hermes: 'HERMES_BIN',
+  kimi: 'KIMI_BIN',
+  kiro: 'KIRO_BIN',
+  kilo: 'KILO_BIN',
+  opencode: 'OPENCODE_BIN',
+  pi: 'PI_BIN',
+  qoder: 'QODER_BIN',
+  qwen: 'QWEN_BIN',
+  vibe: 'VIBE_BIN',
+};
+
+function envValue(env, key) {
+  if (!env || !key) return null;
+  const direct = env[key];
+  if (typeof direct === 'string' && direct.trim()) return direct.trim();
+  const upper = key.toUpperCase();
+  for (const [candidate, value] of Object.entries(env)) {
+    if (candidate.toUpperCase() === upper && typeof value === 'string' && value.trim()) {
+      return value.trim();
+    }
+  }
+  return null;
+}
+
+function expandUserPath(value) {
+  if (typeof value !== 'string') return value;
+  if (value === '~') return homedir();
+  if (value.startsWith('~/') || value.startsWith('~\\')) {
+    return path.join(homedir(), value.slice(2));
+  }
+  return value;
+}
+
+function execAgentFile(command, args, options = {}) {
+  const invocation = createCommandInvocation({
+    command,
+    args,
+    env: options.env,
+  });
+  return execFileP(invocation.command, invocation.args, {
+    ...options,
+    windowsVerbatimArguments: invocation.windowsVerbatimArguments,
+  });
+}
+
 // Map a user-picked reasoning effort to one the chosen model will accept.
 // Codex's CLI accepts `none | minimal | low | medium | high | xhigh`, but
 // real models support narrower subsets — gpt-5.2/5.3/5.4/5.5 reject
@@ -124,7 +178,7 @@ export const AGENT_DEFS = [
     // — issue #235) get auto-detected without writing wrapper scripts.
     fallbackBins: ['openclaude'],
     versionArgs: ['--version'],
-    helpArgs: ['--help'],
+    helpArgs: ['-p', '--help'],
     capabilityFlags: {
       // Flag string -> capability key. After probing `--help`, we set
       // `agentCapabilities[id][key] = true` for each substring that matches.
@@ -191,6 +245,12 @@ export const AGENT_DEFS = [
     // as a hint. Users can supply other ids via the custom-model input.
     fallbackModels: [
       DEFAULT_MODEL_OPTION,
+      { id: 'gpt-5.5', label: 'gpt-5.5' },
+      { id: 'gpt-5.4', label: 'gpt-5.4' },
+      { id: 'gpt-5.4-mini', label: 'gpt-5.4-mini' },
+      { id: 'gpt-5.3-codex', label: 'gpt-5.3-codex' },
+      { id: 'gpt-5.1', label: 'gpt-5.1' },
+      { id: 'gpt-5.1-codex-mini', label: 'gpt-5.1-codex-mini' },
       { id: 'gpt-5-codex', label: 'gpt-5-codex' },
       { id: 'gpt-5', label: 'gpt-5' },
       { id: 'o3', label: 'o3' },
@@ -198,10 +258,12 @@ export const AGENT_DEFS = [
     ],
     reasoningOptions: [
       { id: 'default', label: 'Default' },
+      { id: 'none', label: 'None' },
       { id: 'minimal', label: 'Minimal' },
       { id: 'low', label: 'Low' },
       { id: 'medium', label: 'Medium' },
       { id: 'high', label: 'High' },
+      { id: 'xhigh', label: 'XHigh' },
     ],
     // Prompt is delivered via stdin pipe (gated by `promptViaStdin: true`
     // below) to avoid Windows `spawn ENAMETOOLONG` while keeping Codex on
@@ -210,12 +272,14 @@ export const AGENT_DEFS = [
     // `error: unexpected argument '-' found` and the agent exits with
     // code 2 before any prompt is read (see issue #237). The pipe alone
     // is sufficient for stdin delivery.
-    buildArgs: (_prompt, _imagePaths, _extra, options = {}, runtimeContext = {}) => {
+    buildArgs: (_prompt, _imagePaths, extraAllowedDirs = [], options = {}, runtimeContext = {}) => {
       const args = [
         'exec',
         '--json',
         '--skip-git-repo-check',
         '--full-auto',
+        '--sandbox',
+        'workspace-write',
         '-c',
         'sandbox_workspace_write.network_access=true',
       ];
@@ -224,6 +288,12 @@ export const AGENT_DEFS = [
       }
       if (runtimeContext.cwd) {
         args.push('-C', runtimeContext.cwd);
+      }
+      const dirs = (extraAllowedDirs || []).filter(
+        (d) => typeof d === 'string' && path.isAbsolute(d),
+      );
+      for (const d of dirs) {
+        args.push('--add-dir', d);
       }
       if (options.model && options.model !== 'default') {
         args.push('--model', options.model);
@@ -614,6 +684,42 @@ export const AGENT_DEFS = [
     buildArgs: () => [],
     streamFormat: 'acp-json-rpc',
   },
+  {
+    id: 'qoder',
+    name: 'Qoder CLI',
+    bin: 'qodercli',
+    versionArgs: ['--version'],
+    fallbackModels: [
+      DEFAULT_MODEL_OPTION,
+      { id: 'lite', label: 'lite' },
+      { id: 'efficient', label: 'efficient' },
+      { id: 'auto', label: 'auto' },
+      { id: 'performance', label: 'performance' },
+      { id: 'ultimate', label: 'ultimate' },
+    ],
+    buildArgs: (_prompt, imagePaths = [], extraAllowedDirs = [], options = {}, runtimeContext = {}) => {
+      const args = ['-p', '--output-format', 'stream-json', '--yolo'];
+      if (runtimeContext.cwd) {
+        args.push('-w', runtimeContext.cwd);
+      }
+      if (options.model && options.model !== 'default') {
+        args.push('--model', options.model);
+      }
+      for (const d of extraAllowedDirs || []) {
+        if (typeof d === 'string' && path.isAbsolute(d)) {
+          args.push('--add-dir', d);
+        }
+      }
+      for (const imagePath of imagePaths || []) {
+        if (typeof imagePath === 'string' && path.isAbsolute(imagePath)) {
+          args.push('--attachment', imagePath);
+        }
+      }
+      return args;
+    },
+    promptViaStdin: true,
+    streamFormat: 'qoder-stream-json',
+  },
 ];
 
 function existingDirsUnder(root, segments = []) {
@@ -703,8 +809,21 @@ export function resolveOnPath(bin) {
 // agents whose forks ship under a different binary name but speak the
 // exact same CLI (Claude Code → OpenClaude, issue #235). Returns null
 // when no candidate is on PATH.
-export function resolveAgentExecutable(def) {
+function configuredExecutableOverride(def, configuredEnv = {}) {
+  const key = AGENT_BIN_ENV_KEYS[def?.id];
+  const raw = envValue(configuredEnv, key);
+  if (!raw) return null;
+  const expanded = expandUserPath(raw);
+  if (path.isAbsolute(expanded) || expanded.includes('/') || expanded.includes('\\')) {
+    return existsSync(expanded) ? expanded : null;
+  }
+  return resolveOnPath(expanded);
+}
+
+export function resolveAgentExecutable(def, configuredEnv = {}) {
   if (!def?.bin) return null;
+  const override = configuredExecutableOverride(def, configuredEnv);
+  if (override) return override;
   const candidates = [def.bin, ...(Array.isArray(def.fallbackBins) ? def.fallbackBins : [])];
   for (const bin of candidates) {
     const resolved = resolveOnPath(bin);
@@ -713,10 +832,10 @@ export function resolveAgentExecutable(def) {
   return null;
 }
 
-async function fetchModels(def, resolvedBin) {
+async function fetchModels(def, resolvedBin, configuredEnv = {}) {
   if (typeof def.fetchModels === 'function') {
     try {
-      const parsed = await def.fetchModels(resolvedBin);
+      const parsed = await def.fetchModels(resolvedBin, configuredEnv);
       if (!parsed || parsed.length === 0) return def.fallbackModels;
       return parsed;
     } catch {
@@ -725,7 +844,8 @@ async function fetchModels(def, resolvedBin) {
   }
   if (!def.listModels) return def.fallbackModels;
   try {
-    const { stdout } = await execFileP(resolvedBin, def.listModels.args, {
+    const { stdout } = await execAgentFile(resolvedBin, def.listModels.args, {
+      env: spawnEnvForAgent(def.id, process.env, configuredEnv),
       timeout: def.listModels.timeoutMs ?? 5000,
       // Models lists from popular CLIs (e.g. opencode) easily exceed the
       // default 1MB buffer once you include every openrouter model. Bump
@@ -743,8 +863,8 @@ async function fetchModels(def, resolvedBin) {
   }
 }
 
-async function probe(def) {
-  const resolved = resolveAgentExecutable(def);
+async function probe(def, configuredEnv = {}) {
+  const resolved = resolveAgentExecutable(def, configuredEnv);
   if (!resolved) {
     return {
       ...stripFns(def),
@@ -754,7 +874,10 @@ async function probe(def) {
   }
   let version = null;
   try {
-    const { stdout } = await execFileP(resolved, def.versionArgs, { timeout: 3000 });
+    const { stdout } = await execAgentFile(resolved, def.versionArgs, {
+      env: spawnEnvForAgent(def.id, process.env, configuredEnv),
+      timeout: 3000,
+    });
     version = stdout.trim().split('\n')[0];
   } catch {
     // binary exists but --version failed; still mark available
@@ -764,7 +887,8 @@ async function probe(def) {
   if (def.helpArgs && def.capabilityFlags) {
     const caps = {};
     try {
-      const { stdout } = await execFileP(resolved, def.helpArgs, {
+      const { stdout } = await execAgentFile(resolved, def.helpArgs, {
+        env: spawnEnvForAgent(def.id, process.env, configuredEnv),
         timeout: 5000,
         maxBuffer: 4 * 1024 * 1024,
       });
@@ -777,7 +901,7 @@ async function probe(def) {
     }
     agentCapabilities.set(def.id, caps);
   }
-  const models = await fetchModels(def, resolved);
+  const models = await fetchModels(def, resolved, configuredEnv);
   return {
     ...stripFns(def),
     models,
@@ -808,8 +932,10 @@ function stripFns(def) {
 }
 
 
-export async function detectAgents() {
-  const results = await Promise.all(AGENT_DEFS.map(probe));
+export async function detectAgents(configuredEnvByAgent = {}) {
+  const results = await Promise.all(
+    AGENT_DEFS.map((def) => probe(def, configuredEnvByAgent?.[def.id] ?? {})),
+  );
   // Refresh the validation cache from whatever we just surfaced to the UI
   // so /api/chat can accept any model the user could have just picked,
   // including ones that only showed up after a CLI re-auth.
@@ -827,18 +953,18 @@ export function getAgentDef(id) {
 // Used by the chat handler so spawn() gets the same executable that
 // detection reported as available — fixes Windows ENOENT when the bare
 // bin name isn't on the child process's PATH (issue #10).
-export function resolveAgentBin(id) {
+export function resolveAgentBin(id, configuredEnv = {}) {
   const def = getAgentDef(id);
   if (!def?.bin) return null;
-  return resolveAgentExecutable(def);
+  return resolveAgentExecutable(def, configuredEnv);
 }
 
 // Claude Code reads local credentials from its own auth/config files. Passing
 // ANTHROPIC_API_KEY from the daemon process can accidentally override that
 // setup or leak a hosted-provider key into a CLI run. Keep the key only when
 // the user is explicitly targeting a custom Anthropic-compatible endpoint.
-export function spawnEnvForAgent(agentId, baseEnv = {}) {
-  const env = { ...baseEnv };
+export function spawnEnvForAgent(agentId, baseEnv = {}, configuredEnv = {}) {
+  const env = { ...baseEnv, ...configuredEnv };
   if (agentId !== 'claude') return env;
 
   const hasCustomBaseUrl = Object.keys(env).some(

@@ -35,7 +35,7 @@ from slidify.api.oracle import (
 from slidify.api.oracle import (
     oracle_with_correction as _oracle_with_correction,
 )
-from slidify.api.sources import SlideSource, _inline_local_images, _normalize_source
+from slidify.api.sources import SlideInput, SlideSource, _inline_local_images, _normalize_source
 from slidify.api.state import SlidePlan as _SlidePlan
 from slidify.api.state import SlideSummary as _SlideSummary
 from slidify.atom_inference import infer_atom_id
@@ -233,20 +233,27 @@ async def _classify_slide(
     return stats
 
 
+async def _render_one(renderer: Renderer, inp: SlideInput) -> list[RenderedSlide]:
+    if inp.source_path is not None:
+        return await renderer.render_file(inp.source_path)
+    return [await renderer.render(inp.html)]
+
+
 async def _render_batch(
-    renderer: Renderer, slides_html: list[str]
+    renderer: Renderer, slides: list[SlideInput]
 ) -> list[RenderedSlide]:
     """Render a batch of slides in parallel."""
-    return list(await asyncio.gather(*(renderer.render(h) for h in slides_html)))
+    nested = await asyncio.gather(*(_render_one(renderer, s) for s in slides))
+    return [r for batch in nested for r in batch]
 
 
 async def _drain_in_batches(
-    iter_html: AsyncIterator[str], size: int
-) -> AsyncIterator[list[str]]:
+    slide_iter: AsyncIterator[SlideInput], size: int
+) -> AsyncIterator[list[SlideInput]]:
     """Pull `size` items at a time from an async source, yielding batches."""
-    batch: list[str] = []
-    async for html in iter_html:
-        batch.append(html)
+    batch: list[SlideInput] = []
+    async for item in slide_iter:
+        batch.append(item)
         if len(batch) >= size:
             yield batch
             batch = []

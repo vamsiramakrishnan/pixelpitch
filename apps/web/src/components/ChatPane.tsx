@@ -16,11 +16,13 @@ import type {
   PreviewComment,
   ProjectFile,
   SkillSummary,
+  ContextResolveResponse,
 } from '../types';
 import { dayKey, dayLabel, exactDateTime, messageTime, relativeTimeLong } from '../utils/chatTime';
 import { commentsToAttachments, simplePositionLabel } from '../comments';
 import { AssistantMessage } from './AssistantMessage';
 import { ChatComposer, type ChatComposerHandle } from './ChatComposer';
+import { ContextStackPanel, contextItemToken } from './ContextStackPanel';
 import { Icon } from './Icon';
 
 type TranslateFn = (key: keyof Dict, vars?: Record<string, string | number>) => string;
@@ -105,9 +107,14 @@ interface Props {
   onTogglePet?: () => void;
   onOpenPetSettings?: () => void;
   stageTokenRequest?: { token: string; nonce: number } | null;
+  contextStack?: ContextResolveResponse | null;
+  contextStackLoading?: boolean;
+  contextStackError?: string | null;
+  contextStackRequest?: { nonce: number } | null;
+  onRefreshContextStack?: (draft: string) => void;
 }
 
-type Tab = 'chat' | 'comments';
+type Tab = 'chat' | 'comments' | 'context';
 
 export function ChatPane({
   messages,
@@ -143,6 +150,11 @@ export function ChatPane({
   onTogglePet,
   onOpenPetSettings,
   stageTokenRequest,
+  contextStack = null,
+  contextStackLoading = false,
+  contextStackError = null,
+  contextStackRequest,
+  onRefreshContextStack,
 }: Props) {
   const t = useT();
   const logRef = useRef<HTMLDivElement | null>(null);
@@ -221,6 +233,12 @@ export function ChatPane({
     composerRef.current?.appendToken(stageTokenRequest.token);
   }, [stageTokenRequest]);
 
+  useEffect(() => {
+    if (!contextStackRequest) return;
+    setTab('context');
+    onRefreshContextStack?.(composerRef.current?.getDraft() ?? '');
+  }, [contextStackRequest, onRefreshContextStack]);
+
   const convHistoryLayer = usePopoverLayer({
     open: showConvList,
     onDismiss: () => setShowConvList(false),
@@ -269,6 +287,25 @@ export function ChatPane({
           >
             {t('chat.tabComments')}
             {tab === 'comments' ? (
+              <motion.div
+                className="chat-header-segment-indicator"
+                layoutId="chat-tab-indicator"
+                transition={springs.snappy}
+              />
+            ) : null}
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={tab === 'context'}
+            className={tab === 'context' ? 'active' : ''}
+            onClick={() => {
+              setTab('context');
+              onRefreshContextStack?.(composerRef.current?.getDraft() ?? '');
+            }}
+          >
+            Context
+            {tab === 'context' ? (
               <motion.div
                 className="chat-header-segment-indicator"
                 layoutId="chat-tab-indicator"
@@ -543,6 +580,28 @@ export function ChatPane({
           onDetach={onDetachComment}
           onDelete={onDeleteComment}
           t={t}
+        />
+      ) : null}
+      {tab === 'context' ? (
+        <ContextStackPanel
+          open
+          loading={contextStackLoading}
+          error={contextStackError}
+          context={contextStack}
+          onClose={() => setTab('chat')}
+          onRefresh={() => onRefreshContextStack?.(composerRef.current?.getDraft() ?? '')}
+          onAttachItem={(item) => {
+            const token = contextItemToken(item);
+            if (!token) return;
+            composerRef.current?.appendToken(token);
+            window.setTimeout(() => onRefreshContextStack?.(composerRef.current?.getDraft() ?? ''), 0);
+          }}
+          onRemoveItem={(item) => {
+            const token = contextItemToken(item);
+            if (!token) return;
+            composerRef.current?.removeToken(token);
+            window.setTimeout(() => onRefreshContextStack?.(composerRef.current?.getDraft() ?? ''), 0);
+          }}
         />
       ) : null}
     </div>

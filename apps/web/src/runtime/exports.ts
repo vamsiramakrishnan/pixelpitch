@@ -128,6 +128,37 @@ export async function exportProjectAsZip(opts: {
   }
 }
 
+export async function exportProjectAsPdf(opts: {
+  projectId: string;
+  filePath: string;
+  fallbackHtml: string;
+  fallbackTitle: string;
+  deck?: boolean;
+}): Promise<void> {
+  try {
+    const resp = await fetch(`/api/projects/${encodeURIComponent(opts.projectId)}/export/pdf`, {
+      body: JSON.stringify({
+        deck: opts.deck === true,
+        fileName: opts.filePath,
+        title: opts.fallbackTitle,
+      }),
+      headers: { 'content-type': 'application/json' },
+      method: 'POST',
+    });
+    if (resp.status === 501) {
+      exportAsPdf(opts.fallbackHtml, opts.fallbackTitle, { deck: opts.deck });
+      return;
+    }
+    if (!resp.ok) throw new Error(`pdf export request failed (${resp.status})`);
+    const result = await resp.json();
+    if (result?.canceled) return;
+    if (!result?.ok) throw new Error(result?.error || 'desktop PDF export failed');
+  } catch (err) {
+    console.warn('[exportProjectAsPdf] falling back to browser print:', err);
+    exportAsPdf(opts.fallbackHtml, opts.fallbackTitle, { deck: opts.deck });
+  }
+}
+
 // Exported for unit tests. Pure string transform with no DOM dependency.
 export function archiveRootFromFilePath(filePath: string): string {
   const trimmed = (filePath || '').replace(/^\/+/, '');

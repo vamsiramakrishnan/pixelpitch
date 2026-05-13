@@ -129,16 +129,32 @@ function injectCommentBridge(doc: string): string {
   function isDeckChrome(el){
     if (!el || !el.closest) return false;
     try {
-      return !!el.closest([
+      if (el.closest('[data-od-selection-ring], [data-od-draw-box]')) return true;
+      if (el.closest([
         '#deck-prev',
         '#deck-next',
         '#deck-cur',
         '#deck-total',
         '[data-od-deck-chrome]',
+        '[data-noncommentable]',
+        '[role="toolbar"]',
         '[aria-label="Previous slide"]',
         '[aria-label="Next slide"]',
+        '[aria-label="Reset to first slide"]',
         '[aria-label="Previous"]',
         '[aria-label="Next"]',
+        '.export-hidden',
+        '.overlay',
+        '.tapzones',
+        '.tapzone',
+        '.btn.prev',
+        '.btn.next',
+        '.btn.reset',
+        '.count',
+        '.current',
+        '.total',
+        '.sep',
+        '.kbd',
         '.deck-nav',
         '.deck-controls',
         '.slide-nav',
@@ -150,7 +166,21 @@ function injectCommentBridge(doc: string): string {
         '.prev',
         '.next',
         '.arrow'
-      ].join(','));
+      ].join(','))) return true;
+      var node = el.closest('button, a, [role="button"], [aria-label], [class], [id]') || el;
+      var rect = node.getBoundingClientRect ? node.getBoundingClientRect() : null;
+      var cs = window.getComputedStyle ? window.getComputedStyle(node) : null;
+      var classId = String((node.className || '') + ' ' + (node.id || '') + ' ' + (node.getAttribute && (node.getAttribute('aria-label') || ''))).toLowerCase();
+      var namesLikeNav = /\\b(prev|previous|next|arrow|nav|pager|pagination|slide[-_ ]?(control|nav|next|prev)|deck[-_ ]?(control|nav|next|prev)|carousel)\\b/.test(classId);
+      if (namesLikeNav) return true;
+      if (rect && cs && (cs.position === 'fixed' || cs.position === 'sticky')) {
+        var area = Math.max(1, rect.width * rect.height);
+        var nearEdge = rect.left < 96 || rect.right > window.innerWidth - 96 || rect.top < 96 || rect.bottom > window.innerHeight - 96;
+        var compact = rect.width <= 180 && rect.height <= 96 && area <= 12000;
+        var clickable = /^(button|a)$/i.test(node.tagName || '') || node.getAttribute('role') === 'button' || !!node.onclick;
+        if (nearEdge && compact && clickable) return true;
+      }
+      return false;
     } catch (_) {
       return false;
     }
@@ -237,6 +267,66 @@ function injectCommentBridge(doc: string): string {
       className: typeof el.className === 'string' ? el.className : '',
       styles: styles
     };
+  }
+  function inlineCloneStyles(source, clone, depth){
+    if (!source || !clone || depth > 3) return;
+    try {
+      var cs = window.getComputedStyle(source);
+      var props = ['display','position','box-sizing','width','height','margin','padding','color','background','background-color','border','border-radius','box-shadow','font','font-family','font-size','font-weight','font-style','line-height','letter-spacing','text-transform','text-align','opacity','transform','gap','align-items','justify-content','flex-direction','grid-template-columns'];
+      clone.setAttribute('style', props.map(function(prop){ return prop + ':' + cs.getPropertyValue(prop); }).join(';'));
+      var sourceKids = source.children || [];
+      var cloneKids = clone.children || [];
+      for (var i = 0; i < sourceKids.length && i < cloneKids.length; i++) inlineCloneStyles(sourceKids[i], cloneKids[i], depth + 1);
+    } catch (_) {}
+  }
+  function captureTargetImage(el, rect){
+    return new Promise(function(resolve){
+      if (!el || !rect || rect.width < 2 || rect.height < 2) return resolve('');
+      try {
+        var scale = Math.min(2, 900 / Math.max(1, rect.width));
+        var width = Math.max(1, Math.round(rect.width * scale));
+        var height = Math.max(1, Math.round(rect.height * scale));
+        var clone = el.cloneNode(true);
+        inlineCloneStyles(el, clone, 0);
+        clone.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+        clone.style.margin = '0';
+        clone.style.transform = 'none';
+        clone.style.width = Math.round(rect.width) + 'px';
+        clone.style.height = Math.round(rect.height) + 'px';
+        var xml = new XMLSerializer().serializeToString(clone);
+        var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + width + '" height="' + height + '" viewBox="0 0 ' + Math.round(rect.width) + ' ' + Math.round(rect.height) + '"><foreignObject width="100%" height="100%">' + xml + '</foreignObject></svg>';
+        var blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+        var url = URL.createObjectURL(blob);
+        var img = new Image();
+        img.onload = function(){
+          try {
+            var canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            var ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, width, height);
+            ctx.drawImage(img, 0, 0, width, height);
+            URL.revokeObjectURL(url);
+            resolve(canvas.toDataURL('image/png'));
+          } catch (_) {
+            URL.revokeObjectURL(url);
+            resolve('');
+          }
+        };
+        img.onerror = function(){ URL.revokeObjectURL(url); resolve(''); };
+        img.src = url;
+      } catch (_) {
+        resolve('');
+      }
+    });
+  }
+  function postCapturedTarget(el, payload){
+    var rect = el && el.getBoundingClientRect ? el.getBoundingClientRect() : null;
+    captureTargetImage(el, rect).then(function(dataUrl){
+      if (dataUrl) payload.screenshotDataUrl = dataUrl;
+      window.parent.postMessage(payload, '*');
+    });
   }
   function slideNodes(){
     return Array.prototype.slice.call(document.querySelectorAll('.slide, [data-screen-label]'));
@@ -550,6 +640,7 @@ function injectCommentBridge(doc: string): string {
   });
   function handleAnnotationSlideKey(ev){
     if (!enabled) return;
+    if (ev.__odDeckBridge) return;
     var isSlideKey = ev.key === 'ArrowRight' || ev.key === 'ArrowLeft' || ev.key === 'PageDown' || ev.key === 'PageUp' || ev.key === 'Home' || ev.key === 'End';
     if (!isSlideKey) return;
     if (ev.metaKey || ev.ctrlKey) {
@@ -567,6 +658,8 @@ function injectCommentBridge(doc: string): string {
   }
   document.addEventListener('keydown', handleAnnotationSlideKey, true);
   document.addEventListener('keyup', handleAnnotationSlideKey, true);
+  window.addEventListener('keydown', handleAnnotationSlideKey, true);
+  window.addEventListener('keyup', handleAnnotationSlideKey, true);
   document.addEventListener('pointerdown', function(ev){
     if (!enabled || targetMode !== 'draw') return;
     drawStart = { x: ev.clientX, y: ev.clientY };
@@ -602,7 +695,17 @@ function injectCommentBridge(doc: string): string {
     drawStart = null;
     var payload = drawRegionPayload(start, { x: ev.clientX, y: ev.clientY });
     removeDrawBox();
-    if (payload) window.parent.postMessage(payload, '*');
+    if (payload) {
+      var centerEl = null;
+      try {
+        centerEl = document.elementFromPoint(
+          payload.position.x + payload.position.width / 2,
+          payload.position.y + payload.position.height / 2
+        );
+      } catch (_) {}
+      if (centerEl && !isDeckChrome(centerEl)) postCapturedTarget(centerEl, payload);
+      else window.parent.postMessage(payload, '*');
+    }
     ev.preventDefault();
     ev.stopPropagation();
   }, true);
@@ -643,7 +746,7 @@ function injectCommentBridge(doc: string): string {
     var payload = targetFrom(el);
     if (payload) {
       updateNativeRing(el, payload, true);
-      window.parent.postMessage(payload, '*');
+      postCapturedTarget(el, payload);
     }
   }, true);
   window.addEventListener('resize', schedulePostTargets);
@@ -815,7 +918,24 @@ function injectDeckBridge(doc: string, initialSlideIndex = 0): string {
   const script = `<script>(function(){
   var initialSlideIndex = ${safeInitialSlideIndex};
   var didRestoreInitialSlide = initialSlideIndex <= 0;
-  function slides(){ return document.querySelectorAll('.slide'); }
+  function deckStage(){
+    return document.querySelector('deck-stage');
+  }
+  function stageSlides(stage){
+    return stage ? Array.prototype.slice.call(stage.children || []).filter(function(child){
+      return child && child.nodeType === 1 && !/^(SCRIPT|STYLE|TEMPLATE)$/i.test(child.tagName || '');
+    }) : [];
+  }
+  function slides(){
+    var stage = deckStage();
+    var stageItems = stageSlides(stage);
+    if (stageItems.length) return stageItems;
+    return Array.prototype.slice.call(document.querySelectorAll('.slide, [data-deck-slide]'));
+  }
+  function hasDeckStageApi(){
+    var stage = deckStage();
+    return !!(stage && typeof stage.goTo === 'function' && typeof stage.next === 'function' && typeof stage.prev === 'function');
+  }
   function scroller(){
     if (document.body && document.body.scrollWidth > document.body.clientWidth + 1) return document.body;
     return document.scrollingElement || document.documentElement;
@@ -842,12 +962,17 @@ function injectDeckBridge(doc: string, initialSlideIndex = 0): string {
   }
   function activeIndex(list){
     if (!list || !list.length) return 0;
+    var stage = deckStage();
+    if (stage && typeof stage.index === 'number') return Math.max(0, Math.min(list.length - 1, stage.index));
     if (isScrollDeck()) {
       var w = Math.max(1, window.innerWidth);
       return Math.max(0, Math.min(list.length - 1, Math.round(scroller().scrollLeft / w)));
     }
     var byClass = findActiveByClass(list);
     if (byClass >= 0) return byClass;
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].hasAttribute && list[i].hasAttribute('data-deck-active')) return i;
+    }
     var byVis = findActiveByVisibility(list);
     if (byVis >= 0) return byVis;
     return 0;
@@ -856,10 +981,13 @@ function injectDeckBridge(doc: string, initialSlideIndex = 0): string {
     // Bubbles so any listener on window picks it up too. We dispatch on
     // document only — dispatching on window/body in addition would cause
     // bubbling to fire the same document-level listener twice.
-    var init = { key: key, code: key, bubbles: true, cancelable: true, composed: true };
     try {
-      document.dispatchEvent(new KeyboardEvent('keydown', init));
-      document.dispatchEvent(new KeyboardEvent('keyup', init));
+      var down = new KeyboardEvent('keydown', { key: key, code: key, bubbles: true, cancelable: true, composed: true });
+      var up = new KeyboardEvent('keyup', { key: key, code: key, bubbles: true, cancelable: true, composed: true });
+      try { Object.defineProperty(down, '__odDeckBridge', { value: true }); } catch (_) {}
+      try { Object.defineProperty(up, '__odDeckBridge', { value: true }); } catch (_) {}
+      document.dispatchEvent(down);
+      document.dispatchEvent(up);
     } catch (_) {}
   }
   function pad2(n){ return (n < 10 ? '0' : '') + n; }
@@ -942,6 +1070,16 @@ function injectDeckBridge(doc: string, initialSlideIndex = 0): string {
     var list = slides();
     if (!list.length) return;
     var target = Math.max(0, Math.min(list.length - 1, targetFor(action, list)));
+    var stage = deckStage();
+    if (hasDeckStageApi()) {
+      if (action === 'next') stage.next();
+      else if (action === 'prev') stage.prev();
+      else if (action === 'first') stage.goTo(0);
+      else if (action === 'last') stage.goTo(list.length - 1);
+      else stage.goTo(target);
+      setTimeout(report, 60);
+      return;
+    }
     if (isScrollDeck()) {
       scrollGo(target);
       return;
@@ -957,6 +1095,12 @@ function injectDeckBridge(doc: string, initialSlideIndex = 0): string {
     var list = slides();
     if (!list.length) return;
     var target = Math.max(0, Math.min(list.length - 1, i));
+    var stage = deckStage();
+    if (hasDeckStageApi()) {
+      stage.goTo(target);
+      setTimeout(report, 60);
+      return;
+    }
     if (isScrollDeck()) { scrollGo(target); return; }
     if (canSetActive(list) && setActive(target)) return;
     var current = activeIndex(list);
@@ -1003,6 +1147,7 @@ function injectDeckBridge(doc: string, initialSlideIndex = 0): string {
   }
   ownDeckButton('deck-prev', 'prev');
   ownDeckButton('deck-next', 'next');
+  document.addEventListener('slidechange', function(){ setTimeout(report, 0); }, true);
   // Report once on load and on every scroll-end so the host stays in sync.
   window.addEventListener('load', function(){ setTimeout(restoreInitialSlide, 200); });
   document.addEventListener('scroll', function(){
@@ -1055,7 +1200,7 @@ function injectDeckBridge(doc: string, initialSlideIndex = 0): string {
         window.__odReportT2 = setTimeout(report, 60);
       });
       for (var i = 0; i < list.length; i++) {
-        mo.observe(list[i], { attributes: true, attributeFilter: ['class', 'style', 'hidden', 'aria-hidden'] });
+        mo.observe(list[i], { attributes: true, attributeFilter: ['class', 'style', 'hidden', 'aria-hidden', 'data-deck-active'] });
       }
     } catch (e) {}
     setTimeout(restoreInitialSlide, 100);

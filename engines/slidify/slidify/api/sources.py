@@ -5,6 +5,7 @@ from __future__ import annotations
 import base64
 import re
 from collections.abc import AsyncIterable, AsyncIterator, Iterable
+from dataclasses import dataclass
 from pathlib import Path
 
 from slidify.splitter import split_slides
@@ -12,31 +13,50 @@ from slidify.splitter import split_slides
 SlideSource = str | Path | Iterable[str | Path] | AsyncIterable[str | Path]
 
 
-async def _normalize_source(source: SlideSource) -> AsyncIterator[str]:
-    """Yield slide HTML strings from any supported source form."""
+@dataclass(frozen=True, slots=True)
+class SlideInput:
+    """A slide's HTML and optional on-disk source path.
+
+    When *source_path* is set the renderer can use ``page.goto(file://…)``
+    so that relative ``<script src>``, ``<link href>``, etc. resolve against
+    the file's directory.
+    """
+    html: str
+    source_path: Path | None = None
+
+
+async def _normalize_source(source: SlideSource) -> AsyncIterator[SlideInput]:
+    """Yield ``SlideInput`` objects from any supported source form."""
     if isinstance(source, str):
         for chunk in split_slides(source):
-            yield chunk
+            yield SlideInput(html=chunk)
         return
 
     if isinstance(source, Path):
         if source.is_dir():
             for path in sorted(source.glob("*.html")):
-                yield _inline_local_images(path.read_text(encoding="utf-8"), path.parent)
+                yield SlideInput(
+                    html=_inline_local_images(path.read_text(encoding="utf-8"), path.parent),
+                    source_path=path,
+                )
             return
         text = source.read_text(encoding="utf-8")
-        for chunk in split_slides(text):
-            yield _inline_local_images(chunk, source.parent)
+        chunks = split_slides(text)
+        for chunk in chunks:
+            yield SlideInput(
+                html=_inline_local_images(chunk, source.parent),
+                source_path=source if len(chunks) == 1 else None,
+            )
         return
 
     if hasattr(source, "__aiter__"):
         async for item in source:  # type: ignore[union-attr]
-            yield _read_item(item)
+            yield SlideInput(html=_read_item(item))
         return
 
     if hasattr(source, "__iter__"):
         for item in source:  # type: ignore[union-attr]
-            yield _read_item(item)
+            yield SlideInput(html=_read_item(item))
         return
 
     raise TypeError(f"unsupported slide source type: {type(source).__name__}")

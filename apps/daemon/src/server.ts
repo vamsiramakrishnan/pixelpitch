@@ -1,4 +1,5 @@
 // @ts-nocheck
+import type { DesktopExportPdfInput, DesktopExportPdfResult } from '@pixelpitch/sidecar-proto';
 import express from 'express';
 import multer from 'multer';
 import { randomUUID } from 'node:crypto';
@@ -7,7 +8,8 @@ import path from 'node:path';
 import fs from 'node:fs';
 import os from 'node:os';
 import net from 'node:net';
-import { composeSystemPrompt } from '@pixelpitch/contracts';
+import { execFile } from 'node:child_process';
+import { composeSystemPrompt, listPromptDirectives, searchPromptDirectives } from '@pixelpitch/contracts';
 import {
   detectAgents,
   getAgentDef,
@@ -15,13 +17,16 @@ import {
   resolveAgentBin,
   sanitizeCustomModel,
 } from './agents.js';
-import { listSkills } from './skills.js';
+import { listSkills, searchSkills } from './skills.js';
 import { listCodexPets, readCodexPetSpritesheet } from './codex-pets.js';
 import { syncCommunityPets } from './community-pets-sync.js';
 import { listDesignSystems, readDesignSystem, readDesignSystemTokens, listDesignSystemPreviews } from './design-systems.js';
+import { resolveTurnContext, searchContextRegistry } from './context-resolver.js';
 import { createAgentRunService } from './agent-run-service.js';
 import { loadCritiqueConfigFromEnv } from './critique/config.js';
 import { reconcileStaleRuns } from './critique/persistence.js';
+import { createRunRegistry } from './critique/run-registry.js';
+import { handleCritiqueInterrupt } from './critique/interrupt-handler.js';
 import { renderDesignSystemPreview } from './design-system-preview.js';
 import { renderDesignSystemShowcase } from './design-system-showcase.js';
 import { createChatRunService } from './runs.js';
@@ -29,7 +34,7 @@ import { importClaudeDesignZip } from './claude-design-import.js';
 import { listPromptTemplates, readPromptTemplate } from './prompt-templates.js';
 import { buildDocumentPreview } from './document-preview.js';
 import { lintArtifact, renderFindingsForAgent } from './lint-artifact.js';
-import { loadCraftSections } from './craft.js';
+import { listCraftSections, loadCraftSections, searchCraftSections } from './craft.js';
 import {
   buildSpecialistPlannerPrompt,
   parseSpecialistPlannerOutput,
@@ -37,6 +42,7 @@ import {
 } from './specialist-router.js';
 import { generateMedia } from './media.js';
 import { PptxExportError, runPptxExport } from './pptx-export.js';
+import { buildDesktopPdfExportInput } from './pdf-export.js';
 import {
   AUDIO_DURATIONS_SEC,
   AUDIO_MODELS_BY_KIND,
@@ -48,6 +54,15 @@ import {
 } from './media-models.js';
 import { readMaskedConfig, writeConfig } from './media-config.js';
 import { readAppConfig, writeAppConfig } from './app-config.js';
+import { OrbitService, formatLocalProjectTimestamp, renderOrbitTemplateSystemPrompt } from './orbit.js';
+import {
+  MCP_TEMPLATES,
+  isManagedProjectCwd,
+  readMcpConfig,
+  writeClaudeMcpConfigForCwd,
+  writeMcpConfig,
+} from './mcp-config.js';
+import { buildMcpInstallPayload } from './mcp-install-info.js';
 import {
   applyHtmlEditOperations,
   HtmlEditOperationError,
@@ -56,6 +71,7 @@ import {
   buildProjectArchive,
   decodeMultipartFilename,
   deleteProjectFile,
+  detectEntryFile,
   ensureProject,
   listFiles,
   projectDir,
@@ -65,6 +81,9 @@ import {
   searchProjectFiles,
   writeProjectFile,
 } from './projects.js';
+import { validateLinkedDirs } from './linked-dirs.js';
+import { buildWindowsFolderDialogCommand, parseFolderDialogStdout } from './native-folder-dialog.js';
+import { subscribe as subscribeFileEvents } from './project-watchers.js';
 
 function uniqueStrings(values) {
   const out = [];
@@ -75,6 +94,155 @@ function uniqueStrings(values) {
     out.push(trimmed);
   }
   return out;
+}
+
+function openNativeFolderDialog() {
+  return new Promise((resolve) => {
+    const platform = process.platform;
+    if (platform === 'darwin') {
+      execFile(
+        'osascript',
+        ['-e', 'POSIX path of (choose folder with prompt "Select a code folder to link")'],
+        { timeout: 120_000 },
+        (err, stdout) => {
+          if (err) return resolve(null);
+          const selected = stdout.trim().replace(/\/$/, '');
+          resolve(selected || null);
+        },
+      );
+      return;
+    }
+    if (platform === 'linux') {
+      execFile(
+        'zenity',
+        ['--file-selection', '--directory', '--title=Select a code folder to link'],
+        { timeout: 120_000 },
+        (err, stdout) => {
+          if (err) return resolve(null);
+          const selected = stdout.trim();
+          resolve(selected || null);
+        },
+      );
+      return;
+    }
+    if (platform === 'win32') {
+      const command = buildWindowsFolderDialogCommand();
+      execFile(command.command, command.args, { timeout: 120_000 }, (err, stdout) => {
+        resolve(parseFolderDialogStdout(err, stdout));
+      });
+      return;
+    }
+    resolve(null);
+  });
+}
+
+function renderAutomaticContextDiscoveryBlock({
+  activeSkillIds,
+  activeCraftIds,
+  activeDirectiveIds,
+  skillMatches,
+  craftMatches,
+  directiveMatches,
+  inferredSkillIds,
+}) {
+  const lines = [];
+  const candidateSkillMatches = Array.isArray(skillMatches)
+    ? skillMatches.filter((match) => !activeSkillIds.includes(match.skill?.id)).slice(0, 4)
+    : [];
+  const candidateCraftMatches = Array.isArray(craftMatches)
+    ? craftMatches.filter((match) => !activeCraftIds.includes(match.section?.id)).slice(0, 4)
+    : [];
+  const candidateDirectiveMatches = Array.isArray(directiveMatches)
+    ? directiveMatches.filter((match) => !activeDirectiveIds.includes(match.directive?.id)).slice(0, 4)
+    : [];
+
+  if (
+    inferredSkillIds.length === 0 &&
+    activeCraftIds.length === 0 &&
+    activeDirectiveIds.length === 0 &&
+    candidateSkillMatches.length === 0 &&
+    candidateCraftMatches.length === 0 &&
+    candidateDirectiveMatches.length === 0
+  ) {
+    return '';
+  }
+
+  lines.push('## Automatic context discovery');
+  lines.push('');
+  lines.push('Pixelpitch searched skills, prompt directives, and craft rules from the user request. Explicit @ mentions and the project active skill/design system still win. Treat inferred matches as awareness and quality guidance; do not announce search mechanics unless it affects a decision.');
+  lines.push('');
+
+  if (inferredSkillIds.length > 0) {
+    lines.push(`Inferred base skill because this project had no active skill: ${inferredSkillIds.map((id) => `\`${id}\``).join(', ')}.`);
+    lines.push('Follow the inferred skill body as the active workflow unless the user asks for a different artifact type.');
+    lines.push('');
+  }
+
+  if (activeDirectiveIds.length > 0) {
+    lines.push(`Auto-applied directive overlays: ${activeDirectiveIds.map((id) => `\`${id}\``).join(', ')}.`);
+    lines.push('Directive overlays can shape atmosphere, hierarchy, materiality, motion, imagery, and fallback tokens. They never replace an active DESIGN.md.');
+    lines.push('');
+  }
+
+  if (activeCraftIds.length > 0) {
+    lines.push(`Auto-loaded craft rules: ${activeCraftIds.map((id) => `\`${id}\``).join(', ')}.`);
+    lines.push('');
+  }
+
+  if (candidateSkillMatches.length > 0) {
+    lines.push('Nearby skill candidates available if the task pivots:');
+    for (const match of candidateSkillMatches) {
+      const skill = match.skill;
+      const cliHint = Array.isArray(skill.cliProcedures) && skill.cliProcedures.length > 0
+        ? `; ${skill.cliProcedures.length} CLI procedure${skill.cliProcedures.length === 1 ? '' : 's'} available`
+        : '';
+      lines.push(`- \`${skill.id}\` (${skill.mode}${cliHint}): ${skill.description || skill.name} [score ${match.score}]`);
+    }
+    lines.push('');
+  }
+
+  if (candidateDirectiveMatches.length > 0) {
+    lines.push('Nearby directive candidates:');
+    for (const match of candidateDirectiveMatches) {
+      const directive = match.directive;
+      lines.push(`- \`${directive.id}\`: ${directive.title} — ${directive.summary} [score ${match.score}]`);
+    }
+    lines.push('');
+  }
+
+  if (candidateCraftMatches.length > 0) {
+    lines.push('Nearby craft candidates:');
+    for (const match of candidateCraftMatches) {
+      const section = match.section;
+      lines.push(`- \`${section.id}\`: ${section.title} — ${section.summary} [score ${match.score}]`);
+    }
+    lines.push('');
+  }
+
+  return lines.join('\n').trim();
+}
+
+function renderContextTraceForAgent(resolved) {
+  if (!resolved || !Array.isArray(resolved.stack)) return '';
+  const loaded = resolved.stack.filter((item) => item.loaded);
+  const nearby = resolved.stack.filter((item) => !item.loaded).slice(0, 6);
+  if (loaded.length === 0 && nearby.length === 0 && (!resolved.trace || resolved.trace.length === 0)) return '';
+  const lines = ['## Context loaded by Pixelpitch', ''];
+  for (const item of loaded) {
+    lines.push(`- ${item.kind} \`${item.id}\`: ${item.reason}`);
+    if (item.source) lines.push(`  source: ${item.source}`);
+  }
+  if (nearby.length > 0) {
+    lines.push('', 'Nearby context candidates, not loaded unless useful:');
+    for (const item of nearby) {
+      lines.push(`- ${item.kind} \`${item.id}\` [score ${item.score}]: ${item.summary}`);
+    }
+  }
+  if (Array.isArray(resolved.trace) && resolved.trace.length > 0) {
+    lines.push('', 'Resolution trace:');
+    for (const item of resolved.trace) lines.push(`- ${item}`);
+  }
+  return lines.join('\n');
 }
 import { validateArtifactManifestInput } from './artifact-manifest.js';
 import { readCurrentAppVersionInfo } from './app-version.js';
@@ -193,6 +361,11 @@ export function normalizeCommentAttachments(input) {
         currentText: compactString(raw.currentText, 160),
         pagePosition: normalizeAttachmentPosition(raw.pagePosition),
         htmlHint: compactString(raw.htmlHint, 180),
+        screenshotPath: compactString(raw.screenshotPath, 260),
+        sourcePath: compactString(raw.sourcePath, 260),
+        sourceLine: positiveIntegerOrNull(raw.sourceLine),
+        sourceColumn: positiveIntegerOrNull(raw.sourceColumn),
+        sourceSnippet: compactMultilineString(raw.sourceSnippet, 900),
       };
     })
     .filter(Boolean)
@@ -215,6 +388,11 @@ export function renderCommentAttachmentHint(commentAttachments) {
       `selector: ${item.selector}`,
       `label: ${item.label || '(unlabeled)'}`,
       `position: ${formatAttachmentPosition(item.pagePosition)}`,
+      item.sourcePath && item.sourceLine
+        ? `source: ${item.sourcePath}:${item.sourceLine}${item.sourceColumn ? `:${item.sourceColumn}` : ''}`
+        : `source: ${item.filePath}`,
+      item.sourceSnippet ? `sourceSnippet:\n${item.sourceSnippet}` : 'sourceSnippet: (not located)',
+      item.screenshotPath ? `visual: ${item.screenshotPath}` : 'visual: (not captured)',
       `currentText: ${item.currentText || '(empty)'}`,
       `htmlHint: ${item.htmlHint || '(none)'}`,
       `comment: ${item.comment}`,
@@ -231,6 +409,15 @@ function cleanString(value) {
 function compactString(value, max) {
   const text = cleanString(value).replace(/\s+/g, ' ');
   return text.length > max ? `${text.slice(0, max - 3)}...` : text;
+}
+
+function compactMultilineString(value, max) {
+  const text = typeof value === 'string' ? value.replace(/\n{4,}/g, '\n\n\n').trim() : '';
+  return text.length > max ? `${text.slice(0, max - 3)}...` : text;
+}
+
+function positiveIntegerOrNull(value) {
+  return Number.isFinite(value) && value > 0 ? Math.round(value) : null;
 }
 
 function normalizeAttachmentPosition(input) {
@@ -363,6 +550,13 @@ const PROMPT_TEMPLATES_DIR = resolveDaemonResourceDir(
 const RUNTIME_DATA_DIR = process.env.PIXELPITCH_DATA_DIR
   ? path.resolve(PROJECT_ROOT, process.env.PIXELPITCH_DATA_DIR)
   : path.join(PROJECT_ROOT, '.pixelpitch');
+const RUNTIME_DATA_DIR_CANONICAL = (() => {
+  try {
+    return fs.realpathSync.native(RUNTIME_DATA_DIR);
+  } catch {
+    return path.resolve(RUNTIME_DATA_DIR);
+  }
+})();
 const ARTIFACTS_DIR = path.join(RUNTIME_DATA_DIR, 'artifacts');
 const PROJECTS_DIR = path.join(RUNTIME_DATA_DIR, 'projects');
 fs.mkdirSync(PROJECTS_DIR, { recursive: true });
@@ -555,15 +749,15 @@ function createSseErrorPayload(code, message, init = {}) {
   return { message, error: createCompatApiError(code, message, init) };
 }
 
-async function applyProjectEditOperations(projectId, ownerFileName, operations) {
-  const owner = await readProjectFile(PROJECTS_DIR, projectId, ownerFileName);
+async function applyProjectEditOperations(projectId, ownerFileName, operations, metadata = null) {
+  const owner = await readProjectFile(PROJECTS_DIR, projectId, ownerFileName, metadata);
   const ownerSource = owner.buffer.toString('utf8');
   const sourceCache = new Map([[owner.name, ownerSource]]);
   const changed = new Map();
   const applied = [];
 
   for (const operation of operations) {
-    const candidates = await projectEditCandidateNames(projectId, owner.name, ownerSource, operation);
+    const candidates = await projectEditCandidateNames(projectId, owner.name, ownerSource, operation, metadata);
     let match = null;
     let lastTargetError = null;
 
@@ -571,7 +765,7 @@ async function applyProjectEditOperations(projectId, ownerFileName, operations) 
       let source = sourceCache.get(candidateName);
       if (source == null) {
         try {
-          const file = await readProjectFile(PROJECTS_DIR, projectId, candidateName);
+          const file = await readProjectFile(PROJECTS_DIR, projectId, candidateName, metadata);
           source = file.buffer.toString('utf8');
           sourceCache.set(file.name, source);
         } catch {
@@ -610,13 +804,14 @@ async function applyProjectEditOperations(projectId, ownerFileName, operations) 
       projectId,
       fileName,
       Buffer.from(source, 'utf8'),
+      { metadata },
     );
   }
 
   return applied;
 }
 
-async function projectEditCandidateNames(projectId, ownerName, ownerSource, operation) {
+async function projectEditCandidateNames(projectId, ownerName, ownerSource, operation, metadata = null) {
   const names = uniqueStrings([
     ownerName,
     ...relativeHtmlAssetRefs(ownerName, ownerSource),
@@ -625,7 +820,7 @@ async function projectEditCandidateNames(projectId, ownerName, ownerSource, oper
   const target = operation?.target ?? {};
   const needle = compactString(target.currentText || target.elementId || target.label || '', 80);
   if (!needle) return names;
-  const files = await listFiles(PROJECTS_DIR, projectId);
+  const files = await listFiles(PROJECTS_DIR, projectId, { metadata });
   const searchable = files
     .filter((file) => /\.(?:html?|jsx?|tsx?)$/i.test(file.name))
     .filter((file) => file.size <= 500_000)
@@ -871,7 +1066,16 @@ export function createSseResponse(
   };
 }
 
-export async function startServer({ port = 17456, host = process.env.PIXELPITCH_BIND_HOST || '127.0.0.1', returnServer = false } = {}) {
+export type DesktopPdfExporter = (input: DesktopExportPdfInput) => Promise<DesktopExportPdfResult>;
+
+export interface StartServerOptions {
+  desktopPdfExporter?: DesktopPdfExporter | null;
+  host?: string;
+  port?: number;
+  returnServer?: boolean;
+}
+
+export async function startServer({ port = 17456, host = process.env.PIXELPITCH_BIND_HOST || '127.0.0.1', returnServer = false, desktopPdfExporter = null }: StartServerOptions = {}) {
   let resolvedPort = port;
   const app = express();
   app.use(express.json({ limit: '4mb' }));
@@ -882,6 +1086,8 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
   const activeProjectEventSinks = new Map();
   const critiqueCfg = loadCritiqueConfigFromEnv();
   const critiqueWarnedAdapters = new Set();
+  const critiqueRunRegistry = createRunRegistry();
+  const orbitService = new OrbitService(RUNTIME_DATA_DIR);
   configureConnectorCredentialStore(new FileConnectorCredentialStore(RUNTIME_DATA_DIR));
   configureComposioConfigStore(RUNTIME_DATA_DIR);
 
@@ -895,6 +1101,10 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
   void recoverStaleLiveArtifactRefreshes({ projectsRoot: PROJECTS_DIR }).catch((err) => {
     console.warn('[live-artifacts] stale refresh recovery failed:', err?.message || err);
   });
+
+  readAppConfig(RUNTIME_DATA_DIR)
+    .then((config) => orbitService.configure(config.orbit))
+    .catch((err) => console.warn('[orbit] config load failed:', err?.message || err));
 
   function emitChatAgentEvent(runId, payload) {
     const sink = activeChatAgentEventSinks.get(runId);
@@ -1360,6 +1570,76 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     },
   );
 
+  app.post('/api/import/folder', async (req, res) => {
+    try {
+      const { baseDir, name, skillId, designSystemId } = req.body || {};
+      if (typeof baseDir !== 'string' || !baseDir.trim()) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'baseDir required');
+      }
+      const trimmedInput = baseDir.trim();
+      if (!path.isAbsolute(path.normalize(trimmedInput))) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'baseDir must be absolute');
+      }
+
+      let normalizedPath;
+      try {
+        normalizedPath = await fs.promises.realpath(trimmedInput);
+      } catch {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'folder not found');
+      }
+      let dirStat;
+      try {
+        dirStat = await fs.promises.lstat(normalizedPath);
+      } catch {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'folder not found');
+      }
+      if (!dirStat.isDirectory()) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'path must be a directory');
+      }
+      if (
+        normalizedPath === RUNTIME_DATA_DIR_CANONICAL ||
+        normalizedPath.startsWith(RUNTIME_DATA_DIR_CANONICAL + path.sep)
+      ) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'cannot import the data directory');
+      }
+
+      const id = randomId();
+      const now = Date.now();
+      const projectName =
+        typeof name === 'string' && name.trim()
+          ? name.trim()
+          : path.basename(normalizedPath);
+      const entryFile = await detectEntryFile(normalizedPath);
+      const project = insertProject(db, {
+        id,
+        name: projectName,
+        skillId: skillId ?? null,
+        designSystemId: designSystemId ?? null,
+        pendingPrompt: null,
+        metadata: {
+          kind: 'prototype',
+          baseDir: normalizedPath,
+          importedFrom: 'folder',
+          entryFile,
+        },
+        createdAt: now,
+        updatedAt: now,
+      });
+      const cid = randomId();
+      insertConversation(db, {
+        id: cid,
+        projectId: id,
+        title: `Imported from ${projectName}`,
+        createdAt: now,
+        updatedAt: now,
+      });
+      if (entryFile) setTabs(db, id, [entryFile], entryFile);
+      res.json({ project, conversationId: cid, entryFile });
+    } catch (err) {
+      sendApiError(res, 400, 'BAD_REQUEST', String(err?.message || err));
+    }
+  });
+
   app.get('/api/projects/:id', (req, res) => {
     const project = getProject(db, req.params.id);
     if (!project)
@@ -1372,6 +1652,39 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
   app.patch('/api/projects/:id', (req, res) => {
     try {
       const patch = req.body || {};
+      if (patch.metadata && typeof patch.metadata === 'object') {
+        const existing = getProject(db, req.params.id);
+        const existingMeta = existing?.metadata;
+        if (existingMeta?.baseDir) {
+          if ('baseDir' in patch.metadata && patch.metadata.baseDir !== existingMeta.baseDir) {
+            return sendApiError(
+              res,
+              400,
+              'BAD_REQUEST',
+              'baseDir is immutable after import; use a new import to change it',
+            );
+          }
+          patch.metadata = {
+            ...patch.metadata,
+            baseDir: existingMeta.baseDir,
+            ...(existingMeta.importedFrom === 'folder' ? { importedFrom: 'folder' } : {}),
+          };
+        } else if ('baseDir' in patch.metadata) {
+          return sendApiError(
+            res,
+            400,
+            'BAD_REQUEST',
+            'baseDir can only be set via POST /api/import/folder',
+          );
+        }
+      }
+      if (patch.metadata?.linkedDirs) {
+        const validated = validateLinkedDirs(patch.metadata.linkedDirs);
+        if (validated.error) {
+          return sendApiError(res, 400, 'INVALID_LINKED_DIR', validated.error);
+        }
+        patch.metadata.linkedDirs = validated.dirs;
+      }
       const project = updateProject(db, req.params.id, patch);
       if (!project)
         return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
@@ -1396,12 +1709,19 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
   });
 
   app.get('/api/projects/:id/events', (req, res) => {
-    if (!getProject(db, req.params.id)) {
+    const project = getProject(db, req.params.id);
+    if (!project) {
       return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
     }
     try {
       const sse = createSseResponse(res);
       const projectEventSink = (payload) => sse.send(payload.type, payload);
+      const fileSubscription = subscribeFileEvents(
+        PROJECTS_DIR,
+        req.params.id,
+        (payload) => sse.send(payload.type, { ...payload, projectId: req.params.id }),
+        { metadata: project.metadata },
+      );
       let sinks = activeProjectEventSinks.get(req.params.id);
       if (!sinks) {
         sinks = new Set();
@@ -1410,6 +1730,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       sinks.add(projectEventSink);
       sse.send('ready', { projectId: req.params.id });
       const cleanup = () => {
+        void fileSubscription.unsubscribe();
         const currentSinks = activeProjectEventSinks.get(req.params.id);
         currentSinks?.delete(projectEventSink);
         if (currentSinks?.size === 0) activeProjectEventSinks.delete(req.params.id);
@@ -1418,6 +1739,15 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       res.on('finish', cleanup);
     } catch (err) {
       if (!res.headersSent) sendApiError(res, 400, 'BAD_REQUEST', String(err?.message || err));
+    }
+  });
+
+  app.post('/api/dialog/open-folder', async (req, res) => {
+    try {
+      const selectedPath = await openNativeFolderDialog();
+      res.json({ path: selectedPath });
+    } catch (err) {
+      sendApiError(res, 400, 'BAD_REQUEST', String(err?.message || err));
     }
   });
 
@@ -1774,12 +2104,118 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     }
   });
 
+  app.get('/api/skills/search', async (req, res) => {
+    try {
+      const q = typeof req.query.q === 'string' ? req.query.q : '';
+      const limit = Number.isFinite(Number(req.query.limit))
+        ? Math.max(1, Math.min(25, Number(req.query.limit)))
+        : 8;
+      res.json({ skills: await searchSkills(SKILLS_DIR, q, limit) });
+    } catch (err) {
+      res.status(500).json({ error: String(err) });
+    }
+  });
+
   app.get('/api/skills/:id', async (req, res) => {
     try {
       const skills = await listSkills(SKILLS_DIR);
       const skill = skills.find((s) => s.id === req.params.id);
       if (!skill) return res.status(404).json({ error: 'skill not found' });
       const { dir: _dir, ...serializable } = skill;
+      res.json(serializable);
+    } catch (err) {
+      res.status(500).json({ error: String(err) });
+    }
+  });
+
+  app.get('/api/craft', async (req, res) => {
+    try {
+      const limit = Number.isFinite(Number(req.query.limit))
+        ? Math.max(1, Math.min(50, Number(req.query.limit)))
+        : 50;
+      res.json({ craft: (await listCraftSections(CRAFT_DIR)).slice(0, limit) });
+    } catch (err) {
+      res.status(500).json({ error: String(err) });
+    }
+  });
+
+  app.get('/api/craft/search', async (req, res) => {
+    try {
+      const q = typeof req.query.q === 'string' ? req.query.q : '';
+      const limit = Number.isFinite(Number(req.query.limit))
+        ? Math.max(1, Math.min(25, Number(req.query.limit)))
+        : 8;
+      res.json({ craft: await searchCraftSections(CRAFT_DIR, q, limit) });
+    } catch (err) {
+      res.status(500).json({ error: String(err) });
+    }
+  });
+
+  app.get('/api/directives', (req, res) => {
+    try {
+      const q = typeof req.query.q === 'string' ? req.query.q : '';
+      const limit = Number.isFinite(Number(req.query.limit))
+        ? Math.max(1, Math.min(25, Number(req.query.limit)))
+        : 12;
+      if (q.trim()) {
+        res.json({ directives: searchPromptDirectives(q, limit) });
+        return;
+      }
+      res.json({ directives: listPromptDirectives().slice(0, limit) });
+    } catch (err) {
+      res.status(500).json({ error: String(err) });
+    }
+  });
+
+  app.get('/api/context/search', async (req, res) => {
+    try {
+      const q = typeof req.query.q === 'string' ? req.query.q : '';
+      const limit = Number.isFinite(Number(req.query.limit))
+        ? Math.max(1, Math.min(50, Number(req.query.limit)))
+        : 12;
+      res.json({
+        results: await searchContextRegistry({
+          query: q,
+          limit,
+          skillsDir: SKILLS_DIR,
+          designSystemsDir: DESIGN_SYSTEMS_DIR,
+          craftDir: CRAFT_DIR,
+        }),
+      });
+    } catch (err) {
+      res.status(500).json({ error: String(err) });
+    }
+  });
+
+  app.post('/api/context/resolve', async (req, res) => {
+    try {
+      const body = req.body && typeof req.body === 'object' ? req.body : {};
+      const project =
+        typeof body.projectId === 'string' && body.projectId
+          ? getProject(db, body.projectId)
+          : null;
+      const metadata = project?.metadata;
+      const template =
+        metadata?.kind === 'template' && typeof metadata.templateId === 'string'
+          ? (getTemplate(db, metadata.templateId) ?? undefined)
+          : undefined;
+      const resolved = await resolveTurnContext({
+        project,
+        message: typeof body.message === 'string' ? body.message : '',
+        skillId: body.skillId,
+        skillIds: Array.isArray(body.skillIds) ? body.skillIds : [],
+        designSystemId: body.designSystemId,
+        designSystemIds: Array.isArray(body.designSystemIds) ? body.designSystemIds : [],
+        craftIds: Array.isArray(body.craftIds) ? body.craftIds : [],
+        directiveIds: Array.isArray(body.directiveIds) ? body.directiveIds : [],
+        metadata,
+        template,
+        skillsDir: SKILLS_DIR,
+        designSystemsDir: DESIGN_SYSTEMS_DIR,
+        craftDir: CRAFT_DIR,
+        includePrompt: Boolean(body.includePrompt),
+      });
+      const { prompt: _prompt, ...serializable } = resolved;
       res.json(serializable);
     } catch (err) {
       res.status(500).json({ error: String(err) });
@@ -2573,8 +3009,11 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
   // project's own folder (see apps/daemon/src/projects.ts).
   app.get('/api/projects/:id/files', async (req, res) => {
     try {
+      const project = getProject(db, req.params.id);
+      if (!project) return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
       const since = Number(req.query?.since);
       const files = await listFiles(PROJECTS_DIR, req.params.id, {
+        metadata: project.metadata,
         since: Number.isFinite(since) ? since : undefined,
       });
       /** @type {import('@pixelpitch/contracts').ProjectFilesResponse} */
@@ -2594,7 +3033,10 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       }
       const pattern = req.query.pattern ? String(req.query.pattern) : null;
       const max = Math.min(Number(req.query.max) || 200, 1000);
+      const project = getProject(db, req.params.id);
+      if (!project) return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
       const matches = await searchProjectFiles(PROJECTS_DIR, req.params.id, query, {
+        metadata: project.metadata,
         pattern,
         max,
       });
@@ -2606,7 +3048,8 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
 
   app.post('/api/projects/:id/edit-ops/apply', async (req, res) => {
     try {
-      if (!getProject(db, req.params.id)) {
+      const project = getProject(db, req.params.id);
+      if (!project) {
         return sendApiError(res, 404, 'FILE_NOT_FOUND', 'project not found');
       }
       const operations = Array.isArray(req.body?.operations)
@@ -2635,7 +3078,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
         if (!/\.html?$/i.test(fileName)) {
           return sendApiError(res, 400, 'BAD_REQUEST', 'deterministic edit ops currently support HTML files only');
         }
-        const edited = await applyProjectEditOperations(req.params.id, fileName, fileOperations);
+        const edited = await applyProjectEditOperations(req.params.id, fileName, fileOperations, project.metadata);
         applied.push(...edited);
       }
 
@@ -2665,12 +3108,14 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
   app.get('/api/projects/:id/archive', async (req, res) => {
     try {
       const root = typeof req.query?.root === 'string' ? req.query.root : '';
+      const project = getProject(db, req.params.id);
+      if (!project) return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
       const { buffer, baseName } = await buildProjectArchive(
         PROJECTS_DIR,
         req.params.id,
         root,
+        project.metadata,
       );
-      const project = getProject(db, req.params.id);
       const fallbackName = project?.name || req.params.id;
       const fileSlug = sanitizeArchiveFilename(baseName || fallbackName) || 'project';
       const filename = `${fileSlug}.zip`;
@@ -2707,9 +3152,11 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
         return sendApiError(res, 400, 'BAD_REQUEST', 'only HTML files can be exported to PPTX');
       }
 
-      await ensureProject(PROJECTS_DIR, req.params.id);
-      const dir = projectDir(PROJECTS_DIR, req.params.id);
-      const input = await readProjectFile(PROJECTS_DIR, req.params.id, fileName);
+      const project = getProject(db, req.params.id);
+      if (!project) return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
+      await ensureProject(PROJECTS_DIR, req.params.id, project.metadata);
+      const dir = await ensureProject(PROJECTS_DIR, req.params.id, project.metadata);
+      const input = await readProjectFile(PROJECTS_DIR, req.params.id, fileName, project.metadata);
       const inputPath = path.join(dir, input.path || fileName);
       if (!isPathWithin(dir, inputPath)) {
         return sendApiError(res, 400, 'BAD_REQUEST', 'file path escapes project');
@@ -2733,6 +3180,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
         req.params.id,
         outputName,
         await fs.promises.readFile(outputPath),
+        { metadata: project.metadata },
       );
       /** @type {import('@pixelpitch/contracts').ProjectFileResponse & { audit: { ok: boolean; output: string }; report: unknown }} */
       const body = { file, audit: result.audit, report: result.report };
@@ -2772,7 +3220,9 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
   app.get('/api/projects/:id/raw/*', async (req, res) => {
     try {
       const relPath = req.params[0];
-      const file = await readProjectFile(PROJECTS_DIR, req.params.id, relPath);
+      const project = getProject(db, req.params.id);
+      if (!project) return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
+      const file = await readProjectFile(PROJECTS_DIR, req.params.id, relPath, project.metadata);
       // PreviewModal loads artifact HTML via srcdoc, giving the iframe Origin: "null".
       // data: URIs, file://, and some sandboxed iframes also send null — all are
       // local-only callers, so this is safe. Real cross-origin sites send a real
@@ -2792,9 +3242,49 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     }
   });
 
+  app.post('/api/projects/:id/export/pdf', async (req, res) => {
+    if (typeof desktopPdfExporter !== 'function') {
+      return sendApiError(
+        res,
+        501,
+        'UPSTREAM_UNAVAILABLE',
+        'desktop PDF export is only available in the desktop runtime',
+      );
+    }
+    try {
+      const { fileName, title, deck } = req.body || {};
+      if (typeof fileName !== 'string' || fileName.length === 0) {
+        return sendApiError(res, 400, 'BAD_REQUEST', 'fileName required');
+      }
+      const project = getProject(db, req.params.id);
+      if (!project) return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
+      const input = await buildDesktopPdfExportInput({
+        daemonUrl: `http://127.0.0.1:${resolvedPort}`,
+        deck: deck === true,
+        fileName,
+        metadata: project.metadata,
+        projectId: req.params.id,
+        projectsRoot: PROJECTS_DIR,
+        title: typeof title === 'string' ? title : undefined,
+      });
+      const result = await desktopPdfExporter(input);
+      res.json(result);
+    } catch (err) {
+      const status = err && err.code === 'ENOENT' ? 404 : 400;
+      sendApiError(
+        res,
+        status,
+        status === 404 ? 'FILE_NOT_FOUND' : 'BAD_REQUEST',
+        String(err?.message || err),
+      );
+    }
+  });
+
   app.delete('/api/projects/:id/raw/*', async (req, res) => {
     try {
-      await deleteProjectFile(PROJECTS_DIR, req.params.id, req.params[0]);
+      const project = getProject(db, req.params.id);
+      if (!project) return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
+      await deleteProjectFile(PROJECTS_DIR, req.params.id, req.params[0], project.metadata);
       /** @type {import('@pixelpitch/contracts').DeleteProjectFileResponse} */
       const body = { ok: true };
       res.json(body);
@@ -2815,6 +3305,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
         PROJECTS_DIR,
         req.params.id,
         req.params.name,
+        getProject(db, req.params.id)?.metadata,
       );
       const preview = await buildDocumentPreview(file);
       res.json(preview);
@@ -2840,6 +3331,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
         PROJECTS_DIR,
         req.params.id,
         req.params.name,
+        getProject(db, req.params.id)?.metadata,
       );
       res.type(file.mime).send(file.buffer);
     } catch (err) {
@@ -2866,7 +3358,9 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     },
     async (req, res) => {
       try {
-        await ensureProject(PROJECTS_DIR, req.params.id);
+        const project = getProject(db, req.params.id);
+        if (!project) return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
+        await ensureProject(PROJECTS_DIR, req.params.id, project.metadata);
         if (req.file) {
           const buf = await fs.promises.readFile(req.file.path);
           const desiredName = sanitizeName(
@@ -2877,6 +3371,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
             req.params.id,
             desiredName,
             buf,
+            { metadata: project.metadata },
           );
           fs.promises.unlink(req.file.path).catch(() => {});
           /** @type {import('@pixelpitch/contracts').ProjectFileResponse} */
@@ -2917,6 +3412,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
           buf,
           {
             artifactManifest,
+            metadata: project.metadata,
           },
         );
         /** @type {import('@pixelpitch/contracts').ProjectFileResponse} */
@@ -2930,7 +3426,9 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
 
   app.delete('/api/projects/:id/files/:name', async (req, res) => {
     try {
-      await deleteProjectFile(PROJECTS_DIR, req.params.id, req.params.name);
+      const project = getProject(db, req.params.id);
+      if (!project) return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
+      await deleteProjectFile(PROJECTS_DIR, req.params.id, req.params.name, project.metadata);
       /** @type {import('@pixelpitch/contracts').DeleteProjectFileResponse} */
       const body = { ok: true };
       res.json(body);
@@ -3031,12 +3529,67 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     }
     try {
       const config = await writeAppConfig(RUNTIME_DATA_DIR, req.body);
+      orbitService.configure(config.orbit);
       res.json({ config });
     } catch (err) {
       res
         .status(500)
         .json({ error: String(err && err.message ? err.message : err) });
     }
+  });
+
+  app.get('/api/mcp/servers', async (req, res) => {
+    if (!isLocalSameOrigin(req, resolvedPort)) {
+      return res.status(403).json({ error: 'cross-origin request rejected' });
+    }
+    try {
+      const config = await readMcpConfig(RUNTIME_DATA_DIR);
+      res.json({ servers: config.servers, templates: MCP_TEMPLATES });
+    } catch (err) {
+      sendApiError(res, 500, 'INTERNAL_ERROR', String(err?.message || err));
+    }
+  });
+
+  app.put('/api/mcp/servers', async (req, res) => {
+    if (!isLocalSameOrigin(req, resolvedPort)) {
+      return res.status(403).json({ error: 'cross-origin request rejected' });
+    }
+    try {
+      const config = await writeMcpConfig(RUNTIME_DATA_DIR, req.body || {});
+      res.json({ servers: config.servers, templates: MCP_TEMPLATES });
+    } catch (err) {
+      sendApiError(res, 400, 'BAD_REQUEST', String(err?.message || err));
+    }
+  });
+
+  app.get('/api/mcp/install-info', (req, res) => {
+    if (!isLocalSameOrigin(req, resolvedPort)) {
+      return res.status(403).json({ error: 'cross-origin request rejected' });
+    }
+    const cliPath = PIXELPITCH_BIN;
+    const execPath = process.execPath;
+    res.json(buildMcpInstallPayload({
+      cliPath,
+      cliExists: fs.existsSync(cliPath),
+      execPath,
+      nodeExists: fs.existsSync(execPath),
+      port: resolvedPort,
+      platform: process.platform,
+      dataDir: RUNTIME_DATA_DIR,
+      electronAsNode: process.env.ELECTRON_RUN_AS_NODE === '1',
+    }));
+  });
+
+  app.get('/api/mcp/oauth/status', (_req, res) => {
+    res.json({ connected: false });
+  });
+
+  app.post('/api/mcp/oauth/start', (_req, res) => {
+    sendApiError(res, 501, 'UPSTREAM_UNAVAILABLE', 'MCP OAuth flow is not configured in this runtime');
+  });
+
+  app.post('/api/mcp/oauth/disconnect', (_req, res) => {
+    res.json({ ok: true });
   });
 
   app.post('/api/projects/:id/media/generate', async (req, res) => {
@@ -3286,6 +3839,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     db,
     critiqueCfg,
     parallelCritiqueEnabled,
+    critiqueRunRegistry,
     critiqueWarnedAdapters,
     createSseErrorPayload,
     composeCritiquePanelPrompt,
@@ -3304,107 +3858,38 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     designSystemId,
     designSystemIds,
     craftIds,
+    directiveIds,
+    message,
   }) => {
     const project =
       typeof projectId === 'string' && projectId
         ? getProject(db, projectId)
         : null;
-    const effectiveSkillIds = uniqueStrings([
-      ...(Array.isArray(skillIds) ? skillIds : []),
-      typeof skillId === 'string' && skillId ? skillId : null,
-      project?.skillId,
-    ]);
-    const effectiveDesignSystemIds = uniqueStrings([
-      ...(Array.isArray(designSystemIds) ? designSystemIds : []),
-      typeof designSystemId === 'string' && designSystemId ? designSystemId : null,
-      project?.designSystemId,
-    ]);
-    const effectiveCraftIds = uniqueStrings(Array.isArray(craftIds) ? craftIds : []);
     const metadata = project?.metadata;
-
-    let skillBody;
-    let skillName;
-    let skillMode;
-    let skillCraftRequires = [];
-    if (effectiveSkillIds.length > 0) {
-      const allSkills = await listSkills(SKILLS_DIR);
-      const selectedSkills = effectiveSkillIds
-        .map((id) => allSkills.find((s) => s.id === id))
-        .filter(Boolean);
-      if (selectedSkills.length > 0) {
-        skillBody = selectedSkills
-          .map((skill) => `# Skill: ${skill.name} (${skill.id})\n\n${skill.body}`)
-          .join('\n\n---\n\n');
-        skillName = selectedSkills.map((skill) => skill.name).join(' + ');
-        skillMode = selectedSkills[0]?.mode;
-        skillCraftRequires = uniqueStrings(
-          selectedSkills.flatMap((skill) =>
-            Array.isArray(skill.craftRequires) ? skill.craftRequires : [],
-          ),
-        );
-      }
-    }
-
-    let craftBody;
-    let craftSections;
-    const requiredCraftSections = uniqueStrings([
-      ...skillCraftRequires,
-      ...effectiveCraftIds,
-    ]);
-    if (requiredCraftSections.length > 0) {
-      const loaded = await loadCraftSections(CRAFT_DIR, requiredCraftSections);
-      if (loaded.body) {
-        craftBody = loaded.body;
-        craftSections = loaded.sections;
-      }
-    }
-
-    let designSystemBody;
-    let designSystemTitle;
-    let designSystemCss;
-    if (effectiveDesignSystemIds.length > 0) {
-      const systems = await listDesignSystems(DESIGN_SYSTEMS_DIR);
-      const loadedSystems = [];
-      for (const id of effectiveDesignSystemIds) {
-        const body = await readDesignSystem(DESIGN_SYSTEMS_DIR, id);
-        if (!body) continue;
-        const summary = systems.find((s) => s.id === id);
-        loadedSystems.push({ id, title: summary?.title ?? id, body });
-      }
-      if (loadedSystems.length > 0) {
-        designSystemTitle = loadedSystems.map((system) => system.title).join(' + ');
-        designSystemBody = loadedSystems
-          .map((system, index) =>
-            index === 0
-              ? `# Primary design system: ${system.title} (${system.id})\n\n${system.body}`
-              : `# Inspiration design system: ${system.title} (${system.id})\n\n${system.body}`,
-          )
-          .join('\n\n---\n\n');
-      }
-      // Read colors_and_type.css if it exists alongside the DESIGN.md
-      try {
-        const cssPath = path.join(DESIGN_SYSTEMS_DIR, effectiveDesignSystemIds[0], 'colors_and_type.css');
-        designSystemCss = await fs.promises.readFile(cssPath, 'utf-8');
-      } catch { /* no CSS file */ }
-    }
-
     const template =
       metadata?.kind === 'template' && typeof metadata.templateId === 'string'
         ? (getTemplate(db, metadata.templateId) ?? undefined)
         : undefined;
-
-    return composeSystemPrompt({
-      skillBody,
-      skillName,
-      skillMode,
-      designSystemBody,
-      designSystemTitle,
-      designSystemCss,
-      craftBody,
-      craftSections,
+    const resolved = await resolveTurnContext({
+      project,
+      message,
+      skillId,
+      skillIds,
+      designSystemId,
+      designSystemIds,
+      craftIds,
+      directiveIds,
       metadata,
       template,
+      skillsDir: SKILLS_DIR,
+      designSystemsDir: DESIGN_SYSTEMS_DIR,
+      craftDir: CRAFT_DIR,
+      includePrompt: true,
     });
+    return [
+      resolved.prompt,
+      renderContextTraceForAgent(resolved),
+    ].filter(Boolean).join('\n\n---\n\n');
   };
 
   const startChatRun = async (chatBody, run) => {
@@ -3424,6 +3909,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       designSystemId,
       designSystemIds = [],
       craftIds = [],
+      directiveIds = [],
       attachments = [],
       commentAttachments = [],
       model,
@@ -3463,18 +3949,31 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     // mode work but loses file-tool addressability.
     let cwd = null;
     let existingProjectFiles = [];
+    let projectRecord = null;
     if (typeof projectId === 'string' && projectId) {
       try {
-        cwd = await ensureProject(PROJECTS_DIR, projectId);
-        existingProjectFiles = await listFiles(PROJECTS_DIR, projectId);
+        projectRecord = getProject(db, projectId);
+        cwd = await ensureProject(PROJECTS_DIR, projectId, projectRecord?.metadata);
+        existingProjectFiles = await listFiles(PROJECTS_DIR, projectId, {
+          metadata: projectRecord?.metadata,
+        });
       } catch {
         cwd = null;
       }
     }
     if (run.cancelRequested || design.runs.isTerminal(run.status)) return;
 
+    if (cwd && isManagedProjectCwd(cwd, PROJECTS_DIR)) {
+      try {
+        const mcpConfig = await readMcpConfig(RUNTIME_DATA_DIR);
+        await writeClaudeMcpConfigForCwd(cwd, mcpConfig.servers);
+      } catch (err) {
+        console.warn('[mcp] failed to write project .mcp.json:', err?.message || err);
+      }
+    }
+
     // Sanitise supplied image paths: must live under UPLOAD_DIR.
-    const safeImages = imagePaths.filter((p) => {
+    let safeImages = imagePaths.filter((p) => {
       const resolved = path.resolve(p);
       return (
         resolved.startsWith(UPLOAD_DIR + path.sep) && fs.existsSync(resolved)
@@ -3501,6 +4000,21 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
             }
           })
       : [];
+    if (cwd && safeCommentAttachments.length > 0) {
+      const commentImages = safeCommentAttachments
+        .map((item) => item.screenshotPath)
+        .filter((p) => typeof p === 'string' && p.length > 0)
+        .map((p) => {
+          try {
+            const abs = path.resolve(cwd, p);
+            return (abs === cwd || abs.startsWith(cwd + path.sep)) && fs.existsSync(abs) ? abs : null;
+          } catch {
+            return null;
+          }
+        })
+        .filter(Boolean);
+      safeImages = Array.from(new Set([...safeImages, ...commentImages]));
+    }
 
     // Local code agents don't accept a separate "system" channel the way the
     // Messages API does — we fold the skill + design-system prompt into the
@@ -3518,8 +4032,22 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     const cwdHint = cwd
       ? `\n\nYour working directory: ${cwd}\nWrite project files relative to it (e.g. \`index.html\`, \`assets/x.png\`). The user can browse those files in real time.${filesListBlock}`
       : '';
+    const linkedDirs = (() => {
+      if (!Array.isArray(projectRecord?.metadata?.linkedDirs)) return [];
+      const validated = validateLinkedDirs(projectRecord.metadata.linkedDirs);
+      return validated.error ? [] : validated.dirs;
+    })();
+    const linkedDirsHint = linkedDirs.length
+      ? `\n\nLinked code folders (read-only reference code the user wants you to see):\n${linkedDirs
+          .map((dir) => `- \`${dir}\``)
+          .join('\n')}`
+      : '';
     const attachmentHint = safeAttachments.length
-      ? `\n\nAttached project files: ${safeAttachments.map((p) => `\`${p}\``).join(', ')}`
+      ? `\n\nAttached project files: ${safeAttachments.map((p) => `\`${p}\``).join(', ')}${
+          safeAttachments.some((p) => /\.(?:html?|jsx?|tsx?|css)$/i.test(p))
+            ? '\nFor HTML/deck/code entry files, read the complete referenced artifact bundle before reasoning or editing; the entry file may only be a shell that imports slides, CSS, and assets. Prefer Pixelpitch get_artifact/include=auto or equivalent over a single-file read.'
+            : ''
+        }`
       : '';
     const send = (event, data) => design.runs.emit(run, event, data);
     const toolContext = agentRunService.createToolContext({
@@ -3537,6 +4065,8 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       designSystemId,
       designSystemIds,
       craftIds,
+      directiveIds,
+      message,
     });
     const instructionPrompt = [daemonSystemPrompt, runtimeToolPrompt, systemPrompt]
       .map((part) => (typeof part === 'string' ? part.trim() : ''))
@@ -3544,10 +4074,12 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       .join('\n\n---\n\n');
     const composed = [
       instructionPrompt
-        ? `# Instructions (read first)\n\n${instructionPrompt}${cwdHint}\n\n---\n`
+        ? `# Instructions (read first)\n\n${instructionPrompt}${cwdHint}${linkedDirsHint}\n\n---\n`
         : cwdHint
-          ? `# Instructions${cwdHint}\n\n---\n`
-          : '',
+          ? `# Instructions${cwdHint}${linkedDirsHint}\n\n---\n`
+          : linkedDirsHint
+            ? `# Instructions${linkedDirsHint}\n\n---\n`
+            : '',
       `# User request\n\n${message || '(No extra typed instruction.)'}${attachmentHint}${commentHint}`,
       safeImages.length
         ? `\n\n${safeImages.map((p) => `@${p}`).join(' ')}`
@@ -3851,6 +4383,108 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     }
   });
 
+  orbitService.setTemplateResolver(async (skillId) => {
+    const skills = await listSkills(SKILLS_DIR);
+    const skill = skills.find((item) => item.id === skillId);
+    if (!skill || skill.scenario !== 'orbit') return null;
+    return {
+      id: skill.id,
+      name: skill.name,
+      examplePrompt: skill.examplePrompt || '',
+      dir: skill.dir,
+      body: skill.body || '',
+      designSystemRequired: skill.designSystemRequired !== false,
+    };
+  });
+
+  orbitService.setRunHandler(async ({
+    trigger,
+    startedAt,
+    prompt,
+    systemPrompt,
+    template,
+  }) => {
+    const config = await readAppConfig(RUNTIME_DATA_DIR);
+    const availableAgents = detectAgents();
+    const configuredAgent = typeof config.agentId === 'string' && config.agentId
+      ? availableAgents.find((agent) => agent.id === config.agentId && agent.available)
+      : null;
+    const fallbackAgent = availableAgents.find((agent) => agent.available);
+    const agent = configuredAgent ?? fallbackAgent;
+    if (!agent) {
+      throw new Error('No available agent is configured for Orbit. Choose an agent in Settings first.');
+    }
+
+    const projectId = `orbit-${randomUUID()}`;
+    const conversationId = `orbit-conv-${randomUUID()}`;
+    const assistantMessageId = `orbit-assistant-${randomUUID()}`;
+    const now = Date.now();
+    const project = insertProject(db, {
+      id: projectId,
+      name: `Orbit · ${formatLocalProjectTimestamp(startedAt)}`,
+      skillId: template?.id ?? 'live-artifact',
+      designSystemId: config.designSystemId ?? null,
+      pendingPrompt: prompt,
+      metadata: { kind: 'orbit', trigger },
+      createdAt: now,
+      updatedAt: now,
+    });
+    insertConversation(db, {
+      id: conversationId,
+      projectId,
+      title: 'Orbit daily digest',
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    const run = design.runs.create({
+      projectId,
+      conversationId,
+      assistantMessageId,
+      agentId: agent.id,
+      clientRequestId: `orbit-${trigger}-${randomUUID()}`,
+    });
+    const body = {
+      agentId: agent.id,
+      conversationId,
+      designSystemId: project.designSystemId,
+      message: prompt,
+      projectId,
+      skillId: template?.id ?? project.skillId,
+      systemPrompt: [systemPrompt, renderOrbitTemplateSystemPrompt(template)]
+        .map((part) => (typeof part === 'string' ? part.trim() : ''))
+        .filter(Boolean)
+        .join('\n\n'),
+    };
+    design.runs.start(run, () => startChatRun(body, run));
+
+    return {
+      projectId,
+      agentRunId: run.id,
+      completion: design.runs.wait(run).then((status) => ({
+        agentRunId: run.id,
+        status: status.status,
+        summary: `Orbit run ${status.status}.`,
+      })),
+    };
+  });
+
+  app.get('/api/orbit/status', async (_req, res) => {
+    try {
+      res.json(await orbitService.status());
+    } catch (err) {
+      sendApiError(res, 500, 'INTERNAL_ERROR', String(err?.message || err));
+    }
+  });
+
+  app.post('/api/orbit/run', async (_req, res) => {
+    try {
+      res.json(await orbitService.start('manual'));
+    } catch (err) {
+      sendApiError(res, 400, 'BAD_REQUEST', String(err?.message || err));
+    }
+  });
+
   app.post('/api/runs', (req, res) => {
     const run = design.runs.create(req.body || {});
     /** @type {import('@pixelpitch/contracts').ChatRunCreateResponse} */
@@ -3888,6 +4522,11 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     const body = { ok: true };
     res.json(body);
   });
+
+  app.post(
+    '/api/projects/:projectId/critique/:runId/interrupt',
+    handleCritiqueInterrupt(db, critiqueRunRegistry),
+  );
 
   app.post('/api/chat', (req, res) => {
     const run = design.runs.create();
@@ -3927,6 +4566,9 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
 
   const apiEndpointForProtocol = (baseUrl, protocol) => {
     const clean = String(baseUrl || '').replace(/\/+$/, '');
+    if (protocol === 'ollama') {
+      return `${clean.replace(/\/api\/?$/, '')}/api/chat`;
+    }
     if (protocol === 'openai') {
       return /\/v\d+$/.test(clean)
         ? `${clean}/chat/completions`
@@ -3938,7 +4580,9 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
   };
 
   async function testApiExecutionConfig(input) {
-    const protocol = input?.apiProtocol === 'openai' ? 'openai' : 'anthropic';
+    const protocol = input?.apiProtocol === 'openai' || input?.apiProtocol === 'ollama'
+      ? input.apiProtocol
+      : 'anthropic';
     const baseUrl = cleanString(input?.baseUrl);
     const apiKey = cleanString(input?.apiKey);
     const model = cleanString(input?.model);
@@ -3968,6 +4612,11 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
               'Content-Type': 'application/json',
               Authorization: `Bearer ${apiKey}`,
             }
+          : protocol === 'ollama'
+            ? {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${apiKey}`,
+              }
           : {
               'Content-Type': 'application/json',
               'x-api-key': apiKey,
@@ -3980,6 +4629,13 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
               max_tokens: 1,
               stream: false,
             }
+          : protocol === 'ollama'
+            ? {
+                model,
+                messages: [{ role: 'user', content: 'Reply with ok.' }],
+                stream: false,
+                options: { num_predict: 1 },
+              }
           : {
               model,
               messages: [{ role: 'user', content: 'Reply with ok.' }],
@@ -4002,7 +4658,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
         ok: true,
         mode: 'api',
         status: response.status,
-        message: `${protocol === 'openai' ? 'OpenAI-compatible' : 'Anthropic-compatible'} endpoint responded.`,
+        message: `${protocol === 'openai' ? 'OpenAI-compatible' : protocol === 'ollama' ? 'Ollama-compatible' : 'Anthropic-compatible'} endpoint responded.`,
       };
     } catch (err) {
       return {
@@ -4237,6 +4893,121 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
   app.post('/api/proxy/openai/stream', handleOpenAiProxyStream);
   app.post('/api/proxy/stream', handleOpenAiProxyStream);
 
+  app.post('/api/proxy/ollama/stream', async (req, res) => {
+    /** @type {Partial<ProxyStreamRequest>} */
+    const proxyBody = req.body || {};
+    const { baseUrl, apiKey, model, systemPrompt, messages, maxTokens } =
+      proxyBody;
+    if (!baseUrl || !apiKey || !model) {
+      return sendApiError(
+        res,
+        400,
+        'BAD_REQUEST',
+        'baseUrl, apiKey, and model are required',
+      );
+    }
+
+    const validated = validateExternalApiBaseUrl(baseUrl);
+    if (validated.error) {
+      return sendApiError(
+        res,
+        validated.forbidden ? 403 : 400,
+        validated.forbidden ? 'FORBIDDEN' : 'BAD_REQUEST',
+        validated.error,
+      );
+    }
+
+    const url = apiEndpointForProtocol(baseUrl, 'ollama');
+    console.log(
+      `[proxy:ollama] ${req.method} ${validated.parsed.hostname} model=${model}`,
+    );
+
+    const payloadMessages = Array.isArray(messages) ? [...messages] : [];
+    if (typeof systemPrompt === 'string' && systemPrompt) {
+      payloadMessages.unshift({ role: 'system', content: systemPrompt });
+    }
+
+    const payload = {
+      model,
+      messages: payloadMessages,
+      stream: true,
+    };
+    if (typeof maxTokens === 'number' && maxTokens > 0) {
+      payload.options = { num_predict: maxTokens };
+    }
+
+    const sse = createSseResponse(res);
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(
+          `[proxy:ollama] upstream error: ${response.status} ${redactAuthTokens(errorText)}`,
+        );
+        sse.send('error', {
+          message: `Upstream error: ${response.status}`,
+          details: errorText,
+        });
+        return sse.end();
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split(/\r?\n/);
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          try {
+            const data = JSON.parse(line);
+            const delta = data?.message?.content;
+            if (typeof delta === 'string' && delta) {
+              sse.send('delta', { delta });
+            }
+            if (data?.done) {
+              sse.send('end', {});
+              return sse.end();
+            }
+          } catch {
+            // Ignore partial JSON lines until the next chunk completes them.
+          }
+        }
+      }
+
+      if (buffer.trim()) {
+        try {
+          const data = JSON.parse(buffer);
+          const delta = data?.message?.content;
+          if (typeof delta === 'string' && delta) {
+            sse.send('delta', { delta });
+          }
+        } catch {
+          // Ignore trailing partial content from an upstream disconnect.
+        }
+      }
+      sse.send('end', {});
+      sse.end();
+    } catch (err) {
+      console.error(`[proxy:ollama] internal error: ${err.message}`);
+      sse.send('error', { message: err.message });
+      sse.end();
+    }
+  });
+
   // Wait for `listen` to bind so callers always see the resolved URL —
   // critical when port=0 (ephemeral port) and when the embedding sidecar
   // needs to advertise the port to a parent process before any request
@@ -4278,6 +5049,28 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     // returned Promise always settles instead of hanging forever.
     server.on('error', reject);
   });
+}
+
+function renderSkillCliOperatingProcedures(skill) {
+  if (!Array.isArray(skill.cliProcedures) || skill.cliProcedures.length === 0) return '';
+  const lines = [
+    '## Skill CLI operating procedures',
+    '',
+    'This skill includes executable CLI procedures. Use them when they are the shortest reliable path, and reason over their outputs before editing or continuing. If several commands are listed, choose the one matching the task phase; do not run every command mechanically.',
+    '',
+  ];
+  for (const [index, proc] of skill.cliProcedures.entries()) {
+    lines.push(`### CLI ${index + 1}`);
+    if (proc.when) lines.push(`When: ${proc.when}`);
+    lines.push('Command pattern:');
+    lines.push('```bash');
+    lines.push(proc.command);
+    lines.push('```');
+    if (proc.customize) lines.push(`Customize: ${proc.customize}`);
+    if (proc.output) lines.push(`Output contract: ${proc.output}`);
+    lines.push('');
+  }
+  return `${lines.join('\n').trim()}\n\n`;
 }
 
 function randomId() {

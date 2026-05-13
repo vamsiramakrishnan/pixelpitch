@@ -16,6 +16,7 @@ import {
   fetchLiveArtifacts,
   fetchProjectFiles,
   fetchSkill,
+  resolveContext,
   exportConversationTranscript,
   exportProjectFileAsPptx,
   patchPreviewCommentStatus,
@@ -23,7 +24,7 @@ import {
   upsertPreviewComment,
   writeProjectTextFile,
 } from '../providers/registry';
-import { composeSystemPrompt } from '@pixelpitch/contracts';
+import { composeSystemPrompt, parseContextMentions } from '@pixelpitch/contracts';
 import { navigate } from '../router';
 import { agentDisplayName } from '../utils/agentLabels';
 import { playSound, showCompletionNotification } from '../utils/notifications';
@@ -52,6 +53,7 @@ import type {
   ChatMessage,
   Conversation,
   DesignSystemSummary,
+  ContextResolveResponse,
   LiveArtifactSummary,
   OpenTabsState,
   Project,
@@ -98,6 +100,7 @@ interface Props {
   onTouchProject: () => void;
   onProjectChange: (next: Project) => void;
   onProjectsRefresh: () => void;
+  commandRequest?: { type: 'open-context' | 'stage-token'; token?: string; nonce: number } | null;
 }
 
 export function ProjectView({
@@ -121,6 +124,7 @@ export function ProjectView({
   onTouchProject,
   onProjectChange,
   onProjectsRefresh,
+  commandRequest,
 }: Props) {
   const t = useT();
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -151,6 +155,10 @@ export function ProjectView({
   // tab still focuses it.
   const [openRequest, setOpenRequest] = useState<{ name: string; nonce: number } | null>(null);
   const [stageTokenRequest, setStageTokenRequest] = useState<{ token: string; nonce: number } | null>(null);
+  const [contextStack, setContextStack] = useState<ContextResolveResponse | null>(null);
+  const [contextStackLoading, setContextStackLoading] = useState(false);
+  const [contextStackError, setContextStackError] = useState<string | null>(null);
+  const [contextStackRequest, setContextStackRequest] = useState<{ nonce: number } | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const cancelRef = useRef<AbortController | null>(null);
   const sendTextBufferRef = useRef<BufferedTextUpdates | null>(null);
@@ -178,6 +186,48 @@ export function ProjectView({
   const stageComposerToken = useCallback((token: string) => {
     setStageTokenRequest({ token, nonce: Date.now() });
   }, []);
+
+  const refreshContextStack = useCallback((draft: string) => {
+    setContextStackLoading(true);
+    setContextStackError(null);
+    const lastUserMessage = [...messages].reverse().find((message) => message.role === 'user');
+    const prompt = draft.trim() || lastUserMessage?.content || project.pendingPrompt || '';
+    const mentionRouting = resolveMentionRouting(prompt, skills, designSystems, projectFiles, attachedComments);
+    void resolveContext({
+      projectId: project.id,
+      message: prompt,
+      skillId: project.skillId ?? null,
+      skillIds: mentionRouting.skillIds,
+      designSystemId: project.designSystemId ?? null,
+      designSystemIds: mentionRouting.designSystemIds,
+      craftIds: mentionRouting.craftIds,
+      directiveIds: mentionRouting.directiveIds,
+      attachments: [],
+      includePrompt: false,
+    })
+      .then((result) => setContextStack(result))
+      .catch((err) => setContextStackError(err instanceof Error ? err.message : 'Could not resolve context stack.'))
+      .finally(() => setContextStackLoading(false));
+  }, [
+    attachedComments,
+    designSystems,
+    messages,
+    project.designSystemId,
+    project.id,
+    project.pendingPrompt,
+    project.skillId,
+    projectFiles,
+    skills,
+  ]);
+
+  useEffect(() => {
+    if (!commandRequest) return;
+    if (commandRequest.type === 'stage-token' && commandRequest.token) {
+      stageComposerToken(commandRequest.token);
+    } else if (commandRequest.type === 'open-context') {
+      setContextStackRequest({ nonce: commandRequest.nonce });
+    }
+  }, [commandRequest, stageComposerToken]);
 
   const handleExportConversationTranscript = useCallback(() => {
     if (!activeConversationId) return;
@@ -830,7 +880,8 @@ export function ProjectView({
       if (!prompt.trim() && attachments.length === 0 && commentAttachments.length === 0) return;
       setError(null);
       const startedAt = Date.now();
-      const mentionRouting = resolveMentionRouting(prompt, skills, designSystems, attachedComments);
+      const mentionRouting = resolveMentionRouting(prompt, skills, designSystems, projectFiles, attachedComments);
+      refreshContextStack(prompt);
       const mentionedSkillId = mentionRouting.skillIds[0] ?? null;
       const agentPrompt = appendMentionRoutingBlock(prompt, mentionRouting);
       const userMsg: ChatMessage = {
@@ -1088,6 +1139,7 @@ export function ProjectView({
           designSystemId: project.designSystemId ?? null,
           designSystemIds: mentionRouting.designSystemIds,
           craftIds: mentionRouting.craftIds,
+          directiveIds: mentionRouting.directiveIds,
           attachments: attachments.map((a) => a.path),
           commentAttachments,
           model: choice?.model ?? null,
@@ -1502,6 +1554,11 @@ export function ProjectView({
           onTogglePet={onTogglePet}
           onOpenPetSettings={onOpenPetSettings}
           stageTokenRequest={stageTokenRequest}
+          contextStack={contextStack}
+          contextStackLoading={contextStackLoading}
+          contextStackError={contextStackError}
+          contextStackRequest={contextStackRequest}
+          onRefreshContextStack={refreshContextStack}
         />
         <div
           className="chat-pane-resizer"
@@ -1712,6 +1769,7 @@ interface MentionRouting {
   skillIds: string[];
   designSystemIds: string[];
   craftIds: string[];
+  directiveIds: string[];
   actionIds: string[];
   fileRefs: string[];
   selectionRefs: string[];
@@ -1722,16 +1780,16 @@ function resolveMentionRouting(
   prompt: string,
   skills: SkillSummary[],
   designSystems: DesignSystemSummary[],
+  projectFiles: ProjectFile[],
   attachedComments: PreviewComment[],
 ): MentionRouting {
-  const tokens = Array.from(prompt.matchAll(/@([^\s]+)/g)).map((match) =>
-    match[1]!.replace(/[),.;:!?]+$/g, ''),
-  );
+  const parsed = parseContextMentions(prompt);
   const routing: MentionRouting = {
-    hasMentions: tokens.length > 0,
+    hasMentions: parsed.hasMentions,
     skillIds: [],
     designSystemIds: [],
     craftIds: [],
+    directiveIds: [],
     actionIds: [],
     fileRefs: [],
     selectionRefs: [],
@@ -1742,9 +1800,11 @@ function resolveMentionRouting(
   };
   const skillById = new Map(skills.map((skill) => [skill.id, skill]));
   const designById = new Map(designSystems.map((system) => [system.id, system]));
-  for (const token of tokens) {
-    if (token.startsWith('skill:')) {
-      const id = token.slice('skill:'.length);
+  const fileByName = new Map(projectFiles.map((file) => [file.path ?? file.name, file]));
+  for (const mention of parsed.mentions) {
+    const token = mention.raw;
+    if (mention.kind === 'skill') {
+      const id = mention.id;
       pushUnique(routing.skillIds, id);
       const skill = skillById.get(id);
       routing.lines.push(
@@ -1752,8 +1812,8 @@ function resolveMentionRouting(
           ? `- @skill:${id}: use "${skill.name}" (${skill.mode}) as an explicit capability/workflow reference.`
           : `- @skill:${id}: use this named skill if available.`,
       );
-    } else if (token.startsWith('design:')) {
-      const id = token.slice('design:'.length);
+    } else if (mention.kind === 'design') {
+      const id = mention.id;
       pushUnique(routing.designSystemIds, id);
       const system = designById.get(id);
       routing.lines.push(
@@ -1761,19 +1821,30 @@ function resolveMentionRouting(
           ? `- @design:${id}: compose with "${system.title}" design-system direction (${system.category}).`
           : `- @design:${id}: compose with this design-system direction if available.`,
       );
-    } else if (token.startsWith('craft:')) {
-      const id = token.slice('craft:'.length);
+    } else if (mention.kind === 'craft') {
+      const id = mention.id;
       pushUnique(routing.craftIds, id);
       routing.lines.push(`- @craft:${id}: apply this craft rule-set as a quality bar, not a visual theme.`);
-    } else if (token === 'selection' || token === 'current' || token.startsWith('slide:')) {
-      pushUnique(routing.selectionRefs, token);
+    } else if (mention.kind === 'directive') {
+      const id = mention.id;
+      pushUnique(routing.directiveIds, id);
+      routing.lines.push(`- @directive:${id}: apply this searchable prompt directive as a craft overlay. Active DESIGN.md tokens and components remain authoritative.`);
+    } else if (mention.kind === 'selection') {
+      pushUnique(routing.selectionRefs, mention.id);
       routing.lines.push(`- @${token}: target the currently selected rendered element/slide or matching saved comment context.`);
-    } else if (token === 'rewrite-prompt') {
-      pushUnique(routing.actionIds, token);
-      routing.lines.push('- @rewrite-prompt: rewrite the user brief into a precise execution prompt before implementing.');
+    } else if (mention.kind === 'action') {
+      pushUnique(routing.actionIds, mention.id);
+      routing.lines.push(`- @${mention.id}: rewrite the user brief into a precise execution prompt before implementing.`);
     } else {
-      pushUnique(routing.fileRefs, token);
-      routing.lines.push(`- @${token}: include this project file/reference as concrete context.`);
+      pushUnique(routing.fileRefs, mention.id);
+      const file = fileByName.get(mention.id);
+      if (file && /\.(?:html?|jsx?|tsx?|css)$/i.test(mention.id)) {
+        routing.lines.push(
+          `- @${mention.id}: include this project file/reference as concrete context. If it is an HTML/deck entrypoint, read the full referenced artifact bundle, not just the entry shell. Prefer Pixelpitch get_artifact(project=current, entry="${mention.id}", include="auto") or equivalent before editing.`,
+        );
+      } else {
+        routing.lines.push(`- @${mention.id}: include this project file/reference as concrete context.`);
+      }
     }
   }
   if (routing.selectionRefs.length > 0 && attachedComments.length > 0) {
@@ -1793,7 +1864,7 @@ function appendMentionRoutingBlock(prompt: string, routing: MentionRouting): str
     prompt,
     '',
     '<pixelpitch_mention_routing>',
-    'Resolve every @ mention compositionally. Multiple skills, design systems, craft rules, files, slides, and selections are additive unless they conflict; if they conflict, prefer the user typed instruction and explain the tradeoff briefly.',
+    'Resolve every @ mention compositionally. Multiple skills, design systems, directives, craft rules, files, slides, and selections are additive unless they conflict; if they conflict, prefer the user typed instruction and explain the tradeoff briefly.',
     'For rendered assets, produce next-level detail: stable data-od-id anchors, meaningful slide/section labels, accessible controls, responsive states, polished empty/loading/error states, and enough structural hooks for future surgical edits.',
     ...routing.lines,
     '</pixelpitch_mention_routing>',

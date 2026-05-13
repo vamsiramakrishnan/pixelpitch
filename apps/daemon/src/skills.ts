@@ -57,6 +57,7 @@ export async function listSkills(skillsRoot) {
         speakerNotes: normalizeBoolHint(pixelpitch.speaker_notes),
         animations: normalizeBoolHint(pixelpitch.animations),
         examplePrompt: derivePrompt(data, pixelpitch),
+        cliProcedures: normalizeCliProcedures(pixelpitch, body),
         body: hasAttachments ? withSkillRootPreamble(body, dir) : body,
         dir,
       });
@@ -65,6 +66,71 @@ export async function listSkills(skillsRoot) {
     }
   }
   return out;
+}
+
+export async function searchSkills(skillsRoot, query, limit = 8) {
+  const skills = await listSkills(skillsRoot);
+  const terms = tokenizeSearch(query);
+  if (terms.length === 0) {
+    return skills.slice(0, limit).map((skill) => ({
+      skill: stripSearchOnlySkillFields(skill),
+      score: 0,
+      matched: [],
+    }));
+  }
+  const ranked = skills
+    .map((skill) => {
+      const fields = [
+        [skill.id, 6],
+        [skill.name, 6],
+        [skill.description, 5],
+        [skill.mode, 4],
+        [skill.surface, 3],
+        [skill.scenario, 3],
+        [skill.platform, 2],
+        [Array.isArray(skill.triggers) ? skill.triggers.join(" ") : "", 4],
+        [Array.isArray(skill.craftRequires) ? skill.craftRequires.join(" ") : "", 3],
+        [skill.examplePrompt, 3],
+        [skill.body, 1],
+      ];
+      let score = 0;
+      const matched = new Set();
+      for (const term of terms) {
+        for (const [value, weight] of fields) {
+          const hay = String(value ?? "").toLowerCase();
+          if (!hay) continue;
+          if (hay.includes(term)) {
+            score += weight;
+            matched.add(term);
+          }
+        }
+      }
+      return { skill, score, matched: [...matched] };
+    })
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score || a.skill.name.localeCompare(b.skill.name))
+    .slice(0, limit);
+  return ranked.map((item) => ({
+    skill: stripSearchOnlySkillFields(item.skill),
+    score: item.score,
+    matched: item.matched,
+  }));
+}
+
+function stripSearchOnlySkillFields(skill) {
+  const { body, dir, ...rest } = skill;
+  return {
+    ...rest,
+    hasBody: typeof body === "string" && body.length > 0,
+  };
+}
+
+function tokenizeSearch(value) {
+  return String(value ?? "")
+    .toLowerCase()
+    .split(/[^a-z0-9-]+/g)
+    .map((term) => term.trim())
+    .filter((term) => term.length >= 2);
 }
 
 // Skills that ship side files (e.g. `assets/template.html`, `references/*.md`)
@@ -174,6 +240,60 @@ function derivePrompt(data, pixelpitch = data.pixelpitch || data.od || {}) {
   const collapsed = desc.replace(/\s+/g, " ").trim();
   const firstSentence = collapsed.match(/^.+?[.!?。！？](?:\s|$)/)?.[0]?.trim();
   return (firstSentence || collapsed).slice(0, 320);
+}
+
+function normalizeCliProcedures(pixelpitch, body) {
+  const authored =
+    pixelpitch.cli_procedures ||
+    pixelpitch.cliProcedures ||
+    pixelpitch.clis ||
+    pixelpitch.cli ||
+    pixelpitch.tools?.cli;
+  const procedures = [];
+  const values = Array.isArray(authored) ? authored : authored ? [authored] : [];
+  for (const value of values) {
+    if (typeof value === "string") {
+      const command = value.trim();
+      if (command) procedures.push({ command, when: "", customize: "", output: "" });
+    } else if (value && typeof value === "object") {
+      const command = typeof value.command === "string" ? value.command.trim() : "";
+      if (!command) continue;
+      procedures.push({
+        command,
+        when: typeof value.when === "string" ? value.when.trim() : "",
+        customize: typeof value.customize === "string" ? value.customize.trim() : "",
+        output: typeof value.output === "string" ? value.output.trim() : "",
+      });
+    }
+  }
+  if (procedures.length > 0) return procedures.slice(0, 8);
+  return inferCliProceduresFromBody(body).slice(0, 8);
+}
+
+function inferCliProceduresFromBody(body) {
+  const procedures = [];
+  const seen = new Set();
+  const fenceRe = /```(?:bash|sh|shell|zsh)?\n([\s\S]*?)```/gi;
+  for (const match of body.matchAll(fenceRe)) {
+    const lines = String(match[1] ?? "").split(/\r?\n/);
+    for (const line of lines) {
+      const command = line.trim().replace(/^[$>]\s*/, "");
+      if (!looksLikeSkillCliCommand(command) || seen.has(command)) continue;
+      seen.add(command);
+      procedures.push({
+        command,
+        when: "Run when this skill's procedure calls for its CLI step.",
+        customize: "Replace placeholder paths, model ids, prompts, durations, and output names with the current project values before running.",
+        output: "Read stdout/stderr and any written project files before continuing.",
+      });
+    }
+  }
+  return procedures;
+}
+
+function looksLikeSkillCliCommand(command) {
+  if (!command || command.startsWith("#")) return false;
+  return /^(pixelpitch|od|slidify|\.\/scripts\/|bun\s|npx\s|npm\s|pnpm\s|python\s|python3\s|node\s)/.test(command);
 }
 
 function inferMode(body, description) {

@@ -21,34 +21,10 @@
  * the picker automatically. Keep them visually *distinct* — two near-
  * identical directions defeat the purpose.
  */
+import type { DesignDirection } from './directions/types.js';
+import { ATMOSPHERIC_DESIGN_DIRECTIONS } from './directions/atmospheric.js';
 
-export interface DesignDirection {
-  /** kebab-case id, also the form-option label after `: ` */
-  id: string;
-  /** Short user-facing label, shown in the radio. ≤ 56 chars including the dash list. */
-  label: string;
-  /** One-paragraph mood description shown to the user as `help`. */
-  mood: string;
-  /** References / exemplars — real magazines, products, designers. */
-  references: string[];
-  /** Headline (display) font stack. CSS-ready. */
-  displayFont: string;
-  /** Body font stack. CSS-ready. */
-  bodyFont: string;
-  /** Optional mono override; falls back to ui-monospace. */
-  monoFont?: string;
-  /** Six palette values in OKLch — bind directly to seed `:root`. */
-  palette: {
-    bg: string;
-    surface: string;
-    fg: string;
-    muted: string;
-    border: string;
-    accent: string;
-  };
-  /** Layout posture cues for the agent. Concrete, not vague. */
-  posture: string[];
-}
+export type { DesignDirection } from './directions/types.js';
 
 export const DESIGN_DIRECTIONS: DesignDirection[] = [
   {
@@ -181,6 +157,7 @@ export const DESIGN_DIRECTIONS: DesignDirection[] = [
       'underline links, no hover decoration — let the typography carry it',
     ],
   },
+  ...ATMOSPHERIC_DESIGN_DIRECTIONS,
 ];
 
 /**
@@ -273,6 +250,21 @@ export function renderDirectionSpecBlock(): string {
     lines.push('**Posture:**');
     for (const p of d.posture) lines.push(`- ${p}`);
     lines.push('');
+    if (d.materiality?.length) {
+      lines.push('**Materiality / depth:**');
+      for (const p of d.materiality) lines.push(`- ${p}`);
+      lines.push('');
+    }
+    if (d.motion?.length) {
+      lines.push('**Motion / interaction:**');
+      for (const p of d.motion) lines.push(`- ${p}`);
+      lines.push('');
+    }
+    if (d.imagery?.length) {
+      lines.push('**Imagery direction:**');
+      for (const p of d.imagery) lines.push(`- ${p}`);
+      lines.push('');
+    }
   }
   return lines.join('\n');
 }

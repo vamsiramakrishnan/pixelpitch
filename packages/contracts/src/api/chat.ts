@@ -16,6 +16,7 @@ export interface ChatRequest {
   designSystemId?: string | null;
   designSystemIds?: string[];
   craftIds?: string[];
+  directiveIds?: string[];
   attachments?: string[];
   commentAttachments?: ChatCommentAttachment[];
   model?: string | null;
@@ -74,6 +75,11 @@ export interface ChatCommentAttachment {
   currentText: string;
   pagePosition: PreviewCommentPosition;
   htmlHint: string;
+  screenshotPath?: string;
+  sourcePath?: string;
+  sourceLine?: number;
+  sourceColumn?: number;
+  sourceSnippet?: string;
 }
 
 export type PersistedAgentEvent =

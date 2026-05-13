@@ -171,6 +171,22 @@ function migrate(db) {
   if (!messageCols.some((c) => c.name === 'comment_attachments_json')) {
     db.exec(`ALTER TABLE messages ADD COLUMN comment_attachments_json TEXT`);
   }
+  const previewCommentCols = db.prepare(`PRAGMA table_info(preview_comments)`).all();
+  if (!previewCommentCols.some((c) => c.name === 'screenshot_path')) {
+    db.exec(`ALTER TABLE preview_comments ADD COLUMN screenshot_path TEXT`);
+  }
+  if (!previewCommentCols.some((c) => c.name === 'source_path')) {
+    db.exec(`ALTER TABLE preview_comments ADD COLUMN source_path TEXT`);
+  }
+  if (!previewCommentCols.some((c) => c.name === 'source_line')) {
+    db.exec(`ALTER TABLE preview_comments ADD COLUMN source_line INTEGER`);
+  }
+  if (!previewCommentCols.some((c) => c.name === 'source_column')) {
+    db.exec(`ALTER TABLE preview_comments ADD COLUMN source_column INTEGER`);
+  }
+  if (!previewCommentCols.some((c) => c.name === 'source_snippet')) {
+    db.exec(`ALTER TABLE preview_comments ADD COLUMN source_snippet TEXT`);
+  }
   const deploymentCols = db.prepare(`PRAGMA table_info(deployments)`).all();
   if (!deploymentCols.some((c) => c.name === 'status')) {
     db.exec(`ALTER TABLE deployments ADD COLUMN status TEXT NOT NULL DEFAULT 'ready'`);
@@ -738,6 +754,9 @@ export function listPreviewComments(db, projectId, conversationId) {
       `SELECT id, project_id AS projectId, conversation_id AS conversationId,
               file_path AS filePath, element_id AS elementId, selector, label,
               text, position_json AS positionJson, html_hint AS htmlHint,
+              screenshot_path AS screenshotPath, source_path AS sourcePath,
+              source_line AS sourceLine, source_column AS sourceColumn,
+              source_snippet AS sourceSnippet,
               note, status, created_at AS createdAt, updated_at AS updatedAt
          FROM preview_comments
         WHERE project_id = ? AND conversation_id = ?
@@ -757,6 +776,11 @@ export function upsertPreviewComment(db, projectId, conversationId, input) {
   const label = cleanRequiredString(target.label, 'label');
   const text = typeof target.text === 'string' ? compactWhitespace(target.text).slice(0, 160) : '';
   const htmlHint = typeof target.htmlHint === 'string' ? compactWhitespace(target.htmlHint).slice(0, 180) : '';
+  const screenshotPath = optionalCompactString(target.screenshotPath, 260);
+  const sourcePath = optionalCompactString(target.sourcePath, 260);
+  const sourceLine = positiveIntegerOrNull(target.sourceLine);
+  const sourceColumn = positiveIntegerOrNull(target.sourceColumn);
+  const sourceSnippet = optionalMultilineString(target.sourceSnippet, 900);
   const position = normalizePosition(target.position);
   const now = Date.now();
   const existing = db
@@ -771,14 +795,20 @@ export function upsertPreviewComment(db, projectId, conversationId, input) {
   db.prepare(
     `INSERT INTO preview_comments
        (id, project_id, conversation_id, file_path, element_id, selector, label,
-        text, position_json, html_hint, note, status, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        text, position_json, html_hint, screenshot_path, source_path, source_line,
+        source_column, source_snippet, note, status, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
      ON CONFLICT(project_id, conversation_id, file_path, element_id) DO UPDATE SET
        selector = excluded.selector,
        label = excluded.label,
        text = excluded.text,
        position_json = excluded.position_json,
        html_hint = excluded.html_hint,
+       screenshot_path = excluded.screenshot_path,
+       source_path = excluded.source_path,
+       source_line = excluded.source_line,
+       source_column = excluded.source_column,
+       source_snippet = excluded.source_snippet,
        note = excluded.note,
        status = 'open',
        updated_at = excluded.updated_at`,
@@ -793,6 +823,11 @@ export function upsertPreviewComment(db, projectId, conversationId, input) {
     text,
     JSON.stringify(position),
     htmlHint,
+    screenshotPath,
+    sourcePath,
+    sourceLine,
+    sourceColumn,
+    sourceSnippet,
     note,
     'open',
     createdAt,
@@ -828,6 +863,9 @@ function getPreviewComment(db, projectId, conversationId, id) {
       `SELECT id, project_id AS projectId, conversation_id AS conversationId,
               file_path AS filePath, element_id AS elementId, selector, label,
               text, position_json AS positionJson, html_hint AS htmlHint,
+              screenshot_path AS screenshotPath, source_path AS sourcePath,
+              source_line AS sourceLine, source_column AS sourceColumn,
+              source_snippet AS sourceSnippet,
               note, status, created_at AS createdAt, updated_at AS updatedAt
          FROM preview_comments
         WHERE id = ? AND project_id = ? AND conversation_id = ?`,
@@ -848,6 +886,11 @@ function normalizePreviewComment(row) {
     text: row.text,
     position: parseJsonOrUndef(row.positionJson) ?? { x: 0, y: 0, width: 0, height: 0 },
     htmlHint: row.htmlHint,
+    screenshotPath: row.screenshotPath ?? undefined,
+    sourcePath: row.sourcePath ?? undefined,
+    sourceLine: row.sourceLine ?? undefined,
+    sourceColumn: row.sourceColumn ?? undefined,
+    sourceSnippet: row.sourceSnippet ?? undefined,
     note: row.note,
     status: row.status,
     createdAt: row.createdAt,
@@ -862,6 +905,22 @@ function cleanRequiredString(value, name) {
 
 function compactWhitespace(value) {
   return value.replace(/\s+/g, ' ').trim();
+}
+
+function optionalCompactString(value, max) {
+  if (typeof value !== 'string') return null;
+  const text = compactWhitespace(value);
+  return text ? text.slice(0, max) : null;
+}
+
+function optionalMultilineString(value, max) {
+  if (typeof value !== 'string') return null;
+  const text = value.replace(/\n{4,}/g, '\n\n\n').trim();
+  return text ? text.slice(0, max) : null;
+}
+
+function positiveIntegerOrNull(value) {
+  return Number.isFinite(value) && value > 0 ? Math.round(value) : null;
 }
 
 function normalizePosition(input) {
