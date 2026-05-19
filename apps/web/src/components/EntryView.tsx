@@ -30,7 +30,7 @@ import { PromptTemplatePreviewModal } from './PromptTemplatePreviewModal';
 import { PromptTemplatesTab } from './PromptTemplatesTab';
 import { apiRuntimeLabel } from '../utils/runtimeLabels';
 
-export type EntryTopTab = 'designs' | 'examples' | 'design-systems' | 'image-templates' | 'video-templates';
+export type EntryTopTab = 'designs' | 'examples' | 'design-systems' | 'media';
 
 interface Props {
   skills: SkillSummary[];
@@ -47,7 +47,9 @@ interface Props {
   onCreateProject: (input: CreateInput & { pendingPrompt?: string }) => void;
   onImportClaudeDesign: (file: File) => Promise<void> | void;
   onOpenProject: (id: string) => void;
+  onOpenLiveArtifact: (projectId: string, artifactId: string) => void;
   onDeleteProject: (id: string) => void;
+  onRenameProject: (id: string, name: string) => void;
   onChangeDefaultDesignSystem: (id: string) => void;
   onOpenSettings: () => void;
   // Deep-link into Settings → Pets so the entry view's "Adopt a pet"
@@ -108,7 +110,9 @@ export function EntryView({
   onCreateProject,
   onImportClaudeDesign,
   onOpenProject,
+  onOpenLiveArtifact,
   onDeleteProject,
+  onRenameProject,
   onChangeDefaultDesignSystem,
   onOpenSettings,
   onAdoptPet,
@@ -379,14 +383,8 @@ export function EntryView({
             />
             <TopTabButton
               current={topTab}
-              value="image-templates"
-              label={t('entry.tabImageTemplates')}
-              onClick={setTopTab}
-            />
-            <TopTabButton
-              current={topTab}
-              value="video-templates"
-              label={t('entry.tabVideoTemplates')}
+              value="media"
+              label="Media"
               onClick={setTopTab}
             />
           </div>
@@ -521,7 +519,9 @@ export function EntryView({
                   skills={skills}
                   designSystems={designSystems}
                   onOpen={onOpenProject}
+                  onOpenLiveArtifact={onOpenLiveArtifact}
                   onDelete={onDeleteProject}
+                  onRename={onRenameProject}
                 />
               ) : null}
               {topTab === 'examples' ? (
@@ -535,16 +535,8 @@ export function EntryView({
                   onPreview={previewDesignSystem}
                 />
               ) : null}
-              {topTab === 'image-templates' ? (
-                <PromptTemplatesTab
-                  surface="image"
-                  templates={promptTemplates}
-                  onPreview={setPreviewPromptTemplate}
-                />
-              ) : null}
-              {topTab === 'video-templates' ? (
-                <PromptTemplatesTab
-                  surface="video"
+              {topTab === 'media' ? (
+                <MediaTemplatesTab
                   templates={promptTemplates}
                   onPreview={setPreviewPromptTemplate}
                 />
@@ -614,6 +606,54 @@ function DashboardStat({
     <div className={`entry-dashboard-stat ${tone}`}>
       <span className="entry-dashboard-stat-value">{value}</span>
       <span className="entry-dashboard-stat-label">{label}</span>
+    </div>
+  );
+}
+
+function MediaTemplatesTab({
+  templates,
+  onPreview,
+}: {
+  templates: PromptTemplateSummary[];
+  onPreview: (tpl: PromptTemplateSummary) => void;
+}) {
+  const imageCount = templates.filter((tpl) => tpl.surface === 'image').length;
+  const videoCount = templates.filter((tpl) => tpl.surface === 'video').length;
+  return (
+    <div className="media-templates-panel">
+      <section className="media-templates-intro" aria-label="Media prompt library summary">
+        <div>
+          <span className="media-templates-kicker">Media Library</span>
+          <h2>Prompt systems for image direction and motion briefs in one place.</h2>
+          <p>
+            Use the same gallery flow for stills and video: browse, preview, then carry the prompt into the creation panel.
+          </p>
+        </div>
+        <div className="media-templates-counts" aria-label="Media template counts">
+          <span><strong>{imageCount}</strong> image prompts</span>
+          <span><strong>{videoCount}</strong> video prompts</span>
+        </div>
+      </section>
+      <section className="media-template-section" aria-label="Image prompt templates">
+        <div className="media-template-section-head">
+          <Icon name="image" size={16} />
+          <div>
+            <h3>Image prompts</h3>
+            <p>Visual systems for posters, editorial frames, product key art, and generated assets.</p>
+          </div>
+        </div>
+        <PromptTemplatesTab surface="image" templates={templates} onPreview={onPreview} />
+      </section>
+      <section className="media-template-section" aria-label="Video prompt templates">
+        <div className="media-template-section-head">
+          <Icon name="play" size={16} />
+          <div>
+            <h3>Video prompts</h3>
+            <p>Motion prompts with camera, rhythm, render intent, and HyperFrames-compatible direction.</p>
+          </div>
+        </div>
+        <PromptTemplatesTab surface="video" templates={templates} onPreview={onPreview} />
+      </section>
     </div>
   );
 }

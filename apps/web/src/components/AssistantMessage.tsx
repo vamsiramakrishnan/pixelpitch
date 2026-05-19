@@ -138,6 +138,7 @@ export function AssistantMessage({
           />
         ) : null}
         <AssistantFooter
+          feedbackKey={message.id}
           streaming={streaming}
           startedAt={message.startedAt}
           endedAt={message.endedAt}
@@ -169,12 +170,14 @@ function assistantRoleLabel(message: ChatMessage, t: TranslateFn): string {
 }
 
 function AssistantFooter({
+  feedbackKey,
   streaming,
   startedAt,
   endedAt,
   usage,
   hasUnfinishedTodos,
 }: {
+  feedbackKey: string;
   streaming: boolean;
   startedAt: number | undefined;
   endedAt: number | undefined;
@@ -183,28 +186,113 @@ function AssistantFooter({
 }) {
   const t = useT();
   const elapsed = useLiveElapsed(streaming, startedAt, endedAt);
-  if (!streaming && !elapsed && !usage && !hasUnfinishedTodos) return null;
+  const [feedback, setFeedback] = useState<'up' | 'down' | null>(() =>
+    loadAssistantFeedback(feedbackKey),
+  );
+
+  useEffect(() => {
+    setFeedback(loadAssistantFeedback(feedbackKey));
+  }, [feedbackKey]);
+
+  const updateFeedback = (next: 'up' | 'down') => {
+    const value = feedback === next ? null : next;
+    setFeedback(value);
+    saveAssistantFeedback(feedbackKey, value);
+  };
+
+  if (streaming || elapsed || usage || hasUnfinishedTodos) {
+    return (
+      <div className="assistant-footer" data-unfinished={hasUnfinishedTodos ? 'true' : 'false'}>
+        <span className="dot" data-active={streaming ? 'true' : 'false'} />
+        <span className="assistant-label">
+          {streaming
+            ? t('assistant.workingLabel')
+            : hasUnfinishedTodos
+              ? t('assistant.unfinishedLabel')
+              : t('assistant.doneLabel')}
+        </span>
+        <span className="assistant-stats">
+          {elapsed}
+          {usage?.outputTokens != null
+            ? ` · ${t('assistant.outTokens', { n: usage.outputTokens })}`
+            : ''}
+          {typeof usage?.costUsd === 'number'
+            ? ` · $${usage.costUsd.toFixed(4)}`
+            : ''}
+        </span>
+        {!streaming ? (
+          <AssistantFeedbackButtons feedback={feedback} onChange={updateFeedback} />
+        ) : null}
+      </div>
+    );
+  }
+
   return (
-    <div className="assistant-footer" data-unfinished={hasUnfinishedTodos ? 'true' : 'false'}>
-      <span className="dot" data-active={streaming ? 'true' : 'false'} />
-      <span className="assistant-label">
-        {streaming
-          ? t('assistant.workingLabel')
-          : hasUnfinishedTodos
-            ? t('assistant.unfinishedLabel')
-            : t('assistant.doneLabel')}
-      </span>
-      <span className="assistant-stats">
-        {elapsed}
-        {usage?.outputTokens != null
-          ? ` · ${t('assistant.outTokens', { n: usage.outputTokens })}`
-          : ''}
-        {typeof usage?.costUsd === 'number'
-          ? ` · $${usage.costUsd.toFixed(4)}`
-          : ''}
-      </span>
+    <div className="assistant-footer assistant-footer-feedback-only">
+      <AssistantFeedbackButtons feedback={feedback} onChange={updateFeedback} />
     </div>
   );
+}
+
+function AssistantFeedbackButtons({
+  feedback,
+  onChange,
+}: {
+  feedback: 'up' | 'down' | null;
+  onChange: (next: 'up' | 'down') => void;
+}) {
+  return (
+    <span className="assistant-feedback" aria-label="Response feedback">
+      <button
+        type="button"
+        className="assistant-feedback-btn"
+        data-active={feedback === 'up' ? 'true' : 'false'}
+        title="Good response"
+        aria-label="Mark response as useful"
+        onClick={() => onChange('up')}
+      >
+        <Icon name="thumbs-up" size={13} />
+      </button>
+      <button
+        type="button"
+        className="assistant-feedback-btn"
+        data-active={feedback === 'down' ? 'true' : 'false'}
+        title="Bad response"
+        aria-label="Mark response as not useful"
+        onClick={() => onChange('down')}
+      >
+        <Icon name="thumbs-down" size={13} />
+      </button>
+    </span>
+  );
+}
+
+function assistantFeedbackStorageKey(messageId: string): string {
+  return `pixelpitch:assistant-feedback:${messageId}`;
+}
+
+function loadAssistantFeedback(messageId: string): 'up' | 'down' | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const value = window.localStorage.getItem(assistantFeedbackStorageKey(messageId));
+    return value === 'up' || value === 'down' ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveAssistantFeedback(messageId: string, value: 'up' | 'down' | null): void {
+  if (typeof window === 'undefined') return;
+  const key = assistantFeedbackStorageKey(messageId);
+  try {
+    if (value) {
+      window.localStorage.setItem(key, value);
+    } else {
+      window.localStorage.removeItem(key);
+    }
+  } catch {
+    // Feedback is local-only; storage failures should not affect chat use.
+  }
 }
 
 function UnfinishedTodosPanel({

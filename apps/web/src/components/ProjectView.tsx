@@ -19,6 +19,8 @@ import {
   resolveContext,
   exportConversationTranscript,
   exportProjectFileAsPptx,
+  extractMemoryFromMessage,
+  fetchMemorySystemPrompt,
   patchPreviewCommentStatus,
   projectFileUrl,
   upsertPreviewComment,
@@ -72,7 +74,9 @@ import {
 import { AppChromeHeader } from './AppChromeHeader';
 import { AvatarMenu } from './AvatarMenu';
 import { ChatPane } from './ChatPane';
+import { CritiqueTheaterPanel } from './CritiqueTheaterPanel';
 import { FileWorkspace } from './FileWorkspace';
+import { useCritiqueStream } from './Theater/hooks/useCritiqueStream';
 
 interface Props {
   project: Project;
@@ -142,6 +146,7 @@ export function ProjectView({
   const [projectFiles, setProjectFiles] = useState<ProjectFile[]>([]);
   const [liveArtifacts, setLiveArtifacts] = useState<LiveArtifactSummary[]>([]);
   const [chatWidth, setChatWidth] = useState(460);
+  const [workspaceFocus, setWorkspaceFocus] = useState(false);
   // The persisted set of open tabs + active tab. Persisted via PUT on every
   // change; loaded once when the project mounts.
   const [openTabsState, setOpenTabsState] = useState<OpenTabsState>({
@@ -159,6 +164,7 @@ export function ProjectView({
   const [contextStackLoading, setContextStackLoading] = useState(false);
   const [contextStackError, setContextStackError] = useState<string | null>(null);
   const [contextStackRequest, setContextStackRequest] = useState<{ nonce: number } | null>(null);
+  const critiqueTheater = useCritiqueStream(project.id, daemonLive);
   const abortRef = useRef<AbortController | null>(null);
   const cancelRef = useRef<AbortController | null>(null);
   const sendTextBufferRef = useRef<BufferedTextUpdates | null>(null);
@@ -537,7 +543,7 @@ export function ProjectView({
         }
       }
     }
-    return composeSystemPrompt({
+    const basePrompt = composeSystemPrompt({
       skillBody,
       skillName,
       skillMode,
@@ -546,6 +552,10 @@ export function ProjectView({
       metadata: project.metadata,
       template,
     });
+    const memoryBody = await fetchMemorySystemPrompt();
+    return [memoryBody ? `# Memory\n\n${memoryBody}` : '', basePrompt]
+      .filter(Boolean)
+      .join('\n\n---\n\n');
   }, [
     project.skillId,
     project.designSystemId,
@@ -884,6 +894,7 @@ export function ProjectView({
       refreshContextStack(prompt);
       const mentionedSkillId = mentionRouting.skillIds[0] ?? null;
       const agentPrompt = appendMentionRoutingBlock(prompt, mentionRouting);
+      void extractMemoryFromMessage(prompt);
       const userMsg: ChatMessage = {
         id: crypto.randomUUID(),
         role: 'user',
@@ -1511,7 +1522,7 @@ export function ProjectView({
         </div>
       </AppChromeHeader>
       <div
-        className="split"
+        className={`split${workspaceFocus ? ' workspace-focus' : ''}`}
         style={{ ['--chat-pane-width' as string]: `${chatWidth}px` }}
       >
         <ChatPane
@@ -1559,6 +1570,8 @@ export function ProjectView({
           contextStackError={contextStackError}
           contextStackRequest={contextStackRequest}
           onRefreshContextStack={refreshContextStack}
+          critiqueTheater={<CritiqueTheaterPanel state={critiqueTheater.state} />}
+          critiqueActive={critiqueTheater.state.phase === 'running'}
         />
         <div
           className="chat-pane-resizer"
@@ -1590,6 +1603,8 @@ export function ProjectView({
           isDeck={isDeck}
           onExportAsPptx={handleExportAsPptx}
           streaming={streaming || pptxExporting}
+          focusMode={workspaceFocus}
+          onFocusModeChange={setWorkspaceFocus}
           openRequest={openRequest}
           tabsState={openTabsState}
           onTabsStateChange={persistTabsState}

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState, type CSSProperties } from 'react';
+import { Fragment, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { springs, variants } from '../motion';
 import { useT } from '../i18n';
@@ -112,9 +112,11 @@ interface Props {
   contextStackError?: string | null;
   contextStackRequest?: { nonce: number } | null;
   onRefreshContextStack?: (draft: string) => void;
+  critiqueTheater?: ReactNode;
+  critiqueActive?: boolean;
 }
 
-type Tab = 'chat' | 'comments' | 'context';
+type Tab = 'chat' | 'comments' | 'context' | 'critique';
 
 export function ChatPane({
   messages,
@@ -155,6 +157,8 @@ export function ChatPane({
   contextStackError = null,
   contextStackRequest,
   onRefreshContextStack,
+  critiqueTheater,
+  critiqueActive = false,
 }: Props) {
   const t = useT();
   const logRef = useRef<HTMLDivElement | null>(null);
@@ -313,6 +317,25 @@ export function ChatPane({
               />
             ) : null}
           </button>
+          {critiqueTheater ? (
+            <button
+              type="button"
+              role="tab"
+              aria-selected={tab === 'critique'}
+              className={tab === 'critique' ? 'active' : ''}
+              onClick={() => setTab('critique')}
+            >
+              Critique
+              {critiqueActive ? <span className="chat-tab-live-dot" aria-hidden /> : null}
+              {tab === 'critique' ? (
+                <motion.div
+                  className="chat-header-segment-indicator"
+                  layoutId="chat-tab-indicator"
+                  transition={springs.snappy}
+                />
+              ) : null}
+            </button>
+          ) : null}
         </div>
         <div className="chat-header-actions">
           <div
@@ -604,6 +627,7 @@ export function ChatPane({
           }}
         />
       ) : null}
+      {tab === 'critique' && critiqueTheater ? critiqueTheater : null}
     </div>
   );
 }

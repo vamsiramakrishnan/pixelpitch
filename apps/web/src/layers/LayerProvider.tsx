@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { LayerContext, type LayerEntry, type LayerStackContext } from './LayerContext';
 
-const Z_BASE = 1000;
+const Z_BASE = 2000;
 const Z_STEP = 10;
 
 let nextId = 0;

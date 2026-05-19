@@ -125,7 +125,7 @@ describe('orchestrator lifecycle (PR #481 round 3 review)', () => {
     expect(result.composite!).toBeGreaterThan(8.0);
   });
 
-  it('shipped run persists artifactPath=null until artifact extraction lands', async () => {
+  it('shipped run persists the extracted SHIP artifact path', async () => {
     const { bus } = makeBus();
     const artifactDir = join(tmpDir, 'no-artifact');
 
@@ -165,8 +165,8 @@ describe('orchestrator lifecycle (PR #481 round 3 review)', () => {
     });
 
     expect(result.status).toBe('shipped');
-    expect(result.artifactPath).toBeNull();
+    expect(result.artifactPath).toMatch(/artifact\.html$/);
     const row = getCritiqueRun(db, 'r-shipped');
-    expect(row?.artifactPath).toBeNull();
+    expect(row?.artifactPath).toBe(result.artifactPath);
   });
 });

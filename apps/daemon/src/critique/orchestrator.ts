@@ -1,9 +1,10 @@
 import type { ChildProcess } from 'node:child_process';
+import { promises as fs } from 'node:fs';
 import type Database from 'better-sqlite3';
 import type { CritiqueConfig, PanelEvent } from '@pixelpitch/contracts/critique';
 import { panelEventToSse } from '@pixelpitch/contracts/critique';
 import type { CritiqueSseEvent } from '@pixelpitch/contracts/critique';
-import { parseCritiqueStream } from './parser.js';
+import { parseCritiqueStream, type ShipArtifactPayload } from './parser.js';
 import {
   computeComposite,
   decideRound,
@@ -21,6 +22,11 @@ import {
   OversizeBlockError,
   MissingArtifactError,
 } from './errors.js';
+import {
+  ArtifactEmptyError,
+  ArtifactTooLargeError,
+  writeShipArtifact,
+} from './artifact-writer.js';
 
 /**
  * Tolerance used when comparing the agent-supplied composite attribute on
@@ -131,6 +137,7 @@ export async function runOrchestrator(
   const completedRounds: RoundState[] = [];
   let artifactPath: string | null = null;
   let shipEvent: Extract<PanelEvent, { type: 'ship' }> | null = null;
+  const artifactBuffer: { value: ShipArtifactPayload | null } = { value: null };
   let finalStatus: CritiqueRunRow['status'] = 'failed';
   let finalComposite: number | null = null;
   let transcriptPath: string | null = null;
@@ -180,6 +187,9 @@ export async function runOrchestrator(
       parserMaxBlockBytes: cfg.parserMaxBlockBytes,
       projectId,
       artifactId: params.artifactId,
+      onArtifact: (payload: ShipArtifactPayload) => {
+        artifactBuffer.value = payload;
+      },
     };
 
     for await (const event of parseCritiqueStream(timedSource, parserOpts)) {
@@ -333,15 +343,32 @@ export async function runOrchestrator(
         artifactRef: { projectId, artifactId: params.artifactId },
         summary: ship.summary,
       };
+
+      const captured = artifactBuffer.value;
+      if (captured !== null) {
+        try {
+          await fs.mkdir(artifactDir, { recursive: true });
+          const written = await writeShipArtifact(
+            artifactDir,
+            captured.body,
+            captured.mime,
+            { maxBytes: cfg.parserMaxBlockBytes },
+          );
+          artifactPath = written.absPath;
+          updateCritiqueRun(db, runId, { artifactPath });
+        } catch (err) {
+          if (err instanceof ArtifactTooLargeError || err instanceof ArtifactEmptyError) {
+            console.warn(`[critique] failed to persist ship artifact for ${runId}: ${err.code}`);
+          } else {
+            console.warn(`[critique] failed to persist ship artifact for ${runId}:`, err);
+          }
+          artifactPath = null;
+        }
+      } else {
+        console.warn(`[critique] parser emitted ship without artifact side-channel for ${runId}`);
+      }
       collectedEvents.push(normalizedShip);
       bus.emit(panelEventToSse(normalizedShip));
-
-      // artifactPath stays null until a future phase actually extracts the
-      // <SHIP><ARTIFACT> body and writes it to disk. Persisting a synthesized
-      // path that no file occupies would let UI/replay/export code dereference
-      // a missing file. The transcript still carries the ship event with the
-      // artifact reference so consumers can find the run.
-      artifactPath = null;
     } else {
       // No SHIP arrived (or the agent SHIP was rejected as malformed above).
       // Apply fallback policy over the daemon's closed rounds.

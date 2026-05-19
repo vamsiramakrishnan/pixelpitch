@@ -17,11 +17,13 @@ import {
   MIN_MAX_TOKENS,
   modelMaxTokensDefault,
 } from '../state/maxTokens';
-import type { AgentInfo, AppConfig, AppTheme, AppVersionInfo, ExecMode } from '../types';
+import type { AgentInfo, AppConfig, AppTheme, AppVersionInfo, ExecMode, ProviderModelsResponse } from '../types';
 import { MEDIA_PROVIDERS } from '../media/models';
 import type { MediaProvider } from '../media/models';
 import { PetSettings } from './pet/PetSettings';
 import { McpClientSection } from './McpClientSection';
+import { MemorySection } from './MemorySection';
+import { RoutinesSection } from './RoutinesSection';
 import { DEFAULT_NOTIFICATIONS } from '../state/config';
 import {
   FAILURE_SOUNDS,
@@ -31,12 +33,14 @@ import {
   requestNotificationPermission,
   showCompletionNotification,
 } from '../utils/notifications';
-import { testExecutionConfig, type ExecutionTestResult } from '../providers/registry';
+import { fetchProviderModels, testExecutionConfig, type ExecutionTestResult } from '../providers/registry';
 
 export type SettingsSection =
   | 'execution'
   | 'media'
   | 'orbit'
+  | 'memory'
+  | 'routines'
   | 'mcpClient'
   | 'language'
   | 'appearance'
@@ -161,6 +165,8 @@ export function SettingsDialog({
   const [languageOpen, setLanguageOpen] = useState(false);
   const [executionTest, setExecutionTest] = useState<ExecutionTestResult | null>(null);
   const [testingExecution, setTestingExecution] = useState(false);
+  const [providerModelsResult, setProviderModelsResult] = useState<ProviderModelsResponse | null>(null);
+  const [fetchingProviderModels, setFetchingProviderModels] = useState(false);
   const [activeSection, setActiveSection] = useState<SettingsSection>(
     defaultSection ?? 'execution',
   );
@@ -233,13 +239,18 @@ export function SettingsDialog({
   );
   const selectedProviderIndex = protocolProviders.findIndex((p) => p.baseUrl === cfg.baseUrl);
   const selectedProvider = selectedProviderIndex >= 0 ? protocolProviders[selectedProviderIndex] : undefined;
+  useEffect(() => {
+    setProviderModelsResult(null);
+  }, [apiProtocol, cfg.baseUrl]);
   const apiModelOptions = useMemo(
     () => Array.from(new Set(
-      selectedProvider?.models?.length
+      providerModelsResult?.ok && providerModelsResult.models?.length
+        ? providerModelsResult.models.map((model) => model.id)
+        : selectedProvider?.models?.length
         ? selectedProvider.models
         : SUGGESTED_MODELS_BY_PROTOCOL[apiProtocol],
     )),
-    [apiProtocol, cfg.baseUrl, selectedProvider],
+    [apiProtocol, providerModelsResult, selectedProvider],
   );
   const apiModelCustom = Boolean(cfg.model) && !apiModelOptions.includes(cfg.model);
   const apiModelSelectValue = apiModelCustom || !cfg.model ? CUSTOM_MODEL_SENTINEL : cfg.model;
@@ -264,6 +275,32 @@ export function SettingsDialog({
       });
     } finally {
       setTestingExecution(false);
+    }
+  }
+
+  async function runProviderModelsFetch() {
+    setFetchingProviderModels(true);
+    setProviderModelsResult(null);
+    try {
+      const result = await fetchProviderModels({
+        protocol: apiProtocol,
+        baseUrl: cfg.baseUrl,
+        apiKey: cfg.apiKey,
+      });
+      setProviderModelsResult(result);
+      const firstModel = result.models?.[0]?.id;
+      if (result.ok && firstModel && (!cfg.model || !result.models?.some((model) => model.id === cfg.model))) {
+        setCfg((current) => ({ ...current, model: firstModel }));
+      }
+    } catch (err) {
+      setProviderModelsResult({
+        ok: false,
+        kind: 'unknown',
+        latencyMs: 0,
+        detail: err instanceof Error ? err.message : 'Model fetch failed.',
+      });
+    } finally {
+      setFetchingProviderModels(false);
     }
   }
 
@@ -339,6 +376,28 @@ export function SettingsDialog({
               <span>
                 <strong>Orbit</strong>
                 <small>Daily activity summaries</small>
+              </span>
+            </button>
+            <button
+              type="button"
+              className={`settings-nav-item${activeSection === 'memory' ? ' active' : ''}`}
+              onClick={() => setActiveSection('memory')}
+            >
+              <Icon name="file" size={18} />
+              <span>
+                <strong>Memory</strong>
+                <small>Persistent context</small>
+              </span>
+            </button>
+            <button
+              type="button"
+              className={`settings-nav-item${activeSection === 'routines' ? ' active' : ''}`}
+              onClick={() => setActiveSection('routines')}
+            >
+              <Icon name="history" size={18} />
+              <span>
+                <strong>Routines</strong>
+                <small>Local scheduled runs</small>
               </span>
             </button>
             <button
@@ -715,7 +774,18 @@ export function SettingsDialog({
                 </div>
               </label>
               <label className="field">
-                <span className="field-label">{t('settings.model')}</span>
+                <span className="field-label">
+                  {t('settings.model')}
+                  <button
+                    type="button"
+                    className="ghost"
+                    disabled={fetchingProviderModels || !cfg.baseUrl.trim()}
+                    onClick={() => void runProviderModelsFetch()}
+                    style={{ marginLeft: 8, padding: '2px 8px', fontSize: 11 }}
+                  >
+                    {fetchingProviderModels ? 'Fetching...' : 'Fetch models'}
+                  </button>
+                </span>
                 <select
                   value={apiModelSelectValue}
                   onChange={(e) => {
@@ -732,6 +802,13 @@ export function SettingsDialog({
                   <option value={CUSTOM_MODEL_SENTINEL}>{t('settings.modelCustom')}</option>
                 </select>
               </label>
+              {providerModelsResult ? (
+                <p className={`hint${providerModelsResult.ok ? '' : ' error'}`}>
+                  {providerModelsResult.ok
+                    ? `Loaded ${providerModelsResult.models?.length ?? 0} model(s) in ${providerModelsResult.latencyMs}ms.`
+                    : providerModelsResult.detail || `Could not fetch models (${providerModelsResult.kind}).`}
+                </p>
+              ) : null}
               {!selectedProvider ? (
                 <p className="hint">These are suggested models for this protocol. Your provider may support different models.</p>
               ) : null}
@@ -763,6 +840,10 @@ export function SettingsDialog({
           {activeSection === 'media' ? <MediaProvidersSection cfg={cfg} setCfg={setCfg} /> : null}
 
           {activeSection === 'orbit' ? <OrbitSection cfg={cfg} setCfg={setCfg} /> : null}
+
+          {activeSection === 'memory' ? <MemorySection /> : null}
+
+          {activeSection === 'routines' ? <RoutinesSection /> : null}
 
           {activeSection === 'mcpClient' ? <McpClientSection /> : null}
 

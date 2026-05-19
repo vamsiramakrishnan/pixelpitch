@@ -1,6 +1,14 @@
 import type { PanelEvent } from '@pixelpitch/contracts/critique';
 import { parseV1 } from './parsers/v1.js';
 
+export interface ShipArtifactPayload {
+  round: number;
+  mime: string;
+  body: string;
+}
+
+export type ShipArtifactCallback = (payload: ShipArtifactPayload) => void;
+
 export interface ParserOptions {
   runId: string;
   adapter: string;
@@ -9,6 +17,12 @@ export interface ParserOptions {
   projectId?: string;
   /** Artifact identity threaded into ship event artifactRef. */
   artifactId?: string;
+  /**
+   * Side-channel for the potentially large <SHIP><ARTIFACT> body. The
+   * parser keeps PanelEvent/SSE payloads small and hands artifact bytes to
+   * the orchestrator for persistence before the ship event is emitted.
+   */
+  onArtifact?: ShipArtifactCallback;
 }
 
 export async function* parseCritiqueStream(

@@ -145,6 +145,40 @@ function migrate(db) {
 
     CREATE INDEX IF NOT EXISTS idx_deployments_project
       ON deployments(project_id, updated_at DESC);
+
+    CREATE TABLE IF NOT EXISTS routines (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      prompt TEXT NOT NULL,
+      schedule_kind TEXT NOT NULL,
+      schedule_value TEXT NOT NULL,
+      schedule_json TEXT,
+      project_mode TEXT NOT NULL,
+      project_id TEXT,
+      skill_id TEXT,
+      agent_id TEXT,
+      enabled INTEGER NOT NULL DEFAULT 1,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS routine_runs (
+      id TEXT PRIMARY KEY,
+      routine_id TEXT NOT NULL,
+      trigger TEXT NOT NULL,
+      status TEXT NOT NULL,
+      project_id TEXT NOT NULL,
+      conversation_id TEXT NOT NULL,
+      agent_run_id TEXT NOT NULL,
+      started_at INTEGER NOT NULL,
+      completed_at INTEGER,
+      summary TEXT,
+      error TEXT,
+      FOREIGN KEY(routine_id) REFERENCES routines(id) ON DELETE CASCADE
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_routine_runs_routine
+      ON routine_runs(routine_id, started_at DESC);
   `);
   // Forward-compatible column add for databases created before metadata_json.
   // SQLite has no IF NOT EXISTS for ALTER, so we check pragma_table_info.
@@ -196,6 +230,10 @@ function migrate(db) {
   }
   if (!deploymentCols.some((c) => c.name === 'reachable_at')) {
     db.exec(`ALTER TABLE deployments ADD COLUMN reachable_at INTEGER`);
+  }
+  const routineCols = db.prepare(`PRAGMA table_info(routines)`).all();
+  if (routineCols.length > 0 && !routineCols.some((c) => c.name === 'schedule_json')) {
+    db.exec(`ALTER TABLE routines ADD COLUMN schedule_json TEXT`);
   }
   migrateCritique(db);
 }
@@ -316,6 +354,207 @@ function normalizeDeployment(row) {
     reachableAt: row.reachableAt == null ? undefined : Number(row.reachableAt),
     createdAt: Number(row.createdAt),
     updatedAt: Number(row.updatedAt),
+  };
+}
+
+// ---------- routines ----------
+
+const ROUTINE_COLS = `id, name, prompt,
+  schedule_kind AS scheduleKind, schedule_value AS scheduleValue,
+  schedule_json AS scheduleJson,
+  project_mode AS projectMode, project_id AS projectId,
+  skill_id AS skillId, agent_id AS agentId,
+  enabled, created_at AS createdAt, updated_at AS updatedAt`;
+
+const ROUTINE_RUN_COLS = `id, routine_id AS routineId, trigger, status,
+  project_id AS projectId, conversation_id AS conversationId,
+  agent_run_id AS agentRunId, started_at AS startedAt,
+  completed_at AS completedAt, summary, error`;
+
+export function listRoutines(db) {
+  return db
+    .prepare(`SELECT ${ROUTINE_COLS} FROM routines ORDER BY created_at ASC`)
+    .all()
+    .map(normalizeRoutine);
+}
+
+export function getRoutine(db, id) {
+  const r = db
+    .prepare(`SELECT ${ROUTINE_COLS} FROM routines WHERE id = ?`)
+    .get(id);
+  return r ? normalizeRoutine(r) : null;
+}
+
+export function insertRoutine(db, r) {
+  db.prepare(
+    `INSERT INTO routines
+       (id, name, prompt, schedule_kind, schedule_value, schedule_json,
+        project_mode, project_id, skill_id, agent_id, enabled,
+        created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  ).run(
+    r.id,
+    r.name,
+    r.prompt,
+    r.scheduleKind,
+    r.scheduleValue,
+    r.scheduleJson ?? null,
+    r.projectMode,
+    r.projectId ?? null,
+    r.skillId ?? null,
+    r.agentId ?? null,
+    r.enabled ? 1 : 0,
+    r.createdAt,
+    r.updatedAt,
+  );
+  return getRoutine(db, r.id);
+}
+
+export function updateRoutine(db, id, patch) {
+  const existing = getRoutine(db, id);
+  if (!existing) return null;
+  const merged = {
+    ...existing,
+    ...patch,
+    updatedAt: typeof patch.updatedAt === 'number' ? patch.updatedAt : Date.now(),
+  };
+  db.prepare(
+    `UPDATE routines
+        SET name = ?, prompt = ?,
+            schedule_kind = ?, schedule_value = ?, schedule_json = ?,
+            project_mode = ?, project_id = ?,
+            skill_id = ?, agent_id = ?,
+            enabled = ?, updated_at = ?
+      WHERE id = ?`,
+  ).run(
+    merged.name,
+    merged.prompt,
+    merged.scheduleKind,
+    merged.scheduleValue,
+    merged.scheduleJson ?? null,
+    merged.projectMode,
+    merged.projectId ?? null,
+    merged.skillId ?? null,
+    merged.agentId ?? null,
+    merged.enabled ? 1 : 0,
+    merged.updatedAt,
+    id,
+  );
+  return getRoutine(db, id);
+}
+
+export function deleteRoutine(db, id) {
+  const result = db.prepare(`DELETE FROM routines WHERE id = ?`).run(id);
+  return result.changes > 0;
+}
+
+function normalizeRoutine(row) {
+  return {
+    id: row.id,
+    name: row.name,
+    prompt: row.prompt,
+    scheduleKind: row.scheduleKind,
+    scheduleValue: row.scheduleValue,
+    scheduleJson: row.scheduleJson ?? null,
+    projectMode: row.projectMode,
+    projectId: row.projectId ?? null,
+    skillId: row.skillId ?? null,
+    agentId: row.agentId ?? null,
+    enabled: Number(row.enabled) === 1,
+    createdAt: Number(row.createdAt),
+    updatedAt: Number(row.updatedAt),
+  };
+}
+
+export function listRoutineRuns(db, routineId, limit = 20) {
+  return db
+    .prepare(
+      `SELECT ${ROUTINE_RUN_COLS}
+         FROM routine_runs
+        WHERE routine_id = ?
+        ORDER BY started_at DESC
+        LIMIT ?`,
+    )
+    .all(routineId, limit)
+    .map(normalizeRoutineRun);
+}
+
+export function getLatestRoutineRun(db, routineId) {
+  const r = db
+    .prepare(
+      `SELECT ${ROUTINE_RUN_COLS}
+         FROM routine_runs
+        WHERE routine_id = ?
+        ORDER BY started_at DESC
+        LIMIT 1`,
+    )
+    .get(routineId);
+  return r ? normalizeRoutineRun(r) : null;
+}
+
+export function getRoutineRun(db, id) {
+  const r = db
+    .prepare(`SELECT ${ROUTINE_RUN_COLS} FROM routine_runs WHERE id = ?`)
+    .get(id);
+  return r ? normalizeRoutineRun(r) : null;
+}
+
+export function insertRoutineRun(db, r) {
+  db.prepare(
+    `INSERT INTO routine_runs
+       (id, routine_id, trigger, status, project_id, conversation_id,
+        agent_run_id, started_at, completed_at, summary, error)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  ).run(
+    r.id,
+    r.routineId,
+    r.trigger,
+    r.status,
+    r.projectId,
+    r.conversationId,
+    r.agentRunId,
+    r.startedAt,
+    r.completedAt ?? null,
+    r.summary ?? null,
+    r.error ?? null,
+  );
+  return getRoutineRun(db, r.id);
+}
+
+export function updateRoutineRun(db, id, patch) {
+  const existing = getRoutineRun(db, id);
+  if (!existing) return null;
+  const merged = {
+    ...existing,
+    ...patch,
+  };
+  db.prepare(
+    `UPDATE routine_runs
+        SET status = ?, completed_at = ?, summary = ?, error = ?
+      WHERE id = ?`,
+  ).run(
+    merged.status,
+    merged.completedAt ?? null,
+    merged.summary ?? null,
+    merged.error ?? null,
+    id,
+  );
+  return getRoutineRun(db, id);
+}
+
+function normalizeRoutineRun(row) {
+  return {
+    id: row.id,
+    routineId: row.routineId,
+    trigger: row.trigger,
+    status: row.status,
+    projectId: row.projectId,
+    conversationId: row.conversationId,
+    agentRunId: row.agentRunId,
+    startedAt: Number(row.startedAt),
+    completedAt: row.completedAt == null ? null : Number(row.completedAt),
+    summary: row.summary ?? null,
+    error: row.error ?? null,
   };
 }
 

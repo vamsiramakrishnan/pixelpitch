@@ -17,12 +17,16 @@ import type {
   PreviewCommentStatus,
   PreviewCommentUpsertRequest,
   DeployConfigResponse,
+  DeployPreflightResponse,
   DeployProjectFileResponse,
   DesignSystemDetail,
   DesignSystemSummary,
   LiveArtifact,
   LiveArtifactRefreshLogEntry,
   LiveArtifactSummary,
+  MemoryEntry,
+  MemoryListResponse,
+  MemoryType,
   ProjectDeploymentsResponse,
   PromptTemplateDetail,
   PromptTemplateSummary,
@@ -30,6 +34,8 @@ import type {
   SkillDetail,
   SkillSummary,
   UpdateDeployConfigRequest,
+  ProviderModelsRequest,
+  ProviderModelsResponse,
 } from '../types';
 import type { ArtifactManifest } from '../artifacts/types';
 
@@ -71,6 +77,112 @@ export async function testExecutionConfig(
     throw new Error(message);
   }
   return (await resp.json()) as ExecutionTestResult;
+}
+
+export async function fetchProviderModels(
+  input: ProviderModelsRequest,
+): Promise<ProviderModelsResponse> {
+  const resp = await fetch('/api/provider-models', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+  if (!resp.ok) {
+    const payload = (await resp.json().catch(() => null)) as
+      | { error?: { message?: string } | string; message?: string }
+      | null;
+    const message =
+      typeof payload?.error === 'string'
+        ? payload.error
+        : payload?.error?.message || payload?.message || `Model fetch failed (${resp.status})`;
+    throw new Error(message);
+  }
+  return (await resp.json()) as ProviderModelsResponse;
+}
+
+export async function fetchMemorySystemPrompt(): Promise<string> {
+  try {
+    const resp = await fetch('/api/memory/system-prompt');
+    if (!resp.ok) return '';
+    const json = (await resp.json()) as { body?: string };
+    return json.body ?? '';
+  } catch {
+    return '';
+  }
+}
+
+export async function extractMemoryFromMessage(userMessage: string): Promise<void> {
+  try {
+    await fetch('/api/memory/extract', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userMessage }),
+    });
+  } catch {
+    // Memory extraction must never block a chat turn.
+  }
+}
+
+export async function fetchMemoryList(): Promise<MemoryListResponse | null> {
+  try {
+    const resp = await fetch('/api/memory');
+    if (!resp.ok) return null;
+    return (await resp.json()) as MemoryListResponse;
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchMemoryEntry(id: string): Promise<MemoryEntry | null> {
+  try {
+    const resp = await fetch(`/api/memory/${encodeURIComponent(id)}`);
+    if (!resp.ok) return null;
+    const json = (await resp.json()) as { entry?: MemoryEntry };
+    return json.entry ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export async function updateMemoryConfig(enabled: boolean): Promise<void> {
+  await fetch('/api/memory/config', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ enabled }),
+  });
+}
+
+export async function saveMemoryIndex(index: string): Promise<void> {
+  await fetch('/api/memory/index', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ index }),
+  });
+}
+
+export async function saveMemoryEntry(input: {
+  id?: string;
+  name: string;
+  description: string;
+  type: MemoryType;
+  body: string;
+}): Promise<MemoryEntry | null> {
+  const url = input.id ? `/api/memory/${encodeURIComponent(input.id)}` : '/api/memory';
+  const resp = await fetch(url, {
+    method: input.id ? 'PUT' : 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+  if (!resp.ok) return null;
+  const json = (await resp.json()) as { entry?: MemoryEntry };
+  return json.entry ?? null;
+}
+
+export async function deleteMemoryEntry(id: string): Promise<boolean> {
+  const resp = await fetch(`/api/memory/${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+  });
+  return resp.ok;
 }
 
 export async function fetchSkills(): Promise<SkillSummary[]> {
@@ -309,6 +421,24 @@ export async function fetchProjectDeployments(
   } catch {
     return [];
   }
+}
+
+export async function preflightDeployProjectFile(
+  projectId: string,
+  fileName: string,
+): Promise<DeployPreflightResponse> {
+  const resp = await fetch(`/api/projects/${encodeURIComponent(projectId)}/deploy/preflight`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fileName, providerId: 'cloud-run' }),
+  });
+  if (!resp.ok) {
+    const payload = (await resp.json().catch(() => null)) as
+      | { error?: { message?: string }; message?: string }
+      | null;
+    throw new Error(payload?.error?.message || payload?.message || `Deploy preflight failed (${resp.status})`);
+  }
+  return (await resp.json()) as DeployPreflightResponse;
 }
 
 export async function deployProjectFile(

@@ -1934,6 +1934,39 @@
 }
 
 @media (max-width: 600px) {
+  .landing-masthead {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    min-height: 58px;
+    padding: 9px 20px;
+  }
+
+  .masthead-kicker,
+  .masthead-nav a {
+    display: none;
+  }
+
+  .masthead-brand {
+    min-width: 0;
+    overflow: hidden;
+    font-size: 16px;
+    line-height: 1.05;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .masthead-nav {
+    min-width: 0;
+    justify-content: flex-end;
+    gap: 0;
+  }
+
+  .masthead-command {
+    max-width: 126px;
+    flex-shrink: 0;
+  }
+
   .hero {
     padding: 80px 20px 60px;
   }

@@ -1,27 +1,12 @@
 import type Database from 'better-sqlite3';
-import type { ShipStatus } from '@pixelpitch/contracts/critique';
+import {
+  CRITIQUE_RUN_STATUSES,
+  type CritiqueRoundSummary,
+  type CritiqueRunStatus,
+} from '@pixelpitch/contracts/critique';
 
-/**
- * Final critique status persisted with each run. Mirrors the spec's CHECK
- * constraint on critique_status. 'failed' covers orchestrator-level errors,
- * 'legacy' marks rows produced before the feature shipped (reserved for the
- * artifacts-on-disk backfill in Phase 15).
- */
-export type CritiqueRunStatus =
-  | ShipStatus
-  | 'degraded'
-  | 'failed'
-  | 'legacy';
-
-export const CRITIQUE_RUN_STATUSES: readonly CritiqueRunStatus[] = [
-  'shipped',
-  'below_threshold',
-  'timed_out',
-  'interrupted',
-  'degraded',
-  'failed',
-  'legacy',
-];
+export type { CritiqueRoundSummary, CritiqueRunStatus };
+export { CRITIQUE_RUN_STATUSES };
 
 // All values accepted by the DB CHECK constraint, including the in-flight value
 // that the public type union deliberately omits.
@@ -29,13 +14,6 @@ const ALL_VALID_STATUSES: ReadonlySet<string> = new Set([
   ...CRITIQUE_RUN_STATUSES,
   'running',
 ]);
-
-export interface CritiqueRoundSummary {
-  n: number;
-  composite: number;
-  mustFix: number;
-  decision: 'continue' | 'ship';
-}
 
 export interface CritiqueRunRow {
   id: string;

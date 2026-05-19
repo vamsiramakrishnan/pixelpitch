@@ -27,6 +27,9 @@ import { loadCritiqueConfigFromEnv } from './critique/config.js';
 import { reconcileStaleRuns } from './critique/persistence.js';
 import { createRunRegistry } from './critique/run-registry.js';
 import { handleCritiqueInterrupt } from './critique/interrupt-handler.js';
+import { handleCritiqueArtifact } from './critique/artifact-handler.js';
+import { RoutineService } from './routines.js';
+import { registerRoutineRoutes, routineDbRowToContract } from './routine-routes.js';
 import { renderDesignSystemPreview } from './design-system-preview.js';
 import { renderDesignSystemShowcase } from './design-system-showcase.js';
 import { createChatRunService } from './runs.js';
@@ -53,6 +56,22 @@ import {
   VIDEO_MODELS,
 } from './media-models.js';
 import { readMaskedConfig, writeConfig } from './media-config.js';
+import {
+  composeMemoryBody,
+  deleteMemoryEntry,
+  extractFromMessage,
+  listMemoryEntries,
+  maskMemoryExtractionConfig,
+  memoryDir,
+  memoryEvents,
+  readMemoryConfig,
+  readMemoryEntry,
+  readMemoryIndex,
+  upsertMemoryEntry,
+  writeMemoryConfig,
+  writeMemoryIndex,
+} from './memory.js';
+import { listProviderModels } from './providerModels.js';
 import { readAppConfig, writeAppConfig } from './app-config.js';
 import { OrbitService, formatLocalProjectTimestamp, renderOrbitTemplateSystemPrompt } from './orbit.js';
 import {
@@ -284,9 +303,12 @@ import {
   getDeploymentById,
   getProject,
   getTemplate,
+  getLatestRoutineRun,
+  insertRoutineRun,
   insertConversation,
   insertProject,
   insertTemplate,
+  listRoutines,
   listProjectsAwaitingInput,
   listConversations,
   listDeployments,
@@ -301,6 +323,7 @@ import {
   updateConversation,
   updatePreviewCommentStatus,
   updateProject,
+  updateRoutineRun,
   upsertDeployment,
   upsertMessage,
   upsertPreviewComment,
@@ -404,6 +427,39 @@ export function renderCommentAttachmentHint(commentAttachments) {
 
 function cleanString(value) {
   return typeof value === 'string' ? value.trim() : '';
+}
+
+function sendBufferWithRange(req, res, file) {
+  const size = file.buffer.length;
+  const range = req.headers.range;
+  res.setHeader('Accept-Ranges', 'bytes');
+  res.type(file.mime);
+  if (typeof range !== 'string' || !range.startsWith('bytes=')) {
+    res.setHeader('Content-Length', String(size));
+    res.send(file.buffer);
+    return;
+  }
+  const match = /^bytes=(\d*)-(\d*)$/.exec(range.trim());
+  if (!match) {
+    res.status(416).setHeader('Content-Range', `bytes */${size}`).end();
+    return;
+  }
+  let start = match[1] ? Number(match[1]) : 0;
+  let end = match[2] ? Number(match[2]) : size - 1;
+  if (!match[1] && match[2]) {
+    const suffixLength = Number(match[2]);
+    start = Math.max(size - suffixLength, 0);
+    end = size - 1;
+  }
+  if (!Number.isFinite(start) || !Number.isFinite(end) || start < 0 || end < start || start >= size) {
+    res.status(416).setHeader('Content-Range', `bytes */${size}`).end();
+    return;
+  }
+  end = Math.min(end, size - 1);
+  res.status(206);
+  res.setHeader('Content-Range', `bytes ${start}-${end}/${size}`);
+  res.setHeader('Content-Length', String(end - start + 1));
+  res.send(file.buffer.subarray(start, end + 1));
 }
 
 function compactString(value, max) {
@@ -3110,13 +3166,14 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       const root = typeof req.query?.root === 'string' ? req.query.root : '';
       const project = getProject(db, req.params.id);
       if (!project) return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
+      const fallbackName = project?.name || req.params.id;
       const { buffer, baseName } = await buildProjectArchive(
         PROJECTS_DIR,
         req.params.id,
         root,
         project.metadata,
+        fallbackName,
       );
-      const fallbackName = project?.name || req.params.id;
       const fileSlug = sanitizeArchiveFilename(baseName || fallbackName) || 'project';
       const filename = `${fileSlug}.zip`;
       // RFC 5987 dance: legacy `filename=` carries an ASCII fallback, while
@@ -3230,7 +3287,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       if (req.headers.origin === 'null') {
         res.header('Access-Control-Allow-Origin', '*');
       }
-      res.type(file.mime).send(file.buffer);
+      sendBufferWithRange(req, res, file);
     } catch (err) {
       const status = err && err.code === 'ENOENT' ? 404 : 400;
       sendApiError(
@@ -3333,7 +3390,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
         req.params.name,
         getProject(db, req.params.id)?.metadata,
       );
-      res.type(file.mime).send(file.buffer);
+      sendBufferWithRange(req, res, file);
     } catch (err) {
       const status = err && err.code === 'ENOENT' ? 404 : 400;
       sendApiError(
@@ -3535,6 +3592,105 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       res
         .status(500)
         .json({ error: String(err && err.message ? err.message : err) });
+    }
+  });
+
+  app.get('/api/memory', async (req, res) => {
+    try {
+      const [config, index, entries] = await Promise.all([
+        readMemoryConfig(RUNTIME_DATA_DIR),
+        readMemoryIndex(RUNTIME_DATA_DIR),
+        listMemoryEntries(RUNTIME_DATA_DIR),
+      ]);
+      res.json({
+        enabled: config.enabled,
+        rootDir: memoryDir(RUNTIME_DATA_DIR),
+        index,
+        entries,
+        extraction: maskMemoryExtractionConfig(config.extraction),
+      });
+    } catch (err) {
+      sendApiError(res, 500, 'INTERNAL_ERROR', String(err?.message || err));
+    }
+  });
+
+  app.get('/api/memory/system-prompt', async (req, res) => {
+    try {
+      res.json({ body: await composeMemoryBody(RUNTIME_DATA_DIR) });
+    } catch (err) {
+      sendApiError(res, 500, 'INTERNAL_ERROR', String(err?.message || err));
+    }
+  });
+
+  app.get('/api/memory/events', (req, res) => {
+    const sse = createSseResponse(res);
+    const onChange = (event) => sse.send('memory', event);
+    memoryEvents.on('change', onChange);
+    res.on('close', () => {
+      memoryEvents.off('change', onChange);
+      sse.cleanup();
+    });
+  });
+
+  app.post('/api/memory/extract', async (req, res) => {
+    try {
+      const changed = await extractFromMessage(RUNTIME_DATA_DIR, cleanString(req.body?.userMessage));
+      res.json({ changed, attemptedLLM: false });
+    } catch (err) {
+      sendApiError(res, 400, 'BAD_REQUEST', String(err?.message || err));
+    }
+  });
+
+  app.put('/api/memory/index', async (req, res) => {
+    try {
+      await writeMemoryIndex(RUNTIME_DATA_DIR, cleanString(req.body?.index));
+      res.json({ ok: true });
+    } catch (err) {
+      sendApiError(res, 400, 'BAD_REQUEST', String(err?.message || err));
+    }
+  });
+
+  app.patch('/api/memory/config', async (req, res) => {
+    try {
+      res.json(await writeMemoryConfig(RUNTIME_DATA_DIR, req.body || {}));
+    } catch (err) {
+      sendApiError(res, 400, 'BAD_REQUEST', String(err?.message || err));
+    }
+  });
+
+  app.post('/api/memory', async (req, res) => {
+    try {
+      const entry = await upsertMemoryEntry(RUNTIME_DATA_DIR, req.body || {});
+      res.json({ entry });
+    } catch (err) {
+      sendApiError(res, 400, 'BAD_REQUEST', String(err?.message || err));
+    }
+  });
+
+  app.get('/api/memory/:id', async (req, res) => {
+    const entry = await readMemoryEntry(RUNTIME_DATA_DIR, req.params.id);
+    if (!entry) return sendApiError(res, 404, 'NOT_FOUND', 'memory entry not found');
+    res.json({ entry });
+  });
+
+  app.put('/api/memory/:id', async (req, res) => {
+    try {
+      const entry = await upsertMemoryEntry(RUNTIME_DATA_DIR, {
+        ...(req.body || {}),
+        id: req.params.id,
+      });
+      res.json({ entry });
+    } catch (err) {
+      sendApiError(res, 400, 'BAD_REQUEST', String(err?.message || err));
+    }
+  });
+
+  app.delete('/api/memory/:id', async (req, res) => {
+    try {
+      await deleteMemoryEntry(RUNTIME_DATA_DIR, req.params.id);
+      res.json({ ok: true });
+    } catch (err) {
+      sendApiError(res, 400, 'BAD_REQUEST', String(err?.message || err));
     }
   });
 
@@ -3886,7 +4042,9 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       craftDir: CRAFT_DIR,
       includePrompt: true,
     });
+    const memoryBody = await composeMemoryBody(RUNTIME_DATA_DIR);
     return [
+      memoryBody ? `# Memory\n\n${memoryBody}` : '',
       resolved.prompt,
       renderContextTraceForAgent(resolved),
     ].filter(Boolean).join('\n\n---\n\n');
@@ -4058,6 +4216,7 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     });
     const runtimeToolPrompt = toolContext.runtimeToolPrompt;
     const commentHint = renderCommentAttachmentHint(safeCommentAttachments);
+    await extractFromMessage(RUNTIME_DATA_DIR, message);
     const daemonSystemPrompt = await composeDaemonSystemPrompt({
       projectId,
       skillId,
@@ -4469,6 +4628,133 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
     };
   });
 
+  const routineService = new RoutineService({
+    list: () => listRoutines(db).map((row) => routineDbRowToContract(row, null)),
+    insertRun: (run) => {
+      insertRoutineRun(db, {
+        routineId: run.routineId,
+        id: run.id,
+        trigger: run.trigger,
+        status: run.status,
+        projectId: run.projectId,
+        conversationId: run.conversationId,
+        agentRunId: run.agentRunId,
+        startedAt: run.startedAt,
+        completedAt: run.completedAt,
+        summary: run.summary,
+        error: run.error,
+      });
+    },
+    updateRun: (id, patch) => updateRoutineRun(db, id, patch),
+    getLatestRun: (routineId) => getLatestRoutineRun(db, routineId),
+  });
+
+  routineService.setRunHandler(async ({ routine, trigger, startedAt }) => {
+    const config = await readAppConfig(RUNTIME_DATA_DIR);
+    let agentId = routine.agentId
+      || (typeof config.agentId === 'string' && config.agentId ? config.agentId : null);
+    if (!agentId) {
+      const agents = detectAgents(config.agentCliEnv ?? {});
+      agentId = agents.find((agent) => agent.available)?.id ?? null;
+    }
+    if (!agentId) {
+      throw new Error('No available agent is configured. Choose an agent in Settings first.');
+    }
+
+    const now = startedAt;
+    const stamp = formatLocalProjectTimestamp(new Date(now).toISOString());
+    let projectId;
+    let projectName;
+    if (routine.target.mode === 'reuse') {
+      const project = getProject(db, routine.target.projectId);
+      if (!project) throw new Error(`Routine target project ${routine.target.projectId} not found`);
+      projectId = project.id;
+      projectName = project.name;
+    } else {
+      projectId = `routine-${randomUUID()}`;
+      projectName = `${routine.name} · ${stamp}`;
+      insertProject(db, {
+        id: projectId,
+        name: projectName,
+        skillId: routine.skillId ?? null,
+        designSystemId: config.designSystemId ?? null,
+        pendingPrompt: null,
+        metadata: { kind: 'other', intent: 'routine', routineId: routine.id, trigger },
+        createdAt: now,
+        updatedAt: now,
+      });
+    }
+
+    const conversationId = `routine-conv-${randomUUID()}`;
+    const conversationTitle = routine.target.mode === 'reuse'
+      ? `${routine.name} · ${stamp}`
+      : projectName;
+    insertConversation(db, {
+      id: conversationId,
+      projectId,
+      title: conversationTitle,
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    const assistantMessageId = `routine-assistant-${randomUUID()}`;
+    const run = design.runs.create({
+      projectId,
+      conversationId,
+      assistantMessageId,
+      clientRequestId: `routine-${trigger}-${randomUUID()}`,
+      agentId,
+    });
+    upsertMessage(db, conversationId, {
+      id: `routine-user-${run.id}`,
+      role: 'user',
+      content: routine.prompt,
+    });
+    upsertMessage(db, conversationId, {
+      id: assistantMessageId,
+      role: 'assistant',
+      content: '',
+      agentId,
+      agentName: getAgentDef(agentId)?.name ?? agentId,
+      runId: run.id,
+      runStatus: 'queued',
+      startedAt: now,
+    });
+
+    const modelPrefs = config.agentModels?.[agentId] ?? {};
+    design.runs.start(run, () => startChatRun({
+      agentId,
+      projectId,
+      conversationId: run.conversationId,
+      assistantMessageId: run.assistantMessageId,
+      clientRequestId: run.clientRequestId,
+      skillId: routine.skillId ?? null,
+      designSystemId: config.designSystemId ?? null,
+      model: modelPrefs.model ?? null,
+      reasoning: modelPrefs.reasoning ?? null,
+      message: routine.prompt,
+      systemPrompt: [
+        `You are running an unattended scheduled routine named "${routine.name}".`,
+        'Do not ask follow-up questions, do not emit <question-form>, and do not wait for user input. Pick reasonable defaults and finish the task.',
+      ].join('\n'),
+    }, run));
+
+    const completion = (async () => {
+      const finalStatus = await design.runs.wait(run);
+      db.prepare(`UPDATE messages SET run_status = ?, ended_at = ? WHERE id = ?`)
+        .run(finalStatus.status, Date.now(), assistantMessageId);
+      return {
+        status: finalStatus.status,
+        summary: `Routine "${routine.name}" ${finalStatus.status}.`,
+      };
+    })();
+
+    return { projectId, conversationId, agentRunId: run.id, completion };
+  });
+  routineService.start();
+
+  registerRoutineRoutes(app, { db, routineService });
+
   app.get('/api/orbit/status', async (_req, res) => {
     try {
       res.json(await orbitService.status());
@@ -4526,6 +4812,14 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
   app.post(
     '/api/projects/:projectId/critique/:runId/interrupt',
     handleCritiqueInterrupt(db, critiqueRunRegistry),
+  );
+
+  app.get(
+    '/api/projects/:projectId/critique/:runId/artifact',
+    handleCritiqueArtifact(db, {
+      artifactsRoot: ARTIFACTS_DIR,
+      responseCapBytes: critiqueCfg.parserMaxBlockBytes,
+    }),
   );
 
   app.post('/api/chat', (req, res) => {
@@ -4693,6 +4987,21 @@ export async function startServer({ port = 17456, host = process.env.PIXELPITCH_
       });
     }
     res.json(await testApiExecutionConfig(input));
+  });
+
+  app.post('/api/provider-models', async (req, res) => {
+    if (!isLocalSameOrigin(req, resolvedPort)) {
+      return res.status(403).json({ error: 'cross-origin request rejected' });
+    }
+    const input = req.body || {};
+    const protocol = input.protocol === 'openai' || input.protocol === 'ollama'
+      ? input.protocol
+      : 'anthropic';
+    return res.json(await listProviderModels({
+      protocol,
+      baseUrl: cleanString(input.baseUrl),
+      apiKey: cleanString(input.apiKey),
+    }));
   });
 
   app.post('/api/proxy/anthropic/stream', async (req, res) => {

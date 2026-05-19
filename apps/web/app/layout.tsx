@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import Script from 'next/script';
 import type { ReactNode } from 'react';
 import { I18nProvider } from '../src/i18n';
 import { LayerProvider } from '../src/layers';
@@ -33,12 +34,10 @@ const themeInitScript = `(function(){try{var t=JSON.parse(localStorage.getItem('
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang='en' suppressHydrationWarning>
-      {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-      <head>
-        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: intentional theme-init inline script to prevent FOUC */}
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-      </head>
       <body suppressHydrationWarning>
+        <Script id="pixelpitch-theme-init" strategy="beforeInteractive">
+          {themeInitScript}
+        </Script>
         <I18nProvider>
           <LayerProvider>{children}</LayerProvider>
         </I18nProvider>

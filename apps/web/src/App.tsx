@@ -55,8 +55,7 @@ const ENTRY_TOP_TABS = new Set<EntryTopTab>([
   'designs',
   'examples',
   'design-systems',
-  'image-templates',
-  'video-templates',
+  'media',
 ]);
 
 const CREATE_TABS = new Set<CreateTab>([
@@ -81,7 +80,12 @@ function studioIntentFromLocation(): StudioIntent {
     ? (rawTab as EntryTopTab)
     : null;
   if (!topTab && createTab) topTab = 'designs';
-  if (!topTab && rawTab === 'templates') topTab = 'image-templates';
+  if (
+    !topTab
+    && (rawTab === 'templates' || rawTab === 'image-templates' || rawTab === 'video-templates')
+  ) {
+    topTab = 'media';
+  }
   return { topTab, createTab };
 }
 
@@ -146,6 +150,20 @@ export function App() {
     const onPop = () => setStudioIntent(studioIntentFromLocation());
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
+  }, []);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented) return;
+      if ((event.metaKey || event.ctrlKey) && event.key === ',') {
+        event.preventDefault();
+        setSettingsWelcome(false);
+        setSettingsSection(undefined);
+        setSettingsOpen(true);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
 
   // Sync theme preference to the <html> element so CSS variables pick it up.
@@ -413,6 +431,17 @@ export function App() {
     navigate({ kind: 'project', projectId: id, fileName: null });
   }, []);
 
+  const handleOpenLiveArtifact = useCallback((projectId: string) => {
+    navigate({ kind: 'project', projectId, fileName: null });
+  }, []);
+
+  const handleRenameProject = useCallback((id: string, name: string) => {
+    setProjects((curr) =>
+      curr.map((p) => (p.id === id ? { ...p, name, updatedAt: Date.now() } : p)),
+    );
+    void patchProject(id, { name, updatedAt: Date.now() });
+  }, []);
+
   const handleDeleteProject = useCallback(
     async (id: string) => {
       const ok = await deleteProjectApi(id);
@@ -591,7 +620,9 @@ export function App() {
           onCreateProject={handleCreateProject}
           onImportClaudeDesign={handleImportClaudeDesign}
           onOpenProject={handleOpenProject}
+          onOpenLiveArtifact={handleOpenLiveArtifact}
           onDeleteProject={handleDeleteProject}
+          onRenameProject={handleRenameProject}
           onChangeDefaultDesignSystem={handleChangeDefaultDesignSystem}
           onOpenSettings={openSettings}
           onAdoptPet={openPetSettings}

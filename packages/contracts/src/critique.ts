@@ -173,3 +173,36 @@ export function panelEventToSse(e: PanelEvent): CritiqueSseEvent {
   // data. The cast is safe by construction.
   return { event: `critique.${type}`, data: payload } as CritiqueSseEvent;
 }
+
+export interface CritiqueRoundSummary {
+  n: number;
+  composite: number;
+  mustFix: number;
+  decision: RoundDecision;
+}
+
+export type CritiqueRunStatus =
+  | ShipStatus
+  | 'degraded'
+  | 'failed'
+  | 'legacy';
+
+export const CRITIQUE_RUN_STATUSES = [
+  'shipped',
+  'below_threshold',
+  'timed_out',
+  'interrupted',
+  'degraded',
+  'failed',
+  'legacy',
+] as const satisfies readonly CritiqueRunStatus[];
+
+export type CritiquePersistedStatus = CritiqueRunStatus | 'running';
+
+export interface CritiqueArtifactRef {
+  projectId: string;
+  runId: string;
+  mime: string;
+  sizeBytes: number;
+  url: string;
+}

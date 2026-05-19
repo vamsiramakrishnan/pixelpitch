@@ -119,13 +119,13 @@ export function StudioCommandPalette({
         run: () => goStudio('/app?tab=design-systems'),
       },
       {
-        id: 'image-templates',
-        title: 'Image prompt library',
-        detail: 'Jump to visual prompt templates',
+        id: 'media-templates',
+        title: 'Media prompt library',
+        detail: 'Jump to image and video prompt templates',
         group: 'Explore',
         icon: 'image',
-        keywords: 'image templates prompts media',
-        run: () => goStudio('/app?tab=image-templates'),
+        keywords: 'image video templates prompts media',
+        run: () => goStudio('/app?tab=media'),
       },
       {
         id: 'settings',

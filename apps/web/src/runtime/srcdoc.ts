@@ -14,9 +14,16 @@
  *   { type: 'od:slide-state', active: number, count: number }
  * after every navigation so the host can render its own counter / dots.
  */
+import {
+  buildManualEditBridge,
+  buildManualEditBridgeStyle,
+  MANUAL_EDIT_DISCOVERY_SELECTOR,
+  MANUAL_EDIT_SOURCE_PATH_ATTR,
+} from '../edit-mode/bridge';
+
 export function buildSrcdoc(
   html: string,
-  options: { deck?: boolean; baseHref?: string; initialSlideIndex?: number; commentBridge?: boolean; inspectBridge?: boolean } = {}
+  options: { deck?: boolean; baseHref?: string; initialSlideIndex?: number; commentBridge?: boolean; inspectBridge?: boolean; editBridge?: boolean } = {}
 ): string {
   const head = html.trimStart().slice(0, 64).toLowerCase();
   const isFullDoc = head.startsWith("<!doctype") || head.startsWith("<html");
@@ -30,10 +37,86 @@ export function buildSrcdoc(
   </head>
   <body>${html}</body>
 </html>`;
-  const withBase = options.baseHref ? injectBaseHref(wrapped, options.baseHref) : wrapped;
+  const withSourcePaths = options.editBridge ? annotateManualEditSourcePaths(wrapped) : wrapped;
+  const withBase = options.baseHref ? injectBaseHref(withSourcePaths, options.baseHref) : withSourcePaths;
   const withShim = injectSandboxShim(withBase);
   const withDeck = options.deck ? injectDeckBridge(withShim, options.initialSlideIndex) : withShim;
-  return options.commentBridge || options.inspectBridge ? injectCommentBridge(withDeck) : withDeck;
+  const withComment = options.commentBridge || options.inspectBridge ? injectCommentBridge(withDeck) : withDeck;
+  return options.editBridge ? injectManualEditBridge(withComment) : withComment;
+}
+
+function injectManualEditBridge(doc: string): string {
+  const withStyle = injectBeforeHeadEnd(doc, buildManualEditBridgeStyle());
+  return injectBeforeBodyEnd(withStyle, buildManualEditBridge(true));
+}
+
+function annotateManualEditSourcePaths(doc: string): string {
+  if (typeof DOMParser === 'undefined') return doc;
+  try {
+    const parsed = new DOMParser().parseFromString(doc, 'text/html');
+    parsed.body.querySelectorAll(MANUAL_EDIT_DISCOVERY_SELECTOR).forEach((el) => {
+      if (el.hasAttribute('data-od-id')) return;
+      const path = sourcePathForElement(el);
+      if (path) el.setAttribute(MANUAL_EDIT_SOURCE_PATH_ATTR, path);
+    });
+    return serializeHtmlDocument(parsed);
+  } catch {
+    return doc;
+  }
+}
+
+function sourcePathForElement(el: Element): string {
+  const parts: number[] = [];
+  let node: Element | null = el;
+  while (node && node !== node.ownerDocument.body) {
+    const parent: Element | null = node.parentElement;
+    if (!parent) break;
+    parts.unshift(Array.prototype.indexOf.call(parent.children, node));
+    node = parent;
+  }
+  return parts.length ? `path-${parts.join('-')}` : '';
+}
+
+function serializeHtmlDocument(doc: Document): string {
+  const doctype = doc.doctype ? '<!doctype html>\n' : '';
+  return `${doctype}${doc.documentElement.outerHTML}`;
+}
+
+function injectBeforeHeadEnd(doc: string, payload: string): string {
+  if (typeof DOMParser !== 'undefined') {
+    try {
+      const parsed = new DOMParser().parseFromString(doc, 'text/html');
+      if (parsed.head) parsed.head.insertAdjacentHTML('beforeend', payload);
+      return serializeHtmlDocument(parsed);
+    } catch {
+      // Fall through to string insertion.
+    }
+  }
+  const lower = doc.toLowerCase();
+  const bodyStart = lower.indexOf('<body');
+  const limit = bodyStart >= 0 ? bodyStart : lower.length;
+  const idx = lower.lastIndexOf('</head>', limit - 1);
+  if (idx >= 0) return doc.slice(0, idx) + payload + doc.slice(idx);
+  if (/<head[^>]*>/i.test(doc)) return doc.replace(/<head[^>]*>/i, (m) => `${m}${payload}`);
+  return payload + doc;
+}
+
+function injectBeforeBodyEnd(doc: string, payload: string): string {
+  if (typeof DOMParser !== 'undefined') {
+    try {
+      const parsed = new DOMParser().parseFromString(doc, 'text/html');
+      if (parsed.body) parsed.body.insertAdjacentHTML('beforeend', payload);
+      return serializeHtmlDocument(parsed);
+    } catch {
+      // Fall through to string insertion.
+    }
+  }
+  const lower = doc.toLowerCase();
+  const htmlEnd = lower.lastIndexOf('</html>');
+  const limit = htmlEnd >= 0 ? htmlEnd : lower.length;
+  const idx = lower.lastIndexOf('</body>', limit - 1);
+  if (idx >= 0) return doc.slice(0, idx) + payload + doc.slice(idx);
+  return doc + payload;
 }
 
 function injectBaseHref(doc: string, baseHref: string): string {

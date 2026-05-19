@@ -29,14 +29,25 @@ describe('buildProjectArchive', () => {
   });
 
   it('zips the requested subdirectory tree', async () => {
-    const { buffer, baseName } = await buildProjectArchive(projectsRoot, projectId, 'ui-design');
+    const { buffer, baseName } = await buildProjectArchive(projectsRoot, projectId, 'ui-design', null, 'Archive Test');
     expect(baseName).toBe('ui-design');
     const zip = await JSZip.loadAsync(buffer);
     const fileEntries = Object.values(zip.files)
       .filter((entry) => !entry.dir)
       .map((entry) => entry.name)
       .sort();
-    expect(fileEntries).toEqual(['frames/phone.html', 'index.html', 'src/app.css']);
+    expect(fileEntries).toEqual([
+      'DESIGN-HANDOFF.md',
+      'DESIGN-MANIFEST.json',
+      'frames/phone.html',
+      'index.html',
+      'src/app.css',
+    ]);
+    const manifest = JSON.parse(await zip.file('DESIGN-MANIFEST.json')!.async('string'));
+    expect(manifest.title).toBe('Archive Test');
+    expect(manifest.entryFile).toBe('index.html');
+    expect(manifest.screens.map((screen: { file: string }) => screen.file)).toEqual(['index.html']);
+    expect(await zip.file('DESIGN-HANDOFF.md')!.async('string')).toContain('DESIGN-MANIFEST.json');
   });
 
   it('zips the whole project when no root is given', async () => {
@@ -47,6 +58,8 @@ describe('buildProjectArchive', () => {
       .filter((entry) => !entry.dir)
       .map((entry) => entry.name);
     expect(fileEntries).toContain('README.md');
+    expect(fileEntries).toContain('DESIGN-HANDOFF.md');
+    expect(fileEntries).toContain('DESIGN-MANIFEST.json');
     expect(fileEntries).toContain('ui-design/index.html');
     expect(fileEntries).toContain('ui-design/src/app.css');
     // dotfiles and .artifact.json sidecars are filtered, matching listFiles

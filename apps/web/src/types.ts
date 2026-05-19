@@ -16,6 +16,7 @@ import type {
   ContextResolveResponse,
   ContextSearchResponse,
   DeployConfigResponse,
+  DeployPreflightResponse,
   DeployProjectFileResponse,
   DesignSystemDetail,
   DesignSystemSummary,
@@ -26,6 +27,9 @@ import type {
   LiveArtifactStatus,
   LiveArtifactSummary,
   MediaAspect,
+  MemoryEntry,
+  MemoryListResponse,
+  MemoryType,
   ProjectDeploymentsResponse,
   PersistedAgentEvent,
   Project,
@@ -33,6 +37,8 @@ import type {
   PreviewCommentStatus,
   PreviewCommentTarget,
   PreviewCommentUpsertRequest,
+  ProviderModelsRequest,
+  ProviderModelsResponse,
   ProjectDisplayStatus,
   ProjectFile,
   ProjectFileKind,
@@ -50,6 +56,9 @@ import type {
 
 export type { ContextResolveRequest, ContextResolveResponse, ContextSearchResponse };
 export type { ConnectionTestRequest, ConnectionTestResponse };
+export type { ProviderModelsRequest, ProviderModelsResponse };
+export type { MemoryEntry, MemoryListResponse, MemoryType };
+export type { DeployPreflightResponse };
 
 export type ExecMode = 'daemon' | 'api';
 export type ApiProtocol = 'anthropic' | 'openai' | 'ollama';

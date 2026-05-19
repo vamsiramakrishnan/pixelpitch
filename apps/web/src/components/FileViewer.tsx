@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { createPortal } from 'react-dom';
 import { MarkdownRenderer, artifactRendererRegistry } from '../artifacts/renderer-registry';
 import { renderMarkdownToSafeHtml } from '../artifacts/markdown';
 import { useT } from '../i18n';
@@ -12,10 +13,12 @@ import {
   fetchProjectDeployments,
   fetchProjectFilePreview,
   fetchProjectFileText,
+  preflightDeployProjectFile,
   projectFileUrl,
   projectRawUrl,
   updateDeployConfig,
   uploadProjectFiles,
+  writeProjectTextFile,
 } from '../providers/registry';
 import type { ProjectFilePreview } from '../providers/registry';
 import {
@@ -31,7 +34,7 @@ import {
 import { buildReactComponentSrcdoc } from '../runtime/react-component';
 import { buildSrcdoc } from '../runtime/srcdoc';
 import { saveTemplate } from '../state/projects';
-import type { DeployConfigResponse, DeployProjectFileResponse, ElementEditOperation, ProjectFile } from '../types';
+import type { DeployConfigResponse, DeployPreflightResponse, DeployProjectFileResponse, ElementEditOperation, ProjectFile } from '../types';
 import { Icon } from './Icon';
 import {
   liveSnapshotForComment,
@@ -41,6 +44,17 @@ import {
   type PreviewCommentSnapshot,
 } from '../comments';
 import type { PreviewComment, PreviewCommentTarget } from '../types';
+import { APP_CHROME_FILE_ACTIONS_ID } from './AppChromeHeader';
+import { ManualEditPanel, emptyManualEditDraft, type ManualEditDraft } from './ManualEditPanel';
+import { PaletteTweaks, type PaletteId } from './PaletteTweaks';
+import {
+  applyManualEditPatch,
+  readManualEditAttributes,
+  readManualEditFields,
+  readManualEditOuterHtml,
+  readManualEditStyles,
+} from '../edit-mode/source-patches';
+import type { ManualEditBridgeMessage, ManualEditHistoryEntry, ManualEditPatch, ManualEditTarget } from '../edit-mode/types';
 
 type TranslateFn = (key: keyof Dict, vars?: Record<string, string | number>) => string;
 type SlideState = { active: number; count: number };
@@ -68,6 +82,20 @@ type TargetMode = 'comment' | 'inspect' | 'edit' | 'draw';
 type InspectApplyScope = 'element' | 'section' | 'similar';
 type ColorToken = { label: string; value: string; source: 'token' | 'custom' };
 type ContrastSummary = { ratio: number | null; label: string; pass: boolean };
+type PreviewViewportId = 'fill' | 'mobile' | 'tablet' | 'desktop' | 'wide';
+
+const PREVIEW_VIEWPORTS: Array<{
+  id: PreviewViewportId;
+  label: string;
+  width: number | null;
+  height: number | null;
+}> = [
+  { id: 'fill', label: 'Fill', width: null, height: null },
+  { id: 'mobile', label: '390 mobile', width: 390, height: 844 },
+  { id: 'tablet', label: '820 tablet', width: 820, height: 1180 },
+  { id: 'desktop', label: '1440 desktop', width: 1440, height: 900 },
+  { id: 'wide', label: '1920 wide', width: 1920, height: 1080 },
+];
 
 const htmlPreviewSlideState = new Map<string, SlideState>();
 
@@ -78,6 +106,8 @@ interface Props {
   isDeck?: boolean;
   onExportAsPptx?: ((fileName: string) => void) | undefined;
   streaming?: boolean;
+  focusMode?: boolean;
+  onFocusModeChange?: (focused: boolean) => void;
   previewComments?: PreviewComment[];
   onSavePreviewComment?: (target: PreviewCommentTarget, note: string, attachAfterSave: boolean) => Promise<PreviewComment | null>;
   onRemovePreviewComment?: (commentId: string) => Promise<void>;
@@ -94,6 +124,8 @@ export function FileViewer({
   isDeck,
   onExportAsPptx,
   streaming,
+  focusMode = false,
+  onFocusModeChange,
   previewComments = [],
   onSavePreviewComment,
   onRemovePreviewComment,
@@ -116,6 +148,8 @@ export function FileViewer({
         isDeck={rendererMatch.renderer.id === 'deck-html'}
         onExportAsPptx={onExportAsPptx}
         streaming={Boolean(streaming)}
+        focusMode={focusMode}
+        onFocusModeChange={onFocusModeChange}
         previewComments={previewComments}
         onSavePreviewComment={onSavePreviewComment}
         onRemovePreviewComment={onRemovePreviewComment}
@@ -1143,6 +1177,8 @@ function HtmlViewer({
   isDeck,
   onExportAsPptx,
   streaming,
+  focusMode,
+  onFocusModeChange,
   previewComments = [],
   onSavePreviewComment,
   onRemovePreviewComment,
@@ -1157,6 +1193,8 @@ function HtmlViewer({
   isDeck: boolean;
   onExportAsPptx?: ((fileName: string) => void) | undefined;
   streaming: boolean;
+  focusMode: boolean;
+  onFocusModeChange?: (focused: boolean) => void;
   previewComments?: PreviewComment[];
   onSavePreviewComment?: (target: PreviewCommentTarget, note: string, attachAfterSave: boolean) => Promise<PreviewComment | null>;
   onRemovePreviewComment?: (commentId: string) => Promise<void>;
@@ -1170,8 +1208,11 @@ function HtmlViewer({
   const [source, setSource] = useState<string | null>(liveHtml ?? null);
   const [inlinedSource, setInlinedSource] = useState<string | null>(null);
   const [zoom, setZoom] = useState(100);
+  const [previewViewport, setPreviewViewport] = useState<PreviewViewportId>('fill');
   const [presentMenuOpen, setPresentMenuOpen] = useState(false);
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
+  const [paletteTweaksOpen, setPaletteTweaksOpen] = useState(false);
+  const [selectedPalette, setSelectedPalette] = useState<PaletteId | null>(null);
   // Template save UX. We surface a transient "Saved" pill in the share
   // menu so the user gets feedback without a noisy toast layer.
   const [savingTemplate, setSavingTemplate] = useState(false);
@@ -1184,6 +1225,8 @@ function HtmlViewer({
   const [savingDeployConfig, setSavingDeployConfig] = useState(false);
   const [deployError, setDeployError] = useState<string | null>(null);
   const [deployResult, setDeployResult] = useState<DeployProjectFileResponse | null>(null);
+  const [deployPreflight, setDeployPreflight] = useState<DeployPreflightResponse | null>(null);
+  const [checkingDeployPreflight, setCheckingDeployPreflight] = useState(false);
   const [copiedDeployLink, setCopiedDeployLink] = useState(false);
   const [cloudRunProjectId, setCloudRunProjectId] = useState('');
   const [cloudRunRegion, setCloudRunRegion] = useState('us-central1');
@@ -1193,6 +1236,14 @@ function HtmlViewer({
   const [reloadKey, setReloadKey] = useState(0);
   const [inspectMode, setInspectMode] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [manualEditMode, setManualEditMode] = useState(false);
+  const [manualEditTargets, setManualEditTargets] = useState<ManualEditTarget[]>([]);
+  const [selectedManualEditTarget, setSelectedManualEditTarget] = useState<ManualEditTarget | null>(null);
+  const [manualEditDraft, setManualEditDraft] = useState<ManualEditDraft>(() => emptyManualEditDraft());
+  const [manualEditHistory, setManualEditHistory] = useState<ManualEditHistoryEntry[]>([]);
+  const [manualEditUndone, setManualEditUndone] = useState<ManualEditHistoryEntry[]>([]);
+  const [manualEditError, setManualEditError] = useState<string | null>(null);
+  const [manualEditSaving, setManualEditSaving] = useState(false);
   const [drawMode, setDrawMode] = useState(false);
   const [activeInspectTarget, setActiveInspectTarget] = useState<InspectSnapshot | null>(null);
   const [inspectBaseline, setInspectBaseline] = useState<InspectStyleDraft>(EMPTY_INSPECT_STYLE);
@@ -1216,6 +1267,7 @@ function HtmlViewer({
   const [slideState, setSlideState] = useState<SlideState | null>(
     () => htmlPreviewSlideState.get(previewStateKey) ?? null,
   );
+  const [chromeActionsHost, setChromeActionsHost] = useState<HTMLElement | null>(null);
   const previewBodyRef = useRef<HTMLDivElement | null>(null);
   const previewFrameWrapRef = useRef<HTMLDivElement | null>(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
@@ -1223,6 +1275,11 @@ function HtmlViewer({
   const presentWrapRef = useRef<HTMLDivElement | null>(null);
   const foregroundSlideLockRef = useRef<number | null>(null);
   const lastAnnotationSlideNavRef = useRef<{ action: string; at: number } | null>(null);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    setChromeActionsHost(document.getElementById(APP_CHROME_FILE_ACTIONS_ID));
+  }, []);
 
   const presentLayer = usePopoverLayer({
     open: presentMenuOpen,
@@ -1284,7 +1341,7 @@ function HtmlViewer({
     );
   }, [source]);
   const effectiveDeck = isDeck || looksLikeDeck;
-  const targetingModeActive = commentMode || inspectMode || editMode || drawMode;
+  const targetingModeActive = commentMode || inspectMode || editMode || drawMode || manualEditMode;
   const previewSource = inlinedSource ?? source;
   const inspectPalette = useMemo(() => extractColorTokens(previewSource), [previewSource]);
 
@@ -1307,8 +1364,9 @@ function HtmlViewer({
       initialSlideIndex: htmlPreviewSlideState.get(previewStateKey)?.active ?? 0,
       commentBridge: commentMode,
       inspectBridge: inspectMode || editMode || drawMode,
+      editBridge: manualEditMode,
     }) : ''),
-    [previewSource, effectiveDeck, projectId, file.name, previewStateKey, commentMode, inspectMode, editMode, drawMode],
+    [previewSource, effectiveDeck, projectId, file.name, previewStateKey, commentMode, inspectMode, editMode, drawMode, manualEditMode],
   );
 
   useEffect(() => {
@@ -1414,10 +1472,11 @@ function HtmlViewer({
             ? 'draw'
             : 'off';
     win.postMessage({ type: 'od:preview-target-mode', mode, enabled: mode !== 'off' }, '*');
+    win.postMessage({ type: 'od-edit-mode', enabled: manualEditMode }, '*');
     if (mode !== 'off') {
       window.requestAnimationFrame(() => previewBodyRef.current?.focus({ preventScroll: true }));
     }
-  }, [commentMode, inspectMode, editMode, drawMode, srcDoc]);
+  }, [commentMode, inspectMode, editMode, drawMode, manualEditMode, srcDoc]);
 
   useEffect(() => {
     if (!effectiveDeck || mode !== 'preview' || !targetingModeActive) {
@@ -1441,7 +1500,20 @@ function HtmlViewer({
     setDrawInstruction('');
     setLiveCommentTargets(new Map());
     setCommentDraft('');
+    setManualEditTargets([]);
+    setSelectedManualEditTarget(null);
+    setManualEditDraft(emptyManualEditDraft());
+    setManualEditHistory([]);
+    setManualEditUndone([]);
+    setManualEditError(null);
   }, [file.name]);
+
+  useEffect(() => {
+    if (source == null) return;
+    setManualEditDraft((current) =>
+      current.fullSource === source ? current : { ...current, fullSource: source },
+    );
+  }, [source]);
 
   useEffect(() => {
     if (!commentMode && !inspectMode && !editMode && !drawMode) {
@@ -1556,6 +1628,132 @@ function HtmlViewer({
     return () => window.removeEventListener('message', onMessage);
   }, [commentMode, inspectMode, editMode, drawMode, file.name, previewComments, onStageComposerToken]);
 
+  useEffect(() => {
+    if (!manualEditMode) {
+      setManualEditTargets([]);
+      setSelectedManualEditTarget(null);
+      setManualEditError(null);
+      return;
+    }
+    function onMessage(ev: MessageEvent) {
+      if (ev.source !== iframeRef.current?.contentWindow) return;
+      const data = ev.data as ManualEditBridgeMessage | null;
+      if (!data?.type) return;
+      if (data.type === 'od-edit-targets' && Array.isArray(data.targets)) {
+        setManualEditTargets(data.targets);
+        setSelectedManualEditTarget((current) =>
+          current ? data.targets.find((target) => target.id === current.id) ?? null : current,
+        );
+      } else if (data.type === 'od-edit-select') {
+        selectManualEditTarget(data.target);
+      }
+    }
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, [manualEditMode, source]);
+
+  function selectManualEditTarget(target: ManualEditTarget) {
+    const base = source ?? '';
+    const fields = readManualEditFields(base, target.id);
+    setSelectedManualEditTarget(target);
+    setManualEditDraft({
+      text: fields.text ?? target.fields.text ?? target.text,
+      href: fields.href ?? target.fields.href ?? '',
+      src: fields.src ?? target.fields.src ?? '',
+      alt: fields.alt ?? target.fields.alt ?? '',
+      styles: readManualEditStyles(base, target.id),
+      attributesText: JSON.stringify(readManualEditAttributes(base, target.id), null, 2),
+      outerHtml: readManualEditOuterHtml(base, target.id) || target.outerHtml,
+      fullSource: base,
+    });
+    setManualEditError(null);
+  }
+
+  async function applyManualEdit(patch: ManualEditPatch, label: string) {
+    if (manualEditSaving || source == null) return;
+    setManualEditSaving(true);
+    setManualEditError(null);
+    try {
+      const baseSource = source;
+      const result = applyManualEditPatch(baseSource, patch);
+      if (!result.ok) {
+        setManualEditError(result.error ?? 'Could not apply edit.');
+        return;
+      }
+      const saved = await writeProjectTextFile(projectId, file.name, result.source, {
+        artifactManifest: (file as any).artifactManifest,
+      });
+      if (!saved) {
+        setManualEditError('Could not save the edited file.');
+        return;
+      }
+      const entry: ManualEditHistoryEntry = {
+        id: `${Date.now()}-${manualEditHistory.length}`,
+        label,
+        patch,
+        beforeSource: baseSource,
+        afterSource: result.source,
+        createdAt: Date.now(),
+      };
+      setSource(result.source);
+      setInlinedSource(null);
+      setManualEditHistory((current) => [entry, ...current]);
+      setManualEditUndone([]);
+      setManualEditDraft((current) => ({ ...current, fullSource: result.source }));
+      await onFileEdited?.();
+    } finally {
+      setManualEditSaving(false);
+    }
+  }
+
+  async function undoManualEdit() {
+    if (manualEditSaving) return;
+    const [latest, ...rest] = manualEditHistory;
+    if (!latest) return;
+    setManualEditSaving(true);
+    try {
+      const saved = await writeProjectTextFile(projectId, file.name, latest.beforeSource, {
+        artifactManifest: (file as any).artifactManifest,
+      });
+      if (!saved) {
+        setManualEditError('Could not save the undo result.');
+        return;
+      }
+      setSource(latest.beforeSource);
+      setInlinedSource(null);
+      setManualEditHistory(rest);
+      setManualEditUndone((current) => [latest, ...current]);
+      setManualEditDraft((current) => ({ ...current, fullSource: latest.beforeSource }));
+      await onFileEdited?.();
+    } finally {
+      setManualEditSaving(false);
+    }
+  }
+
+  async function redoManualEdit() {
+    if (manualEditSaving) return;
+    const [latest, ...rest] = manualEditUndone;
+    if (!latest) return;
+    setManualEditSaving(true);
+    try {
+      const saved = await writeProjectTextFile(projectId, file.name, latest.afterSource, {
+        artifactManifest: (file as any).artifactManifest,
+      });
+      if (!saved) {
+        setManualEditError('Could not save the redo result.');
+        return;
+      }
+      setSource(latest.afterSource);
+      setInlinedSource(null);
+      setManualEditUndone(rest);
+      setManualEditHistory((current) => [latest, ...current]);
+      setManualEditDraft((current) => ({ ...current, fullSource: latest.afterSource }));
+      await onFileEdited?.();
+    } finally {
+      setManualEditSaving(false);
+    }
+  }
+
   function postSlide(action: 'next' | 'prev' | 'first' | 'last' | 'go', index?: number) {
     const win = iframeRef.current?.contentWindow;
     if (!win) return;
@@ -1666,10 +1864,18 @@ function HtmlViewer({
     setDeployError(null);
     setCopiedDeployLink(false);
     setDeployPhase('idle');
-    const [config, deployments] = await Promise.all([
+    setDeployPreflight(null);
+    setCheckingDeployPreflight(true);
+    const preflightPromise = preflightDeployProjectFile(projectId, file.name).catch((err) => {
+      setDeployError(err instanceof Error ? err.message : 'Deploy preflight failed.');
+      return null;
+    });
+    const [config, deployments, preflight] = await Promise.all([
       fetchDeployConfig(),
       fetchProjectDeployments(projectId),
+      preflightPromise,
     ]);
+    setCheckingDeployPreflight(false);
     if (config) {
       setDeployConfig(config);
       setCloudRunProjectId(config.projectId || '');
@@ -1682,6 +1888,7 @@ function HtmlViewer({
     );
     setDeployment(current ?? null);
     setDeployResult(current ?? null);
+    setDeployPreflight(preflight);
   }
 
   async function saveDeployConfig() {
@@ -1715,6 +1922,14 @@ function HtmlViewer({
     setDeployError(null);
     setCopiedDeployLink(false);
     try {
+      setCheckingDeployPreflight(true);
+      const preflight = await preflightDeployProjectFile(projectId, file.name);
+      setDeployPreflight(preflight);
+      setCheckingDeployPreflight(false);
+      const blocking = deploymentPreflightBlockingWarnings(preflight);
+      if (blocking.length > 0) {
+        throw new Error('Fix missing or invalid deploy references before deploying.');
+      }
       const needsConfigSave =
         cloudRunProjectId.trim() !== (deployConfig?.projectId || '') ||
         cloudRunRegion.trim() !== (deployConfig?.region || '') ||
@@ -1734,8 +1949,21 @@ function HtmlViewer({
     } catch (err) {
       setDeployError(err instanceof Error ? err.message : t('fileViewer.deployFailed'));
     } finally {
+      setCheckingDeployPreflight(false);
       setDeploying(false);
       setDeployPhase('idle');
+    }
+  }
+
+  async function refreshDeployPreflight() {
+    setCheckingDeployPreflight(true);
+    setDeployError(null);
+    try {
+      setDeployPreflight(await preflightDeployProjectFile(projectId, file.name));
+    } catch (err) {
+      setDeployError(err instanceof Error ? err.message : 'Deploy preflight failed.');
+    } finally {
+      setCheckingDeployPreflight(false);
     }
   }
 
@@ -1907,6 +2135,7 @@ function HtmlViewer({
     setInspectMode(nextMode === 'inspect');
     setEditMode(nextMode === 'edit');
     setDrawMode(nextMode === 'draw');
+    setManualEditMode(false);
     setActiveCommentTarget(null);
     setHoveredCommentTarget(null);
     setActiveInspectTarget(null);
@@ -2130,12 +2359,34 @@ function HtmlViewer({
   const exportTitle = file.name.replace(/\.html?$/i, '') || file.name;
   const canPptx = canShare && Boolean(onExportAsPptx) && !streaming;
   const previewScale = zoom / 100;
+  const selectedPreviewViewport =
+    PREVIEW_VIEWPORTS.find((item) => item.id === previewViewport) ?? PREVIEW_VIEWPORTS[0]!;
+  const fixedPreviewViewport = selectedPreviewViewport.width !== null && selectedPreviewViewport.height !== null
+    ? selectedPreviewViewport
+    : null;
+  const previewFrameStyle: CSSProperties = fixedPreviewViewport
+    ? {
+        width: `${fixedPreviewViewport.width}px`,
+        height: `${fixedPreviewViewport.height}px`,
+        transform: `scale(${previewScale})`,
+        transformOrigin: '0 0',
+      }
+    : {
+        width: `${100 / previewScale}%`,
+        height: `${100 / previewScale}%`,
+        transform: `scale(${previewScale})`,
+        transformOrigin: '0 0',
+      };
   const activeDeployment = deployResult || deployment;
   const activeDeployedUrl = activeDeployment?.url?.trim() || '';
   const activeDeploymentReady = activeDeployment?.status === 'ready';
   const activeDeploymentDelayed = activeDeployment?.status === 'link-delayed';
   const activeDeploymentProtected = activeDeployment?.status === 'protected';
   const activeDeploymentNeedsRetry = activeDeploymentDelayed || activeDeploymentProtected;
+  const deployBlockingWarnings = deployPreflight
+    ? deploymentPreflightBlockingWarnings(deployPreflight)
+    : [];
+  const deployWarningCount = deployPreflight?.warnings.length ?? 0;
   const copyDeployLabel = copiedDeployLink
     ? t('fileViewer.copied')
     : t('fileViewer.copyDeployLink');
@@ -2155,7 +2406,80 @@ function HtmlViewer({
   const visibleCommentCount = visibleSlideComments().length;
 
   return (
-    <div className="viewer html-viewer">
+    <div className={`viewer html-viewer${focusMode ? ' viewer-focus-mode' : ''}`}>
+      {chromeActionsHost ? createPortal(
+        <>
+          {mode === 'preview' && passivePreviewControlsVisible ? (
+            <label className="chrome-zoom-control" title="Preview viewport">
+              <Icon name="grid" size={13} />
+              <select
+                value={previewViewport}
+                onChange={(event) => setPreviewViewport(event.target.value as PreviewViewportId)}
+                aria-label="Preview viewport"
+              >
+                {PREVIEW_VIEWPORTS.map((item) => (
+                  <option key={item.id} value={item.id}>{item.label}</option>
+                ))}
+              </select>
+            </label>
+          ) : null}
+          {mode === 'preview' && passivePreviewControlsVisible ? (
+            <label className="chrome-zoom-control" title="Preview zoom">
+              <Icon name="search" size={13} />
+              <select
+                value={zoom}
+                onChange={(event) => setZoom(Number(event.target.value))}
+                aria-label="Preview zoom"
+              >
+                {[50, 75, 100, 125, 150, 200].map((value) => (
+                  <option key={value} value={value}>{value}%</option>
+                ))}
+              </select>
+            </label>
+          ) : null}
+          {onFocusModeChange ? (
+            <button
+              type="button"
+              className={`chrome-action chrome-action-secondary${focusMode ? ' active' : ''}`}
+              onClick={() => onFocusModeChange(!focusMode)}
+              title={focusMode ? 'Exit focus' : 'Focus preview'}
+              aria-pressed={focusMode}
+            >
+              <Icon name={focusMode ? 'close' : 'eye'} size={13} />
+              <span>{focusMode ? 'Exit Focus' : 'Focus'}</span>
+            </button>
+          ) : null}
+          {showPresent ? (
+            <button
+              type="button"
+              className="chrome-action chrome-action-secondary"
+              onClick={presentInThisTab}
+              title={t('fileViewer.present')}
+            >
+              <Icon name="present" size={13} />
+              <span>{t('fileViewer.present')}</span>
+            </button>
+          ) : null}
+          {canShare ? (
+            <button
+              type="button"
+              className="chrome-action chrome-action-primary"
+              onClick={() => void exportProjectAsPdf({
+                projectId,
+                filePath: file.name,
+                fallbackHtml: source ?? '',
+                fallbackTitle: exportTitle,
+                deck: effectiveDeck,
+              })}
+              title={t('fileViewer.shareLabel')}
+            >
+              <Icon name="share" size={13} />
+              <span>{t('fileViewer.shareLabel')}</span>
+            </button>
+          ) : null}
+        </>,
+        chromeActionsHost,
+      ) : null}
       <div className="viewer-toolbar">
         <div className="viewer-toolbar-left">
           {passivePreviewControlsVisible ? (
@@ -2209,6 +2533,26 @@ function HtmlViewer({
             <span>{t('fileViewer.tweaks')}</span>
             <span className="switch" aria-hidden />
           </button>
+          <div className="palette-tweaks-anchor">
+            <button
+              type="button"
+              className={`viewer-action${selectedPalette ? ' active' : ''}`}
+              data-testid="palette-tweaks-toggle"
+              title="Palette tweaks"
+              onClick={() => setPaletteTweaksOpen((open) => !open)}
+            >
+              <Icon name="tweaks" size={13} />
+              <span>Palette</span>
+              {selectedPalette ? <span className="palette-tweaks-badge" aria-hidden /> : null}
+            </button>
+            <PaletteTweaks
+              open={paletteTweaksOpen}
+              selected={selectedPalette}
+              onChange={setSelectedPalette}
+              onPreview={() => {}}
+              onClose={() => setPaletteTweaksOpen(false)}
+            />
+          </div>
         </div>
         <div className="viewer-toolbar-actions">
           <div className="viewer-tabs">
@@ -2254,6 +2598,27 @@ function HtmlViewer({
             <span>{t('fileViewer.edit')}</span>
           </button>
           <button
+            className={`viewer-action${manualEditMode ? ' active' : ''}`}
+            type="button"
+            title="Manual edit"
+            aria-pressed={manualEditMode}
+            data-testid="manual-edit-mode-toggle"
+            onClick={() => {
+              const next = !manualEditMode;
+              setManualEditMode(next);
+              if (next) {
+                setCommentMode(false);
+                setInspectMode(false);
+                setEditMode(false);
+                setDrawMode(false);
+                setMode('preview');
+              }
+            }}
+          >
+            <Icon name="pencil" size={13} />
+            <span>Manual</span>
+          </button>
+          <button
             className={`viewer-action${drawMode ? ' active' : ''}`}
             type="button"
             title={t('fileViewer.draw')}
@@ -2291,6 +2656,17 @@ function HtmlViewer({
               >
                 <Icon name="plus" size={14} />
               </button>
+              <select
+                className="viewer-viewport-select"
+                value={previewViewport}
+                onChange={(event) => setPreviewViewport(event.target.value as PreviewViewportId)}
+                aria-label="Preview viewport"
+                title="Preview viewport"
+              >
+                {PREVIEW_VIEWPORTS.map((item) => (
+                  <option key={item.id} value={item.id}>{item.label}</option>
+                ))}
+              </select>
               <span className="viewer-divider" aria-hidden />
             </>
           ) : null}
@@ -2380,6 +2756,26 @@ function HtmlViewer({
                     <span>{t('fileViewer.exportPptx') + '…'}</span>
                   </button>
                   <div className="share-menu-divider" />
+                  <button
+                    type="button"
+                    className="share-menu-item share-menu-item-strong"
+                    role="menuitem"
+                    onClick={() => {
+                      setShareMenuOpen(false);
+                      void exportProjectAsZip({
+                        projectId,
+                        filePath: file.name,
+                        fallbackHtml: source ?? '',
+                        fallbackTitle: exportTitle,
+                      });
+                    }}
+                  >
+                    <span className="share-menu-icon"><Icon name="check" size={14} /></span>
+                    <span>
+                      <strong>Finalize design package</strong>
+                      <small>Includes DESIGN-HANDOFF.md and DESIGN-MANIFEST.json</small>
+                    </span>
+                  </button>
                   <button
                     type="button"
                     className="share-menu-item"
@@ -2490,23 +2886,48 @@ function HtmlViewer({
         {source === null ? (
           <div className="viewer-empty">{t('fileViewer.loading')}</div>
         ) : mode === 'preview' ? (
-          <div className="comment-preview-layer">
-            <div
-              ref={previewFrameWrapRef}
-              style={{
-                width: `${100 / previewScale}%`,
-                height: `${100 / previewScale}%`,
-                transform: `scale(${previewScale})`,
-                transformOrigin: '0 0',
-              }}
-            >
-              <iframe
-                ref={iframeRef}
-                data-testid="artifact-preview-frame"
-                title={file.name}
-                sandbox="allow-scripts"
-                srcDoc={srcDoc}
+          <div className={manualEditMode ? 'manual-edit-workspace' : 'comment-preview-layer'}>
+            {manualEditMode ? (
+              <ManualEditPanel
+                targets={manualEditTargets}
+                selectedTarget={selectedManualEditTarget}
+                draft={manualEditDraft}
+                history={manualEditHistory}
+                error={manualEditError}
+                canUndo={manualEditHistory.length > 0}
+                canRedo={manualEditUndone.length > 0}
+                busy={manualEditSaving}
+                onSelectTarget={selectManualEditTarget}
+                onDraftChange={setManualEditDraft}
+                onApplyPatch={(patch, label) => {
+                  void applyManualEdit(patch, label);
+                }}
+                onError={setManualEditError}
+                onCancelDraft={() => {
+                  if (selectedManualEditTarget) selectManualEditTarget(selectedManualEditTarget);
+                }}
+                onUndo={() => {
+                  void undoManualEdit();
+                }}
+                onRedo={() => {
+                  void redoManualEdit();
+                }}
               />
+            ) : null}
+            <div className={manualEditMode ? 'manual-edit-canvas' : `comment-frame-clip${fixedPreviewViewport ? ' fixed-viewport' : ''}`}>
+              <div
+                ref={previewFrameWrapRef}
+                className={fixedPreviewViewport ? 'preview-frame-wrap fixed-viewport' : 'preview-frame-wrap fill-viewport'}
+                style={previewFrameStyle}
+              >
+                <iframe
+                  ref={iframeRef}
+                  data-testid="artifact-preview-frame"
+                  title={file.name}
+                  sandbox="allow-scripts"
+                  srcDoc={srcDoc}
+                />
+              </div>
             </div>
             {commentMode || inspectMode || editMode || drawMode ? (
               <CommentPreviewOverlays
@@ -2685,6 +3106,60 @@ function HtmlViewer({
                 <p className="hint">{t('fileViewer.vercelTokenReuseHint')}</p>
               ) : null}
               <p className="hint">{t('fileViewer.vercelPreviewOnly')}</p>
+              <div
+                className={`deploy-preflight ${
+                  deployBlockingWarnings.length > 0
+                    ? 'blocked'
+                    : deployWarningCount > 0
+                      ? 'warn'
+                      : 'ready'
+                }`}
+              >
+                <div className="deploy-preflight-head">
+                  <div>
+                    <strong>Deploy preflight</strong>
+                    <span>
+                      {checkingDeployPreflight
+                        ? 'Checking deploy bundle...'
+                        : deployPreflight
+                          ? `${deployPreflight.totalFiles} files · ${formatDeployBytes(deployPreflight.totalBytes)}`
+                          : 'Not checked yet'}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    className="ghost-link button-like"
+                    disabled={checkingDeployPreflight || deploying}
+                    onClick={() => {
+                      void refreshDeployPreflight();
+                    }}
+                  >
+                    {checkingDeployPreflight ? 'Checking...' : 'Refresh'}
+                  </button>
+                </div>
+                {deployPreflight ? (
+                  <>
+                    {deployPreflight.warnings.length > 0 ? (
+                      <ul className="deploy-preflight-warnings">
+                        {deployPreflight.warnings.slice(0, 4).map((warning, index) => (
+                          <li key={`${warning.code}-${warning.path ?? warning.url ?? index}`}>
+                            <span>{deployWarningLabel(warning.code)}</span>
+                            <p>{warning.message}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="deploy-preflight-ok">No blocking issues found in this artifact bundle.</p>
+                    )}
+                    {deployPreflight.warnings.length > 4 ? (
+                      <p className="deploy-preflight-more">
+                        +{deployPreflight.warnings.length - 4} more warning
+                        {deployPreflight.warnings.length - 4 === 1 ? '' : 's'}
+                      </p>
+                    ) : null}
+                  </>
+                ) : null}
+              </div>
               {deployError ? <p className="deploy-error">{deployError}</p> : null}
               {activeDeployedUrl ? (
                 <div
@@ -2759,7 +3234,13 @@ function HtmlViewer({
               <button
                 type="button"
                 className="viewer-action primary"
-                disabled={deploying || savingDeployConfig || deployPhase !== 'idle'}
+                disabled={
+                  deploying ||
+                  savingDeployConfig ||
+                  checkingDeployPreflight ||
+                  deployPhase !== 'idle' ||
+                  deployBlockingWarnings.length > 0
+                }
                 onClick={() => {
                   void deployToCloudRun();
                 }}
@@ -3311,6 +3792,43 @@ function CodeWithLines({ text }: { text: string }) {
       <code className="lines">{text}</code>
     </pre>
   );
+}
+
+function deploymentPreflightBlockingWarnings(preflight: DeployPreflightResponse) {
+  return preflight.warnings.filter(
+    (warning) => warning.code === 'broken-reference' || warning.code === 'invalid-reference',
+  );
+}
+
+function formatDeployBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+}
+
+function deployWarningLabel(code: DeployPreflightResponse['warnings'][number]['code']): string {
+  switch (code) {
+    case 'broken-reference':
+      return 'Broken reference';
+    case 'invalid-reference':
+      return 'Invalid path';
+    case 'large-asset':
+      return 'Large asset';
+    case 'large-bundle':
+      return 'Large bundle';
+    case 'large-html':
+      return 'Large HTML';
+    case 'external-script':
+      return 'External script';
+    case 'external-stylesheet':
+      return 'External stylesheet';
+    case 'no-doctype':
+      return 'Missing doctype';
+    case 'no-viewport':
+      return 'Missing viewport';
+    default:
+      return 'Warning';
+  }
 }
 
 function humanSize(bytes: number): string {

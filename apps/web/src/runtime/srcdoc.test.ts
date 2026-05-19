@@ -63,7 +63,8 @@ describe('buildSrcdoc', () => {
       inspectBridge: true,
     });
 
-    expect(srcdoc).toContain('p, li, figure, figcaption, img, video, canvas, svg, table');
+    expect(srcdoc).toContain('p, li, figure, figcaption');
+    expect(srcdoc).toContain('img, video, canvas, svg, table');
     expect(srcdoc).toContain('event.composedPath');
     expect(srcdoc).toContain('data-od-target-mode');
   });

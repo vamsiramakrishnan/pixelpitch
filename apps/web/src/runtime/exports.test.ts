@@ -1,5 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { archiveFilenameFrom, archiveRootFromFilePath, exportAsMd } from './exports';
+import {
+  archiveFilenameFrom,
+  archiveRootFromFilePath,
+  buildDesignHandoffContent,
+  buildDesignManifestContent,
+  exportAsMd,
+} from './exports';
 
 function mockResponse(headers: Record<string, string>): Response {
   return { headers: new Headers(headers) } as Response;
@@ -62,6 +68,52 @@ describe('archiveFilenameFrom', () => {
       'content-disposition': "attachment; filename*=UTF-8''%E9%9D",
     });
     expect(archiveFilenameFrom(resp, 'fallback', 'ui-design')).toBe('ui-design.zip');
+  });
+});
+
+describe('design handoff exports', () => {
+  it('builds a screen-file-first manifest with responsive viewports', () => {
+    const manifest = JSON.parse(buildDesignManifestContent({
+      title: 'Launch UI',
+      entryFile: 'frames/browser-chrome.html',
+      files: [
+        'frames/browser-chrome.html',
+        'index.html',
+        'landing.html',
+        'src/app.css',
+        'src/app.tsx',
+        'assets/logo.png',
+      ],
+    }));
+
+    expect(manifest.schema).toBe('open-design.design-manifest.v1');
+    expect(manifest.title).toBe('Launch UI');
+    expect(manifest.entryFile).toBe('index.html');
+    expect(manifest.sourceFiles.css).toEqual(['src/app.css']);
+    expect(manifest.sourceFiles.scriptsAndComponents).toEqual(['src/app.tsx']);
+    expect(manifest.sourceFiles.assets).toEqual(['assets/logo.png']);
+    expect(manifest.screens.map((screen: { file: string }) => screen.file)).toEqual([
+      'index.html',
+      'landing.html',
+    ]);
+    expect(manifest.screens[0].role).toBe('launcher-overview');
+    expect(manifest.responsiveViewports).toContainEqual(
+      expect.objectContaining({ name: 'mobile-standard', width: 390, height: 844 }),
+    );
+  });
+
+  it('builds a handoff that references the manifest and excludes Pixelpitch chrome', () => {
+    const handoff = buildDesignHandoffContent({
+      title: 'Launch UI',
+      entryFile: 'index.html',
+      files: ['index.html', 'src/app.css'],
+    });
+
+    expect(handoff).toContain('# Launch UI implementation handoff');
+    expect(handoff).toContain('DESIGN-MANIFEST.json');
+    expect(handoff).toContain('Pixelpitch chrome');
+    expect(handoff).toContain('360x800');
+    expect(handoff).toContain('src/app.css');
   });
 });
 

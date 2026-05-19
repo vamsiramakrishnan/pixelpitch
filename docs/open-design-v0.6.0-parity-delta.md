@@ -71,17 +71,20 @@ Keep these out of the parity build unless the scope changes. Existing Pixelpitch
 
 ## P1 Web/UI Gaps
 
-- Top bar redesign: Share/Present in the top bar, zoom dropdown, focus toggle.
+- Top bar redesign:
+  - Status: completed for runtime parity.
+  - Added top-bar file action host and wired HTML artifact Present/PDF Share actions, preview zoom, and workspace focus toggle through it.
+  - Remaining polish: upstream's exact visual treatment and cleanup of duplicated legacy viewer toolbar controls.
 - Draggable file tabs, batch delete, sortable design-file table columns.
 - Manual edit panel and edit-mode bridge:
-  - Missing `apps/web/src/components/ManualEditPanel.tsx`
-  - Missing `apps/web/src/edit-mode/*`
+  - Status: completed.
+  - Added `apps/web/src/components/ManualEditPanel.tsx`, `apps/web/src/edit-mode/*`, source-path annotation, iframe bridge injection, target selection, patch application, save, undo, and redo wiring.
 - MCP client browser:
   - Status: MCP client section added.
   - `ConnectorsBrowser.tsx` remains out of this pass because Cloudflare/Tavily/Langfuse-related connector catalog work is out of scope.
 - Quick switcher:
-  - Missing `apps/web/src/components/QuickSwitcher.tsx`
-  - Missing `apps/web/src/quickSwitcherRecents.ts`
+  - Status: completed.
+  - Added `apps/web/src/components/QuickSwitcher.tsx`, `apps/web/src/quickSwitcherRecents.ts`, and `Ctrl/Cmd+P` project-file navigation in the workspace.
 - Privacy consent:
   - Missing `apps/web/src/components/PrivacyConsentModal.tsx`
   - Missing `apps/web/src/components/PrivacySection.tsx`
@@ -104,6 +107,7 @@ Keep these out of the parity build unless the scope changes. Existing Pixelpitch
   - adds Linux package support
   - adds source-hash caching and lock/cache helpers
   - adds many tests under `tools/pack/tests`
+- Packaging refactor means this release/build-system work, not runtime feature parity. It should stay deferred until the daemon/web/desktop runtime surfaces are stable.
 - Upstream adds `apps/landing-page`.
 - Upstream adds Docker/Vercel/release assets and several docs/test directories not present locally.
 - Root runtime baseline differs:

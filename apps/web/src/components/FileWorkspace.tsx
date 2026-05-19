@@ -12,6 +12,7 @@ import { FileViewer } from './FileViewer';
 import { Icon } from './Icon';
 import { LiveArtifactViewer, liveArtifactTabId, parseLiveArtifactTabId } from './LiveArtifactViewer';
 import { PasteTextDialog } from './PasteTextDialog';
+import { QuickSwitcher } from './QuickSwitcher';
 import { SketchEditor, type SketchDocument, type SketchItem } from './SketchEditor';
 
 interface Props {
@@ -23,6 +24,8 @@ interface Props {
   isDeck: boolean;
   onExportAsPptx?: ((fileName: string) => void) | undefined;
   streaming?: boolean;
+  focusMode?: boolean;
+  onFocusModeChange?: (focused: boolean) => void;
   openRequest?: { name: string; nonce: number } | null;
   // Persisted set of open tabs + active tab. Owned by ProjectView so the
   // daemon's SQLite store can hold the source of truth and survive reloads.
@@ -55,6 +58,8 @@ export function FileWorkspace({
   isDeck,
   onExportAsPptx,
   streaming,
+  focusMode = false,
+  onFocusModeChange,
   openRequest,
   tabsState,
   onTabsStateChange,
@@ -74,6 +79,7 @@ export function FileWorkspace({
   );
 
   const [showPasteDialog, setShowPasteDialog] = useState(false);
+  const [quickSwitcherOpen, setQuickSwitcherOpen] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [sketches, setSketches] = useState<Record<string, SketchState>>({});
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -360,6 +366,18 @@ export function FileWorkspace({
   const isActiveSketch = activeFile?.kind === 'sketch' && isSketchName(activeFile.name);
   const activeSketch = activeFile && isActiveSketch ? sketches[activeFile.name] : null;
 
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== 'p') return;
+      const target = event.target as HTMLElement | null;
+      if (target?.closest('input, textarea, select, [contenteditable="true"]')) return;
+      event.preventDefault();
+      setQuickSwitcherOpen(true);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
+
   return (
     <div className="pane pane-elevated workspace" data-testid="file-workspace">
       <div className="ws-tabs-bar" role="tablist" aria-label={t('workspace.designFiles')}>
@@ -450,6 +468,8 @@ export function FileWorkspace({
             isDeck={isDeck}
             onExportAsPptx={onExportAsPptx}
             streaming={streaming}
+            focusMode={focusMode}
+            onFocusModeChange={onFocusModeChange}
             previewComments={previewComments.filter((comment) => comment.filePath === activeFile.name)}
             onSavePreviewComment={onSavePreviewComment}
             onRemovePreviewComment={onRemovePreviewComment}
@@ -495,6 +515,16 @@ export function FileWorkspace({
           }
         }}
       />
+      {quickSwitcherOpen ? (
+        <QuickSwitcher
+          projectId={projectId}
+          files={files}
+          liveArtifacts={liveArtifacts}
+          onOpenFile={openFile}
+          onOpenLiveArtifact={openLiveArtifact}
+          onClose={() => setQuickSwitcherOpen(false)}
+        />
+      ) : null}
     </div>
   );
 }

@@ -10,6 +10,8 @@ interface Props {
   plate?: boolean;
 }
 
+export const APP_CHROME_FILE_ACTIONS_ID = 'app-chrome-file-actions';
+
 export function AppChromeHeader({ actions, children, onBack, backLabel, plate = false }: Props) {
   const t = useT();
   const resolvedBackLabel = backLabel ?? t('project.backToProjects');
@@ -37,6 +39,7 @@ export function AppChromeHeader({ actions, children, onBack, backLabel, plate = 
       ) : null}
       {children ? <div className="app-chrome-content">{children}</div> : null}
       <div className="app-chrome-drag" aria-hidden />
+      <div id={APP_CHROME_FILE_ACTIONS_ID} className="app-chrome-file-actions" />
       {actions ? <div className="app-chrome-actions">{actions}</div> : null}
     </header>
   );
