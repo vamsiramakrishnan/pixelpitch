@@ -1,7 +1,8 @@
 # pixelpitch
 
-> End-to-end designer-grade slide system. Agent-driven HTML authoring →
-> sandboxed live preview → PPTX export.
+Pixelpitch is a local slide-authoring system built around HTML preview and PPTX export.
+
+A coding agent can author slide HTML, preview it in a sandboxed browser surface, iterate on the deck, and export it through `slidify`, the repository's HTML-to-PPTX converter.
 
 ## Quickstart
 
@@ -10,408 +11,275 @@
 bun run dev
 ```
 
-`setup.sh` installs Bun into `~/.bun` if it is missing, runs the root Bun
-workspace install, builds the package chain, and mirrors bundled skills.
-`bun run dev` starts the daemon and web app; open the URL it prints.
+`setup.sh` installs the Bun workspace dependencies, builds the package chain, and mirrors the bundled skills. `bun run dev` starts the daemon and web application.
 
-Need anything else? See [`QUICKSTART.md`](QUICKSTART.md). Stuck?
-`bun run doctor`.
-
-## What you get
-
-- **Web app** with chat, sandboxed-iframe preview, live tweaks, deck
-  navigation, project persistence, exports.
-- **Local daemon** that PATH-scans 13 code-agent CLIs (`claude`, `codex`,
-  `gemini`, `cursor-agent`, `copilot`, `devin`, `opencode`, `qwen`,
-  `hermes`, `kimi`, `pi`, `kiro`, `mistral`) and proxies streaming
-  artifacts.
-- **59 bundled skills** spanning deck modes (`simple-deck`, `replit-deck`,
-  `guizang-ppt`, 18 `html-ppt-*` variants, `weekly-update`,
-  `pptx-html-fidelity-audit`), prototypes (`web-prototype`, `dashboard`,
-  `mobile-app`, `dating-web`), media (`motion-frames`, `sprite-animation`,
-  `hyperframes`, `image-poster`, `video-shortform`, `audio-jingle`),
-  and operations (`critique`, `tweaks`, `design-brief`).
-- **138 design systems** (awesome-claude-design schema) and **93 prompt
-  templates** for image / video / audio generation.
-- **HyperFrames-aware** slide runtime contracts — the same HTML can
-  render to PPTX (slidify) or to MP4 (HyperFrames engine).
-- **Slidify** (the existing Python HTML→PPTX converter) wired in as the
-  PPTX export backend.
-
-The 6-step pipeline: design language → components → narrative → slide
-design → deck composition → PPTX. See
-[`docs/architecture.md`](docs/architecture.md) for the deep dive.
-
----
-
-## slidify (the converter, used as the PPTX backend)
-
-> Convert HTML decks into PPTX with maximal editability and high-fidelity rendering.
-
-slidify converts HTML slide decks into PPTX files where the maximum useful
-fraction of content is **native, editable PPTX**: text frames, shapes, lines,
-tables, native pictures, and SVG-derived geometry. When native PPTX cannot
-faithfully express the visual result, slidify uses rasterization deliberately:
-surgical crops, image-aware hybrids, and full raster layers for irreducible
-effects such as complex masks, filters, blends, canvas, and cinematic imagery.
-
-The single metric we optimize: `native_area_ratio` — the fraction of slide
-area covered by native shapes — subject to perceptual fidelity floors
-(SSIM ≥ 0.95, OCR recall ≥ 0.98).
-
-The practical goal is not "never rasterize." It is:
-
-1. Keep text, layout, core shapes, and data structures editable.
-2. Preserve designer-grade pixels for effects that PowerPoint cannot model.
-3. Use corpus feedback to turn repeated misses into native atoms or hybrid
-   recipes.
-
-## Feedback Loop
-
-The project improves through a bench-driven loop:
+If setup fails:
 
 ```bash
-make bench-index-all     # organize and inventory _bench
-make bench-harvest       # convert corpus misses into pipeline signals
+bun run doctor
+```
+
+See [`QUICKSTART.md`](QUICKSTART.md) for the longer setup path.
+
+## Main pieces
+
+```text
+coding agent
+    │
+    ▼
+local daemon
+    │ streamed artifacts
+    ▼
+web app
+    │
+    ├── sandboxed HTML preview
+    ├── deck navigation
+    ├── design-system / skill inputs
+    └── project state
+    │
+    ▼
+slidify
+    │
+    └── PPTX
+```
+
+The daemon discovers supported local coding-agent CLIs from `PATH` and streams their artifacts into the application. The checked repository currently includes adapters for Claude Code, Codex, Gemini CLI, Cursor Agent, Copilot, Devin, OpenCode, Qwen, Hermes, Kimi, Pi, Kiro, and Mistral.
+
+The repository also contains bundled deck skills, design-system references, and media prompt templates. Those are authoring inputs; `slidify` is the PPTX export implementation.
+
+## slidify
+
+`slidify` converts HTML slides into PowerPoint while keeping elements native when the converter can reproduce them with useful fidelity.
+
+Native output includes text boxes, shapes, lines, tables, pictures, and supported SVG-derived geometry. Effects that PowerPoint cannot reproduce cleanly can remain rasterized.
+
+The converter measures two different concerns:
+
+- editability, including `native_area_ratio`;
+- rendered fidelity, including SSIM and OCR-based checks.
+
+A high native-area ratio is not useful if the PowerPoint rendering no longer resembles the source. The optimization therefore treats editability as constrained by the configured fidelity checks.
+
+## Convert a deck
+
+Single HTML file:
+
+```bash
+slidify deck.html deck.pptx
+```
+
+Directory of slide files:
+
+```bash
+slidify slides/ deck.pptx
+```
+
+Pipe HTML from stdin:
+
+```bash
+cat deck.html | slidify convert - deck.pptx --json
+```
+
+Environment checks and command discovery:
+
+```bash
+slidify doctor
+slidify manifest --brief
+slidify manifest convert
+slidify guide
+slidify guide authoring
+```
+
+Current exit-code meanings are:
+
+| Code | Meaning |
+| ---: | --- |
+| `0` | command completed |
+| `1` | doctor found missing dependencies |
+| `2` | conversion failed |
+| `3` | editability drift was detected |
+
+CLI JSON output includes remediation and next-command data where the command implementation supplies it.
+
+## Python API
+
+```python
+import asyncio
+from pathlib import Path
+from slidify import ConversionConfig, convert
+
+async def main():
+    config = ConversionConfig(run_tier3=True, run_oracle=True)
+    await convert(Path("deck.html"), "out.pptx", config)
+
+asyncio.run(main())
+```
+
+`convert` accepts HTML text, a single HTML path, a directory of slide files, an iterable of HTML strings, or an async iterator.
+
+The converter streams slides through the pipeline. Peak working state is primarily controlled by render concurrency, except when oracle correction retains per-slide plans and rendered references. Use the low-memory option when that retained correction state is not needed.
+
+## Conversion pipeline
+
+```text
+HTML
+  │
+  ▼
+split slides
+  │
+  ▼
+Playwright render
+  │
+  ▼
+DOM walk
+  │
+  ▼
+VisualUnit clustering
+  │
+  ├── tier 1: deterministic rules
+  ├── tier 2: heuristic classification
+  └── tier 3: optional model adjudication
+  │
+  ▼
+promotion / emit
+  │
+  ▼
+PPTX
+  │
+  ▼
+optional LibreOffice + SSIM + OCR oracle
+  │
+  └── correction / report
+```
+
+Tier 3 is used for units that remain ambiguous after the deterministic and heuristic passes. If no model provider is configured, the converter can fall back to raster decisions rather than requiring a model call for the conversion to finish.
+
+Supported tier-3 backends in the current code include Gemini through AI Studio or Vertex AI, Anthropic's API, and Claude on Vertex AI. Check the current configuration code for model defaults before depending on a specific model identifier.
+
+## Authoring hints
+
+HTML authors can use `data-pptx-*` attributes to give the converter explicit information when automatic classification is unnecessary or ambiguous.
+
+Examples:
+
+```html
+<h1 data-pptx-role="title">Quarterly results</h1>
+<canvas data-pptx-rasterize="true">...</canvas>
+<div data-pptx-skip="true">debug overlay</div>
+<div data-pptx-text="Q1 results">visual replacement</div>
+<div data-pptx-allow-overflow="true">intentional bleed</div>
+```
+
+`data-atom="<id>"` selects a known atomic recipe where one exists. See [`examples/landing/atoms.html`](examples/landing/atoms.html) and the [`slide-author`](.claude/skills/slide-author/SKILL.md) skill for the current authoring grammar.
+
+These hints bypass parts of classification. They therefore shift responsibility to the producer: an incorrect hint can still create a poor conversion.
+
+## Fidelity bench
+
+The `_bench` corpus is used to find repeated conversion misses and decide whether a miss should become:
+
+- a native atom or pattern;
+- a hybrid recipe with an editable structure and raster effect layer;
+- a retained raster path with better crop, resolution, or transparency handling.
+
+Useful commands:
+
+```bash
+make bench-index-all
+make bench-harvest
 make bench-render DECK=product-pitch
+make bench-app
 ```
 
-`_bench/corpus` contains curated slide specimens. The harvester writes
-`_bench/reports/harvest/bench-signals.json` and `_bench/reports/harvest/bench-report.md`,
-which classify misses by source spread, visual area, fidelity risk,
-editability goal, raster fidelity goal, render strategy, promotion priority,
-and pipeline actions.
+The harvester writes machine-readable and Markdown reports under `_bench/reports/harvest/`.
 
-Those signals drive the roadmap:
+A corpus result measures the specimens in that corpus. It does not establish that arbitrary HTML will meet the same fidelity or editability thresholds.
 
-- `native-atom` / `native-pattern`: promote to editable pattern coverage.
-- `hybrid-recipe`: keep editable structure, rasterize only the effect layer.
-- `preserve-raster`: keep the pixel layer, but improve crop, resolution,
-  transparency, and source-vs-PPTX regression coverage.
+## Local dependencies
 
-## Install
-
-Pixelpitch development is Bun-first:
+The Bun application can be checked with:
 
 ```bash
-./setup.sh
-bun run dev
+bun run doctor
 ```
 
-Verify the JavaScript app/tooling layer with `bun run doctor`. For PPTX export
-backend checks, install the optional system tools and run `make doctor`:
+The PPTX backend uses additional system tools for full fidelity checks:
 
 ```bash
-sudo apt-get install -y libreoffice-impress poppler-utils tesseract-ocr fonts-inter
+sudo apt-get install -y \
+  libreoffice-impress \
+  poppler-utils \
+  tesseract-ocr \
+  fonts-inter
+
 make doctor
 ```
 
-See [`packaging/`](packaging/) for the Bun packaging contract and desktop
-artifact commands.
-
-If `make doctor` reports `Chromium launch` as failing, run:
+Install Chromium/Playwright system dependencies when needed:
 
 ```bash
 make playwright-deps
 make doctor
 ```
 
-That check launches a real headless Chromium page, so it catches missing shared
-libraries and restrictive execution environments before a new contributor hits
-them during render or harvest.
+`make doctor` launches headless Chromium, so it can catch missing browser libraries before a render run.
 
-Useful source checkout targets:
+## Application architecture
 
-| Command | Purpose |
-| --- | --- |
-| `make bootstrap` | Install Python deps into `.venv` and Chromium into `.ms-playwright`. |
-| `make playwright-deps` | Install Chromium plus Playwright OS libraries. |
-| `make doctor` | Verify LibreOffice, Tesseract, poppler, Chromium launch, and Inter. |
-| `make check` | Run lint and tests. |
-| `make bench-index-all` | Rebuild `_bench` and `_bench/corpus` indexes. |
-| `make bench-harvest` | Generate bench signal JSON and markdown report. |
-| `make bench-render DECK=product-pitch` | Compose and render one named corpus mix. |
-| `make bench-app` | Serve the human HTML/PPTX side-by-side viewer on port `15999`. |
+```text
+apps/web/             web UI: chat, preview, agent panel, exports
+apps/daemon/          localhost daemon and coding-agent adapters
+packages/contracts/   web / daemon TypeScript contracts
+packages/platform/    cross-platform process handling
+packages/sidecar/     preview-side React/Babel runtime
+packages/sidecar-proto/ IPC types
+packages/hyperframes-types/ frame/runtime contracts
+skills/               authoring and operational skills
+prompt-templates/     image, video, and audio prompt templates
+design-systems/       design-system references
+slidify/              HTML-to-PPTX converter
+components/           multi-target React components
+_bench/               corpus, mixes, reports, and render outputs
+```
 
-## Use
+HTML can also target the HyperFrames runtime where the relevant contracts are used. PPTX and video output are different backends; support for one does not imply visual equivalence on the other.
 
-CLI:
+## Development
 
 ```bash
-# Single HTML file with optional <!DOCTYPE> separators
-slidify deck.html deck.pptx
-
-# Directory of per-slide files (sorted lexicographically — name them 01.html, 02.html, …)
-slidify slides/ deck.pptx
-
-# Stdin pipe (no temp files)
-cat deck.html | slidify convert - deck.pptx --json
+make bun-install
+make daemon   # localhost:17456
+make web      # localhost:3000
 ```
 
-The CLI is designed to be self-describing — every command emits structured
-JSON, every error includes a `_remediation` block, every successful run
-includes a `_next` array of follow-up commands:
+General checks:
 
 ```bash
-slidify doctor              # verify environment (LibreOffice, Chromium, …)
-slidify manifest --brief    # one-line index of every command
-slidify manifest convert    # full spec for one command (drill-down)
-slidify guide               # list of long-form guides
-slidify guide authoring     # how to author HTML for high native-area ratio
-slidify guide authoring --section "What forces a raster"   # section pluck
-slidify guide --search "tier 0"                            # cross-guide grep
-slidify field report.json native_area_ratio                # built-in jq-lite
+make check
+make doctor
 ```
 
-Exit codes: `0` ok, `1` doctor missing deps, `2` conversion error, `3`
-editability drift (shapes silently dropped). For LLM agents, the
-[`html-to-slides` skill](.claude/skills/html-to-slides/SKILL.md) (mirrored
-under [`.gemini/`](.gemini/skills/html-to-slides/SKILL.md)) wraps the
-canonical agent loop.
+## Third-party work
 
-Python — `convert(source, pptx_path, config)` accepts five source forms:
+Pixelpitch incorporates or adapts work from several projects, including:
 
-```python
-import asyncio
-from pathlib import Path
-from slidify import convert, ConversionConfig
+- [nexu-io/open-design](https://github.com/nexu-io/open-design)
+- [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes)
+- [op7418/guizang-ppt-skill](https://github.com/op7418/guizang-ppt-skill)
+- [OpenCoworkAI/open-codesign](https://github.com/OpenCoworkAI/open-codesign)
+- [multica-ai/multica](https://github.com/multica-ai/multica)
+- [alchaincyf/huashu-design](https://github.com/alchaincyf/huashu-design)
 
-async def main():
-    cfg = ConversionConfig(run_tier3=True, run_oracle=True)
+See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for licenses, attribution details, and recorded upstream revisions.
 
-    # 1) Full HTML string (multi-slide via DOCTYPE separators)
-    await convert(Path("deck.html").read_text(), "out.pptx", cfg)
+## Boundaries
 
-    # 2) Path to a single .html file
-    await convert(Path("deck.html"), "out.pptx", cfg)
-
-    # 3) Path to a directory of per-slide .html files
-    await convert(Path("slides/"), "out.pptx", cfg)
-
-    # 4) Iterable of HTML strings (one per slide)
-    await convert([slide_a, slide_b, slide_c], "out.pptx", cfg)
-
-    # 5) Async iterator — true streaming, slides pulled on demand
-    async def stream():
-        async for s in fetch_slides_from_db():
-            yield s
-    await convert(stream(), "out.pptx", cfg)
-
-asyncio.run(main())
-```
-
-### Memory characteristics for large decks
-
-The pipeline streams: each slide is rendered → classified → emitted, and intermediate
-state is dropped before the next batch starts. Peak memory is bounded by
-`render_concurrency` (default 4 slides in flight), not by deck size — *with one caveat*.
-
-When `run_oracle=True`, the auto-correction loop needs per-slide state (units,
-decisions, ground-truth PNGs) so it can re-classify failing regions after the
-LibreOffice/SSIM/OCR pass. Set `keep_plans_for_oracle=False` (CLI flag:
-`--low-memory`) to drop that state right after emit; you still get a single
-fidelity report per slide, but failing regions are not auto-fixed.
-
-## Pipeline
-
-```
-HTML → split → render (Playwright) → DOM walk → cluster into VisualUnits →
-  tier 1 (rules) → tier 2 (heuristics) → tier 3 (LLM) → promote → emit →
-  oracle (LibreOffice + SSIM + OCR) → auto-correct → ship
-```
-
-The corpus harvester sits beside the pipeline. It aggregates
-`unmatched_signatures` across `_bench`, ranks the repeated misses, and labels
-them as native-editability work, hybrid recipe work, or raster-fidelity work.
-
-## LLM backends (tier 3)
-
-The tier-3 adjudicator picks a vision-capable LLM for the small residue of
-ambiguous units. Four backends are supported; pick one via env var or
-`ConversionConfig.llm_backend`.
-
-| Backend          | Env vars                                                   | Default model           |
-| ---------------- | ---------------------------------------------------------- | ----------------------- |
-| `gemini-aistudio`| `GEMINI_API_KEY` (or `GOOGLE_API_KEY`)                     | `gemini-2.5-pro`        |
-| `gemini-vertex`  | `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION`            | `gemini-2.5-pro`        |
-| `anthropic`      | `ANTHROPIC_API_KEY`                                        | `claude-opus-4-7`       |
-| `claude-vertex`  | `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION` (e.g. `us-east5`) | `claude-opus-4-7@20260101` |
-
-Auto-detection order: gemini-aistudio → gemini-vertex (if `SLIDIFY_PREFER_VERTEX_GEMINI` set) →
-anthropic → claude-vertex.
-
-CLI override:
-
-```bash
-slidify deck.html deck.pptx \
-    --llm-backend gemini-vertex \
-    --google-project my-gcp-project \
-    --google-location us-central1
-```
-
-If no provider is configured (or any call fails), tier 3 safely falls back to
-Raster decisions — output remains correct, just less editable.
-
-## Hint protocol
-
-Cooperating HTML producers can emit `data-pptx-*` attributes that bypass
-classification. See spec §10. Examples:
-
-```html
-<h1 data-pptx-role="title">Maximum editability</h1>
-<canvas data-pptx-rasterize="true">…</canvas>
-<div data-pptx-skip="true">debug overlay</div>
-<div data-pptx-text="Q1 results">Q1 sales numbers</div>
-<div data-pptx-allow-overflow="true">aurora bleed by design</div>
-```
-
-## Atomic seed (landing-page-quality decks)
-
-For decks that need to look like a designer touched every gradient,
-slidify ships an **atomic seed** — ~70 named recipes across 10 axes,
-matched by `data-atom="<id>"` on the cluster anchor. The matcher
-short-circuits to the recipe and emits natively, with cache hits on
-repeat runs.
-
-```html
-<div data-atom="bg.mesh">…</div>
-<h1 data-atom="type.gfill-4" data-pptx-role="title">Future.</h1>
-<svg data-atom="data.ring">…</svg>
-```
-
-| Reference                          | What it shows |
-|------------------------------------|---------------|
-| [`examples/landing/atoms.html`](examples/landing/atoms.html)     | Parts catalog — every atom labeled with its `data-atom` id |
-| [`examples/landing/recipes.html`](examples/landing/recipes.html) | **16 award-winning compositions** (hero / chapter / manifesto / magazine / bento / anatomy / spec / process / ticker / longshadow / dashboard / testimonials / echo / marquee / team / closing CTA) |
-| [`examples/landing/fonts.html`](examples/landing/fonts.html)     | Eight typographic registers, same headline |
-| [`examples/landing/probe.html`](examples/landing/probe.html)     | Constraint envelope — which primitives survive native emit |
-
-Authoring grammar — viewport math, font registers, the 10 axes, and the
-pipeline-side rules (allow-overflow inheritance for echo / longshadow /
-marquee, native-line editability accounting, atom-keyed authoring hints) —
-lives in the [`slide-author`](.claude/skills/slide-author/SKILL.md) skill.
-
-## Layout
-
-```
-slidify/
-  api.py            # public convert(...)
-  cli.py            # `slidify` entrypoint
-  models.py         # Pydantic models
-  geom.py, fonts.py, colors.py
-  splitter.py
-  renderer.py       # Playwright wrapper
-  dom_walker.py     # in-page JS
-  units.py          # visual unit clusterer
-  harvester.py      # corpus miss aggregation + pipeline signals
-  classifier/
-    tier1.py        # deterministic rules
-    tier2.py        # heuristic scoring
-    tier3.py        # LLM adjudicator
-    llm.py          # multi-provider abstraction
-    prompts.py
-  promotion.py      # bottom-up DAG resolution
-  emitter.py        # python-pptx output
-  oracle.py         # SSIM + OCR + auto-correct
-  cache.py          # structural memoization
-_bench/
-  corpus/           # curated source corpus + mixable slide index
-  harvest/          # harvester JSON + human reports
-  scripts/          # index, compose, and report helpers
-  composed/         # generated mixes, ignored by git
-  dist/             # generated PPTX outputs
-tests/
-  unit/             # rule + clustering tests
-  integration/      # full pipeline smoke
-  fixtures/         # sample decks
-```
-
-## Architecture (v0.2)
-
-Pixelpitch is now an integrated end-to-end deck-design system:
-
-```
-apps/web/             Next.js 16 web app — chat, sandboxed-iframe preview,
-                      live agent panel, design-system browser, exports.
-apps/daemon/          Express daemon on 127.0.0.1:17456 — PATH-scans 13
-                      agent CLIs (claude, codex, gemini, cursor-agent,
-                      copilot, devin, opencode, qwen, hermes, kimi, pi,
-                      kiro, mistral), streams via NDJSON / ACP / pi-rpc,
-                      persists to ~/.pixelpitch/app.sqlite.
-packages/contracts/   web ↔ daemon TS types.
-packages/platform/    cross-platform process spawn.
-packages/sidecar/     vendored React 18 + Babel for sandboxed previews.
-packages/sidecar-proto/ IPC protocol types.
-packages/hyperframes-types/  HfProtocol slide-runtime contracts.
-
-skills/               60+ bundled skills (web-prototype, dashboard, mobile-app,
-                      email-marketing, social-carousel, motion-frames,
-                      sprite-animation, finance-report, eng-runbook,
-                      pptx-html-fidelity-audit, guizang-ppt, hyperframes,
-                      and 18 html-ppt presentation variants).
-prompt-templates/     93 image / video / audio generation prompts.
-design-systems/       138 curated design system references.
-
-slidify/              The HTML→PPTX converter (Python, unchanged).
-                      The PPTX export path delegates here.
-components/           @slidify/components — multi-target React components
-                      that emit IR consumed by slidify.
-_bench/               corpus, decks, prompts, scripts, harvest reports.
-```
-
-The 6-step pipeline:
-
-1. **Design language** — `apps/daemon/src/prompts/discovery.ts` runs the
-   discovery form + 5-school direction picker.
-2. **Components** — `skills/` provides parameterized templates; the
-   `tweaks` skill mutates tokens in-place.
-3. **Narrative** — deck-mode skills (`simple-deck`, `replit-deck`,
-   `weekly-update`, `guizang-ppt`, `html-ppt-*`) propose the slide arc.
-4. **Slide design** — `slide-author` skill enforces the slidify atomic-seed
-   grammar; `hyperframes` skill adds animated/timeline support via
-   `@pixelpitch/hyperframes-types`.
-5. **Deck composition** — `apps/web/src/runtime/srcdoc.ts` previews each
-   slide in a sandboxed iframe; the agent emits `<artifact>` blocks
-   parsed by `apps/web/src/artifacts/parser.ts`.
-6. **PPTX** — `slidify convert deck.html deck.pptx --json` (or via the
-   `pptx-html-fidelity-audit` skill).
-
-Run it:
-
-```bash
-make bun-install         # install workspace deps
-make daemon              # localhost:17456
-make web                 # localhost:3000
-```
-
-## Built on
-
-Pixelpitch is built on the shoulders of:
-
-- **[nexu-io/open-design](https://github.com/nexu-io/open-design)**
-  (Apache 2.0) — agent system, web UI, daemon, skill catalog, design-
-  system resolver, discovery prompts, exporters. The bulk of `apps/`,
-  `packages/`, `skills/`, `prompt-templates/`, `design-systems/`, `e2e/`,
-  `tools/dev`, `tools/pack`, `scripts/` was lifted from OD and renamed
-  to pixelpitch conventions.
-- **[heygen-com/hyperframes](https://github.com/heygen-com/hyperframes)**
-  (Apache 2.0) — `HfProtocol` slide-runtime contract, frame data model.
-- **[op7418/guizang-ppt-skill](https://github.com/op7418/guizang-ppt-skill)**
-  (MIT) — `skills/guizang-ppt/`: magazine layouts + WebGL hero +
-  P0/P1/P2 quality gate.
-- **[OpenCoworkAI/open-codesign](https://github.com/OpenCoworkAI/open-codesign)**
-  (MIT) — streaming-artifact / sandboxed-iframe / exporter patterns,
-  synthesized into OD.
-- **[multica-ai/multica](https://github.com/multica-ai/multica)**
-  (Modified Apache 2.0) — daemon and 13-CLI PATH-scan patterns,
-  synthesized into OD.
-- **[alchaincyf/huashu-design](https://github.com/alchaincyf/huashu-design)**
-  (personal-use) — design-philosophy patterns absorbed via OD's
-  discovery prompts.
-
-See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for full
-attribution and upstream commit SHAs.
+- `slidify` preserves editability where its native emitter supports the source visual. It rasterizes unsupported effects rather than claiming every HTML construct is editable in PowerPoint.
+- SSIM and OCR thresholds measure the configured render comparison, not subjective slide quality.
+- Tier-3 model adjudication is optional and can vary by provider/model revision.
+- The coding-agent adapters execute external local CLIs and inherit the permissions and behavior of those tools.
+- A successful browser preview does not prove equivalent output in PowerPoint; the export oracle exists to test that separate rendering path.
 
 ## License
 
-Apache 2.0 — see [`LICENSE`](LICENSE).
+Apache-2.0. See [`LICENSE`](LICENSE).
