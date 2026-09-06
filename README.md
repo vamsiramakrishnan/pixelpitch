@@ -1,8 +1,24 @@
 # pixelpitch
 
+**Author slides in HTML, inspect them in a browser, and export a PowerPoint deck with editable elements where fidelity allows.**
+
 Pixelpitch is a local slide-authoring system built around HTML preview and PPTX export.
 
 A coding agent can author slide HTML, preview it in a sandboxed browser surface, iterate on the deck, and export it through `slidify`, the repository's HTML-to-PPTX converter.
+
+## Pick the part you need
+
+| Job | Start here | Output |
+|---|---|---|
+| Author and revise a deck with a coding agent | [Application quickstart](#quickstart) | A local project with a browser preview |
+| Convert HTML you already have | [Convert a deck](#convert-a-deck) | A PPTX file |
+| Integrate conversion into Python | [Python API](#python-api) | Programmatic conversion under explicit configuration |
+| Judge an export | [Fidelity bench](#fidelity-bench) | Visual fidelity and editability measurements |
+
+Inspect both the browser source and the PowerPoint rendering. Native shapes
+are useful only when they preserve the intended result; unsupported effects
+may remain images. The application and the converter can be evaluated separately.
+
 
 ## Quickstart
 
