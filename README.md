@@ -283,3 +283,7 @@ See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for licenses, attribution
 ## License
 
 Apache-2.0. See [`LICENSE`](LICENSE).
+
+## Related projects
+
+- [pixelpitch-slidegen](https://github.com/vamsiramakrishnan/pixelpitch-slidegen). Create editable PowerPoint decks from Gemini Enterprise through MCP or A2A.
